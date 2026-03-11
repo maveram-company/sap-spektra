@@ -61,13 +61,12 @@ export const dataService = {
 
   getSystemById: async (id) => {
     if (isDemoMode()) { await delay(); return mockSystems.find(s => s.id === id) || null; }
-    const systems = await api.getSystems();
-    return systems.find(s => s.id === id) || null;
+    return api.getSystemById(id);
   },
 
   getSystemMetrics: async (id, hours = 2) => {
     if (isDemoMode()) { await delay(300); return mockMetrics(); }
-    return api.getSystemMetrics(id, hours);
+    return api.getSystemHostMetrics(id, hours);
   },
 
   getSystemBreaches: async (id, limit = 50) => {
@@ -77,7 +76,7 @@ export const dataService = {
         ? mockBreaches.filter(b => b.systemId === id).slice(0, limit)
         : mockBreaches.slice(0, limit);
     }
-    return api.getSystemBreaches(id, limit);
+    return api.getBreaches(id);
   },
 
   getSystemSla: async (id) => {
@@ -86,42 +85,44 @@ export const dataService = {
       const sys = mockSystems.find(s => s.id === id);
       return sys ? { mttr: sys.mttr, mtbf: sys.mtbf, availability: sys.availability } : null;
     }
-    return api.getSystemSla(id);
+    // SLA endpoint to be built — use health snapshots for now
+    return api.getHealthSnapshots(id, 720);
   },
 
   getServerMetrics: async (id) => {
     if (isDemoMode()) { await delay(300); return mockServerMetrics[id] || null; }
-    return api.getSystems().then(() => mockServerMetrics[id]); // placeholder
+    return api.getHosts(id);
   },
 
   getServerDeps: async (id) => {
     if (isDemoMode()) { await delay(300); return mockServerDeps[id] || null; }
-    return mockServerDeps[id]; // placeholder
+    return api.getDependencies(id);
   },
 
   getSystemInstances: async (id) => {
     if (isDemoMode()) { await delay(300); return mockSystemInstances[id] || []; }
-    return mockSystemInstances[id]; // placeholder
+    return api.getComponents(id);
   },
 
   getMetricHistory: async (hostname) => {
     if (isDemoMode()) { await delay(300); return mockMetricHistory[hostname] || []; }
-    return mockMetricHistory[hostname]; // placeholder
+    // In production, find host by hostname and get metrics
+    return mockMetricHistory[hostname] || [];
   },
 
   getSystemHosts: async (id) => {
     if (isDemoMode()) { await delay(200); return getSystemHosts(id); }
-    return getSystemHosts(id); // placeholder
+    return api.getHosts(id);
   },
 
   getSystemMeta: async (id) => {
     if (isDemoMode()) { await delay(200); return id ? (mockSystemMeta[id] || null) : mockSystemMeta; }
-    return id ? (mockSystemMeta[id] || null) : mockSystemMeta; // placeholder
+    return api.getSystemMeta(id);
   },
 
   getSAPMonitoring: async (id) => {
     if (isDemoMode()) { await delay(300); return mockSAPMonitoring[id] || null; }
-    return mockSAPMonitoring[id]; // placeholder
+    return mockSAPMonitoring[id] || null; // SAP-specific monitoring — future endpoint
   },
 
   // ── Usuarios ──
@@ -139,14 +140,14 @@ export const dataService = {
     return api.getApprovals(status);
   },
 
-  approveAction: async (id, token) => {
+  approveAction: async (id) => {
     if (isDemoMode()) { await delay(300); return { success: true }; }
-    return api.approveAction(id, token);
+    return api.approveAction(id);
   },
 
-  rejectAction: async (id, token) => {
+  rejectAction: async (id) => {
     if (isDemoMode()) { await delay(300); return { success: true }; }
-    return api.rejectAction(id, token);
+    return api.rejectAction(id);
   },
 
   // ── Operaciones ──
@@ -164,51 +165,53 @@ export const dataService = {
   // ── Alertas ──
   getAlerts: async () => {
     if (isDemoMode()) { await delay(); return mockAlerts; }
-    return api.getApprovals(); // placeholder — API endpoint TBD
+    return api.getAlerts();
   },
 
   // ── Eventos ──
   getEvents: async () => {
     if (isDemoMode()) { await delay(); return mockEvents; }
-    return mockEvents; // placeholder — API endpoint TBD
+    return api.getEvents();
   },
 
   // ── Runbooks ──
   getRunbooks: async () => {
     if (isDemoMode()) { await delay(); return mockRunbooks; }
-    return mockRunbooks; // placeholder — API endpoint TBD
+    return api.getRunbooks();
   },
 
   getRunbookExecutions: async () => {
     if (isDemoMode()) { await delay(300); return mockRunbookExecutions; }
-    return mockRunbookExecutions; // placeholder — API endpoint TBD
+    return api.getRunbookExecutions();
   },
 
   // ── Discovery / Landscape ──
   getDiscovery: async () => {
     if (isDemoMode()) { await delay(); return mockDiscovery; }
-    return mockDiscovery; // placeholder — API endpoint TBD
+    // Discovery is derived from systems + components
+    const systems = await api.getSystems();
+    return systems;
   },
 
   getSIDLines: async () => {
     if (isDemoMode()) { await delay(300); return mockSIDLines; }
-    return mockSIDLines; // placeholder — API endpoint TBD
+    return mockSIDLines; // Frontend-only visualization data
   },
 
   getLandscapeValidation: async () => {
     if (isDemoMode()) { await delay(300); return mockLandscapeValidation; }
-    return mockLandscapeValidation; // placeholder — API endpoint TBD
+    return mockLandscapeValidation; // Frontend-only validation rules
   },
 
   // ── AI / Chat ──
   getAIUseCases: async () => {
     if (isDemoMode()) { await delay(300); return mockAIUseCases; }
-    return mockAIUseCases; // placeholder — API endpoint TBD
+    return mockAIUseCases; // Static UI content
   },
 
   getAIResponses: async () => {
     if (isDemoMode()) { await delay(300); return mockAIResponses; }
-    return mockAIResponses; // placeholder — API endpoint TBD
+    return mockAIResponses; // Static UI content
   },
 
   chat: async (message, context) => {
@@ -219,28 +222,28 @@ export const dataService = {
   // ── Conectores ──
   getConnectors: async () => {
     if (isDemoMode()) { await delay(); return mockConnectors; }
-    return mockConnectors; // placeholder — API endpoint TBD
+    return api.getConnectors();
   },
 
   // ── HA / DR ──
   getHASystems: async () => {
     if (isDemoMode()) { await delay(); return mockHASystems; }
-    return mockHASystems; // placeholder — API endpoint TBD
+    return api.getHAConfigs();
   },
 
   getHAPrereqs: async (strategy) => {
     if (isDemoMode()) { await delay(300); return strategy ? mockHAPrereqs[strategy] : mockHAPrereqs; }
-    return mockHAPrereqs; // placeholder — API endpoint TBD
+    return mockHAPrereqs; // Static prerequisite data
   },
 
   getHAOpsHistory: async () => {
     if (isDemoMode()) { await delay(300); return mockHAOpsHistory; }
-    return mockHAOpsHistory; // placeholder — API endpoint TBD
+    return mockHAOpsHistory; // Future: operations filtered by HA type
   },
 
   getHADrivers: async () => {
     if (isDemoMode()) { await delay(300); return mockHADrivers; }
-    return mockHADrivers; // placeholder — API endpoint TBD
+    return mockHADrivers; // Static driver configuration data
   },
 
   // ── Analytics ──
@@ -252,44 +255,44 @@ export const dataService = {
   // ── Background Jobs ──
   getBackgroundJobs: async () => {
     if (isDemoMode()) { await delay(); return mockBackgroundJobs; }
-    return mockBackgroundJobs; // placeholder — API endpoint TBD
+    return api.getJobs();
   },
 
   // ── Transports ──
   getTransports: async () => {
     if (isDemoMode()) { await delay(); return mockTransports; }
-    return mockTransports; // placeholder — API endpoint TBD
+    return api.getTransports();
   },
 
   // ── Certificados y Licencias ──
   getCertificates: async () => {
     if (isDemoMode()) { await delay(); return mockCertificates; }
-    return mockCertificates; // placeholder — API endpoint TBD
+    return api.getCertificates();
   },
 
   getLicenses: async () => {
     if (isDemoMode()) { await delay(300); return mockLicenses; }
-    return mockLicenses; // placeholder — API endpoint TBD
+    return mockLicenses; // Future: license management endpoint
   },
 
   // ── Settings ──
   getThresholds: async () => {
     if (isDemoMode()) { await delay(300); return mockThresholds; }
-    return mockThresholds; // placeholder — API endpoint TBD
+    return mockThresholds; // Future: settings endpoint
   },
 
   getEscalationPolicy: async () => {
     if (isDemoMode()) { await delay(300); return mockEscalationPolicy; }
-    return mockEscalationPolicy; // placeholder — API endpoint TBD
+    return mockEscalationPolicy; // Future: settings endpoint
   },
 
   getMaintenanceWindows: async () => {
     if (isDemoMode()) { await delay(300); return mockMaintenanceWindows; }
-    return mockMaintenanceWindows; // placeholder — API endpoint TBD
+    return mockMaintenanceWindows; // Future: settings endpoint
   },
 
   getApiKeys: async () => {
     if (isDemoMode()) { await delay(300); return mockApiKeys; }
-    return mockApiKeys; // placeholder — API endpoint TBD
+    return mockApiKeys; // Future: API key management endpoint
   },
 };
