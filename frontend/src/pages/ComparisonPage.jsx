@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { GitCompare, CheckCircle, AlertTriangle, Info, Server } from 'lucide-react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts';
 import Header from '../components/layout/Header';
@@ -11,7 +11,8 @@ import Table, { TableHeader, TableHead, TableBody, TableRow, TableCell } from '.
 import StatusBadge from '../components/ui/StatusBadge';
 import EmptyState from '../components/ui/EmptyState';
 import FeatureGate, { UpgradeBanner } from '../components/ui/FeatureGate';
-import { mockSystems, mockSIDLines, mockSystemMeta, mockLandscapeValidation } from '../lib/mockData';
+import PageLoading from '../components/ui/PageLoading';
+import { dataService } from '../services/dataService';
 
 // Mapeo de entorno a variante de Badge
 const envBadgeVariant = {
@@ -30,26 +31,46 @@ function hasDifference(values) {
 }
 
 export default function ComparisonPage() {
+  const [systems, setSystems] = useState([]);
+  const [sidLines, setSidLines] = useState([]);
+  const [systemMeta, setSystemMeta] = useState({});
+  const [landscapeValidation, setLandscapeValidation] = useState({});
+  const [loading, setLoading] = useState(true);
   const [selectedLine, setSelectedLine] = useState('ERP');
+
+  useEffect(() => {
+    Promise.all([
+      dataService.getSystems(),
+      dataService.getSIDLines(),
+      dataService.getSystemMeta(),
+      dataService.getLandscapeValidation(),
+    ]).then(([sys, lines, meta, validation]) => {
+      setSystems(sys);
+      setSidLines(lines);
+      setSystemMeta(meta);
+      setLandscapeValidation(validation);
+      setLoading(false);
+    });
+  }, []);
 
   // Opciones del selector de SID Lines
   const lineOptions = useMemo(() =>
-    mockSIDLines.map(l => ({
+    sidLines.map(l => ({
       value: l.line,
       label: `${l.line} — ${l.description}`,
     })),
-  []);
+  [sidLines]);
 
   // Datos de la linea seleccionada
   const currentLine = useMemo(() =>
-    mockSIDLines.find(l => l.line === selectedLine),
-  [selectedLine]);
+    sidLines.find(l => l.line === selectedLine),
+  [selectedLine, sidLines]);
 
   // Sistemas de la linea seleccionada, ordenados DEV -> QAS -> PRD
   const lineSystems = useMemo(() => {
     if (!currentLine) return [];
     return currentLine.systems
-      .map(id => mockSystems.find(s => s.id === id))
+      .map(id => systems.find(s => s.id === id))
       .filter(Boolean)
       .sort((a, b) => (envOrder[a.environment] ?? 99) - (envOrder[b.environment] ?? 99));
   }, [currentLine]);
@@ -58,7 +79,7 @@ export default function ComparisonPage() {
   const lineSystemsMeta = useMemo(() => {
     const map = {};
     lineSystems.forEach(s => {
-      map[s.id] = mockSystemMeta[s.id] || {};
+      map[s.id] = systemMeta[s.id] || {};
     });
     return map;
   }, [lineSystems]);
@@ -77,7 +98,7 @@ export default function ComparisonPage() {
   const colors = ['#3b82f6', '#f59e0b', '#8b5cf6'];
 
   // Validacion de landscape (solo disponible para ERP)
-  const landscapeData = mockLandscapeValidation[selectedLine] || null;
+  const landscapeData = landscapeValidation[selectedLine] || null;
 
   // Helper: color de fila segun status de check
   function checkStatusColor(status) {
@@ -99,6 +120,8 @@ export default function ComparisonPage() {
     if (metric === 'healthScore') return value === Math.min(...allValues);
     return value === Math.max(...allValues);
   }
+
+  if (loading) return <PageLoading message="Cargando comparación..." />;
 
   return (
     <div>

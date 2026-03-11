@@ -1,7 +1,8 @@
-import { useState, useMemo } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { Network, CheckCircle, XCircle, Shield, Server, Monitor } from 'lucide-react';
 import Header from '../components/layout/Header';
-import { mockDiscovery } from '../lib/mockData';
+import PageLoading from '../components/ui/PageLoading';
+import { dataService } from '../services/dataService';
 
 // Colores para la columna de confianza
 const confidenceColors = {
@@ -24,12 +25,18 @@ const envColors = {
 };
 
 export default function LandscapePage() {
+  const [discovery, setDiscovery] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
+
+  useEffect(() => {
+    dataService.getDiscovery().then(data => { setDiscovery(data); setLoading(false); });
+  }, []);
 
   // Agrupar instancias por SID para la topología
   const sidGroups = useMemo(() => {
     const groups = {};
-    mockDiscovery.forEach((inst) => {
+    discovery.forEach((inst) => {
       if (!groups[inst.sid]) {
         groups[inst.sid] = {
           sid: inst.sid,
@@ -47,19 +54,19 @@ export default function LandscapePage() {
       }
     });
     return Object.values(groups);
-  }, []);
+  }, [discovery]);
 
   // Métricas del resumen
-  const totalInstances = mockDiscovery.length;
-  const successScans = mockDiscovery.filter((d) => d.scanStatus === 'success').length;
-  const failScans = mockDiscovery.filter((d) => d.scanStatus === 'fail').length;
+  const totalInstances = discovery.length;
+  const successScans = discovery.filter((d) => d.scanStatus === 'success').length;
+  const failScans = discovery.filter((d) => d.scanStatus === 'fail').length;
   const haClusters = sidGroups.filter((g) => g.haEnabled).length;
 
   // Filtrar instancias para la tabla
   const filteredInstances = useMemo(() => {
-    if (!search) return mockDiscovery;
+    if (!search) return discovery;
     const q = search.toLowerCase();
-    return mockDiscovery.filter(
+    return discovery.filter(
       (d) =>
         d.instanceId.toLowerCase().includes(q) ||
         d.hostname.toLowerCase().includes(q) ||
@@ -67,7 +74,7 @@ export default function LandscapePage() {
         d.role.toLowerCase().includes(q) ||
         d.product.toLowerCase().includes(q)
     );
-  }, [search]);
+  }, [search, discovery]);
 
   const summaryCards = [
     { label: 'Instancias Descubiertas', value: totalInstances, icon: Monitor, color: 'primary' },
@@ -81,6 +88,8 @@ export default function LandscapePage() {
     success: 'bg-success-50 dark:bg-success-900/20 border-success-200 dark:border-success-800',
     danger: 'bg-danger-50 dark:bg-danger-900/20 border-danger-200 dark:border-danger-800',
   };
+
+  if (loading) return <PageLoading message="Cargando landscape..." />;
 
   return (
     <div>

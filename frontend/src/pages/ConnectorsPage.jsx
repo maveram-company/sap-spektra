@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { CheckCircle, AlertTriangle, XCircle, Plug, WifiOff, Plus } from 'lucide-react';
 import Header from '../components/layout/Header';
@@ -6,7 +6,8 @@ import Card, { CardHeader, CardTitle } from '../components/ui/Card';
 import Button from '../components/ui/Button';
 import Badge from '../components/ui/Badge';
 import Table, { TableHeader, TableBody, TableRow, TableHead, TableCell } from '../components/ui/Table';
-import { mockConnectors } from '../lib/mockData';
+import PageLoading from '../components/ui/PageLoading';
+import { dataService } from '../services/dataService';
 
 // ── Helpers ──
 
@@ -50,14 +51,23 @@ const STATUS_ORDER = { disconnected: 0, degraded: 1, connected: 2 };
 
 export default function ConnectorsPage() {
   const navigate = useNavigate();
-  const connected = useMemo(() => mockConnectors.filter(c => c.status === 'connected').length, []);
-  const degraded = useMemo(() => mockConnectors.filter(c => c.status === 'degraded').length, []);
-  const disconnected = useMemo(() => mockConnectors.filter(c => c.status === 'disconnected').length, []);
-  const total = mockConnectors.length;
+  const [connectors, setConnectors] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    dataService.getConnectors().then(data => { setConnectors(data); setLoading(false); });
+  }, []);
+
+  const connected = useMemo(() => connectors.filter(c => c.status === 'connected').length, [connectors]);
+  const degraded = useMemo(() => connectors.filter(c => c.status === 'degraded').length, [connectors]);
+  const disconnected = useMemo(() => connectors.filter(c => c.status === 'disconnected').length, [connectors]);
+  const total = connectors.length;
 
   const sorted = useMemo(() =>
-    [...mockConnectors].sort((a, b) => STATUS_ORDER[a.status] - STATUS_ORDER[b.status]),
-  []);
+    [...connectors].sort((a, b) => STATUS_ORDER[a.status] - STATUS_ORDER[b.status]),
+  [connectors]);
+
+  if (loading) return <PageLoading message="Cargando conectores..." />;
 
   return (
     <div>

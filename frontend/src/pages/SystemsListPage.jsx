@@ -11,7 +11,7 @@ import Select from '../components/ui/Select';
 import Button from '../components/ui/Button';
 import EmptyState from '../components/ui/EmptyState';
 import PageLoading from '../components/ui/PageLoading';
-import { mockSystems } from '../lib/mockData';
+import { dataService } from '../services/dataService';
 
 export default function SystemsListPage() {
   const [systems, setSystems] = useState([]);
@@ -22,7 +22,7 @@ export default function SystemsListPage() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    setTimeout(() => { setSystems(mockSystems); setLoading(false); }, 400);
+    dataService.getSystems().then(data => { setSystems(data); setLoading(false); });
   }, []);
 
   if (loading) return <PageLoading message="Cargando sistemas..." />;

@@ -1,10 +1,11 @@
-import { useState, useMemo } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { Play, Square, Clock, AlertTriangle, CheckCircle, XCircle, RotateCcw, Filter } from 'lucide-react';
 import Header from '../components/layout/Header';
 import Card, { CardHeader, CardTitle } from '../components/ui/Card';
 import Badge from '../components/ui/Badge';
 import Table, { TableHeader, TableBody, TableRow, TableHead, TableCell } from '../components/ui/Table';
-import { mockBackgroundJobs, mockSystems } from '../lib/mockData';
+import PageLoading from '../components/ui/PageLoading';
+import { dataService } from '../services/dataService';
 
 const statusConfig = {
   running: { icon: Play, label: 'Ejecutando', color: 'bg-primary-100 dark:bg-primary-900/30 text-primary-700 dark:text-primary-400', dot: 'bg-primary-500 animate-pulse' },
@@ -28,22 +29,35 @@ function JobStatusBadge({ status }) {
 }
 
 export default function BackgroundJobsPage() {
+  const [jobs, setJobs] = useState([]);
+  const [systems, setSystems] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [statusFilter, setStatusFilter] = useState('all');
   const [systemFilter, setSystemFilter] = useState('all');
 
+  useEffect(() => {
+    Promise.all([dataService.getBackgroundJobs(), dataService.getSystems()]).then(([j, s]) => {
+      setJobs(j);
+      setSystems(s);
+      setLoading(false);
+    });
+  }, []);
+
   const filtered = useMemo(() => {
-    return mockBackgroundJobs.filter(job => {
+    return jobs.filter(job => {
       if (statusFilter !== 'all' && job.status !== statusFilter) return false;
       if (systemFilter !== 'all' && job.systemId !== systemFilter) return false;
       return true;
     });
-  }, [statusFilter, systemFilter]);
+  }, [statusFilter, systemFilter, jobs]);
 
   // KPI summaries
-  const running = mockBackgroundJobs.filter(j => j.status === 'running').length;
-  const scheduled = mockBackgroundJobs.filter(j => j.status === 'scheduled').length;
-  const failed = mockBackgroundJobs.filter(j => j.status === 'failed').length;
-  const finished = mockBackgroundJobs.filter(j => j.status === 'finished').length;
+  const running = jobs.filter(j => j.status === 'running').length;
+  const scheduled = jobs.filter(j => j.status === 'scheduled').length;
+  const failed = jobs.filter(j => j.status === 'failed').length;
+  const finished = jobs.filter(j => j.status === 'finished').length;
+
+  if (loading) return <PageLoading message="Cargando jobs..." />;
 
   return (
     <div>
@@ -120,7 +134,7 @@ export default function BackgroundJobsPage() {
             className="appearance-none bg-surface border border-border rounded-lg px-3 py-2 text-sm text-text-primary focus:outline-none focus:ring-2 focus:ring-primary-500 cursor-pointer"
           >
             <option value="all">Todos los sistemas</option>
-            {mockSystems.map(s => (
+            {systems.map(s => (
               <option key={s.id} value={s.id}>{s.sid} — {s.id}</option>
             ))}
           </select>

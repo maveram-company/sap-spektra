@@ -1,7 +1,7 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Building2, Globe, Clock, Save, AlertTriangle, Shield, Calendar, Key, Copy, Eye, EyeOff } from 'lucide-react';
 import { useTenant } from '../../contexts/TenantContext';
-import { mockThresholds, mockEscalationPolicy, mockMaintenanceWindows, mockApiKeys } from '../../lib/mockData';
+import { dataService } from '../../services/dataService';
 import Card, { CardHeader, CardTitle, CardDescription } from '../../components/ui/Card';
 import Input from '../../components/ui/Input';
 import Select from '../../components/ui/Select';
@@ -11,7 +11,25 @@ import Table, { TableHeader, TableBody, TableRow, TableHead, TableCell } from '.
 
 export default function GeneralSettings() {
   const { organization, updateSettings } = useTenant();
+  const [thresholds, setThresholds] = useState([]);
+  const [escalationPolicy, setEscalationPolicy] = useState([]);
+  const [maintenanceWindows, setMaintenanceWindows] = useState([]);
+  const [apiKeys, setApiKeys] = useState([]);
   const [saving, setSaving] = useState(false);
+
+  useEffect(() => {
+    Promise.all([
+      dataService.getThresholds(),
+      dataService.getEscalationPolicy(),
+      dataService.getMaintenanceWindows(),
+      dataService.getApiKeys(),
+    ]).then(([t, e, m, a]) => {
+      setThresholds(t);
+      setEscalationPolicy(e);
+      setMaintenanceWindows(m);
+      setApiKeys(a);
+    });
+  }, []);
   const [form, setForm] = useState({
     name: organization.name,
     slug: organization.slug,
@@ -159,7 +177,7 @@ export default function GeneralSettings() {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {mockThresholds.map((t) => (
+            {thresholds.map((t) => (
               <TableRow key={t.metric}>
                 <TableCell className="font-medium">{t.metric}</TableCell>
                 <TableCell>
@@ -200,7 +218,7 @@ export default function GeneralSettings() {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {mockEscalationPolicy.map((p) => (
+            {escalationPolicy.map((p) => (
               <TableRow key={p.level}>
                 <TableCell className="font-medium">{p.level}</TableCell>
                 <TableCell>{p.timeout}</TableCell>
@@ -239,7 +257,7 @@ export default function GeneralSettings() {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {mockMaintenanceWindows.map((w, idx) => (
+            {maintenanceWindows.map((w, idx) => (
               <TableRow key={idx}>
                 <TableCell className="font-medium">{w.system}</TableCell>
                 <TableCell>{w.day}</TableCell>
@@ -269,7 +287,7 @@ export default function GeneralSettings() {
         </CardHeader>
 
         <div className="space-y-3">
-          {mockApiKeys.map((apiKey) => (
+          {apiKeys.map((apiKey) => (
             <div key={apiKey.name} className="flex items-center justify-between p-3 rounded-lg bg-surface-secondary border border-border">
               <div className="flex items-center gap-4">
                 <div>

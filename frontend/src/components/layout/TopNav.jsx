@@ -12,7 +12,7 @@ import { useAuth } from '../../contexts/AuthContext';
 import { usePlan } from '../../hooks/usePlan';
 import { useTenant } from '../../contexts/TenantContext';
 import { useTheme } from '../../contexts/ThemeContext';
-import { mockSystems } from '../../lib/mockData';
+import { dataService } from '../../services/dataService';
 
 // ── Estructura de navegación por secciones ──
 const sections = [
@@ -106,11 +106,17 @@ export default function TopNav({ topOffset = 0 }) {
   }, []);
 
   // Conteos del sistema
-  const { healthy, warning, critical } = useMemo(() => ({
-    healthy: mockSystems.filter(s => s.healthScore >= 90).length,
-    warning: mockSystems.filter(s => s.healthScore >= 70 && s.healthScore < 90).length,
-    critical: mockSystems.filter(s => s.healthScore < 70).length,
-  }), []);
+  const [systemCounts, setSystemCounts] = useState({ healthy: 0, warning: 0, critical: 0 });
+  useEffect(() => {
+    dataService.getSystems().then(systems => {
+      setSystemCounts({
+        healthy: systems.filter(s => s.healthScore >= 90).length,
+        warning: systems.filter(s => s.healthScore >= 70 && s.healthScore < 90).length,
+        critical: systems.filter(s => s.healthScore < 70).length,
+      });
+    });
+  }, []);
+  const { healthy, warning, critical } = systemCounts;
 
   // Auto-hide al hacer scroll hacia abajo
   useEffect(() => {

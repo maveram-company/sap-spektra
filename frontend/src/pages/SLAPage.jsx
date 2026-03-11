@@ -1,6 +1,8 @@
+import { useState, useEffect } from 'react';
 import { BarChart3, AlertTriangle } from 'lucide-react';
 import Header from '../components/layout/Header';
-import { mockSystems, mockAnalytics } from '../lib/mockData';
+import PageLoading from '../components/ui/PageLoading';
+import { dataService } from '../services/dataService';
 
 function getHealthColor(score) {
   if (score >= 85) return { border: 'border-success-500', text: 'text-success-600', bg: 'bg-success-50 dark:bg-success-500/10' };
@@ -60,7 +62,21 @@ function SimpleTable({ title, icon: Icon, rows }) {
 }
 
 export default function SLAPage() {
-  const { alertStats, slaMetrics } = mockAnalytics;
+  const [systems, setSystems] = useState([]);
+  const [analytics, setAnalytics] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    Promise.all([dataService.getSystems(), dataService.getAnalytics()]).then(([sys, anl]) => {
+      setSystems(sys);
+      setAnalytics(anl);
+      setLoading(false);
+    });
+  }, []);
+
+  if (loading || !analytics) return <PageLoading message="Cargando SLA..." />;
+
+  const { alertStats, slaMetrics } = analytics;
 
   const runbookRows = [
     { label: 'Runbooks hoy', value: slaMetrics.runbooksToday },
@@ -86,7 +102,7 @@ export default function SLAPage() {
         {/* System SLA Cards */}
         <h2 className="text-base font-semibold text-text-primary mb-4">SLA por Sistema</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
-          {mockSystems.map((system) => (
+          {systems.map((system) => (
               <div
                 key={system.id}
                 className="bg-surface rounded-xl border border-border p-5"

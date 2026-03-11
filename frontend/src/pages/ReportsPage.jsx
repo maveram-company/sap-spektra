@@ -7,7 +7,7 @@ import Badge from '../components/ui/Badge';
 import Button from '../components/ui/Button';
 import Table, { TableHeader, TableBody, TableRow, TableHead, TableCell } from '../components/ui/Table';
 import EmptyState from '../components/ui/EmptyState';
-import { mockEvents, mockAlerts } from '../lib/mockData';
+import { dataService } from '../services/dataService';
 
 // Tipos de reporte disponibles
 const reportTypes = [
@@ -34,11 +34,17 @@ const iconColors = {
 
 export default function ReportsPage() {
   const [reports, setReports] = useState([]);
+  const [events, setEvents] = useState([]);
+  const [alerts, setAlerts] = useState([]);
   const [generating, setGenerating] = useState(null);
   const [toast, setToast] = useState(null);
   const toastTimerRef = useRef(null);
 
   useEffect(() => {
+    Promise.all([dataService.getEvents(), dataService.getAlerts()]).then(([evts, alts]) => {
+      setEvents(evts);
+      setAlerts(alts);
+    });
     return () => { clearTimeout(toastTimerRef.current); };
   }, []);
 
@@ -76,10 +82,10 @@ export default function ReportsPage() {
       generatedAt: report.fecha,
       summary: {
         systemsCount: 9,
-        eventsCount: mockEvents.length,
-        alertsCount: mockAlerts.length,
-        activeAlerts: mockAlerts.filter((a) => a.status === 'active').length,
-        resolvedAlerts: mockAlerts.filter((a) => a.status === 'resolved').length,
+        eventsCount: events.length,
+        alertsCount: alerts.length,
+        activeAlerts: alerts.filter((a) => a.status === 'active').length,
+        resolvedAlerts: alerts.filter((a) => a.status === 'resolved').length,
       },
       status: report.estado,
     };

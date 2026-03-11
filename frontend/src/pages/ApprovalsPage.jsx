@@ -11,7 +11,7 @@ import Table, { TableHeader, TableBody, TableRow, TableHead, TableCell } from '.
 import EmptyState from '../components/ui/EmptyState';
 import PageLoading from '../components/ui/PageLoading';
 import { useAuth } from '../contexts/AuthContext';
-import { mockApprovals } from '../lib/mockData';
+import { dataService } from '../services/dataService';
 
 export default function ApprovalsPage() {
   const [approvals, setApprovals] = useState([]);
@@ -22,7 +22,7 @@ export default function ApprovalsPage() {
   const canApprove = hasRole('escalation');
 
   useEffect(() => {
-    setTimeout(() => { setApprovals(mockApprovals); setLoading(false); }, 400);
+    dataService.getApprovals().then(data => { setApprovals(data); setLoading(false); });
   }, []);
 
   const filtered = approvals.filter(a => a.status === activeTab);

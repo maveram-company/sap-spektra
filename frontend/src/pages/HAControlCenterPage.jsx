@@ -1,12 +1,13 @@
 import { useState, useEffect, useCallback } from 'react';
 import Header from '../components/layout/Header';
+import PageLoading from '../components/ui/PageLoading';
 import {
-  mockHASystems, mockHAPrereqs, mockHAOpsHistory, mockHADrivers,
   HA_STRATEGY_META,
   HANA_TAKEOVER_STEPS, HANA_FAILOVER_STEPS, WARM_STANDBY_FAILOVER_STEPS,
   ASCS_FAILOVER_STEPS,
   PILOT_LIGHT_ACTIVATION_STEPS, CROSS_REGION_DR_STEPS, BACKUP_RESTORE_STEPS,
 } from '../lib/mockData';
+import { dataService } from '../services/dataService';
 import { useAuth } from '../contexts/AuthContext';
 import {
   ArrowLeftRight,
@@ -87,9 +88,27 @@ const getOpLabels = (sys) => {
 export default function HAControlCenterPage() {
   const { user } = useAuth();
   const [activeTab, setActiveTab] = useState('systems');
-  const [systems] = useState(() => [...mockHASystems]);
-  const [opsHistory, setOpsHistory] = useState(() => [...mockHAOpsHistory]);
+  const [systems, setSystems] = useState([]);
+  const [opsHistory, setOpsHistory] = useState([]);
+  const [haDrivers, setHaDrivers] = useState([]);
+  const [haPrereqs, setHaPrereqs] = useState({});
+  const [loading, setLoading] = useState(true);
   const [selectedStrategy, setSelectedStrategy] = useState('ALL');
+
+  useEffect(() => {
+    Promise.all([
+      dataService.getHASystems(),
+      dataService.getHAOpsHistory(),
+      dataService.getHADrivers(),
+      dataService.getHAPrereqs(),
+    ]).then(([sys, history, drivers, prereqs]) => {
+      setSystems(sys);
+      setOpsHistory(history);
+      setHaDrivers(drivers);
+      setHaPrereqs(prereqs);
+      setLoading(false);
+    });
+  }, []);
 
   // Simulation state
   const [runningOp, setRunningOp] = useState(null);
@@ -713,7 +732,7 @@ export default function HAControlCenterPage() {
           Drivers Registrados
         </h3>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-          {mockHADrivers.map((drv, i) => (
+          {haDrivers.map((drv, i) => (
             <div key={i} className="flex items-center justify-between p-3 rounded-lg border border-border bg-surface-secondary">
               <div>
                 <p className="text-sm font-medium text-text-primary">{drv.name}</p>
@@ -879,7 +898,7 @@ export default function HAControlCenterPage() {
   };
 
   const renderPrerequisitesTab = () => {
-    const strategiesWithPrereqs = Object.entries(mockHAPrereqs);
+    const strategiesWithPrereqs = Object.entries(haPrereqs);
 
     return (
       <div className="space-y-6">
@@ -1001,6 +1020,8 @@ export default function HAControlCenterPage() {
       )}
     </div>
   );
+
+  if (loading) return <PageLoading message="Cargando HA Control Center..." />;
 
   return (
     <div>

@@ -1,7 +1,7 @@
 import { useState, useEffect, useMemo } from 'react';
 import Header from '../components/layout/Header';
 import PageLoading from '../components/ui/PageLoading';
-import { mockEvents, mockSystems } from '../lib/mockData';
+import { dataService } from '../services/dataService';
 import { Search, Filter, ChevronDown, AlertCircle, AlertTriangle, Info, CheckCircle } from 'lucide-react';
 
 const PAGE_SIZE = 50;
@@ -65,6 +65,8 @@ function formatTimestamp(iso) {
 
 export default function EventsPage() {
   const [loading, setLoading] = useState(true);
+  const [events, setEvents] = useState([]);
+  const [systems, setSystems] = useState([]);
   const [search, setSearch] = useState('');
   const [levelFilter, setLevelFilter] = useState('all');
   const [systemFilter, setSystemFilter] = useState('all');
@@ -72,12 +74,15 @@ export default function EventsPage() {
   const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
 
   useEffect(() => {
-    const timer = setTimeout(() => setLoading(false), 400);
-    return () => clearTimeout(timer);
+    Promise.all([dataService.getEvents(), dataService.getSystems()]).then(([evts, sys]) => {
+      setEvents(evts);
+      setSystems(sys);
+      setLoading(false);
+    });
   }, []);
 
   const filtered = useMemo(() => {
-    return mockEvents.filter((evt) => {
+    return events.filter((evt) => {
       if (levelFilter !== 'all' && evt.level !== levelFilter) return false;
       if (systemFilter !== 'all' && evt.systemId !== systemFilter) return false;
       if (sourceFilter !== 'all' && evt.source !== sourceFilter) return false; // P2.4
@@ -173,7 +178,7 @@ export default function EventsPage() {
                 className="appearance-none bg-surface border border-border rounded-lg px-3 pr-8 py-2 text-sm text-text-primary focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 cursor-pointer"
               >
                 <option value="all">Todos los sistemas</option>
-                {mockSystems.map((sys) => (
+                {systems.map((sys) => (
                   <option key={sys.id} value={sys.id}>
                     {sys.sid} — {sys.id}
                   </option>

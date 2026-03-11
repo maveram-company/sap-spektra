@@ -1,10 +1,11 @@
-import { useMemo } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { ShieldCheck, AlertTriangle, XCircle, Clock, Key, FileText } from 'lucide-react';
 import Header from '../components/layout/Header';
 import Card, { CardHeader, CardTitle } from '../components/ui/Card';
 import Badge from '../components/ui/Badge';
 import Table, { TableHeader, TableBody, TableRow, TableHead, TableCell } from '../components/ui/Table';
-import { mockCertificates, mockLicenses } from '../lib/mockData';
+import PageLoading from '../components/ui/PageLoading';
+import { dataService } from '../services/dataService';
 
 function StatusIcon({ status }) {
   if (status === 'ok') return <ShieldCheck size={16} className="text-success-500" />;
@@ -22,10 +23,24 @@ function DaysLeftBadge({ days, status }) {
 }
 
 export default function CertificatesPage() {
-  const criticalCerts = useMemo(() => mockCertificates.filter(c => c.status === 'critical').length, []);
-  const warningCerts = useMemo(() => mockCertificates.filter(c => c.status === 'warning').length, []);
-  const okCerts = useMemo(() => mockCertificates.filter(c => c.status === 'ok').length, []);
-  const warningLics = useMemo(() => mockLicenses.filter(l => l.status === 'warning').length, []);
+  const [certificates, setCertificates] = useState([]);
+  const [licenses, setLicenses] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    Promise.all([dataService.getCertificates(), dataService.getLicenses()]).then(([certs, lics]) => {
+      setCertificates(certs);
+      setLicenses(lics);
+      setLoading(false);
+    });
+  }, []);
+
+  const criticalCerts = useMemo(() => certificates.filter(c => c.status === 'critical').length, [certificates]);
+  const warningCerts = useMemo(() => certificates.filter(c => c.status === 'warning').length, [certificates]);
+  const okCerts = useMemo(() => certificates.filter(c => c.status === 'ok').length, [certificates]);
+  const warningLics = useMemo(() => licenses.filter(l => l.status === 'warning').length, [licenses]);
+
+  if (loading) return <PageLoading message="Cargando certificados..." />;
 
   return (
     <div>
@@ -72,7 +87,7 @@ export default function CertificatesPage() {
                 <Key size={20} className="text-blue-600" />
               </div>
               <div>
-                <p className="text-2xl font-bold text-text-primary">{mockLicenses.length}</p>
+                <p className="text-2xl font-bold text-text-primary">{licenses.length}</p>
                 <p className="text-xs text-text-secondary">Licencias SAP</p>
               </div>
             </div>
@@ -86,7 +101,7 @@ export default function CertificatesPage() {
               <FileText size={18} />
               Certificados SSL / PSE / SNC
             </CardTitle>
-            <Badge variant="primary" size="sm">{mockCertificates.length} total</Badge>
+            <Badge variant="primary" size="sm">{certificates.length} total</Badge>
           </CardHeader>
           <Table>
             <TableHeader>
@@ -101,7 +116,7 @@ export default function CertificatesPage() {
               </tr>
             </TableHeader>
             <TableBody>
-              {mockCertificates
+              {certificates
                 .sort((a, b) => a.daysLeft - b.daysLeft)
                 .map(cert => (
                 <TableRow key={cert.id}>
@@ -139,7 +154,7 @@ export default function CertificatesPage() {
               <Key size={18} />
               Licencias SAP (SLICENSE)
             </CardTitle>
-            <Badge variant="primary" size="sm">{mockLicenses.length} total</Badge>
+            <Badge variant="primary" size="sm">{licenses.length} total</Badge>
           </CardHeader>
           <Table>
             <TableHeader>
@@ -154,7 +169,7 @@ export default function CertificatesPage() {
               </tr>
             </TableHeader>
             <TableBody>
-              {mockLicenses
+              {licenses
                 .sort((a, b) => a.daysLeft - b.daysLeft)
                 .map(lic => (
                 <TableRow key={lic.id}>

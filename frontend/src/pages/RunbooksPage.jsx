@@ -9,9 +9,13 @@ import Button from '../components/ui/Button';
 import Table, { TableHeader, TableBody, TableRow, TableHead, TableCell } from '../components/ui/Table';
 import EmptyState from '../components/ui/EmptyState';
 import { useAuth } from '../contexts/AuthContext';
-import { mockRunbooks, mockRunbookExecutions } from '../lib/mockData';
+import PageLoading from '../components/ui/PageLoading';
+import { dataService } from '../services/dataService';
 
 export default function RunbooksPage() {
+  const [runbooks, setRunbooks] = useState([]);
+  const [executions, setExecutions] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState('catalog');
   const [toast, setToast] = useState(null);
   const { hasRole } = useAuth();
@@ -19,6 +23,11 @@ export default function RunbooksPage() {
   const toastTimerRef = useRef(null);
 
   useEffect(() => {
+    Promise.all([dataService.getRunbooks(), dataService.getRunbookExecutions()]).then(([rb, ex]) => {
+      setRunbooks(rb);
+      setExecutions(ex);
+      setLoading(false);
+    });
     return () => { clearTimeout(toastTimerRef.current); };
   }, []);
 
@@ -53,7 +62,7 @@ export default function RunbooksPage() {
 
   // Configuración de tabs
   const tabs = [
-    { value: 'catalog', label: `Catálogo (${mockRunbooks.length})` },
+    { value: 'catalog', label: `Catálogo (${runbooks.length})` },
     { value: 'executions', label: 'Ejecuciones' },
   ];
 
@@ -68,9 +77,11 @@ export default function RunbooksPage() {
     return gate === 'SAFE' ? 'success' : 'warning';
   };
 
+  if (loading) return <PageLoading message="Cargando runbooks..." />;
+
   return (
     <div>
-      <Header title="Runbooks" subtitle="18 runbooks integrados + ejecución automática" />
+      <Header title="Runbooks" subtitle={`${runbooks.length} runbooks integrados + ejecución automática`} />
       <div className="p-6">
         <PageHeader
           title="Runbooks"
@@ -98,7 +109,7 @@ export default function RunbooksPage() {
               </tr>
             </TableHeader>
             <TableBody>
-              {mockRunbooks.map((rb) => (
+              {runbooks.map((rb) => (
                 <TableRow key={rb.id}>
                   {/* ID con color de acento */}
                   <TableCell>
@@ -205,7 +216,7 @@ export default function RunbooksPage() {
         {/* ── Tab: Ejecuciones ── */}
         {activeTab === 'executions' && (
           <>
-            {mockRunbookExecutions.length === 0 ? (
+            {executions.length === 0 ? (
               <EmptyState
                 icon={Clock}
                 title="Sin ejecuciones"
@@ -225,7 +236,7 @@ export default function RunbooksPage() {
                   </tr>
                 </TableHeader>
                 <TableBody>
-                  {mockRunbookExecutions.map((exec, idx) => (
+                  {executions.map((exec, idx) => (
                     <TableRow key={`${exec.runbookId}-${exec.ts}-${idx}`}>
                       {/* Hora */}
                       <TableCell className="text-xs font-mono text-text-secondary whitespace-nowrap">

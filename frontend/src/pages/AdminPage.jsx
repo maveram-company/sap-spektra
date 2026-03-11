@@ -9,7 +9,7 @@ import Badge from '../components/ui/Badge';
 import StatusBadge from '../components/ui/StatusBadge';
 import Table, { TableHeader, TableBody, TableRow, TableHead, TableCell } from '../components/ui/Table';
 import PageLoading from '../components/ui/PageLoading';
-import { mockSystems } from '../lib/mockData';
+import { dataService } from '../services/dataService';
 
 export default function AdminPage() {
   const [systems, setSystems] = useState([]);
@@ -19,7 +19,7 @@ export default function AdminPage() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    setTimeout(() => { setSystems(mockSystems); setLoading(false); }, 400);
+    dataService.getSystems().then(data => { setSystems(data); setLoading(false); });
   }, []);
 
   const handleHealthCheck = async (id) => {

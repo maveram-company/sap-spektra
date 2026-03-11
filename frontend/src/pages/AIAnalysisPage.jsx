@@ -1,7 +1,8 @@
 import { useState, useRef, useEffect } from 'react';
 import { Brain, Send, Sparkles, Bot } from 'lucide-react';
 import Header from '../components/layout/Header';
-import { mockAIUseCases, mockAIResponses } from '../lib/mockData';
+import PageLoading from '../components/ui/PageLoading';
+import { dataService } from '../services/dataService';
 import { UpgradeBanner } from '../components/ui/FeatureGate';
 import { usePlan } from '../hooks/usePlan';
 
@@ -17,14 +18,14 @@ const KEYWORD_MAP = [
 ];
 
 // Determina qué respuesta mock usar basado en el contenido del mensaje
-function matchResponse(text) {
+function matchResponse(text, aiResponses) {
   const lower = text.toLowerCase();
   for (const entry of KEYWORD_MAP) {
     if (entry.keys.some((k) => lower.includes(k))) {
-      return mockAIResponses[entry.response];
+      return aiResponses[entry.response];
     }
   }
-  return mockAIResponses.estado;
+  return aiResponses.estado;
 }
 
 // Contador global para IDs únicos de mensajes
@@ -85,6 +86,9 @@ function renderMarkdown(text) {
 
 export default function AIAnalysisPage() {
   const { hasFeature } = usePlan();
+  const [aiUseCases, setAiUseCases] = useState([]);
+  const [aiResponses, setAiResponses] = useState({});
+  const [loading, setLoading] = useState(true);
   const [messages, setMessages] = useState([
     {
       id: 'welcome',
@@ -97,6 +101,14 @@ export default function AIAnalysisPage() {
   const chatEndRef = useRef(null);
   const inputRef = useRef(null);
 
+  useEffect(() => {
+    Promise.all([dataService.getAIUseCases(), dataService.getAIResponses()]).then(([uc, resp]) => {
+      setAiUseCases(uc);
+      setAiResponses(resp);
+      setLoading(false);
+    });
+  }, []);
+
   // Auto-scroll al final cuando llegan nuevos mensajes
   useEffect(() => {
     chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -106,7 +118,7 @@ export default function AIAnalysisPage() {
   const generateResponse = (userText) => {
     setIsTyping(true);
     setTimeout(() => {
-      const responseText = matchResponse(userText);
+      const responseText = matchResponse(userText, aiResponses);
       setMessages((prev) => [
         ...prev,
         {
@@ -160,6 +172,8 @@ export default function AIAnalysisPage() {
     );
   }
 
+  if (loading) return <PageLoading message="Cargando análisis IA..." />;
+
   return (
     <div className="flex flex-col h-full">
       <Header
@@ -170,7 +184,7 @@ export default function AIAnalysisPage() {
       <div className="flex-1 overflow-y-auto p-6 space-y-6">
         {/* Grid de casos de uso */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {mockAIUseCases.map((uc) => (
+          {aiUseCases.map((uc) => (
             <button
               key={uc.id}
               type="button"

@@ -16,12 +16,8 @@ import Select from '../components/ui/Select';
 import Tabs from '../components/ui/Tabs';
 import Table, { TableHeader, TableBody, TableRow, TableHead, TableCell } from '../components/ui/Table';
 import PageLoading from '../components/ui/PageLoading';
-import {
-  mockSystems, mockBreaches as allBreaches,
-  mockServerMetrics, mockServerDeps, mockDepRemediation, mockBackupRunbooks, mockMetricHistory,
-  mockSAPMonitoring, mockSystemInstances, mockSystemMeta
-} from '../lib/mockData';
-import { getSystemHosts } from '../lib/mockData';
+import { mockDepRemediation, mockBackupRunbooks } from '../lib/mockData';
+import { dataService } from '../services/dataService';
 
 // ── Local Helpers ──
 
@@ -83,6 +79,14 @@ export default function SystemDetailPage() {
   const { systemId } = useParams();
   const navigate = useNavigate();
   const [system, setSystem] = useState(null);
+  const [sm, setSm] = useState(null);
+  const [deps, setDeps] = useState([]);
+  const [sapMon, setSapMon] = useState(null);
+  const [instancesData, setInstancesData] = useState([]);
+  const [sysMeta, setSysMeta] = useState(null);
+  const [breachesData, setBreachesData] = useState([]);
+  const [hostsData, setHostsData] = useState([]);
+  const [metricHistoryData, setMetricHistoryData] = useState({});
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState('overview');
   const [chartRange, setChartRange] = useState('6h');
@@ -90,22 +94,43 @@ export default function SystemDetailPage() {
   const [mountTime] = useState(() => Date.now());
 
   useEffect(() => {
-    setTimeout(() => {
-      const found = mockSystems.find(s => s.id === systemId);
-      setSystem(found || null);
+    Promise.all([
+      dataService.getSystemById(systemId),
+      dataService.getServerMetrics(systemId),
+      dataService.getServerDeps(systemId),
+      dataService.getSAPMonitoring(systemId),
+      dataService.getSystemInstances(systemId),
+      dataService.getSystemMeta(systemId),
+      dataService.getSystemBreaches(systemId),
+      dataService.getSystemHosts(systemId),
+    ]).then(([sys, metrics, dependencies, monitoring, inst, meta, breaches, hosts]) => {
+      setSystem(sys);
+      setSm(metrics);
+      setDeps(dependencies || []);
+      setSapMon(monitoring);
+      setInstancesData(inst || []);
+      setSysMeta(meta);
+      setBreachesData(breaches);
+      setHostsData(hosts);
+      // Pre-load metric history for all hosts
+      const historyMap = {};
+      if (hosts && hosts.length) {
+        hosts.forEach(h => {
+          dataService.getMetricHistory(h.hostname).then(hist => {
+            historyMap[h.hostname] = hist;
+            setMetricHistoryData(prev => ({ ...prev, [h.hostname]: hist }));
+          });
+        });
+      }
       setLoading(false);
-    }, 400);
+    });
   }, [systemId]);
 
   // Derived data
-  const sm = system ? mockServerMetrics[system.id] : null;
-  const deps = system ? (mockServerDeps[system.id] || []) : [];
-  const sapMon = system ? (mockSAPMonitoring[system.id] || null) : null;
-  const instances = useMemo(() => system ? (mockSystemInstances[system.id] || []) : [], [system]);
-  const sysMeta = system ? (mockSystemMeta[system.id] || null) : null;
-  const systemBreaches = useMemo(() => allBreaches.filter(b => b.systemId === systemId), [systemId]);
+  const instances = instancesData;
+  const systemBreaches = breachesData;
   // Host-grouped data for the Hosts tab
-  const hosts = useMemo(() => system ? getSystemHosts(system.id) : [], [system]);
+  const hosts = hostsData;
 
   // Derive effective selected host (fallback to first host if none selected)
   const effectiveHost = selectedHost || (hosts.length ? hosts[0].hostname : '');
@@ -119,7 +144,7 @@ export default function SystemDetailPage() {
   // Chart data per selected host
   const chartData = useMemo(() => {
     if (!effectiveHost) return [];
-    const history = mockMetricHistory[effectiveHost] || [];
+    const history = metricHistoryData[effectiveHost] || [];
     if (!history.length) return [];
     const now = mountTime;
     const rangeMinutes = chartRange === '1h' ? 60 : chartRange === '3h' ? 180 : 360;

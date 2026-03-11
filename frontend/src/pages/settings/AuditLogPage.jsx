@@ -1,15 +1,19 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { ScrollText, Search, Download, Filter } from 'lucide-react';
 import Card from '../../components/ui/Card';
 import Input from '../../components/ui/Input';
 import Button from '../../components/ui/Button';
 import Badge from '../../components/ui/Badge';
 import Table, { TableHeader, TableBody, TableRow, TableHead, TableCell } from '../../components/ui/Table';
-import { mockAuditLog } from '../../lib/mockData';
+import { dataService } from '../../services/dataService';
 
 export default function AuditLogPage() {
   const [search, setSearch] = useState('');
-  const [events] = useState(mockAuditLog);
+  const [events, setEvents] = useState([]);
+
+  useEffect(() => {
+    dataService.getAuditLog().then(data => setEvents(data));
+  }, []);
 
   const filtered = events.filter(e =>
     e.action.toLowerCase().includes(search.toLowerCase()) ||

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { BarChart3, TrendingUp, AlertTriangle, CheckCircle, Activity } from 'lucide-react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, Legend } from 'recharts';
 import Header from '../components/layout/Header';
@@ -8,11 +8,24 @@ import Select from '../components/ui/Select';
 import Table, { TableHeader, TableBody, TableRow, TableHead, TableCell } from '../components/ui/Table';
 import Badge from '../components/ui/Badge';
 import FeatureGate, { UpgradeBanner } from '../components/ui/FeatureGate';
-import { mockAnalytics, mockSystems } from '../lib/mockData';
+import PageLoading from '../components/ui/PageLoading';
+import { dataService } from '../services/dataService';
 
 export default function AnalyticsPage() {
   const [selectedSystem, setSelectedSystem] = useState('all');
-  const data = mockAnalytics;
+  const [data, setData] = useState(null);
+  const [systems, setSystems] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    Promise.all([dataService.getAnalytics(), dataService.getSystems()]).then(([anl, sys]) => {
+      setData(anl);
+      setSystems(sys);
+      setLoading(false);
+    });
+  }, []);
+
+  if (loading || !data) return <PageLoading message="Cargando analytics..." />;
 
   const pieData = [
     { name: 'Exitosos', value: data.totalExecutions - data.failedCount, color: '#22c55e' },
@@ -32,7 +45,7 @@ export default function AnalyticsPage() {
               onChange={(e) => setSelectedSystem(e.target.value)}
               options={[
                 { value: 'all', label: 'Todos los sistemas' },
-                ...mockSystems.map(s => ({ value: s.id, label: `${s.sid} - ${s.type}` }))
+                ...systems.map(s => ({ value: s.id, label: `${s.sid} - ${s.type}` }))
               ]}
             />
           }

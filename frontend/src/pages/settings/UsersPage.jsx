@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { UserPlus, Mail, Trash2, Edit, Save } from 'lucide-react';
 import Card, { CardHeader, CardTitle } from '../../components/ui/Card';
 import Button from '../../components/ui/Button';
@@ -8,11 +8,15 @@ import Modal from '../../components/ui/Modal';
 import Input from '../../components/ui/Input';
 import Select from '../../components/ui/Select';
 import Table, { TableHeader, TableBody, TableRow, TableHead, TableCell } from '../../components/ui/Table';
-import { mockUsers } from '../../lib/mockData';
+import { dataService } from '../../services/dataService';
 import { useTenant } from '../../contexts/TenantContext';
 
 export default function UsersPage() {
-  const [users, setUsers] = useState(mockUsers);
+  const [users, setUsers] = useState([]);
+
+  useEffect(() => {
+    dataService.getUsers().then(data => setUsers(data));
+  }, []);
   const [showInviteModal, setShowInviteModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
   const [editingUser, setEditingUser] = useState(null);

@@ -13,10 +13,11 @@ import Select from '../components/ui/Select';
 import Table, { TableHeader, TableBody, TableRow, TableHead, TableCell } from '../components/ui/Table';
 import EmptyState from '../components/ui/EmptyState';
 import PageLoading from '../components/ui/PageLoading';
-import { mockOperations, mockSystems } from '../lib/mockData';
+import { dataService } from '../services/dataService';
 
 export default function OperationsPage() {
   const [operations, setOperations] = useState([]);
+  const [systems, setSystems] = useState([]);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState('all');
   const [showNewModal, setShowNewModal] = useState(false);
@@ -24,7 +25,11 @@ export default function OperationsPage() {
   const [newOp, setNewOp] = useState({ systemId: '', type: 'BACKUP', description: '', riskLevel: 'LOW', scheduledTime: '' });
 
   useEffect(() => {
-    setTimeout(() => { setOperations(mockOperations); setLoading(false); }, 400);
+    Promise.all([dataService.getOperations(), dataService.getSystems()]).then(([ops, sys]) => {
+      setOperations(ops);
+      setSystems(sys);
+      setLoading(false);
+    });
   }, []);
 
   if (loading) return <PageLoading />;
@@ -32,7 +37,7 @@ export default function OperationsPage() {
   const handleCreateOperation = async () => {
     setSaving(true);
     await new Promise(r => setTimeout(r, 800));
-    const sys = mockSystems.find(s => s.id === newOp.systemId);
+    const sys = systems.find(s => s.id === newOp.systemId);
     setOperations(prev => [...prev, {
       id: `OP-${String(prev.length + 1).padStart(3, '0')}`,
       systemId: newOp.systemId,
@@ -141,7 +146,7 @@ export default function OperationsPage() {
               onChange={(e) => setNewOp({ ...newOp, systemId: e.target.value })}
               options={[
                 { value: '', label: 'Seleccionar sistema...' },
-                ...mockSystems.map(s => ({ value: s.id, label: `${s.sid} — ${s.type} (${s.environment})` }))
+                ...systems.map(s => ({ value: s.id, label: `${s.sid} — ${s.type} (${s.environment})` }))
               ]}
             />
             <Select

@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
 import Header from '../components/layout/Header';
 import PageLoading from '../components/ui/PageLoading';
-import { mockAlerts, mockSystems, alertResolutionCategories } from '../lib/mockData';
+import { alertResolutionCategories } from '../lib/mockData';
+import { dataService } from '../services/dataService';
 import { useAuth } from '../contexts/AuthContext';
 import {
   AlertTriangle,
@@ -22,7 +23,8 @@ import {
 function AlertsPage() {
   const { user, hasRole } = useAuth();
   const [loading, setLoading] = useState(true);
-  const [alerts, setAlerts] = useState(() => [...mockAlerts]);
+  const [alerts, setAlerts] = useState([]);
+  const [systems, setSystems] = useState([]);
   const [statusFilter, setStatusFilter] = useState('active');
   const [systemFilter, setSystemFilter] = useState('all');
   const [resolveModalAlertId, setResolveModalAlertId] = useState(null);
@@ -30,8 +32,11 @@ function AlertsPage() {
   const [resolutionNote, setResolutionNote] = useState('');
 
   useEffect(() => {
-    const timer = setTimeout(() => setLoading(false), 400);
-    return () => clearTimeout(timer);
+    Promise.all([dataService.getAlerts(), dataService.getSystems()]).then(([alts, sys]) => {
+      setAlerts(alts);
+      setSystems(sys);
+      setLoading(false);
+    });
   }, []);
 
   // Filtrado de alertas
@@ -234,7 +239,7 @@ function AlertsPage() {
               className="px-3 py-1.5 rounded-lg text-sm border border-border dark:border-border bg-surface dark:bg-surface text-text-primary dark:text-text-primary focus:outline-none focus:ring-2 focus:ring-primary-500"
             >
               <option value="all">Todos los sistemas</option>
-              {mockSystems.map((sys) => (
+              {systems.map((sys) => (
                 <option key={sys.id} value={sys.id}>
                   {sys.sid} - {sys.description}
                 </option>

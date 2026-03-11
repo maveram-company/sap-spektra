@@ -8,7 +8,7 @@ import StatusBadge from '../components/ui/StatusBadge';
 import HealthGauge from '../components/ui/HealthGauge';
 import Button from '../components/ui/Button';
 import PageLoading from '../components/ui/PageLoading';
-import { mockSystems, mockApprovals } from '../lib/mockData';
+import { dataService } from '../services/dataService';
 
 // Mapa de colores por variante — solo colorea el valor y el icono, sin fondos de color
 const variantValueColors = {
@@ -146,6 +146,7 @@ function SystemCard({ system, onClick }) {
 
 export default function DashboardPage() {
   const [systems, setSystems] = useState([]);
+  const [approvals, setApprovals] = useState([]);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const navigate = useNavigate();
@@ -154,9 +155,12 @@ export default function DashboardPage() {
 
   const loadData = useCallback(async () => {
     setRefreshing(true);
-    // Simula llamada a la API
-    await new Promise(r => setTimeout(r, 500));
-    setSystems(mockSystems);
+    const [systemsData, approvalsData] = await Promise.all([
+      dataService.getSystems(),
+      dataService.getApprovals(),
+    ]);
+    setSystems(systemsData);
+    setApprovals(approvalsData);
     setLoading(false);
     setRefreshing(false);
   }, []);
@@ -168,7 +172,7 @@ export default function DashboardPage() {
   // Cálculo de KPIs
   const healthySystems    = systems.filter(s => s.healthScore >= 90).length;
   const totalBreaches     = systems.reduce((sum, s) => sum + s.breaches, 0);
-  const pendingApprovals  = mockApprovals.filter(a => a.status === 'PENDING').length;
+  const pendingApprovals  = approvals.filter(a => a.status === 'PENDING').length;
 
   return (
     <div>

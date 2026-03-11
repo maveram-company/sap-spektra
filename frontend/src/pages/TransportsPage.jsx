@@ -1,10 +1,11 @@
-import { useMemo, useState } from 'react';
+import { useMemo, useState, useEffect } from 'react';
 import { Package, ArrowRight, CheckCircle, XCircle, Clock, AlertTriangle, Filter } from 'lucide-react';
 import Header from '../components/layout/Header';
 import Card, { CardHeader, CardTitle } from '../components/ui/Card';
 import Badge from '../components/ui/Badge';
 import Table, { TableHeader, TableBody, TableRow, TableHead, TableCell } from '../components/ui/Table';
-import { mockTransports, mockSystems } from '../lib/mockData';
+import PageLoading from '../components/ui/PageLoading';
+import { dataService } from '../services/dataService';
 
 const transportStatus = {
   released: { label: 'Liberado', color: 'bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400', icon: ArrowRight },
@@ -32,16 +33,29 @@ function RCBadge({ rc }) {
 }
 
 export default function TransportsPage() {
+  const [transports, setTransports] = useState([]);
+  const [systems, setSystems] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [statusFilter, setStatusFilter] = useState('all');
 
-  const filtered = useMemo(() => {
-    if (statusFilter === 'all') return mockTransports;
-    return mockTransports.filter(t => t.status === statusFilter);
-  }, [statusFilter]);
+  useEffect(() => {
+    Promise.all([dataService.getTransports(), dataService.getSystems()]).then(([t, s]) => {
+      setTransports(t);
+      setSystems(s);
+      setLoading(false);
+    });
+  }, []);
 
-  const released = mockTransports.filter(t => t.status === 'released').length;
-  const imported = mockTransports.filter(t => t.status === 'imported').length;
-  const errors = mockTransports.filter(t => t.status === 'error').length;
+  const filtered = useMemo(() => {
+    if (statusFilter === 'all') return transports;
+    return transports.filter(t => t.status === statusFilter);
+  }, [statusFilter, transports]);
+
+  const released = transports.filter(t => t.status === 'released').length;
+  const imported = transports.filter(t => t.status === 'imported').length;
+  const errors = transports.filter(t => t.status === 'error').length;
+
+  if (loading) return <PageLoading message="Cargando transportes..." />;
 
   return (
     <div>
@@ -55,7 +69,7 @@ export default function TransportsPage() {
                 <Package size={20} className="text-blue-600" />
               </div>
               <div>
-                <p className="text-2xl font-bold text-text-primary">{mockTransports.length}</p>
+                <p className="text-2xl font-bold text-text-primary">{transports.length}</p>
                 <p className="text-xs text-text-secondary">Total Transportes</p>
               </div>
             </div>
@@ -103,7 +117,7 @@ export default function TransportsPage() {
           <div className="flex items-center justify-center gap-4 py-4">
             {/* Find ERP line systems */}
             {['DEV', 'QAS', 'PRD'].map((env, idx) => {
-              const sys = mockSystems.find(s => s.environment === env && s.type === 'S/4HANA');
+              const sys = systems.find(s => s.environment === env && s.type === 'S/4HANA');
               return (
                 <div key={env} className="flex items-center gap-4">
                   <div className={`px-6 py-4 rounded-xl border-2 text-center ${
@@ -197,7 +211,7 @@ export default function TransportsPage() {
               </CardTitle>
             </CardHeader>
             <div className="space-y-3">
-              {mockTransports.filter(t => t.status === 'error').map(t => (
+              {transports.filter(t => t.status === 'error').map(t => (
                 <div key={t.id} className="border border-danger-200 dark:border-danger-800 rounded-lg p-3 bg-surface">
                   <div className="flex items-center gap-2 mb-1">
                     <span className="font-mono text-sm font-bold text-text-primary">{t.id}</span>
