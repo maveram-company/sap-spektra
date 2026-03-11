@@ -1,7 +1,7 @@
 {
-  "name": "sap-alwaysops-discovery-engine",
+  "name": "sap-spektra-discovery-engine",
   "version": "1.0.0",
-  "description": "Avvale SAP AlwaysOps — Deep Discovery Engine per-instance + HA",
+  "description": "SAP Spektra — Deep Discovery Engine per-instance + HA",
   "main": "index.js",
   "dependencies": {
     "@aws-sdk/client-ssm": "^3.x",

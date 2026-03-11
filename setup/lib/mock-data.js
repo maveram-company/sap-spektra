@@ -1,5 +1,5 @@
 // ============================================================================
-//  Avvale SAP AlwaysOps v1.0 — Mock Data para pruebas locales sin AWS
+//  SAP Spektra v1.0 — Mock Data para pruebas locales sin AWS
 //  Uso: MOCK=true node server.js
 // ============================================================================
 
@@ -444,7 +444,7 @@ function mockMiddleware(req, res, next) {
     return setTimeout(() => res.json({
       profiles: [{
         name: 'sap-alwaysops-sso',
-        ssoStartUrl: 'https://avvale.awsapps.com/start',
+        ssoStartUrl: 'https://maveram.awsapps.com/start',
         ssoRegion: 'us-east-1',
         ssoAccountId: '123456789012',
         ssoRoleName: 'AdministratorAccess',

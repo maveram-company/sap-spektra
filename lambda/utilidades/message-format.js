@@ -1,7 +1,7 @@
 'use strict';
 
 // ═══════════════════════════════════════════════════════════════
-//  Avvale SAP AlwaysOps v1.4 — Mensajes Estandarizados
+//  SAP Spektra v1.4 — Mensajes Estandarizados
 //  Formato unico para errores, exitos y notificaciones.
 //  "No mas 'Internal error' sin pasos accionables."
 // ═══════════════════════════════════════════════════════════════

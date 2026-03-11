@@ -1,7 +1,7 @@
 'use strict';
 
 // ═══════════════════════════════════════════════════════════════
-//  Avvale SAP AlwaysOps v1.0 — Teams Agent
+//  SAP Spektra v1.0 — Teams Agent
 //  Agente de notificaciones para Microsoft Teams via webhooks.
 //
 //  ¿Qué hace este Lambda?
@@ -135,7 +135,7 @@ const CARDS = {
       body: [
         {
           type: 'TextBlock',
-          text: `Avvale SAP AlwaysOps - Alerta de Breach (${severity})`,
+          text: `SAP Spektra - Alerta de Breach (${severity})`,
           weight: 'Bolder',
           size: 'Large',
           color: color,
@@ -180,7 +180,7 @@ const CARDS = {
       body: [
         {
           type: 'TextBlock',
-          text: 'Avvale SAP AlwaysOps - Aprobacion Requerida',
+          text: 'SAP Spektra - Aprobacion Requerida',
           weight: 'Bolder',
           size: 'Large',
           color: 'Warning',
@@ -246,7 +246,7 @@ const CARDS = {
       body: [
         {
           type: 'TextBlock',
-          text: `Avvale SAP AlwaysOps - Aprobacion ${data.status}`,
+          text: `SAP Spektra - Aprobacion ${data.status}`,
           weight: 'Bolder',
           size: 'Large',
           color: color,
@@ -278,7 +278,7 @@ const CARDS = {
       body: [
         {
           type: 'TextBlock',
-          text: 'Avvale SAP AlwaysOps - Resultado de Runbook',
+          text: 'SAP Spektra - Resultado de Runbook',
           weight: 'Bolder',
           size: 'Large',
           color: 'Accent',
@@ -307,7 +307,7 @@ const CARDS = {
       body: [
         {
           type: 'TextBlock',
-          text: 'Avvale SAP AlwaysOps - Recomendacion del Advisor',
+          text: 'SAP Spektra - Recomendacion del Advisor',
           weight: 'Bolder',
           size: 'Large',
           color: 'Accent',
@@ -350,7 +350,7 @@ const CARDS = {
       body: [
         {
           type: 'TextBlock',
-          text: 'Avvale SAP AlwaysOps - Anomalia HA',
+          text: 'SAP Spektra - Anomalia HA',
           weight: 'Bolder',
           size: 'Large',
           color: 'Attention',
@@ -390,7 +390,7 @@ const CARDS = {
       body: [
         {
           type: 'TextBlock',
-          text: 'Avvale SAP AlwaysOps - Digest Ejecutivo Diario',
+          text: 'SAP Spektra - Digest Ejecutivo Diario',
           weight: 'Bolder',
           size: 'Large',
           color: 'Accent',
@@ -445,7 +445,7 @@ const CARDS = {
       body: [
         {
           type: 'TextBlock',
-          text: 'Avvale SAP AlwaysOps - Prediccion de Disco (UC2)',
+          text: 'SAP Spektra - Prediccion de Disco (UC2)',
           weight: 'Bolder',
           size: 'Large',
           color: 'Warning',
@@ -490,7 +490,7 @@ const CARDS = {
       body: [
         {
           type: 'TextBlock',
-          text: 'Avvale SAP AlwaysOps - Safety Gate Bloqueo (UC3)',
+          text: 'SAP Spektra - Safety Gate Bloqueo (UC3)',
           weight: 'Bolder',
           size: 'Large',
           color: 'Attention',
@@ -537,7 +537,7 @@ const CARDS = {
       body: [
         {
           type: 'TextBlock',
-          text: 'Avvale SAP AlwaysOps - Alerta Preventiva',
+          text: 'SAP Spektra - Alerta Preventiva',
           weight: 'Bolder',
           size: 'Large',
           color: 'Warning',
@@ -571,7 +571,7 @@ const CARDS = {
 
 exports.handler = async (event, context) => {
   log.initFromEvent(event, context);
-  log.info('Avvale SAP AlwaysOps Teams Agent v1.0 invocado');
+  log.info('SAP Spektra Teams Agent v1.0 invocado');
   const startTime = Date.now();
 
   try {
@@ -620,7 +620,7 @@ exports.handler = async (event, context) => {
     return {
       statusCode: 200,
       body: {
-        message: 'Avvale SAP AlwaysOps Teams Agent v1.0 completado',
+        message: 'SAP Spektra Teams Agent v1.0 completado',
         duration: `${duration}ms`,
         messagesSent: results.filter(r => r.sent).length,
         results,

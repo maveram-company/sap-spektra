@@ -1,7 +1,7 @@
 {
-  "name": "sap-alwaysops-slack-agent",
+  "name": "sap-spektra-slack-agent",
   "version": "1.0.0",
-  "description": "Avvale SAP AlwaysOps - Slack Notification Agent",
+  "description": "SAP Spektra - Slack Notification Agent",
   "main": "index.js",
   "dependencies": {
     "@aws-sdk/client-secrets-manager": "^3.400.0"

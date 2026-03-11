@@ -1,4 +1,4 @@
-# Avvale SAP AlwaysOps v1.0
+# SAP Spektra v1.0
 
 Plataforma serverless de monitoreo inteligente y remediacion automatizada para sistemas SAP en AWS. Combina 20 funciones Lambda, 13 tablas DynamoDB, 7 casos de uso de IA (Amazon Bedrock / Claude) y 18 runbooks para mantener tus sistemas SAP operando 24/7.
 
@@ -123,7 +123,7 @@ scripts/    Scripts de despliegue
 ## Tests
 
 ```bash
-cd SAP-Sentinel-v1.0
+cd sap-spektra
 node tests/run-all.js     # Suite completa (56 tests)
 ```
 
@@ -143,4 +143,4 @@ Tests incluidos:
 
 ---
 
-*Avvale SAP AlwaysOps v1.0 — Monitoreo inteligente para SAP en AWS*
+*SAP Spektra v1.0 — Mission Control for SAP Operations*

@@ -1,7 +1,7 @@
 {
-  "name": "sap-alwaysops-setup",
+  "name": "sap-spektra-setup",
   "version": "1.0.0",
-  "description": "Setup Portal — Wizard de despliegue automatizado para Avvale SAP AlwaysOps",
+  "description": "Setup Portal — Wizard de despliegue automatizado para SAP Spektra",
   "main": "server.js",
   "scripts": {
     "setup": "node server.js",

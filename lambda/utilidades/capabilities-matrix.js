@@ -1,7 +1,7 @@
 'use strict';
 
 // ═══════════════════════════════════════════════════════════════
-//  Avvale SAP AlwaysOps v1.4 — Capabilities Matrix
+//  SAP Spektra v1.4 — Capabilities Matrix
 //  Genera y consulta la matriz de capacidades por SID/host.
 //  Cero misterio: toda limitacion tiene explicacion + next action.
 // ═══════════════════════════════════════════════════════════════
@@ -15,7 +15,7 @@
 function buildCapabilitiesFromDiscovery(discoveryResult) {
   const caps = {
     canDiscover: { enabled: true, reasonCode: 'OK', howToFix: null },
-    canRunSSM: { enabled: false, reasonCode: 'UNKNOWN', howToFix: 'Verificar que SSM Agent esta instalado y el tag Project=SAP-AlwaysOps esta asignado' },
+    canRunSSM: { enabled: false, reasonCode: 'UNKNOWN', howToFix: 'Verificar que SSM Agent esta instalado y el tag Project=SAP-Spektra esta asignado' },
     canCollectDBMetrics: { enabled: false, reasonCode: 'UNKNOWN', howToFix: 'Ejecutar discovery para detectar tipo de BD' },
     canExecuteRunbooks: { enabled: false, reasonCode: 'UNKNOWN', howToFix: 'Verificar permisos SSM y credenciales de BD en Secrets Manager' },
     canMonitorHA: { enabled: false, reasonCode: 'NO_HA_DETECTED', howToFix: 'Configurar HA cluster (Pacemaker/WSFC) si aplica' },

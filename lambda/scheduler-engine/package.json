@@ -1,7 +1,7 @@
 {
-  "name": "sap-alwaysops-scheduler-engine",
+  "name": "sap-spektra-scheduler-engine",
   "version": "1.0.0",
-  "description": "Avvale SAP AlwaysOps - Motor de operaciones programadas con evaluacion de riesgo IA",
+  "description": "SAP Spektra - Motor de operaciones programadas con evaluacion de riesgo IA",
   "main": "index.js",
   "dependencies": {
     "@aws-sdk/client-dynamodb": "^3.450.0",

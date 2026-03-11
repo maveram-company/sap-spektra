@@ -1,7 +1,7 @@
 /**
  * scan-orchestrator.js
  *
- * Modulo de orquestacion de escaneo para el wizard de configuracion de SAP AlwaysOps.
+ * Modulo de orquestacion de escaneo para el wizard de configuracion de SAP Spektra.
  * Gestiona el escaneo paralelo (con control de concurrencia) de instancias EC2
  * para descubrir productos SAP instalados.
  *

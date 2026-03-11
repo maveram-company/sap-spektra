@@ -3,9 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Avvale SAP AlwaysOps — Setup Portal v2.0</title>
+<title>SAP Spektra — Setup Portal v2.0</title>
 <style>
-/*  Avvale SAP AlwaysOps Setup Portal v2.0 — Estilos  */
+/*  SAP Spektra Setup Portal v2.0 — Estilos  */
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
   --bg:#060a0d;--bg-card:#0d1117;--bg-card-h:#151b23;--bg-input:#0a0f14;
@@ -236,8 +236,8 @@ a{color:var(--accent);text-decoration:none}
 <!-- Header -->
 <header class="header">
   <div class="header-brand">
-    <div class="header-logo"><img src="/avvale-logo.png" alt="Avvale" width="36" height="36" style="object-fit:contain"></div>
-    <div class="header-title">Avvale <span>SAP AlwaysOps</span></div>
+    <div class="header-logo"><img src="/avvale-logo.png" alt="Maveram" width="36" height="36" style="object-fit:contain"></div>
+    <div class="header-title">Maveram <span>SAP Spektra</span></div>
   </div>
   <div style="display:flex;align-items:center;gap:12px">
     <div class="header-version">Setup Portal v2.0</div>
@@ -654,7 +654,7 @@ a{color:var(--accent);text-decoration:none}
   <label class="custom-check" style="margin-bottom:8px">
     <input type="checkbox" id="confirmCheck" onchange="document.getElementById('btnDeploy').disabled=!this.checked">
     <div class="box"></div>
-    He revisado la configuracion y deseo desplegar Avvale SAP AlwaysOps.
+    He revisado la configuracion y deseo desplegar SAP Spektra.
   </label>
   <div class="nav-footer">
     <button class="btn btn-secondary" onclick="goToStep(6)">Atras</button>
@@ -684,7 +684,7 @@ a{color:var(--accent);text-decoration:none}
   <div id="deploySuccess" style="display:none">
     <div class="success-card">
       <h2>Despliegue Exitoso</h2>
-      <p style="color:var(--txt2);margin-bottom:16px">Avvale SAP AlwaysOps se ha desplegado correctamente.</p>
+      <p style="color:var(--txt2);margin-bottom:16px">SAP Spektra se ha desplegado correctamente.</p>
       <div class="card" style="text-align:left;margin-top:12px">
         <table class="summary-table" id="deployResultTable"></table>
       </div>
@@ -728,7 +728,7 @@ a{color:var(--accent);text-decoration:none}
 
 <script>
 /* ================================================================
-   Avvale SAP AlwaysOps Setup Portal v2.0 — JavaScript
+   SAP Spektra Setup Portal v2.0 — JavaScript
    ================================================================ */
 
 // ── Toggle de Tema (claro/oscuro) ──
@@ -753,7 +753,7 @@ function updateThemeIcon(theme){
 
 // ── Error Logger Global ──
 window.onerror = function(msg, url, line, col, error) {
-  console.error('[AlwaysOps Error]', { msg, line, col, stack: error ? error.stack : '' });
+  console.error('[Spektra Error]', { msg, line, col, stack: error ? error.stack : '' });
   fetch('/api/client-error', {
     method: 'POST', headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ msg: String(msg), line, col, stack: error ? error.stack : '' })
@@ -762,7 +762,7 @@ window.onerror = function(msg, url, line, col, error) {
 };
 window.addEventListener('unhandledrejection', function(e) {
   var m = e.reason ? (e.reason.message || String(e.reason)) : 'Unknown';
-  console.error('[AlwaysOps Rejection]', m);
+  console.error('[Spektra Rejection]', m);
   fetch('/api/client-error', {
     method: 'POST', headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ msg: m, stack: e.reason ? e.reason.stack : '' })

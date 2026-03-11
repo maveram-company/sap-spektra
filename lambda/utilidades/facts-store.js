@@ -1,7 +1,7 @@
 'use strict';
 
 // ═══════════════════════════════════════════════════════════════
-//  Avvale SAP AlwaysOps v1.4 — Facts Store Versionado
+//  SAP Spektra v1.4 — Facts Store Versionado
 //  Almacen inmutable de hechos sobre los sistemas SAP.
 //  Discovery, collectors y runbooks escriben facts aqui.
 //  Runbooks y simulaciones SOLO consumen facts del store.

@@ -1,7 +1,7 @@
 {
-  "name": "sap-alwaysops-dashboard-api",
+  "name": "sap-spektra-dashboard-api",
   "version": "1.0.0",
-  "description": "Avvale SAP AlwaysOps - API REST para dashboard de monitoreo + chatbot + operaciones",
+  "description": "SAP Spektra - API REST para dashboard de monitoreo + chatbot + operaciones",
   "main": "index.js",
   "dependencies": {
     "@aws-sdk/client-cloudwatch": "^3.450.0",

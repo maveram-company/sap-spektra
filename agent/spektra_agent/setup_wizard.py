@@ -331,7 +331,7 @@ def _check_cloud_permissions(config):
     print()
 
     # Preguntar si va a usar HA/DR
-    if not _ask_yes_no("¿Este sistema usará operaciones HA/DR desde Sentinel?", default=True):
+    if not _ask_yes_no("¿Este sistema usará operaciones HA/DR desde SAP Spektra?", default=True):
         print(_info("Saltando validación de permisos cloud."))
         return
 

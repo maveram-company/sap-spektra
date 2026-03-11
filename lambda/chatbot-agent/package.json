@@ -1,7 +1,7 @@
 {
-  "name": "sap-alwaysops-chatbot-agent",
+  "name": "sap-spektra-chatbot-agent",
   "version": "1.0.0",
-  "description": "Avvale SAP AlwaysOps - Chatbot inteligente para autoservicio del cliente con IA",
+  "description": "SAP Spektra - Chatbot inteligente para autoservicio del cliente con IA",
   "main": "index.js",
   "dependencies": {
     "@aws-sdk/client-bedrock-runtime": "^3.450.0",

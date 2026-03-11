@@ -1,7 +1,7 @@
 'use strict';
 
 // =================================================================
-//  Avvale SAP AlwaysOps v1.5 — Mock DB Driver
+//  SAP Spektra v1.5 — Mock DB Driver
 //  Simula operaciones de HANA System Replication (takeover/register)
 //  con estados intermedios realistas (SYNCING -> TAKEOVER_IN_PROGRESS
 //  -> PRIMARY). Soporta inyeccion de fallos y delays configurables.

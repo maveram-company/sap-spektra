@@ -1,7 +1,7 @@
 'use strict';
 
 // ═══════════════════════════════════════════════════════════════
-//  Avvale SAP AlwaysOps v1.5 — Driver Registry
+//  SAP Spektra v1.5 — Driver Registry
 //  Registro global de drivers HA. Singleton pattern.
 // ═══════════════════════════════════════════════════════════════
 

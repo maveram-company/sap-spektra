@@ -1,5 +1,5 @@
 // ============================================================================
-//  Avvale SAP AlwaysOps v1.0 — H33: TRIAL MODE CONFIGURATION
+//  SAP Spektra v1.0 — H33: TRIAL MODE CONFIGURATION
 //  Módulo compartido para controlar el modo de operación del sistema
 //  TRIAL = mínimo costo, toda la funcionalidad
 //  PRODUCTION = rendimiento completo

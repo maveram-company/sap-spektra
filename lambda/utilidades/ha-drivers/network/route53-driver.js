@@ -1,7 +1,7 @@
 'use strict';
 
 // ═══════════════════════════════════════════════════════════════
-//  Avvale SAP AlwaysOps v1.5 — Route53 Network Driver
+//  SAP Spektra v1.5 — Route53 Network Driver
 //  Maneja failover de red mediante actualizacion de DNS en Route53.
 //  Soporta modo real (AWS Route53 API) y modo mock.
 // ═══════════════════════════════════════════════════════════════
@@ -95,7 +95,7 @@ class Route53Driver extends BaseHaDriver {
       return r53.send(new ChangeResourceRecordSetsCommand({
         HostedZoneId: hostedZoneId,
         ChangeBatch: {
-          Comment: `SAP AlwaysOps HA Failover - ${new Date().toISOString()}`,
+          Comment: `SAP Spektra HA Failover - ${new Date().toISOString()}`,
           Changes: [{
             Action: 'UPSERT',
             ResourceRecordSet: {
@@ -159,7 +159,7 @@ class Route53Driver extends BaseHaDriver {
     const changeResult = await r53.send(new ChangeResourceRecordSetsCommand({
       HostedZoneId: cfg.hostedZoneId,
       ChangeBatch: {
-        Comment: `SAP AlwaysOps HA Rollback - ${new Date().toISOString()}`,
+        Comment: `SAP Spektra HA Rollback - ${new Date().toISOString()}`,
         Changes: [{
           Action: 'UPSERT',
           ResourceRecordSet: {

@@ -1,7 +1,7 @@
 'use strict';
 
 // ═══════════════════════════════════════════════════════════════
-//  Avvale SAP AlwaysOps v1.5 — EIP Network Driver
+//  SAP Spektra v1.5 — EIP Network Driver
 //  Maneja failover de red mediante reasociacion de Elastic IP.
 //  Soporta modo real (AWS EC2 API) y modo mock.
 // ═══════════════════════════════════════════════════════════════

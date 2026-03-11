@@ -1,7 +1,7 @@
 'use strict';
 
 // ═══════════════════════════════════════════════════════════════
-//  Avvale SAP AlwaysOps v2.0 — Structured Logger
+//  SAP Spektra v2.0 — Structured Logger
 //  Logger JSON estructurado para todas las Lambdas.
 //  Emite logs en formato JSON para CloudWatch Logs Insights.
 //
@@ -21,7 +21,7 @@ const crypto = require('crypto');
 const LEVELS = { debug: 10, info: 20, warn: 30, error: 40 };
 const MIN_LEVEL = LEVELS[process.env.LOG_LEVEL || 'info'] || 20;
 const SERVICE_NAME = process.env.SERVICE_NAME || 'sap-alwaysops';
-const VERSION = process.env.SENTINEL_VERSION || '2.0';
+const VERSION = process.env.SPEKTRA_VERSION || '2.0';
 
 /**
  * Genera un correlationId unico (prefijo 'cid-' + 12 hex chars)

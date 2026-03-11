@@ -1,7 +1,7 @@
 'use strict';
 
 // ═══════════════════════════════════════════════════════════════
-//  Avvale SAP AlwaysOps v1.4 — Runbook Schema Declarativo
+//  SAP Spektra v1.4 — Runbook Schema Declarativo
 //  Define runbooks como JSON validado con prechecks, steps y rollback.
 //  "No strings libres" — todo pasa por validacion estricta.
 // ═══════════════════════════════════════════════════════════════

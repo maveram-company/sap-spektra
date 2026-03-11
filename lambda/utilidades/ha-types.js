@@ -1,7 +1,7 @@
 'use strict';
 
 // ═══════════════════════════════════════════════════════════════
-//  Avvale SAP AlwaysOps v1.5 — HA Orchestration Types
+//  SAP Spektra v1.5 — HA Orchestration Types
 //  JSDoc typedefs, enums, and interface definitions for
 //  High Availability orchestration (failover/takeover/failback).
 // ═══════════════════════════════════════════════════════════════

@@ -1,5 +1,5 @@
 // ══════════════════════════════════════════════════════════════
-// SAP Sentinel v1.4 — Mock Data completo
+// SAP Spektra v1.4 — Mock Data completo
 // ══════════════════════════════════════════════════════════════
 
 function seeded(seed) {
@@ -219,12 +219,12 @@ export const mockAIUseCases = [
 export const mockConnectors = [
   { id: 'conn-001', systemId: 'SAP-ERP-P01', sid: 'EP1', systemName: 'SAP ERP Productivo', systemType: 'S/4HANA', environment: 'PRD', connectionMethod: 'SAP Cloud Connector', status: 'connected', lastHeartbeat: '2026-03-11T08:14:52Z', latencyMs: 45, messagesCollected24h: 12840, agentVersion: null, sccLocationId: 'LOC_DC1', tunnelSubaccount: 'maveram-prod' },
   { id: 'conn-002', systemId: 'SAP-ERP-Q01', sid: 'EQ1', systemName: 'SAP ERP Calidad', systemType: 'S/4HANA', environment: 'QAS', connectionMethod: 'SAP Cloud Connector', status: 'degraded', lastHeartbeat: '2026-03-11T07:58:10Z', latencyMs: 320, messagesCollected24h: 4210, agentVersion: null, sccLocationId: 'LOC_DC1', tunnelSubaccount: 'maveram-prod' },
-  { id: 'conn-003', systemId: 'SAP-ERP-D01', sid: 'ED1', systemName: 'SAP ERP Desarrollo', systemType: 'S/4HANA', environment: 'DEV', connectionMethod: 'Sentinel Agent', status: 'connected', lastHeartbeat: '2026-03-11T08:14:48Z', latencyMs: 28, messagesCollected24h: 3520, agentVersion: 'v1.4.2', sccLocationId: null, tunnelSubaccount: null },
-  { id: 'conn-004', systemId: 'SAP-BW-P01', sid: 'BP1', systemName: 'BW Productivo', systemType: 'BW/4HANA', environment: 'PRD', connectionMethod: 'Sentinel Agent', status: 'connected', lastHeartbeat: '2026-03-11T08:14:55Z', latencyMs: 32, messagesCollected24h: 8930, agentVersion: 'v1.4.2', sccLocationId: null, tunnelSubaccount: null },
+  { id: 'conn-003', systemId: 'SAP-ERP-D01', sid: 'ED1', systemName: 'SAP ERP Desarrollo', systemType: 'S/4HANA', environment: 'DEV', connectionMethod: 'Spektra Agent', status: 'connected', lastHeartbeat: '2026-03-11T08:14:48Z', latencyMs: 28, messagesCollected24h: 3520, agentVersion: 'v1.4.2', sccLocationId: null, tunnelSubaccount: null },
+  { id: 'conn-004', systemId: 'SAP-BW-P01', sid: 'BP1', systemName: 'BW Productivo', systemType: 'BW/4HANA', environment: 'PRD', connectionMethod: 'Spektra Agent', status: 'connected', lastHeartbeat: '2026-03-11T08:14:55Z', latencyMs: 32, messagesCollected24h: 8930, agentVersion: 'v1.4.2', sccLocationId: null, tunnelSubaccount: null },
   { id: 'conn-005', systemId: 'SAP-SOL-P01', sid: 'SM1', systemName: 'Solution Manager', systemType: 'SolMan 7.2', environment: 'PRD', connectionMethod: 'RFC/BAPI', status: 'connected', lastHeartbeat: '2026-03-11T08:13:40Z', latencyMs: 88, messagesCollected24h: 6740, agentVersion: null, sccLocationId: null, tunnelSubaccount: null },
   { id: 'conn-006', systemId: 'SAP-CRM-P01', sid: 'CR1', systemName: 'CRM Productivo', systemType: 'CRM 7.0', environment: 'PRD', connectionMethod: 'SAP Cloud Connector', status: 'connected', lastHeartbeat: '2026-03-11T08:14:50Z', latencyMs: 52, messagesCollected24h: 5120, agentVersion: null, sccLocationId: 'LOC_DC2', tunnelSubaccount: 'maveram-prod' },
   { id: 'conn-007', systemId: 'SAP-GRC-P01', sid: 'GR1', systemName: 'GRC Compliance', systemType: 'GRC 12.0', environment: 'QAS', connectionMethod: 'API Gateway', status: 'connected', lastHeartbeat: '2026-03-11T08:14:44Z', latencyMs: 110, messagesCollected24h: 2890, agentVersion: null, sccLocationId: null, tunnelSubaccount: null },
-  { id: 'conn-008', systemId: 'SAP-PO-P01', sid: 'PO1', systemName: 'Process Orchestration', systemType: 'PI/PO 7.5', environment: 'PRD', connectionMethod: 'Sentinel Agent', status: 'disconnected', lastHeartbeat: '2026-03-11T06:42:15Z', latencyMs: null, messagesCollected24h: 1240, agentVersion: 'v1.3.8', sccLocationId: null, tunnelSubaccount: null },
+  { id: 'conn-008', systemId: 'SAP-PO-P01', sid: 'PO1', systemName: 'Process Orchestration', systemType: 'PI/PO 7.5', environment: 'PRD', connectionMethod: 'Spektra Agent', status: 'disconnected', lastHeartbeat: '2026-03-11T06:42:15Z', latencyMs: null, messagesCollected24h: 1240, agentVersion: 'v1.3.8', sccLocationId: null, tunnelSubaccount: null },
   { id: 'conn-009', systemId: 'SAP-EWM-P01', sid: 'EW1', systemName: 'Extended Warehouse Mgmt', systemType: 'S/4HANA', environment: 'PRD', connectionMethod: 'SAP Cloud Connector', status: 'connected', lastHeartbeat: '2026-03-11T08:14:51Z', latencyMs: 48, messagesCollected24h: 7650, agentVersion: null, sccLocationId: 'LOC_DC1', tunnelSubaccount: 'maveram-prod' },
 ];
 

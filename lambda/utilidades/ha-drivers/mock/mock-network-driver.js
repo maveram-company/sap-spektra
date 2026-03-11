@@ -1,7 +1,7 @@
 'use strict';
 
 // =================================================================
-//  Avvale SAP AlwaysOps v1.5 — Mock Network Driver
+//  SAP Spektra v1.5 — Mock Network Driver
 //  Simula operaciones de switching de red (EIP/Route53/VIP)
 //  para pruebas locales sin AWS. Soporta inyeccion de fallos
 //  y delays configurables para probar escenarios realistas.

@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
-# SAP AlwaysOps v1.5 — CI Gate Script
+# SAP Spektra v1.5 — CI Gate Script
 # Exit on first failure
 set -euo pipefail
 
 echo "╔══════════════════════════════════════════════╗"
-echo "║  SAP AlwaysOps v1.5 — CI Gate               ║"
+echo "║  SAP Spektra v1.5 — CI Gate                 ║"
 echo "╚══════════════════════════════════════════════╝"
 
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"

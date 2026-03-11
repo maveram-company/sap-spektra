@@ -1,7 +1,7 @@
 {
-  "name": "sap-alwaysops-ha-orchestrator",
+  "name": "sap-spektra-ha-orchestrator",
   "version": "1.5.0",
-  "description": "Avvale SAP AlwaysOps - Orquestador de operaciones de Alta Disponibilidad (failover/takeover/failback)",
+  "description": "SAP Spektra - Orquestador de operaciones de Alta Disponibilidad (failover/takeover/failback)",
   "main": "index.js",
   "dependencies": {
     "@aws-sdk/client-dynamodb": "^3.450.0",

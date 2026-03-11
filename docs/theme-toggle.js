@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════════════════════════════
-//  Avvale SAP AlwaysOps v1.4 — Toggle Tema Claro/Oscuro
+//  SAP Spektra v1.4 — Toggle Tema Claro/Oscuro
 //  Se ejecuta antes del render para evitar flash de tema incorrecto.
 //  Persiste en localStorage con fallback a prefers-color-scheme.
 // ═══════════════════════════════════════════════════════════════

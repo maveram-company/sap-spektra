@@ -1,5 +1,5 @@
 // ============================================================================
-//  Avvale SAP AlwaysOps v1.0 — Setup Portal — Deteccion de prerequisitos
+//  SAP Spektra v1.0 — Setup Portal — Deteccion de prerequisitos
 // ============================================================================
 
 'use strict';

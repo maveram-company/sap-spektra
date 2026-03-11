@@ -1,5 +1,5 @@
 // ============================================================================
-//  Avvale SAP AlwaysOps v1.0 — Setup Portal — Motor de despliegue (8 pasos)
+//  SAP Spektra v1.0 — Setup Portal — Motor de despliegue (8 pasos)
 // ============================================================================
 
 'use strict';
@@ -67,7 +67,7 @@ async function step1_createSecrets(config, clients) {
       await clients.secrets.send(new CreateSecretCommand({
         Name: `sap-alwaysops/${config.stackName}/db-credentials`,
         SecretString: JSON.stringify(config.dbCredentials),
-        Description: `Avvale SAP AlwaysOps — DB Credentials para ${config.systemId}`
+        Description: `SAP Spektra — DB Credentials para ${config.systemId}`
       }));
       addLog('  ✓ Secreto db-credentials creado');
     } catch (e) {
@@ -81,7 +81,7 @@ async function step1_createSecrets(config, clients) {
       await clients.secrets.send(new CreateSecretCommand({
         Name: `sap-alwaysops/${config.stackName}/app-credentials`,
         SecretString: JSON.stringify(config.appCredentials),
-        Description: `Avvale SAP AlwaysOps — App Credentials para ${config.systemId}`
+        Description: `SAP Spektra — App Credentials para ${config.systemId}`
       }));
       addLog('  ✓ Secreto app-credentials creado');
     } catch (e) {
@@ -296,7 +296,7 @@ async function step7_registerSystem(config, region) {
       Value: JSON.stringify(systemConfig),
       Type: 'String',
       Overwrite: true,
-      Description: 'Avvale SAP AlwaysOps — Configuracion de sistemas monitoreados'
+      Description: 'SAP Spektra — Configuracion de sistemas monitoreados'
     }));
     addLog(`  ✓ Sistema ${config.systemId} registrado en SSM`, 'success');
   } catch (e) {
@@ -325,7 +325,7 @@ async function step8_verify(config) {
 
   addLog('');
   addLog('════════════════════════════════════════════');
-  addLog('  ✅ Avvale SAP AlwaysOps desplegado exitosamente!');
+  addLog('  ✅ SAP Spektra desplegado exitosamente!');
   addLog('════════════════════════════════════════════');
   addLog(`  Dashboard: ${dashboardUrl}`);
   addLog(`  Usuario: ${config.adminEmail}`);

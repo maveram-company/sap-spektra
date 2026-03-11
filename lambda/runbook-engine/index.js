@@ -1,7 +1,7 @@
 'use strict';
 
 // ═══════════════════════════════════════════════════════════════
-//  Avvale SAP AlwaysOps v1.0 — Runbook Engine
+//  SAP Spektra v1.0 — Runbook Engine
 //  Motor de ejecución de runbooks para remediación automática.
 //
 //  ¿Qué hace este Lambda?
@@ -1107,7 +1107,7 @@ async function notifyResult(systemId, results) {
   try {
     await sns.send(new PublishCommand({
       TopicArn: alertsTopicArn,
-      Subject: `Avvale SAP AlwaysOps Runbook: ${systemId} (${results.length} acciones)`,
+      Subject: `SAP Spektra Runbook: ${systemId} (${results.length} acciones)`,
       Message: JSON.stringify(message),
       MessageAttributes: {
         eventType: { DataType: 'String', StringValue: 'RUNBOOK_RESULT' },
@@ -1154,7 +1154,7 @@ async function publishRunbookFailureAlert(systemId, result) {
   try {
     await sns.send(new PublishCommand({
       TopicArn: alertsTopicArn,
-      Subject: `🚨 Avvale SAP AlwaysOps: Runbook ${result.runbookId} FALLÓ en ${systemId}`,
+      Subject: `🚨 SAP Spektra: Runbook ${result.runbookId} FALLÓ en ${systemId}`,
       Message: JSON.stringify(message, null, 2),
       MessageAttributes: {
         eventType: { DataType: 'String', StringValue: 'RUNBOOK_FAILURE' },
@@ -1988,7 +1988,7 @@ exports.handler = async (event) => {
     return {
       statusCode: 200,
       body: {
-        message: 'Avvale SAP AlwaysOps Runbook Engine v1.0 completado',
+        message: 'SAP Spektra Runbook Engine v1.0 completado',
         duration: `${duration}ms`,
         systemId,
         totalBreaches: breaches.length,

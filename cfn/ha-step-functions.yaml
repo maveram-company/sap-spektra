@@ -1,6 +1,6 @@
 AWSTemplateFormatVersion: '2010-09-09'
 Description: >
-  Avvale SAP AlwaysOps v1.5 — HA Orchestration Step Functions
+  SAP Spektra v1.5 — HA Orchestration Step Functions
   Maquina de estados para orquestar operaciones de alta disponibilidad
   (failover, takeover, failback) en sistemas SAP.
   Estados: ValidatePrereqs -> AcquireLock -> ExecuteNetworkSwitch ->
@@ -40,7 +40,7 @@ Parameters:
   ProductVersion:
     Type: String
     Default: '1.5.0'
-    Description: Version del producto SAP AlwaysOps
+    Description: Version del producto SAP Spektra
 
 Conditions:
   HasAlertTopic: !Not [!Equals [!Ref AlertSnsTopicArn, '']]
@@ -194,7 +194,7 @@ Resources:
           Value: !Ref ProductVersion
       DefinitionString: !Sub |
         {
-          "Comment": "Avvale SAP AlwaysOps v1.5 — HA Orchestration State Machine. Orquesta operaciones de failover, takeover y failback para sistemas SAP con rollback automatico.",
+          "Comment": "SAP Spektra v1.5 — HA Orchestration State Machine. Orquesta operaciones de failover, takeover y failback para sistemas SAP con rollback automatico.",
           "StartAt": "ValidatePrereqs",
           "TimeoutSeconds": 1800,
           "States": {

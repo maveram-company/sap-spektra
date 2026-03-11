@@ -1,7 +1,7 @@
 'use strict';
 
 // =================================================================
-//  Avvale SAP AlwaysOps v1.0 -- Escalation Engine
+//  SAP Spektra v1.0 -- Escalation Engine
 //  Motor de escalacion automatica para aprobaciones no respondidas.
 //
 //  Que hace este Lambda?
@@ -260,7 +260,7 @@ async function publishEscalationNotification(approval, escalationLevel, elapsedM
   try {
     await sns.send(new PublishCommand({
       TopicArn: ALERTS_TOPIC_ARN,
-      Subject: `Avvale SAP AlwaysOps ${escalationType}: ${message.systemId} - ${message.runbookId} (${elapsedMinutes} min sin respuesta)`,
+      Subject: `SAP Spektra ${escalationType}: ${message.systemId} - ${message.runbookId} (${elapsedMinutes} min sin respuesta)`,
       Message: JSON.stringify(message),
       MessageAttributes: {
         eventType: { DataType: 'String', StringValue: escalationType },
@@ -718,11 +718,11 @@ function buildNotificationPayload(event, matchedRule) {
   // --- Payload para email: HTML formateado ---
   if (matchedRule.channels.includes('email')) {
     payloads.email = {
-      subject: `[Avvale SAP AlwaysOps] [${severity}] ${systemId} - ${metricName}`,
+      subject: `[SAP Spektra] [${severity}] ${systemId} - ${metricName}`,
       htmlBody: `
         <div style="font-family: Arial, sans-serif; max-width: 600px;">
           <div style="background: ${color}; color: white; padding: 12px 16px; border-radius: 4px 4px 0 0;">
-            <h2 style="margin: 0;">Avvale SAP AlwaysOps - Alerta ${severity}</h2>
+            <h2 style="margin: 0;">SAP Spektra - Alerta ${severity}</h2>
           </div>
           <div style="border: 1px solid #ddd; border-top: none; padding: 16px; border-radius: 0 0 4px 4px;">
             <table style="width: 100%; border-collapse: collapse;">
@@ -738,7 +738,7 @@ function buildNotificationPayload(event, matchedRule) {
           </div>
         </div>
       `,
-      textBody: `Avvale SAP AlwaysOps [${severity}] - Sistema: ${systemId}, Metrica: ${metricName}, Valor: ${value}, Runbook: ${runbookId}`,
+      textBody: `SAP Spektra [${severity}] - Sistema: ${systemId}, Metrica: ${metricName}, Valor: ${value}, Runbook: ${runbookId}`,
     };
   }
 
@@ -748,7 +748,7 @@ function buildNotificationPayload(event, matchedRule) {
       blocks: [
         {
           type: 'header',
-          text: { type: 'plain_text', text: `Avvale SAP AlwaysOps - Alerta ${severity}`, emoji: true },
+          text: { type: 'plain_text', text: `SAP Spektra - Alerta ${severity}`, emoji: true },
         },
         {
           type: 'section',
@@ -787,7 +787,7 @@ function buildNotificationPayload(event, matchedRule) {
             body: [
               {
                 type: 'TextBlock',
-                text: `Avvale SAP AlwaysOps - Alerta ${severity}`,
+                text: `SAP Spektra - Alerta ${severity}`,
                 weight: 'Bolder',
                 size: 'Large',
                 color: severity === 'CRITICAL' ? 'Attention' : severity === 'HIGH' ? 'Warning' : 'Default',
@@ -815,7 +815,7 @@ function buildNotificationPayload(event, matchedRule) {
   // --- Payload para SMS: texto corto (maximo 160 caracteres) ---
   if (matchedRule.channels.includes('sms')) {
     // Construir mensaje compacto que quepa en 160 caracteres
-    const smsBase = `Avvale SAP AlwaysOps [${severity}] ${systemId}: ${metricName}=${value}`;
+    const smsBase = `SAP Spektra [${severity}] ${systemId}: ${metricName}=${value}`;
     payloads.sms = {
       message: smsBase.length > 160 ? smsBase.substring(0, 157) + '...' : smsBase,
     };
@@ -956,7 +956,7 @@ async function processPendingBatches() {
       });
 
       // Construir el digest consolidado
-      const digestSubject = `[Avvale SAP AlwaysOps] Digest: ${notifications.length} alertas agrupadas`;
+      const digestSubject = `[SAP Spektra] Digest: ${notifications.length} alertas agrupadas`;
       const digestItems = notifications.map(n =>
         `- [${n.severity}] ${n.systemId}: ${n.metricName} = ${n.value}`
       ).join('\n');
@@ -1120,7 +1120,7 @@ async function routeNotification(event) {
 
         await sns.send(new PublishCommand({
           TopicArn: ALERTS_TOPIC_ARN,
-          Subject: `Avvale SAP AlwaysOps [${channel.toUpperCase()}]: ${event.severity || 'ALERT'} - ${event.systemId || 'sistema'}`,
+          Subject: `SAP Spektra [${channel.toUpperCase()}]: ${event.severity || 'ALERT'} - ${event.systemId || 'sistema'}`,
           Message: JSON.stringify(routingMessage),
           MessageAttributes: {
             eventType: { DataType: 'String', StringValue: 'INTELLIGENT_ROUTING' },
@@ -1192,7 +1192,7 @@ exports.handler = async (event, context) => {
       return {
         statusCode: 200,
         body: {
-          message: 'Avvale SAP AlwaysOps Escalation Engine v1.0 - Sin aprobaciones pendientes',
+          message: 'SAP Spektra Escalation Engine v1.0 - Sin aprobaciones pendientes',
           duration: `${duration}ms`,
           escalated: 0,
         },
@@ -1372,7 +1372,7 @@ exports.handler = async (event, context) => {
     return {
       statusCode: 200,
       body: {
-        message: 'Avvale SAP AlwaysOps Escalation Engine v1.0 completado',
+        message: 'SAP Spektra Escalation Engine v1.0 completado',
         duration: `${duration}ms`,
         summary: {
           totalPending: pendingApprovals.length,

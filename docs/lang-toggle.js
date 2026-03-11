@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════════════════════════════
-//  Avvale SAP AlwaysOps v1.5 — Toggle Idioma ES/EN
+//  SAP Spektra v1.5 — Toggle Idioma ES/EN
 //  Se ejecuta antes del render para evitar flash de idioma incorrecto.
 //  Persiste en localStorage. Default: español.
 // ═══════════════════════════════════════════════════════════════

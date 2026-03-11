@@ -1,6 +1,6 @@
 #!/bin/bash
 # ═══════════════════════════════════════════════════════════════
-#  Avvale SAP AlwaysOps v1.4 — Script de Despliegue
+#  SAP Spektra v1.4 — Script de Despliegue
 #
 #  Este script empaqueta las 20 Lambdas, las sube a S3,
 #  y despliega el stack de CloudFormation.
@@ -208,7 +208,7 @@ deploy_stack() {
       ParameterKey=LambdaS3Bucket,ParameterValue="${S3_BUCKET}" \
       ParameterKey=LambdaS3Prefix,ParameterValue="${S3_PREFIX}" \
     --tags \
-      Key=Project,Value=SAP-AlwaysOps \
+      Key=Project,Value=SAP-Spektra \
       Key=Version,Value=1.4 \
     2>&1)
   CFN_EXIT=$?
@@ -430,7 +430,7 @@ deploy_frontend() {
 main() {
   echo ""
   echo -e "${BLUE}═══════════════════════════════════════════════════${NC}"
-  echo -e "${BLUE}  Avvale SAP AlwaysOps v1.4 — Deploy Script${NC}"
+  echo -e "${BLUE}  SAP Spektra v1.4 — Deploy Script${NC}"
   echo -e "${BLUE}═══════════════════════════════════════════════════${NC}"
   echo ""
 

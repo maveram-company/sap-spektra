@@ -1,5 +1,5 @@
 // ============================================================================
-//  Avvale SAP AlwaysOps v1.0 — Setup Portal — Auto-discovery de configuración SAP via SSM
+//  SAP Spektra v1.0 — Setup Portal — Auto-discovery de configuración SAP via SSM
 //  Conecta a instancias EC2 via AWS Systems Manager para leer configuración SAP
 // ============================================================================
 
@@ -180,7 +180,7 @@ async function discoverSapConfig(region, instanceId, platform) {
     DocumentName: documentName,
     Parameters: { commands },
     TimeoutSeconds: 60,
-    Comment: 'Avvale SAP AlwaysOps — Auto-descubrimiento de configuración SAP'
+    Comment: 'SAP Spektra — Auto-descubrimiento de configuración SAP'
   }));
 
   const commandId = sendResult.Command.CommandId;

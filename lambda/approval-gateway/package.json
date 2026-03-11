@@ -1,7 +1,7 @@
 {
-  "name": "sap-alwaysops-approval-gateway",
+  "name": "sap-spektra-approval-gateway",
   "version": "1.0.0",
-  "description": "Avvale SAP AlwaysOps - Gateway de aprobaciones para acciones que requieren autorización humana",
+  "description": "SAP Spektra - Gateway de aprobaciones para acciones que requieren autorización humana",
   "main": "index.js",
   "dependencies": {
     "@aws-sdk/client-dynamodb": "^3.450.0",

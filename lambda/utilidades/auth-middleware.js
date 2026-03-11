@@ -1,7 +1,7 @@
 'use strict';
 
 // =============================================================================
-// SAP Sentinel v1.0 - Middleware de Autenticacion y Autorizacion
+// SAP Spektra v1.0 - Middleware de Autenticacion y Autorizacion
 // =============================================================================
 // Valida tokens JWT de Cognito y aplica control de acceso basado en roles.
 // API Gateway ya verifica la firma del token, aqui solo decodificamos el

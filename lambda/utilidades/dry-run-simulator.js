@@ -1,7 +1,7 @@
 'use strict';
 
 // ═══════════════════════════════════════════════════════════════
-//  Avvale SAP AlwaysOps v1.4 — Dry-Run Simulator
+//  SAP Spektra v1.4 — Dry-Run Simulator
 //  Simulador que evalua prechecks, policy, capabilities y estima
 //  impacto/costo SIN ejecutar comandos reales via SSM.
 //  NUNCA ejecuta SSM commands reales.

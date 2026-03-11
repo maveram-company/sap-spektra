@@ -1,7 +1,7 @@
 'use strict';
 
 // ═══════════════════════════════════════════════════════════════
-//  Avvale SAP AlwaysOps v1.5 — Base HA Driver
+//  SAP Spektra v1.5 — Base HA Driver
 //  Clase base abstracta para todos los drivers de HA.
 //  Implementa funcionalidad comun: logging, evidence, timeout, retry.
 // ═══════════════════════════════════════════════════════════════

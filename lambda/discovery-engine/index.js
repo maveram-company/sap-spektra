@@ -1,7 +1,7 @@
 'use strict';
 
 // ═══════════════════════════════════════════════════════════════
-//  Avvale SAP AlwaysOps v1.0 — Discovery Engine
+//  SAP Spektra v1.0 — Discovery Engine
 //  Motor de descubrimiento profundo de instancias SAP.
 //
 //  Capacidades:
@@ -126,7 +126,7 @@ async function runSsmCommand(instanceId) {
     DocumentName: 'AWS-RunShellScript',
     Parameters: { commands: [DEEP_DISCOVERY_LINUX] },
     TimeoutSeconds: SSM_TIMEOUT,
-    Comment: 'Avvale SAP AlwaysOps - Deep Discovery',
+    Comment: 'SAP Spektra - Deep Discovery',
   }));
 
   const commandId = sendResult.Command.CommandId;

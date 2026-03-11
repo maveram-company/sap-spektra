@@ -1,5 +1,5 @@
 // ============================================================================
-//  Avvale SAP AlwaysOps v2.0 — Response Helper
+//  SAP Spektra v2.0 — Response Helper
 //  Módulo compartido para generar respuestas HTTP consistentes.
 //  Incluye CORS, correlation ID, y esquema de error estandarizado.
 // ============================================================================
@@ -57,7 +57,7 @@ function respond(statusCode, body, options = {}) {
     headers: {
       'Content-Type': 'application/json',
       'X-Correlation-Id': corrId,
-      'X-Sentinel-Version': '2.0',
+      'X-Spektra-Version': '2.0',
       ...corsHeaders(requestOrigin, cloudFrontDomain),
     },
     body: JSON.stringify(body),
@@ -98,7 +98,7 @@ function respondError(statusCode, message, options = {}) {
     headers: {
       'Content-Type': 'application/json',
       'X-Correlation-Id': corrId,
-      'X-Sentinel-Version': '2.0',
+      'X-Spektra-Version': '2.0',
       ...corsHeaders(requestOrigin, cloudFrontDomain),
     },
     body: JSON.stringify(errorBody),

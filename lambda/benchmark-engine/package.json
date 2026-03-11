@@ -1,7 +1,7 @@
 {
-  "name": "sap-alwaysops-benchmark-engine",
+  "name": "sap-spektra-benchmark-engine",
   "version": "1.0.0",
-  "description": "Avvale SAP AlwaysOps - H40: Motor de benchmarking que calcula baselines, compara sistemas y detecta tendencias de rendimiento",
+  "description": "SAP Spektra - H40: Motor de benchmarking que calcula baselines, compara sistemas y detecta tendencias de rendimiento",
   "main": "index.js",
   "dependencies": {
     "@aws-sdk/client-dynamodb": "^3.450.0",

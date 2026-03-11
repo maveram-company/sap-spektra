@@ -1,7 +1,7 @@
 'use strict';
 
 // ═══════════════════════════════════════════════════════════════
-//  Avvale SAP AlwaysOps v1.5 — SAP Services Driver
+//  SAP Spektra v1.5 — SAP Services Driver
 //  Maneja stop/start de servicios SAP (ABAP, J2EE, ICM)
 //  via sapcontrol y SSM commands.
 // ═══════════════════════════════════════════════════════════════

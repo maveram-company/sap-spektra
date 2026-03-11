@@ -89,7 +89,7 @@ export default function AIAnalysisPage() {
     {
       id: 'welcome',
       role: 'ai',
-      text: '**Bienvenido al Análisis IA de SAP Sentinel.**\n\nSoy tu asistente potenciado por Amazon Bedrock (Claude). Puedo ayudarte con 7 casos de uso especializados para monitoreo SAP.\n\nSelecciona un caso de uso arriba o escribe tu consulta directamente.',
+      text: '**Bienvenido al Análisis IA de SAP Spektra.**\n\nSoy tu asistente potenciado por Amazon Bedrock (Claude). Puedo ayudarte con 7 casos de uso especializados para monitoreo SAP.\n\nSelecciona un caso de uso arriba o escribe tu consulta directamente.',
     },
   ]);
   const [input, setInput] = useState('');

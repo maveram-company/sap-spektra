@@ -19,7 +19,7 @@ function ConnectionStatusIcon({ status }) {
 function ConnectionMethodBadge({ method }) {
   const variants = {
     'SAP Cloud Connector': 'primary',
-    'Sentinel Agent': 'info',
+    'Spektra Agent': 'info',
     'RFC/BAPI': 'warning',
     'API Gateway': 'success',
   };

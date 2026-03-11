@@ -1,7 +1,7 @@
 'use strict';
 
 // ═══════════════════════════════════════════════════════════════
-//  Avvale SAP AlwaysOps v1.5 — HANA System Replication Driver
+//  SAP Spektra v1.5 — HANA System Replication Driver
 //  Maneja failover/takeover de HANA via hdbnsutil y
 //  systemReplicationStatus.py.
 // ═══════════════════════════════════════════════════════════════

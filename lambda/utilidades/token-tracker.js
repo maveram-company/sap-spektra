@@ -1,7 +1,7 @@
 'use strict';
 
 // ═══════════════════════════════════════════════════════════════
-//  Avvale SAP AlwaysOps v1.0 — Token Tracker
+//  SAP Spektra v1.0 — Token Tracker
 //  Registra el consumo de tokens de Bedrock por invocacion.
 //
 //  Funciones:

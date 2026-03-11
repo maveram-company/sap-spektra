@@ -1,7 +1,7 @@
 {
-  "name": "sap-alwaysops-ewa-generator",
+  "name": "sap-spektra-ewa-generator",
   "version": "1.0.0",
-  "description": "Avvale SAP AlwaysOps — EWA-Equivalent Report Generator",
+  "description": "SAP Spektra — EWA-Equivalent Report Generator",
   "main": "index.js",
   "dependencies": {
     "@aws-sdk/client-dynamodb": "^3.x",

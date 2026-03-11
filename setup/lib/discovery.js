@@ -1,5 +1,5 @@
 // ============================================================================
-//  Avvale SAP AlwaysOps v1.0 — Setup Portal — Auto-discovery de recursos AWS
+//  SAP Spektra v1.0 — Setup Portal — Auto-discovery de recursos AWS
 // ============================================================================
 
 'use strict';

@@ -1,7 +1,7 @@
 'use strict';
 
 // ═══════════════════════════════════════════════════════════════
-//  Avvale SAP AlwaysOps v1.0 — SAP Instance Classifier
+//  SAP Spektra v1.0 — SAP Instance Classifier
 //  Reglas deterministas para clasificar instancias SAP
 //  a partir de facts (procesos, perfiles, configuracion).
 //

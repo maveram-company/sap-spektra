@@ -1,7 +1,7 @@
 'use strict';
 
 // ═══════════════════════════════════════════════════════════════
-//  Avvale SAP AlwaysOps v1.4 — Evidence Pack Firmado
+//  SAP Spektra v1.4 — Evidence Pack Firmado
 //  Genera paquetes de evidencia con hash chain y firma KMS.
 //  Exportable a S3 con retencion e inmutabilidad.
 // ═══════════════════════════════════════════════════════════════

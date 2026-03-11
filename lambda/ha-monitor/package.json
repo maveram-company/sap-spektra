@@ -1,7 +1,7 @@
 {
-  "name": "sap-alwaysops-ha-monitor",
+  "name": "sap-spektra-ha-monitor",
   "version": "1.0.0",
-  "description": "Avvale SAP AlwaysOps - HA topology auto-detection and replication monitor",
+  "description": "SAP Spektra - HA topology auto-detection and replication monitor",
   "main": "index.js",
   "dependencies": {
     "@aws-sdk/client-ec2": "^3.450.0",

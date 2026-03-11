@@ -1,7 +1,7 @@
 'use strict';
 
 // ═══════════════════════════════════════════════════════════════
-//  Avvale SAP AlwaysOps v2.0 — Pagination Helper
+//  SAP Spektra v2.0 — Pagination Helper
 //  Paginación cursor-based para DynamoDB queries.
 //
 //  Uso:

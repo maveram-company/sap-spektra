@@ -1,6 +1,6 @@
 AWSTemplateFormatVersion: '2010-09-09'
 Description: >
-  Avvale SAP AlwaysOps v1.5 — Stack completo de monitoreo, remediacion automatica,
+  SAP Spektra v1.5 — Stack completo de monitoreo, remediacion automatica,
   chatbot IA, operaciones programadas y orquestacion HA para sistemas SAP.
   Incluye 20+ Lambdas, 16+ tablas DynamoDB, 3 SNS topics, HTTP API Gateway v2
   con JWT Auth (Cognito), KMS, EventBridge, Step Functions, CloudWatch alarms y RBAC.
@@ -131,7 +131,7 @@ Parameters:
   ProductVersion:
     Type: String
     Default: '1.5.0'
-    Description: Version del producto SAP AlwaysOps (SSOT desde version.json)
+    Description: Version del producto SAP Spektra (SSOT desde version.json)
 
 Conditions:
   BedrockEnabled: !Equals [!Ref EnableBedrock, 'true']
@@ -150,7 +150,7 @@ Resources:
   AlwaysOpsKMSKey:
     Type: AWS::KMS::Key
     Properties:
-      Description: Avvale SAP AlwaysOps v1.0 encryption key
+      Description: SAP Spektra v1.0 encryption key
       KeyPolicy:
         Version: '2012-10-17'
         Statement:
@@ -478,7 +478,7 @@ Resources:
       Name: /sap-alwaysops/version
       Type: String
       Value: '2.0'
-      Description: Version de Avvale SAP AlwaysOps desplegada
+      Description: Version de SAP Spektra desplegada
 
   # ═══════════════════════════════════════════════════════════════
   #  IAM ROLES — Roles de dominio especificos (principio de minimo privilegio)
@@ -2838,21 +2838,21 @@ Resources:
     Type: AWS::Cognito::UserPoolGroup
     Properties:
       GroupName: admins
-      Description: Administradores de Avvale SAP AlwaysOps
+      Description: Administradores de SAP Spektra
       UserPoolId: !Ref SAPAlwaysOpsUserPool
 
   SAPAlwaysOpsOperatorsGroup:
     Type: AWS::Cognito::UserPoolGroup
     Properties:
       GroupName: operators
-      Description: Operadores de Avvale SAP AlwaysOps (lectura + escritura)
+      Description: Operadores de SAP Spektra (lectura + escritura)
       UserPoolId: !Ref SAPAlwaysOpsUserPool
 
   SAPAlwaysOpsViewersGroup:
     Type: AWS::Cognito::UserPoolGroup
     Properties:
       GroupName: viewers
-      Description: Visualizadores de Avvale SAP AlwaysOps (solo lectura)
+      Description: Visualizadores de SAP Spektra (solo lectura)
       UserPoolId: !Ref SAPAlwaysOpsUserPool
 
 # ═══════════════════════════════════════════════════════════════
@@ -2866,7 +2866,7 @@ Resources:
     Properties:
       Name: !Sub '${AWS::StackName}-api'
       ProtocolType: HTTP
-      Description: HTTP API Gateway para Avvale SAP AlwaysOps v1.0
+      Description: HTTP API Gateway para SAP Spektra v1.0
       CorsConfiguration:
         AllowOrigins:
           - !Sub 'https://${FrontendDistribution.DomainName}'
@@ -3063,7 +3063,7 @@ Resources:
                 AWS:SourceArn: !Sub 'arn:aws:cloudfront::${AWS::AccountId}:distribution/${FrontendDistribution}'
 
   # ═══════════════════════════════════════════════════════════════
-  #  CloudWatch Alarms — Sentinel Platform Health
+  #  CloudWatch Alarms — Spektra Platform Health
   # ═══════════════════════════════════════════════════════════════
 
   # Alarm 1: Lambda error rate for collector (most critical Lambda)
@@ -3308,7 +3308,7 @@ Resources:
 
 Outputs:
   ApiGatewayUrl:
-    Description: URL del HTTP API Gateway para Avvale SAP AlwaysOps
+    Description: URL del HTTP API Gateway para SAP Spektra
     Value: !Sub 'https://${AlwaysOpsHttpApi}.execute-api.${AWS::Region}.amazonaws.com'
 
   ApiGatewayId:
@@ -3426,5 +3426,5 @@ Outputs:
     Value: !GetAtt EwaGeneratorFunction.Arn
 
   StackVersion:
-    Description: Version de Avvale SAP AlwaysOps
+    Description: Version de SAP Spektra
     Value: '1.4'

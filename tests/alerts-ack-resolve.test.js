@@ -87,31 +87,31 @@ console.log('ACK (Tomar en gestion):');
 
 test('ACK establece ack=true, ackBy y ackAt', () => {
   const alert = createTestAlert();
-  const result = ackAlert(alert, 'operador@avvale.com');
+  const result = ackAlert(alert, 'operador@maveram.com');
   assert.strictEqual(result, true);
   assert.strictEqual(alert.ack, true);
-  assert.strictEqual(alert.ackBy, 'operador@avvale.com');
+  assert.strictEqual(alert.ackBy, 'operador@maveram.com');
   assert.ok(alert.ackAt);
   assert.ok(new Date(alert.ackAt).getTime() > 0, 'ackAt debe ser ISO date valido');
 });
 
 test('ACK es idempotente (no duplica si ya esta en gestion)', () => {
-  const alert = createTestAlert({ ack: true, ackBy: 'admin@avvale.com', ackAt: '2026-01-01T00:00:00Z' });
-  const result = ackAlert(alert, 'otro@avvale.com');
+  const alert = createTestAlert({ ack: true, ackBy: 'admin@maveram.com', ackAt: '2026-01-01T00:00:00Z' });
+  const result = ackAlert(alert, 'otro@maveram.com');
   assert.strictEqual(result, false); // no cambio
-  assert.strictEqual(alert.ackBy, 'admin@avvale.com'); // mantiene el original
+  assert.strictEqual(alert.ackBy, 'admin@maveram.com'); // mantiene el original
   assert.strictEqual(alert.ackAt, '2026-01-01T00:00:00Z');
 });
 
 test('ACK no cambia el estado de la alerta (sigue active)', () => {
   const alert = createTestAlert();
-  ackAlert(alert, 'operador@avvale.com');
+  ackAlert(alert, 'operador@maveram.com');
   assert.strictEqual(alert.st, 'active');
 });
 
 test('ACK preserva campos existentes', () => {
   const alert = createTestAlert({ rb: 'RB-HANA-001', sys: 'OCP' });
-  ackAlert(alert, 'operador@avvale.com');
+  ackAlert(alert, 'operador@maveram.com');
   assert.strictEqual(alert.rb, 'RB-HANA-001');
   assert.strictEqual(alert.sys, 'OCP');
   assert.strictEqual(alert.resolvedBy, null);
@@ -123,10 +123,10 @@ console.log('\nResolve:');
 
 test('Resolve exitoso con nota y categoria', () => {
   const alert = createTestAlert();
-  const result = resolveAlert(alert, 'admin@avvale.com', 'Reinicio de servicio', 'fixed');
+  const result = resolveAlert(alert, 'admin@maveram.com', 'Reinicio de servicio', 'fixed');
   assert.deepStrictEqual(result, { success: true });
   assert.strictEqual(alert.st, 'resolved');
-  assert.strictEqual(alert.resolvedBy, 'admin@avvale.com');
+  assert.strictEqual(alert.resolvedBy, 'admin@maveram.com');
   assert.ok(alert.resolvedAt);
   assert.strictEqual(alert.resolutionNote, 'Reinicio de servicio');
   assert.strictEqual(alert.resolutionCategory, 'fixed');
@@ -134,21 +134,21 @@ test('Resolve exitoso con nota y categoria', () => {
 
 test('Resolve falla sin nota', () => {
   const alert = createTestAlert();
-  const result = resolveAlert(alert, 'admin@avvale.com', '', 'fixed');
+  const result = resolveAlert(alert, 'admin@maveram.com', '', 'fixed');
   assert.ok(result.error);
   assert.strictEqual(alert.st, 'active'); // no cambio
 });
 
 test('Resolve falla sin categoria', () => {
   const alert = createTestAlert();
-  const result = resolveAlert(alert, 'admin@avvale.com', 'Nota valida', '');
+  const result = resolveAlert(alert, 'admin@maveram.com', 'Nota valida', '');
   assert.ok(result.error);
   assert.strictEqual(alert.st, 'active');
 });
 
 test('Resolve falla con categoria invalida', () => {
   const alert = createTestAlert();
-  const result = resolveAlert(alert, 'admin@avvale.com', 'Nota', 'invalid_category');
+  const result = resolveAlert(alert, 'admin@maveram.com', 'Nota', 'invalid_category');
   assert.ok(result.error);
   assert.strictEqual(alert.st, 'active');
 });
@@ -156,7 +156,7 @@ test('Resolve falla con categoria invalida', () => {
 test('Todas las categorias validas son aceptadas', () => {
   for (const cat of VALID_CATEGORIES) {
     const alert = createTestAlert({ id: VALID_CATEGORIES.indexOf(cat) + 100 });
-    const result = resolveAlert(alert, 'admin@avvale.com', 'Nota para ' + cat, cat);
+    const result = resolveAlert(alert, 'admin@maveram.com', 'Nota para ' + cat, cat);
     assert.deepStrictEqual(result, { success: true }, `Categoria ${cat} debe ser valida`);
     assert.strictEqual(alert.resolutionCategory, cat);
   }
@@ -164,7 +164,7 @@ test('Todas las categorias validas son aceptadas', () => {
 
 test('Resolve trim la nota', () => {
   const alert = createTestAlert();
-  resolveAlert(alert, 'admin@avvale.com', '  Nota con espacios  ', 'mitigated');
+  resolveAlert(alert, 'admin@maveram.com', '  Nota con espacios  ', 'mitigated');
   assert.strictEqual(alert.resolutionNote, 'Nota con espacios');
 });
 
@@ -185,21 +185,21 @@ test('alerta nueva tiene todos los campos de auditoria', () => {
 test('flujo completo: ACK luego Resolve', () => {
   const alert = createTestAlert();
   // Paso 1: Tomar en gestion
-  ackAlert(alert, 'operador@avvale.com');
+  ackAlert(alert, 'operador@maveram.com');
   assert.strictEqual(alert.ack, true);
   assert.strictEqual(alert.st, 'active');
   // Paso 2: Resolver
-  const result = resolveAlert(alert, 'operador@avvale.com', 'Problema resuelto con reinicio', 'fixed');
+  const result = resolveAlert(alert, 'operador@maveram.com', 'Problema resuelto con reinicio', 'fixed');
   assert.deepStrictEqual(result, { success: true });
   assert.strictEqual(alert.st, 'resolved');
-  assert.strictEqual(alert.resolvedBy, 'operador@avvale.com');
+  assert.strictEqual(alert.resolvedBy, 'operador@maveram.com');
   assert.strictEqual(alert.resolutionNote, 'Problema resuelto con reinicio');
 });
 
 test('Resolve directo sin ACK previo funciona', () => {
   const alert = createTestAlert();
   assert.strictEqual(alert.ack, false);
-  const result = resolveAlert(alert, 'admin@avvale.com', 'Falso positivo', 'false_positive');
+  const result = resolveAlert(alert, 'admin@maveram.com', 'Falso positivo', 'false_positive');
   assert.deepStrictEqual(result, { success: true });
   assert.strictEqual(alert.st, 'resolved');
 });

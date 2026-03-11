@@ -1,7 +1,7 @@
 {
-  "name": "sap-alwaysops-runbook-engine",
+  "name": "sap-spektra-runbook-engine",
   "version": "1.0.0",
-  "description": "Avvale SAP AlwaysOps - Motor de ejecución de runbooks para remediación automática",
+  "description": "SAP Spektra - Motor de ejecución de runbooks para remediación automática",
   "main": "index.js",
   "dependencies": {
     "@aws-sdk/client-ssm": "^3.450.0",

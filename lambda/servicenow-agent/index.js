@@ -1,7 +1,7 @@
 'use strict';
 
 // ═══════════════════════════════════════════════════════════════
-//  Avvale SAP AlwaysOps v1.0 — ServiceNow Agent
+//  SAP Spektra v1.0 — ServiceNow Agent
 //  Agente de integración con ServiceNow ITSM para gestión de
 //  incidentes.
 //
@@ -289,7 +289,7 @@ async function serviceNowRequest(method, path, body, retryCount = 0) {
 
 // ═══════════════════════════════════════════════════════════════
 //  FUNCIÓN: mapSeverityToUrgency
-//  Mapea la severidad de Avvale SAP AlwaysOps a la urgencia de
+//  Mapea la severidad de SAP Spektra a la urgencia de
 //  ServiceNow. Los valores numéricos de ServiceNow son:
 //    1 = High (Crítico)
 //    2 = Medium (Alto)
@@ -340,7 +340,7 @@ function mapEnvironmentToImpact(env) {
 // ═══════════════════════════════════════════════════════════════
 //  FUNCIÓN: buildShortDescription
 //  Construye el short_description del incidente en ServiceNow.
-//  Formato: [Avvale SAP AlwaysOps] SEVERITY: SystemId - Metric(s)
+//  Formato: [SAP Spektra] SEVERITY: SystemId - Metric(s)
 //  ServiceNow tiene un límite de 160 caracteres para este campo.
 // ═══════════════════════════════════════════════════════════════
 
@@ -352,7 +352,7 @@ function buildShortDescription(eventType, data) {
       const metrics = (data.breaches || []).map(b => b.metricName).join(', ');
       const severity = data.breaches?.some(b => b.severity === 'CRITICAL') ? 'CRITICAL'
         : data.breaches?.some(b => b.severity === 'HIGH') ? 'HIGH' : 'WARNING';
-      const desc = `[Avvale SAP AlwaysOps] ${severity}: ${systemId} - Breach en ${metrics}`;
+      const desc = `[SAP Spektra] ${severity}: ${systemId} - Breach en ${metrics}`;
       // Truncar a 160 caracteres si es necesario
       return desc.length > 160 ? desc.substring(0, 157) + '...' : desc;
     }
@@ -360,15 +360,15 @@ function buildShortDescription(eventType, data) {
       const runbooks = (data.results || []).map(r => r.runbookId).join(', ');
       const allSuccess = (data.results || []).every(r => r.success);
       const status = allSuccess ? 'OK' : 'FALLO';
-      const desc = `[Avvale SAP AlwaysOps] Runbook ${status}: ${systemId} - ${runbooks}`;
+      const desc = `[SAP Spektra] Runbook ${status}: ${systemId} - ${runbooks}`;
       return desc.length > 160 ? desc.substring(0, 157) + '...' : desc;
     }
     case 'APPROVAL_RESULT': {
-      const desc = `[Avvale SAP AlwaysOps] Aprobacion ${data.status}: ${systemId} - ${data.runbookId || 'N/A'}`;
+      const desc = `[SAP Spektra] Aprobacion ${data.status}: ${systemId} - ${data.runbookId || 'N/A'}`;
       return desc.length > 160 ? desc.substring(0, 157) + '...' : desc;
     }
     default:
-      return `[Avvale SAP AlwaysOps] ${eventType}: ${systemId}`;
+      return `[SAP Spektra] ${eventType}: ${systemId}`;
   }
 }
 
@@ -410,9 +410,9 @@ function buildDescription(eventType, data) {
 
       lines.push(separator);
       lines.push('Los runbooks marcados como costSafe se ejecutan automaticamente.');
-      lines.push('Los demas requieren aprobacion manual via Avvale SAP AlwaysOps.');
+      lines.push('Los demas requieren aprobacion manual via SAP Spektra.');
       lines.push('');
-      lines.push(`Generado automaticamente por Avvale SAP AlwaysOps v1.0`);
+      lines.push(`Generado automaticamente por SAP Spektra v1.0`);
 
       return lines.join('\n');
     }
@@ -442,7 +442,7 @@ function buildDescription(eventType, data) {
       });
 
       lines.push(separator);
-      lines.push(`Generado automaticamente por Avvale SAP AlwaysOps v1.0`);
+      lines.push(`Generado automaticamente por SAP Spektra v1.0`);
 
       return lines.join('\n');
     }
@@ -469,7 +469,7 @@ function buildDescription(eventType, data) {
       }
 
       lines.push(separator);
-      lines.push(`Generado automaticamente por Avvale SAP AlwaysOps v1.0`);
+      lines.push(`Generado automaticamente por SAP Spektra v1.0`);
 
       return lines.join('\n');
     }
@@ -484,7 +484,7 @@ function buildDescription(eventType, data) {
         JSON.stringify(data, null, 2),
         '',
         separator,
-        `Generado automaticamente por Avvale SAP AlwaysOps v1.0`,
+        `Generado automaticamente por SAP Spektra v1.0`,
       ].join('\n');
   }
 }
@@ -503,7 +503,7 @@ function buildWorkNote(eventType, data) {
     case 'RUNBOOK_EXECUTED': {
       const allSuccess = (data.results || []).every(r => r.success);
       const lines = [
-        `[Avvale SAP AlwaysOps] Runbook ejecutado - ${allSuccess ? 'EXITOSO' : 'CON FALLOS'}`,
+        `[SAP Spektra] Runbook ejecutado - ${allSuccess ? 'EXITOSO' : 'CON FALLOS'}`,
         `Timestamp: ${timestamp}`,
         '',
       ];
@@ -523,7 +523,7 @@ function buildWorkNote(eventType, data) {
 
     case 'APPROVAL_RESULT': {
       const lines = [
-        `[Avvale SAP AlwaysOps] Aprobacion: ${data.status}`,
+        `[SAP Spektra] Aprobacion: ${data.status}`,
         `Runbook: ${data.runbookId || 'N/A'}`,
         `Procesado por: ${data.processedBy || 'N/A'}`,
         `Timestamp: ${timestamp}`,
@@ -548,7 +548,7 @@ function buildWorkNote(eventType, data) {
     }
 
     default:
-      return `[Avvale SAP AlwaysOps] ${eventType} - ${data.systemId || 'N/A'} - ${timestamp}`;
+      return `[SAP Spektra] ${eventType} - ${data.systemId || 'N/A'} - ${timestamp}`;
   }
 }
 
@@ -570,7 +570,7 @@ async function createIncident(incidentData) {
     assignment_group: incidentData.assignmentGroup || ASSIGNMENT_GROUP,
     caller_id: 'sap-alwaysops',
     correlation_id: incidentData.correlationId || '',
-    correlation_display: 'Avvale SAP AlwaysOps Breach',
+    correlation_display: 'SAP Spektra Breach',
     // Campos personalizados de ServiceNow se pueden agregar aqui
     // u_sap_system_id: incidentData.systemId,
     // u_sap_sid: incidentData.sid,
@@ -672,7 +672,7 @@ async function resolveIncident(sysId, closeNotes, workNote) {
   const updatePayload = {
     state: '6',  // 6 = Resolved en ServiceNow
     close_code: 'Solved (Permanently)',
-    close_notes: closeNotes || 'Resuelto automaticamente por Avvale SAP AlwaysOps via runbook.',
+    close_notes: closeNotes || 'Resuelto automaticamente por SAP Spektra via runbook.',
   };
 
   // Agregar work_notes si se proporcionaron
@@ -719,7 +719,7 @@ async function findIncidentByCorrelation(correlationId) {
 // ═══════════════════════════════════════════════════════════════
 //  FUNCIÓN: saveTicketMapping
 //  Guarda el mapeo entre el incidente de ServiceNow y el
-//  evento de Avvale SAP AlwaysOps en DynamoDB. Esto permite:
+//  evento de SAP Spektra en DynamoDB. Esto permite:
 //    - Encontrar el sys_id de ServiceNow dado un breachId
 //    - Rastrear el historial de incidentes por sistema
 //    - Deduplicar creación de incidentes
@@ -924,7 +924,7 @@ const EVENT_PROCESSORS = {
         existingNumber: existingIncident.number,
       });
 
-      const workNote = `[Avvale SAP AlwaysOps] Breach recurrente detectado.\n${description}`;
+      const workNote = `[SAP Spektra] Breach recurrente detectado.\n${description}`;
       const updateResult = await updateIncident(existingIncident.sys_id, {
         work_notes: workNote,
         urgency,
@@ -1015,7 +1015,7 @@ const EVENT_PROCESSORS = {
 
       if (allSuccess) {
         // Todos exitosos → resolver el incidente automáticamente
-        const closeNotes = `Resuelto automaticamente por Avvale SAP AlwaysOps. Runbooks ejecutados: ${results.map(r => r.runbookId).join(', ')}`;
+        const closeNotes = `Resuelto automaticamente por SAP Spektra. Runbooks ejecutados: ${results.map(r => r.runbookId).join(', ')}`;
         const resolveResult = await resolveIncident(mapping.sysId, closeNotes, workNote);
 
         // Actualizar el estado en DynamoDB
@@ -1244,7 +1244,7 @@ const EVENT_PROCESSORS = {
 
 exports.handler = async (event) => {
   structuredLog('INFO', 'INVOKED', {
-    message: 'Avvale SAP AlwaysOps ServiceNow Agent v1.0 invocado',
+    message: 'SAP Spektra ServiceNow Agent v1.0 invocado',
     memoryLimitMB: process.env.AWS_LAMBDA_FUNCTION_MEMORY_SIZE || 'N/A',
     functionName: process.env.AWS_LAMBDA_FUNCTION_NAME || 'N/A',
   });
@@ -1349,7 +1349,7 @@ exports.handler = async (event) => {
     const duration = Date.now() - startTime;
 
     structuredLog('INFO', 'COMPLETED', {
-      message: 'Avvale SAP AlwaysOps ServiceNow Agent v1.0 completado',
+      message: 'SAP Spektra ServiceNow Agent v1.0 completado',
       duration: `${duration}ms`,
       eventsProcessed: results.length,
       successCount,
@@ -1359,7 +1359,7 @@ exports.handler = async (event) => {
     return {
       statusCode: 200,
       body: {
-        message: 'Avvale SAP AlwaysOps ServiceNow Agent v1.0 completado',
+        message: 'SAP Spektra ServiceNow Agent v1.0 completado',
         duration: `${duration}ms`,
         eventsProcessed: results.length,
         successCount,

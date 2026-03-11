@@ -1,7 +1,7 @@
 'use strict';
 
 // ═══════════════════════════════════════════════════════════════
-//  Avvale SAP AlwaysOps v1.5 — HA Orchestrator
+//  SAP Spektra v1.5 — HA Orchestrator
 //  API REST para orquestacion de operaciones de alta disponibilidad
 //  (failover, takeover, failback) en sistemas SAP.
 //

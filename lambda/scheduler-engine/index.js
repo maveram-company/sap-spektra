@@ -1,7 +1,7 @@
 'use strict';
 
 // ═══════════════════════════════════════════════════════════════
-//  Avvale SAP AlwaysOps v1.0 — Scheduler Engine
+//  SAP Spektra v1.0 — Scheduler Engine
 //  Motor de operaciones programadas con evaluacion de riesgo IA.
 //
 //  Que hace este Lambda?
@@ -339,7 +339,7 @@ async function executeOperation(operation) {
       DocumentName: (operation.osType || 'LINUX') === 'WINDOWS' ? 'AWS-RunPowerShellScript' : 'AWS-RunShellScript',
       TimeoutSeconds: 600,
       Parameters: { commands, executionTimeout: ['540'] },
-      Comment: `Avvale SAP AlwaysOps Scheduled: ${operation.operationType} - ${operation.operationId}`,
+      Comment: `SAP Spektra Scheduled: ${operation.operationType} - ${operation.operationId}`,
     }));
 
     const commandId = ssmResult.Command?.CommandId;
@@ -448,7 +448,7 @@ async function notifyResult(operation, status, result, riskAssessment) {
   try {
     await sns.send(new PublishCommand({
       TopicArn: ALERTS_TOPIC_ARN,
-      Subject: `Avvale SAP AlwaysOps Operacion ${status}: ${operation.operationType} en ${operation.systemId}`,
+      Subject: `SAP Spektra Operacion ${status}: ${operation.operationType} en ${operation.systemId}`,
       Message: JSON.stringify({
         type: 'SCHEDULED_OPERATION_RESULT',
         operationId: operation.operationId,
@@ -603,7 +603,7 @@ async function recoverFailedOrchestrations() {
           if (ALERTS_TOPIC_ARN) {
             await sns.send(new PublishCommand({
               TopicArn: ALERTS_TOPIC_ARN,
-              Subject: `🚨 Avvale SAP AlwaysOps: Orquestación ABANDONADA para ${systemId}`,
+              Subject: `🚨 SAP Spektra: Orquestación ABANDONADA para ${systemId}`,
               Message: JSON.stringify({
                 type: 'ORCHESTRATION_ABANDONED',
                 severity: 'CRITICAL',
@@ -982,7 +982,7 @@ async function executeDRDrill(systemId, drill, sys) {
       const statusEmoji = drillStatus === 'SUCCESS' ? 'OK' : drillStatus === 'PARTIAL' ? 'WARN' : 'FAIL';
       await sns.send(new PublishCommand({
         TopicArn: ALERTS_TOPIC_ARN,
-        Subject: `Avvale SAP AlwaysOps DR Drill [${statusEmoji}]: ${drillTemplate.name} en ${systemId}`,
+        Subject: `SAP Spektra DR Drill [${statusEmoji}]: ${drillTemplate.name} en ${systemId}`,
         Message: JSON.stringify({
           type: 'DR_DRILL_RESULT',
           ...drillResult,

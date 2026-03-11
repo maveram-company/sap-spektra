@@ -1,6 +1,6 @@
 #!/bin/bash
 # ============================================================================
-#  SAP-AlwaysOps v1.5 -- Supply Chain Audit Script
+#  SAP Spektra v1.5 -- Supply Chain Audit Script
 #  Verifica dependencias, lock files, y vulnerabilidades conocidas.
 #
 #  Uso:
@@ -72,7 +72,7 @@ log_info() {
 
 # ── Paso 0: Verificar herramientas requeridas ──
 
-log_header "SAP-AlwaysOps v1.5 -- Supply Chain Audit"
+log_header "SAP Spektra v1.5 -- Supply Chain Audit"
 echo ""
 echo "  Fecha:     $(date -u '+%Y-%m-%d %H:%M:%S UTC')"
 echo "  Proyecto:  $PROJECT_ROOT"

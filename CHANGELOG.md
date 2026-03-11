@@ -1,4 +1,4 @@
-# Changelog — Avvale SAP AlwaysOps
+# Changelog — SAP Spektra
 
 ## v1.4 — Hardening + Evolucion (Marzo 2026)
 

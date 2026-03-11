@@ -1,7 +1,7 @@
 'use strict';
 
 // ═══════════════════════════════════════════════════════════════
-//  Avvale SAP AlwaysOps v1.0 — Bedrock Advisor (7 Use Cases)
+//  SAP Spektra v1.0 — Bedrock Advisor (7 Use Cases)
 //  Asesor inteligente con Amazon Bedrock (Claude Haiku).
 //
 //  7 módulos IA:
@@ -451,7 +451,7 @@ async function uc3SafetyGate(event) {
   //  más sofisticado con contexto de métricas y horario.
   // ═══════════════════════════════════════════════════════════════
 
-  const safetyPrompt = `Eres el Safety Gate de Avvale SAP AlwaysOps. Debes evaluar si una acción automática es SEGURA.
+  const safetyPrompt = `Eres el Safety Gate de SAP Spektra. Debes evaluar si una acción automática es SEGURA.
 
 REGLAS DE SEGURIDAD para DUMP TRANSACTION ASE:
 - SAFE: oldest_tx < 30 min AND blocking_chains = 0
@@ -571,7 +571,7 @@ async function uc4DailyDigest(systemsConfig) {
     systemSummaries += incidentsSection;
   }
 
-  const prompt = `DIGEST EJECUTIVO DIARIO — Avvale SAP AlwaysOps
+  const prompt = `DIGEST EJECUTIVO DIARIO — SAP Spektra
 Fecha: ${new Date().toISOString().split('T')[0]}
 Hora: 5:00 PM Colombia (22:00 UTC)
 
@@ -654,7 +654,7 @@ async function uc6ChatbotAnalysis(event) {
 
   const { message, conversationHistory, systemsList, currentTime } = event;
 
-  const chatbotPrompt = `Eres AlwaysOps AI, asistente de Avvale SAP AlwaysOps. Ayudas a clientes a gestionar sus sistemas SAP.
+  const chatbotPrompt = `Eres Spektra AI, asistente de SAP Spektra. Ayudas a clientes a gestionar sus sistemas SAP.
 
 SISTEMAS DISPONIBLES: ${systemsList || 'No configurados'}
 HORA ACTUAL: ${currentTime || new Date().toISOString()}
@@ -845,7 +845,7 @@ async function publishAdvisorAlert(eventType, systemId, content) {
   try {
     await sns.send(new PublishCommand({
       TopicArn: topicArn,
-      Subject: `Avvale SAP AlwaysOps Advisor ${eventType}: ${systemId}`,
+      Subject: `SAP Spektra Advisor ${eventType}: ${systemId}`,
       Message: JSON.stringify(message),
       MessageAttributes: {
         eventType: { DataType: 'String', StringValue: eventType },
@@ -990,7 +990,7 @@ exports.handler = async (event, context) => {
     }
 
     // ─── UC2: Disk Forecast (EventBridge cada 6h) ───
-    if (event.source === 'aws.events' && event['detail-type'] === 'Avvale SAP AlwaysOps Disk Forecast') {
+    if (event.source === 'aws.events' && event['detail-type'] === 'SAP Spektra Disk Forecast') {
       const systemsConfig = await loadSystemsConfig();
       const results = await uc2DiskForecast(systemsConfig);
       const duration = Date.now() - startTime;
@@ -998,7 +998,7 @@ exports.handler = async (event, context) => {
     }
 
     // ─── UC4: Daily Digest (EventBridge 1/día 22:00 UTC) ───
-    if (event.source === 'aws.events' && event['detail-type'] === 'Avvale SAP AlwaysOps Daily Digest') {
+    if (event.source === 'aws.events' && event['detail-type'] === 'SAP Spektra Daily Digest') {
       const systemsConfig = await loadSystemsConfig();
       const result = await uc4DailyDigest(systemsConfig);
       const duration = Date.now() - startTime;

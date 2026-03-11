@@ -1,7 +1,7 @@
 'use strict';
 
 // ═══════════════════════════════════════════════════════════════
-//  Avvale SAP AlwaysOps v1.5 — HA Prerequisites Validation
+//  SAP Spektra v1.5 — HA Prerequisites Validation
 //  Modulo de validacion de 9 prerequisitos obligatorios antes
 //  de cualquier operacion HA (failover/takeover/failback).
 //

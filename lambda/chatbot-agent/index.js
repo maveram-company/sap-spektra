@@ -1,7 +1,7 @@
 'use strict';
 
 // ═══════════════════════════════════════════════════════════════
-//  Avvale SAP AlwaysOps v1.0 — Chatbot Agent (Interaccion con Cliente)
+//  SAP Spektra v1.0 — Chatbot Agent (Interaccion con Cliente)
 //  Chatbot inteligente con IA para autoservicio del cliente.
 //
 //  Capacidades:
@@ -65,8 +65,8 @@ function respond(statusCode, body) {
 //  SISTEMA DE PROMPTS — Contexto IA para el chatbot
 // ═══════════════════════════════════════════════════════════════
 
-const CHATBOT_SYSTEM_PROMPT = `Eres el asistente virtual de Avvale SAP AlwaysOps, un sistema de monitoreo inteligente para SAP.
-Tu nombre es "AlwaysOps AI" y ayudas a los clientes a gestionar sus sistemas SAP.
+const CHATBOT_SYSTEM_PROMPT = `Eres el asistente virtual de SAP Spektra, un sistema de monitoreo inteligente para SAP.
+Tu nombre es "Spektra AI" y ayudas a los clientes a gestionar sus sistemas SAP.
 
 CAPACIDADES que puedes ofrecer:
 1. ESTADO: Consultar el estado actual de un sistema SAP
@@ -869,7 +869,7 @@ Responde SOLO con el texto de la respuesta (sin JSON).`;
 
       const enrichedResult = await callBedrock(
         [{ role: 'user', content: contextPrompt }],
-        'Eres AlwaysOps AI, asistente de Avvale SAP AlwaysOps. Responde en espanol, amigable y profesional. No inventes datos.',
+        'Eres Spektra AI, asistente de SAP Spektra. Responde en espanol, amigable y profesional. No inventes datos.',
         800
       );
       if (enrichedResult.success) finalResponse = enrichedResult.text;

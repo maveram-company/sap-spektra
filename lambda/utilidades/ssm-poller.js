@@ -1,5 +1,5 @@
 // ============================================================================
-//  Avvale SAP AlwaysOps v2.0 — SSM Command Poller
+//  SAP Spektra v2.0 — SSM Command Poller
 //  Módulo compartido para ejecutar comandos SSM con polling robusto.
 //  Implementa exponential backoff con jitter para evitar throttling.
 // ============================================================================

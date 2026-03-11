@@ -1,7 +1,7 @@
 'use strict';
 
 // ═══════════════════════════════════════════════════════════════
-//  Avvale SAP AlwaysOps v1.0 — Preventive Engine
+//  SAP Spektra v1.0 — Preventive Engine
 //  Motor preventivo que analiza tendencias y predice breaches.
 //
 //  ¿Qué hace este Lambda?
@@ -169,7 +169,7 @@ async function publishSmartWindowSuggestions(suggestions) {
     .map(w => `  - ${w.localDescription} (${w.alertCount} alertas, confianza: ${w.confidence})`)
     .join('\n');
 
-  const message = `[Avvale SAP AlwaysOps] Sugerencia de Ventana de Mantenimiento
+  const message = `[SAP Spektra] Sugerencia de Ventana de Mantenimiento
 
 Sistema: ${suggestions.systemId}
 
@@ -184,7 +184,7 @@ Para configurar: actualice el parámetro SSM /sap-alwaysops/maintenance-windows`
   try {
     await sns.send(new PublishCommand({
       TopicArn: topicArn,
-      Subject: `[AlwaysOps] Ventana de mantenimiento sugerida: ${suggestions.systemId}`,
+      Subject: `[SAP Spektra] Ventana de mantenimiento sugerida: ${suggestions.systemId}`,
       Message: message,
     }));
   } catch (err) {
@@ -410,7 +410,7 @@ async function publishCorrelationAlerts(correlations, systemId) {
   try {
     await sns.send(new PublishCommand({
       TopicArn: alertsTopicArn,
-      Subject: `Avvale SAP AlwaysOps Correlación: ${systemId} (${correlations.length} patrones detectados)`,
+      Subject: `SAP Spektra Correlación: ${systemId} (${correlations.length} patrones detectados)`,
       Message: JSON.stringify(message),
       MessageAttributes: {
         eventType: { DataType: 'String', StringValue: 'CORRELATION_ALERT' },
@@ -679,7 +679,7 @@ async function publishCapacityPlanningAlerts(predictions) {
     if (topicArn) {
       await sns.send(new PublishCommand({
         TopicArn: topicArn,
-        Subject: `Avvale SAP AlwaysOps — Capacity Planning: ${criticalPredictions.length} críticas, ${warningPredictions.length} warnings`,
+        Subject: `SAP Spektra — Capacity Planning: ${criticalPredictions.length} críticas, ${warningPredictions.length} warnings`,
         Message: JSON.stringify(message, null, 2),
         MessageAttributes: {
           eventType: { DataType: 'String', StringValue: 'CAPACITY_PLANNING' },
@@ -998,7 +998,7 @@ async function publishCapacityForecastAlerts(forecasts, systemId) {
       warning: warningCount,
     },
     forecasts: newForecasts,
-    readableMessage: `[Avvale SAP AlwaysOps] Pronóstico de Capacidad — ${systemId}\n\n` +
+    readableMessage: `[SAP Spektra] Pronóstico de Capacidad — ${systemId}\n\n` +
       `${criticalCount} crítico(s), ${warningCount} advertencia(s)\n\n` +
       `${forecastLines}\n\n` +
       `Acción requerida: revise las recomendaciones individuales de cada métrica.`,
@@ -1007,7 +1007,7 @@ async function publishCapacityForecastAlerts(forecasts, systemId) {
   try {
     await sns.send(new PublishCommand({
       TopicArn: alertsTopicArn,
-      Subject: `Avvale SAP AlwaysOps H23 Capacity Forecast: ${systemId} (${criticalCount} CRITICAL, ${warningCount} WARNING)`,
+      Subject: `SAP Spektra H23 Capacity Forecast: ${systemId} (${criticalCount} CRITICAL, ${warningCount} WARNING)`,
       Message: JSON.stringify(message, null, 2),
       MessageAttributes: {
         eventType: { DataType: 'String', StringValue: 'CAPACITY_FORECAST' },
@@ -1264,7 +1264,7 @@ async function publishPreventiveAlert(predictions, systemId) {
   try {
     await sns.send(new PublishCommand({
       TopicArn: alertsTopicArn,
-      Subject: `Avvale SAP AlwaysOps Preventivo: ${systemId} (${predictions.length} predicciones)`,
+      Subject: `SAP Spektra Preventivo: ${systemId} (${predictions.length} predicciones)`,
       Message: JSON.stringify(message),
       MessageAttributes: {
         eventType: { DataType: 'String', StringValue: 'PREVENTIVE_ALERT' },
@@ -1521,7 +1521,7 @@ async function getMultiSystemBreaches() {
   const systemsBreaches = {};
 
   try {
-    // Consultar todas las alarmas activas en el namespace de Avvale SAP AlwaysOps
+    // Consultar todas las alarmas activas en el namespace de SAP Spektra
     let nextToken = undefined;
     const allAlarms = [];
 
@@ -1535,7 +1535,7 @@ async function getMultiSystemBreaches() {
       const result = await cw.send(new DescribeAlarmsCommand(params));
       const alarms = result.MetricAlarms || [];
 
-      // Filtrar solo alarmas del namespace de Avvale SAP AlwaysOps
+      // Filtrar solo alarmas del namespace de SAP Spektra
       const alwaysOpsAlarms = alarms.filter(a => a.Namespace === NAMESPACE);
       allAlarms.push(...alwaysOpsAlarms);
 
@@ -1603,7 +1603,7 @@ async function publishMultiSystemCorrelationAlerts(alerts) {
   try {
     await sns.send(new PublishCommand({
       TopicArn: alertsTopicArn,
-      Subject: `[Avvale SAP AlwaysOps H29] ${subjectPrefix}: ${alerts.length} alerta(s)`,
+      Subject: `[SAP Spektra H29] ${subjectPrefix}: ${alerts.length} alerta(s)`,
       Message: JSON.stringify(message, null, 2),
       MessageAttributes: {
         eventType: { DataType: 'String', StringValue: cascadeAlerts.length > 0 ? 'CASCADE_FAILURE' : 'MULTI_SYSTEM_CORRELATION' },
@@ -1897,7 +1897,7 @@ exports.handler = async (event) => {
   return {
     statusCode: 200,
     body: {
-      message: 'Avvale SAP AlwaysOps Preventive Engine v1.0 completado',
+      message: 'SAP Spektra Preventive Engine v1.0 completado',
       duration: `${duration}ms`,
       systemsProcessed: results.length,
       capacityPredictions: allCapacityPredictions.length,

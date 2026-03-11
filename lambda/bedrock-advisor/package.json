@@ -1,7 +1,7 @@
 {
-  "name": "sap-alwaysops-bedrock-advisor",
+  "name": "sap-spektra-bedrock-advisor",
   "version": "1.0.0",
-  "description": "Avvale SAP AlwaysOps - Asesor IA con 5 módulos Bedrock (UC1-UC5): análisis, forecast, safety gate, digest, adaptación",
+  "description": "SAP Spektra - Asesor IA con 5 módulos Bedrock (UC1-UC5): análisis, forecast, safety gate, digest, adaptación",
   "main": "index.js",
   "dependencies": {
     "@aws-sdk/client-bedrock-runtime": "^3.450.0",

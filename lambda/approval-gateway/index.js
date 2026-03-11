@@ -1,7 +1,7 @@
 'use strict';
 
 // ═══════════════════════════════════════════════════════════════
-//  Avvale SAP AlwaysOps v1.0 — Approval Gateway
+//  SAP Spektra v1.0 — Approval Gateway
 //  Gateway de aprobaciones para acciones con costo o riesgo.
 //
 //  ¿Qué hace este Lambda?
@@ -487,7 +487,7 @@ async function notifyApprovalRequest(approval) {
   };
 
   // H27: Si la solicitud fue delegada, agregar info al Subject del SNS
-  let subject = `Avvale SAP AlwaysOps Aprobación: ${approval.systemId} - ${approval.runbookId} (${approval.severity})`;
+  let subject = `SAP Spektra Aprobación: ${approval.systemId} - ${approval.runbookId} (${approval.severity})`;
   if (approval.delegatedTo) {
     subject = `[DELEGADO] ${subject}`;
   }
@@ -532,7 +532,7 @@ async function notifyApprovalResult(approval, status, processedBy) {
   try {
     await sns.send(new PublishCommand({
       TopicArn: alertsTopicArn,
-      Subject: `Avvale SAP AlwaysOps Aprobación ${status}: ${approval.systemId} - ${approval.runbookId}`,
+      Subject: `SAP Spektra Aprobación ${status}: ${approval.systemId} - ${approval.runbookId}`,
       Message: JSON.stringify(message),
       MessageAttributes: {
         eventType: { DataType: 'String', StringValue: 'APPROVAL_RESULT' },
@@ -569,7 +569,7 @@ function respondHtml(statusCode, title, message, color, icon) {
   const html = `<!DOCTYPE html>
 <html lang="es">
 <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Avvale SAP AlwaysOps - ${title}</title>
+<title>SAP Spektra - ${title}</title>
 <style>
   body{font-family:Arial,sans-serif;margin:0;padding:0;background:#f4f4f4;display:flex;justify-content:center;align-items:center;min-height:100vh;}
   .card{background:#fff;border-radius:12px;box-shadow:0 4px 20px rgba(0,0,0,0.1);max-width:480px;width:90%;overflow:hidden;text-align:center;}
@@ -584,7 +584,7 @@ function respondHtml(statusCode, title, message, color, icon) {
   <div class="card">
     <div class="header"><div class="icon">${icon}</div><h1>${title}</h1></div>
     <div class="body"><p>${message}</p></div>
-    <div class="footer">Avvale SAP AlwaysOps v1.0 &mdash; Sistema de monitoreo automatizado</div>
+    <div class="footer">SAP Spektra v1.0 &mdash; Sistema de monitoreo automatizado</div>
   </div>
 </body></html>`;
 

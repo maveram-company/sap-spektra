@@ -1,11 +1,11 @@
 'use strict';
 
 // =====================================================================
-//  Avvale SAP AlwaysOps v1.0 -- Slack Agent
+//  SAP Spektra v1.0 -- Slack Agent
 //  Agente de notificaciones para Slack via Incoming Webhooks.
 //
 //  Que hace este Lambda?
-//  Esta suscrito a los SNS topics de Avvale SAP AlwaysOps (AlertsTopic,
+//  Esta suscrito a los SNS topics de SAP Spektra (AlertsTopic,
 //  ApprovalsTopic). Cuando recibe un evento, construye un mensaje
 //  usando Slack Block Kit (el formato de mensaje enriquecido de Slack)
 //  y lo envia al canal de Slack configurado via webhook.
@@ -256,7 +256,7 @@ const MESSAGES = {
     );
 
     const blocks = [
-      headerBlock(`${emoji} Avvale SAP AlwaysOps - Alerta de Breach (${severity})`),
+      headerBlock(`${emoji} SAP Spektra - Alerta de Breach (${severity})`),
       fieldsBlock([
         { label: 'Sistema', value: data.systemId || 'N/A' },
         { label: 'Tipo', value: `${data.systemType || 'N/A'} / ${data.dbType || 'N/A'}` },
@@ -297,7 +297,7 @@ const MESSAGES = {
     });
 
     const blocks = [
-      headerBlock(`${emoji} Avvale SAP AlwaysOps - Resultado de Runbook (${statusText})`),
+      headerBlock(`${emoji} SAP Spektra - Resultado de Runbook (${statusText})`),
       fieldsBlock([
         { label: 'Sistema', value: data.systemId || 'N/A' },
         { label: 'Acciones ejecutadas', value: `${(data.results || []).length}` },
@@ -369,7 +369,7 @@ const MESSAGES = {
     fields.push({ label: 'Expira', value: data.expiresAt || 'N/A' });
 
     const blocks = [
-      headerBlock(':large_yellow_circle: Avvale SAP AlwaysOps - Aprobacion Requerida'),
+      headerBlock(':large_yellow_circle: SAP Spektra - Aprobacion Requerida'),
       sectionBlock(
         ':warning: *Se requiere aprobacion humana* para ejecutar una accion correctiva.'
       ),
@@ -403,7 +403,7 @@ const MESSAGES = {
     const statusLabel = isApproved ? 'APROBADA' : 'RECHAZADA';
 
     const blocks = [
-      headerBlock(`${emoji} Avvale SAP AlwaysOps - Aprobacion ${statusLabel}`),
+      headerBlock(`${emoji} SAP Spektra - Aprobacion ${statusLabel}`),
       fieldsBlock([
         { label: 'Sistema', value: data.systemId || 'N/A' },
         { label: 'Runbook', value: data.runbookId || 'N/A' },
@@ -450,7 +450,7 @@ const MESSAGES = {
     });
 
     const blocks = [
-      headerBlock(':warning: Avvale SAP AlwaysOps - Alerta Preventiva'),
+      headerBlock(':warning: SAP Spektra - Alerta Preventiva'),
       fieldsBlock([
         { label: 'Sistema', value: data.systemId || 'N/A' },
         { label: 'Predicciones', value: `${(data.predictions || []).length}` },
@@ -499,7 +499,7 @@ const MESSAGES = {
     }
 
     const blocks = [
-      headerBlock(':red_circle: Avvale SAP AlwaysOps - HA Failover Detectado'),
+      headerBlock(':red_circle: SAP Spektra - HA Failover Detectado'),
       sectionBlock(
         ':rotating_light: *ALERTA CRITICA*: Se detecto un failover de alta disponibilidad. ' +
         'Requiere atencion inmediata del equipo de Basis.'
@@ -562,7 +562,7 @@ const MESSAGES = {
     });
 
     const blocks = [
-      headerBlock(':bar_chart: Avvale SAP AlwaysOps - Digest Ejecutivo Diario'),
+      headerBlock(':bar_chart: SAP Spektra - Digest Ejecutivo Diario'),
       fieldsBlock([
         { label: 'Periodo', value: data.period || 'Ultimas 24h' },
         { label: 'Sistemas monitoreados', value: `${data.systemsCount || 0}` },
@@ -602,7 +602,7 @@ const MESSAGES = {
 
     blocks.push(dividerBlock());
     blocks.push(
-      contextBlock(':robot_face: Avvale SAP AlwaysOps v1.0 - Generado automaticamente')
+      contextBlock(':robot_face: SAP Spektra v1.0 - Generado automaticamente')
     );
 
     return { color, blocks };
@@ -637,7 +637,7 @@ const MESSAGES = {
     }
 
     const blocks = [
-      headerBlock(':shield: Avvale SAP AlwaysOps - Safety Gate Bloqueo'),
+      headerBlock(':shield: SAP Spektra - Safety Gate Bloqueo'),
       sectionBlock(
         ':no_entry: *El Safety Gate bloqueo una auto-ejecucion de runbook.* ' +
         'Se requiere revision humana antes de proceder.'
@@ -688,7 +688,7 @@ const MESSAGES = {
     });
 
     const blocks = [
-      headerBlock(':floppy_disk: Avvale SAP AlwaysOps - Prediccion de Disco'),
+      headerBlock(':floppy_disk: SAP Spektra - Prediccion de Disco'),
       fieldsBlock([
         { label: 'Motor IA', value: data.bedrockUsed ? 'Bedrock (Claude)' : 'Regresion lineal' },
         { label: 'Ventana', value: data.forecastWindow || '6 horas' },
@@ -741,7 +741,7 @@ function buildSlackPayload(eventType, messageData) {
 
   return {
     // Texto de fallback (se muestra en notificaciones push y previews)
-    text: `Avvale SAP AlwaysOps - ${eventType.replace(/_/g, ' ')}`,
+    text: `SAP Spektra - ${eventType.replace(/_/g, ' ')}`,
     // Usamos attachments para la barra de color lateral
     attachments: [
       {
@@ -761,7 +761,7 @@ function buildSlackPayload(eventType, messageData) {
 
 function buildFallbackMessage(eventType, data) {
   const blocks = [
-    headerBlock(`:bell: Avvale SAP AlwaysOps - ${eventType.replace(/_/g, ' ')}`),
+    headerBlock(`:bell: SAP Spektra - ${eventType.replace(/_/g, ' ')}`),
     fieldsBlock([
       { label: 'Tipo de evento', value: eventType },
       { label: 'Sistema', value: data.systemId || 'N/A' },
@@ -796,7 +796,7 @@ exports.handler = async (event, context) => {
   const startTime = Date.now();
   const invocationId = `slack-${Date.now()}-${Math.random().toString(36).substring(2, 8)}`;
 
-  log.info('Avvale SAP AlwaysOps Slack Agent v1.0 invocado', {
+  log.info('SAP Spektra Slack Agent v1.0 invocado', {
     invocationId,
     recordCount: (event.Records || []).length,
   });
@@ -899,7 +899,7 @@ exports.handler = async (event, context) => {
     const successCount = results.filter((r) => r.sent).length;
     const failCount = results.filter((r) => !r.sent).length;
 
-    log.info('Avvale SAP AlwaysOps Slack Agent v1.0 completado', {
+    log.info('SAP Spektra Slack Agent v1.0 completado', {
       invocationId,
       duration: `${duration}ms`,
       totalRecords: records.length,
@@ -911,7 +911,7 @@ exports.handler = async (event, context) => {
     return {
       statusCode: 200,
       body: {
-        message: 'Avvale SAP AlwaysOps Slack Agent v1.0 completado',
+        message: 'SAP Spektra Slack Agent v1.0 completado',
         invocationId,
         duration: `${duration}ms`,
         messagesSent: successCount,
@@ -933,11 +933,11 @@ exports.handler = async (event, context) => {
     // Intentar enviar un mensaje de error a Slack como ultimo recurso
     try {
       const errorPayload = {
-        text: 'Avvale SAP AlwaysOps - Error en Slack Agent',
+        text: 'SAP Spektra - Error en Slack Agent',
         attachments: [{
           color: '#DC3545',
           blocks: [
-            headerBlock(':sos: Avvale SAP AlwaysOps - Error Interno'),
+            headerBlock(':sos: SAP Spektra - Error Interno'),
             sectionBlock(
               `El Slack Agent encontro un error fatal:\n\`\`\`${err.message}\`\`\``
             ),

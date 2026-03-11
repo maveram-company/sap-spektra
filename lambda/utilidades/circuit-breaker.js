@@ -1,7 +1,7 @@
 'use strict';
 
 // ═══════════════════════════════════════════════════════════════
-//  Avvale SAP AlwaysOps v1.0 — Circuit Breaker
+//  SAP Spektra v1.0 — Circuit Breaker
 //  Patron circuit breaker para proteger llamadas a Bedrock y SSM.
 //
 //  Estados:

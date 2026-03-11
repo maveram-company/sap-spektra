@@ -1,5 +1,5 @@
 // ============================================================================
-//  Avvale SAP AlwaysOps v2.0 — Validador de Inputs
+//  SAP Spektra v2.0 — Validador de Inputs
 //  Módulo compartido para sanitizar y validar entradas de usuario.
 //  Previene inyección de comandos, JSON malformado y datos inválidos.
 // ============================================================================

@@ -1,7 +1,7 @@
 {
-  "name": "sap-alwaysops-alert-rules-engine",
+  "name": "sap-spektra-alert-rules-engine",
   "version": "1.0.0",
-  "description": "Avvale SAP AlwaysOps - Motor de reglas de alerta personalizadas (H38)",
+  "description": "SAP Spektra - Motor de reglas de alerta personalizadas (H38)",
   "main": "index.js",
   "dependencies": {
     "@aws-sdk/client-dynamodb": "^3.450.0",

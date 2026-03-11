@@ -1,7 +1,7 @@
 'use strict';
 
 // ═══════════════════════════════════════════════════════════════
-//  Avvale SAP AlwaysOps v1.0 — Dashboard API
+//  SAP Spektra v1.0 — Dashboard API
 //  API REST para el dashboard de monitoreo + chatbot + operaciones + admin.
 //
 //  ¿Qué hace este Lambda?
@@ -979,14 +979,14 @@ async function getSystemSLA(systemId, queryParams) {
 // ═══════════════════════════════════════════════════════════════
 const PRODUCT_VERSION = (() => {
   try { return require('../../version.json'); }
-  catch (e) { return { product: 'SAP-AlwaysOps', version: 'unknown' }; }
+  catch (e) { return { product: 'SAP-Spektra', version: 'unknown' }; }
 })();
 const LAMBDA_START = Date.now();
 
 async function healthCheck() {
   return {
     status: 'healthy',
-    service: 'Avvale SAP AlwaysOps Dashboard API',
+    service: 'SAP Spektra Dashboard API',
     version: PRODUCT_VERSION.version,
     codename: PRODUCT_VERSION.codename || '',
     timestamp: new Date().toISOString(),
@@ -1014,7 +1014,7 @@ function getVersionInfo() {
 
 // ═══════════════════════════════════════════════════════════════
 //  FUNCIÓN: getHealthStatus
-//  v2.0 — Deep health check para /health/sentinel
+//  v2.0 — Deep health check para /health/spektra
 //  Verifica conectividad con DynamoDB, estado de Lambda,
 //  y retorna información de salud de la plataforma.
 // ═══════════════════════════════════════════════════════════════
@@ -1523,8 +1523,8 @@ exports.handler = async (event, context) => {
     }
 
     // ─── Router ───
-    // GET /health/sentinel — Platform deep health check (unauthenticated)
-    if (method === 'GET' && path === '/health/sentinel') {
+    // GET /health/spektra — Platform deep health check (unauthenticated)
+    if (method === 'GET' && path === '/health/spektra') {
       return await getHealthStatus(event);
     }
 

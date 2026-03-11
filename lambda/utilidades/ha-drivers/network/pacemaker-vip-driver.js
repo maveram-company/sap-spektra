@@ -1,7 +1,7 @@
 'use strict';
 
 // ═══════════════════════════════════════════════════════════════
-//  Avvale SAP AlwaysOps v1.5 — Pacemaker VIP Network Driver
+//  SAP Spektra v1.5 — Pacemaker VIP Network Driver
 //  Maneja failover de red mediante movimiento de Virtual IP
 //  en clusters Pacemaker/Corosync via SSM commands.
 // ═══════════════════════════════════════════════════════════════

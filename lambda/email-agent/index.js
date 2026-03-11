@@ -1,7 +1,7 @@
 'use strict';
 
 // ═══════════════════════════════════════════════════════════════
-//  Avvale SAP AlwaysOps v1.0 — Email Agent
+//  SAP Spektra v1.0 — Email Agent
 //  Agente de notificaciones por email via Amazon SES.
 //
 //  ¿Qué hace este Lambda?
@@ -63,7 +63,7 @@ function baseTemplate(title, headerColor, bodyContent) {
   <div style="max-width:600px;margin:20px auto;background:#ffffff;border-radius:8px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,0.1);">
     <!-- Encabezado -->
     <div style="background:${headerColor};color:white;padding:24px;text-align:center;">
-      <h1 style="margin:0;font-size:22px;">Avvale SAP AlwaysOps</h1>
+      <h1 style="margin:0;font-size:22px;">SAP Spektra</h1>
       <h2 style="margin:8px 0 0;font-size:16px;font-weight:normal;opacity:0.9;">${title}</h2>
     </div>
     <!-- Contenido -->
@@ -72,7 +72,7 @@ function baseTemplate(title, headerColor, bodyContent) {
     </div>
     <!-- Pie de página -->
     <div style="background:#f8f8f8;padding:16px;text-align:center;font-size:12px;color:#888;border-top:1px solid #eee;">
-      Avvale SAP AlwaysOps v1.0 &mdash; Sistema de monitoreo automatizado<br>
+      SAP Spektra v1.0 &mdash; Sistema de monitoreo automatizado<br>
       Este email fue generado autom&aacute;ticamente. No responder.
     </div>
   </div>
@@ -142,7 +142,7 @@ const TEMPLATES = {
       </p>`;
 
     return {
-      subject: `[Avvale SAP AlwaysOps] ${severityText}: ${data.systemId} - ${breaches.length} breach(es)`,
+      subject: `[SAP Spektra] ${severityText}: ${data.systemId} - ${breaches.length} breach(es)`,
       htmlBody: baseTemplate(`Alerta de Breach - ${severityText}`, severityColor, body),
     };
   },
@@ -170,7 +170,7 @@ const TEMPLATES = {
       </div>`;
 
     return {
-      subject: `[Avvale SAP AlwaysOps] Aprobacion requerida: ${data.systemId} - ${data.runbookId}`,
+      subject: `[SAP Spektra] Aprobacion requerida: ${data.systemId} - ${data.runbookId}`,
       htmlBody: baseTemplate('Solicitud de Aprobacion', '#ffc107', body),
     };
   },
@@ -189,7 +189,7 @@ const TEMPLATES = {
       </table>`;
 
     return {
-      subject: `[Avvale SAP AlwaysOps] Aprobacion ${data.status}: ${data.systemId} - ${data.runbookId}`,
+      subject: `[SAP Spektra] Aprobacion ${data.status}: ${data.systemId} - ${data.runbookId}`,
       htmlBody: baseTemplate(`Aprobacion ${data.status}`, color, body),
     };
   },
@@ -224,7 +224,7 @@ const TEMPLATES = {
       </table>`;
 
     return {
-      subject: `[Avvale SAP AlwaysOps] Runbook ejecutado: ${data.systemId}`,
+      subject: `[SAP Spektra] Runbook ejecutado: ${data.systemId}`,
       htmlBody: baseTemplate('Resultado de Runbook', '#17a2b8', body),
     };
   },
@@ -248,7 +248,7 @@ const TEMPLATES = {
       </div>`;
 
     return {
-      subject: `[Avvale SAP AlwaysOps] Advisor: ${data.systemId} (${data.originalEventType})`,
+      subject: `[SAP Spektra] Advisor: ${data.systemId} (${data.originalEventType})`,
       htmlBody: baseTemplate('Recomendacion del Advisor', '#0d6efd', body),
     };
   },
@@ -285,7 +285,7 @@ const TEMPLATES = {
       </table>`;
 
     return {
-      subject: `[Avvale SAP AlwaysOps] HA Anomalia: ${data.systemId} (${data.severity})`,
+      subject: `[SAP Spektra] HA Anomalia: ${data.systemId} (${data.severity})`,
       htmlBody: baseTemplate('Anomalia de Alta Disponibilidad', '#dc3545', body),
     };
   },
@@ -330,7 +330,7 @@ const TEMPLATES = {
       </div>`;
 
     return {
-      subject: `[Avvale SAP AlwaysOps] Digest Diario - ${data.systemsCount || 0} sistemas`,
+      subject: `[SAP Spektra] Digest Diario - ${data.systemsCount || 0} sistemas`,
       htmlBody: baseTemplate('Digest Ejecutivo Diario', '#6f42c1', body),
     };
   },
@@ -380,7 +380,7 @@ const TEMPLATES = {
       </div>` : ''}`;
 
     return {
-      subject: `[Avvale SAP AlwaysOps] Forecast Disco - ${(data.forecasts || []).length} alertas`,
+      subject: `[SAP Spektra] Forecast Disco - ${(data.forecasts || []).length} alertas`,
       htmlBody: baseTemplate('Prediccion de Disco (UC2)', '#fd7e14', body),
     };
   },
@@ -404,7 +404,7 @@ const TEMPLATES = {
       </p>`;
 
     return {
-      subject: `[Avvale SAP AlwaysOps] Safety Gate: ${data.systemId} - ${data.runbookId} (${data.decision})`,
+      subject: `[SAP Spektra] Safety Gate: ${data.systemId} - ${data.runbookId} (${data.decision})`,
       htmlBody: baseTemplate('Safety Gate Bloqueo (UC3)', '#dc3545', body),
     };
   },
@@ -443,7 +443,7 @@ const TEMPLATES = {
       </table>`;
 
     return {
-      subject: `[Avvale SAP AlwaysOps] Alerta Preventiva: ${data.systemId}`,
+      subject: `[SAP Spektra] Alerta Preventiva: ${data.systemId}`,
       htmlBody: baseTemplate('Alerta Preventiva', '#fd7e14', body),
     };
   },
@@ -485,7 +485,7 @@ async function sendEmail(subject, htmlBody, recipients) {
 
 exports.handler = async (event, context) => {
   log.initFromEvent(event, context);
-  log.info('Avvale SAP AlwaysOps Email Agent v1.0 invocado');
+  log.info('SAP Spektra Email Agent v1.0 invocado');
   const startTime = Date.now();
 
   try {
@@ -540,7 +540,7 @@ exports.handler = async (event, context) => {
     return {
       statusCode: 200,
       body: {
-        message: 'Avvale SAP AlwaysOps Email Agent v1.0 completado',
+        message: 'SAP Spektra Email Agent v1.0 completado',
         duration: `${duration}ms`,
         emailsSent: results.filter(r => r.emailSent).length,
         results,

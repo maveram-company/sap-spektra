@@ -1,5 +1,5 @@
 // ============================================================================
-//  Avvale SAP AlwaysOps v1.0 — Setup Portal — Gestion de credenciales AWS
+//  SAP Spektra v1.0 — Setup Portal — Gestion de credenciales AWS
 // ============================================================================
 
 'use strict';

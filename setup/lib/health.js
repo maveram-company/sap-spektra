@@ -1,5 +1,5 @@
 // ============================================================================
-//  Avvale SAP AlwaysOps v1.0 — Setup Portal — Health checks y teardown post-deploy
+//  SAP Spektra v1.0 — Setup Portal — Health checks y teardown post-deploy
 // ============================================================================
 
 'use strict';

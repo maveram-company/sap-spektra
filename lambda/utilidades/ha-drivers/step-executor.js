@@ -1,7 +1,7 @@
 'use strict';
 
 // ═══════════════════════════════════════════════════════════════
-//  Avvale SAP AlwaysOps v1.5 — Step Executor
+//  SAP Spektra v1.5 — Step Executor
 //  Ejecuta secuencias de pasos de HA con checkpoints,
 //  rollback automatico, evidence pack y timeout control.
 // ═══════════════════════════════════════════════════════════════

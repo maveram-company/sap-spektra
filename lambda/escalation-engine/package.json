@@ -1,7 +1,7 @@
 {
-  "name": "sap-alwaysops-escalation-engine",
+  "name": "sap-spektra-escalation-engine",
   "version": "1.0.0",
-  "description": "Avvale SAP AlwaysOps - Motor de escalación automática para aprobaciones no respondidas",
+  "description": "SAP Spektra - Motor de escalación automática para aprobaciones no respondidas",
   "main": "index.js",
   "dependencies": {
     "@aws-sdk/client-dynamodb": "^3.450.0",

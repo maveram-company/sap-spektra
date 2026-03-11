@@ -1,7 +1,7 @@
 {
-  "name": "sap-alwaysops-universal-collector",
+  "name": "sap-spektra-universal-collector",
   "version": "1.0.0",
-  "description": "Avvale SAP AlwaysOps - Universal metric collector for all SAP system types and databases",
+  "description": "SAP Spektra - Universal metric collector for all SAP system types and databases",
   "main": "index.js",
   "dependencies": {
     "@aws-sdk/client-cloudwatch": "^3.450.0",

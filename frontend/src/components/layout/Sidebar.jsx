@@ -20,7 +20,7 @@ const navigation = [
   { section: 'Monitor' },
   { name: 'Sistemas', href: '/systems', icon: Monitor },
   { name: 'Eventos', href: '/events', icon: List },
-  { name: 'Sentinel Health', href: '/health', icon: Heart },
+  { name: 'Spektra Health', href: '/health', icon: Heart },
 
   { section: 'Intelligence' },
   { name: 'Análisis IA', href: '/ai', icon: Brain },

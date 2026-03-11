@@ -1,7 +1,7 @@
 {
-  "name": "sap-alwaysops-servicenow-agent",
+  "name": "sap-spektra-servicenow-agent",
   "version": "1.0.0",
-  "description": "Avvale SAP AlwaysOps - ServiceNow ITSM Integration Agent",
+  "description": "SAP Spektra - ServiceNow ITSM Integration Agent",
   "main": "index.js",
   "dependencies": {
     "@aws-sdk/client-secrets-manager": "^3.400.0",

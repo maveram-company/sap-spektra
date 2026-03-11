@@ -1,7 +1,7 @@
 {
-  "name": "sap-alwaysops-audit-reporter",
+  "name": "sap-spektra-audit-reporter",
   "version": "1.0.0",
-  "description": "Avvale SAP AlwaysOps - Generador de reportes de auditoría y compliance",
+  "description": "SAP Spektra - Generador de reportes de auditoría y compliance",
   "main": "index.js",
   "dependencies": {
     "@aws-sdk/client-dynamodb": "^3.450.0",

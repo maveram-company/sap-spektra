@@ -1,7 +1,7 @@
 'use strict';
 
 // ═══════════════════════════════════════════════════════════════
-//  Avvale SAP AlwaysOps v1.4 — Policy Engine Unico
+//  SAP Spektra v1.4 — Policy Engine Unico
 //  Motor de politicas para permitir/denegar operaciones.
 //  Deny-by-default: si no hay regla que permita → bloquear.
 //  Un solo modulo para TODO: scheduler, discovery, ejecucion,

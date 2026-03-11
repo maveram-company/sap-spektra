@@ -1,7 +1,7 @@
 'use strict';
 
 // ═══════════════════════════════════════════════════════════════
-//  Test Runner — Avvale SAP AlwaysOps v1.5
+//  Test Runner — SAP Spektra v1.5
 //  Ejecutar: node tests/run-all.js
 // ═══════════════════════════════════════════════════════════════
 
@@ -48,7 +48,7 @@ let totalPassed = 0;
 let totalFailed = 0;
 
 console.log('╔══════════════════════════════════════════════╗');
-console.log('║  Avvale SAP AlwaysOps v1.5 — Test Suite     ║');
+console.log('║  SAP Spektra v1.5 — Test Suite               ║');
 console.log('╚══════════════════════════════════════════════╝\n');
 
 for (const testFile of tests) {

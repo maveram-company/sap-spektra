@@ -1,7 +1,7 @@
 'use strict';
 
 // ═══════════════════════════════════════════════════════════════
-//  Avvale SAP AlwaysOps v1.0 — Audit Reporter
+//  SAP Spektra v1.0 — Audit Reporter
 //  Generador semanal de reportes de auditoría y compliance.
 //
 //  ¿Qué hace este Lambda?
@@ -46,7 +46,7 @@ const SEVEN_DAYS_MS = 7 * 24 * 60 * 60 * 1000;
 const PRESIGNED_URL_EXPIRY = 7 * 24 * 60 * 60; // 7 días en segundos
 
 // ─── H25: Mapeo de controles de compliance (SOX / ISO 27001 / ITIL) ───
-// Cada control define qué indicadores (tipos de actividad de Avvale SAP AlwaysOps)
+// Cada control define qué indicadores (tipos de actividad de SAP Spektra)
 // sirven como evidencia de cumplimiento. Se usa para generar el reporte
 // automático de compliance mapping en cada auditoría semanal.
 const COMPLIANCE_CONTROLS = {
@@ -103,7 +103,7 @@ const COMPLIANCE_CONTROLS = {
 //  7 días. Usa paginación con LastEvaluatedKey para manejar
 //  datasets grandes sin perder datos.
 //
-//  Las tablas de Avvale SAP AlwaysOps usan pk como partition key y
+//  Las tablas de SAP Spektra usan pk como partition key y
 //  sk como sort key (ISO timestamp). Hacemos un Scan con
 //  filtro por fecha porque necesitamos datos de TODOS los
 //  sistemas (no un solo pk).
@@ -485,7 +485,7 @@ function calculateCostImpact(approvals) {
 
 // ═══════════════════════════════════════════════════════════════
 //  FUNCIÓN: calculateOperationalCosts (v1.6)
-//  Estima el costo mensual de operación de Avvale SAP AlwaysOps basándose
+//  Estima el costo mensual de operación de SAP Spektra basándose
 //  en el uso real: invocaciones Lambda, lecturas DynamoDB,
 //  métricas CloudWatch, y SNS notifications.
 //
@@ -917,7 +917,7 @@ function generateComplianceSection(complianceReport) {
 // ═══════════════════════════════════════════════════════════════
 //  FUNCIÓN: generateHtmlReport
 //  Genera un reporte HTML standalone con CSS inline.
-//  Tema profesional azul/naranja con branding Avvale SAP AlwaysOps.
+//  Tema profesional azul/naranja con branding SAP Spektra.
 // ═══════════════════════════════════════════════════════════════
 
 function generateHtmlReport(reportData) {
@@ -1111,7 +1111,7 @@ function generateHtmlReport(reportData) {
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Avvale SAP AlwaysOps - Reporte de Auditor&iacute;a Semanal W${weekNumber}</title>
+  <title>SAP Spektra - Reporte de Auditor&iacute;a Semanal W${weekNumber}</title>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f0f2f5; color: #333; line-height: 1.6; }
@@ -1154,7 +1154,7 @@ function generateHtmlReport(reportData) {
   <div class="container">
     <!-- Header -->
     <div class="header">
-      <h1>Avvale SAP AlwaysOps</h1>
+      <h1>SAP Spektra</h1>
       <div class="subtitle">Reporte de Auditor&iacute;a y Compliance Semanal</div>
       <div class="date-badge">Semana ${weekNumber} &mdash; ${reportDate}</div>
     </div>
@@ -1331,9 +1331,9 @@ function generateHtmlReport(reportData) {
       </div>
     </div>
 
-    <!-- Sección 8: Costos Operacionales AlwaysOps (v1.6) -->
+    <!-- Sección 8: Costos Operacionales SAP Spektra (v1.6) -->
     <div class="section">
-      <div class="section-header">AlwaysOps Operational Costs (Estimado Mensual)</div>
+      <div class="section-header">SAP Spektra Operational Costs (Estimado Mensual)</div>
       <div class="section-body">
         <div style="padding:16px 20px;background:#f8f9fa;border-bottom:1px solid #eee;">
           <strong>Total estimado:</strong> $${operationalCosts?.totalMonthlyCostUsd || 0}/mes &nbsp; | &nbsp;
@@ -1389,7 +1389,7 @@ function generateHtmlReport(reportData) {
 
     <!-- Footer -->
     <div class="footer">
-      <strong>Avvale SAP AlwaysOps v1.0</strong> &mdash; Reporte generado autom&aacute;ticamente el ${new Date().toISOString()}<br>
+      <strong>SAP Spektra v1.0</strong> &mdash; Reporte generado autom&aacute;ticamente el ${new Date().toISOString()}<br>
       Sistema de monitoreo y remediaci&oacute;n automatizada para SAP
     </div>
   </div>
@@ -1513,7 +1513,7 @@ async function sendSummaryNotification(summary, htmlUrl, reportDate, weekNumber)
   try {
     await sns.send(new PublishCommand({
       TopicArn: ALERTS_TOPIC_ARN,
-      Subject: `Avvale SAP AlwaysOps Audit Report - Semana ${weekNumber} (${reportDate})`,
+      Subject: `SAP Spektra Audit Report - Semana ${weekNumber} (${reportDate})`,
       Message: JSON.stringify(message),
       MessageAttributes: {
         eventType: { DataType: 'String', StringValue: 'AUDIT_REPORT' },
@@ -2062,7 +2062,7 @@ exports.handler = async (event, context) => {
     // Impacto de costos (expansiones aprobadas)
     const costImpact = calculateCostImpact(approvals);
 
-    // v1.6 — Costo operacional estimado de AlwaysOps
+    // v1.6 — Costo operacional estimado de SAP Spektra
     const systemsConfig = await loadSystemsConfig();
     const operationalCosts = calculateOperationalCosts(incidents, executions, systemsConfig.length || 1);
 
@@ -2253,7 +2253,7 @@ exports.handler = async (event, context) => {
     return {
       statusCode: 200,
       body: {
-        message: 'Avvale SAP AlwaysOps Audit Reporter v1.0 completado',
+        message: 'SAP Spektra Audit Reporter v1.0 completado',
         duration: `${duration}ms`,
         reportDate,
         weekNumber,

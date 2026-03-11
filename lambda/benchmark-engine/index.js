@@ -1,7 +1,7 @@
 'use strict';
 
 // ═══════════════════════════════════════════════════════════════
-//  Avvale SAP AlwaysOps v1.0 — H40: Performance Benchmarking Engine
+//  SAP Spektra v1.0 — H40: Performance Benchmarking Engine
 //  Motor de benchmarking de rendimiento para sistemas SAP.
 //
 //  ¿Qué hace este Lambda?

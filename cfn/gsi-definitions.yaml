@@ -1,8 +1,8 @@
 # ============================================================================
-#  SAP AlwaysOps v1.5 -- Enterprise Hardening: GSI Definitions
+#  SAP Spektra v1.5 -- Enterprise Hardening: GSI Definitions
 #
 #  This file documents all Global Secondary Indexes (GSIs) that must be added
-#  to the main CloudFormation template (sap-sentinel-v1.0.yaml) to eliminate
+#  to the main CloudFormation template (sap-spektra-v1.0.yaml) to eliminate
 #  DynamoDB Scan operations from hot-path Lambda functions.
 #
 #  Each GSI below replaces a Scan with a Query for O(1) partition access.

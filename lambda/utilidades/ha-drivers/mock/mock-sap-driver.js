@@ -1,7 +1,7 @@
 'use strict';
 
 // =================================================================
-//  Avvale SAP AlwaysOps v1.5 — Mock SAP Services Driver
+//  SAP Spektra v1.5 — Mock SAP Services Driver
 //  Simula operaciones de stop/start de servicios SAP (ABAP, J2EE, ICM)
 //  con listas de procesos realistas (disp+work, igswd_mt, gwrd, icman).
 //  Soporta inyeccion de fallos y delays configurables.

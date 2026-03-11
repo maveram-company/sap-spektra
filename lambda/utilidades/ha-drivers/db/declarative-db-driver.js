@@ -1,7 +1,7 @@
 'use strict';
 
 // ═══════════════════════════════════════════════════════════════
-//  Avvale SAP AlwaysOps v1.5 — Declarative DB Driver
+//  SAP Spektra v1.5 — Declarative DB Driver
 //  Driver generico para bases de datos sin driver especifico.
 //  Configuracion por JSON: comandos de promote, demote, status, health.
 //  Soporta MaxDB, ASE, Oracle, etc.

@@ -1,7 +1,7 @@
 'use strict';
 
 // ═══════════════════════════════════════════════════════════════
-//  Avvale SAP AlwaysOps v1.0 — Movidesk Agent
+//  SAP Spektra v1.0 — Movidesk Agent
 //  Agente de integración con Movidesk para gestión de tickets.
 //
 //  ¿Qué hace este Lambda?
@@ -221,7 +221,7 @@ async function movideskRequest(method, path, body, retryCount = 0) {
 
 // ═══════════════════════════════════════════════════════════════
 //  FUNCIÓN: mapSeverityToUrgency
-//  Mapea la severidad de Avvale SAP AlwaysOps a la urgencia de
+//  Mapea la severidad de SAP Spektra a la urgencia de
 //  Movidesk. También retorna si el ticket es urgente.
 //
 //  WARNING    → Baixa (baja prioridad)
@@ -258,21 +258,21 @@ function buildTicketSubject(eventType, data) {
     case 'BREACH_DETECTED': {
       const metrics = (data.breaches || []).map(b => b.metricName).join(', ');
       const severity = data.breaches?.some(b => b.severity === 'CRITICAL') ? 'CRITICAL' : 'HIGH';
-      return `[Avvale SAP AlwaysOps] ${severity}: ${systemId} - Breach en ${metrics}`;
+      return `[SAP Spektra] ${severity}: ${systemId} - Breach en ${metrics}`;
     }
     case 'RUNBOOK_RESULT': {
       const runbooks = (data.results || []).map(r => r.runbookId).join(', ');
-      return `[Avvale SAP AlwaysOps] Runbook ejecutado: ${systemId} - ${runbooks}`;
+      return `[SAP Spektra] Runbook ejecutado: ${systemId} - ${runbooks}`;
     }
     case 'PREVENTIVE_ALERT': {
       const predMetrics = (data.predictions || []).map(p => p.metricName).join(', ');
-      return `[Avvale SAP AlwaysOps] Alerta Preventiva: ${systemId} - ${predMetrics}`;
+      return `[SAP Spektra] Alerta Preventiva: ${systemId} - ${predMetrics}`;
     }
     case 'APPROVAL_RESULT': {
-      return `[Avvale SAP AlwaysOps] Aprobacion ${data.status}: ${systemId} - ${data.runbookId}`;
+      return `[SAP Spektra] Aprobacion ${data.status}: ${systemId} - ${data.runbookId}`;
     }
     default:
-      return `[Avvale SAP AlwaysOps] ${eventType}: ${systemId}`;
+      return `[SAP Spektra] ${eventType}: ${systemId}`;
   }
 }
 
@@ -305,7 +305,7 @@ function buildTicketDescription(eventType, data) {
       });
 
       return `<div style="font-family:Arial,sans-serif;">
-        <h2 style="color:${severityColor};">Avvale SAP AlwaysOps - Breach Detectado (${severity})</h2>
+        <h2 style="color:${severityColor};">SAP Spektra - Breach Detectado (${severity})</h2>
         <table style="width:100%;border-collapse:collapse;margin-bottom:16px;">
           <tr><td style="padding:6px 10px;border:1px solid #ddd;font-weight:bold;">Sistema</td><td style="padding:6px 10px;border:1px solid #ddd;">${data.systemId}</td></tr>
           <tr><td style="padding:6px 10px;border:1px solid #ddd;font-weight:bold;">Tipo</td><td style="padding:6px 10px;border:1px solid #ddd;">${data.systemType || 'N/A'} / ${data.dbType || 'N/A'}</td></tr>
@@ -326,9 +326,9 @@ function buildTicketDescription(eventType, data) {
         </table>
         <p style="color:#666;font-size:12px;margin-top:16px;">
           Los runbooks marcados como <strong>costSafe</strong> se ejecutan autom&aacute;ticamente.
-          Los dem&aacute;s requieren aprobaci&oacute;n manual via Avvale SAP AlwaysOps.
+          Los dem&aacute;s requieren aprobaci&oacute;n manual via SAP Spektra.
         </p>
-        <hr><p style="font-size:11px;color:#999;">Generado autom&aacute;ticamente por Avvale SAP AlwaysOps v1.0</p>
+        <hr><p style="font-size:11px;color:#999;">Generado autom&aacute;ticamente por SAP Spektra v1.0</p>
       </div>`;
     }
 
@@ -350,7 +350,7 @@ function buildTicketDescription(eventType, data) {
       const statusColor = allSuccess ? '#28a745' : '#dc3545';
 
       return `<div style="font-family:Arial,sans-serif;">
-        <h2 style="color:${statusColor};">Avvale SAP AlwaysOps - Resultado de Runbook</h2>
+        <h2 style="color:${statusColor};">SAP Spektra - Resultado de Runbook</h2>
         <table style="width:100%;border-collapse:collapse;margin-bottom:16px;">
           <tr><td style="padding:6px 10px;border:1px solid #ddd;font-weight:bold;">Sistema</td><td style="padding:6px 10px;border:1px solid #ddd;">${data.systemId}</td></tr>
           <tr><td style="padding:6px 10px;border:1px solid #ddd;font-weight:bold;">Estado General</td><td style="padding:6px 10px;border:1px solid #ddd;color:${statusColor};font-weight:bold;">${allSuccess ? 'TODOS EXITOSOS' : 'CON FALLOS'}</td></tr>
@@ -367,7 +367,7 @@ function buildTicketDescription(eventType, data) {
           </tr>
           ${resultRows}
         </table>
-        <hr><p style="font-size:11px;color:#999;">Generado autom&aacute;ticamente por Avvale SAP AlwaysOps v1.0</p>
+        <hr><p style="font-size:11px;color:#999;">Generado autom&aacute;ticamente por SAP Spektra v1.0</p>
       </div>`;
     }
 
@@ -385,7 +385,7 @@ function buildTicketDescription(eventType, data) {
       });
 
       return `<div style="font-family:Arial,sans-serif;">
-        <h2 style="color:#fd7e14;">Avvale SAP AlwaysOps - Alerta Preventiva</h2>
+        <h2 style="color:#fd7e14;">SAP Spektra - Alerta Preventiva</h2>
         <p>El motor preventivo detect&oacute; m&eacute;tricas con tendencia a superar sus umbrales.</p>
         <table style="width:100%;border-collapse:collapse;margin-bottom:16px;">
           <tr><td style="padding:6px 10px;border:1px solid #ddd;font-weight:bold;">Sistema</td><td style="padding:6px 10px;border:1px solid #ddd;">${data.systemId}</td></tr>
@@ -403,7 +403,7 @@ function buildTicketDescription(eventType, data) {
           </tr>
           ${predRows}
         </table>
-        <hr><p style="font-size:11px;color:#999;">Generado autom&aacute;ticamente por Avvale SAP AlwaysOps v1.0</p>
+        <hr><p style="font-size:11px;color:#999;">Generado autom&aacute;ticamente por SAP Spektra v1.0</p>
       </div>`;
     }
 
@@ -413,7 +413,7 @@ function buildTicketDescription(eventType, data) {
       const statusColor = isApproved ? '#28a745' : '#dc3545';
 
       return `<div style="font-family:Arial,sans-serif;">
-        <h2 style="color:${statusColor};">Avvale SAP AlwaysOps - Aprobaci&oacute;n ${data.status}</h2>
+        <h2 style="color:${statusColor};">SAP Spektra - Aprobaci&oacute;n ${data.status}</h2>
         <table style="width:100%;border-collapse:collapse;margin-bottom:16px;">
           <tr><td style="padding:6px 10px;border:1px solid #ddd;font-weight:bold;">Sistema</td><td style="padding:6px 10px;border:1px solid #ddd;">${data.systemId}</td></tr>
           <tr><td style="padding:6px 10px;border:1px solid #ddd;font-weight:bold;">Runbook</td><td style="padding:6px 10px;border:1px solid #ddd;">${data.runbookId || 'N/A'}</td></tr>
@@ -421,17 +421,17 @@ function buildTicketDescription(eventType, data) {
           <tr><td style="padding:6px 10px;border:1px solid #ddd;font-weight:bold;">Procesado por</td><td style="padding:6px 10px;border:1px solid #ddd;">${data.processedBy || 'N/A'}</td></tr>
           <tr><td style="padding:6px 10px;border:1px solid #ddd;font-weight:bold;">Timestamp</td><td style="padding:6px 10px;border:1px solid #ddd;">${timestamp}</td></tr>
         </table>
-        <hr><p style="font-size:11px;color:#999;">Generado autom&aacute;ticamente por Avvale SAP AlwaysOps v1.0</p>
+        <hr><p style="font-size:11px;color:#999;">Generado autom&aacute;ticamente por SAP Spektra v1.0</p>
       </div>`;
     }
 
     default:
       return `<div style="font-family:Arial,sans-serif;">
-        <h2>Avvale SAP AlwaysOps - ${eventType}</h2>
+        <h2>SAP Spektra - ${eventType}</h2>
         <p>Sistema: ${data.systemId || 'N/A'}</p>
         <p>Timestamp: ${timestamp}</p>
         <pre>${JSON.stringify(data, null, 2)}</pre>
-        <hr><p style="font-size:11px;color:#999;">Generado autom&aacute;ticamente por Avvale SAP AlwaysOps v1.0</p>
+        <hr><p style="font-size:11px;color:#999;">Generado autom&aacute;ticamente por SAP Spektra v1.0</p>
       </div>`;
   }
 }
@@ -450,7 +450,7 @@ async function createTicket(ticketData) {
     type: 2, // 2 = Ticket público
     status: 'New',
     urgency: ticketData.urgency || 'Baixa',
-    category: ticketData.category || 'Avvale SAP AlwaysOps',
+    category: ticketData.category || 'SAP Spektra',
     isUrgent: ticketData.isUrgent || false,
     tags: ticketData.tags || ['sap-alwaysops', 'automatico'],
     actions: [
@@ -561,7 +561,7 @@ async function findOpenTicket(systemId, metricName) {
 // ═══════════════════════════════════════════════════════════════
 //  FUNCIÓN: saveTicketMapping
 //  Guarda el mapeo entre el ticket de Movidesk y el evento
-//  de Avvale SAP AlwaysOps en DynamoDB para futuras correlaciones.
+//  de SAP Spektra en DynamoDB para futuras correlaciones.
 // ═══════════════════════════════════════════════════════════════
 
 async function saveTicketMapping(systemId, metricName, movideskTicketId, severity, status) {
@@ -642,7 +642,7 @@ const EVENT_PROCESSORS = {
       urgency,
       isUrgent,
       tags: ['sap-alwaysops', 'breach', severity.toLowerCase(), data.systemId],
-      category: 'Avvale SAP AlwaysOps - Breach',
+      category: 'SAP Spektra - Breach',
     });
 
     if (result.success && result.data?.id) {
@@ -716,7 +716,7 @@ const EVENT_PROCESSORS = {
           urgency: 'Baixa',
           isUrgent: false,
           tags: ['sap-alwaysops', 'runbook-result', data.systemId],
-          category: 'Avvale SAP AlwaysOps - Runbook',
+          category: 'SAP Spektra - Runbook',
         });
 
         if (createResult.success && createResult.data?.id) {
@@ -752,7 +752,7 @@ const EVENT_PROCESSORS = {
       urgency,
       isUrgent,
       tags: ['sap-alwaysops', 'preventive', 'predictivo', data.systemId],
-      category: 'Avvale SAP AlwaysOps - Preventivo',
+      category: 'SAP Spektra - Preventivo',
     });
 
     if (result.success && result.data?.id) {
@@ -818,7 +818,7 @@ const EVENT_PROCESSORS = {
       urgency: 'Baixa',
       isUrgent: false,
       tags: ['sap-alwaysops', 'approval', data.status?.toLowerCase(), data.systemId],
-      category: 'Avvale SAP AlwaysOps - Aprobacion',
+      category: 'SAP Spektra - Aprobacion',
     });
 
     if (createResult.success && createResult.data?.id) {
@@ -843,7 +843,7 @@ const EVENT_PROCESSORS = {
 // ═══════════════════════════════════════════════════════════════
 
 exports.handler = async (event) => {
-  structuredLog('INFO', 'INVOKED', { message: 'Avvale SAP AlwaysOps Movidesk Agent v1.0 invocado' });
+  structuredLog('INFO', 'INVOKED', { message: 'SAP Spektra Movidesk Agent v1.0 invocado' });
   const startTime = Date.now();
 
   try {
@@ -902,7 +902,7 @@ exports.handler = async (event) => {
 
     const duration = Date.now() - startTime;
     structuredLog('INFO', 'COMPLETED', {
-      message: 'Avvale SAP AlwaysOps Movidesk Agent v1.0 completado',
+      message: 'SAP Spektra Movidesk Agent v1.0 completado',
       duration: `${duration}ms`,
       eventsProcessed: results.length,
     });
@@ -910,7 +910,7 @@ exports.handler = async (event) => {
     return {
       statusCode: 200,
       body: {
-        message: 'Avvale SAP AlwaysOps Movidesk Agent v1.0 completado',
+        message: 'SAP Spektra Movidesk Agent v1.0 completado',
         duration: `${duration}ms`,
         eventsProcessed: results.length,
         results,

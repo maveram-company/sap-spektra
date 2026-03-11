@@ -1,7 +1,7 @@
 'use strict';
 
 // ═══════════════════════════════════════════════════════════════
-//  Avvale SAP AlwaysOps v1.4 — Modelo Unificado de Ejecucion
+//  SAP Spektra v1.4 — Modelo Unificado de Ejecucion
 //  Scan, simulacion, runbook y remediacion son "Execution".
 //  Un solo formato para historial, auditoria y UI.
 // ═══════════════════════════════════════════════════════════════

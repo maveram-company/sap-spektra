@@ -1,5 +1,5 @@
 // ============================================================================
-//  Avvale SAP AlwaysOps v1.0 — Setup Portal — Verificacion de permisos IAM
+//  SAP Spektra v1.0 — Setup Portal — Verificacion de permisos IAM
 // ============================================================================
 
 'use strict';

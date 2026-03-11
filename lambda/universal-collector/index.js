@@ -1,7 +1,7 @@
 'use strict';
 
 // ═══════════════════════════════════════════════════════════════
-//  Avvale SAP AlwaysOps v1.0 — Universal Collector
+//  SAP Spektra v1.0 — Universal Collector
 //  Motor principal de recopilación de métricas SAP.
 // ═══════════════════════════════════════════════════════════════
 
@@ -1383,7 +1383,7 @@ async function notifyAdvisor(breaches, metrics, systemConfig) {
 
   await sns.send(new PublishCommand({
     TopicArn: advisorTopicArn,
-    Subject: `Avvale SAP AlwaysOps Breach: ${systemConfig.systemId} (${breaches[0].severity})`,
+    Subject: `SAP Spektra Breach: ${systemConfig.systemId} (${breaches[0].severity})`,
     Message: JSON.stringify(message),
     MessageAttributes: {
       eventType: { DataType: 'String', StringValue: 'BREACH_DETECTED' },
@@ -1412,7 +1412,7 @@ async function publishSnapshot(metrics, systemConfig) {
 
   await sns.send(new PublishCommand({
     TopicArn: advisorTopicArn,
-    Subject: `Avvale SAP AlwaysOps Snapshot: ${systemConfig.systemId}`,
+    Subject: `SAP Spektra Snapshot: ${systemConfig.systemId}`,
     Message: JSON.stringify(message),
     MessageAttributes: {
       eventType: { DataType: 'String', StringValue: 'METRIC_SNAPSHOT' },
@@ -1756,7 +1756,7 @@ exports.handler = async (event, context) => {
   return {
     statusCode: 200,
     body: {
-      message: 'Avvale SAP AlwaysOps Universal Collector v1.0 completed',
+      message: 'SAP Spektra Universal Collector v1.0 completed',
       duration: `${duration}ms`,
       systemsProcessed: results.length,
       results,

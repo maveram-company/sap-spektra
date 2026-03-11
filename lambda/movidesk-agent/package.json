@@ -1,7 +1,7 @@
 {
-  "name": "sap-alwaysops-movidesk-agent",
+  "name": "sap-spektra-movidesk-agent",
   "version": "1.0.0",
-  "description": "Avvale SAP AlwaysOps - Agente de integración con Movidesk para gestión de tickets",
+  "description": "SAP Spektra - Agente de integración con Movidesk para gestión de tickets",
   "main": "index.js",
   "dependencies": {
     "@aws-sdk/client-dynamodb": "^3.450.0",

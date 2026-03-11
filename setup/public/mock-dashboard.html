@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Avvale SAP AlwaysOps — Dashboard</title>
+<title>SAP Spektra — Dashboard</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 :root{--bg:#060a0d;--bg2:#0d1117;--bg3:#151b23;--border:rgba(85,116,131,.3);--txt:#ffffff;--txt2:#557483;--txt3:#3d5a6a;--accent:#47b1a3;--accent2:#248b7e;--ok:#5ab031;--ok-bg:rgba(90,176,49,.15);--warn:#aace7c;--warn-bg:rgba(170,206,124,.15);--err:#f25757;--err-bg:rgba(242,87,87,.15);--info:#989fce;--info-bg:rgba(152,159,206,.15);--sidebar-w:220px;--rs:10px}
@@ -155,8 +155,8 @@ a{color:var(--accent);text-decoration:none}button{cursor:pointer;font-family:inh
 <!-- LOGIN -->
 <div class="login-screen" id="loginScreen">
 <div class="login-card">
-<div style="margin:0 auto 16px;width:56px;height:56px"><img src="/avvale-logo.png" alt="Avvale" width="56" height="56" style="object-fit:contain"></div>
-<h1>Avvale SAP AlwaysOps</h1>
+<div style="margin:0 auto 16px;width:56px;height:56px"><img src="/avvale-logo.png" alt="Maveram" width="56" height="56" style="object-fit:contain"></div>
+<h1>SAP Spektra</h1>
 <p>Monitoreo inteligente para sistemas SAP en AWS</p>
 <label>Email</label><input type="email" id="loginEmail" value="admin@sap-alwaysops-mock.com">
 <label>Contrasena</label><input type="password" id="loginPass" value="MockPass123!">
@@ -168,7 +168,7 @@ a{color:var(--accent);text-decoration:none}button{cursor:pointer;font-family:inh
 <!-- APP -->
 <div class="app" id="app">
 <aside class="sidebar">
-<div class="sidebar-brand"><div style="display:flex;align-items:center;gap:8px"><img src="/avvale-logo.png" alt="Avvale" width="24" height="24" style="object-fit:contain"><h2>Avvale SAP AlwaysOps</h2></div><span>v1.0 &middot; Mock &middot; us-east-1</span></div>
+<div class="sidebar-brand"><div style="display:flex;align-items:center;gap:8px"><img src="/avvale-logo.png" alt="Maveram" width="24" height="24" style="object-fit:contain"><h2>SAP Spektra</h2></div><span>v1.0 &middot; Mock &middot; us-east-1</span></div>
 <nav>
 <div class="nav-section">Principal</div>
 <div class="nav-item active" data-p="dashboard" onclick="nav('dashboard')"><span class="icon">&#9673;</span>Dashboard</div>
@@ -191,7 +191,7 @@ a{color:var(--accent);text-decoration:none}button{cursor:pointer;font-family:inh
 <div class="nav-section">HA ORCHESTRATION</div>
 <div class="nav-item" data-p="ha" onclick="nav('ha')"><span class="icon">&#9878;</span>HA Control Center</div>
 <div class="nav-section">PLATFORM</div>
-<div class="nav-item" data-p="health" onclick="nav('health')"><span class="icon">&#9829;</span>Sentinel Health</div>
+<div class="nav-item" data-p="health" onclick="nav('health')"><span class="icon">&#9829;</span>Spektra Health</div>
 </nav>
 <div class="sidebar-footer">
 <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px"><span><span class="avatar">A</span>Admin Mock</span><button class="theme-toggle-btn" id="themeToggle" onclick="toggleTheme()" title="Cambiar tema">☀</button></div>
@@ -215,7 +215,7 @@ a{color:var(--accent);text-decoration:none}button{cursor:pointer;font-family:inh
 <!-- INFRA --><div class="page" id="pg-infra"><div class="page-header"><h1>Infraestructura AWS</h1><p>Recursos desplegados</p></div><div id="infraContent"></div></div>
 <!-- SLA --><div class="page" id="pg-sla"><div class="page-header"><h1>SLA &amp; Analytics</h1><p>Metricas de servicio y rendimiento</p></div><div id="slaContent"></div></div>
 <!-- HA CONTROL CENTER --><div class="page" id="pg-ha"><div class="page-header"><h1>&#9878; HA Control Center</h1><p>Orquestacion de Alta Disponibilidad — Failover, Takeover, Failback</p></div><div id="haContent"></div></div>
-<!-- HEALTH --><div class="page" id="pg-health"><div class="page-header"><h1>Sentinel Health</h1><p>Estado de la plataforma de monitoreo — Lambdas, DynamoDB, SSM, Circuit Breakers</p></div><div id="healthContent"></div></div>
+<!-- HEALTH --><div class="page" id="pg-health"><div class="page-header"><h1>Spektra Health</h1><p>Estado de la plataforma de monitoreo — Lambdas, DynamoDB, SSM, Circuit Breakers</p></div><div id="healthContent"></div></div>
 <!-- SERVER DETAIL (Grafana-style per-server dashboard) --><div class="page" id="pg-server-detail"><div id="serverDetailContent"></div></div>
 </div>
 </div>
@@ -224,8 +224,8 @@ a{color:var(--accent);text-decoration:none}button{cursor:pointer;font-family:inh
 <div class="float-chat" id="floatChat" style="display:none">
 <button class="float-chat-btn" onclick="toggleChat()" title="Chatbot IA">&#10024;</button>
 <div class="float-chat-panel" id="chatPanel">
-<div class="float-chat-header"><span>Avvale SAP AlwaysOps AI — Bedrock</span><button onclick="toggleChat()">&times;</button></div>
-<div class="chat-messages" id="fChatMsgs"><div class="chat-msg ai">Soy el asistente IA de Avvale SAP AlwaysOps (Claude via Bedrock). Preguntame sobre tus sistemas SAP.</div></div>
+<div class="float-chat-header"><span>SAP Spektra AI — Bedrock</span><button onclick="toggleChat()">&times;</button></div>
+<div class="chat-messages" id="fChatMsgs"><div class="chat-msg ai">Soy el asistente IA de SAP Spektra (Claude via Bedrock). Preguntame sobre tus sistemas SAP.</div></div>
 <div style="display:flex;gap:6px;padding:10px;border-top:1px solid var(--bg3)"><input id="fChatIn" style="flex:1;padding:8px 10px;background:var(--bg);border:1px solid var(--bg3);border-radius:7px;color:var(--txt);font-size:12px;outline:none" placeholder="Pregunta..." onkeydown="if(event.key==='Enter')fSend()"><button class="btn btn-p btn-sm" onclick="fSend()">Enviar</button></div>
 </div>
 </div>
@@ -286,20 +286,20 @@ var RB=[
 {id:'RB-TRANS-001',name:'Transport monitoring STMS',safe:true,auto:true,db:'ABAP',desc:'Monitorea cola de transportes y detecta bloqueados'}
 ];
 
-var currentUserEmail='operador@avvale.com';
+var currentUserEmail='operador@maveram.com';
 var ALERTS=[
 {id:1,sys:'OMP',lv:'critical',title:'CPU sostenida >70%',msg:'SAPDISP consumiendo 72% CPU por 35 min. Umbral HIGH: 70%.',time:'14:32',esc:'L1',ack:false,ackBy:null,ackAt:null,st:'active',rb:'RB-ABAP-001',resolvedBy:null,resolvedAt:null,resolutionNote:null,resolutionCategory:null},
 {id:2,sys:'OCP',lv:'critical',title:'Disco HANA 85%',msg:'Particion /hana/data al 85%. Umbral CRITICAL: 85%. Crecimiento: 2%/dia.',time:'14:15',esc:'L1',ack:false,ackBy:null,ackAt:null,st:'active',rb:'RB-HANA-002',resolvedBy:null,resolvedAt:null,resolutionNote:null,resolutionCategory:null},
-{id:3,sys:'OMR',lv:'critical',title:'Sistema offline',msg:'Conexion SSM perdida hace 2h. Instancia i-0a1b2c3d4e5f00005 no responde.',time:'11:55',esc:'L2',ack:true,ackBy:'admin@avvale.com',ackAt:'2026-03-03T11:58:00Z',st:'active',rb:null,resolvedBy:null,resolvedAt:null,resolutionNote:null,resolutionCategory:null},
-{id:4,sys:'OCP',lv:'warning',title:'Memoria HANA 78%',msg:'Uso de memoria HANA al 78%. Umbral WARNING: 75%.',time:'13:52',esc:'L1',ack:true,ackBy:'operador@avvale.com',ackAt:'2026-03-03T13:55:00Z',st:'active',rb:'RB-HANA-001',resolvedBy:null,resolvedAt:null,resolutionNote:null,resolutionCategory:null},
+{id:3,sys:'OMR',lv:'critical',title:'Sistema offline',msg:'Conexion SSM perdida hace 2h. Instancia i-0a1b2c3d4e5f00005 no responde.',time:'11:55',esc:'L2',ack:true,ackBy:'admin@maveram.com',ackAt:'2026-03-03T11:58:00Z',st:'active',rb:null,resolvedBy:null,resolvedAt:null,resolutionNote:null,resolutionCategory:null},
+{id:4,sys:'OCP',lv:'warning',title:'Memoria HANA 78%',msg:'Uso de memoria HANA al 78%. Umbral WARNING: 75%.',time:'13:52',esc:'L1',ack:true,ackBy:'operador@maveram.com',ackAt:'2026-03-03T13:55:00Z',st:'active',rb:'RB-HANA-001',resolvedBy:null,resolvedAt:null,resolutionNote:null,resolutionCategory:null},
 {id:5,sys:'OMP',lv:'warning',title:'Job RSUSR002 lento',msg:'Job tomo 45 min (normal: 15 min). Verificar bloqueos.',time:'10:20',esc:'L1',ack:false,ackBy:null,ackAt:null,st:'active',rb:'RB-JOB-001',resolvedBy:null,resolvedAt:null,resolutionNote:null,resolutionCategory:null},
-{id:6,sys:'SM1',lv:'warning',title:'Transport queue llena',msg:'15 transportes pendientes en cola STMS.',time:'09:30',esc:'L1',ack:false,ackBy:null,ackAt:null,st:'resolved',rb:null,resolvedBy:'admin@avvale.com',resolvedAt:'2026-03-03T10:00:00Z',resolutionNote:'Transportes procesados manualmente',resolutionCategory:'fixed'},
+{id:6,sys:'SM1',lv:'warning',title:'Transport queue llena',msg:'15 transportes pendientes en cola STMS.',time:'09:30',esc:'L1',ack:false,ackBy:null,ackAt:null,st:'resolved',rb:null,resolvedBy:'admin@maveram.com',resolvedAt:'2026-03-03T10:00:00Z',resolutionNote:'Transportes procesados manualmente',resolutionCategory:'fixed'},
 {id:7,sys:'OAP',lv:'info',title:'Backup completado',msg:'Backup HANA finalizado exitosamente. Duracion: 45 min.',time:'03:00',esc:'-',ack:true,ackBy:'sistema',ackAt:'2026-03-03T03:45:00Z',st:'resolved',rb:null,resolvedBy:'sistema',resolvedAt:'2026-03-03T03:45:00Z',resolutionNote:'Backup completado automaticamente',resolutionCategory:'fixed'},
 {id:8,sys:'OMP',lv:'warning',title:'Enqueue locks antiguos',msg:'12 locks con mas de 2 horas en SM12.',time:'15:10',esc:'L1',ack:false,ackBy:null,ackAt:null,st:'active',rb:'RB-LOCK-001',resolvedBy:null,resolvedAt:null,resolutionNote:null,resolutionCategory:null},
 {id:9,sys:'OCP',lv:'critical',title:'ShortDumps elevados',msg:'87 short dumps en 24h. Umbral HIGH: 50. Programa SAPMSSY1.',time:'12:45',esc:'L2',ack:false,ackBy:null,ackAt:null,st:'active',rb:'RB-ABAP-001',resolvedBy:null,resolvedAt:null,resolutionNote:null,resolutionCategory:null},
 {id:10,sys:'OMP',lv:'info',title:'Certificado ICM por vencer',msg:'Certificado SSL vence en 15 dias. Renovar antes del 17-Mar.',time:'08:00',esc:'-',ack:false,ackBy:null,ackAt:null,st:'active',rb:'RB-CERT-001',resolvedBy:null,resolvedAt:null,resolutionNote:null,resolutionCategory:null},
 {id:11,sys:'BWP',lv:'warning',title:'ASE Transaction Log 45%',msg:'Transaction log al 45%. Crecimiento rapido detectado. Umbral WARNING: 40%.',time:'14:50',esc:'L1',ack:false,ackBy:null,ackAt:null,st:'active',rb:'RB-ASE-001',resolvedBy:null,resolvedAt:null,resolutionNote:null,resolutionCategory:null},
-{id:12,sys:'CRP',lv:'warning',title:'Oracle Tablespace 55%',msg:'Tablespace SAPDATA al 55%. Monitorear crecimiento semanal.',time:'13:30',esc:'L1',ack:true,ackBy:'operador@avvale.com',ackAt:'2026-03-03T13:35:00Z',st:'active',rb:null,resolvedBy:null,resolvedAt:null,resolutionNote:null,resolutionCategory:null},
+{id:12,sys:'CRP',lv:'warning',title:'Oracle Tablespace 55%',msg:'Tablespace SAPDATA al 55%. Monitorear crecimiento semanal.',time:'13:30',esc:'L1',ack:true,ackBy:'operador@maveram.com',ackAt:'2026-03-03T13:35:00Z',st:'active',rb:null,resolvedBy:null,resolvedAt:null,resolutionNote:null,resolutionCategory:null},
 {id:13,sys:'GRC',lv:'info',title:'Backup MSSQL completado',msg:'Backup SQL Server finalizado exitosamente. Duracion: 22 min.',time:'02:00',esc:'-',ack:true,ackBy:'sistema',ackAt:'2026-03-03T02:22:00Z',st:'resolved',rb:null,resolvedBy:'sistema',resolvedAt:'2026-03-03T02:22:00Z',resolutionNote:'Backup exitoso sin errores',resolutionCategory:'fixed'},
 {id:15,sys:'GRC',lv:'warning',title:'MSSQL Data File 42%',msg:'Data file crecimiento detectado. Espacio usado: 42%. Proyeccion: 60% en 30 dias.',time:'09:45',esc:'L1',ack:false,ackBy:null,ackAt:null,st:'active',rb:null,resolvedBy:null,resolvedAt:null,resolutionNote:null,resolutionCategory:null},
 {id:14,sys:'POP',lv:'warning',title:'DB2 Log usage 35%',msg:'DB2 log usage al 35%. Tendencia ascendente detectada.',time:'11:15',esc:'L1',ack:false,ackBy:null,ackAt:null,st:'active',rb:null,resolvedBy:null,resolvedAt:null,resolutionNote:null,resolutionCategory:null}
@@ -516,9 +516,9 @@ var HA_PREREQS=[
 ];
 
 var HA_OPS_HISTORY=[
-{id:'op-001',systemId:'SAP-PRD-01',type:'TAKEOVER',status:'COMPLETED',triggeredBy:'admin@avvale.com',reason:'Mantenimiento planificado de SO',startedAt:'2026-02-28T02:00:00Z',completedAt:'2026-02-28T02:04:32Z',duration:'4m 32s',steps:7,stepsOk:7},
+{id:'op-001',systemId:'SAP-PRD-01',type:'TAKEOVER',status:'COMPLETED',triggeredBy:'admin@maveram.com',reason:'Mantenimiento planificado de SO',startedAt:'2026-02-28T02:00:00Z',completedAt:'2026-02-28T02:04:32Z',duration:'4m 32s',steps:7,stepsOk:7},
 {id:'op-002',systemId:'SAP-QAS-01',type:'FAILOVER',status:'FAILED',triggeredBy:'SYSTEM',reason:'Replicacion HANA desincronizada',startedAt:'2026-03-02T14:28:00Z',completedAt:'2026-03-02T14:30:45Z',duration:'2m 45s',steps:5,stepsOk:3},
-{id:'op-003',systemId:'SAP-PRD-01',type:'FAILBACK',status:'COMPLETED',triggeredBy:'admin@avvale.com',reason:'Retorno post-mantenimiento',startedAt:'2026-02-28T06:00:00Z',completedAt:'2026-02-28T06:05:10Z',duration:'5m 10s',steps:9,stepsOk:9}
+{id:'op-003',systemId:'SAP-PRD-01',type:'FAILBACK',status:'COMPLETED',triggeredBy:'admin@maveram.com',reason:'Retorno post-mantenimiento',startedAt:'2026-02-28T06:00:00Z',completedAt:'2026-02-28T06:05:10Z',duration:'5m 10s',steps:9,stepsOk:9}
 ];
 
 var HA_MOCK_RUNNING=null; // operacion en progreso
@@ -1038,7 +1038,7 @@ var ucs=[
 ];
 ucs.forEach(function(u){h+='<div class="card" style="cursor:pointer;border-color:'+u.c+'30" onclick="askAI(\''+u.q+'\')"><h3 style="color:'+u.c+'">'+esc(u.n)+': '+esc(u.t)+'</h3><p style="font-size:11px;color:var(--txt3)">'+esc(u.d)+'</p></div>';});
 h+='</div>';
-h+='<div class="card" style="padding:0;overflow:hidden"><div class="chat-container"><div class="chat-messages" id="aiChat"><div class="chat-msg ai">Soy el asistente IA de Avvale SAP AlwaysOps powered by Amazon Bedrock (Claude). Tengo acceso a las metricas de tus 5 sistemas SAP, historial de alertas, ejecuciones de runbooks y predicciones. Preguntame cualquier cosa.</div></div>';
+h+='<div class="card" style="padding:0;overflow:hidden"><div class="chat-container"><div class="chat-messages" id="aiChat"><div class="chat-msg ai">Soy el asistente IA de SAP Spektra powered by Amazon Bedrock (Claude). Tengo acceso a las metricas de tus 5 sistemas SAP, historial de alertas, ejecuciones de runbooks y predicciones. Preguntame cualquier cosa.</div></div>';
 h+='<div style="display:flex;gap:6px;padding:10px;border-top:1px solid var(--bg3)"><input id="aiIn" style="flex:1;padding:8px 10px;background:var(--bg);border:1px solid var(--bg3);border-radius:7px;color:var(--txt);font-size:12px;outline:none" placeholder="Pregunta sobre tus sistemas..." onkeydown="if(event.key===\'Enter\')aiSend()"><button class="btn btn-p btn-sm" onclick="aiSend()">Enviar</button></div></div></div>';
 document.getElementById('aiContent').innerHTML=h;
 }
@@ -1300,7 +1300,7 @@ _origData=null;
 }
 
 // ══════════════════════════════════════════════════════════════
-// SENTINEL HEALTH
+// SPEKTRA HEALTH
 // ══════════════════════════════════════════════════════════════
 function renderHealth(){
 var err=window.errorMode;
@@ -1580,7 +1580,7 @@ if(!HA_MOCK_RUNNING)return;
 var op=HA_MOCK_RUNNING;
 if(op.currentStep>=op.steps.length){
 // Completar operacion
-HA_OPS_HISTORY.unshift({id:'op-'+String(HA_OPS_HISTORY.length+1).padStart(3,'0'),systemId:op.systemId,type:op.type,status:'COMPLETED',triggeredBy:currentUserEmail||'admin@avvale.com',reason:'Operacion mock',startedAt:op.startedAt,completedAt:new Date().toISOString(),duration:Math.round((Date.now()-new Date(op.startedAt).getTime())/1000)+'s',steps:op.steps.length,stepsOk:op.steps.length});
+HA_OPS_HISTORY.unshift({id:'op-'+String(HA_OPS_HISTORY.length+1).padStart(3,'0'),systemId:op.systemId,type:op.type,status:'COMPLETED',triggeredBy:currentUserEmail||'admin@maveram.com',reason:'Operacion mock',startedAt:op.startedAt,completedAt:new Date().toISOString(),duration:Math.round((Date.now()-new Date(op.startedAt).getTime())/1000)+'s',steps:op.steps.length,stepsOk:op.steps.length});
 HA_MOCK_RUNNING=null;
 toast('Operacion HA completada exitosamente','success');
 haTab('ops');

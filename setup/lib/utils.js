@@ -1,5 +1,5 @@
 // ============================================================================
-//  Avvale SAP AlwaysOps v1.0 — Setup Portal — Utilidades compartidas
+//  SAP Spektra v1.0 — Setup Portal — Utilidades compartidas
 // ============================================================================
 
 'use strict';

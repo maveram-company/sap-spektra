@@ -1,7 +1,7 @@
 'use strict';
 
 // =================================================================
-//  Avvale SAP AlwaysOps v1.5 — Mock Data HA
+//  SAP Spektra v1.5 — Mock Data HA
 //  Datos simulados para el sistema de Alta Disponibilidad (HA).
 //  Incluye sistemas con configuracion HA, prerequisitos mock,
 //  historial de operaciones y configuraciones de drivers.

@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 // ============================================================================
-//  Avvale SAP AlwaysOps v1.0 — Setup Portal v2.0
+//  SAP Spektra v1.0 — Setup Portal v2.0
 //  Wizard de despliegue 100% automatizado (10 pasos, 3 fases)
 //  Ejecutar: npm run setup (desde la carpeta /setup)
 // ============================================================================
@@ -608,7 +608,7 @@ app.post('/api/deploy/secrets', async (req, res) => {
         await clients.secrets.send(new CreateSecretCommand({
           Name: 'sap-alwaysops/db-credentials',
           SecretString: JSON.stringify(dbCredentials),
-          Description: 'Avvale SAP AlwaysOps — Credenciales de base de datos'
+          Description: 'SAP Spektra — Credenciales de base de datos'
         }));
         results.push({ name: 'db-credentials', status: 'created' });
       } catch (e) {
@@ -621,7 +621,7 @@ app.post('/api/deploy/secrets', async (req, res) => {
         await clients.secrets.send(new CreateSecretCommand({
           Name: 'sap-alwaysops/app-credentials',
           SecretString: JSON.stringify(appCredentials),
-          Description: 'Avvale SAP AlwaysOps — Credenciales de aplicacion SAP'
+          Description: 'SAP Spektra — Credenciales de aplicacion SAP'
         }));
         results.push({ name: 'app-credentials', status: 'created' });
       } catch (e) {
@@ -1224,7 +1224,7 @@ const PORT = process.env.PORT || 5001;
 app.listen(PORT, () => {
   console.log('');
   console.log('  ╔══════════════════════════════════════════════════╗');
-  console.log('  ║  🛡️  Avvale SAP AlwaysOps — Setup Portal v2.0            ║');
+  console.log('  ║  🛡️  SAP Spektra — Setup Portal v2.0                     ║');
   console.log('  ╠══════════════════════════════════════════════════╣');
   console.log(`  ║  🌐 http://localhost:${PORT}                       ║`);
   console.log('  ║  📋 Wizard 100% automatizado (10 pasos)          ║');

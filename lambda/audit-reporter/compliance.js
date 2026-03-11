@@ -1,7 +1,7 @@
 'use strict';
 
 // ═══════════════════════════════════════════════════════════════
-//  Avvale SAP AlwaysOps v1.0 — Compliance Reporter (H39)
+//  SAP Spektra v1.0 — Compliance Reporter (H39)
 //  Modulo dedicado a la generacion de reportes de cumplimiento
 //  regulatorio para tres frameworks: SOX, GxP e ISO 27001.
 //
@@ -804,7 +804,7 @@ function evaluateGxPChecks(data) {
       `${consistent}/${total} sistemas de ejecucion con registros cruzados en otras tablas`,
     ];
     const recommendation = score < 80
-      ? 'Verificar que los systemIds son consistentes entre todas las tablas de Avvale SAP AlwaysOps'
+      ? 'Verificar que los systemIds son consistentes entre todas las tablas de SAP Spektra'
       : 'Consistencia inter-tablas cumple con ALCOA+';
     results.push(checkResult(scoreToStatus(score), score, evidence, recommendation));
   }

@@ -1,17 +1,17 @@
 /**
- * Avvale SAP AlwaysOps v1.4 — UI Renderer (SSOT)
+ * SAP Spektra v1.4 — UI Renderer (SSOT)
  * Libreria vanilla JS para renderizar formularios, tablas y widgets
  * a partir del esquema compartido (ui-schema.json).
  *
  * Uso:
  *   <script src="/shared/ui-renderer.js"></script>
- *   const renderer = new AlwaysOpsRenderer(schema);
+ *   const renderer = new SpektraRenderer(schema);
  *   renderer.renderStep(container, stepId, values);
  */
 
 /* global document */
 
-class AlwaysOpsRenderer {
+class SpektraRenderer {
   constructor(schema) {
     this.schema = schema;
     this.values = {};
@@ -334,5 +334,5 @@ class AlwaysOpsRenderer {
 
 // Export para Node.js y browser
 if (typeof module !== 'undefined' && module.exports) {
-  module.exports = AlwaysOpsRenderer;
+  module.exports = SpektraRenderer;
 }

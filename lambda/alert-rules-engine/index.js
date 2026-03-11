@@ -1,7 +1,7 @@
 'use strict';
 
 // ============================================================================
-//  Avvale SAP AlwaysOps v1.0 -- H38: Custom Alert Rules Engine
+//  SAP Spektra v1.0 -- H38: Custom Alert Rules Engine
 //  Motor de reglas de alerta personalizadas.
 //
 //  Que hace este Lambda?
@@ -1023,9 +1023,9 @@ async function sendRuleAlert(rule, evaluationResult, metrics) {
     }
 
     // Construir mensaje legible para notificaciones
-    const subject = `[Avvale SAP AlwaysOps] Alerta ${rule.severity}: ${rule.name}`;
+    const subject = `[SAP Spektra] Alerta ${rule.severity}: ${rule.name}`;
     const messageText = [
-      `--- Avvale SAP AlwaysOps - Alerta de Regla Personalizada ---`,
+      `--- SAP Spektra - Alerta de Regla Personalizada ---`,
       ``,
       `Regla: ${rule.name} (${rule.ruleId})`,
       `Sistema: ${rule.systemId}`,

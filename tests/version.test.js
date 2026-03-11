@@ -79,8 +79,8 @@ test('version matches semver pattern (X.Y.Z)', () => {
   );
 });
 
-test('product is SAP-AlwaysOps', () => {
-  assert.strictEqual(version.product, 'SAP-AlwaysOps');
+test('product is SAP-Spektra', () => {
+  assert.strictEqual(version.product, 'SAP-Spektra');
 });
 
 test('version is 1.5.0', () => {

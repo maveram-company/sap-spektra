@@ -1,7 +1,7 @@
 'use strict';
 
 // ═══════════════════════════════════════════════════════════════
-//  Avvale SAP AlwaysOps v1.0 — HA Monitor
+//  SAP Spektra v1.0 — HA Monitor
 //  Monitor de alta disponibilidad para sistemas SAP.
 // ═══════════════════════════════════════════════════════════════
 
@@ -712,7 +712,7 @@ async function publishHAAlert(systemId, anomalies, allMetrics) {
 
   await snsClient.send(new PublishCommand({
     TopicArn: alertsTopicArn,
-    Subject: `Avvale SAP AlwaysOps HA Alert: ${systemId} (${severity})`,
+    Subject: `SAP Spektra HA Alert: ${systemId} (${severity})`,
     Message: JSON.stringify(message),
     MessageAttributes: {
       eventType: { DataType: 'String', StringValue: 'HA_ANOMALY' },
@@ -730,7 +730,7 @@ async function publishHAAlert(systemId, anomalies, allMetrics) {
 
 exports.handler = async (event, context) => {
   log.initFromEvent(event, context);
-  log.info('Avvale SAP AlwaysOps HA Monitor v1.0 invoked');
+  log.info('SAP Spektra HA Monitor v1.0 invoked');
   const startTime = Date.now();
 
   // Load HA systems configuration
@@ -894,6 +894,6 @@ exports.handler = async (event, context) => {
 
   return {
     statusCode: 200,
-    body: { message: 'Avvale SAP AlwaysOps HA Monitor v1.0 completed', duration: `${duration}ms`, results },
+    body: { message: 'SAP Spektra HA Monitor v1.0 completed', duration: `${duration}ms`, results },
   };
 };

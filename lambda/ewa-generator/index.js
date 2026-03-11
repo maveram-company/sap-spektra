@@ -1,7 +1,7 @@
 'use strict';
 
 // ═══════════════════════════════════════════════════════════════
-//  Avvale SAP AlwaysOps v1.0 — EWA-Equivalent Report Generator
+//  SAP Spektra v1.0 — EWA-Equivalent Report Generator
 //  Genera reportes semanales tipo EWA (Early Watch Alert) con:
 //  - Resumen de metricas por sistema
 //  - Hallazgos y tendencias
@@ -268,7 +268,7 @@ th { background: #f5f5f5; }
 .footer { margin-top: 32px; padding-top: 16px; border-top: 1px solid #ddd; color: #666; font-size: 0.85em; }
 </style></head><body>`;
 
-  html += `<h1>Avvale SAP AlwaysOps — Reporte Semanal EWA</h1>`;
+  html += `<h1>SAP Spektra — Reporte Semanal EWA</h1>`;
   html += `<p>Periodo: ${reports[0]?.period?.from?.split('T')[0] || '?'} al ${now}</p>`;
 
   for (const report of reports) {
@@ -309,7 +309,7 @@ th { background: #f5f5f5; }
   html += `<p>Tokens consumidos: ${tokenUsage.totalTokens.toLocaleString()} en ${tokenUsage.totalInvocations} invocaciones (${tokenUsage.days} dias)</p>`;
 
   html += `<div class="footer">`;
-  html += `<p>Generado automaticamente por Avvale SAP AlwaysOps v1.0</p>`;
+  html += `<p>Generado automaticamente por SAP Spektra v1.0</p>`;
   html += `<p>Este reporte es el equivalente funcional del SAP EWA (Early Watch Alert), generado sin necesidad de SAP Solution Manager.</p>`;
   html += `</div></body></html>`;
 
@@ -333,7 +333,7 @@ async function sendReportEmail(html, systemCount) {
     Source: SES_FROM,
     Destination: { ToAddresses: toAddresses },
     Message: {
-      Subject: { Data: `[AlwaysOps EWA] Reporte Semanal — ${systemCount} sistema(s) — ${now}` },
+      Subject: { Data: `[SAP Spektra EWA] Reporte Semanal — ${systemCount} sistema(s) — ${now}` },
       Body: { Html: { Data: html } },
     },
   }));

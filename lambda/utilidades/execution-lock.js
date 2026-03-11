@@ -1,7 +1,7 @@
 'use strict';
 
 // ═══════════════════════════════════════════════════════════════
-//  Avvale SAP AlwaysOps v1.4 — Execution Lock (per-SID)
+//  SAP Spektra v1.4 — Execution Lock (per-SID)
 //  Previene ejecucion simultanea de runbooks en el mismo SID.
 //  Usa DynamoDB conditional writes con TTL automatico.
 //

@@ -1,7 +1,7 @@
 'use strict';
 
 // ═══════════════════════════════════════════════════════════════
-//  Avvale SAP AlwaysOps v1.5 — HA Plan Builder
+//  SAP Spektra v1.5 — HA Plan Builder
 //  Construye planes de ejecucion (failover/takeover/failback)
 //  con pasos ordenados, dependencias y rollback plan.
 // ═══════════════════════════════════════════════════════════════
