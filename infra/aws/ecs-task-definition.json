@@ -1,0 +1,49 @@
+{
+  "family": "spektra-api",
+  "networkMode": "awsvpc",
+  "requiresCompatibilities": ["FARGATE"],
+  "cpu": "512",
+  "memory": "1024",
+  "executionRoleArn": "arn:aws:iam::ACCOUNT_ID:role/ecsTaskExecutionRole",
+  "taskRoleArn": "arn:aws:iam::ACCOUNT_ID:role/spektra-api-task-role",
+  "containerDefinitions": [
+    {
+      "name": "spektra-api",
+      "image": "ACCOUNT_ID.dkr.ecr.us-east-1.amazonaws.com/spektra-api:latest",
+      "essential": true,
+      "portMappings": [
+        {
+          "containerPort": 3001,
+          "protocol": "tcp"
+        }
+      ],
+      "environment": [
+        { "name": "NODE_ENV", "value": "production" },
+        { "name": "PORT", "value": "3001" },
+        { "name": "RUNTIME_MODE", "value": "AWS_REAL" }
+      ],
+      "secrets": [
+        { "name": "DATABASE_URL", "valueFrom": "arn:aws:secretsmanager:us-east-1:ACCOUNT_ID:secret:spektra/database-url" },
+        { "name": "REDIS_URL", "valueFrom": "arn:aws:secretsmanager:us-east-1:ACCOUNT_ID:secret:spektra/redis-url" },
+        { "name": "JWT_SECRET", "valueFrom": "arn:aws:secretsmanager:us-east-1:ACCOUNT_ID:secret:spektra/jwt-secret" },
+        { "name": "COGNITO_USER_POOL_ID", "valueFrom": "arn:aws:secretsmanager:us-east-1:ACCOUNT_ID:secret:spektra/cognito-pool-id" },
+        { "name": "COGNITO_CLIENT_ID", "valueFrom": "arn:aws:secretsmanager:us-east-1:ACCOUNT_ID:secret:spektra/cognito-client-id" }
+      ],
+      "logConfiguration": {
+        "logDriver": "awslogs",
+        "options": {
+          "awslogs-group": "/ecs/spektra-api",
+          "awslogs-region": "us-east-1",
+          "awslogs-stream-prefix": "api"
+        }
+      },
+      "healthCheck": {
+        "command": ["CMD-SHELL", "wget -qO- http://localhost:3001/api/health || exit 1"],
+        "interval": 30,
+        "timeout": 5,
+        "retries": 3,
+        "startPeriod": 60
+      }
+    }
+  ]
+}
