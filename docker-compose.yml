@@ -1,0 +1,36 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: spektra-postgres
+    environment:
+      POSTGRES_USER: spektra
+      POSTGRES_PASSWORD: spektra_dev
+      POSTGRES_DB: spektra_dev
+    ports:
+      - '5432:5432'
+    volumes:
+      - spektra_pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U spektra -d spektra_dev']
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7-alpine
+    container_name: spektra-redis
+    ports:
+      - '6379:6379'
+    volumes:
+      - spektra_redisdata:/data
+    healthcheck:
+      test: ['CMD', 'redis-cli', 'ping']
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  spektra_pgdata:
+  spektra_redisdata:

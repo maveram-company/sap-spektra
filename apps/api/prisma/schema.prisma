@@ -1,0 +1,530 @@
+// ══════════════════════════════════════════════════════════
+// SAP Spektra — Prisma Schema
+// ══════════════════════════════════════════════════════════
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ── Tenant / Organization ──
+
+model Organization {
+  id        String   @id @default(uuid())
+  name      String
+  slug      String   @unique
+  plan      String   @default("professional") // starter | professional | enterprise
+  logo      String?
+  timezone  String   @default("America/Bogota")
+  language  String   @default("es")
+  settings  Json     @default("{}")
+  limits    Json     @default("{}")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  memberships  Membership[]
+  systems      System[]
+  alerts       Alert[]
+  events       Event[]
+  approvals    ApprovalRequest[]
+  runbooks     Runbook[]
+  operations   OperationRecord[]
+  auditEntries AuditEntry[]
+  connectors   Connector[]
+  apiKeys      ApiKey[]
+
+  @@map("organizations")
+}
+
+model User {
+  id           String   @id @default(uuid())
+  email        String   @unique
+  name         String
+  passwordHash String
+  status       String   @default("active") // active | invited | disabled
+  mfaEnabled   Boolean  @default(false)
+  lastLoginAt  DateTime?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  memberships Membership[]
+
+  @@map("users")
+}
+
+model Membership {
+  id             String   @id @default(uuid())
+  userId         String
+  organizationId String
+  role           String   @default("viewer") // admin | escalation | operator | viewer
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  user         User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, organizationId])
+  @@map("memberships")
+}
+
+model Plan {
+  id          String   @id @default(uuid())
+  tier        String   @unique // starter | professional | enterprise
+  name        String
+  price       Int      @default(0) // monthly price in cents
+  features    Json     @default("[]") // string array of feature keys
+  limits      Json     @default("{}") // { maxSystems, maxUsers, etc. }
+  createdAt   DateTime @default(now())
+
+  @@map("plans")
+}
+
+// ── SAP Domain ──
+
+model System {
+  id                          String   @id @default(uuid())
+  organizationId              String
+  sid                         String   // 3-char SAP System ID
+  description                 String
+  sapProduct                  String   // S/4HANA, ECC, BW/4HANA, SolMan, PO, etc.
+  productFamily               String   // ABAP_BUSINESS_SUITE, JAVA_STACK, EDGE, etc.
+  sapStackType                String   // ABAP | JAVA | DUAL_STACK | EDGE | DB | MANAGED_CLOUD_RESTRICTED
+  dbType                      String   // SAP HANA 2.0, Oracle 19c, etc.
+  environment                 String   // PRD | QAS | DEV | SBX | DR
+  mode                        String   @default("PRODUCTION") // PRODUCTION | TRIAL | MAINTENANCE
+  deploymentModel             String   @default("ON_PREMISE") // ON_PREMISE | RISE_MANAGED | etc.
+  connectionMode              String   @default("AGENT_FULL") // AGENT_FULL | MANAGED_RESTRICTED | etc.
+  monitoringCapabilityProfile String   @default("FULL_STACK_AGENT")
+  supportsHostMetrics         Boolean  @default(true)
+  supportsOsMetrics           Boolean  @default(true)
+  supportsSapMetrics          Boolean  @default(true)
+  supportsDbMetrics           Boolean  @default(true)
+  supportsTopologyDiscovery   Boolean  @default(true)
+  supportsRunbookExecution    Boolean  @default(true)
+  supportsApprovals           Boolean  @default(true)
+  integrationTrustLevel       String   @default("full") // full | partial | restricted
+  healthScore                 Int      @default(0) // 0-100
+  status                      String   @default("healthy")
+  lastCheckAt                 DateTime?
+  createdAt                   DateTime @default(now())
+  updatedAt                   DateTime @updatedAt
+
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  components    Component[]
+  instances     Instance[]
+  hosts         Host[]
+  dependencies  Dependency[]
+  breaches      Breach[]
+  healthSnaps   HealthSnapshot[]
+  alerts        Alert[]
+  events        Event[]
+  approvals     ApprovalRequest[]
+  operations    OperationRecord[]
+  connectors    Connector[]
+  haConfig      HAConfig?
+  systemMeta    SystemMeta?
+
+  @@unique([organizationId, sid])
+  @@map("systems")
+}
+
+model SystemMeta {
+  id         String @id @default(uuid())
+  systemId   String @unique
+  sapRelease String?
+  kernelVersion String?
+  kernelPatch   String?
+  abapPatch     String?
+  client        String?
+  osVersion     String?
+  dbVersion     String?
+  notes         String?
+
+  system System @relation(fields: [systemId], references: [id], onDelete: Cascade)
+
+  @@map("system_meta")
+}
+
+model Component {
+  id       String @id @default(uuid())
+  systemId String
+  name     String
+  type     String // ABAP, JAVA, DB, WEBDISP, GATEWAY, etc.
+  version  String?
+  status   String @default("active")
+
+  system    System     @relation(fields: [systemId], references: [id], onDelete: Cascade)
+  instances Instance[]
+
+  @@map("components")
+}
+
+model Instance {
+  id          String @id @default(uuid())
+  systemId    String
+  componentId String?
+  hostId      String?
+  instanceNr  String // 00, 01, etc.
+  type        String // PAS, AAS, ASCS, ERS, HANA, WEBDISP, etc.
+  role        String // Dialog, Batch, Gateway, Web Dispatcher, etc.
+  status      String @default("active")
+  features    Json   @default("{}") // SAP features enabled
+
+  system    System     @relation(fields: [systemId], references: [id], onDelete: Cascade)
+  component Component? @relation(fields: [componentId], references: [id])
+  host      Host?      @relation(fields: [hostId], references: [id])
+
+  @@map("instances")
+}
+
+model Host {
+  id         String  @id @default(uuid())
+  systemId   String
+  hostname   String
+  ip         String?
+  os         String?
+  osVersion  String?
+  region     String?
+  zone       String?
+  cpu        Float   @default(0)
+  memory     Float   @default(0)
+  disk       Float   @default(0)
+  status     String  @default("active")
+
+  system    System     @relation(fields: [systemId], references: [id], onDelete: Cascade)
+  instances Instance[]
+  metrics   HostMetric[]
+
+  @@map("hosts")
+}
+
+model HostMetric {
+  id        String   @id @default(uuid())
+  hostId    String
+  timestamp DateTime @default(now())
+  cpu       Float
+  memory    Float
+  disk      Float
+  iops      Float?
+  networkIn Float?
+  networkOut Float?
+
+  host Host @relation(fields: [hostId], references: [id], onDelete: Cascade)
+
+  @@index([hostId, timestamp])
+  @@map("host_metrics")
+}
+
+model Dependency {
+  id           String @id @default(uuid())
+  systemId     String
+  name         String
+  type         String // DB, RFC, HTTP, IDoc, etc.
+  target       String // Target system/service
+  status       String @default("ok") // ok | warning | error
+  latencyMs    Int?
+  details      Json?
+
+  system System @relation(fields: [systemId], references: [id], onDelete: Cascade)
+
+  @@map("dependencies")
+}
+
+model Breach {
+  id        String   @id @default(uuid())
+  systemId  String
+  metric    String   // cpu_usage, memory_usage, disk_usage, etc.
+  value     Float
+  threshold Float
+  severity  String   // CRITICAL | HIGH | MEDIUM | LOW
+  timestamp DateTime @default(now())
+  resolved  Boolean  @default(false)
+  resolvedAt DateTime?
+
+  system System @relation(fields: [systemId], references: [id], onDelete: Cascade)
+
+  @@index([systemId, timestamp])
+  @@map("breaches")
+}
+
+model HealthSnapshot {
+  id        String   @id @default(uuid())
+  systemId  String
+  score     Int      // 0-100
+  status    String
+  cpu       Float?
+  memory    Float?
+  disk      Float?
+  details   Json?
+  timestamp DateTime @default(now())
+
+  system System @relation(fields: [systemId], references: [id], onDelete: Cascade)
+
+  @@index([systemId, timestamp])
+  @@map("health_snapshots")
+}
+
+// ── HA/DR ──
+
+model HAConfig {
+  id               String @id @default(uuid())
+  systemId         String @unique
+  haEnabled        Boolean @default(false)
+  haStrategy       String? // HOT_STANDBY | WARM_STANDBY | etc.
+  primaryNode      String?
+  secondaryNode    String?
+  rpoMinutes       Int?
+  rtoMinutes       Int?
+  lastFailoverAt   DateTime?
+  status           String  @default("standby") // standby | failover_in_progress | failed_over
+
+  system System @relation(fields: [systemId], references: [id], onDelete: Cascade)
+
+  @@map("ha_configs")
+}
+
+// ── Alerts & Events ──
+
+model Alert {
+  id             String   @id @default(uuid())
+  organizationId String
+  systemId       String
+  title          String
+  message        String
+  level          String   // critical | warning | info
+  status         String   @default("active") // active | acknowledged | resolved
+  escalation     String   @default("-") // L1 | L2 | -
+  acknowledged   Boolean  @default(false)
+  ackBy          String?
+  ackAt          DateTime?
+  resolved       Boolean  @default(false)
+  resolvedBy     String?
+  resolvedAt     DateTime?
+  resolutionCategory String?
+  resolutionNote String?
+  runbookId      String?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  system       System       @relation(fields: [systemId], references: [id], onDelete: Cascade)
+
+  @@index([organizationId, status])
+  @@map("alerts")
+}
+
+model Event {
+  id             String   @id @default(uuid())
+  organizationId String
+  systemId       String?
+  level          String   // critical | warning | info | success
+  source         String   // SAP | Platform | Security
+  component      String
+  message        String
+  details        Json?
+  timestamp      DateTime @default(now())
+
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  system       System?      @relation(fields: [systemId], references: [id])
+
+  @@index([organizationId, timestamp])
+  @@map("events")
+}
+
+// ── Approvals & Runbooks ──
+
+model ApprovalRequest {
+  id             String   @id @default(uuid())
+  organizationId String
+  systemId       String
+  runbookId      String?
+  metric         String?
+  value          Float?
+  severity       String
+  status         String   @default("PENDING") // PENDING | APPROVED | REJECTED | EXPIRED | EXECUTED
+  description    String
+  requestedBy    String
+  processedBy    String?
+  processedAt    DateTime?
+  token          String   @unique @default(uuid())
+  expiresAt      DateTime?
+  evidence       Json?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  system       System       @relation(fields: [systemId], references: [id], onDelete: Cascade)
+
+  @@index([organizationId, status])
+  @@map("approval_requests")
+}
+
+model Runbook {
+  id             String   @id @default(uuid())
+  organizationId String
+  name           String
+  description    String
+  costSafe       Boolean  @default(true)
+  autoExecute    Boolean  @default(false)
+  dbType         String?
+  txCode         String?  // SAP Transaction Code
+  prereqs        Json?
+  parameters     Json?
+  steps          Json?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  organization Organization     @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  executions   RunbookExecution[]
+
+  @@map("runbooks")
+}
+
+model RunbookExecution {
+  id         String   @id @default(uuid())
+  runbookId  String
+  systemId   String
+  gate       String   // SAFE | HUMAN
+  result     String   // SUCCESS | FAILED | PENDING | RUNNING
+  duration   String?
+  detail     String?
+  executedBy String?
+  evidence   Json?
+  startedAt  DateTime @default(now())
+  completedAt DateTime?
+
+  runbook Runbook @relation(fields: [runbookId], references: [id], onDelete: Cascade)
+
+  @@index([runbookId, startedAt])
+  @@map("runbook_executions")
+}
+
+// ── Operations ──
+
+model OperationRecord {
+  id             String   @id @default(uuid())
+  organizationId String
+  systemId       String
+  type           String   // BACKUP | RESTART | MAINTENANCE | DR_DRILL | HOUSEKEEPING
+  status         String   @default("SCHEDULED") // SCHEDULED | RUNNING | COMPLETED | FAILED | CANCELLED
+  riskLevel      String   @default("LOW")
+  scheduledTime  DateTime?
+  completedAt    DateTime?
+  requestedBy    String
+  description    String
+  schedule       String?  // Cron expression or description
+  error          String?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  system       System       @relation(fields: [systemId], references: [id], onDelete: Cascade)
+
+  @@index([organizationId, status])
+  @@map("operation_records")
+}
+
+model JobRecord {
+  id        String   @id @default(uuid())
+  systemId  String
+  jobName   String
+  jobClass  String   // A | B | C
+  status    String   // running | scheduled | finished | failed | canceled
+  startedAt DateTime?
+  duration  String?
+  client    String?
+  user      String?
+  details   Json?
+
+  @@map("job_records")
+}
+
+model TransportRecord {
+  id          String   @id @default(uuid())
+  systemId    String
+  transportId String   // e.g., EP1K900001
+  description String
+  owner       String
+  status      String   // released | imported | error | modifiable
+  target      String?  // Target system SID
+  rc          Int?     // Return code
+  importedAt  DateTime?
+  createdAt   DateTime @default(now())
+
+  @@map("transport_records")
+}
+
+model CertificateRecord {
+  id        String   @id @default(uuid())
+  systemId  String
+  name      String
+  issuer    String
+  expiresAt DateTime
+  daysLeft  Int
+  status    String   // ok | warning | critical
+  type      String   // SSL | SAML | SNC | etc.
+
+  @@map("certificate_records")
+}
+
+// ── Connectors ──
+
+model Connector {
+  id             String   @id @default(uuid())
+  organizationId String
+  systemId       String
+  method         String   // SAP Cloud Connector | Spektra Agent | RFC/BAPI | API Gateway
+  status         String   @default("disconnected") // connected | degraded | disconnected
+  latencyMs      Int?
+  version        String?
+  lastHeartbeat  DateTime?
+  features       Json?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  system       System       @relation(fields: [systemId], references: [id], onDelete: Cascade)
+
+  @@map("connectors")
+}
+
+// ── Audit ──
+
+model AuditEntry {
+  id             String   @id @default(uuid())
+  organizationId String
+  userId         String?
+  userEmail      String
+  action         String   // system.register | approval.approve | etc.
+  resource       String
+  details        String?
+  severity       String   @default("info") // info | warning | critical
+  timestamp      DateTime @default(now())
+
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  @@index([organizationId, timestamp])
+  @@map("audit_entries")
+}
+
+// ── API Keys ──
+
+model ApiKey {
+  id             String   @id @default(uuid())
+  organizationId String
+  name           String
+  keyHash        String
+  prefix         String   // First 8 chars for identification
+  status         String   @default("active") // active | inactive
+  createdAt      DateTime @default(now())
+  lastUsedAt     DateTime?
+
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  @@map("api_keys")
+}
