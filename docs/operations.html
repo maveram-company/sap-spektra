@@ -1,0 +1,265 @@
+<!DOCTYPE html><html lang="es" data-theme="dark" data-lang="es"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Operaciones — SAP Spektra Docs</title><link rel="stylesheet" href="theme.css"><script src="theme-toggle.js"></script><script src="lang-toggle.js"></script></head><body><div class="docs-wrapper">
+<nav class="docs-sidebar">
+  <div class="sidebar-brand"><div class="logo">&#9889;</div><div class="brand-text"><div class="brand-name">SAP Spektra</div><div class="brand-sub">Documentacion</div></div></div>
+  <div class="sidebar-section"><div class="sidebar-section-label">Inicio</div><a href="index.html" class="sidebar-link">Portal</a><a href="getting-started.html" class="sidebar-link">Primeros Pasos</a></div>
+  <div class="sidebar-section"><div class="sidebar-section-label">Command</div><a href="dashboard.html" class="sidebar-link">Dashboard</a><a href="landscape.html" class="sidebar-link">Landscape</a><a href="alerts.html" class="sidebar-link">Alertas</a></div>
+  <div class="sidebar-section"><div class="sidebar-section-label">Monitor</div><a href="systems.html" class="sidebar-link">Sistemas</a><a href="connectors.html" class="sidebar-link">Conectores</a><a href="events.html" class="sidebar-link">Eventos</a></div>
+  <div class="sidebar-section"><div class="sidebar-section-label">Intelligence</div><a href="ai-analysis.html" class="sidebar-link">Analisis IA</a><a href="analytics.html" class="sidebar-link">Analytics</a><a href="reports.html" class="sidebar-link">Reportes</a><a href="comparison.html" class="sidebar-link">Comparacion</a></div>
+  <div class="sidebar-section"><div class="sidebar-section-label">Operations</div><a href="runbooks.html" class="sidebar-link">Runbooks</a><a href="approvals.html" class="sidebar-link">Aprobaciones</a><a href="operations.html" class="sidebar-link active">Operaciones</a><a href="jobs.html" class="sidebar-link">Jobs (SM37)</a><a href="transports.html" class="sidebar-link">Transportes</a><a href="sla.html" class="sidebar-link">SLA</a><a href="ha-control.html" class="sidebar-link">HA Control</a><a href="certificates.html" class="sidebar-link">Certificados</a></div>
+  <div class="sidebar-section"><div class="sidebar-section-label">Admin</div><a href="admin.html" class="sidebar-link">Gestion</a><a href="settings.html" class="sidebar-link">Configuracion</a><a href="connect-system.html" class="sidebar-link">Conectar Sistema</a></div>
+</nav>
+<main class="docs-main">
+
+  <!-- ====== HEADER ====== -->
+  <section class="doc-section">
+    <h1><span class="es">Operaciones</span><span class="en">Operations</span></h1>
+    <p class="section-desc">
+      <span class="es">Operaciones programadas y ejecutadas</span>
+      <span class="en">Scheduled and executed operations</span>
+    </p>
+    <p>
+      <span class="es">La pantalla de <strong>Operaciones</strong> le permite planificar, programar y dar seguimiento a operaciones de mantenimiento sobre sus sistemas SAP. Aqui puede crear nuevas operaciones, revisar las programadas y consultar el historial de operaciones completadas o fallidas.</span>
+      <span class="en">The <strong>Operations</strong> screen lets you plan, schedule and track maintenance operations on your SAP systems. Here you can create new operations, review scheduled ones and check the history of completed or failed operations.</span>
+    </p>
+  </section>
+
+  <!-- ====== TABS + BUTTON ====== -->
+  <section class="doc-section">
+    <h2><span class="es">Pestanas y Boton Principal</span><span class="en">Tabs and Main Button</span></h2>
+    <p>
+      <span class="es">En la parte superior vera cuatro pestanas de filtro y un boton de accion:</span>
+      <span class="en">At the top you will see four filter tabs and an action button:</span>
+    </p>
+    <div style="display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin:16px 0;">
+      <span style="background:var(--bg-secondary);border:1px solid var(--border-color);padding:8px 16px;border-radius:6px;"><span class="es">Todas</span><span class="en">All</span></span>
+      <span style="background:var(--bg-secondary);border:1px solid var(--border-color);padding:8px 16px;border-radius:6px;"><span class="es">Programadas</span><span class="en">Scheduled</span></span>
+      <span style="background:var(--bg-secondary);border:1px solid var(--border-color);padding:8px 16px;border-radius:6px;"><span class="es">Completadas</span><span class="en">Completed</span></span>
+      <span style="background:var(--bg-secondary);border:1px solid var(--border-color);padding:8px 16px;border-radius:6px;"><span class="es">Fallidas</span><span class="en">Failed</span></span>
+      <span style="margin-left:auto;background:var(--accent-blue);color:#fff;padding:8px 20px;border-radius:6px;font-weight:600;cursor:pointer;">+ <span class="es">Nueva Operacion</span><span class="en">New Operation</span></span>
+    </div>
+    <ul>
+      <li><span class="es"><strong>Todas</strong> &mdash; Muestra todas las operaciones sin importar su estado.</span><span class="en"><strong>All</strong> &mdash; Shows all operations regardless of status.</span></li>
+      <li><span class="es"><strong>Programadas</strong> &mdash; Muestra solo las operaciones pendientes de ejecucion.</span><span class="en"><strong>Scheduled</strong> &mdash; Shows only operations pending execution.</span></li>
+      <li><span class="es"><strong>Completadas</strong> &mdash; Muestra las operaciones finalizadas con exito.</span><span class="en"><strong>Completed</strong> &mdash; Shows successfully finished operations.</span></li>
+      <li><span class="es"><strong>Fallidas</strong> &mdash; Muestra las operaciones que terminaron con error.</span><span class="en"><strong>Failed</strong> &mdash; Shows operations that ended with errors.</span></li>
+    </ul>
+  </section>
+
+  <!-- ====== TABLE COLUMNS ====== -->
+  <section class="doc-section">
+    <h2><span class="es">Tabla de Operaciones</span><span class="en">Operations Table</span></h2>
+    <table class="doc-table">
+      <thead>
+        <tr>
+          <th><span class="es">Columna</span><span class="en">Column</span></th>
+          <th><span class="es">Que muestra</span><span class="en">What it shows</span></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>ID</strong></td>
+          <td><span class="es">Identificador unico de la operacion en formato monoespaciado (ej. <code>OP-0042</code>).</span><span class="en">Unique operation identifier in monospace format (e.g. <code>OP-0042</code>).</span></td>
+        </tr>
+        <tr>
+          <td><strong><span class="es">Sistema</span><span class="en">System</span></strong></td>
+          <td><span class="es">SID del sistema objetivo de la operacion (ej. <span style="background:var(--accent-blue);color:#fff;padding:1px 6px;border-radius:3px;font-size:0.85em;">PRD</span>).</span><span class="en">SID of the target system for the operation (e.g. <span style="background:var(--accent-blue);color:#fff;padding:1px 6px;border-radius:3px;font-size:0.85em;">PRD</span>).</span></td>
+        </tr>
+        <tr>
+          <td><strong><span class="es">Tipo</span><span class="en">Type</span></strong></td>
+          <td>
+            <span class="es">Categoria de la operacion, mostrada como badge de color:
+              <br>&#8226; <span style="background:#3b82f6;color:#fff;padding:2px 8px;border-radius:4px;font-size:0.85em;">BACKUP</span> &mdash; Copia de seguridad del sistema o base de datos.
+              <br>&#8226; <span style="background:#f59e0b;color:#000;padding:2px 8px;border-radius:4px;font-size:0.85em;">RESTART</span> &mdash; Reinicio de instancia o servicio.
+              <br>&#8226; <span style="background:#8b5cf6;color:#fff;padding:2px 8px;border-radius:4px;font-size:0.85em;">MAINTENANCE</span> &mdash; Ventana de mantenimiento planificada.
+              <br>&#8226; <span style="background:#ef4444;color:#fff;padding:2px 8px;border-radius:4px;font-size:0.85em;">DR_DRILL</span> &mdash; Simulacro de recuperacion ante desastres.
+              <br>&#8226; <span style="background:#22c55e;color:#fff;padding:2px 8px;border-radius:4px;font-size:0.85em;">PATCH</span> &mdash; Aplicacion de parches o actualizaciones.
+            </span>
+            <span class="en">Operation category, shown as a colored badge:
+              <br>&#8226; <span style="background:#3b82f6;color:#fff;padding:2px 8px;border-radius:4px;font-size:0.85em;">BACKUP</span> &mdash; System or database backup.
+              <br>&#8226; <span style="background:#f59e0b;color:#000;padding:2px 8px;border-radius:4px;font-size:0.85em;">RESTART</span> &mdash; Instance or service restart.
+              <br>&#8226; <span style="background:#8b5cf6;color:#fff;padding:2px 8px;border-radius:4px;font-size:0.85em;">MAINTENANCE</span> &mdash; Planned maintenance window.
+              <br>&#8226; <span style="background:#ef4444;color:#fff;padding:2px 8px;border-radius:4px;font-size:0.85em;">DR_DRILL</span> &mdash; Disaster recovery drill.
+              <br>&#8226; <span style="background:#22c55e;color:#fff;padding:2px 8px;border-radius:4px;font-size:0.85em;">PATCH</span> &mdash; Patch or update application.
+            </span>
+          </td>
+        </tr>
+        <tr>
+          <td><strong><span class="es">Descripcion</span><span class="en">Description</span></strong></td>
+          <td><span class="es">Texto libre que describe el objetivo y alcance de la operacion.</span><span class="en">Free text describing the objective and scope of the operation.</span></td>
+        </tr>
+        <tr>
+          <td><strong><span class="es">Programada</span><span class="en">Scheduled</span></strong></td>
+          <td><span class="es">Fecha y hora en que la operacion esta programada para ejecutarse.</span><span class="en">Date and time the operation is scheduled to execute.</span></td>
+        </tr>
+        <tr>
+          <td><strong><span class="es">Recurrencia</span><span class="en">Recurrence</span></strong></td>
+          <td><span class="es">Frecuencia de repeticion: <em>Unica</em>, <em>Diaria</em>, <em>Semanal</em>, <em>Mensual</em>, o <em>Personalizada</em>.</span><span class="en">Repetition frequency: <em>Once</em>, <em>Daily</em>, <em>Weekly</em>, <em>Monthly</em>, or <em>Custom</em>.</span></td>
+        </tr>
+        <tr>
+          <td><strong><span class="es">Proxima</span><span class="en">Next</span></strong></td>
+          <td><span class="es">Fecha y hora de la proxima ejecucion programada (solo para operaciones recurrentes).</span><span class="en">Date and time of the next scheduled execution (only for recurring operations).</span></td>
+        </tr>
+        <tr>
+          <td><strong><span class="es">Ultima</span><span class="en">Last</span></strong></td>
+          <td><span class="es">Resultado de la ultima ejecucion: <span style="color:#22c55e;">&#10003;</span> (exito) o <span style="color:#ef4444;">&#10007;</span> (fallo). En blanco si nunca se ha ejecutado.</span><span class="en">Result of the last execution: <span style="color:#22c55e;">&#10003;</span> (success) or <span style="color:#ef4444;">&#10007;</span> (failure). Blank if never executed.</span></td>
+        </tr>
+        <tr>
+          <td><strong><span class="es">Riesgo</span><span class="en">Risk</span></strong></td>
+          <td>
+            <span class="es">Nivel de riesgo asignado a la operacion:
+              <br>&#8226; <span style="background:#22c55e;color:#fff;padding:2px 8px;border-radius:4px;font-size:0.85em;">LOW</span>
+              <br>&#8226; <span style="background:#f59e0b;color:#000;padding:2px 8px;border-radius:4px;font-size:0.85em;">MEDIUM</span>
+              <br>&#8226; <span style="background:#ef4444;color:#fff;padding:2px 8px;border-radius:4px;font-size:0.85em;">HIGH</span>
+              <br>&#8226; <span style="background:#7f1d1d;color:#fff;padding:2px 8px;border-radius:4px;font-size:0.85em;">CRITICAL</span>
+            </span>
+            <span class="en">Risk level assigned to the operation:
+              <br>&#8226; <span style="background:#22c55e;color:#fff;padding:2px 8px;border-radius:4px;font-size:0.85em;">LOW</span>
+              <br>&#8226; <span style="background:#f59e0b;color:#000;padding:2px 8px;border-radius:4px;font-size:0.85em;">MEDIUM</span>
+              <br>&#8226; <span style="background:#ef4444;color:#fff;padding:2px 8px;border-radius:4px;font-size:0.85em;">HIGH</span>
+              <br>&#8226; <span style="background:#7f1d1d;color:#fff;padding:2px 8px;border-radius:4px;font-size:0.85em;">CRITICAL</span>
+            </span>
+          </td>
+        </tr>
+        <tr>
+          <td><strong><span class="es">Estado</span><span class="en">Status</span></strong></td>
+          <td><span class="es">Estado actual: <em>Programada</em>, <em>En ejecucion</em>, <em>Completada</em>, <em>Fallida</em> o <em>Cancelada</em>.</span><span class="en">Current status: <em>Scheduled</em>, <em>Running</em>, <em>Completed</em>, <em>Failed</em> or <em>Cancelled</em>.</span></td>
+        </tr>
+        <tr>
+          <td><strong><span class="es">Solicitado por</span><span class="en">Requested by</span></strong></td>
+          <td><span class="es">Nombre del usuario que creo o solicito la operacion.</span><span class="en">Name of the user who created or requested the operation.</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- ====== EXAMPLE TABLE ====== -->
+  <section class="doc-section">
+    <h3><span class="es">Ejemplo de Tabla</span><span class="en">Table Example</span></h3>
+    <div style="overflow-x:auto;">
+      <table class="doc-table" style="font-size:0.9em;">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th><span class="es">Sistema</span><span class="en">System</span></th>
+            <th><span class="es">Tipo</span><span class="en">Type</span></th>
+            <th><span class="es">Descripcion</span><span class="en">Description</span></th>
+            <th><span class="es">Programada</span><span class="en">Scheduled</span></th>
+            <th><span class="es">Recurrencia</span><span class="en">Recurrence</span></th>
+            <th><span class="es">Ultima</span><span class="en">Last</span></th>
+            <th><span class="es">Riesgo</span><span class="en">Risk</span></th>
+            <th><span class="es">Estado</span><span class="en">Status</span></th>
+            <th><span class="es">Solicitado</span><span class="en">Requested</span></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>OP-0042</code></td>
+            <td><span style="background:var(--accent-blue);color:#fff;padding:1px 6px;border-radius:3px;font-size:0.85em;">PRD</span></td>
+            <td><span style="background:#3b82f6;color:#fff;padding:2px 8px;border-radius:4px;font-size:0.85em;">BACKUP</span></td>
+            <td><span class="es">Backup completo HANA PRD</span><span class="en">Full HANA PRD backup</span></td>
+            <td>2026-03-12 02:00</td>
+            <td><span class="es">Diaria</span><span class="en">Daily</span></td>
+            <td><span style="color:#22c55e;">&#10003;</span></td>
+            <td><span style="background:#22c55e;color:#fff;padding:2px 8px;border-radius:4px;font-size:0.85em;">LOW</span></td>
+            <td><span class="es">Programada</span><span class="en">Scheduled</span></td>
+            <td>admin</td>
+          </tr>
+          <tr>
+            <td><code>OP-0039</code></td>
+            <td><span style="background:#f59e0b;color:#000;padding:1px 6px;border-radius:3px;font-size:0.85em;">QAS</span></td>
+            <td><span style="background:#f59e0b;color:#000;padding:2px 8px;border-radius:4px;font-size:0.85em;">RESTART</span></td>
+            <td><span class="es">Reinicio de instancia ASCS</span><span class="en">ASCS instance restart</span></td>
+            <td>2026-03-11 22:00</td>
+            <td><span class="es">Unica</span><span class="en">Once</span></td>
+            <td>&mdash;</td>
+            <td><span style="background:#f59e0b;color:#000;padding:2px 8px;border-radius:4px;font-size:0.85em;">MEDIUM</span></td>
+            <td><span class="es">Programada</span><span class="en">Scheduled</span></td>
+            <td>j.martinez</td>
+          </tr>
+          <tr>
+            <td><code>OP-0035</code></td>
+            <td><span style="background:var(--accent-blue);color:#fff;padding:1px 6px;border-radius:3px;font-size:0.85em;">PRD</span></td>
+            <td><span style="background:#ef4444;color:#fff;padding:2px 8px;border-radius:4px;font-size:0.85em;">DR_DRILL</span></td>
+            <td><span class="es">Simulacro DR trimestral</span><span class="en">Quarterly DR drill</span></td>
+            <td>2026-03-15 06:00</td>
+            <td><span class="es">Mensual</span><span class="en">Monthly</span></td>
+            <td><span style="color:#ef4444;">&#10007;</span></td>
+            <td><span style="background:#ef4444;color:#fff;padding:2px 8px;border-radius:4px;font-size:0.85em;">HIGH</span></td>
+            <td><span class="es">Programada</span><span class="en">Scheduled</span></td>
+            <td>admin</td>
+          </tr>
+          <tr>
+            <td><code>OP-0031</code></td>
+            <td><span style="background:#22c55e;color:#fff;padding:1px 6px;border-radius:3px;font-size:0.85em;">DEV</span></td>
+            <td><span style="background:#22c55e;color:#fff;padding:2px 8px;border-radius:4px;font-size:0.85em;">PATCH</span></td>
+            <td><span class="es">Kernel patch SP05</span><span class="en">Kernel patch SP05</span></td>
+            <td>2026-03-10 20:00</td>
+            <td><span class="es">Unica</span><span class="en">Once</span></td>
+            <td><span style="color:#22c55e;">&#10003;</span></td>
+            <td><span style="background:#22c55e;color:#fff;padding:2px 8px;border-radius:4px;font-size:0.85em;">LOW</span></td>
+            <td><span class="es">Completada</span><span class="en">Completed</span></td>
+            <td>c.lopez</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ====== NEW OPERATION MODAL ====== -->
+  <section class="doc-section">
+    <h2><span class="es">Modal: Nueva Operacion</span><span class="en">Modal: New Operation</span></h2>
+    <p>
+      <span class="es">Al hacer clic en el boton <strong>+ Nueva Operacion</strong>, se abre un formulario modal con los siguientes campos:</span>
+      <span class="en">When you click the <strong>+ New Operation</strong> button, a modal form opens with the following fields:</span>
+    </p>
+
+    <div style="background:var(--bg-secondary);border:1px solid var(--border-color);border-radius:8px;padding:24px;margin:16px 0;">
+      <h3 style="margin-top:0;"><span class="es">Nueva Operacion</span><span class="en">New Operation</span></h3>
+      <table class="doc-table">
+        <thead>
+          <tr>
+            <th><span class="es">Campo</span><span class="en">Field</span></th>
+            <th><span class="es">Descripcion</span><span class="en">Description</span></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong><span class="es">Sistema</span><span class="en">System</span></strong></td>
+            <td><span class="es">Selector desplegable con todos los sistemas SAP conectados. Muestra el SID y el entorno (DEV/QAS/PRD). Debe seleccionar exactamente un sistema.</span><span class="en">Dropdown selector with all connected SAP systems. Shows the SID and environment (DEV/QAS/PRD). You must select exactly one system.</span></td>
+          </tr>
+          <tr>
+            <td><strong><span class="es">Tipo de Operacion</span><span class="en">Operation Type</span></strong></td>
+            <td><span class="es">Selector desplegable con las opciones: BACKUP, RESTART, MAINTENANCE, DR_DRILL, PATCH.</span><span class="en">Dropdown selector with options: BACKUP, RESTART, MAINTENANCE, DR_DRILL, PATCH.</span></td>
+          </tr>
+          <tr>
+            <td><strong><span class="es">Descripcion</span><span class="en">Description</span></strong></td>
+            <td><span class="es">Campo de texto libre donde describe el objetivo de la operacion. Maximo 500 caracteres.</span><span class="en">Free text field where you describe the operation objective. Maximum 500 characters.</span></td>
+          </tr>
+          <tr>
+            <td><strong><span class="es">Nivel de Riesgo</span><span class="en">Risk Level</span></strong></td>
+            <td><span class="es">Selector con las opciones LOW, MEDIUM, HIGH, CRITICAL. Las operaciones HIGH y CRITICAL pueden requerir aprobacion adicional segun la configuracion del sistema.</span><span class="en">Selector with options LOW, MEDIUM, HIGH, CRITICAL. HIGH and CRITICAL operations may require additional approval depending on system configuration.</span></td>
+          </tr>
+          <tr>
+            <td><strong><span class="es">Fecha y Hora</span><span class="en">Date and Time</span></strong></td>
+            <td><span class="es">Selector de fecha y hora para programar cuando se ejecutara la operacion. Debe ser una fecha futura.</span><span class="en">Date and time picker to schedule when the operation will execute. Must be a future date.</span></td>
+          </tr>
+        </tbody>
+      </table>
+      <div style="display:flex;gap:12px;margin-top:16px;justify-content:flex-end;">
+        <span style="background:var(--bg-tertiary);color:var(--text-secondary);padding:8px 20px;border-radius:6px;border:1px solid var(--border-color);cursor:pointer;"><span class="es">Cancelar</span><span class="en">Cancel</span></span>
+        <span style="background:var(--accent-blue);color:#fff;padding:8px 20px;border-radius:6px;font-weight:600;cursor:pointer;"><span class="es">Crear Operacion</span><span class="en">Create Operation</span></span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====== TIPS ====== -->
+  <section class="doc-section">
+    <h2><span class="es">Consejos</span><span class="en">Tips</span></h2>
+    <ul>
+      <li><span class="es">Programe operaciones de alto riesgo (DR_DRILL, RESTART en PRD) fuera del horario de negocio para minimizar el impacto.</span><span class="en">Schedule high-risk operations (DR_DRILL, RESTART on PRD) outside business hours to minimize impact.</span></li>
+      <li><span class="es">Revise la columna <strong>Ultima</strong> para identificar operaciones recurrentes que han fallado recientemente y necesitan atencion.</span><span class="en">Check the <strong>Last</strong> column to identify recurring operations that have recently failed and need attention.</span></li>
+      <li><span class="es">Use la pestana <strong>Fallidas</strong> para revisar rapidamente que operaciones necesitan intervencion manual.</span><span class="en">Use the <strong>Failed</strong> tab to quickly review which operations need manual intervention.</span></li>
+    </ul>
+  </section>
+
+</main></div></body></html>

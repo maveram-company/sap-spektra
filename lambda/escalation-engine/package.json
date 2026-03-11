@@ -1,0 +1,12 @@
+{
+  "name": "sap-alwaysops-escalation-engine",
+  "version": "1.0.0",
+  "description": "Avvale SAP AlwaysOps - Motor de escalación automática para aprobaciones no respondidas",
+  "main": "index.js",
+  "dependencies": {
+    "@aws-sdk/client-dynamodb": "^3.450.0",
+    "@aws-sdk/lib-dynamodb": "^3.450.0",
+    "@aws-sdk/client-sns": "^3.450.0",
+    "@aws-sdk/client-lambda": "^3.450.0"
+  }
+}

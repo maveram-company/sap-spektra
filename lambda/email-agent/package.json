@@ -1,0 +1,9 @@
+{
+  "name": "sap-alwaysops-email-agent",
+  "version": "1.0.0",
+  "description": "Avvale SAP AlwaysOps - Agente de notificaciones por email via Amazon SES",
+  "main": "index.js",
+  "dependencies": {
+    "@aws-sdk/client-ses": "^3.450.0"
+  }
+}

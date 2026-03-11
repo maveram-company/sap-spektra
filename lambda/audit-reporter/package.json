@@ -1,0 +1,14 @@
+{
+  "name": "sap-alwaysops-audit-reporter",
+  "version": "1.0.0",
+  "description": "Avvale SAP AlwaysOps - Generador de reportes de auditoría y compliance",
+  "main": "index.js",
+  "dependencies": {
+    "@aws-sdk/client-dynamodb": "^3.450.0",
+    "@aws-sdk/lib-dynamodb": "^3.450.0",
+    "@aws-sdk/client-s3": "^3.450.0",
+    "@aws-sdk/s3-request-presigner": "^3.450.0",
+    "@aws-sdk/client-sns": "^3.450.0",
+    "@aws-sdk/client-ssm": "^3.450.0"
+  }
+}

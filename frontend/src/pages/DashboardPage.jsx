@@ -1,0 +1,291 @@
+import { useState, useEffect, useCallback } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { Monitor, AlertTriangle, ShieldAlert, ShieldCheck, TrendingUp, ArrowRight } from 'lucide-react';
+import { useAuth } from '../contexts/AuthContext';
+import { useTenant } from '../contexts/TenantContext';
+import Header from '../components/layout/Header';
+import StatusBadge from '../components/ui/StatusBadge';
+import HealthGauge from '../components/ui/HealthGauge';
+import Button from '../components/ui/Button';
+import PageLoading from '../components/ui/PageLoading';
+import { mockSystems, mockApprovals } from '../lib/mockData';
+
+// Mapa de colores por variante — solo colorea el valor y el icono, sin fondos de color
+const variantValueColors = {
+  default:  'text-text-primary',
+  primary:  'text-primary-400',
+  danger:   'text-danger-500',
+  success:  'text-success-500',
+  warning:  'text-warning-500',
+};
+
+// Glow suave en el número según variante
+const variantGlowStyle = {
+  default:  {},
+  primary:  { textShadow: '0 0 12px rgba(6,182,212,0.5)' },
+  danger:   { textShadow: '0 0 12px rgba(244,63,94,0.5)' },
+  success:  { textShadow: '0 0 12px rgba(16,185,129,0.5)' },
+  warning:  { textShadow: '0 0 12px rgba(245,158,11,0.5)' },
+};
+
+// Gradiente del círculo de icono por variante
+const variantIconGradient = {
+  default:  ['#06b6d4', '#8b5cf6'],
+  primary:  ['#06b6d4', '#8b5cf6'],
+  danger:   ['#f43f5e', '#e11d48'],
+  success:  ['#10b981', '#059669'],
+  warning:  ['#f59e0b', '#d97706'],
+};
+
+// eslint-disable-next-line no-unused-vars -- Icon es componente JSX
+function KPICard({ icon: Icon, label, value, change, variant = 'default' }) {
+  const valueColor   = variantValueColors[variant];
+  const glowStyle    = variantGlowStyle[variant];
+  const [gradFrom, gradTo] = variantIconGradient[variant];
+
+  return (
+    <div className="bg-white/[0.03] backdrop-blur-sm border border-white/10 rounded-xl p-5 transition-all duration-300 hover:border-primary-500/20 hover:shadow-[0_0_20px_rgba(6,182,212,0.06)]">
+      {/* Fila superior: icono y cambio porcentual */}
+      <div className="flex items-center justify-between mb-4">
+        {/* Círculo con degradado cyan→violet (o según variante) */}
+        <div
+          className="w-9 h-9 rounded-full flex items-center justify-center flex-shrink-0"
+          style={{ background: `linear-gradient(135deg, ${gradFrom}, ${gradTo})` }}
+        >
+          <Icon size={16} className="text-white" />
+        </div>
+
+        {/* Indicador de cambio: cyan positivo, danger negativo */}
+        {change != null && (
+          <span
+            className={`text-xs font-medium flex items-center gap-0.5 ${
+              change > 0 ? 'text-primary-400' : 'text-danger-500'
+            }`}
+          >
+            <TrendingUp
+              size={12}
+              className={change < 0 ? 'rotate-180' : ''}
+            />
+            {Math.abs(change)}%
+          </span>
+        )}
+      </div>
+
+      {/* Número grande con glow */}
+      <p
+        className={`text-3xl font-bold tracking-tight ${valueColor}`}
+        style={glowStyle}
+      >
+        {value}
+      </p>
+
+      {/* Etiqueta descriptiva */}
+      <p className="text-xs text-text-tertiary mt-1 leading-snug">{label}</p>
+    </div>
+  );
+}
+
+function SystemCard({ system, onClick }) {
+  return (
+    <div
+      onClick={onClick}
+      className="
+        bg-white/[0.03] backdrop-blur-sm border border-white/10 rounded-xl p-5
+        cursor-pointer transition-all duration-300 animate-fade-in
+        hover:border-primary-500/30 hover:shadow-[0_0_20px_rgba(6,182,212,0.10)]
+      "
+    >
+      {/* Cabecera: SID + badge de estado */}
+      <div className="flex items-start justify-between mb-1">
+        <h3 className="text-xl font-bold text-gradient leading-none">{system.sid}</h3>
+        <StatusBadge status={system.status} size="sm" />
+      </div>
+
+      {/* Descripción y modo (Trial / Producción) */}
+      <div className="flex items-center gap-2 mb-4">
+        <p className="text-xs text-text-tertiary truncate">{system.description}</p>
+        <StatusBadge status={system.mode === 'TRIAL' ? 'trial' : 'production'} size="sm" />
+      </div>
+
+      {/* Gauge de salud centrado */}
+      <div className="flex items-center justify-center my-3">
+        <HealthGauge score={system.healthScore} size={130} />
+      </div>
+
+      {/* Grid de métricas con separador sutil */}
+      <div className="grid grid-cols-2 gap-x-4 gap-y-3 mt-4 pt-4 border-t border-white/[0.06]">
+        <div>
+          <p className="text-[10px] text-text-tertiary uppercase tracking-wider">Tipo</p>
+          <p className="text-xs font-medium text-text-secondary mt-0.5">{system.type}</p>
+        </div>
+        <div>
+          <p className="text-[10px] text-text-tertiary uppercase tracking-wider">Base de Datos</p>
+          <p className="text-xs font-medium text-text-secondary mt-0.5">{system.dbType}</p>
+        </div>
+        <div>
+          <p className="text-[10px] text-text-tertiary uppercase tracking-wider">Ambiente</p>
+          <p className="text-xs font-medium text-text-secondary mt-0.5">{system.environment}</p>
+        </div>
+        <div>
+          <p className="text-[10px] text-text-tertiary uppercase tracking-wider">Breaches</p>
+          <p className="text-xs font-medium mt-0.5">
+            {system.breaches > 0 ? (
+              /* Breaches activos: color danger con pulso sutil */
+              <span className="text-danger-500 animate-pulse">
+                {system.breaches} activos
+              </span>
+            ) : (
+              <span className="text-success-500">Sin breaches</span>
+            )}
+          </p>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export default function DashboardPage() {
+  const [systems, setSystems] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
+  const navigate = useNavigate();
+  const { user } = useAuth();
+  const { organization } = useTenant();
+
+  const loadData = useCallback(async () => {
+    setRefreshing(true);
+    // Simula llamada a la API
+    await new Promise(r => setTimeout(r, 500));
+    setSystems(mockSystems);
+    setLoading(false);
+    setRefreshing(false);
+  }, []);
+
+  useEffect(() => { loadData(); }, [loadData]); // eslint-disable-line react-hooks/set-state-in-effect -- carga inicial estándar de React
+
+  if (loading) return <PageLoading message="Cargando dashboard..." />;
+
+  // Cálculo de KPIs
+  const healthySystems    = systems.filter(s => s.healthScore >= 90).length;
+  const totalBreaches     = systems.reduce((sum, s) => sum + s.breaches, 0);
+  const pendingApprovals  = mockApprovals.filter(a => a.status === 'PENDING').length;
+
+  return (
+    <div>
+      {/* ── Header global del layout ── */}
+      <Header
+        title={`Hola, ${user?.name || user?.username}`}
+        subtitle={`${organization?.name} — ${new Date().toLocaleDateString('es-CO', { weekday: 'long', day: 'numeric', month: 'long' })}`}
+        onRefresh={loadData}
+        refreshing={refreshing}
+      />
+
+      <div className="p-6 space-y-8">
+
+        {/* ══════════════════════════════════════
+            KPI Cards
+        ══════════════════════════════════════ */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          <KPICard
+            icon={Monitor}
+            label="Sistemas Activos"
+            value={systems.length}
+            change={12}
+            variant="primary"
+          />
+          <KPICard
+            icon={ShieldCheck}
+            label="Sistemas Saludables"
+            value={healthySystems}
+            change={5}
+            variant="success"
+          />
+          <KPICard
+            icon={AlertTriangle}
+            label="Breaches Activos"
+            value={totalBreaches}
+            change={-8}
+            variant={totalBreaches > 0 ? 'danger' : 'default'}
+          />
+          <KPICard
+            icon={ShieldAlert}
+            label="Aprobaciones Pendientes"
+            value={pendingApprovals}
+            variant={pendingApprovals > 0 ? 'warning' : 'default'}
+          />
+        </div>
+
+        {/* ══════════════════════════════════════
+            Landscape SAP — cabecera de sección
+        ══════════════════════════════════════ */}
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <h2 className="text-lg font-semibold text-text-primary">Landscape SAP</h2>
+            {/* Pill con conteo de sistemas */}
+            <span className="
+              px-2.5 py-0.5 text-xs font-medium rounded-full
+              bg-primary-500/10 text-primary-400 border border-primary-500/20
+            ">
+              {systems.length} sistemas
+            </span>
+          </div>
+
+        </div>
+
+        {/* ══════════════════════════════════════
+            Grid de SystemCards
+        ══════════════════════════════════════ */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+          {systems.map(system => (
+            <SystemCard
+              key={system.id}
+              system={system}
+              onClick={() => navigate(`/systems/${system.id}`)}
+            />
+          ))}
+        </div>
+
+        {/* ══════════════════════════════════════
+            Quick Actions — aviso de aprobaciones
+        ══════════════════════════════════════ */}
+        {pendingApprovals > 0 && (
+          <div className="
+            bg-white/[0.03] backdrop-blur-sm
+            border border-warning-500/30
+            rounded-xl p-4
+            transition-all duration-300
+            hover:shadow-[0_0_20px_rgba(245,158,11,0.08)]
+          ">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                {/* Icono con glow amber */}
+                <div
+                  className="w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0"
+                  style={{ boxShadow: '0 0 14px rgba(245,158,11,0.3)', background: 'rgba(245,158,11,0.12)' }}
+                >
+                  <ShieldAlert size={20} className="text-warning-500" />
+                </div>
+                <div>
+                  <p className="text-sm font-semibold text-text-primary">
+                    {pendingApprovals} aprobaciones pendientes
+                  </p>
+                  <p className="text-xs text-text-secondary">Requieren acción inmediata</p>
+                </div>
+              </div>
+
+              <Button
+                variant="outline"
+                size="sm"
+                icon={ArrowRight}
+                onClick={() => navigate('/approvals')}
+              >
+                Ver Aprobaciones
+              </Button>
+            </div>
+          </div>
+        )}
+
+      </div>
+    </div>
+  );
+}

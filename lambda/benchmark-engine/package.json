@@ -1,0 +1,12 @@
+{
+  "name": "sap-alwaysops-benchmark-engine",
+  "version": "1.0.0",
+  "description": "Avvale SAP AlwaysOps - H40: Motor de benchmarking que calcula baselines, compara sistemas y detecta tendencias de rendimiento",
+  "main": "index.js",
+  "dependencies": {
+    "@aws-sdk/client-dynamodb": "^3.450.0",
+    "@aws-sdk/lib-dynamodb": "^3.450.0",
+    "@aws-sdk/client-cloudwatch": "^3.450.0",
+    "@aws-sdk/client-ssm": "^3.450.0"
+  }
+}

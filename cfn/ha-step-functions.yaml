@@ -1,0 +1,841 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: >
+  Avvale SAP AlwaysOps v1.5 — HA Orchestration Step Functions
+  Maquina de estados para orquestar operaciones de alta disponibilidad
+  (failover, takeover, failback) en sistemas SAP.
+  Estados: ValidatePrereqs -> AcquireLock -> ExecuteNetworkSwitch ->
+           ExecuteDbFailover -> ExecuteSapSwitch -> VerifyHealth ->
+           CollectEvidence -> ReleaseLock
+  Incluye rollback automatico ante fallas y timeout de 30 minutos.
+
+# ═══════════════════════════════════════════════════════════════
+#  PARAMETROS
+# ═══════════════════════════════════════════════════════════════
+
+Parameters:
+  Environment:
+    Type: String
+    Default: Production
+    AllowedValues: [Production, Staging, Development]
+    Description: Ambiente de despliegue
+
+  HaOrchestratorFunctionArn:
+    Type: String
+    Description: ARN de la funcion Lambda del HA Orchestrator que ejecuta cada paso
+
+  HaOperationsTableName:
+    Type: String
+    Default: sap-alwaysops-ha-operations
+    Description: Nombre de la tabla DynamoDB para operaciones HA
+
+  HaOperationsTableArn:
+    Type: String
+    Description: ARN de la tabla DynamoDB de operaciones HA
+
+  AlertSnsTopicArn:
+    Type: String
+    Default: ''
+    Description: ARN del SNS topic para notificaciones de alerta (opcional)
+
+  ProductVersion:
+    Type: String
+    Default: '1.5.0'
+    Description: Version del producto SAP AlwaysOps
+
+Conditions:
+  HasAlertTopic: !Not [!Equals [!Ref AlertSnsTopicArn, '']]
+
+# ═══════════════════════════════════════════════════════════════
+#  RECURSOS
+# ═══════════════════════════════════════════════════════════════
+
+Resources:
+
+  # ─────────────────────────────────────────────────────────────
+  #  IAM Role para Step Functions
+  #  Permite invocar la Lambda del HA Orchestrator, escribir logs
+  #  en CloudWatch y publicar en SNS (notificaciones de error).
+  # ─────────────────────────────────────────────────────────────
+
+  HaStepFunctionsRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: !Sub 'sap-alwaysops-ha-sfn-role-${AWS::Region}'
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: states.amazonaws.com
+            Action: sts:AssumeRole
+            Condition:
+              StringEquals:
+                aws:SourceAccount: !Ref AWS::AccountId
+      Policies:
+        # Politica para invocar la Lambda del HA Orchestrator
+        - PolicyName: InvokeHaOrchestratorLambda
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - lambda:InvokeFunction
+                Resource:
+                  - !Ref HaOrchestratorFunctionArn
+                  # Permitir invocar cualquier version/alias de la Lambda
+                  - !Sub '${HaOrchestratorFunctionArn}:*'
+
+        # Politica para escribir logs en CloudWatch
+        - PolicyName: CloudWatchLogsAccess
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - logs:CreateLogDelivery
+                  - logs:GetLogDelivery
+                  - logs:UpdateLogDelivery
+                  - logs:DeleteLogDelivery
+                  - logs:ListLogDeliveries
+                  - logs:PutResourcePolicy
+                  - logs:DescribeResourcePolicies
+                  - logs:DescribeLogGroups
+                  - logs:CreateLogGroup
+                  - logs:CreateLogStream
+                  - logs:PutLogEvents
+                Resource: '*'
+
+        # Politica para actualizar DynamoDB (estado de operacion)
+        - PolicyName: DynamoDbOperationsAccess
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - dynamodb:UpdateItem
+                  - dynamodb:GetItem
+                  - dynamodb:PutItem
+                Resource:
+                  - !Ref HaOperationsTableArn
+
+        # Politica para publicar en SNS (notificaciones de error)
+        - PolicyName: SnsPublishAccess
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - sns:Publish
+                Resource:
+                  - !If
+                    - HasAlertTopic
+                    - !Ref AlertSnsTopicArn
+                    - !Sub 'arn:aws:sns:${AWS::Region}:${AWS::AccountId}:sap-alwaysops-*'
+      Tags:
+        - Key: Application
+          Value: SAP-AlwaysOps
+        - Key: Component
+          Value: HA-Orchestration
+        - Key: Version
+          Value: !Ref ProductVersion
+
+  # ─────────────────────────────────────────────────────────────
+  #  CloudWatch Log Group para la State Machine
+  #  Retiene logs 30 dias para auditoria.
+  # ─────────────────────────────────────────────────────────────
+
+  HaStateMachineLogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: !Sub '/aws/states/sap-alwaysops-ha-orchestration-${Environment}'
+      RetentionInDays: 30
+      Tags:
+        - Key: Application
+          Value: SAP-AlwaysOps
+        - Key: Component
+          Value: HA-Orchestration
+
+  # ─────────────────────────────────────────────────────────────
+  #  State Machine — Orquestacion HA
+  #
+  #  Flujo principal (Happy Path):
+  #    ValidatePrereqs → AcquireLock → ExecuteNetworkSwitch →
+  #    ExecuteDbFailover → ExecuteSapSwitch → VerifyHealth →
+  #    CollectEvidence → ReleaseLock → OperationSuccess
+  #
+  #  Flujo de error (Rollback Branch):
+  #    Cualquier falla → RollbackBranch → RollbackSapSwitch →
+  #    RollbackDbFailover → RollbackNetworkSwitch →
+  #    ReleaseLockAfterRollback → NotifyFailure → OperationFailed
+  #
+  #  Timeout global: 30 minutos
+  # ─────────────────────────────────────────────────────────────
+
+  HaOrchestrationStateMachine:
+    Type: AWS::StepFunctions::StateMachine
+    Properties:
+      StateMachineName: !Sub 'sap-alwaysops-ha-orchestration-${Environment}'
+      StateMachineType: STANDARD
+      RoleArn: !GetAtt HaStepFunctionsRole.Arn
+      LoggingConfiguration:
+        Level: ALL
+        IncludeExecutionData: true
+        Destinations:
+          - CloudWatchLogsLogGroup:
+              LogGroupArn: !GetAtt HaStateMachineLogGroup.Arn
+      TracingConfiguration:
+        Enabled: true
+      Tags:
+        - Key: Application
+          Value: SAP-AlwaysOps
+        - Key: Component
+          Value: HA-Orchestration
+        - Key: Version
+          Value: !Ref ProductVersion
+      DefinitionString: !Sub |
+        {
+          "Comment": "Avvale SAP AlwaysOps v1.5 — HA Orchestration State Machine. Orquesta operaciones de failover, takeover y failback para sistemas SAP con rollback automatico.",
+          "StartAt": "ValidatePrereqs",
+          "TimeoutSeconds": 1800,
+          "States": {
+
+            "ValidatePrereqs": {
+              "Type": "Task",
+              "Comment": "Valida todos los prerequisitos HA antes de iniciar la operacion. Verifica replicacion, conectividad de nodos, drivers disponibles y ausencia de operaciones activas.",
+              "Resource": "arn:aws:states:::lambda:invoke",
+              "Parameters": {
+                "FunctionName": "${HaOrchestratorFunctionArn}",
+                "Payload": {
+                  "stepAction": "validatePrereqs",
+                  "operationId.$": "$.operationId",
+                  "systemId.$": "$.systemId",
+                  "sid.$": "$.sid",
+                  "operationType.$": "$.operationType",
+                  "networkStrategy.$": "$.networkStrategy",
+                  "dbStrategy.$": "$.dbStrategy",
+                  "sapStrategy.$": "$.sapStrategy",
+                  "sourceNode.$": "$.sourceNode",
+                  "targetNode.$": "$.targetNode"
+                }
+              },
+              "ResultPath": "$.prereqResult",
+              "ResultSelector": {
+                "allPassed.$": "$.Payload.allPassed",
+                "results.$": "$.Payload.results",
+                "checkedAt.$": "$.Payload.checkedAt"
+              },
+              "TimeoutSeconds": 120,
+              "Retry": [
+                {
+                  "ErrorEquals": ["Lambda.ServiceException", "Lambda.AWSLambdaException", "Lambda.SdkClientException"],
+                  "IntervalSeconds": 5,
+                  "MaxAttempts": 2,
+                  "BackoffRate": 2.0
+                }
+              ],
+              "Catch": [
+                {
+                  "ErrorEquals": ["States.ALL"],
+                  "ResultPath": "$.errorInfo",
+                  "Next": "RollbackBranch"
+                }
+              ],
+              "Next": "CheckPrereqsPassed"
+            },
+
+            "CheckPrereqsPassed": {
+              "Type": "Choice",
+              "Comment": "Evalua si todos los prerequisitos obligatorios pasaron. Si no, salta directamente al fallo sin intentar rollback.",
+              "Choices": [
+                {
+                  "Variable": "$.prereqResult.allPassed",
+                  "BooleanEquals": true,
+                  "Next": "AcquireLock"
+                }
+              ],
+              "Default": "PrereqsFailed"
+            },
+
+            "PrereqsFailed": {
+              "Type": "Task",
+              "Comment": "Registra el fallo de prerequisitos en DynamoDB y notifica. No se requiere rollback porque no se adquirio ningun recurso.",
+              "Resource": "arn:aws:states:::lambda:invoke",
+              "Parameters": {
+                "FunctionName": "${HaOrchestratorFunctionArn}",
+                "Payload": {
+                  "stepAction": "recordPrereqFailure",
+                  "operationId.$": "$.operationId",
+                  "systemId.$": "$.systemId",
+                  "prereqResult.$": "$.prereqResult"
+                }
+              },
+              "ResultPath": "$.failureRecord",
+              "Next": "OperationFailed"
+            },
+
+            "AcquireLock": {
+              "Type": "Task",
+              "Comment": "Adquiere un lock exclusivo en DynamoDB para el sistema SAP. Previene ejecuciones concurrentes de operaciones HA en el mismo sistema. TTL de 30 minutos.",
+              "Resource": "arn:aws:states:::lambda:invoke",
+              "Parameters": {
+                "FunctionName": "${HaOrchestratorFunctionArn}",
+                "Payload": {
+                  "stepAction": "acquireLock",
+                  "operationId.$": "$.operationId",
+                  "systemId.$": "$.systemId",
+                  "sid.$": "$.sid",
+                  "ttlSeconds": 1800
+                }
+              },
+              "ResultPath": "$.lockResult",
+              "ResultSelector": {
+                "lockId.$": "$.Payload.lockId",
+                "locked.$": "$.Payload.locked",
+                "acquiredAt.$": "$.Payload.acquiredAt"
+              },
+              "TimeoutSeconds": 30,
+              "Retry": [
+                {
+                  "ErrorEquals": ["Lambda.ServiceException", "Lambda.AWSLambdaException"],
+                  "IntervalSeconds": 3,
+                  "MaxAttempts": 3,
+                  "BackoffRate": 2.0
+                }
+              ],
+              "Catch": [
+                {
+                  "ErrorEquals": ["States.ALL"],
+                  "ResultPath": "$.errorInfo",
+                  "Next": "RollbackBranch"
+                }
+              ],
+              "Next": "ExecuteNetworkSwitch"
+            },
+
+            "ExecuteNetworkSwitch": {
+              "Type": "Task",
+              "Comment": "Ejecuta el switch de red segun la estrategia configurada: EIP reassociation, Route53 DNS failover, o Pacemaker VIP move. Redirige el trafico hacia el nodo target.",
+              "Resource": "arn:aws:states:::lambda:invoke",
+              "Parameters": {
+                "FunctionName": "${HaOrchestratorFunctionArn}",
+                "Payload": {
+                  "stepAction": "executeNetworkSwitch",
+                  "operationId.$": "$.operationId",
+                  "systemId.$": "$.systemId",
+                  "networkStrategy.$": "$.networkStrategy",
+                  "sourceNode.$": "$.sourceNode",
+                  "targetNode.$": "$.targetNode"
+                }
+              },
+              "ResultPath": "$.networkResult",
+              "ResultSelector": {
+                "success.$": "$.Payload.success",
+                "strategy.$": "$.Payload.strategy",
+                "evidence.$": "$.Payload.evidence",
+                "durationMs.$": "$.Payload.durationMs"
+              },
+              "TimeoutSeconds": 120,
+              "Retry": [
+                {
+                  "ErrorEquals": ["Lambda.ServiceException", "Lambda.AWSLambdaException"],
+                  "IntervalSeconds": 5,
+                  "MaxAttempts": 2,
+                  "BackoffRate": 2.0
+                }
+              ],
+              "Catch": [
+                {
+                  "ErrorEquals": ["States.ALL"],
+                  "ResultPath": "$.errorInfo",
+                  "Next": "RollbackBranch"
+                }
+              ],
+              "Next": "ExecuteDbFailover"
+            },
+
+            "ExecuteDbFailover": {
+              "Type": "Task",
+              "Comment": "Ejecuta el failover de la base de datos. Para HANA SR, ejecuta sr_takeover. Para declarative, ejecuta el script de takeover generico. Incluye verificacion de consistencia post-takeover.",
+              "Resource": "arn:aws:states:::lambda:invoke",
+              "Parameters": {
+                "FunctionName": "${HaOrchestratorFunctionArn}",
+                "Payload": {
+                  "stepAction": "executeDbFailover",
+                  "operationId.$": "$.operationId",
+                  "systemId.$": "$.systemId",
+                  "sid.$": "$.sid",
+                  "dbStrategy.$": "$.dbStrategy",
+                  "sourceNode.$": "$.sourceNode",
+                  "targetNode.$": "$.targetNode"
+                }
+              },
+              "ResultPath": "$.dbResult",
+              "ResultSelector": {
+                "success.$": "$.Payload.success",
+                "strategy.$": "$.Payload.strategy",
+                "evidence.$": "$.Payload.evidence",
+                "durationMs.$": "$.Payload.durationMs"
+              },
+              "TimeoutSeconds": 300,
+              "Retry": [
+                {
+                  "ErrorEquals": ["Lambda.ServiceException", "Lambda.AWSLambdaException"],
+                  "IntervalSeconds": 10,
+                  "MaxAttempts": 1,
+                  "BackoffRate": 2.0
+                }
+              ],
+              "Catch": [
+                {
+                  "ErrorEquals": ["States.ALL"],
+                  "ResultPath": "$.errorInfo",
+                  "Next": "RollbackBranch"
+                }
+              ],
+              "Next": "ExecuteSapSwitch"
+            },
+
+            "ExecuteSapSwitch": {
+              "Type": "Task",
+              "Comment": "Reinicia los servicios SAP en el nodo target. Detiene SAP en el nodo source (si aun corre), inicia message server, dispatcher, enqueue server y work processes en el target.",
+              "Resource": "arn:aws:states:::lambda:invoke",
+              "Parameters": {
+                "FunctionName": "${HaOrchestratorFunctionArn}",
+                "Payload": {
+                  "stepAction": "executeSapSwitch",
+                  "operationId.$": "$.operationId",
+                  "systemId.$": "$.systemId",
+                  "sid.$": "$.sid",
+                  "sapStrategy.$": "$.sapStrategy",
+                  "sourceNode.$": "$.sourceNode",
+                  "targetNode.$": "$.targetNode"
+                }
+              },
+              "ResultPath": "$.sapResult",
+              "ResultSelector": {
+                "success.$": "$.Payload.success",
+                "strategy.$": "$.Payload.strategy",
+                "evidence.$": "$.Payload.evidence",
+                "durationMs.$": "$.Payload.durationMs"
+              },
+              "TimeoutSeconds": 300,
+              "Retry": [
+                {
+                  "ErrorEquals": ["Lambda.ServiceException", "Lambda.AWSLambdaException"],
+                  "IntervalSeconds": 10,
+                  "MaxAttempts": 1,
+                  "BackoffRate": 2.0
+                }
+              ],
+              "Catch": [
+                {
+                  "ErrorEquals": ["States.ALL"],
+                  "ResultPath": "$.errorInfo",
+                  "Next": "RollbackBranch"
+                }
+              ],
+              "Next": "VerifyHealth"
+            },
+
+            "VerifyHealth": {
+              "Type": "Task",
+              "Comment": "Verifica la salud del sistema post-failover. Comprueba que SAP responde, la base de datos es accesible, los work processes estan activos y el enqueue lock table esta intacto.",
+              "Resource": "arn:aws:states:::lambda:invoke",
+              "Parameters": {
+                "FunctionName": "${HaOrchestratorFunctionArn}",
+                "Payload": {
+                  "stepAction": "verifyHealth",
+                  "operationId.$": "$.operationId",
+                  "systemId.$": "$.systemId",
+                  "sid.$": "$.sid",
+                  "targetNode.$": "$.targetNode"
+                }
+              },
+              "ResultPath": "$.healthResult",
+              "ResultSelector": {
+                "healthy.$": "$.Payload.healthy",
+                "checks.$": "$.Payload.checks",
+                "evidence.$": "$.Payload.evidence",
+                "checkedAt.$": "$.Payload.checkedAt"
+              },
+              "TimeoutSeconds": 120,
+              "Retry": [
+                {
+                  "ErrorEquals": ["Lambda.ServiceException", "Lambda.AWSLambdaException"],
+                  "IntervalSeconds": 10,
+                  "MaxAttempts": 2,
+                  "BackoffRate": 2.0
+                }
+              ],
+              "Catch": [
+                {
+                  "ErrorEquals": ["States.ALL"],
+                  "ResultPath": "$.errorInfo",
+                  "Next": "RollbackBranch"
+                }
+              ],
+              "Next": "CollectEvidence"
+            },
+
+            "CollectEvidence": {
+              "Type": "Task",
+              "Comment": "Recopila toda la evidencia de la operacion HA: logs, capturas de estado pre/post, resultados de cada paso, hash chain de integridad. Almacena el evidence pack en DynamoDB y opcionalmente en S3.",
+              "Resource": "arn:aws:states:::lambda:invoke",
+              "Parameters": {
+                "FunctionName": "${HaOrchestratorFunctionArn}",
+                "Payload": {
+                  "stepAction": "collectEvidence",
+                  "operationId.$": "$.operationId",
+                  "systemId.$": "$.systemId",
+                  "sid.$": "$.sid",
+                  "prereqResult.$": "$.prereqResult",
+                  "networkResult.$": "$.networkResult",
+                  "dbResult.$": "$.dbResult",
+                  "sapResult.$": "$.sapResult",
+                  "healthResult.$": "$.healthResult",
+                  "lockResult.$": "$.lockResult"
+                }
+              },
+              "ResultPath": "$.evidenceResult",
+              "ResultSelector": {
+                "evidencePackId.$": "$.Payload.evidencePackId",
+                "totalEntries.$": "$.Payload.totalEntries",
+                "integrityHash.$": "$.Payload.integrityHash",
+                "collectedAt.$": "$.Payload.collectedAt"
+              },
+              "TimeoutSeconds": 60,
+              "Retry": [
+                {
+                  "ErrorEquals": ["Lambda.ServiceException", "Lambda.AWSLambdaException"],
+                  "IntervalSeconds": 5,
+                  "MaxAttempts": 2,
+                  "BackoffRate": 2.0
+                }
+              ],
+              "Catch": [
+                {
+                  "ErrorEquals": ["States.ALL"],
+                  "ResultPath": "$.errorInfo",
+                  "Comment": "Si la recoleccion de evidencia falla, no hacer rollback (la operacion ya se completo). Ir directamente a liberar el lock.",
+                  "Next": "ReleaseLock"
+                }
+              ],
+              "Next": "ReleaseLock"
+            },
+
+            "ReleaseLock": {
+              "Type": "Task",
+              "Comment": "Libera el lock exclusivo del sistema en DynamoDB. Solo libera si el lockId coincide con el adquirido al inicio de la operacion para evitar liberar locks ajenos.",
+              "Resource": "arn:aws:states:::lambda:invoke",
+              "Parameters": {
+                "FunctionName": "${HaOrchestratorFunctionArn}",
+                "Payload": {
+                  "stepAction": "releaseLock",
+                  "operationId.$": "$.operationId",
+                  "systemId.$": "$.systemId",
+                  "sid.$": "$.sid",
+                  "lockId.$": "$.lockResult.lockId"
+                }
+              },
+              "ResultPath": "$.releaseLockResult",
+              "TimeoutSeconds": 30,
+              "Retry": [
+                {
+                  "ErrorEquals": ["States.ALL"],
+                  "IntervalSeconds": 5,
+                  "MaxAttempts": 3,
+                  "BackoffRate": 2.0
+                }
+              ],
+              "Catch": [
+                {
+                  "ErrorEquals": ["States.ALL"],
+                  "ResultPath": "$.releaseLockError",
+                  "Comment": "Si liberar el lock falla, continuar de todos modos. El TTL del lock expirara automaticamente.",
+                  "Next": "OperationSuccess"
+                }
+              ],
+              "Next": "OperationSuccess"
+            },
+
+            "OperationSuccess": {
+              "Type": "Task",
+              "Comment": "Registra la operacion como completada exitosamente en DynamoDB. Actualiza el estado final, duracion total y resumen de pasos ejecutados.",
+              "Resource": "arn:aws:states:::lambda:invoke",
+              "Parameters": {
+                "FunctionName": "${HaOrchestratorFunctionArn}",
+                "Payload": {
+                  "stepAction": "recordSuccess",
+                  "operationId.$": "$.operationId",
+                  "systemId.$": "$.systemId",
+                  "sid.$": "$.sid",
+                  "operationType.$": "$.operationType",
+                  "triggeredBy.$": "$.triggeredBy",
+                  "prereqResult.$": "$.prereqResult",
+                  "networkResult.$": "$.networkResult",
+                  "dbResult.$": "$.dbResult",
+                  "sapResult.$": "$.sapResult",
+                  "healthResult.$": "$.healthResult",
+                  "evidenceResult.$": "$.evidenceResult"
+                }
+              },
+              "ResultPath": "$.finalResult",
+              "TimeoutSeconds": 30,
+              "End": true
+            },
+
+            "RollbackBranch": {
+              "Type": "Pass",
+              "Comment": "Punto de entrada al flujo de rollback. Prepara el contexto de error para iniciar la reversion de los pasos completados en orden inverso.",
+              "Parameters": {
+                "operationId.$": "$.operationId",
+                "systemId.$": "$.systemId",
+                "sid.$": "$.sid",
+                "operationType.$": "$.operationType",
+                "networkStrategy.$": "$.networkStrategy",
+                "dbStrategy.$": "$.dbStrategy",
+                "sapStrategy.$": "$.sapStrategy",
+                "sourceNode.$": "$.sourceNode",
+                "targetNode.$": "$.targetNode",
+                "triggeredBy.$": "$.triggeredBy",
+                "errorInfo.$": "$.errorInfo",
+                "lockResult.$": "$.lockResult",
+                "networkResult.$": "$.networkResult",
+                "dbResult.$": "$.dbResult",
+                "sapResult.$": "$.sapResult"
+              },
+              "Next": "RollbackSapSwitch"
+            },
+
+            "RollbackSapSwitch": {
+              "Type": "Task",
+              "Comment": "Revierte el switch de servicios SAP: detiene SAP en el target y reinicia en el source (nodo original). Se salta si SAP no fue ejecutado.",
+              "Resource": "arn:aws:states:::lambda:invoke",
+              "Parameters": {
+                "FunctionName": "${HaOrchestratorFunctionArn}",
+                "Payload": {
+                  "stepAction": "rollbackSapSwitch",
+                  "operationId.$": "$.operationId",
+                  "systemId.$": "$.systemId",
+                  "sid.$": "$.sid",
+                  "sapStrategy.$": "$.sapStrategy",
+                  "sourceNode.$": "$.sourceNode",
+                  "targetNode.$": "$.targetNode",
+                  "sapResult.$": "$.sapResult"
+                }
+              },
+              "ResultPath": "$.rollbackSapResult",
+              "TimeoutSeconds": 300,
+              "Retry": [
+                {
+                  "ErrorEquals": ["Lambda.ServiceException", "Lambda.AWSLambdaException"],
+                  "IntervalSeconds": 10,
+                  "MaxAttempts": 2,
+                  "BackoffRate": 2.0
+                }
+              ],
+              "Catch": [
+                {
+                  "ErrorEquals": ["States.ALL"],
+                  "ResultPath": "$.rollbackSapError",
+                  "Comment": "Si el rollback de SAP falla, continuar con rollback de DB",
+                  "Next": "RollbackDbFailover"
+                }
+              ],
+              "Next": "RollbackDbFailover"
+            },
+
+            "RollbackDbFailover": {
+              "Type": "Task",
+              "Comment": "Revierte el failover de base de datos: re-registra el nodo original como primario y restaura la replicacion. Se salta si el DB failover no fue ejecutado.",
+              "Resource": "arn:aws:states:::lambda:invoke",
+              "Parameters": {
+                "FunctionName": "${HaOrchestratorFunctionArn}",
+                "Payload": {
+                  "stepAction": "rollbackDbFailover",
+                  "operationId.$": "$.operationId",
+                  "systemId.$": "$.systemId",
+                  "sid.$": "$.sid",
+                  "dbStrategy.$": "$.dbStrategy",
+                  "sourceNode.$": "$.sourceNode",
+                  "targetNode.$": "$.targetNode",
+                  "dbResult.$": "$.dbResult"
+                }
+              },
+              "ResultPath": "$.rollbackDbResult",
+              "TimeoutSeconds": 300,
+              "Retry": [
+                {
+                  "ErrorEquals": ["Lambda.ServiceException", "Lambda.AWSLambdaException"],
+                  "IntervalSeconds": 10,
+                  "MaxAttempts": 2,
+                  "BackoffRate": 2.0
+                }
+              ],
+              "Catch": [
+                {
+                  "ErrorEquals": ["States.ALL"],
+                  "ResultPath": "$.rollbackDbError",
+                  "Comment": "Si el rollback de DB falla, continuar con rollback de red",
+                  "Next": "RollbackNetworkSwitch"
+                }
+              ],
+              "Next": "RollbackNetworkSwitch"
+            },
+
+            "RollbackNetworkSwitch": {
+              "Type": "Task",
+              "Comment": "Revierte el switch de red: reasigna EIP, actualiza DNS o mueve VIP de vuelta al nodo original. Se salta si el network switch no fue ejecutado.",
+              "Resource": "arn:aws:states:::lambda:invoke",
+              "Parameters": {
+                "FunctionName": "${HaOrchestratorFunctionArn}",
+                "Payload": {
+                  "stepAction": "rollbackNetworkSwitch",
+                  "operationId.$": "$.operationId",
+                  "systemId.$": "$.systemId",
+                  "networkStrategy.$": "$.networkStrategy",
+                  "sourceNode.$": "$.sourceNode",
+                  "targetNode.$": "$.targetNode",
+                  "networkResult.$": "$.networkResult"
+                }
+              },
+              "ResultPath": "$.rollbackNetworkResult",
+              "TimeoutSeconds": 120,
+              "Retry": [
+                {
+                  "ErrorEquals": ["Lambda.ServiceException", "Lambda.AWSLambdaException"],
+                  "IntervalSeconds": 5,
+                  "MaxAttempts": 2,
+                  "BackoffRate": 2.0
+                }
+              ],
+              "Catch": [
+                {
+                  "ErrorEquals": ["States.ALL"],
+                  "ResultPath": "$.rollbackNetworkError",
+                  "Comment": "Si el rollback de red falla, continuar a liberar lock",
+                  "Next": "ReleaseLockAfterRollback"
+                }
+              ],
+              "Next": "ReleaseLockAfterRollback"
+            },
+
+            "ReleaseLockAfterRollback": {
+              "Type": "Task",
+              "Comment": "Libera el lock del sistema despues del rollback. Es critico liberar el lock incluso si el rollback fallo parcialmente para permitir operaciones futuras.",
+              "Resource": "arn:aws:states:::lambda:invoke",
+              "Parameters": {
+                "FunctionName": "${HaOrchestratorFunctionArn}",
+                "Payload": {
+                  "stepAction": "releaseLock",
+                  "operationId.$": "$.operationId",
+                  "systemId.$": "$.systemId",
+                  "sid.$": "$.sid",
+                  "lockId.$": "$.lockResult.lockId"
+                }
+              },
+              "ResultPath": "$.releaseLockAfterRollbackResult",
+              "TimeoutSeconds": 30,
+              "Retry": [
+                {
+                  "ErrorEquals": ["States.ALL"],
+                  "IntervalSeconds": 5,
+                  "MaxAttempts": 3,
+                  "BackoffRate": 2.0
+                }
+              ],
+              "Catch": [
+                {
+                  "ErrorEquals": ["States.ALL"],
+                  "ResultPath": "$.releaseLockRollbackError",
+                  "Comment": "Si liberar lock falla en rollback, el TTL lo liberara automaticamente",
+                  "Next": "NotifyFailure"
+                }
+              ],
+              "Next": "NotifyFailure"
+            },
+
+            "NotifyFailure": {
+              "Type": "Task",
+              "Comment": "Envia notificacion de fallo de operacion HA via SNS. Incluye detalles del error, pasos completados, pasos de rollback ejecutados y recomendaciones de accion.",
+              "Resource": "arn:aws:states:::lambda:invoke",
+              "Parameters": {
+                "FunctionName": "${HaOrchestratorFunctionArn}",
+                "Payload": {
+                  "stepAction": "notifyFailure",
+                  "operationId.$": "$.operationId",
+                  "systemId.$": "$.systemId",
+                  "sid.$": "$.sid",
+                  "operationType.$": "$.operationType",
+                  "triggeredBy.$": "$.triggeredBy",
+                  "errorInfo.$": "$.errorInfo",
+                  "rollbackSapResult.$": "$.rollbackSapResult",
+                  "rollbackDbResult.$": "$.rollbackDbResult",
+                  "rollbackNetworkResult.$": "$.rollbackNetworkResult"
+                }
+              },
+              "ResultPath": "$.notificationResult",
+              "TimeoutSeconds": 30,
+              "Retry": [
+                {
+                  "ErrorEquals": ["States.ALL"],
+                  "IntervalSeconds": 5,
+                  "MaxAttempts": 2,
+                  "BackoffRate": 2.0
+                }
+              ],
+              "Catch": [
+                {
+                  "ErrorEquals": ["States.ALL"],
+                  "ResultPath": "$.notifyError",
+                  "Comment": "Si la notificacion falla, continuar al estado de fallo final",
+                  "Next": "OperationFailed"
+                }
+              ],
+              "Next": "OperationFailed"
+            },
+
+            "OperationFailed": {
+              "Type": "Task",
+              "Comment": "Registra la operacion como fallida en DynamoDB. Actualiza el estado, razon de fallo, evidencia de rollback y timestamp de finalizacion.",
+              "Resource": "arn:aws:states:::lambda:invoke",
+              "Parameters": {
+                "FunctionName": "${HaOrchestratorFunctionArn}",
+                "Payload": {
+                  "stepAction": "recordFailure",
+                  "operationId.$": "$.operationId",
+                  "systemId.$": "$.systemId",
+                  "sid.$": "$.sid",
+                  "operationType.$": "$.operationType",
+                  "errorInfo.$": "$.errorInfo"
+                }
+              },
+              "ResultPath": "$.failureResult",
+              "TimeoutSeconds": 30,
+              "End": true
+            }
+          }
+        }
+
+# ═══════════════════════════════════════════════════════════════
+#  OUTPUTS
+# ═══════════════════════════════════════════════════════════════
+
+Outputs:
+  HaStateMachineArn:
+    Description: ARN de la State Machine de orquestacion HA
+    Value: !GetAtt HaOrchestrationStateMachine.Arn
+    Export:
+      Name: !Sub '${AWS::StackName}-HaStateMachineArn'
+
+  HaStateMachineName:
+    Description: Nombre de la State Machine de orquestacion HA
+    Value: !GetAtt HaOrchestrationStateMachine.Name
+
+  HaStepFunctionsRoleArn:
+    Description: ARN del IAM Role usado por Step Functions
+    Value: !GetAtt HaStepFunctionsRole.Arn
+
+  HaStateMachineLogGroupName:
+    Description: Nombre del Log Group de CloudWatch para la State Machine
+    Value: !Ref HaStateMachineLogGroup

@@ -1,0 +1,237 @@
+<!DOCTYPE html><html lang="es" data-theme="dark" data-lang="es"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Aprobaciones — SAP Spektra Docs</title><link rel="stylesheet" href="theme.css"><script src="theme-toggle.js"></script><script src="lang-toggle.js"></script></head><body><div class="docs-wrapper">
+<nav class="docs-sidebar">
+  <div class="sidebar-brand"><div class="logo">&#9889;</div><div class="brand-text"><div class="brand-name">SAP Spektra</div><div class="brand-sub">Documentacion</div></div></div>
+  <div class="sidebar-section"><div class="sidebar-section-label">Inicio</div><a href="index.html" class="sidebar-link">Portal</a><a href="getting-started.html" class="sidebar-link">Primeros Pasos</a></div>
+  <div class="sidebar-section"><div class="sidebar-section-label">Command</div><a href="dashboard.html" class="sidebar-link">Dashboard</a><a href="landscape.html" class="sidebar-link">Landscape</a><a href="alerts.html" class="sidebar-link">Alertas</a></div>
+  <div class="sidebar-section"><div class="sidebar-section-label">Monitor</div><a href="systems.html" class="sidebar-link">Sistemas</a><a href="connectors.html" class="sidebar-link">Conectores</a><a href="events.html" class="sidebar-link">Eventos</a></div>
+  <div class="sidebar-section"><div class="sidebar-section-label">Intelligence</div><a href="ai-analysis.html" class="sidebar-link">Analisis IA</a><a href="analytics.html" class="sidebar-link">Analytics</a><a href="reports.html" class="sidebar-link">Reportes</a><a href="comparison.html" class="sidebar-link">Comparacion</a></div>
+  <div class="sidebar-section"><div class="sidebar-section-label">Operations</div><a href="runbooks.html" class="sidebar-link">Runbooks</a><a href="approvals.html" class="sidebar-link active">Aprobaciones</a><a href="operations.html" class="sidebar-link">Operaciones</a><a href="jobs.html" class="sidebar-link">Jobs (SM37)</a><a href="transports.html" class="sidebar-link">Transportes</a><a href="sla.html" class="sidebar-link">SLA</a><a href="ha-control.html" class="sidebar-link">HA Control</a><a href="certificates.html" class="sidebar-link">Certificados</a></div>
+  <div class="sidebar-section"><div class="sidebar-section-label">Admin</div><a href="admin.html" class="sidebar-link">Gestion</a><a href="settings.html" class="sidebar-link">Configuracion</a><a href="connect-system.html" class="sidebar-link">Conectar Sistema</a></div>
+</nav>
+<main class="docs-main">
+
+  <!-- ====== HEADER ====== -->
+  <section class="doc-section">
+    <h1><span class="es">Aprobaciones</span><span class="en">Approvals</span></h1>
+    <p class="section-desc">
+      <span class="es">Gestiona las solicitudes de ejecucion de runbooks</span>
+      <span class="en">Manage runbook execution requests</span>
+    </p>
+    <p>
+      <span class="es">La pantalla de <strong>Aprobaciones</strong> centraliza todas las solicitudes de ejecucion de runbooks que requieren intervencion humana. Cuando un runbook marcado como <em>Cost-Safe = No</em> se dispara &mdash; ya sea por una alerta automatica o por accion manual &mdash;, se genera una solicitud de aprobacion que aparece aqui. Solo los usuarios con <strong>rol de escalamiento</strong> pueden aprobar o rechazar solicitudes.</span>
+      <span class="en">The <strong>Approvals</strong> screen centralizes all runbook execution requests that require human intervention. When a runbook marked as <em>Cost-Safe = No</em> is triggered &mdash; either by an automatic alert or manual action &mdash;, an approval request is generated and appears here. Only users with the <strong>escalation role</strong> can approve or reject requests.</span>
+    </p>
+  </section>
+
+  <!-- ====== TABS ====== -->
+  <section class="doc-section">
+    <h2><span class="es">Pestanas de Estado</span><span class="en">Status Tabs</span></h2>
+    <p>
+      <span class="es">En la parte superior de la pantalla encontrara cuatro pestanas, cada una con un contador que indica la cantidad de solicitudes en ese estado:</span>
+      <span class="en">At the top of the screen you will find four tabs, each with a counter indicating the number of requests in that status:</span>
+    </p>
+    <div style="display:flex;gap:12px;flex-wrap:wrap;margin:16px 0;">
+      <div style="background:var(--bg-secondary);border:1px solid var(--border-color);padding:10px 20px;border-radius:8px;text-align:center;">
+        <strong><span class="es">Pendientes</span><span class="en">Pending</span></strong>
+        <span style="background:#f59e0b;color:#000;padding:1px 8px;border-radius:10px;font-size:0.85em;margin-left:6px;">3</span>
+        <br><span style="font-size:0.85em;color:var(--text-tertiary);"><span class="es">Esperando decision</span><span class="en">Awaiting decision</span></span>
+      </div>
+      <div style="background:var(--bg-secondary);border:1px solid var(--border-color);padding:10px 20px;border-radius:8px;text-align:center;">
+        <strong><span class="es">Aprobadas</span><span class="en">Approved</span></strong>
+        <span style="background:#22c55e;color:#fff;padding:1px 8px;border-radius:10px;font-size:0.85em;margin-left:6px;">12</span>
+        <br><span style="font-size:0.85em;color:var(--text-tertiary);"><span class="es">Aprobadas y ejecutadas</span><span class="en">Approved and executed</span></span>
+      </div>
+      <div style="background:var(--bg-secondary);border:1px solid var(--border-color);padding:10px 20px;border-radius:8px;text-align:center;">
+        <strong><span class="es">Rechazadas</span><span class="en">Rejected</span></strong>
+        <span style="background:#ef4444;color:#fff;padding:1px 8px;border-radius:10px;font-size:0.85em;margin-left:6px;">2</span>
+        <br><span style="font-size:0.85em;color:var(--text-tertiary);"><span class="es">Rechazadas por operador</span><span class="en">Rejected by operator</span></span>
+      </div>
+      <div style="background:var(--bg-secondary);border:1px solid var(--border-color);padding:10px 20px;border-radius:8px;text-align:center;">
+        <strong><span class="es">Expiradas</span><span class="en">Expired</span></strong>
+        <span style="background:var(--text-tertiary);color:#fff;padding:1px 8px;border-radius:10px;font-size:0.85em;margin-left:6px;">1</span>
+        <br><span style="font-size:0.85em;color:var(--text-tertiary);"><span class="es">Tiempo de aprobacion agotado</span><span class="en">Approval window expired</span></span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====== TABLE COLUMNS ====== -->
+  <section class="doc-section">
+    <h2><span class="es">Tabla de Solicitudes</span><span class="en">Requests Table</span></h2>
+    <p>
+      <span class="es">Cada pestana muestra una tabla con las solicitudes de aprobacion correspondientes. Las columnas son:</span>
+      <span class="en">Each tab shows a table with the corresponding approval requests. The columns are:</span>
+    </p>
+
+    <table class="doc-table">
+      <thead>
+        <tr>
+          <th><span class="es">Columna</span><span class="en">Column</span></th>
+          <th><span class="es">Que muestra</span><span class="en">What it shows</span></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong><span class="es">Sistema</span><span class="en">System</span></strong></td>
+          <td><span class="es">SID del sistema afectado en formato badge (ej. <span style="background:var(--accent-blue);color:#fff;padding:1px 6px;border-radius:3px;font-size:0.85em;">PRD</span> <code>00</code>) junto con el identificador de instancia.</span><span class="en">SID of the affected system in badge format (e.g. <span style="background:var(--accent-blue);color:#fff;padding:1px 6px;border-radius:3px;font-size:0.85em;">PRD</span> <code>00</code>) along with the instance identifier.</span></td>
+        </tr>
+        <tr>
+          <td><strong>Runbook</strong></td>
+          <td><span class="es">Codigo del runbook solicitado en formato monoespaciado (ej. <code style="color:var(--accent-cyan);">RB-012</code>).</span><span class="en">Requested runbook code in monospace format (e.g. <code style="color:var(--accent-cyan);">RB-012</code>).</span></td>
+        </tr>
+        <tr>
+          <td><strong><span class="es">Descripcion</span><span class="en">Description</span></strong></td>
+          <td><span class="es">Breve explicacion de por que se solicito la ejecucion del runbook, incluyendo el contexto de la alerta que lo disparo.</span><span class="en">Brief explanation of why the runbook execution was requested, including the context of the alert that triggered it.</span></td>
+        </tr>
+        <tr>
+          <td><strong><span class="es">Metrica + Valor</span><span class="en">Metric + Value</span></strong></td>
+          <td><span class="es">La metrica que disparo la solicitud y su valor actual (ej. <em>CPU Usage: 94.2%</em>, <em>Disk Space: 97.1%</em>).</span><span class="en">The metric that triggered the request and its current value (e.g. <em>CPU Usage: 94.2%</em>, <em>Disk Space: 97.1%</em>).</span></td>
+        </tr>
+        <tr>
+          <td><strong><span class="es">Severidad</span><span class="en">Severity</span></strong></td>
+          <td>
+            <span class="es">Nivel de severidad de la alerta asociada, mostrado como badge de color:
+              <br>&#8226; <span style="background:#ef4444;color:#fff;padding:2px 8px;border-radius:4px;font-size:0.85em;">CRITICAL</span>
+              <br>&#8226; <span style="background:#f59e0b;color:#000;padding:2px 8px;border-radius:4px;font-size:0.85em;">HIGH</span>
+              <br>&#8226; <span style="background:#3b82f6;color:#fff;padding:2px 8px;border-radius:4px;font-size:0.85em;">MEDIUM</span>
+              <br>&#8226; <span style="background:var(--text-tertiary);color:#fff;padding:2px 8px;border-radius:4px;font-size:0.85em;">LOW</span>
+            </span>
+            <span class="en">Severity level of the associated alert, shown as a colored badge:
+              <br>&#8226; <span style="background:#ef4444;color:#fff;padding:2px 8px;border-radius:4px;font-size:0.85em;">CRITICAL</span>
+              <br>&#8226; <span style="background:#f59e0b;color:#000;padding:2px 8px;border-radius:4px;font-size:0.85em;">HIGH</span>
+              <br>&#8226; <span style="background:#3b82f6;color:#fff;padding:2px 8px;border-radius:4px;font-size:0.85em;">MEDIUM</span>
+              <br>&#8226; <span style="background:var(--text-tertiary);color:#fff;padding:2px 8px;border-radius:4px;font-size:0.85em;">LOW</span>
+            </span>
+          </td>
+        </tr>
+        <tr>
+          <td><strong><span class="es">Fecha</span><span class="en">Date</span></strong></td>
+          <td><span class="es">Fecha y hora en que se genero la solicitud de aprobacion.</span><span class="en">Date and time the approval request was generated.</span></td>
+        </tr>
+        <tr>
+          <td><strong><span class="es">Estado</span><span class="en">Status</span></strong></td>
+          <td>
+            <span class="es">Estado actual de la solicitud, mostrado como badge:
+              <br>&#8226; <span style="background:#f59e0b;color:#000;padding:2px 8px;border-radius:4px;font-size:0.85em;">PENDIENTE</span>
+              <br>&#8226; <span style="background:#22c55e;color:#fff;padding:2px 8px;border-radius:4px;font-size:0.85em;">APROBADA</span>
+              <br>&#8226; <span style="background:#ef4444;color:#fff;padding:2px 8px;border-radius:4px;font-size:0.85em;">RECHAZADA</span>
+              <br>&#8226; <span style="background:var(--text-tertiary);color:#fff;padding:2px 8px;border-radius:4px;font-size:0.85em;">EXPIRADA</span>
+            </span>
+            <span class="en">Current request status, shown as a badge:
+              <br>&#8226; <span style="background:#f59e0b;color:#000;padding:2px 8px;border-radius:4px;font-size:0.85em;">PENDING</span>
+              <br>&#8226; <span style="background:#22c55e;color:#fff;padding:2px 8px;border-radius:4px;font-size:0.85em;">APPROVED</span>
+              <br>&#8226; <span style="background:#ef4444;color:#fff;padding:2px 8px;border-radius:4px;font-size:0.85em;">REJECTED</span>
+              <br>&#8226; <span style="background:var(--text-tertiary);color:#fff;padding:2px 8px;border-radius:4px;font-size:0.85em;">EXPIRED</span>
+            </span>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- ====== PENDING ACTIONS ====== -->
+  <section class="doc-section">
+    <h2><span class="es">Acciones en Solicitudes Pendientes</span><span class="en">Actions on Pending Requests</span></h2>
+    <p>
+      <span class="es">En la pestana <strong>Pendientes</strong>, los usuarios con <strong>rol de escalamiento</strong> veran dos botones de accion junto a cada solicitud:</span>
+      <span class="en">In the <strong>Pending</strong> tab, users with the <strong>escalation role</strong> will see two action buttons next to each request:</span>
+    </p>
+    <div style="display:flex;gap:12px;margin:16px 0;">
+      <span style="background:#22c55e;color:#fff;padding:8px 20px;border-radius:6px;font-weight:600;cursor:pointer;"><span class="es">Aprobar</span><span class="en">Approve</span></span>
+      <span style="background:#ef4444;color:#fff;padding:8px 20px;border-radius:6px;font-weight:600;cursor:pointer;"><span class="es">Rechazar</span><span class="en">Reject</span></span>
+    </div>
+    <ul>
+      <li><span class="es"><strong>Aprobar</strong> &mdash; Autoriza la ejecucion del runbook. El sistema procede a ejecutar el runbook de inmediato sobre el sistema indicado. La solicitud pasa al estado <em>APROBADA</em> y se registra la ejecucion en la pantalla de <a href="runbooks.html">Runbooks &gt; Ejecuciones</a>.</span><span class="en"><strong>Approve</strong> &mdash; Authorizes the runbook execution. The system proceeds to execute the runbook immediately on the indicated system. The request moves to <em>APPROVED</em> status and execution is logged in the <a href="runbooks.html">Runbooks &gt; Executions</a> screen.</span></li>
+      <li><span class="es"><strong>Rechazar</strong> &mdash; Deniega la ejecucion. El runbook no se ejecutara. La solicitud pasa al estado <em>RECHAZADA</em>. Se le solicitara un motivo opcional de rechazo.</span><span class="en"><strong>Reject</strong> &mdash; Denies execution. The runbook will not run. The request moves to <em>REJECTED</em> status. You will be prompted for an optional rejection reason.</span></li>
+    </ul>
+
+    <div style="background:var(--bg-secondary);border-left:4px solid #f59e0b;padding:16px 20px;border-radius:6px;margin-top:16px;">
+      <strong><span class="es">Nota sobre Permisos</span><span class="en">Note on Permissions</span></strong>
+      <p style="margin:8px 0 0;">
+        <span class="es">Los usuarios sin rol de escalamiento pueden <em>ver</em> las solicitudes de aprobacion pero no veran los botones de Aprobar/Rechazar. Para solicitar acceso a este rol, contacte al administrador desde la seccion <a href="admin.html">Gestion</a>.</span>
+        <span class="en">Users without the escalation role can <em>view</em> approval requests but will not see the Approve/Reject buttons. To request access to this role, contact the administrator from the <a href="admin.html">Management</a> section.</span>
+      </p>
+    </div>
+  </section>
+
+  <!-- ====== EXAMPLE TABLE ====== -->
+  <section class="doc-section">
+    <h3><span class="es">Ejemplo: Pestana Pendientes</span><span class="en">Example: Pending Tab</span></h3>
+    <div style="overflow-x:auto;">
+      <table class="doc-table" style="font-size:0.9em;">
+        <thead>
+          <tr>
+            <th><span class="es">Sistema</span><span class="en">System</span></th>
+            <th>Runbook</th>
+            <th><span class="es">Descripcion</span><span class="en">Description</span></th>
+            <th><span class="es">Metrica</span><span class="en">Metric</span></th>
+            <th><span class="es">Severidad</span><span class="en">Severity</span></th>
+            <th><span class="es">Fecha</span><span class="en">Date</span></th>
+            <th><span class="es">Estado</span><span class="en">Status</span></th>
+            <th><span class="es">Acciones</span><span class="en">Actions</span></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span style="background:var(--accent-blue);color:#fff;padding:1px 6px;border-radius:3px;font-size:0.85em;">PRD</span> <code>00</code></td>
+            <td><code style="color:var(--accent-cyan);">RB-012</code></td>
+            <td><span class="es">Scale-out solicitado por alto consumo de CPU sostenido</span><span class="en">Scale-out requested due to sustained high CPU usage</span></td>
+            <td>CPU: 94.2%</td>
+            <td><span style="background:#ef4444;color:#fff;padding:2px 8px;border-radius:4px;font-size:0.85em;">CRITICAL</span></td>
+            <td>2026-03-11 14:15</td>
+            <td><span style="background:#f59e0b;color:#000;padding:2px 8px;border-radius:4px;font-size:0.85em;">PENDIENTE</span></td>
+            <td>
+              <span style="background:#22c55e;color:#fff;padding:3px 10px;border-radius:4px;font-size:0.8em;cursor:pointer;">Aprobar</span>
+              <span style="background:#ef4444;color:#fff;padding:3px 10px;border-radius:4px;font-size:0.8em;cursor:pointer;">Rechazar</span>
+            </td>
+          </tr>
+          <tr>
+            <td><span style="background:#22c55e;color:#fff;padding:1px 6px;border-radius:3px;font-size:0.85em;">DEV</span> <code>01</code></td>
+            <td><code style="color:var(--accent-cyan);">RB-016</code></td>
+            <td><span class="es">Failover preventivo por errores recurrentes en DB</span><span class="en">Preventive failover due to recurring DB errors</span></td>
+            <td>DB Errors: 147</td>
+            <td><span style="background:#f59e0b;color:#000;padding:2px 8px;border-radius:4px;font-size:0.85em;">HIGH</span></td>
+            <td>2026-03-11 13:42</td>
+            <td><span style="background:#f59e0b;color:#000;padding:2px 8px;border-radius:4px;font-size:0.85em;">PENDIENTE</span></td>
+            <td>
+              <span style="background:#22c55e;color:#fff;padding:3px 10px;border-radius:4px;font-size:0.8em;cursor:pointer;">Aprobar</span>
+              <span style="background:#ef4444;color:#fff;padding:3px 10px;border-radius:4px;font-size:0.8em;cursor:pointer;">Rechazar</span>
+            </td>
+          </tr>
+          <tr>
+            <td><span style="background:#f59e0b;color:#000;padding:1px 6px;border-radius:3px;font-size:0.85em;">QAS</span> <code>00</code></td>
+            <td><code style="color:var(--accent-cyan);">RB-014</code></td>
+            <td><span class="es">Limpieza de espacio en disco &mdash; filesystem /usr/sap al 97%</span><span class="en">Disk space cleanup &mdash; filesystem /usr/sap at 97%</span></td>
+            <td>Disk: 97.1%</td>
+            <td><span style="background:#3b82f6;color:#fff;padding:2px 8px;border-radius:4px;font-size:0.85em;">MEDIUM</span></td>
+            <td>2026-03-11 12:08</td>
+            <td><span style="background:#f59e0b;color:#000;padding:2px 8px;border-radius:4px;font-size:0.85em;">PENDIENTE</span></td>
+            <td>
+              <span style="background:#22c55e;color:#fff;padding:3px 10px;border-radius:4px;font-size:0.8em;cursor:pointer;">Aprobar</span>
+              <span style="background:#ef4444;color:#fff;padding:3px 10px;border-radius:4px;font-size:0.8em;cursor:pointer;">Rechazar</span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ====== EXPIRATION ====== -->
+  <section class="doc-section">
+    <h2><span class="es">Expiracion de Solicitudes</span><span class="en">Request Expiration</span></h2>
+    <p>
+      <span class="es">Las solicitudes de aprobacion tienen un <strong>tiempo limite</strong> configurable. Si ninguna accion se toma dentro del periodo establecido, la solicitud pasa automaticamente al estado <em>EXPIRADA</em> y el runbook no se ejecuta. Puede ver estas solicitudes en la pestana <strong>Expiradas</strong>. El tiempo de expiracion predeterminado se configura desde <a href="settings.html">Configuracion</a>.</span>
+      <span class="en">Approval requests have a configurable <strong>time limit</strong>. If no action is taken within the established period, the request automatically moves to <em>EXPIRED</em> status and the runbook is not executed. You can view these requests in the <strong>Expired</strong> tab. The default expiration time is configured from <a href="settings.html">Settings</a>.</span>
+    </p>
+  </section>
+
+  <!-- ====== TIPS ====== -->
+  <section class="doc-section">
+    <h2><span class="es">Consejos</span><span class="en">Tips</span></h2>
+    <ul>
+      <li><span class="es">Revise las solicitudes <strong>Pendientes</strong> regularmente, especialmente las de severidad CRITICAL y HIGH, para evitar que expiren sin accion.</span><span class="en">Review <strong>Pending</strong> requests regularly, especially those with CRITICAL and HIGH severity, to prevent them from expiring without action.</span></li>
+      <li><span class="es">Las solicitudes de la pestana <strong>Aprobadas</strong> incluyen un enlace directo al log de ejecucion del runbook resultante.</span><span class="en">Requests in the <strong>Approved</strong> tab include a direct link to the resulting runbook execution log.</span></li>
+      <li><span class="es">Use la columna <strong>Metrica + Valor</strong> para evaluar la urgencia real de la solicitud antes de aprobar o rechazar.</span><span class="en">Use the <strong>Metric + Value</strong> column to evaluate the real urgency of the request before approving or rejecting.</span></li>
+    </ul>
+  </section>
+
+</main></div></body></html>

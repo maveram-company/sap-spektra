@@ -1,0 +1,12 @@
+{
+  "name": "sap-alwaysops-discovery-engine",
+  "version": "1.0.0",
+  "description": "Avvale SAP AlwaysOps — Deep Discovery Engine per-instance + HA",
+  "main": "index.js",
+  "dependencies": {
+    "@aws-sdk/client-ssm": "^3.x",
+    "@aws-sdk/client-dynamodb": "^3.x",
+    "@aws-sdk/lib-dynamodb": "^3.x",
+    "@aws-sdk/client-ec2": "^3.x"
+  }
+}

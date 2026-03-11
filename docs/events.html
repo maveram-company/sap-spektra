@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="dark" data-lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Eventos — SAP Spektra Docs</title>
+<link rel="stylesheet" href="theme.css">
+<script src="theme-toggle.js"></script>
+<script src="lang-toggle.js"></script>
+<style>
+/* ── Events page specific styles ── */
+.page-top-bar{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:24px}
+.page-top-bar h1{margin:0}
+
+/* Toolbar filters card */
+.toolbar-card{
+  background:var(--card-bg);border:1px solid var(--card-border);
+  border-radius:var(--radius);padding:16px 20px;margin-bottom:24px;
+}
+.toolbar-row{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.toolbar-card input[type="text"],.toolbar-card select{
+  background:var(--bg);border:1px solid var(--brd);border-radius:8px;
+  padding:7px 12px;color:var(--txt1);font-size:13px;outline:none;
+  transition:border-color .2s;
+}
+.toolbar-card input[type="text"]{flex:1;min-width:180px}
+.toolbar-card input[type="text"]:focus,.toolbar-card select:focus{border-color:var(--cyan)}
+.toolbar-card select{min-width:130px;cursor:pointer}
+.count-indicator{
+  display:inline-flex;align-items:center;gap:4px;padding:4px 12px;
+  border-radius:8px;background:var(--cyan-dim);color:var(--cyan);
+  font-size:12px;font-weight:600;white-space:nowrap;
+}
+
+/* Level badges */
+.level-badge{
+  display:inline-flex;align-items:center;gap:4px;padding:2px 10px;
+  border-radius:100px;font-size:11px;font-weight:600;
+}
+.level-badge.critical{background:rgba(239,68,68,0.12);color:var(--danger)}
+.level-badge.warning{background:rgba(245,158,11,0.12);color:var(--warning)}
+.level-badge.info{background:var(--cyan-dim);color:var(--cyan)}
+.level-badge.success{background:rgba(34,197,94,0.12);color:var(--success)}
+
+/* Source badges */
+.source-badge{
+  display:inline-flex;align-items:center;gap:4px;padding:2px 10px;
+  border-radius:100px;font-size:11px;font-weight:600;
+}
+.source-badge.sap{background:var(--cyan-dim);color:var(--cyan)}
+.source-badge.platform{background:var(--violet-dim);color:var(--violet)}
+
+/* SID in table */
+.sid-cell{
+  display:inline-block;padding:2px 8px;border-radius:6px;
+  font-size:12px;font-weight:700;font-family:'SF Mono',Monaco,Consolas,monospace;
+  background:var(--cyan-dim);color:var(--cyan);
+}
+
+/* Load more button */
+.load-more-wrap{text-align:center;padding:20px 0}
+.btn-load-more{
+  display:inline-flex;align-items:center;gap:6px;padding:10px 24px;border-radius:8px;
+  background:var(--card-bg);border:1px solid var(--card-border);color:var(--txt1);
+  font-size:13px;font-weight:600;cursor:pointer;transition:all .2s;
+}
+.btn-load-more:hover{border-color:var(--cyan);color:var(--cyan)}
+.btn-load-more .remaining{color:var(--txt3);font-weight:400}
+
+/* Timestamp */
+.ts-cell{font-size:12px;font-family:'SF Mono',Monaco,Consolas,monospace;color:var(--txt3);white-space:nowrap}
+
+/* Message cell */
+.msg-cell{max-width:320px;font-size:13px}
+</style>
+</head>
+<body>
+<div class="docs-wrapper">
+
+<!-- ══════════════════════════════════════════════════════════════════ -->
+<!--  SIDEBAR                                                         -->
+<!-- ══════════════════════════════════════════════════════════════════ -->
+<nav class="docs-sidebar">
+  <div class="sidebar-brand">
+    <div class="logo">&#9889;</div>
+    <div class="brand-text"><div class="brand-name">SAP Spektra</div><div class="brand-sub">Documentacion</div></div>
+  </div>
+  <div class="sidebar-section"><div class="sidebar-section-label">Inicio</div>
+    <a href="index.html" class="sidebar-link">Portal</a>
+    <a href="getting-started.html" class="sidebar-link">Primeros Pasos</a>
+  </div>
+  <div class="sidebar-section"><div class="sidebar-section-label">Command</div>
+    <a href="dashboard.html" class="sidebar-link">Dashboard</a>
+    <a href="landscape.html" class="sidebar-link">Landscape</a>
+    <a href="alerts.html" class="sidebar-link">Alertas</a>
+  </div>
+  <div class="sidebar-section"><div class="sidebar-section-label">Monitor</div>
+    <a href="systems.html" class="sidebar-link">Sistemas</a>
+    <a href="connectors.html" class="sidebar-link">Conectores</a>
+    <a href="events.html" class="sidebar-link active">Eventos</a>
+  </div>
+  <div class="sidebar-section"><div class="sidebar-section-label">Intelligence</div>
+    <a href="ai-analysis.html" class="sidebar-link">Analisis IA</a>
+    <a href="analytics.html" class="sidebar-link">Analytics</a>
+    <a href="reports.html" class="sidebar-link">Reportes</a>
+    <a href="comparison.html" class="sidebar-link">Comparacion</a>
+  </div>
+  <div class="sidebar-section"><div class="sidebar-section-label">Operations</div>
+    <a href="runbooks.html" class="sidebar-link">Runbooks</a>
+    <a href="approvals.html" class="sidebar-link">Aprobaciones</a>
+    <a href="operations.html" class="sidebar-link">Operaciones</a>
+    <a href="jobs.html" class="sidebar-link">Jobs (SM37)</a>
+    <a href="transports.html" class="sidebar-link">Transportes</a>
+    <a href="sla.html" class="sidebar-link">SLA</a>
+    <a href="ha-control.html" class="sidebar-link">HA Control</a>
+    <a href="certificates.html" class="sidebar-link">Certificados</a>
+  </div>
+  <div class="sidebar-section"><div class="sidebar-section-label">Admin</div>
+    <a href="admin.html" class="sidebar-link">Gestion</a>
+    <a href="settings.html" class="sidebar-link">Configuracion</a>
+    <a href="connect-system.html" class="sidebar-link">Conectar Sistema</a>
+  </div>
+</nav>
+
+<!-- ══════════════════════════════════════════════════════════════════ -->
+<!--  MAIN CONTENT                                                     -->
+<!-- ══════════════════════════════════════════════════════════════════ -->
+<main class="docs-main">
+
+  <div class="breadcrumb">
+    <a href="index.html">Docs</a><span class="sep">/</span>
+    <span class="es">Monitor</span><span class="en">Monitor</span><span class="sep">/</span>
+    <span class="es">Eventos</span><span class="en">Events</span>
+  </div>
+
+  <div class="page-header">
+    <h1><span class="es">Eventos</span><span class="en">Events</span></h1>
+    <p class="subtitle">
+      <span class="es">Registro completo de actividad de todos los sistemas y la plataforma.</span>
+      <span class="en">Complete activity log across all systems and the platform.</span>
+    </p>
+  </div>
+
+  <!-- ─── OVERVIEW ─── -->
+  <h2><span class="es">Vista general de la pagina</span><span class="en">Page overview</span></h2>
+  <p>
+    <span class="es">La pagina <strong>Eventos</strong> (<em>Monitor &gt; Eventos</em>) actua como el registro centralizado de toda la actividad capturada por Spektra. Aqui se recopilan eventos provenientes tanto de los sistemas SAP conectados como de la propia plataforma. Al ingresar, usted ve el encabezado con el titulo <strong>"Eventos"</strong> y la descripcion <em>"Registro completo de actividad"</em>.</span>
+    <span class="en">The <strong>Events</strong> page (<em>Monitor &gt; Events</em>) acts as the centralized log of all activity captured by Spektra. It gathers events from both connected SAP systems and the platform itself. Upon entering, you see the header with the title <strong>"Events"</strong> and the description <em>"Complete activity log."</em></span>
+  </p>
+
+  <!-- ─── TOOLBAR / FILTERS ─── -->
+  <h2><span class="es">Barra de herramientas y filtros</span><span class="en">Toolbar and filters</span></h2>
+
+  <p>
+    <span class="es">Debajo del encabezado se muestra una tarjeta con la barra de herramientas de filtrado. Contiene cuatro controles de filtro y un indicador de cantidad de eventos que coinciden:</span>
+    <span class="en">Below the header a card with the filtering toolbar is shown. It contains four filter controls and a count indicator of matching events:</span>
+  </p>
+
+  <div class="toolbar-card">
+    <div class="toolbar-row">
+      <input type="text" placeholder="Buscar por mensaje o componente..." disabled>
+      <select disabled>
+        <option><span class="es">Nivel: Todos</span><span class="en">Level: All</span></option>
+        <option>Critico</option>
+        <option>Warning</option>
+        <option>Info</option>
+        <option>Success</option>
+      </select>
+      <select disabled>
+        <option><span class="es">Origen: Todos</span><span class="en">Source: All</span></option>
+        <option>SAP</option>
+        <option><span class="es">Plataforma</span><span class="en">Platform</span></option>
+      </select>
+      <select disabled>
+        <option><span class="es">Sistema: Todos</span><span class="en">System: All</span></option>
+        <option>P01</option>
+        <option>P02</option>
+        <option>Q01</option>
+        <option>D01</option>
+      </select>
+      <span class="count-indicator">
+        <span class="es">1,247 eventos</span><span class="en">1,247 events</span>
+      </span>
+    </div>
+  </div>
+
+  <div class="card">
+    <h4><span class="es">Controles de filtro</span><span class="en">Filter controls</span></h4>
+    <table>
+      <thead>
+        <tr>
+          <th><span class="es">Control</span><span class="en">Control</span></th>
+          <th><span class="es">Descripcion</span><span class="en">Description</span></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong><span class="es">Busqueda</span><span class="en">Search</span></strong></td>
+          <td>
+            <span class="es">Campo de texto libre donde puede buscar por contenido del mensaje o por nombre de componente. Los resultados se actualizan en tiempo real al escribir.</span>
+            <span class="en">Free-text field where you can search by message content or component name. Results update in real time as you type.</span>
+          </td>
+        </tr>
+        <tr>
+          <td><strong><span class="es">Nivel</span><span class="en">Level</span></strong></td>
+          <td>
+            <span class="es">Desplegable para filtrar por severidad del evento. Las opciones son: <em>Todos</em>, <em>Critico</em> (rojo), <em>Warning</em> (amarillo), <em>Info</em> (azul cian) y <em>Success</em> (verde).</span>
+            <span class="en">Dropdown to filter by event severity. Options are: <em>All</em>, <em>Critical</em> (red), <em>Warning</em> (yellow), <em>Info</em> (cyan blue), and <em>Success</em> (green).</span>
+          </td>
+        </tr>
+        <tr>
+          <td><strong><span class="es">Origen</span><span class="en">Source</span></strong></td>
+          <td>
+            <span class="es">Desplegable para filtrar segun el origen del evento: <em>Todos</em>, <em>SAP</em> (eventos generados por los sistemas SAP) o <em>Plataforma</em> (eventos generados por Spektra, como cambios de configuracion, conexiones, etc.).</span>
+            <span class="en">Dropdown to filter by event source: <em>All</em>, <em>SAP</em> (events generated by SAP systems), or <em>Platform</em> (events generated by Spektra, such as configuration changes, connections, etc.).</span>
+          </td>
+        </tr>
+        <tr>
+          <td><strong><span class="es">Sistema</span><span class="en">System</span></strong></td>
+          <td>
+            <span class="es">Desplegable que lista todos los sistemas SAP registrados por su SID. Seleccione uno para ver solo los eventos de ese sistema.</span>
+            <span class="en">Dropdown listing all registered SAP systems by SID. Select one to see only events from that system.</span>
+          </td>
+        </tr>
+        <tr>
+          <td><strong><span class="es">Indicador de cantidad</span><span class="en">Count indicator</span></strong></td>
+          <td>
+            <span class="es">Badge cian a la derecha que muestra cuantos eventos coinciden con los filtros activos (por ejemplo <span class="count-indicator">1,247 eventos</span>). El numero se actualiza al cambiar cualquier filtro.</span>
+            <span class="en">Cyan badge on the right showing how many events match the active filters (e.g. <span class="count-indicator">1,247 events</span>). The number updates when any filter changes.</span>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="callout info">
+    <span class="callout-icon">&#128161;</span>
+    <div>
+      <span class="es">Los filtros se combinan entre si. Por ejemplo, puede seleccionar nivel <em>Critico</em>, origen <em>SAP</em>, sistema <em>P01</em> y buscar "memory" para encontrar solo los eventos criticos de memoria del sistema productivo P01.</span>
+      <span class="en">Filters combine with each other. For example, you can select level <em>Critical</em>, source <em>SAP</em>, system <em>P01</em>, and search "memory" to find only critical memory events from the P01 production system.</span>
+    </div>
+  </div>
+
+  <!-- ─── EVENTS TABLE ─── -->
+  <h2><span class="es">Tabla de eventos</span><span class="en">Events table</span></h2>
+
+  <p>
+    <span class="es">La seccion principal de la pagina es una tabla que muestra los eventos ordenados del mas reciente al mas antiguo. Se cargan <strong>50 eventos a la vez</strong> para mantener un rendimiento fluido. Las columnas de la tabla son:</span>
+    <span class="en">The main section of the page is a table showing events ordered from most recent to oldest. <strong>50 events load at a time</strong> for smooth performance. The table columns are:</span>
+  </p>
+
+  <div class="card" style="padding:0;overflow:hidden">
+    <div style="padding:16px 20px;border-bottom:1px solid var(--brd);display:flex;align-items:center;justify-content:space-between">
+      <h3 style="margin:0;font-size:15px"><span class="es">Registro de eventos</span><span class="en">Event log</span></h3>
+      <span class="text-xs text-muted"><span class="es">Mostrando 50 de 1,247</span><span class="en">Showing 50 of 1,247</span></span>
+    </div>
+    <div class="table-wrap" style="border:none;border-radius:0;margin:0;overflow-x:auto">
+      <table>
+        <thead>
+          <tr>
+            <th><span class="es">Marca de tiempo</span><span class="en">Timestamp</span></th>
+            <th><span class="es">Nivel</span><span class="en">Level</span></th>
+            <th><span class="es">Sistema</span><span class="en">System</span></th>
+            <th><span class="es">Origen</span><span class="en">Source</span></th>
+            <th><span class="es">Componente</span><span class="en">Component</span></th>
+            <th><span class="es">Mensaje</span><span class="en">Message</span></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="ts-cell">11/03/2026, 10:42:18 a.&nbsp;m.</td>
+            <td><span class="level-badge critical">&#9888; Critico</span></td>
+            <td><span class="sid-cell">P01</span></td>
+            <td><span class="source-badge sap">SAP</span></td>
+            <td>Work Processes</td>
+            <td class="msg-cell">
+              <span class="es">Todos los procesos de dialogo ocupados durante mas de 5 minutos. Riesgo de bloqueo de usuarios.</span>
+              <span class="en">All dialog work processes busy for over 5 minutes. Risk of user lockout.</span>
+            </td>
+          </tr>
+          <tr>
+            <td class="ts-cell">11/03/2026, 10:38:05 a.&nbsp;m.</td>
+            <td><span class="level-badge warning">&#9888; Warning</span></td>
+            <td><span class="sid-cell">Q01</span></td>
+            <td><span class="source-badge sap">SAP</span></td>
+            <td>Database</td>
+            <td class="msg-cell">
+              <span class="es">Espacio de tabla SAPQ01 al 87% de capacidad. Se recomienda ampliacion o limpieza.</span>
+              <span class="en">Tablespace SAPQ01 at 87% capacity. Expansion or cleanup recommended.</span>
+            </td>
+          </tr>
+          <tr>
+            <td class="ts-cell">11/03/2026, 10:35:22 a.&nbsp;m.</td>
+            <td><span class="level-badge info">&#8505; Info</span></td>
+            <td><span class="sid-cell">P02</span></td>
+            <td><span class="source-badge platform">Plataforma</span></td>
+            <td>Connector</td>
+            <td class="msg-cell">
+              <span class="es">Heartbeat restablecido para el sistema P02. Conexion estable.</span>
+              <span class="en">Heartbeat restored for system P02. Connection stable.</span>
+            </td>
+          </tr>
+          <tr>
+            <td class="ts-cell">11/03/2026, 10:30:11 a.&nbsp;m.</td>
+            <td><span class="level-badge success">&#10004; Success</span></td>
+            <td><span class="sid-cell">P01</span></td>
+            <td><span class="source-badge sap">SAP</span></td>
+            <td>Backup</td>
+            <td class="msg-cell">
+              <span class="es">Backup completo de base de datos HANA finalizado exitosamente. Duracion: 12m 34s.</span>
+              <span class="en">Full HANA database backup completed successfully. Duration: 12m 34s.</span>
+            </td>
+          </tr>
+          <tr>
+            <td class="ts-cell">11/03/2026, 10:28:47 a.&nbsp;m.</td>
+            <td><span class="level-badge critical">&#9888; Critico</span></td>
+            <td><span class="sid-cell">D01</span></td>
+            <td><span class="source-badge platform">Plataforma</span></td>
+            <td>Connector</td>
+            <td class="msg-cell">
+              <span class="es">Conexion perdida con el sistema D01. Ultimo heartbeat hace 4h 23m. Verificar agente Sentinel.</span>
+              <span class="en">Connection lost with system D01. Last heartbeat 4h 23m ago. Verify Sentinel agent.</span>
+            </td>
+          </tr>
+          <tr>
+            <td class="ts-cell">11/03/2026, 10:25:03 a.&nbsp;m.</td>
+            <td><span class="level-badge warning">&#9888; Warning</span></td>
+            <td><span class="sid-cell">P01</span></td>
+            <td><span class="source-badge sap">SAP</span></td>
+            <td>Performance</td>
+            <td class="msg-cell">
+              <span class="es">Tiempo de respuesta de dialogo promedio en 1,450 ms (umbral: 1,000 ms). Posible degradacion.</span>
+              <span class="en">Average dialog response time at 1,450 ms (threshold: 1,000 ms). Possible degradation.</span>
+            </td>
+          </tr>
+          <tr>
+            <td class="ts-cell">11/03/2026, 10:20:19 a.&nbsp;m.</td>
+            <td><span class="level-badge info">&#8505; Info</span></td>
+            <td><span class="sid-cell">P01</span></td>
+            <td><span class="source-badge platform">Plataforma</span></td>
+            <td>Runbook</td>
+            <td class="msg-cell">
+              <span class="es">Runbook "Verificar espacio de tablas" ejecutado automaticamente para P01. Resultado: OK.</span>
+              <span class="en">Runbook "Check tablespace" automatically executed for P01. Result: OK.</span>
+            </td>
+          </tr>
+          <tr>
+            <td class="ts-cell">11/03/2026, 10:15:44 a.&nbsp;m.</td>
+            <td><span class="level-badge success">&#10004; Success</span></td>
+            <td><span class="sid-cell">Q01</span></td>
+            <td><span class="source-badge sap">SAP</span></td>
+            <td>Transport</td>
+            <td class="msg-cell">
+              <span class="es">Orden de transporte DEVK901234 importada exitosamente en Q01.</span>
+              <span class="en">Transport request DEVK901234 successfully imported to Q01.</span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <h3><span class="es">Columnas de la tabla</span><span class="en">Table columns</span></h3>
+
+  <div class="card">
+    <table>
+      <thead>
+        <tr>
+          <th><span class="es">Columna</span><span class="en">Column</span></th>
+          <th><span class="es">Descripcion</span><span class="en">Description</span></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong><span class="es">Marca de tiempo</span><span class="en">Timestamp</span></strong></td>
+          <td>
+            <span class="es">Fecha y hora exacta del evento, formateada en formato colombiano (es-CO): <code>dd/mm/aaaa, hh:mm:ss a.&nbsp;m./p.&nbsp;m.</code> Se muestra en tipografia monoespaciada para facilitar la lectura. Los eventos se ordenan del mas reciente al mas antiguo.</span>
+            <span class="en">Exact date and time of the event, formatted in Colombian locale (es-CO): <code>dd/mm/yyyy, hh:mm:ss a.&nbsp;m./p.&nbsp;m.</code> Displayed in monospace font for readability. Events are ordered from newest to oldest.</span>
+          </td>
+        </tr>
+        <tr>
+          <td><strong><span class="es">Nivel</span><span class="en">Level</span></strong></td>
+          <td>
+            <span class="es">Badge de color con icono que indica la severidad del evento:</span>
+            <span class="en">Colored badge with icon indicating event severity:</span>
+            <ul style="list-style:none;padding:0;margin:8px 0 0">
+              <li style="padding:4px 0"><span class="level-badge critical">&#9888; Critico</span> &mdash; <span class="es">Evento de alta severidad que requiere atencion inmediata (rojo).</span><span class="en">High-severity event requiring immediate attention (red).</span></li>
+              <li style="padding:4px 0"><span class="level-badge warning">&#9888; Warning</span> &mdash; <span class="es">Advertencia que debe investigarse pronto (amarillo).</span><span class="en">Warning that should be investigated soon (yellow).</span></li>
+              <li style="padding:4px 0"><span class="level-badge info">&#8505; Info</span> &mdash; <span class="es">Evento informativo, sin accion requerida (azul cian).</span><span class="en">Informational event, no action required (cyan blue).</span></li>
+              <li style="padding:4px 0"><span class="level-badge success">&#10004; Success</span> &mdash; <span class="es">Operacion completada exitosamente (verde).</span><span class="en">Operation completed successfully (green).</span></li>
+            </ul>
+          </td>
+        </tr>
+        <tr>
+          <td><strong><span class="es">Sistema</span><span class="en">System</span></strong></td>
+          <td>
+            <span class="es">SID del sistema SAP donde se origino el evento, mostrado como un badge monoespaciado con fondo cian (por ejemplo <span class="sid-cell">P01</span>).</span>
+            <span class="en">SID of the SAP system where the event originated, displayed as a monospace badge with cyan background (e.g. <span class="sid-cell">P01</span>).</span>
+          </td>
+        </tr>
+        <tr>
+          <td><strong><span class="es">Origen</span><span class="en">Source</span></strong></td>
+          <td>
+            <span class="es">Badge que indica si el evento fue generado por un sistema <span class="source-badge sap">SAP</span> (azul cian) o por la <span class="source-badge platform">Plataforma</span> (violeta) Spektra. Los eventos SAP provienen de metricas, alertas y logs de los sistemas. Los eventos de Plataforma se generan por acciones de usuarios, cambios de configuracion, ejecucion de runbooks, etc.</span>
+            <span class="en">Badge indicating whether the event was generated by an <span class="source-badge sap">SAP</span> system (cyan blue) or by the Spektra <span class="source-badge platform">Platform</span> (violet). SAP events come from system metrics, alerts, and logs. Platform events are generated by user actions, configuration changes, runbook executions, etc.</span>
+          </td>
+        </tr>
+        <tr>
+          <td><strong><span class="es">Componente</span><span class="en">Component</span></strong></td>
+          <td>
+            <span class="es">Nombre del area funcional o modulo que genero el evento (por ejemplo <em>Work Processes</em>, <em>Database</em>, <em>Connector</em>, <em>Backup</em>, <em>Performance</em>, <em>Transport</em>, <em>Runbook</em>). Util para filtrar por area de interes.</span>
+            <span class="en">Name of the functional area or module that generated the event (e.g., <em>Work Processes</em>, <em>Database</em>, <em>Connector</em>, <em>Backup</em>, <em>Performance</em>, <em>Transport</em>, <em>Runbook</em>). Useful for filtering by area of interest.</span>
+          </td>
+        </tr>
+        <tr>
+          <td><strong><span class="es">Mensaje</span><span class="en">Message</span></strong></td>
+          <td>
+            <span class="es">Descripcion detallada del evento en lenguaje claro. Incluye informacion contextual como valores, umbrales, duraciones o instrucciones de accion recomendada.</span>
+            <span class="en">Detailed event description in clear language. Includes contextual information such as values, thresholds, durations, or recommended action instructions.</span>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ─── PAGINATION ─── -->
+  <h2><span class="es">Paginacion</span><span class="en">Pagination</span></h2>
+
+  <p>
+    <span class="es">La tabla carga <strong>50 eventos por pagina</strong>. Al final de la lista visible, aparece un boton <strong>"Cargar mas"</strong> que indica cuantos eventos adicionales quedan por mostrar:</span>
+    <span class="en">The table loads <strong>50 events per page</strong>. At the bottom of the visible list, a <strong>"Load more"</strong> button appears showing how many additional events remain:</span>
+  </p>
+
+  <div class="load-more-wrap">
+    <button class="btn-load-more" disabled>
+      <span class="es">Cargar mas</span><span class="en">Load more</span>
+      <span class="remaining">
+        <span class="es">(1,197 restantes)</span><span class="en">(1,197 remaining)</span>
+      </span>
+    </button>
+  </div>
+
+  <p>
+    <span class="es">Al hacer clic en <strong>"Cargar mas"</strong>, se anaden los siguientes 50 eventos al final de la tabla sin perder los que ya estan visibles. El boton actualiza el conteo de eventos restantes cada vez. Cuando no quedan mas eventos por cargar, el boton desaparece.</span>
+    <span class="en">Clicking <strong>"Load more"</strong> appends the next 50 events to the bottom of the table without losing those already visible. The button updates the remaining count each time. When no more events remain, the button disappears.</span>
+  </p>
+
+  <div class="callout info">
+    <span class="callout-icon">&#128161;</span>
+    <div>
+      <span class="es">La carga por lotes de 50 eventos esta disenada para mantener la pagina rapida y receptiva, incluso cuando el registro total contiene miles de eventos. Los filtros se aplican sobre el conjunto completo de datos, no solo sobre los eventos visibles.</span>
+      <span class="en">Loading events in batches of 50 is designed to keep the page fast and responsive, even when the total log contains thousands of events. Filters apply across the full data set, not just the visible events.</span>
+    </div>
+  </div>
+
+  <!-- ─── TIPS ─── -->
+  <h2><span class="es">Consejos de uso</span><span class="en">Usage tips</span></h2>
+
+  <div class="card">
+    <ul class="feature-list">
+      <li>
+        <span class="es"><strong>Investigacion de incidentes:</strong> Combine el filtro de nivel <em>Critico</em> con un sistema especifico para reconstruir la cronologia de un incidente.</span>
+        <span class="en"><strong>Incident investigation:</strong> Combine the <em>Critical</em> level filter with a specific system to reconstruct the chronology of an incident.</span>
+      </li>
+      <li>
+        <span class="es"><strong>Auditoria de cambios:</strong> Filtre por origen <em>Plataforma</em> para ver todos los cambios de configuracion, ejecuciones de runbooks y acciones de usuario realizadas en Spektra.</span>
+        <span class="en"><strong>Change audit:</strong> Filter by source <em>Platform</em> to see all configuration changes, runbook executions, and user actions performed in Spektra.</span>
+      </li>
+      <li>
+        <span class="es"><strong>Busqueda por componente:</strong> Si sospecha de un problema en un area especifica (por ejemplo <em>Database</em>), escriba el nombre del componente en el campo de busqueda para aislar rapidamente los eventos relevantes.</span>
+        <span class="en"><strong>Component search:</strong> If you suspect an issue in a specific area (e.g., <em>Database</em>), type the component name in the search field to quickly isolate relevant events.</span>
+      </li>
+      <li>
+        <span class="es"><strong>Correlacion entre sistemas:</strong> Seleccione <em>Sistema: Todos</em> y nivel <em>Critico</em> para ver si multiples sistemas estan experimentando problemas simultaneos, lo cual podria indicar un problema de infraestructura compartida.</span>
+        <span class="en"><strong>Cross-system correlation:</strong> Select <em>System: All</em> and level <em>Critical</em> to see if multiple systems are experiencing simultaneous issues, which could indicate a shared infrastructure problem.</span>
+      </li>
+    </ul>
+  </div>
+
+  <div class="callout warning">
+    <span class="callout-icon">&#9888;&#65039;</span>
+    <div>
+      <span class="es">Los eventos se retienen segun la politica de retencion configurada en <a href="settings.html">Configuracion</a>. Si necesita acceder a eventos mas antiguos, consulte la seccion de <a href="reports.html">Reportes</a> donde puede generar exportaciones historicas.</span>
+      <span class="en">Events are retained according to the retention policy configured in <a href="settings.html">Settings</a>. If you need to access older events, check the <a href="reports.html">Reports</a> section where you can generate historical exports.</span>
+    </div>
+  </div>
+
+  <!-- ─── Navigation ─── -->
+  <div style="display:flex;justify-content:space-between;margin-top:40px;padding-top:20px;border-top:1px solid var(--brd)">
+    <a href="connectors.html" style="font-size:13px">&larr; <span class="es">Conectores</span><span class="en">Connectors</span></a>
+    <a href="ai-analysis.html" style="font-size:13px"><span class="es">Analisis IA</span><span class="en">AI Analysis</span> &rarr;</a>
+  </div>
+
+</main>
+</div>
+</body>
+</html>

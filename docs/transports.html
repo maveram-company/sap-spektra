@@ -1,0 +1,290 @@
+<!DOCTYPE html><html lang="es" data-theme="dark" data-lang="es"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Transporte de Ordenes — SAP Spektra Docs</title><link rel="stylesheet" href="theme.css"><script src="theme-toggle.js"></script><script src="lang-toggle.js"></script></head><body><div class="docs-wrapper">
+<nav class="docs-sidebar">
+  <div class="sidebar-brand"><div class="logo">&#9889;</div><div class="brand-text"><div class="brand-name">SAP Spektra</div><div class="brand-sub">Documentacion</div></div></div>
+  <div class="sidebar-section"><div class="sidebar-section-label">Inicio</div><a href="index.html" class="sidebar-link">Portal</a><a href="getting-started.html" class="sidebar-link">Primeros Pasos</a></div>
+  <div class="sidebar-section"><div class="sidebar-section-label">Command</div><a href="dashboard.html" class="sidebar-link">Dashboard</a><a href="landscape.html" class="sidebar-link">Landscape</a><a href="alerts.html" class="sidebar-link">Alertas</a></div>
+  <div class="sidebar-section"><div class="sidebar-section-label">Monitor</div><a href="systems.html" class="sidebar-link">Sistemas</a><a href="connectors.html" class="sidebar-link">Conectores</a><a href="events.html" class="sidebar-link">Eventos</a></div>
+  <div class="sidebar-section"><div class="sidebar-section-label">Intelligence</div><a href="ai-analysis.html" class="sidebar-link">Analisis IA</a><a href="analytics.html" class="sidebar-link">Analytics</a><a href="reports.html" class="sidebar-link">Reportes</a><a href="comparison.html" class="sidebar-link">Comparacion</a></div>
+  <div class="sidebar-section"><div class="sidebar-section-label">Operations</div><a href="runbooks.html" class="sidebar-link">Runbooks</a><a href="approvals.html" class="sidebar-link">Aprobaciones</a><a href="operations.html" class="sidebar-link">Operaciones</a><a href="jobs.html" class="sidebar-link">Jobs (SM37)</a><a href="transports.html" class="sidebar-link active">Transportes</a><a href="sla.html" class="sidebar-link">SLA</a><a href="ha-control.html" class="sidebar-link">HA Control</a><a href="certificates.html" class="sidebar-link">Certificados</a></div>
+  <div class="sidebar-section"><div class="sidebar-section-label">Admin</div><a href="admin.html" class="sidebar-link">Gestion</a><a href="settings.html" class="sidebar-link">Configuracion</a><a href="connect-system.html" class="sidebar-link">Conectar Sistema</a></div>
+</nav>
+<main class="docs-main">
+
+  <!-- ====== HEADER ====== -->
+  <section class="doc-section">
+    <h1><span class="es">Transporte de Ordenes</span><span class="en">Transport Orders</span></h1>
+    <p class="section-desc">
+      <span class="es">Monitor STMS &mdash; gestion de transportes SAP</span>
+      <span class="en">STMS Monitor &mdash; SAP transport management</span>
+    </p>
+    <p>
+      <span class="es">La pantalla de <strong>Transporte de Ordenes</strong> es el equivalente a la transaccion <code>STMS</code> de SAP, centralizada para todos sus sistemas. Permite visualizar el estado de todas las ordenes de transporte, su progreso a traves del landscape y los errores de importacion.</span>
+      <span class="en">The <strong>Transport Orders</strong> screen is the equivalent of SAP transaction <code>STMS</code>, centralized across all your systems. It lets you visualize the status of all transport orders, their progress through the landscape and import errors.</span>
+    </p>
+  </section>
+
+  <!-- ====== KPI CARDS ====== -->
+  <section class="doc-section">
+    <h2><span class="es">Indicadores Clave (KPI)</span><span class="en">Key Indicators (KPI)</span></h2>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:16px;margin:20px 0;">
+      <div style="background:var(--bg-secondary);border:1px solid var(--border-color);border-radius:8px;padding:20px;text-align:center;border-top:3px solid var(--accent-blue);">
+        <div style="font-size:2em;font-weight:700;color:var(--accent-blue);">48</div>
+        <div style="font-size:0.9em;color:var(--text-secondary);margin-top:4px;"><span class="es">Total Transportes</span><span class="en">Total Transports</span></div>
+      </div>
+      <div style="background:var(--bg-secondary);border:1px solid var(--border-color);border-radius:8px;padding:20px;text-align:center;border-top:3px solid #f59e0b;">
+        <div style="font-size:2em;font-weight:700;color:#f59e0b;">7</div>
+        <div style="font-size:0.9em;color:var(--text-secondary);margin-top:4px;"><span class="es">Pendientes Import</span><span class="en">Pending Import</span></div>
+        <div style="font-size:0.8em;color:var(--text-tertiary);"><span class="es">(liberados)</span><span class="en">(released)</span></div>
+      </div>
+      <div style="background:var(--bg-secondary);border:1px solid var(--border-color);border-radius:8px;padding:20px;text-align:center;border-top:3px solid #22c55e;">
+        <div style="font-size:2em;font-weight:700;color:#22c55e;">38</div>
+        <div style="font-size:0.9em;color:var(--text-secondary);margin-top:4px;"><span class="es">Importados OK</span><span class="en">Imported OK</span></div>
+      </div>
+      <div style="background:var(--bg-secondary);border:1px solid var(--border-color);border-radius:8px;padding:20px;text-align:center;border-top:3px solid #ef4444;">
+        <div style="font-size:2em;font-weight:700;color:#ef4444;">3</div>
+        <div style="font-size:0.9em;color:var(--text-secondary);margin-top:4px;"><span class="es">Con Error</span><span class="en">With Error</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====== TRANSPORT PATH ====== -->
+  <section class="doc-section">
+    <h2><span class="es">Ruta de Transporte</span><span class="en">Transport Path</span></h2>
+    <p>
+      <span class="es">El diagrama de <strong>Ruta de Transporte</strong> muestra el flujo visual de las ordenes de transporte a traves de su landscape SAP. Cada entorno aparece como una caja de color conectada por flechas:</span>
+      <span class="en">The <strong>Transport Path</strong> diagram shows the visual flow of transport orders through your SAP landscape. Each environment appears as a colored box connected by arrows:</span>
+    </p>
+
+    <div style="display:flex;align-items:center;justify-content:center;gap:0;margin:30px 0;flex-wrap:wrap;">
+      <div style="background:#22c55e;color:#fff;padding:16px 28px;border-radius:8px;text-align:center;font-weight:700;min-width:100px;">
+        DEV
+        <div style="font-size:0.75em;font-weight:400;margin-top:4px;"><span class="es">Desarrollo</span><span class="en">Development</span></div>
+      </div>
+      <div style="padding:0 16px;font-size:1.5em;color:var(--text-tertiary);">&#8594;</div>
+      <div style="background:#f59e0b;color:#000;padding:16px 28px;border-radius:8px;text-align:center;font-weight:700;min-width:100px;">
+        QAS
+        <div style="font-size:0.75em;font-weight:400;margin-top:4px;"><span class="es">Calidad</span><span class="en">Quality</span></div>
+      </div>
+      <div style="padding:0 16px;font-size:1.5em;color:var(--text-tertiary);">&#8594;</div>
+      <div style="background:var(--accent-blue);color:#fff;padding:16px 28px;border-radius:8px;text-align:center;font-weight:700;min-width:100px;">
+        PRD
+        <div style="font-size:0.75em;font-weight:400;margin-top:4px;"><span class="es">Produccion</span><span class="en">Production</span></div>
+      </div>
+    </div>
+
+    <p>
+      <span class="es">Las ordenes de transporte se crean en <strong>DEV</strong>, se liberan y se importan primero en <strong>QAS</strong> para pruebas, y finalmente se importan en <strong>PRD</strong> para produccion.</span>
+      <span class="en">Transport orders are created in <strong>DEV</strong>, released and first imported into <strong>QAS</strong> for testing, and finally imported into <strong>PRD</strong> for production.</span>
+    </p>
+  </section>
+
+  <!-- ====== FILTER ====== -->
+  <section class="doc-section">
+    <h2><span class="es">Filtro por Estado</span><span class="en">Filter by Status</span></h2>
+    <p>
+      <span class="es">Use el filtro desplegable de estado para ver solo los transportes en un estado especifico:</span>
+      <span class="en">Use the status dropdown filter to see only transports in a specific status:</span>
+    </p>
+    <div style="background:var(--bg-secondary);border:1px solid var(--border-color);border-radius:6px;padding:10px 16px;display:inline-block;margin:8px 0;">
+      <strong><span class="es">Estado:</span><span class="en">Status:</span></strong>
+      <span style="color:var(--text-secondary);margin-left:8px;"><span class="es">Todos / Liberado / Importado / Error / Modificable</span><span class="en">All / Released / Imported / Error / Modifiable</span></span>
+    </div>
+  </section>
+
+  <!-- ====== TABLE COLUMNS ====== -->
+  <section class="doc-section">
+    <h2><span class="es">Tabla de Transportes</span><span class="en">Transports Table</span></h2>
+    <table class="doc-table">
+      <thead>
+        <tr>
+          <th><span class="es">Columna</span><span class="en">Column</span></th>
+          <th><span class="es">Que muestra</span><span class="en">What it shows</span></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong><span class="es">Transporte ID</span><span class="en">Transport ID</span></strong></td>
+          <td><span class="es">Identificador unico de la orden de transporte en formato monoespaciado negrita (ej. <code style="font-weight:700;">DEVK900123</code>). Sigue el formato estandar SAP: prefijo SID + numero secuencial.</span><span class="en">Unique transport order identifier in bold monospace format (e.g. <code style="font-weight:700;">DEVK900123</code>). Follows the standard SAP format: SID prefix + sequential number.</span></td>
+        </tr>
+        <tr>
+          <td><strong><span class="es">Descripcion</span><span class="en">Description</span></strong></td>
+          <td><span class="es">Texto descriptivo de la orden de transporte, indicando que cambios contiene.</span><span class="en">Descriptive text of the transport order, indicating what changes it contains.</span></td>
+        </tr>
+        <tr>
+          <td><strong><span class="es">Origen</span><span class="en">Source</span></strong></td>
+          <td><span class="es">Sistema de origen del transporte en formato badge de color (ej. <span style="background:#22c55e;color:#fff;padding:1px 6px;border-radius:3px;font-size:0.85em;">DEV</span>).</span><span class="en">Transport source system in colored badge format (e.g. <span style="background:#22c55e;color:#fff;padding:1px 6px;border-radius:3px;font-size:0.85em;">DEV</span>).</span></td>
+        </tr>
+        <tr>
+          <td><strong><span class="es">Destino</span><span class="en">Target</span></strong></td>
+          <td><span class="es">Sistema destino de la importacion (ej. <span style="background:#f59e0b;color:#000;padding:1px 6px;border-radius:3px;font-size:0.85em;">QAS</span> o <span style="background:var(--accent-blue);color:#fff;padding:1px 6px;border-radius:3px;font-size:0.85em;">PRD</span>).</span><span class="en">Target import system (e.g. <span style="background:#f59e0b;color:#000;padding:1px 6px;border-radius:3px;font-size:0.85em;">QAS</span> or <span style="background:var(--accent-blue);color:#fff;padding:1px 6px;border-radius:3px;font-size:0.85em;">PRD</span>).</span></td>
+        </tr>
+        <tr>
+          <td><strong><span class="es">Estado</span><span class="en">Status</span></strong></td>
+          <td>
+            <span class="es">Estado actual del transporte:
+              <br>&#8226; <span style="background:#f59e0b;color:#000;padding:2px 8px;border-radius:4px;font-size:0.85em;">Liberado</span> &mdash; Liberado y pendiente de importacion.
+              <br>&#8226; <span style="background:#22c55e;color:#fff;padding:2px 8px;border-radius:4px;font-size:0.85em;">Importado</span> &mdash; Importado exitosamente en el sistema destino.
+              <br>&#8226; <span style="background:#ef4444;color:#fff;padding:2px 8px;border-radius:4px;font-size:0.85em;">Error</span> &mdash; La importacion fallo.
+              <br>&#8226; <span style="background:var(--text-tertiary);color:#fff;padding:2px 8px;border-radius:4px;font-size:0.85em;">Modificable</span> &mdash; Aun en edicion, no liberado.
+            </span>
+            <span class="en">Current transport status:
+              <br>&#8226; <span style="background:#f59e0b;color:#000;padding:2px 8px;border-radius:4px;font-size:0.85em;">Released</span> &mdash; Released and pending import.
+              <br>&#8226; <span style="background:#22c55e;color:#fff;padding:2px 8px;border-radius:4px;font-size:0.85em;">Imported</span> &mdash; Successfully imported into the target system.
+              <br>&#8226; <span style="background:#ef4444;color:#fff;padding:2px 8px;border-radius:4px;font-size:0.85em;">Error</span> &mdash; Import failed.
+              <br>&#8226; <span style="background:var(--text-tertiary);color:#fff;padding:2px 8px;border-radius:4px;font-size:0.85em;">Modifiable</span> &mdash; Still being edited, not released.
+            </span>
+          </td>
+        </tr>
+        <tr>
+          <td><strong>RC</strong></td>
+          <td>
+            <span class="es">Codigo de retorno de la importacion. El color indica la severidad:
+              <br>&#8226; <span style="color:#22c55e;font-weight:700;">RC=0</span> &mdash; Importacion exitosa sin warnings.
+              <br>&#8226; <span style="color:#f59e0b;font-weight:700;">RC&#8804;4</span> &mdash; Importacion con warnings menores (generalmente aceptable).
+              <br>&#8226; <span style="color:#ef4444;font-weight:700;">RC&gt;4</span> &mdash; Error en la importacion (RC=8 error, RC=12 error grave).
+            </span>
+            <span class="en">Import return code. Color indicates severity:
+              <br>&#8226; <span style="color:#22c55e;font-weight:700;">RC=0</span> &mdash; Successful import without warnings.
+              <br>&#8226; <span style="color:#f59e0b;font-weight:700;">RC&#8804;4</span> &mdash; Import with minor warnings (generally acceptable).
+              <br>&#8226; <span style="color:#ef4444;font-weight:700;">RC&gt;4</span> &mdash; Import error (RC=8 error, RC=12 severe error).
+            </span>
+          </td>
+        </tr>
+        <tr>
+          <td><strong>Owner</strong></td>
+          <td><span class="es">Usuario SAP propietario de la orden de transporte.</span><span class="en">SAP user who owns the transport order.</span></td>
+        </tr>
+        <tr>
+          <td><strong><span class="es">Fecha</span><span class="en">Date</span></strong></td>
+          <td><span class="es">Fecha y hora de la ultima accion sobre el transporte (liberacion o importacion).</span><span class="en">Date and time of the last action on the transport (release or import).</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- ====== EXAMPLE TABLE ====== -->
+  <section class="doc-section">
+    <h3><span class="es">Ejemplo de Tabla de Transportes</span><span class="en">Transports Table Example</span></h3>
+    <div style="overflow-x:auto;">
+      <table class="doc-table" style="font-size:0.9em;">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th><span class="es">Descripcion</span><span class="en">Description</span></th>
+            <th><span class="es">Origen</span><span class="en">Source</span></th>
+            <th><span class="es">Destino</span><span class="en">Target</span></th>
+            <th><span class="es">Estado</span><span class="en">Status</span></th>
+            <th>RC</th>
+            <th>Owner</th>
+            <th><span class="es">Fecha</span><span class="en">Date</span></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code style="font-weight:700;">DEVK900123</code></td>
+            <td><span class="es">Correccion ALV report ZFI_001</span><span class="en">ALV report ZFI_001 correction</span></td>
+            <td><span style="background:#22c55e;color:#fff;padding:1px 6px;border-radius:3px;font-size:0.85em;">DEV</span></td>
+            <td><span style="background:#f59e0b;color:#000;padding:1px 6px;border-radius:3px;font-size:0.85em;">QAS</span></td>
+            <td><span style="background:#22c55e;color:#fff;padding:2px 8px;border-radius:4px;font-size:0.85em;"><span class="es">Importado</span><span class="en">Imported</span></span></td>
+            <td><span style="color:#22c55e;font-weight:700;">RC=0</span></td>
+            <td>DEVELOPER1</td>
+            <td>2026-03-11 10:30</td>
+          </tr>
+          <tr>
+            <td><code style="font-weight:700;">DEVK900125</code></td>
+            <td><span class="es">Nuevo workflow de aprobacion MM</span><span class="en">New MM approval workflow</span></td>
+            <td><span style="background:#22c55e;color:#fff;padding:1px 6px;border-radius:3px;font-size:0.85em;">DEV</span></td>
+            <td><span style="background:#f59e0b;color:#000;padding:1px 6px;border-radius:3px;font-size:0.85em;">QAS</span></td>
+            <td><span style="background:#f59e0b;color:#000;padding:2px 8px;border-radius:4px;font-size:0.85em;"><span class="es">Liberado</span><span class="en">Released</span></span></td>
+            <td>&mdash;</td>
+            <td>DEVELOPER2</td>
+            <td>2026-03-11 09:15</td>
+          </tr>
+          <tr>
+            <td><code style="font-weight:700;">QASK800087</code></td>
+            <td><span class="es">Configuracion pricing SD</span><span class="en">SD pricing configuration</span></td>
+            <td><span style="background:#f59e0b;color:#000;padding:1px 6px;border-radius:3px;font-size:0.85em;">QAS</span></td>
+            <td><span style="background:var(--accent-blue);color:#fff;padding:1px 6px;border-radius:3px;font-size:0.85em;">PRD</span></td>
+            <td><span style="background:#22c55e;color:#fff;padding:2px 8px;border-radius:4px;font-size:0.85em;"><span class="es">Importado</span><span class="en">Imported</span></span></td>
+            <td><span style="color:#f59e0b;font-weight:700;">RC=4</span></td>
+            <td>FUNC_CONS</td>
+            <td>2026-03-10 18:45</td>
+          </tr>
+          <tr>
+            <td><code style="font-weight:700;">DEVK900119</code></td>
+            <td><span class="es">Ampliacion BADI para facturacion</span><span class="en">Billing BADI enhancement</span></td>
+            <td><span style="background:#22c55e;color:#fff;padding:1px 6px;border-radius:3px;font-size:0.85em;">DEV</span></td>
+            <td><span style="background:#f59e0b;color:#000;padding:1px 6px;border-radius:3px;font-size:0.85em;">QAS</span></td>
+            <td><span style="background:#ef4444;color:#fff;padding:2px 8px;border-radius:4px;font-size:0.85em;">Error</span></td>
+            <td><span style="color:#ef4444;font-weight:700;">RC=8</span></td>
+            <td>DEVELOPER1</td>
+            <td>2026-03-10 16:20</td>
+          </tr>
+          <tr>
+            <td><code style="font-weight:700;">DEVK900130</code></td>
+            <td><span class="es">Ajuste tabla custom ZTABLE_FI</span><span class="en">Custom table ZTABLE_FI adjustment</span></td>
+            <td><span style="background:#22c55e;color:#fff;padding:1px 6px;border-radius:3px;font-size:0.85em;">DEV</span></td>
+            <td>&mdash;</td>
+            <td><span style="background:var(--text-tertiary);color:#fff;padding:2px 8px;border-radius:4px;font-size:0.85em;"><span class="es">Modificable</span><span class="en">Modifiable</span></span></td>
+            <td>&mdash;</td>
+            <td>DEVELOPER3</td>
+            <td>2026-03-11 11:00</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ====== ERROR DETAIL ====== -->
+  <section class="doc-section">
+    <h2><span class="es">Detalle de Error en Transportes</span><span class="en">Transport Error Detail</span></h2>
+    <p>
+      <span class="es">Los transportes con estado <strong>Error</strong> muestran una seccion expandible con informacion detallada del fallo. Al hacer clic en la fila del transporte con error, se despliega un panel con los siguientes datos:</span>
+      <span class="en">Transports with <strong>Error</strong> status show an expandable section with detailed failure information. When you click on the error transport row, a panel expands with the following data:</span>
+    </p>
+
+    <div style="background:rgba(239,68,68,0.1);border:1px solid #ef4444;border-radius:8px;padding:20px;margin:16px 0;">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;">
+        <span style="color:#ef4444;font-size:1.2em;">&#10007;</span>
+        <strong style="color:#ef4444;"><span class="es">Error de Importacion</span><span class="en">Import Error</span></strong>
+        <code style="font-weight:700;margin-left:auto;">DEVK900119</code>
+      </div>
+      <table class="doc-table" style="font-size:0.9em;margin:0;">
+        <tbody>
+          <tr>
+            <td style="width:160px;"><strong>Return Code</strong></td>
+            <td><span style="color:#ef4444;font-weight:700;">RC=8</span></td>
+          </tr>
+          <tr>
+            <td><strong><span class="es">Fase</span><span class="en">Phase</span></strong></td>
+            <td>Import &mdash; DDIC Activation</td>
+          </tr>
+          <tr>
+            <td><strong><span class="es">Mensaje</span><span class="en">Message</span></strong></td>
+            <td><code style="color:#ef4444;">Table ZTABLE_BILLING activation failed: Field AMOUNT type mismatch (DEC vs CURR)</code></td>
+          </tr>
+          <tr>
+            <td><strong><span class="es">Objeto</span><span class="en">Object</span></strong></td>
+            <td><code>TABL ZTABLE_BILLING</code></td>
+          </tr>
+          <tr>
+            <td><strong><span class="es">Log completo</span><span class="en">Full log</span></strong></td>
+            <td><span style="color:var(--accent-cyan);cursor:pointer;text-decoration:underline;"><span class="es">Descargar log de importacion</span><span class="en">Download import log</span></span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ====== TIPS ====== -->
+  <section class="doc-section">
+    <h2><span class="es">Consejos</span><span class="en">Tips</span></h2>
+    <ul>
+      <li><span class="es">Un <strong>RC=4</strong> generalmente indica warnings que no impiden el uso del transporte &mdash; pero revise el log para confirmar que los warnings son aceptables.</span><span class="en">An <strong>RC=4</strong> generally indicates warnings that don't prevent transport use &mdash; but review the log to confirm the warnings are acceptable.</span></li>
+      <li><span class="es">Los transportes en estado <strong>Modificable</strong> aun no han sido liberados &mdash; no aparecen en la cola de importacion hasta que se liberen.</span><span class="en">Transports in <strong>Modifiable</strong> status have not been released yet &mdash; they do not appear in the import queue until released.</span></li>
+      <li><span class="es">Antes de importar un transporte en PRD, verifique que haya sido importado exitosamente (RC=0 o RC&#8804;4) en QAS.</span><span class="en">Before importing a transport into PRD, verify it was successfully imported (RC=0 or RC&#8804;4) in QAS.</span></li>
+      <li><span class="es">Use la <strong>Ruta de Transporte</strong> visual para entender rapidamente donde se encuentra cada orden en el proceso DEV &rarr; QAS &rarr; PRD.</span><span class="en">Use the visual <strong>Transport Path</strong> to quickly understand where each order is in the DEV &rarr; QAS &rarr; PRD process.</span></li>
+    </ul>
+  </section>
+
+</main></div></body></html>

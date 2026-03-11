@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="dark" data-lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Reportes — SAP Spektra Docs</title>
+  <link rel="stylesheet" href="theme.css">
+  <script src="theme-toggle.js"></script>
+  <script src="lang-toggle.js"></script>
+  <style>
+    /* ── Report type cards ── */
+    .report-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 16px;
+      margin-bottom: 32px;
+    }
+    @media (min-width: 900px) { .report-grid { grid-template-columns: repeat(4, 1fr); } }
+
+    .report-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius);
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      gap: 8px;
+    }
+    .report-card-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      margin-bottom: 4px;
+    }
+    .report-card-icon.primary { background: var(--cyan-dim); color: var(--cyan); }
+    .report-card-icon.info    { background: rgba(59,130,246,0.12); color: #3b82f6; }
+    .report-card-icon.success { background: rgba(34,197,94,0.12); color: var(--success); }
+    .report-card-icon.warning { background: rgba(245,158,11,0.12); color: var(--warning); }
+    .report-card-title { font-size: 15px; font-weight: 600; color: var(--txt1); }
+    .report-card-desc  { font-size: 12px; color: var(--txt3); margin-bottom: 8px; }
+
+    /* ── Generate button ── */
+    .btn-generate {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      width: 100%;
+      padding: 8px 16px;
+      border-radius: 8px;
+      border: none;
+      font-size: 13px;
+      font-weight: 600;
+      font-family: inherit;
+      cursor: pointer;
+      transition: all 0.2s;
+      background: var(--cyan);
+      color: #fff;
+    }
+    .btn-generate:hover { opacity: 0.85; }
+    .btn-generate:disabled { opacity: 0.5; cursor: not-allowed; }
+
+    /* ── Loading spinner ── */
+    .spinner {
+      display: inline-block;
+      width: 14px;
+      height: 14px;
+      border: 2px solid rgba(255,255,255,0.3);
+      border-top-color: #fff;
+      border-radius: 50%;
+      animation: spin 0.6s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ── Download button ── */
+    .btn-download {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 14px;
+      border-radius: 8px;
+      border: 1px solid var(--card-border);
+      background: transparent;
+      color: var(--cyan);
+      font-size: 12px;
+      font-weight: 600;
+      font-family: inherit;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .btn-download:hover { border-color: var(--cyan); background: var(--cyan-dim); }
+
+    /* ── Toast notification ── */
+    .toast-example {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 20px;
+      border-radius: 12px;
+      border: 1px solid rgba(34,197,94,0.3);
+      background: rgba(34,197,94,0.08);
+      color: var(--success);
+      font-size: 13px;
+      font-weight: 500;
+      margin: 16px 0;
+    }
+
+    /* ── Empty state ── */
+    .empty-state {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius);
+      padding: 48px 20px;
+      text-align: center;
+      color: var(--txt3);
+    }
+    .empty-state-icon { font-size: 32px; margin-bottom: 8px; }
+    .empty-state-title { font-size: 15px; font-weight: 600; color: var(--txt2); margin-bottom: 4px; }
+    .empty-state-desc  { font-size: 13px; }
+  </style>
+</head>
+<body>
+  <div class="docs-wrapper">
+
+    <!-- ═══ SIDEBAR ═══ -->
+    <nav class="docs-sidebar">
+      <div class="sidebar-brand">
+        <div class="logo">&#9889;</div>
+        <div class="brand-text">
+          <div class="brand-name">SAP Spektra</div>
+          <div class="brand-sub">
+            <span class="es">DOCUMENTACION</span>
+            <span class="en">DOCUMENTATION</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="sidebar-section">
+        <div class="sidebar-section-label">
+          <span class="es">Inicio</span>
+          <span class="en">Start</span>
+        </div>
+        <a href="index.html" class="sidebar-link">
+          &#127968;
+          <span class="es">Portal de Documentacion</span>
+          <span class="en">Documentation Portal</span>
+        </a>
+        <a href="getting-started.html" class="sidebar-link">
+          &#128640;
+          <span class="es">Primeros Pasos</span>
+          <span class="en">Getting Started</span>
+        </a>
+      </div>
+
+      <div class="sidebar-section">
+        <div class="sidebar-section-label">Command</div>
+        <a href="dashboard.html" class="sidebar-link">&#128202; Dashboard</a>
+        <a href="landscape.html" class="sidebar-link">&#127760; Landscape</a>
+        <a href="alerts.html" class="sidebar-link">
+          &#9888;&#65039;
+          <span class="es">Alertas</span>
+          <span class="en">Alerts</span>
+        </a>
+      </div>
+
+      <div class="sidebar-section">
+        <div class="sidebar-section-label">Monitor</div>
+        <a href="systems.html" class="sidebar-link">
+          &#128421;
+          <span class="es">Sistemas</span>
+          <span class="en">Systems</span>
+        </a>
+        <a href="connectors.html" class="sidebar-link">
+          &#128268;
+          <span class="es">Conectores</span>
+          <span class="en">Connectors</span>
+        </a>
+        <a href="events.html" class="sidebar-link">
+          &#128196;
+          <span class="es">Eventos</span>
+          <span class="en">Events</span>
+        </a>
+      </div>
+
+      <div class="sidebar-section">
+        <div class="sidebar-section-label">Intelligence</div>
+        <a href="ai-analysis.html" class="sidebar-link">
+          &#129504;
+          <span class="es">Analisis IA</span>
+          <span class="en">AI Analysis</span>
+        </a>
+        <a href="analytics.html" class="sidebar-link">&#128200; Analytics</a>
+        <a href="reports.html" class="sidebar-link active">
+          &#128209;
+          <span class="es">Reportes</span>
+          <span class="en">Reports</span>
+        </a>
+        <a href="comparison.html" class="sidebar-link">
+          &#128260;
+          <span class="es">Comparacion</span>
+          <span class="en">Comparison</span>
+        </a>
+      </div>
+
+      <div class="sidebar-section">
+        <div class="sidebar-section-label">Operations</div>
+        <a href="runbooks.html" class="sidebar-link">&#128214; Runbooks</a>
+        <a href="approvals.html" class="sidebar-link">
+          &#9989;
+          <span class="es">Aprobaciones</span>
+          <span class="en">Approvals</span>
+        </a>
+        <a href="operations.html" class="sidebar-link">
+          &#128197;
+          <span class="es">Operaciones</span>
+          <span class="en">Operations</span>
+        </a>
+        <a href="jobs.html" class="sidebar-link">&#9654;&#65039; Jobs SM37</a>
+        <a href="transports.html" class="sidebar-link">
+          &#128230;
+          <span class="es">Transportes</span>
+          <span class="en">Transports</span>
+        </a>
+        <a href="sla.html" class="sidebar-link">&#11088; SLA</a>
+        <a href="ha-control.html" class="sidebar-link">&#128147; HA Control</a>
+        <a href="certificates.html" class="sidebar-link">
+          &#128273;
+          <span class="es">Certificados</span>
+          <span class="en">Certificates</span>
+        </a>
+      </div>
+
+      <div class="sidebar-section">
+        <div class="sidebar-section-label">Admin</div>
+        <a href="admin.html" class="sidebar-link">
+          &#128737;
+          <span class="es">Gestion</span>
+          <span class="en">Management</span>
+        </a>
+        <a href="settings.html" class="sidebar-link">
+          &#9881;&#65039;
+          <span class="es">Configuracion</span>
+          <span class="en">Settings</span>
+        </a>
+        <a href="connect-system.html" class="sidebar-link">
+          &#128279;
+          <span class="es">Conectar Sistema</span>
+          <span class="en">Connect System</span>
+        </a>
+      </div>
+    </nav>
+
+    <!-- ═══ MAIN CONTENT ═══ -->
+    <main class="docs-main">
+
+      <!-- Breadcrumb -->
+      <div class="breadcrumb">
+        <a href="index.html">Docs</a>
+        <span class="sep">/</span>
+        <span>Intelligence</span>
+        <span class="sep">/</span>
+        <span class="es">Reportes</span>
+        <span class="en">Reports</span>
+      </div>
+
+      <!-- Page header -->
+      <div class="page-header">
+        <h1>
+          <span class="es">Reportes</span>
+          <span class="en">Reports</span>
+        </h1>
+        <p class="subtitle">
+          <span class="es">Genera y descarga reportes</span>
+          <span class="en">Generate and download reports</span>
+        </p>
+      </div>
+
+      <!-- ────────────────────────────────────────────── -->
+      <!-- REPORT TYPE CARDS                              -->
+      <!-- ────────────────────────────────────────────── -->
+      <h2>
+        <span class="es">Tipos de reporte</span>
+        <span class="en">Report types</span>
+      </h2>
+      <p>
+        <span class="es">La pagina muestra <strong>4 tarjetas de tipo de reporte</strong> en una fila horizontal. Cada tarjeta tiene un icono, un titulo, una breve descripcion y un boton <strong>"Generar"</strong>.</span>
+        <span class="en">The page displays <strong>4 report type cards</strong> in a horizontal row. Each card has an icon, a title, a brief description and a <strong>"Generar"</strong> (Generate) button.</span>
+      </p>
+
+      <div class="report-grid">
+        <!-- Diario -->
+        <div class="report-card">
+          <div class="report-card-icon primary">&#128197;</div>
+          <div class="report-card-title">
+            <span class="es">Diario</span>
+            <span class="en">Daily</span>
+          </div>
+          <div class="report-card-desc">
+            <span class="es">Ultimas 24h</span>
+            <span class="en">Last 24h</span>
+          </div>
+          <button class="btn-generate" disabled>
+            <span class="es">Generar</span>
+            <span class="en">Generate</span>
+          </button>
+        </div>
+        <!-- Semanal -->
+        <div class="report-card">
+          <div class="report-card-icon info">&#128200;</div>
+          <div class="report-card-title">
+            <span class="es">Semanal</span>
+            <span class="en">Weekly</span>
+          </div>
+          <div class="report-card-desc">
+            <span class="es">Tendencias 7 dias</span>
+            <span class="en">7-day trends</span>
+          </div>
+          <button class="btn-generate" disabled>
+            <span class="es">Generar</span>
+            <span class="en">Generate</span>
+          </button>
+        </div>
+        <!-- Salud -->
+        <div class="report-card">
+          <div class="report-card-icon success">&#128155;</div>
+          <div class="report-card-title">
+            <span class="es">Salud</span>
+            <span class="en">Health</span>
+          </div>
+          <div class="report-card-desc">
+            <span class="es">Estado infra completo</span>
+            <span class="en">Full infra status</span>
+          </div>
+          <button class="btn-generate" disabled>
+            <span class="es">Generar</span>
+            <span class="en">Generate</span>
+          </button>
+        </div>
+        <!-- Auditoria -->
+        <div class="report-card">
+          <div class="report-card-icon warning">&#128737;</div>
+          <div class="report-card-title">
+            <span class="es">Auditoria</span>
+            <span class="en">Audit</span>
+          </div>
+          <div class="report-card-desc">
+            <span class="es">Hash chain inmutable</span>
+            <span class="en">Immutable hash chain</span>
+          </div>
+          <button class="btn-generate" disabled>
+            <span class="es">Generar</span>
+            <span class="en">Generate</span>
+          </button>
+        </div>
+      </div>
+
+      <h3>
+        <span class="es">Detalle de cada tipo</span>
+        <span class="en">Detail of each type</span>
+      </h3>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>
+                <span class="es">Tipo</span>
+                <span class="en">Type</span>
+              </th>
+              <th>
+                <span class="es">Icono</span>
+                <span class="en">Icon</span>
+              </th>
+              <th>
+                <span class="es">Color</span>
+                <span class="en">Color</span>
+              </th>
+              <th>
+                <span class="es">Descripcion</span>
+                <span class="en">Description</span>
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>
+                <span class="es">Diario</span>
+                <span class="en">Daily</span>
+              </strong></td>
+              <td>Calendar</td>
+              <td><span class="badge cyan">primary</span></td>
+              <td>
+                <span class="es">Resumen operativo de las ultimas 24 horas. Incluye alertas, ejecuciones de runbooks y estado general.</span>
+                <span class="en">Operational summary of the last 24 hours. Includes alerts, runbook executions and overall status.</span>
+              </td>
+            </tr>
+            <tr>
+              <td><strong>
+                <span class="es">Semanal</span>
+                <span class="en">Weekly</span>
+              </strong></td>
+              <td>TrendingUp</td>
+              <td><span class="badge" style="background:rgba(59,130,246,0.12);color:#3b82f6">info</span></td>
+              <td>
+                <span class="es">Tendencias de los ultimos 7 dias. Compara metricas con la semana anterior para identificar patrones.</span>
+                <span class="en">Trends over the last 7 days. Compares metrics with the previous week to identify patterns.</span>
+              </td>
+            </tr>
+            <tr>
+              <td><strong>
+                <span class="es">Salud</span>
+                <span class="en">Health</span>
+              </strong></td>
+              <td>HeartPulse</td>
+              <td><span class="badge success">success</span></td>
+              <td>
+                <span class="es">Estado completo de la infraestructura. Revisa cada sistema, sus metricas de CPU, memoria, disco y estado de conectores.</span>
+                <span class="en">Full infrastructure status. Reviews each system, its CPU, memory, disk metrics and connector status.</span>
+              </td>
+            </tr>
+            <tr>
+              <td><strong>
+                <span class="es">Auditoria</span>
+                <span class="en">Audit</span>
+              </strong></td>
+              <td>ShieldCheck</td>
+              <td><span class="badge warning">warning</span></td>
+              <td>
+                <span class="es">Reporte de auditoria con hash chain inmutable. Registra todas las operaciones, aprobaciones y cambios para cumplimiento.</span>
+                <span class="en">Audit report with immutable hash chain. Records all operations, approvals and changes for compliance.</span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- ────────────────────────────────────────────── -->
+      <!-- GENERATING A REPORT                            -->
+      <!-- ────────────────────────────────────────────── -->
+      <h2>
+        <span class="es">Generar un reporte</span>
+        <span class="en">Generate a report</span>
+      </h2>
+
+      <div class="steps">
+        <div class="step">
+          <span class="es">Haz clic en el boton <strong>"Generar"</strong> de la tarjeta del tipo de reporte que deseas.</span>
+          <span class="en">Click the <strong>"Generar"</strong> (Generate) button on the report type card you want.</span>
+        </div>
+        <div class="step">
+          <span class="es">El boton muestra un <strong>spinner de carga</strong> y el texto cambia a <em>"Generando..."</em>. Mientras se genera un reporte, los botones de las demas tarjetas se desactivan para evitar generaciones simultaneas.</span>
+          <span class="en">The button shows a <strong>loading spinner</strong> and the text changes to <em>"Generando..."</em>. While a report is being generated, the buttons on other cards are disabled to prevent simultaneous generations.</span>
+        </div>
+        <div class="step">
+          <span class="es">Una vez generado, el reporte aparece como una nueva fila en la <strong>tabla de reportes generados</strong> (debajo de las tarjetas). Ademas, se muestra una <strong>notificacion toast</strong> en la esquina inferior derecha confirmando la generacion exitosa.</span>
+          <span class="en">Once generated, the report appears as a new row in the <strong>generated reports table</strong> (below the cards). Additionally, a <strong>toast notification</strong> appears in the bottom-right corner confirming successful generation.</span>
+        </div>
+      </div>
+
+      <h3>
+        <span class="es">Notificacion toast</span>
+        <span class="en">Toast notification</span>
+      </h3>
+      <p>
+        <span class="es">Al completar la generacion, aparece una notificacion verde con el mensaje de exito. Ejemplo:</span>
+        <span class="en">When generation completes, a green notification appears with the success message. Example:</span>
+      </p>
+
+      <div class="toast-example">
+        &#9989;
+        <span>
+          <span class="es">Reporte diario generado exitosamente</span>
+          <span class="en">Daily report generated successfully</span>
+        </span>
+      </div>
+
+      <p>
+        <span class="es">La notificacion desaparece automaticamente despues de 3 segundos, o puedes cerrarla manualmente haciendo clic en la <strong>X</strong> que aparece a la derecha del mensaje.</span>
+        <span class="en">The notification automatically disappears after 3 seconds, or you can manually dismiss it by clicking the <strong>X</strong> that appears to the right of the message.</span>
+      </p>
+
+      <!-- ────────────────────────────────────────────── -->
+      <!-- GENERATED REPORTS TABLE                        -->
+      <!-- ────────────────────────────────────────────── -->
+      <h2>
+        <span class="es">Tabla de reportes generados</span>
+        <span class="en">Generated reports table</span>
+      </h2>
+
+      <p>
+        <span class="es">Cuando aun no has generado ningun reporte, esta seccion muestra un <strong>estado vacio</strong> con un icono de documento y el texto <em>"Sin reportes &mdash; Genera un reporte desde las tarjetas de arriba"</em>.</span>
+        <span class="en">When you have not generated any report yet, this section shows an <strong>empty state</strong> with a document icon and the text <em>"Sin reportes &mdash; Genera un reporte desde las tarjetas de arriba"</em>.</span>
+      </p>
+
+      <div class="empty-state mb-3">
+        <div class="empty-state-icon">&#128209;</div>
+        <div class="empty-state-title">
+          <span class="es">Sin reportes</span>
+          <span class="en">No reports</span>
+        </div>
+        <div class="empty-state-desc">
+          <span class="es">Genera un reporte desde las tarjetas de arriba</span>
+          <span class="en">Generate a report from the cards above</span>
+        </div>
+      </div>
+
+      <p>
+        <span class="es">Una vez generados, los reportes se listan en una tabla con las siguientes columnas:</span>
+        <span class="en">Once generated, reports are listed in a table with the following columns:</span>
+      </p>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>
+                <span class="es">Fecha</span>
+                <span class="en">Date</span>
+              </th>
+              <th>
+                <span class="es">Tipo</span>
+                <span class="en">Type</span>
+              </th>
+              <th>
+                <span class="es">Estado</span>
+                <span class="en">Status</span>
+              </th>
+              <th>
+                <span class="es">Accion</span>
+                <span class="en">Action</span>
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td style="font-size:12px;color:var(--txt3);white-space:nowrap">11/3/2026, 14:32:05</td>
+              <td><span class="badge cyan">
+                <span class="es">Diario</span>
+                <span class="en">Daily</span>
+              </span></td>
+              <td><span class="badge success">&#9679; OK</span></td>
+              <td><button class="btn-download" disabled>&#11015;
+                <span class="es">Descargar</span>
+                <span class="en">Download</span>
+              </button></td>
+            </tr>
+            <tr>
+              <td style="font-size:12px;color:var(--txt3);white-space:nowrap">11/3/2026, 14:30:21</td>
+              <td><span class="badge cyan">
+                <span class="es">Salud</span>
+                <span class="en">Health</span>
+              </span></td>
+              <td><span class="badge success">&#9679; OK</span></td>
+              <td><button class="btn-download" disabled>&#11015;
+                <span class="es">Descargar</span>
+                <span class="en">Download</span>
+              </button></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>
+        <span class="es">Columnas de la tabla</span>
+        <span class="en">Table columns</span>
+      </h3>
+      <ul class="feature-list">
+        <li>
+          <span class="es"><strong>Fecha</strong> &mdash; fecha y hora exactas en que se genero el reporte, en formato local colombiano (sin AM/PM, formato 24h).</span>
+          <span class="en"><strong>Fecha</strong> (Date) &mdash; exact date and time the report was generated, in Colombian locale format (24h, no AM/PM).</span>
+        </li>
+        <li>
+          <span class="es"><strong>Tipo</strong> &mdash; badge con el nombre del tipo de reporte (Diario, Semanal, Salud, Auditoria).</span>
+          <span class="en"><strong>Tipo</strong> (Type) &mdash; badge with the report type name (Diario, Semanal, Salud, Auditoria).</span>
+        </li>
+        <li>
+          <span class="es"><strong>Estado</strong> &mdash; badge verde con un punto indicador y el texto <strong>OK</strong>, confirmando que el reporte se genero correctamente.</span>
+          <span class="en"><strong>Estado</strong> (Status) &mdash; green badge with a dot indicator and <strong>OK</strong> text, confirming the report was generated correctly.</span>
+        </li>
+        <li>
+          <span class="es"><strong>Accion</strong> &mdash; boton <strong>"Descargar"</strong> con un icono de flecha hacia abajo. Al hacer clic, se descarga un archivo JSON con los datos del reporte.</span>
+          <span class="en"><strong>Accion</strong> (Action) &mdash; <strong>"Descargar"</strong> (Download) button with a down-arrow icon. Clicking it downloads a JSON file with the report data.</span>
+        </li>
+      </ul>
+
+      <!-- ────────────────────────────────────────────── -->
+      <!-- DOWNLOADED FILE                                -->
+      <!-- ────────────────────────────────────────────── -->
+      <h2>
+        <span class="es">Archivo descargado</span>
+        <span class="en">Downloaded file</span>
+      </h2>
+      <p>
+        <span class="es">El archivo descargado es un <strong>JSON</strong> con el siguiente nombre: <code>RPT-001-diario-2026-03-11.json</code> (el nombre incluye el ID del reporte, el tipo y la fecha).</span>
+        <span class="en">The downloaded file is a <strong>JSON</strong> with the following name: <code>RPT-001-diario-2026-03-11.json</code> (the name includes the report ID, type and date).</span>
+      </p>
+      <p>
+        <span class="es">El contenido del JSON incluye un resumen con:</span>
+        <span class="en">The JSON content includes a summary with:</span>
+      </p>
+      <ul class="feature-list">
+        <li>
+          <span class="es"><strong>id</strong> &mdash; identificador unico del reporte (p. ej., <code>RPT-001</code>).</span>
+          <span class="en"><strong>id</strong> &mdash; unique report identifier (e.g., <code>RPT-001</code>).</span>
+        </li>
+        <li>
+          <span class="es"><strong>type</strong> &mdash; tipo de reporte (<code>diario</code>, <code>semanal</code>, <code>salud</code>, <code>auditoria</code>).</span>
+          <span class="en"><strong>type</strong> &mdash; report type (<code>diario</code>, <code>semanal</code>, <code>salud</code>, <code>auditoria</code>).</span>
+        </li>
+        <li>
+          <span class="es"><strong>generatedAt</strong> &mdash; marca de tiempo ISO 8601 de cuando se genero.</span>
+          <span class="en"><strong>generatedAt</strong> &mdash; ISO 8601 timestamp of when it was generated.</span>
+        </li>
+        <li>
+          <span class="es"><strong>summary</strong> &mdash; objeto con conteo de sistemas, eventos, alertas (activas y resueltas).</span>
+          <span class="en"><strong>summary</strong> &mdash; object with system count, events, alerts (active and resolved).</span>
+        </li>
+        <li>
+          <span class="es"><strong>status</strong> &mdash; estado del reporte (<code>OK</code>).</span>
+          <span class="en"><strong>status</strong> &mdash; report status (<code>OK</code>).</span>
+        </li>
+      </ul>
+
+      <h3>
+        <span class="es">Ejemplo de contenido JSON</span>
+        <span class="en">JSON content example</span>
+      </h3>
+      <pre><code>{
+  "id": "RPT-001",
+  "type": "diario",
+  "generatedAt": "2026-03-11T14:32:05.000Z",
+  "summary": {
+    "systemsCount": 9,
+    "eventsCount": 24,
+    "alertsCount": 12,
+    "activeAlerts": 5,
+    "resolvedAlerts": 7
+  },
+  "status": "OK"
+}</code></pre>
+
+      <!-- Footer -->
+      <div style="margin-top:48px;padding:24px 0;border-top:1px solid var(--brd);text-align:center;font-size:12px;color:var(--txt3);">
+        &copy; 2026 Maveram.
+        <span class="es">Todos los derechos reservados.</span>
+        <span class="en">All rights reserved.</span>
+      </div>
+
+    </main>
+  </div>
+</body>
+</html>

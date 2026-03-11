@@ -1,0 +1,813 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="dark" data-lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Sistemas SAP — SAP Spektra Docs</title>
+<link rel="stylesheet" href="theme.css">
+<script src="theme-toggle.js"></script>
+<script src="lang-toggle.js"></script>
+<style>
+/* ── Systems page specific styles ── */
+.page-top-bar{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:24px}
+.page-top-bar h1{margin:0}
+.btn-primary{
+  display:inline-flex;align-items:center;gap:6px;padding:8px 18px;border-radius:8px;
+  background:var(--gradient-brand);color:#fff;font-size:13px;font-weight:600;
+  border:none;cursor:pointer;text-decoration:none;transition:opacity .2s;
+}
+.btn-primary:hover{opacity:.9;text-decoration:none}
+
+/* Filter bar */
+.filter-bar{
+  display:flex;flex-wrap:wrap;gap:10px;align-items:center;
+  background:var(--card-bg);border:1px solid var(--card-border);
+  border-radius:var(--radius);padding:14px 18px;margin-bottom:24px;
+}
+.filter-bar input[type="text"],.filter-bar select{
+  background:var(--bg);border:1px solid var(--brd);border-radius:8px;
+  padding:7px 12px;color:var(--txt1);font-size:13px;outline:none;
+  transition:border-color .2s;
+}
+.filter-bar input[type="text"]{flex:1;min-width:180px}
+.filter-bar input[type="text"]:focus,.filter-bar select:focus{border-color:var(--cyan)}
+.filter-bar select{min-width:140px;cursor:pointer}
+
+/* System cards grid */
+.systems-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(280px,1fr));
+  gap:16px;margin-bottom:32px;
+}
+.system-card{
+  background:var(--card-bg);border:1px solid var(--card-border);
+  border-radius:var(--radius);padding:20px;cursor:pointer;
+  transition:all .2s;text-decoration:none;color:inherit;display:block;
+}
+.system-card:hover{border-color:var(--cyan);box-shadow:0 0 20px rgba(6,182,212,0.08);text-decoration:none}
+.system-card-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+.system-sid{font-size:18px;font-weight:700;color:var(--txt1);display:flex;align-items:center;gap:8px}
+.system-desc{font-size:12px;color:var(--txt3);margin-bottom:14px}
+
+/* Health gauge */
+.health-gauge{
+  width:80px;height:80px;margin:0 auto 14px;position:relative;
+}
+.health-gauge svg{width:80px;height:80px;transform:rotate(-90deg)}
+.health-gauge-bg{fill:none;stroke:var(--brd);stroke-width:6}
+.health-gauge-fill{fill:none;stroke-width:6;stroke-linecap:round;transition:stroke-dashoffset .6s}
+.health-gauge-label{
+  position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+  font-size:18px;font-weight:700;color:var(--txt1);
+}
+
+/* Metrics row */
+.system-metrics{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.system-metric{font-size:11px;color:var(--txt3)}
+.system-metric strong{display:block;color:var(--txt2);font-size:12px}
+
+/* Empty state */
+.empty-state{
+  text-align:center;padding:60px 20px;color:var(--txt3);
+}
+.empty-state-icon{font-size:48px;margin-bottom:12px;opacity:.4}
+.empty-state-text{font-size:15px;font-weight:600;color:var(--txt2)}
+.empty-state-sub{font-size:13px;margin-top:4px}
+
+/* Detail section */
+.detail-header{
+  display:flex;align-items:center;gap:16px;margin-bottom:24px;flex-wrap:wrap;
+}
+.detail-sid{font-size:28px;font-weight:800;color:var(--txt1)}
+.detail-back{
+  display:inline-flex;align-items:center;gap:4px;font-size:13px;color:var(--cyan);
+  text-decoration:none;margin-bottom:16px;
+}
+.detail-back:hover{text-decoration:underline}
+
+/* Tabs */
+.tabs{display:flex;gap:2px;border-bottom:1px solid var(--brd);margin-bottom:24px;overflow-x:auto}
+.tab{
+  padding:10px 16px;font-size:13px;font-weight:500;color:var(--txt3);
+  cursor:pointer;border-bottom:2px solid transparent;transition:all .2s;
+  white-space:nowrap;background:none;border-top:none;border-left:none;border-right:none;
+}
+.tab:hover{color:var(--txt1)}
+.tab.active{color:var(--cyan);border-bottom-color:var(--cyan);font-weight:600}
+
+/* Percentage bar */
+.pct-bar{height:6px;border-radius:3px;background:var(--brd);overflow:hidden;margin-top:4px}
+.pct-bar-fill{height:100%;border-radius:3px;transition:width .4s}
+
+/* Topology placeholder */
+.topology-diagram{
+  background:var(--bg2);border:1px dashed var(--brd);border-radius:var(--radius);
+  min-height:260px;display:flex;align-items:center;justify-content:center;
+  color:var(--txt3);font-size:13px;padding:24px;
+}
+
+/* Host card */
+.host-card{
+  background:var(--card-bg);border:1px solid var(--card-border);
+  border-radius:var(--radius);padding:16px;margin-bottom:12px;
+}
+.host-card-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.host-name{font-size:14px;font-weight:600;color:var(--txt1)}
+.host-metrics{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:12px}
+@media(max-width:600px){.host-metrics{grid-template-columns:1fr 1fr}}
+.host-metric-label{font-size:11px;color:var(--txt3)}
+.host-metric-value{font-size:13px;font-weight:600;color:var(--txt1);margin-bottom:2px}
+</style>
+</head>
+<body>
+<div class="docs-wrapper">
+
+<!-- ══════════════════════════════════════════════════════════════════ -->
+<!--  SIDEBAR                                                         -->
+<!-- ══════════════════════════════════════════════════════════════════ -->
+<nav class="docs-sidebar">
+  <div class="sidebar-brand">
+    <div class="logo">&#9889;</div>
+    <div class="brand-text"><div class="brand-name">SAP Spektra</div><div class="brand-sub">Documentacion</div></div>
+  </div>
+  <div class="sidebar-section"><div class="sidebar-section-label">Inicio</div>
+    <a href="index.html" class="sidebar-link">Portal</a>
+    <a href="getting-started.html" class="sidebar-link">Primeros Pasos</a>
+  </div>
+  <div class="sidebar-section"><div class="sidebar-section-label">Command</div>
+    <a href="dashboard.html" class="sidebar-link">Dashboard</a>
+    <a href="landscape.html" class="sidebar-link">Landscape</a>
+    <a href="alerts.html" class="sidebar-link">Alertas</a>
+  </div>
+  <div class="sidebar-section"><div class="sidebar-section-label">Monitor</div>
+    <a href="systems.html" class="sidebar-link active">Sistemas</a>
+    <a href="connectors.html" class="sidebar-link">Conectores</a>
+    <a href="events.html" class="sidebar-link">Eventos</a>
+  </div>
+  <div class="sidebar-section"><div class="sidebar-section-label">Intelligence</div>
+    <a href="ai-analysis.html" class="sidebar-link">Analisis IA</a>
+    <a href="analytics.html" class="sidebar-link">Analytics</a>
+    <a href="reports.html" class="sidebar-link">Reportes</a>
+    <a href="comparison.html" class="sidebar-link">Comparacion</a>
+  </div>
+  <div class="sidebar-section"><div class="sidebar-section-label">Operations</div>
+    <a href="runbooks.html" class="sidebar-link">Runbooks</a>
+    <a href="approvals.html" class="sidebar-link">Aprobaciones</a>
+    <a href="operations.html" class="sidebar-link">Operaciones</a>
+    <a href="jobs.html" class="sidebar-link">Jobs (SM37)</a>
+    <a href="transports.html" class="sidebar-link">Transportes</a>
+    <a href="sla.html" class="sidebar-link">SLA</a>
+    <a href="ha-control.html" class="sidebar-link">HA Control</a>
+    <a href="certificates.html" class="sidebar-link">Certificados</a>
+  </div>
+  <div class="sidebar-section"><div class="sidebar-section-label">Admin</div>
+    <a href="admin.html" class="sidebar-link">Gestion</a>
+    <a href="settings.html" class="sidebar-link">Configuracion</a>
+    <a href="connect-system.html" class="sidebar-link">Conectar Sistema</a>
+  </div>
+</nav>
+
+<!-- ══════════════════════════════════════════════════════════════════ -->
+<!--  MAIN CONTENT                                                     -->
+<!-- ══════════════════════════════════════════════════════════════════ -->
+<main class="docs-main">
+
+  <div class="breadcrumb">
+    <a href="index.html">Docs</a><span class="sep">/</span>
+    <span class="es">Monitor</span><span class="en">Monitor</span><span class="sep">/</span>
+    <span class="es">Sistemas</span><span class="en">Systems</span>
+  </div>
+
+  <div class="page-header">
+    <h1><span class="es">Sistemas SAP</span><span class="en">SAP Systems</span></h1>
+    <p class="subtitle">
+      <span class="es">Monitoreo completo del landscape SAP &mdash; todos sus sistemas en una sola vista.</span>
+      <span class="en">Full SAP landscape monitoring &mdash; all your systems in a single view.</span>
+    </p>
+  </div>
+
+  <!-- ─── OVERVIEW ─── -->
+  <h2><span class="es">Vista general de la pagina</span><span class="en">Page overview</span></h2>
+  <p>
+    <span class="es">La pagina <strong>Sistemas</strong> (<em>Monitor &gt; Sistemas</em>) es el punto central para supervisar la salud y el estado de cada instancia SAP conectada a Spektra. Al ingresar, usted ve un encabezado que muestra el titulo <strong>"Landscape SAP"</strong> junto con un subtitulo descriptivo &mdash; <em>"Vista completa de todos los sistemas monitoreados"</em> &mdash; y un indicador del numero total de sistemas registrados. En la esquina superior derecha del encabezado aparece un boton azul-violeta etiquetado <strong>"Conectar Sistema"</strong> que lo lleva al asistente de incorporacion de nuevos sistemas.</span>
+    <span class="en">The <strong>Systems</strong> page (<em>Monitor &gt; Systems</em>) is the central hub for overseeing the health and status of every SAP instance connected to Spektra. Upon entering, you see a header displaying the title <strong>"Landscape SAP"</strong> alongside a descriptive subtitle &mdash; <em>"Complete view of all monitored systems"</em> &mdash; and a count of the total registered systems. In the upper-right corner of the header a blue-violet button labeled <strong>"Conectar Sistema"</strong> (Connect System) takes you to the new-system onboarding wizard.</span>
+  </p>
+
+  <!-- ─── PAGE HEADER AREA ─── -->
+  <h2><span class="es">Encabezado y boton de accion</span><span class="en">Header and action button</span></h2>
+
+  <div class="page-top-bar">
+    <div>
+      <h1 style="font-size:22px"><span class="es">Landscape SAP</span><span class="en">SAP Landscape</span></h1>
+      <p class="subtitle" style="margin-top:2px">
+        <span class="es">Vista completa de todos los sistemas monitoreados &mdash; <strong>12 sistemas</strong></span>
+        <span class="en">Complete view of all monitored systems &mdash; <strong>12 systems</strong></span>
+      </p>
+    </div>
+    <a href="connect-system.html" class="btn-primary">
+      + <span class="es">Conectar Sistema</span><span class="en">Connect System</span>
+    </a>
+  </div>
+
+  <p>
+    <span class="es">El numero junto al subtitulo refleja cuantos sistemas estan registrados en su tenant de Spektra. El boton <strong>"Conectar Sistema"</strong> abre la pantalla de configuracion donde puede vincular un nuevo sistema SAP mediante Cloud Connector, agente Sentinel u otro metodo.</span>
+    <span class="en">The count next to the subtitle reflects how many systems are registered in your Spektra tenant. The <strong>"Connect System"</strong> button opens the configuration screen where you can link a new SAP system via Cloud Connector, Sentinel agent, or another method.</span>
+  </p>
+
+  <!-- ─── FILTER BAR ─── -->
+  <h2><span class="es">Barra de filtros</span><span class="en">Filter bar</span></h2>
+
+  <p>
+    <span class="es">Inmediatamente debajo del encabezado se muestra una barra de filtros dentro de una tarjeta horizontal. Contiene tres controles que puede combinar para reducir la lista de sistemas visibles:</span>
+    <span class="en">Directly below the header sits a filter bar inside a horizontal card. It contains three controls you can combine to narrow the visible system list:</span>
+  </p>
+
+  <div class="filter-bar">
+    <input type="text" placeholder="Buscar por SID, ID o descripcion..." disabled>
+    <select disabled>
+      <option><span>Ambiente: Todos</span></option>
+      <option>Produccion (PRD)</option>
+      <option>Calidad (QAS)</option>
+      <option>Desarrollo (DEV)</option>
+    </select>
+    <select disabled>
+      <option>Estado: Todos</option>
+      <option>Saludable</option>
+      <option>Advertencia</option>
+      <option>Degradado</option>
+      <option>Critico</option>
+    </select>
+  </div>
+
+  <div class="card">
+    <h4><span class="es">Controles de filtro</span><span class="en">Filter controls</span></h4>
+    <table>
+      <thead>
+        <tr>
+          <th><span class="es">Control</span><span class="en">Control</span></th>
+          <th><span class="es">Descripcion</span><span class="en">Description</span></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong><span class="es">Busqueda</span><span class="en">Search</span></strong></td>
+          <td>
+            <span class="es">Campo de texto libre. Escriba un SID (por ejemplo <code>P01</code>), un identificador de sistema o parte de la descripcion. La lista se filtra en tiempo real a medida que escribe.</span>
+            <span class="en">Free-text field. Type a SID (e.g. <code>P01</code>), a system ID, or part of the description. The list filters in real time as you type.</span>
+          </td>
+        </tr>
+        <tr>
+          <td><strong><span class="es">Ambiente</span><span class="en">Environment</span></strong></td>
+          <td>
+            <span class="es">Desplegable con opciones: <em>Todos</em>, <em>Produccion (PRD)</em>, <em>Calidad (QAS)</em> y <em>Desarrollo (DEV)</em>. Seleccione un ambiente para ver solo los sistemas de esa capa.</span>
+            <span class="en">Dropdown with options: <em>All</em>, <em>Production (PRD)</em>, <em>Quality (QAS)</em>, and <em>Development (DEV)</em>. Select an environment to see only the systems in that tier.</span>
+          </td>
+        </tr>
+        <tr>
+          <td><strong><span class="es">Estado</span><span class="en">Status</span></strong></td>
+          <td>
+            <span class="es">Desplegable con opciones: <em>Todos</em>, <em>Saludable</em> (verde), <em>Advertencia</em> (amarillo), <em>Degradado</em> (naranja) y <em>Critico</em> (rojo). Permite aislar rapidamente los sistemas que necesitan atencion.</span>
+            <span class="en">Dropdown with options: <em>All</em>, <em>Healthy</em> (green), <em>Warning</em> (yellow), <em>Degraded</em> (orange), and <em>Critical</em> (red). Lets you quickly isolate systems that need attention.</span>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="callout info">
+    <span class="callout-icon">&#128161;</span>
+    <div>
+      <span class="es">Los filtros se combinan entre si: si selecciona <em>Produccion</em> y <em>Critico</em> y escribe "ERP", solo vera sistemas productivos en estado critico cuyo SID o descripcion contenga "ERP".</span>
+      <span class="en">Filters combine with each other: if you select <em>Production</em> and <em>Critical</em> and type "ERP," you will only see production systems in critical status whose SID or description contains "ERP."</span>
+    </div>
+  </div>
+
+  <!-- ─── SYSTEM CARDS GRID ─── -->
+  <h2><span class="es">Tarjetas de sistemas</span><span class="en">System cards</span></h2>
+
+  <p>
+    <span class="es">Los sistemas se muestran como una cuadricula de tarjetas. Dependiendo del ancho de su pantalla, puede ver entre 1 y 4 columnas. Cada tarjeta es clickeable y lo lleva a la pagina de detalle del sistema seleccionado.</span>
+    <span class="en">Systems are displayed as a grid of cards. Depending on your screen width, you may see between 1 and 4 columns. Each card is clickable and takes you to the detail page for the selected system.</span>
+  </p>
+
+  <div class="systems-grid">
+    <!-- Example card 1 -->
+    <div class="system-card">
+      <div class="system-card-top">
+        <span class="system-sid">P01 <span class="badge cyan" style="font-size:10px">Production</span></span>
+        <span class="badge success">Saludable</span>
+      </div>
+      <div class="system-desc">SAP ERP 6.0 &mdash; ECC Production</div>
+      <div class="health-gauge">
+        <svg viewBox="0 0 80 80">
+          <circle class="health-gauge-bg" cx="40" cy="40" r="34"/>
+          <circle class="health-gauge-fill" cx="40" cy="40" r="34"
+                  stroke="var(--success)" stroke-dasharray="213.6" stroke-dashoffset="17"/>
+        </svg>
+        <span class="health-gauge-label">92</span>
+      </div>
+      <div class="system-metrics">
+        <div class="system-metric"><span class="es">Tipo</span><span class="en">Type</span> <strong>ABAP</strong></div>
+        <div class="system-metric"><span class="es">Base de Datos</span><span class="en">Database</span> <strong>HANA 2.0</strong></div>
+        <div class="system-metric"><span class="es">Ambiente</span><span class="en">Environment</span> <strong>PRD</strong></div>
+        <div class="system-metric">Breaches <strong>0</strong></div>
+      </div>
+    </div>
+    <!-- Example card 2 -->
+    <div class="system-card">
+      <div class="system-card-top">
+        <span class="system-sid">Q01 <span class="badge neutral" style="font-size:10px">Trial</span></span>
+        <span class="badge warning">Advertencia</span>
+      </div>
+      <div class="system-desc">SAP S/4HANA &mdash; QAS Quality</div>
+      <div class="health-gauge">
+        <svg viewBox="0 0 80 80">
+          <circle class="health-gauge-bg" cx="40" cy="40" r="34"/>
+          <circle class="health-gauge-fill" cx="40" cy="40" r="34"
+                  stroke="var(--warning)" stroke-dasharray="213.6" stroke-dashoffset="64"/>
+        </svg>
+        <span class="health-gauge-label">70</span>
+      </div>
+      <div class="system-metrics">
+        <div class="system-metric"><span class="es">Tipo</span><span class="en">Type</span> <strong>ABAP</strong></div>
+        <div class="system-metric"><span class="es">Base de Datos</span><span class="en">Database</span> <strong>HANA 2.0</strong></div>
+        <div class="system-metric"><span class="es">Ambiente</span><span class="en">Environment</span> <strong>QAS</strong></div>
+        <div class="system-metric">Breaches <strong>2</strong></div>
+      </div>
+    </div>
+    <!-- Example card 3 -->
+    <div class="system-card">
+      <div class="system-card-top">
+        <span class="system-sid">D01 <span class="badge neutral" style="font-size:10px">Trial</span></span>
+        <span class="badge danger">Critico</span>
+      </div>
+      <div class="system-desc">SAP BW/4HANA &mdash; DEV Sandbox</div>
+      <div class="health-gauge">
+        <svg viewBox="0 0 80 80">
+          <circle class="health-gauge-bg" cx="40" cy="40" r="34"/>
+          <circle class="health-gauge-fill" cx="40" cy="40" r="34"
+                  stroke="var(--danger)" stroke-dasharray="213.6" stroke-dashoffset="149.5"/>
+        </svg>
+        <span class="health-gauge-label">30</span>
+      </div>
+      <div class="system-metrics">
+        <div class="system-metric"><span class="es">Tipo</span><span class="en">Type</span> <strong>ABAP</strong></div>
+        <div class="system-metric"><span class="es">Base de Datos</span><span class="en">Database</span> <strong>HANA 2.0</strong></div>
+        <div class="system-metric"><span class="es">Ambiente</span><span class="en">Environment</span> <strong>DEV</strong></div>
+        <div class="system-metric">Breaches <strong>5</strong></div>
+      </div>
+    </div>
+  </div>
+
+  <h3><span class="es">Anatomia de una tarjeta de sistema</span><span class="en">Anatomy of a system card</span></h3>
+  <p>
+    <span class="es">Cada tarjeta muestra los siguientes elementos de arriba hacia abajo:</span>
+    <span class="en">Each card displays the following elements from top to bottom:</span>
+  </p>
+  <div class="card">
+    <table>
+      <thead>
+        <tr>
+          <th><span class="es">Elemento</span><span class="en">Element</span></th>
+          <th><span class="es">Descripcion</span><span class="en">Description</span></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>SID</strong></td>
+          <td>
+            <span class="es">Identificador de tres letras del sistema SAP (por ejemplo <code>P01</code>, <code>Q01</code>). Se muestra en tipografia grande y negrita.</span>
+            <span class="en">Three-letter SAP system identifier (e.g. <code>P01</code>, <code>Q01</code>). Shown in large bold type.</span>
+          </td>
+        </tr>
+        <tr>
+          <td><strong><span class="es">Modo</span><span class="en">Mode</span></strong></td>
+          <td>
+            <span class="es">Etiqueta junto al SID que indica <em>Production</em> (cian) o <em>Trial</em> (gris neutro). Refleja la licencia o clasificacion del sistema.</span>
+            <span class="en">Badge next to the SID indicating <em>Production</em> (cyan) or <em>Trial</em> (neutral gray). Reflects the system's license or classification.</span>
+          </td>
+        </tr>
+        <tr>
+          <td><strong><span class="es">Estado</span><span class="en">Status</span></strong></td>
+          <td>
+            <span class="es">Etiqueta de color en la esquina superior derecha: <span class="badge success">Saludable</span>, <span class="badge warning">Advertencia</span>, <span class="badge neutral">Degradado</span> o <span class="badge danger">Critico</span>.</span>
+            <span class="en">Color badge in the upper-right corner: <span class="badge success">Healthy</span>, <span class="badge warning">Warning</span>, <span class="badge neutral">Degraded</span>, or <span class="badge danger">Critical</span>.</span>
+          </td>
+        </tr>
+        <tr>
+          <td><strong><span class="es">Descripcion</span><span class="en">Description</span></strong></td>
+          <td>
+            <span class="es">Linea de texto gris con el nombre largo del sistema y su rol (por ejemplo "SAP ERP 6.0 &mdash; ECC Production").</span>
+            <span class="en">Gray text line with the system's long name and role (e.g., "SAP ERP 6.0 &mdash; ECC Production").</span>
+          </td>
+        </tr>
+        <tr>
+          <td><strong><span class="es">Indicador de salud</span><span class="en">Health gauge</span></strong></td>
+          <td>
+            <span class="es">Circulo grafico (gauge) con un numero de 0 a 100 en el centro. El arco se llena proporcionalmente y cambia de color segun el rango: verde (80&ndash;100), amarillo (50&ndash;79), rojo (0&ndash;49).</span>
+            <span class="en">Circular graphic (gauge) with a number from 0 to 100 in the center. The arc fills proportionally and changes color based on the range: green (80&ndash;100), yellow (50&ndash;79), red (0&ndash;49).</span>
+          </td>
+        </tr>
+        <tr>
+          <td><strong><span class="es">Metricas</span><span class="en">Metrics</span></strong></td>
+          <td>
+            <span class="es">Cuadricula de 2&times;2 con cuatro datos: <em>Tipo</em> (ABAP, Java, etc.), <em>Base de Datos</em> (HANA 2.0, Oracle, etc.), <em>Ambiente</em> (PRD/QAS/DEV) y <em>Breaches</em> (numero de violaciones de umbrales activas).</span>
+            <span class="en">2&times;2 grid with four data points: <em>Type</em> (ABAP, Java, etc.), <em>Database</em> (HANA 2.0, Oracle, etc.), <em>Environment</em> (PRD/QAS/DEV), and <em>Breaches</em> (number of active threshold violations).</span>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ─── EMPTY STATE ─── -->
+  <h2><span class="es">Estado vacio</span><span class="en">Empty state</span></h2>
+  <p>
+    <span class="es">Si los filtros activos no coinciden con ningun sistema, la cuadricula desaparece y se muestra un estado vacio centrado:</span>
+    <span class="en">If the active filters do not match any system, the grid disappears and a centered empty state is shown:</span>
+  </p>
+
+  <div class="empty-state" style="border:1px dashed var(--brd);border-radius:var(--radius)">
+    <div class="empty-state-icon">&#128269;</div>
+    <div class="empty-state-text"><span class="es">Sin resultados</span><span class="en">No results</span></div>
+    <div class="empty-state-sub">
+      <span class="es">No se encontraron sistemas que coincidan con los filtros seleccionados. Intente ampliar los criterios de busqueda.</span>
+      <span class="en">No systems matched the selected filters. Try broadening your search criteria.</span>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════════════ -->
+  <!--  SYSTEM DETAIL PAGE                                            -->
+  <!-- ═══════════════════════════════════════════════════════════════ -->
+  <h2 id="system-detail"><span class="es">Detalle del sistema</span><span class="en">System detail</span></h2>
+
+  <p>
+    <span class="es">Al hacer clic en cualquier tarjeta de sistema, se abre la <strong>pagina de detalle</strong>. En la parte superior aparece un enlace "<em>&larr; Volver al Landscape</em>" seguido del SID del sistema en letra grande, sus badges de modo y estado, y la descripcion. Debajo se presentan <strong>ocho pestanas</strong> que organizan la informacion del sistema en secciones logicas.</span>
+    <span class="en">When you click any system card, the <strong>detail page</strong> opens. At the top a "<em>&larr; Back to Landscape</em>" link appears, followed by the system SID in large type, its mode and status badges, and the description. Below, <strong>eight tabs</strong> organize the system information into logical sections.</span>
+  </p>
+
+  <a href="#" class="detail-back">&larr; <span class="es">Volver al Landscape</span><span class="en">Back to Landscape</span></a>
+  <div class="detail-header">
+    <span class="detail-sid">P01</span>
+    <span class="badge cyan">Production</span>
+    <span class="badge success">Saludable</span>
+  </div>
+  <p class="text-muted text-sm" style="margin-top:-16px;margin-bottom:20px">SAP ERP 6.0 &mdash; ECC Production</p>
+
+  <div class="tabs">
+    <button class="tab active">Overview</button>
+    <button class="tab">Hosts</button>
+    <button class="tab"><span class="es">Topologia</span><span class="en">Topology</span></button>
+    <button class="tab">SAP Monitor</button>
+    <button class="tab">Database</button>
+    <button class="tab"><span class="es">Componentes</span><span class="en">Components</span></button>
+    <button class="tab"><span class="es">Dependencias</span><span class="en">Dependencies</span></button>
+    <button class="tab">Breaches</button>
+  </div>
+
+  <!-- ─── Tab 1: Overview ─── -->
+  <h3>1. Overview</h3>
+  <p>
+    <span class="es">La pestana <strong>Overview</strong> se carga por defecto al abrir el detalle. Muestra el estado general de la capa de aplicacion SAP:</span>
+    <span class="en">The <strong>Overview</strong> tab loads by default when you open the detail. It shows the general status of the SAP application layer:</span>
+  </p>
+
+  <div class="kpi-grid">
+    <div class="kpi-card">
+      <div class="card-icon success">&#10003;</div>
+      <div><div class="kpi-value">99.8%</div><div class="kpi-label">Availability</div></div>
+    </div>
+    <div class="kpi-card">
+      <div class="card-icon cyan">&#9881;</div>
+      <div><div class="kpi-value text-success">OK</div><div class="kpi-label">Mon Status</div></div>
+    </div>
+    <div class="kpi-card">
+      <div class="card-icon cyan">&#9889;</div>
+      <div><div class="kpi-value text-success">OK</div><div class="kpi-label">Mon Performance</div></div>
+    </div>
+    <div class="kpi-card">
+      <div class="card-icon violet">&#128100;</div>
+      <div><div class="kpi-value">42</div><div class="kpi-label"><span class="es">Usuarios conectados</span><span class="en">Logged Users</span></div></div>
+    </div>
+  </div>
+
+  <p>
+    <span class="es">Debajo de las tarjetas de KPI ve metricas adicionales como <em>work processes</em> (en uso vs. disponibles) o <em>JVM heap</em> (para sistemas Java). A continuacion se muestra una grafica de linea temporal que traza <strong>CPU</strong>, <strong>Memoria</strong> y <strong>Disco</strong> durante las ultimas horas o dias, permitiendole identificar tendencias y picos.</span>
+    <span class="en">Below the KPI cards you see additional metrics such as <em>work processes</em> (in use vs. available) or <em>JVM heap</em> (for Java systems). Below that, a time-series line chart plots <strong>CPU</strong>, <strong>Memory</strong>, and <strong>Disk</strong> over the last hours or days, letting you identify trends and spikes.</span>
+  </p>
+
+  <div class="callout info">
+    <span class="callout-icon">&#128200;</span>
+    <div>
+      <span class="es">La grafica de recursos es interactiva: pase el cursor sobre cualquier punto para ver el valor exacto y la marca de tiempo. Puede hacer zoom con scroll o seleccionando un rango con clic y arrastre.</span>
+      <span class="en">The resource chart is interactive: hover over any data point to see its exact value and timestamp. You can zoom in with scroll or by click-dragging to select a range.</span>
+    </div>
+  </div>
+
+  <!-- ─── Tab 2: Hosts ─── -->
+  <h3>2. Hosts</h3>
+  <p>
+    <span class="es">La pestana <strong>Hosts</strong> lista cada servidor (fisico o virtual) que forma parte de este sistema SAP. Para cada host se muestra:</span>
+    <span class="en">The <strong>Hosts</strong> tab lists every server (physical or virtual) that is part of this SAP system. For each host it shows:</span>
+  </p>
+
+  <div class="host-card">
+    <div class="host-card-header">
+      <span class="host-name">sap-prd-app01</span>
+      <span class="badge success">Online</span>
+    </div>
+    <p class="text-xs text-muted" style="margin-bottom:10px">SUSE Linux Enterprise Server 15 SP4 &bull; x86_64 &bull; 16 vCPU &bull; 64 GB RAM</p>
+    <div class="host-metrics">
+      <div>
+        <div class="host-metric-label">CPU</div>
+        <div class="host-metric-value">34%</div>
+        <div class="pct-bar"><div class="pct-bar-fill" style="width:34%;background:var(--success)"></div></div>
+      </div>
+      <div>
+        <div class="host-metric-label"><span class="es">Memoria</span><span class="en">Memory</span></div>
+        <div class="host-metric-value">61%</div>
+        <div class="pct-bar"><div class="pct-bar-fill" style="width:61%;background:var(--warning)"></div></div>
+      </div>
+      <div>
+        <div class="host-metric-label"><span class="es">Disco</span><span class="en">Disk</span></div>
+        <div class="host-metric-value">45%</div>
+        <div class="pct-bar"><div class="pct-bar-fill" style="width:45%;background:var(--success)"></div></div>
+      </div>
+      <div>
+        <div class="host-metric-label">Swap</div>
+        <div class="host-metric-value">8%</div>
+        <div class="pct-bar"><div class="pct-bar-fill" style="width:8%;background:var(--success)"></div></div>
+      </div>
+    </div>
+  </div>
+
+  <p>
+    <span class="es">Cada metrica de uso incluye una barra de porcentaje con codigo de color: <span class="text-success">verde</span> (&lt;60%), <span class="text-warning">amarillo</span> (60&ndash;84%) y <span class="text-danger">rojo</span> (&ge;85%). Tambien se indica el sistema operativo, la arquitectura, la cantidad de vCPU y la RAM total.</span>
+    <span class="en">Each usage metric includes a color-coded percentage bar: <span class="text-success">green</span> (&lt;60%), <span class="text-warning">yellow</span> (60&ndash;84%), and <span class="text-danger">red</span> (&ge;85%). The operating system, architecture, vCPU count, and total RAM are also shown.</span>
+  </p>
+
+  <!-- ─── Tab 3: Topology ─── -->
+  <h3><span class="es">3. Topologia</span><span class="en">3. Topology</span></h3>
+  <p>
+    <span class="es">La pestana <strong>Topologia</strong> presenta un diagrama visual interactivo del sistema. Muestra los nodos (servidores, bases de datos, balanceadores de carga, etc.) y las conexiones entre ellos. Los nodos se colorean segun su estado de salud. Puede hacer zoom y arrastrar el diagrama para explorar la arquitectura completa.</span>
+    <span class="en">The <strong>Topology</strong> tab presents an interactive visual diagram of the system. It shows nodes (servers, databases, load balancers, etc.) and the connections between them. Nodes are color-coded by their health status. You can zoom and drag the diagram to explore the complete architecture.</span>
+  </p>
+
+  <div class="topology-diagram">
+    <span class="es">&#128506; Diagrama interactivo de la topologia del sistema</span>
+    <span class="en">&#128506; Interactive system topology diagram</span>
+  </div>
+
+  <!-- ─── Tab 4: SAP Monitor ─── -->
+  <h3>4. SAP Monitor</h3>
+  <p>
+    <span class="es">La pestana <strong>SAP Monitor</strong> muestra metricas especificas del stack SAP que van mas alla de la infraestructura. Estas incluyen:</span>
+    <span class="en">The <strong>SAP Monitor</strong> tab displays SAP stack-specific metrics that go beyond infrastructure. These include:</span>
+  </p>
+
+  <div class="card">
+    <table>
+      <thead>
+        <tr>
+          <th><span class="es">Metrica</span><span class="en">Metric</span></th>
+          <th><span class="es">Descripcion</span><span class="en">Description</span></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Dialog Response Time</strong></td>
+          <td>
+            <span class="es">Tiempo promedio de respuesta de transacciones de dialogo, en milisegundos. Valores altos indican degradacion del rendimiento.</span>
+            <span class="en">Average dialog transaction response time in milliseconds. High values indicate performance degradation.</span>
+          </td>
+        </tr>
+        <tr>
+          <td><strong>ABAP Dumps</strong></td>
+          <td>
+            <span class="es">Numero de short dumps (ST22) en las ultimas horas. Un incremento subito puede senalar errores de programa o falta de recursos.</span>
+            <span class="en">Number of short dumps (ST22) in the last few hours. A sudden increase may signal program errors or resource shortages.</span>
+          </td>
+        </tr>
+        <tr>
+          <td><strong>Spool</strong></td>
+          <td>
+            <span class="es">Estado del sistema de spool: solicitudes pendientes, errores de impresion y cola de salida.</span>
+            <span class="en">Spool system status: pending requests, print errors, and output queue.</span>
+          </td>
+        </tr>
+        <tr>
+          <td><strong>Update Requests</strong></td>
+          <td>
+            <span class="es">Numero de solicitudes de actualizacion (V1/V2) pendientes o fallidas. Las solicitudes fallidas pueden causar inconsistencia de datos.</span>
+            <span class="en">Number of pending or failed update requests (V1/V2). Failed requests can cause data inconsistency.</span>
+          </td>
+        </tr>
+        <tr>
+          <td><strong>RFC Stats</strong></td>
+          <td>
+            <span class="es">Estadisticas de llamadas RFC (Remote Function Call): llamadas activas, tiempos promedio, conexiones fallidas y colas de tRFC/qRFC.</span>
+            <span class="en">RFC (Remote Function Call) statistics: active calls, average times, failed connections, and tRFC/qRFC queues.</span>
+          </td>
+        </tr>
+        <tr>
+          <td><strong>Work Processes</strong></td>
+          <td>
+            <span class="es">Desglose de procesos de trabajo por tipo (Dialog, Update, Background, Spool, Enqueue) con su estado actual (libre, ocupado, en espera).</span>
+            <span class="en">Work process breakdown by type (Dialog, Update, Background, Spool, Enqueue) with current status (free, busy, waiting).</span>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ─── Tab 5: Database ─── -->
+  <h3>5. Database</h3>
+  <p>
+    <span class="es">La pestana <strong>Database</strong> ofrece informacion sobre la base de datos subyacente del sistema SAP:</span>
+    <span class="en">The <strong>Database</strong> tab provides information about the SAP system's underlying database:</span>
+  </p>
+
+  <div class="kpi-grid">
+    <div class="kpi-card">
+      <div class="card-icon cyan">&#128451;</div>
+      <div><div class="kpi-value text-sm">HANA 2.0 SPS06</div><div class="kpi-label"><span class="es">Tipo de BD</span><span class="en">DB Type</span></div></div>
+    </div>
+    <div class="kpi-card">
+      <div class="card-icon violet">&#128190;</div>
+      <div><div class="kpi-value">1.2 TB</div><div class="kpi-label"><span class="es">Tamano</span><span class="en">Size</span></div></div>
+    </div>
+    <div class="kpi-card">
+      <div class="card-icon success">&#10003;</div>
+      <div><div class="kpi-value text-success text-sm">Completado</div><div class="kpi-label"><span class="es">Ultimo Backup</span><span class="en">Last Backup</span></div></div>
+    </div>
+  </div>
+
+  <p>
+    <span class="es">Tambien vera la posicion de log actual, el estado del ultimo backup completo e incremental, y una lista de <strong>runbooks relacionados</strong> &mdash; procedimientos automatizados que puede ejecutar directamente desde esta seccion (por ejemplo, "Verificar espacio de tablas" o "Forzar backup de log").</span>
+    <span class="en">You will also see the current log position, the status of the last full and incremental backup, and a list of <strong>related runbooks</strong> &mdash; automated procedures you can trigger directly from this section (e.g., "Check tablespace" or "Force log backup").</span>
+  </p>
+
+  <!-- ─── Tab 6: Components ─── -->
+  <h3><span class="es">6. Componentes</span><span class="en">6. Components</span></h3>
+  <p>
+    <span class="es">La pestana <strong>Componentes</strong> muestra una tabla con todas las instancias SAP que componen el sistema. Cada fila incluye:</span>
+    <span class="en">The <strong>Components</strong> tab shows a table listing all SAP instances that make up the system. Each row includes:</span>
+  </p>
+
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th><span class="es">Instancia</span><span class="en">Instance</span></th>
+          <th><span class="es">Tipo</span><span class="en">Type</span></th>
+          <th>Host</th>
+          <th><span class="es">Estado</span><span class="en">Status</span></th>
+          <th>Uptime</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><code>ASCS00</code></td>
+          <td>ASCS</td>
+          <td>sap-prd-ascs01</td>
+          <td><span class="badge success">Running</span></td>
+          <td>45d 12h</td>
+        </tr>
+        <tr>
+          <td><code>D01</code></td>
+          <td>App Server</td>
+          <td>sap-prd-app01</td>
+          <td><span class="badge success">Running</span></td>
+          <td>45d 12h</td>
+        </tr>
+        <tr>
+          <td><code>D02</code></td>
+          <td>App Server</td>
+          <td>sap-prd-app02</td>
+          <td><span class="badge success">Running</span></td>
+          <td>30d 8h</td>
+        </tr>
+        <tr>
+          <td><code>HDB00</code></td>
+          <td>HANA</td>
+          <td>sap-prd-db01</td>
+          <td><span class="badge success">Running</span></td>
+          <td>90d 3h</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p>
+    <span class="es">Los tipos de componente mas comunes son: <strong>ASCS</strong> (SAP Central Services), <strong>App Server</strong> (servidor de aplicacion), <strong>HANA</strong> (base de datos), <strong>Web Dispatcher</strong> y <strong>SCS</strong> (para sistemas Java). El uptime muestra cuanto tiempo lleva la instancia ejecutandose sin reinicio.</span>
+    <span class="en">The most common component types are: <strong>ASCS</strong> (SAP Central Services), <strong>App Server</strong> (application server), <strong>HANA</strong> (database), <strong>Web Dispatcher</strong>, and <strong>SCS</strong> (for Java systems). Uptime shows how long the instance has been running without a restart.</span>
+  </p>
+
+  <!-- ─── Tab 7: Dependencies ─── -->
+  <h3><span class="es">7. Dependencias</span><span class="en">7. Dependencies</span></h3>
+  <p>
+    <span class="es">La pestana <strong>Dependencias</strong> muestra las conexiones de servicio que este sistema mantiene con otros sistemas o servicios externos. Cada dependencia se presenta con:</span>
+    <span class="en">The <strong>Dependencies</strong> tab shows the service connections this system maintains with other systems or external services. Each dependency is displayed with:</span>
+  </p>
+
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th><span class="es">Servicio</span><span class="en">Service</span></th>
+          <th><span class="es">Tipo</span><span class="en">Type</span></th>
+          <th><span class="es">Destino</span><span class="en">Destination</span></th>
+          <th><span class="es">Estado</span><span class="en">Status</span></th>
+          <th><span class="es">Latencia</span><span class="en">Latency</span></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>ERP &rarr; BW</td>
+          <td><span class="badge cyan">RFC</span></td>
+          <td>B01CLNT100</td>
+          <td><span class="badge success">Activo</span></td>
+          <td class="text-success">12 ms</td>
+        </tr>
+        <tr>
+          <td>ERP &rarr; PI</td>
+          <td><span class="badge violet">HTTP</span></td>
+          <td>PI0_HTTP</td>
+          <td><span class="badge success">Activo</span></td>
+          <td class="text-success">45 ms</td>
+        </tr>
+        <tr>
+          <td>ERP &rarr; Portal</td>
+          <td><span class="badge neutral">IDoc</span></td>
+          <td>EP0CLNT100</td>
+          <td><span class="badge warning">Lento</span></td>
+          <td class="text-warning">280 ms</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p>
+    <span class="es">Los tipos de dependencia incluyen <strong>RFC</strong> (Remote Function Call), <strong>HTTP/HTTPS</strong>, <strong>IDoc</strong> (Intermediate Document) y otros protocolos. La latencia se muestra con codigo de color para identificar rapidamente conexiones lentas o caidas.</span>
+    <span class="en">Dependency types include <strong>RFC</strong> (Remote Function Call), <strong>HTTP/HTTPS</strong>, <strong>IDoc</strong> (Intermediate Document), and other protocols. Latency is color-coded so you can quickly spot slow or down connections.</span>
+  </p>
+
+  <!-- ─── Tab 8: Breaches ─── -->
+  <h3>8. Breaches</h3>
+  <p>
+    <span class="es">La pestana <strong>Breaches</strong> lista todas las violaciones de umbrales activas para este sistema especifico. Cada breach muestra:</span>
+    <span class="en">The <strong>Breaches</strong> tab lists all active threshold violations for this specific system. Each breach shows:</span>
+  </p>
+
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th><span class="es">Metrica</span><span class="en">Metric</span></th>
+          <th><span class="es">Umbral</span><span class="en">Threshold</span></th>
+          <th><span class="es">Valor actual</span><span class="en">Current value</span></th>
+          <th><span class="es">Severidad</span><span class="en">Severity</span></th>
+          <th><span class="es">Desde</span><span class="en">Since</span></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>CPU Usage</td>
+          <td>&le; 85%</td>
+          <td class="text-danger font-bold">93%</td>
+          <td><span class="badge danger">Critico</span></td>
+          <td>2026-03-11 08:14</td>
+        </tr>
+        <tr>
+          <td>Dialog Response Time</td>
+          <td>&le; 1000 ms</td>
+          <td class="text-warning font-bold">1450 ms</td>
+          <td><span class="badge warning">Warning</span></td>
+          <td>2026-03-11 09:32</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p>
+    <span class="es">La columna <strong>Umbral</strong> muestra el limite configurado para la metrica, <strong>Valor actual</strong> muestra la lectura que disparo la alerta, y <strong>Desde</strong> indica cuando comenzo la violacion. Las breaches activas alimentan el puntaje de salud del sistema que se muestra en la tarjeta principal.</span>
+    <span class="en">The <strong>Threshold</strong> column shows the configured limit for the metric, <strong>Current value</strong> shows the reading that triggered the alert, and <strong>Since</strong> indicates when the violation started. Active breaches feed into the system health score shown on the main card.</span>
+  </p>
+
+  <div class="callout warning">
+    <span class="callout-icon">&#9888;&#65039;</span>
+    <div>
+      <span class="es">Las breaches criticas generan alertas automaticas segun las reglas de notificacion configuradas en <a href="settings.html">Configuracion</a>. Revise la seccion de <a href="alerts.html">Alertas</a> para gestionarlas.</span>
+      <span class="en">Critical breaches trigger automatic alerts based on the notification rules configured in <a href="settings.html">Settings</a>. Check the <a href="alerts.html">Alerts</a> section to manage them.</span>
+    </div>
+  </div>
+
+  <!-- ─── Navigation ─── -->
+  <div style="display:flex;justify-content:space-between;margin-top:40px;padding-top:20px;border-top:1px solid var(--brd)">
+    <a href="alerts.html" style="font-size:13px">&larr; <span class="es">Alertas</span><span class="en">Alerts</span></a>
+    <a href="connectors.html" style="font-size:13px"><span class="es">Conectores</span><span class="en">Connectors</span> &rarr;</a>
+  </div>
+
+</main>
+</div>
+</body>
+</html>

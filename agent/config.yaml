@@ -1,0 +1,65 @@
+# ============================================================
+# SAP Spektra Agent — Configuración
+# ============================================================
+# Este archivo se edita una vez al instalar el agente en el servidor.
+# El agente lee esta configuración al arrancar.
+
+# ── Identificación del sistema SAP ──
+system:
+  sid: "EP1"                        # System ID (3 letras)
+  type: "S/4HANA"                   # S/4HANA | ECC | BW/4HANA | BW | SolMan | PO | CPI
+  environment: "Production"         # Production | Quality | Development | Sandbox
+  description: "S/4HANA Producción"
+  db_type: "HANA 2.0"              # HANA 2.0 | HANA Cloud | Oracle | DB2 | MSSQL | MaxDB | ASE
+
+# ── Conexión al servidor central de SAP Spektra ──
+api:
+  url: "https://api.spektra.maveram.com"   # URL del backend
+  token: "spk_xxxxxxxxxxxxxxxxxxxxxxxx"    # Token de autenticación (se genera en la UI)
+  timeout: 30                              # Timeout en segundos para cada envío
+  verify_ssl: true                         # Verificar certificado SSL
+
+# ── Frecuencia de recolección (en segundos) ──
+collection:
+  interval: 60          # Cada cuántos segundos se recolectan métricas
+  os_metrics: true      # Recolectar CPU, RAM, disco, red
+  sap_metrics: true     # Recolectar instancias, work processes, logs
+  hana_metrics: true    # Recolectar métricas de HANA (solo si db_type es HANA)
+  cloud_metadata: true  # Detectar proveedor cloud y recoger metadata
+
+# ── SAP Control (sapcontrol SOAP API) ──
+# El agente usa sapcontrol para leer datos de las instancias SAP.
+# Cada instancia SAP tiene su servicio en el puerto 5<NR>13.
+sapcontrol:
+  instances:
+    - instance_nr: "01"       # Número de instancia (2 dígitos)
+      hostname: "localhost"   # Hostname donde corre esta instancia
+      type: "PAS"             # PAS | AAS | ASCS | SCS | HANA | WDP | JAVA
+      http_port: 50113        # Puerto HTTP de sapcontrol (5<NR>13)
+    - instance_nr: "00"
+      hostname: "localhost"
+      type: "HANA"
+      http_port: 50013
+  username: "sapadm"          # Usuario para sapcontrol (opcional si sapcontrol permite anónimo)
+  password: ""                # Contraseña (se recomienda usar variable de entorno SPEKTRA_SAP_PASSWORD)
+
+# ── HANA Database (conexión directa — opcional) ──
+# Solo se usa si hana_metrics está habilitado y db_type incluye "HANA"
+hana:
+  host: "localhost"
+  port: 30015                 # Puerto SQL de HANA (3<NR>15)
+  username: "SYSTEM"          # Usuario de monitoreo (se recomienda crear uno dedicado)
+  password: ""                # Contraseña (se recomienda usar variable de entorno SPEKTRA_HANA_PASSWORD)
+  encrypt: true               # Usar conexión encriptada
+  # Vistas de monitoreo que el agente consulta:
+  #   M_HOST_RESOURCE_UTILIZATION — CPU y memoria del host
+  #   M_DISK_USAGE — uso de disco (data, log, trace)
+  #   M_BACKUP_CATALOG — estado del último backup
+  #   M_SYSTEM_REPLICATION — estado de replicación HA
+
+# ── Logging ──
+logging:
+  level: "INFO"               # DEBUG | INFO | WARNING | ERROR
+  file: "/var/log/spektra-agent.log"
+  max_size_mb: 50
+  backup_count: 5             # Cuántos archivos de log rotar

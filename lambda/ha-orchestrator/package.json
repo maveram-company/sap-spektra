@@ -1,0 +1,12 @@
+{
+  "name": "sap-alwaysops-ha-orchestrator",
+  "version": "1.5.0",
+  "description": "Avvale SAP AlwaysOps - Orquestador de operaciones de Alta Disponibilidad (failover/takeover/failback)",
+  "main": "index.js",
+  "dependencies": {
+    "@aws-sdk/client-dynamodb": "^3.450.0",
+    "@aws-sdk/lib-dynamodb": "^3.450.0",
+    "@aws-sdk/client-sfn": "^3.450.0",
+    "@aws-sdk/client-ssm": "^3.450.0"
+  }
+}

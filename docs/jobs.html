@@ -1,0 +1,290 @@
+<!DOCTYPE html><html lang="es" data-theme="dark" data-lang="es"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Background Jobs — SAP Spektra Docs</title><link rel="stylesheet" href="theme.css"><script src="theme-toggle.js"></script><script src="lang-toggle.js"></script></head><body><div class="docs-wrapper">
+<nav class="docs-sidebar">
+  <div class="sidebar-brand"><div class="logo">&#9889;</div><div class="brand-text"><div class="brand-name">SAP Spektra</div><div class="brand-sub">Documentacion</div></div></div>
+  <div class="sidebar-section"><div class="sidebar-section-label">Inicio</div><a href="index.html" class="sidebar-link">Portal</a><a href="getting-started.html" class="sidebar-link">Primeros Pasos</a></div>
+  <div class="sidebar-section"><div class="sidebar-section-label">Command</div><a href="dashboard.html" class="sidebar-link">Dashboard</a><a href="landscape.html" class="sidebar-link">Landscape</a><a href="alerts.html" class="sidebar-link">Alertas</a></div>
+  <div class="sidebar-section"><div class="sidebar-section-label">Monitor</div><a href="systems.html" class="sidebar-link">Sistemas</a><a href="connectors.html" class="sidebar-link">Conectores</a><a href="events.html" class="sidebar-link">Eventos</a></div>
+  <div class="sidebar-section"><div class="sidebar-section-label">Intelligence</div><a href="ai-analysis.html" class="sidebar-link">Analisis IA</a><a href="analytics.html" class="sidebar-link">Analytics</a><a href="reports.html" class="sidebar-link">Reportes</a><a href="comparison.html" class="sidebar-link">Comparacion</a></div>
+  <div class="sidebar-section"><div class="sidebar-section-label">Operations</div><a href="runbooks.html" class="sidebar-link">Runbooks</a><a href="approvals.html" class="sidebar-link">Aprobaciones</a><a href="operations.html" class="sidebar-link">Operaciones</a><a href="jobs.html" class="sidebar-link active">Jobs (SM37)</a><a href="transports.html" class="sidebar-link">Transportes</a><a href="sla.html" class="sidebar-link">SLA</a><a href="ha-control.html" class="sidebar-link">HA Control</a><a href="certificates.html" class="sidebar-link">Certificados</a></div>
+  <div class="sidebar-section"><div class="sidebar-section-label">Admin</div><a href="admin.html" class="sidebar-link">Gestion</a><a href="settings.html" class="sidebar-link">Configuracion</a><a href="connect-system.html" class="sidebar-link">Conectar Sistema</a></div>
+</nav>
+<main class="docs-main">
+
+  <!-- ====== HEADER ====== -->
+  <section class="doc-section">
+    <h1><span class="es">Background Jobs</span><span class="en">Background Jobs</span></h1>
+    <p class="section-desc">
+      <span class="es">Monitor de jobs SAP &mdash; equivalente SM37</span>
+      <span class="en">SAP job monitor &mdash; SM37 equivalent</span>
+    </p>
+    <p>
+      <span class="es">La pantalla de <strong>Background Jobs</strong> es el equivalente a la transaccion <code>SM37</code> de SAP, pero centralizada para todos sus sistemas conectados. Desde aqui puede ver el estado de todos los jobs en ejecucion, programados, finalizados y fallidos en una sola vista.</span>
+      <span class="en">The <strong>Background Jobs</strong> screen is the equivalent of SAP transaction <code>SM37</code>, but centralized across all your connected systems. From here you can view the status of all running, scheduled, finished and failed jobs in a single view.</span>
+    </p>
+  </section>
+
+  <!-- ====== KPI CARDS ====== -->
+  <section class="doc-section">
+    <h2><span class="es">Tarjetas de Resumen (KPI)</span><span class="en">Summary Cards (KPI)</span></h2>
+    <p>
+      <span class="es">En la parte superior de la pantalla vera cuatro tarjetas de indicadores clave con el conteo actual de jobs por estado:</span>
+      <span class="en">At the top of the screen you will see four key indicator cards with the current job count by status:</span>
+    </p>
+
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:16px;margin:20px 0;">
+      <div style="background:var(--bg-secondary);border:1px solid var(--border-color);border-radius:8px;padding:20px;text-align:center;border-top:3px solid var(--accent-blue);">
+        <div style="font-size:2em;font-weight:700;color:var(--accent-blue);">7</div>
+        <div style="font-size:0.9em;color:var(--text-secondary);margin-top:4px;"><span class="es">Ejecutando</span><span class="en">Running</span></div>
+      </div>
+      <div style="background:var(--bg-secondary);border:1px solid var(--border-color);border-radius:8px;padding:20px;text-align:center;border-top:3px solid #3b82f6;">
+        <div style="font-size:2em;font-weight:700;color:#3b82f6;">23</div>
+        <div style="font-size:0.9em;color:var(--text-secondary);margin-top:4px;"><span class="es">Programados</span><span class="en">Scheduled</span></div>
+      </div>
+      <div style="background:var(--bg-secondary);border:1px solid var(--border-color);border-radius:8px;padding:20px;text-align:center;border-top:3px solid #22c55e;">
+        <div style="font-size:2em;font-weight:700;color:#22c55e;">156</div>
+        <div style="font-size:0.9em;color:var(--text-secondary);margin-top:4px;"><span class="es">Finalizados</span><span class="en">Finished</span></div>
+      </div>
+      <div style="background:var(--bg-secondary);border:1px solid var(--border-color);border-radius:8px;padding:20px;text-align:center;border-top:3px solid #ef4444;">
+        <div style="font-size:2em;font-weight:700;color:#ef4444;">4</div>
+        <div style="font-size:0.9em;color:var(--text-secondary);margin-top:4px;"><span class="es">Fallidos</span><span class="en">Failed</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====== FILTERS ====== -->
+  <section class="doc-section">
+    <h2><span class="es">Filtros</span><span class="en">Filters</span></h2>
+    <p>
+      <span class="es">Debajo de las tarjetas KPI encontrara dos selectores desplegables para filtrar la tabla de jobs:</span>
+      <span class="en">Below the KPI cards you will find two dropdown selectors to filter the jobs table:</span>
+    </p>
+    <div style="display:flex;gap:16px;flex-wrap:wrap;margin:16px 0;">
+      <div style="background:var(--bg-secondary);border:1px solid var(--border-color);border-radius:6px;padding:10px 16px;">
+        <strong><span class="es">Estado:</span><span class="en">Status:</span></strong>
+        <span style="color:var(--text-secondary);margin-left:8px;"><span class="es">Todos / Ejecutando / Programado / Finalizado / Fallido / Cancelado</span><span class="en">All / Running / Scheduled / Finished / Failed / Cancelled</span></span>
+      </div>
+      <div style="background:var(--bg-secondary);border:1px solid var(--border-color);border-radius:6px;padding:10px 16px;">
+        <strong><span class="es">Sistema:</span><span class="en">System:</span></strong>
+        <span style="color:var(--text-secondary);margin-left:8px;"><span class="es">Todos / PRD / QAS / DEV ...</span><span class="en">All / PRD / QAS / DEV ...</span></span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====== JOBS TABLE ====== -->
+  <section class="doc-section">
+    <h2><span class="es">Tabla de Jobs</span><span class="en">Jobs Table</span></h2>
+    <p>
+      <span class="es">La tabla principal muestra todos los background jobs con las siguientes columnas:</span>
+      <span class="en">The main table shows all background jobs with the following columns:</span>
+    </p>
+
+    <table class="doc-table">
+      <thead>
+        <tr>
+          <th><span class="es">Columna</span><span class="en">Column</span></th>
+          <th><span class="es">Que muestra</span><span class="en">What it shows</span></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Job Name</strong></td>
+          <td><span class="es">Nombre del job en formato monoespaciado, seguido de su ID numerico (ej. <code>SAP_COLLECTOR_FOR_PERFMONITOR</code> <span style="color:var(--text-tertiary);font-size:0.85em;">#12847503</span>).</span><span class="en">Job name in monospace format, followed by its numeric ID (e.g. <code>SAP_COLLECTOR_FOR_PERFMONITOR</code> <span style="color:var(--text-tertiary);font-size:0.85em;">#12847503</span>).</span></td>
+        </tr>
+        <tr>
+          <td><strong><span class="es">Sistema</span><span class="en">System</span></strong></td>
+          <td><span class="es">SID del sistema donde se ejecuta el job, mostrado como badge de color (ej. <span style="background:var(--accent-blue);color:#fff;padding:1px 6px;border-radius:3px;font-size:0.85em;">PRD</span>).</span><span class="en">SID of the system where the job runs, shown as a colored badge (e.g. <span style="background:var(--accent-blue);color:#fff;padding:1px 6px;border-radius:3px;font-size:0.85em;">PRD</span>).</span></td>
+        </tr>
+        <tr>
+          <td><strong><span class="es">Estado</span><span class="en">Status</span></strong></td>
+          <td>
+            <span class="es">Estado actual del job con icono y badge de color:
+              <br>&#8226; <span style="background:var(--accent-blue);color:#fff;padding:2px 8px;border-radius:4px;font-size:0.85em;">&#9654; Ejecutando</span> &mdash; El job esta actualmente en ejecucion.
+              <br>&#8226; <span style="background:#3b82f6;color:#fff;padding:2px 8px;border-radius:4px;font-size:0.85em;">&#128339; Programado</span> &mdash; El job esta programado para ejecutarse.
+              <br>&#8226; <span style="background:#22c55e;color:#fff;padding:2px 8px;border-radius:4px;font-size:0.85em;">&#10003; Finalizado</span> &mdash; El job termino exitosamente.
+              <br>&#8226; <span style="background:#ef4444;color:#fff;padding:2px 8px;border-radius:4px;font-size:0.85em;">&#10007; Fallido</span> &mdash; El job termino con error.
+              <br>&#8226; <span style="background:var(--text-tertiary);color:#fff;padding:2px 8px;border-radius:4px;font-size:0.85em;">&#9724; Cancelado</span> &mdash; El job fue cancelado manualmente.
+            </span>
+            <span class="en">Current job status with icon and colored badge:
+              <br>&#8226; <span style="background:var(--accent-blue);color:#fff;padding:2px 8px;border-radius:4px;font-size:0.85em;">&#9654; Running</span> &mdash; The job is currently executing.
+              <br>&#8226; <span style="background:#3b82f6;color:#fff;padding:2px 8px;border-radius:4px;font-size:0.85em;">&#128339; Scheduled</span> &mdash; The job is scheduled to execute.
+              <br>&#8226; <span style="background:#22c55e;color:#fff;padding:2px 8px;border-radius:4px;font-size:0.85em;">&#10003; Finished</span> &mdash; The job completed successfully.
+              <br>&#8226; <span style="background:#ef4444;color:#fff;padding:2px 8px;border-radius:4px;font-size:0.85em;">&#10007; Failed</span> &mdash; The job ended with an error.
+              <br>&#8226; <span style="background:var(--text-tertiary);color:#fff;padding:2px 8px;border-radius:4px;font-size:0.85em;">&#9724; Cancelled</span> &mdash; The job was manually cancelled.
+            </span>
+          </td>
+        </tr>
+        <tr>
+          <td><strong><span class="es">Clase</span><span class="en">Class</span></strong></td>
+          <td>
+            <span class="es">Clase de prioridad del job:
+              <br>&#8226; <strong>A</strong> &mdash; Alta prioridad (critico para el negocio).
+              <br>&#8226; <strong>B</strong> &mdash; Prioridad media (estandar).
+              <br>&#8226; <strong>C</strong> &mdash; Baja prioridad (puede esperar).
+            </span>
+            <span class="en">Job priority class:
+              <br>&#8226; <strong>A</strong> &mdash; High priority (business critical).
+              <br>&#8226; <strong>B</strong> &mdash; Medium priority (standard).
+              <br>&#8226; <strong>C</strong> &mdash; Low priority (can wait).
+            </span>
+          </td>
+        </tr>
+        <tr>
+          <td><strong><span class="es">Duracion</span><span class="en">Duration</span></strong></td>
+          <td><span class="es">Tiempo transcurrido de ejecucion (para jobs activos) o tiempo total de ejecucion (para jobs finalizados). Formato: <em>5m 23s</em>.</span><span class="en">Elapsed execution time (for active jobs) or total execution time (for finished jobs). Format: <em>5m 23s</em>.</span></td>
+        </tr>
+        <tr>
+          <td><strong><span class="es">Programado por</span><span class="en">Scheduled by</span></strong></td>
+          <td><span class="es">Usuario SAP que programo el job (ej. <em>DDIC</em>, <em>SAPSYS</em>, <em>BASIS01</em>).</span><span class="en">SAP user who scheduled the job (e.g. <em>DDIC</em>, <em>SAPSYS</em>, <em>BASIS01</em>).</span></td>
+        </tr>
+        <tr>
+          <td><strong>Client</strong></td>
+          <td><span class="es">Mandante SAP en el que se ejecuta el job (ej. <em>100</em>, <em>200</em>, <em>800</em>).</span><span class="en">SAP client on which the job runs (e.g. <em>100</em>, <em>200</em>, <em>800</em>).</span></td>
+        </tr>
+        <tr>
+          <td><strong><span class="es">Pasos</span><span class="en">Steps</span></strong></td>
+          <td><span class="es">Progreso de los pasos del job en formato <em>actual / total</em> (ej. <strong>3 / 5</strong>). Para jobs finalizados, ambos numeros seran iguales.</span><span class="en">Job step progress in <em>current / total</em> format (e.g. <strong>3 / 5</strong>). For finished jobs, both numbers will be equal.</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- ====== EXAMPLE TABLE ====== -->
+  <section class="doc-section">
+    <h3><span class="es">Ejemplo de Tabla de Jobs</span><span class="en">Jobs Table Example</span></h3>
+    <div style="overflow-x:auto;">
+      <table class="doc-table" style="font-size:0.9em;">
+        <thead>
+          <tr>
+            <th>Job Name</th>
+            <th><span class="es">Sistema</span><span class="en">System</span></th>
+            <th><span class="es">Estado</span><span class="en">Status</span></th>
+            <th><span class="es">Clase</span><span class="en">Class</span></th>
+            <th><span class="es">Duracion</span><span class="en">Duration</span></th>
+            <th><span class="es">Programado por</span><span class="en">Scheduled by</span></th>
+            <th>Client</th>
+            <th><span class="es">Pasos</span><span class="en">Steps</span></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>SAP_COLLECTOR_FOR_PERFMONITOR</code><br><span style="color:var(--text-tertiary);font-size:0.8em;">#12847503</span></td>
+            <td><span style="background:var(--accent-blue);color:#fff;padding:1px 6px;border-radius:3px;font-size:0.85em;">PRD</span></td>
+            <td><span style="background:var(--accent-blue);color:#fff;padding:2px 8px;border-radius:4px;font-size:0.85em;">&#9654; <span class="es">Ejecutando</span><span class="en">Running</span></span></td>
+            <td>A</td>
+            <td>2m 15s</td>
+            <td>SAPSYS</td>
+            <td>100</td>
+            <td>2 / 4</td>
+          </tr>
+          <tr>
+            <td><code>RSBDCSUB</code><br><span style="color:var(--text-tertiary);font-size:0.8em;">#12847510</span></td>
+            <td><span style="background:var(--accent-blue);color:#fff;padding:1px 6px;border-radius:3px;font-size:0.85em;">PRD</span></td>
+            <td><span style="background:#3b82f6;color:#fff;padding:2px 8px;border-radius:4px;font-size:0.85em;">&#128339; <span class="es">Programado</span><span class="en">Scheduled</span></span></td>
+            <td>B</td>
+            <td>&mdash;</td>
+            <td>DDIC</td>
+            <td>100</td>
+            <td>0 / 2</td>
+          </tr>
+          <tr>
+            <td><code>RSBTCDEL2</code><br><span style="color:var(--text-tertiary);font-size:0.8em;">#12847488</span></td>
+            <td><span style="background:#f59e0b;color:#000;padding:1px 6px;border-radius:3px;font-size:0.85em;">QAS</span></td>
+            <td><span style="background:#22c55e;color:#fff;padding:2px 8px;border-radius:4px;font-size:0.85em;">&#10003; <span class="es">Finalizado</span><span class="en">Finished</span></span></td>
+            <td>C</td>
+            <td>8m 42s</td>
+            <td>BASIS01</td>
+            <td>200</td>
+            <td>3 / 3</td>
+          </tr>
+          <tr>
+            <td><code>SAPMSSY1</code><br><span style="color:var(--text-tertiary);font-size:0.8em;">#12847495</span></td>
+            <td><span style="background:var(--accent-blue);color:#fff;padding:1px 6px;border-radius:3px;font-size:0.85em;">PRD</span></td>
+            <td><span style="background:#ef4444;color:#fff;padding:2px 8px;border-radius:4px;font-size:0.85em;">&#10007; <span class="es">Fallido</span><span class="en">Failed</span></span></td>
+            <td>A</td>
+            <td>0m 12s</td>
+            <td>SAPSYS</td>
+            <td>100</td>
+            <td>1 / 3</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ====== FAILED JOBS DETAIL ====== -->
+  <section class="doc-section">
+    <h2><span class="es">Detalle de Jobs Fallidos</span><span class="en">Failed Jobs Detail</span></h2>
+    <p>
+      <span class="es">Cuando existen jobs con estado <strong>Fallido</strong>, se muestra una seccion adicional debajo de la tabla principal. Cada job fallido aparece en una tarjeta individual con fondo de alerta rojo, mostrando la siguiente informacion:</span>
+      <span class="en">When there are jobs with <strong>Failed</strong> status, an additional section is displayed below the main table. Each failed job appears in an individual card with a red alert background, showing the following information:</span>
+    </p>
+
+    <div style="background:rgba(239,68,68,0.1);border:1px solid #ef4444;border-radius:8px;padding:20px;margin:16px 0;">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;">
+        <span style="color:#ef4444;font-size:1.2em;">&#10007;</span>
+        <strong style="color:#ef4444;"><span class="es">Job Fallido</span><span class="en">Failed Job</span></strong>
+        <code style="margin-left:auto;">SAPMSSY1</code> <span style="color:var(--text-tertiary);font-size:0.85em;">#12847495</span>
+      </div>
+      <table class="doc-table" style="font-size:0.9em;margin:0;">
+        <tbody>
+          <tr>
+            <td style="width:140px;"><strong><span class="es">Mensaje de Error</span><span class="en">Error Message</span></strong></td>
+            <td><code style="color:#ef4444;">ABAP runtime error: DBIF_RSQL_SQL_ERROR — SQL error 1653 in database connection</code></td>
+          </tr>
+          <tr>
+            <td><strong><span class="es">Inicio</span><span class="en">Start</span></strong></td>
+            <td>2026-03-11 14:02:33</td>
+          </tr>
+          <tr>
+            <td><strong><span class="es">Duracion</span><span class="en">Duration</span></strong></td>
+            <td>0m 12s</td>
+          </tr>
+          <tr>
+            <td><strong><span class="es">Paso fallido</span><span class="en">Failed step</span></strong></td>
+            <td><span class="es">Paso 1 de 3 &mdash; <code>RSBTCDEL2</code></span><span class="en">Step 1 of 3 &mdash; <code>RSBTCDEL2</code></span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div style="background:rgba(239,68,68,0.1);border:1px solid #ef4444;border-radius:8px;padding:20px;margin:16px 0;">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;">
+        <span style="color:#ef4444;font-size:1.2em;">&#10007;</span>
+        <strong style="color:#ef4444;"><span class="es">Job Fallido</span><span class="en">Failed Job</span></strong>
+        <code style="margin-left:auto;">RDDIMPDP</code> <span style="color:var(--text-tertiary);font-size:0.85em;">#12847501</span>
+      </div>
+      <table class="doc-table" style="font-size:0.9em;margin:0;">
+        <tbody>
+          <tr>
+            <td style="width:140px;"><strong><span class="es">Mensaje de Error</span><span class="en">Error Message</span></strong></td>
+            <td><code style="color:#ef4444;">Transport import failed: RC=8 — Object locked by another user</code></td>
+          </tr>
+          <tr>
+            <td><strong><span class="es">Inicio</span><span class="en">Start</span></strong></td>
+            <td>2026-03-11 13:45:10</td>
+          </tr>
+          <tr>
+            <td><strong><span class="es">Duracion</span><span class="en">Duration</span></strong></td>
+            <td>1m 03s</td>
+          </tr>
+          <tr>
+            <td><strong><span class="es">Paso fallido</span><span class="en">Failed step</span></strong></td>
+            <td><span class="es">Paso 2 de 2 &mdash; <code>R3trans</code></span><span class="en">Step 2 of 2 &mdash; <code>R3trans</code></span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ====== TIPS ====== -->
+  <section class="doc-section">
+    <h2><span class="es">Consejos</span><span class="en">Tips</span></h2>
+    <ul>
+      <li><span class="es">Los jobs de <strong>Clase A</strong> tienen la maxima prioridad y deben monitorearse con especial atencion, ya que un fallo puede impactar procesos criticos de negocio.</span><span class="en"><strong>Class A</strong> jobs have the highest priority and should be monitored with special attention, as a failure can impact critical business processes.</span></li>
+      <li><span class="es">Use los filtros de <strong>Estado</strong> y <strong>Sistema</strong> para enfocarse en los jobs que requieren su atencion inmediata.</span><span class="en">Use the <strong>Status</strong> and <strong>System</strong> filters to focus on jobs that require your immediate attention.</span></li>
+      <li><span class="es">La seccion de <strong>Jobs Fallidos</strong> muestra el mensaje de error exacto &mdash; use esta informacion para diagnosticar el problema sin necesidad de acceder al sistema SAP directamente.</span><span class="en">The <strong>Failed Jobs</strong> section shows the exact error message &mdash; use this information to diagnose the problem without needing to access the SAP system directly.</span></li>
+      <li><span class="es">Compare la columna <strong>Pasos</strong> con el estado para identificar en que paso fallo un job &mdash; esto acelera la resolucion.</span><span class="en">Compare the <strong>Steps</strong> column with the status to identify at which step a job failed &mdash; this speeds up resolution.</span></li>
+    </ul>
+  </section>
+
+</main></div></body></html>

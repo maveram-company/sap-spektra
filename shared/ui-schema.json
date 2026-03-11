@@ -1,0 +1,290 @@
+{
+  "version": "1.4.0",
+  "product": "Avvale SAP AlwaysOps",
+
+  "wizard": {
+    "phases": [
+      {
+        "id": "setup",
+        "label": "Setup",
+        "description": "Prerequisitos, credenciales AWS y permisos",
+        "icon": "settings",
+        "steps": [
+          {
+            "id": 0,
+            "label": "Prerequisitos",
+            "description": "Verificar Node.js, Git y AWS CLI",
+            "api": "/api/prereqs/check",
+            "fields": [
+              { "id": "node", "label": "Node.js 20+", "type": "check", "required": true },
+              { "id": "git", "label": "Git", "type": "check", "required": true },
+              { "id": "awscli", "label": "AWS CLI v2", "type": "check", "required": true }
+            ]
+          },
+          {
+            "id": 1,
+            "label": "Credenciales AWS",
+            "description": "Configurar acceso a la cuenta AWS",
+            "fields": [
+              { "id": "authMethod", "label": "Metodo de autenticacion", "type": "select", "options": ["Access Keys", "SSO / IAM Identity Center", "Perfil existente"], "required": true },
+              { "id": "region", "label": "Region AWS", "type": "select", "required": true }
+            ]
+          },
+          {
+            "id": 2,
+            "label": "Permisos IAM",
+            "description": "Verificar permisos necesarios en la cuenta",
+            "api": "/api/aws/permissions/check",
+            "fields": [
+              { "id": "cloudformation", "label": "CloudFormation", "type": "check" },
+              { "id": "lambda", "label": "Lambda", "type": "check" },
+              { "id": "dynamodb", "label": "DynamoDB", "type": "check" },
+              { "id": "s3", "label": "S3", "type": "check" },
+              { "id": "iam", "label": "IAM", "type": "check" },
+              { "id": "ssm", "label": "Systems Manager", "type": "check" },
+              { "id": "secretsmanager", "label": "Secrets Manager", "type": "check" },
+              { "id": "kms", "label": "KMS", "type": "check" }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "validate",
+        "label": "Validate",
+        "description": "Seleccion de instancias, discovery, capabilities y dry-run",
+        "icon": "search",
+        "steps": [
+          {
+            "id": 3,
+            "label": "Seleccion, Scan y Discovery",
+            "description": "Seleccionar instancias EC2, escanear automaticamente y generar capabilities matrix",
+            "api": "/api/sap/ssm-instances",
+            "inlineScan": {
+              "enabled": true,
+              "triggerOn": "instanceSelect",
+              "concurrencyLimit": 5,
+              "apiStart": "/api/scan/start",
+              "apiStatus": "/api/scan/status",
+              "apiBatchStart": "/api/scan/batch",
+              "apiRetry": "/api/scan/retry",
+              "apiReset": "/api/scan/reset"
+            },
+            "fields": [
+              { "id": "instances", "label": "Instancias EC2", "type": "instance-selector-with-scan", "required": true }
+            ]
+          },
+          {
+            "id": 4,
+            "label": "Landscape y Capabilities",
+            "description": "Topologia SAP, capabilities matrix y dry-run de conectividad",
+            "fields": [
+              { "id": "discoveryResults", "label": "Resultados por instancia", "type": "discovery-table-live", "readonly": true },
+              { "id": "landscape", "label": "Topologia", "type": "landscape-view", "readonly": true, "format": "{SID} - {product} {haLabel} ({nodeCount} nodos)" },
+              { "id": "capabilities", "label": "Capabilities Matrix", "type": "capabilities-matrix", "readonly": true },
+              { "id": "dryRunConnectivity", "label": "Dry-run de conectividad", "type": "dry-run-results", "readonly": true, "api": "/api/dry-run/connectivity" }
+            ]
+          },
+          {
+            "id": 5,
+            "label": "Politicas y Policy Checks",
+            "description": "Definir politicas de respuesta y validar con policy engine",
+            "fields": [
+              { "id": "defaultPolicy", "label": "Politica por defecto", "type": "select", "options": ["alert-only", "approval-required", "auto-remediate"], "default": "approval-required" },
+              { "id": "prdPolicy", "label": "Politica PRD", "type": "select", "options": ["alert-only", "approval-required", "auto-remediate"], "default": "approval-required" },
+              { "id": "qaPolicy", "label": "Politica QAS", "type": "select", "options": ["alert-only", "approval-required", "auto-remediate"], "default": "auto-remediate" },
+              { "id": "devPolicy", "label": "Politica DEV", "type": "select", "options": ["alert-only", "approval-required", "auto-remediate"], "default": "auto-remediate" },
+              { "id": "policyValidation", "label": "Validacion de politicas", "type": "policy-check-results", "readonly": true, "api": "/api/policies/validate" }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "activate",
+        "label": "Activate",
+        "description": "Notificaciones, deploy y health checks",
+        "icon": "rocket",
+        "steps": [
+          {
+            "id": 6,
+            "label": "Canales de Notificacion",
+            "description": "Configurar destinos de alertas y contactos",
+            "fields": [
+              { "id": "adminEmail", "label": "Email administrador", "type": "email", "required": true, "placeholder": "admin@empresa.com" },
+              { "id": "slackWebhook", "label": "Slack Webhook URL", "type": "url", "required": false },
+              { "id": "teamsWebhook", "label": "Teams Webhook URL", "type": "url", "required": false },
+              { "id": "serviceNowUrl", "label": "ServiceNow URL", "type": "url", "required": false },
+              { "id": "movideskToken", "label": "Movidesk Token", "type": "text", "required": false }
+            ]
+          },
+          {
+            "id": 7,
+            "label": "Resumen y Deploy",
+            "description": "Revisar configuracion completa y desplegar",
+            "api": "/api/deploy/start",
+            "fields": [
+              { "id": "stackName", "label": "Nombre del stack", "type": "text", "default": "sap-alwaysops-v14", "required": true },
+              { "id": "summary", "label": "Resumen de configuracion", "type": "summary", "readonly": true }
+            ]
+          },
+          {
+            "id": 8,
+            "label": "Verificacion",
+            "description": "Health checks post-deploy y evidence pack",
+            "api": "/api/deploy/health",
+            "fields": [
+              { "id": "healthChecks", "label": "Resultados", "type": "health-results", "readonly": true },
+              { "id": "evidencePack", "label": "Evidence Pack de despliegue", "type": "evidence-pack-summary", "readonly": true }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+
+  "dashboard": {
+    "pages": [
+      {
+        "id": "overview",
+        "label": "Dashboard",
+        "icon": "chart-bar",
+        "widgets": [
+          { "id": "systemStatus", "type": "status-grid", "label": "Estado de Sistemas" },
+          { "id": "activeAlerts", "type": "alert-list", "label": "Alertas Activas" },
+          { "id": "recentExecutions", "type": "execution-list", "label": "Ejecuciones Recientes" },
+          { "id": "metricsChart", "type": "time-series", "label": "Metricas en Tiempo Real" }
+        ]
+      },
+      {
+        "id": "systems",
+        "label": "Sistemas SAP",
+        "icon": "server",
+        "widgets": [
+          { "id": "systemsList", "type": "system-table", "label": "Lista de Sistemas" },
+          { "id": "systemDetail", "type": "system-detail", "label": "Detalle del Sistema" }
+        ]
+      },
+      {
+        "id": "landscape",
+        "label": "Landscape",
+        "icon": "network",
+        "widgets": [
+          { "id": "landscapeTopology", "type": "landscape-map", "label": "Topologia SAP" },
+          { "id": "instancesTable", "type": "discovery-table", "label": "Instancias Descubiertas" }
+        ]
+      },
+      {
+        "id": "approvals",
+        "label": "Aprobaciones",
+        "icon": "check-circle",
+        "widgets": [
+          { "id": "pendingApprovals", "type": "approval-list", "label": "Aprobaciones Pendientes" }
+        ]
+      },
+      {
+        "id": "operations",
+        "label": "Operaciones",
+        "icon": "calendar",
+        "widgets": [
+          { "id": "scheduledOps", "type": "operations-list", "label": "Operaciones Programadas" }
+        ]
+      },
+      {
+        "id": "ai-insights",
+        "label": "Insights IA",
+        "icon": "brain",
+        "widgets": [
+          { "id": "aiAdvisor", "type": "advisor-panel", "label": "Recomendaciones IA" },
+          { "id": "tokenUsage", "type": "token-chart", "label": "Uso de Tokens" }
+        ]
+      },
+      {
+        "id": "chatbot",
+        "label": "Chatbot",
+        "icon": "message-circle",
+        "widgets": [
+          { "id": "chatInterface", "type": "chat-panel", "label": "Asistente Virtual" }
+        ]
+      }
+    ]
+  },
+
+  "discovery": {
+    "instanceTable": {
+      "columns": [
+        { "key": "instanceId", "label": "Instance ID", "width": "140px" },
+        { "key": "hostname", "label": "Hostname", "width": "150px" },
+        { "key": "scanStatus", "label": "Scan", "width": "100px", "type": "scan-badge" },
+        { "key": "sids", "label": "SID", "width": "60px" },
+        { "key": "role", "label": "Rol SAP", "width": "120px" },
+        { "key": "product", "label": "Producto", "width": "140px" },
+        { "key": "kernelVersion", "label": "Kernel", "width": "80px", "format": "{release}.{patchNumber}" },
+        { "key": "haStatus", "label": "HA", "width": "80px" },
+        { "key": "confidence", "label": "Confianza", "width": "80px" }
+      ]
+    },
+    "landscapeGrouping": {
+      "format": "{SID} - {product} {haLabel} ({nodeCount} nodos)",
+      "haLabels": {
+        "primary": "Primary",
+        "secondary": "Secondary",
+        "standalone": "Standalone",
+        "unknown": ""
+      }
+    },
+    "inlineScan": {
+      "concurrencyLimit": 5,
+      "phases": [
+        { "id": "os", "label": "Sistema Operativo", "percent": 10 },
+        { "id": "sap", "label": "Productos SAP", "percent": 40 },
+        { "id": "kernel", "label": "Kernel SAP", "percent": 60 },
+        { "id": "ha", "label": "Alta Disponibilidad", "percent": 80 },
+        { "id": "classify", "label": "Clasificacion", "percent": 100 }
+      ],
+      "statuses": [
+        { "id": "queued", "label": "En cola", "color": "#6B7280", "icon": "clock" },
+        { "id": "running", "label": "Escaneando", "color": "#3B82F6", "icon": "loader", "animate": true },
+        { "id": "success", "label": "Completado", "color": "#10B981", "icon": "check-circle" },
+        { "id": "fail", "label": "Error", "color": "#EF4444", "icon": "x-circle" }
+      ],
+      "errorMessages": {
+        "ssm_permission": "SSM Agent no encontrado o sin permisos. Verificar que el agente este instalado y la instancia tenga rol IAM con AmazonSSMManagedInstanceCore.",
+        "ssm_timeout": "El escaneo excedio el tiempo limite. Reintentar o verificar conectividad de la instancia.",
+        "no_host_agent": "SAP Host Agent no detectado. Se usaron metodos alternativos — confianza: media.",
+        "instance_offline": "La instancia no esta disponible. Verificar que este en estado 'running'.",
+        "generic": "Error inesperado durante el escaneo. Reintentar o contactar soporte."
+      },
+      "actions": {
+        "rescan": { "label": "Re-escanear", "icon": "refresh-cw" },
+        "scanAll": { "label": "Escanear Todos", "icon": "play-circle" },
+        "retryFailed": { "label": "Reintentar Fallidos", "icon": "rotate-cw" }
+      }
+    }
+  },
+
+  "policies": [
+    { "id": "alert-only", "label": "Solo Alertas", "description": "Notificar sin tomar accion automatica", "color": "#3B82F6" },
+    { "id": "approval-required", "label": "Requiere Aprobacion", "description": "Solicitar aprobacion antes de remediar", "color": "#F59E0B" },
+    { "id": "auto-remediate", "label": "Auto-Remediacion", "description": "Ejecutar runbooks automaticamente (costSafe)", "color": "#10B981" }
+  ],
+
+  "statuses": {
+    "system": [
+      { "id": "HEALTHY", "label": "Saludable", "color": "#10B981", "icon": "check-circle" },
+      { "id": "WARNING", "label": "Advertencia", "color": "#F59E0B", "icon": "alert-triangle" },
+      { "id": "CRITICAL", "label": "Critico", "color": "#EF4444", "icon": "alert-circle" },
+      { "id": "UNKNOWN", "label": "Desconocido", "color": "#6B7280", "icon": "help-circle" }
+    ],
+    "approval": [
+      { "id": "PENDING", "label": "Pendiente", "color": "#F59E0B" },
+      { "id": "APPROVED", "label": "Aprobado", "color": "#10B981" },
+      { "id": "REJECTED", "label": "Rechazado", "color": "#EF4444" },
+      { "id": "EXPIRED", "label": "Expirado", "color": "#6B7280" }
+    ]
+  },
+
+  "roles": {
+    "admin": { "label": "Administrador", "permissions": ["read", "write", "approve", "auto-remediate", "admin"] },
+    "operator": { "label": "Operador", "permissions": ["read", "write", "approve"] },
+    "viewer": { "label": "Visor", "permissions": ["read"] }
+  }
+}

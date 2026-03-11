@@ -1,0 +1,12 @@
+{
+  "name": "sap-alwaysops-preventive-engine",
+  "version": "1.0.0",
+  "description": "Avvale SAP AlwaysOps - Motor preventivo que predice breaches usando análisis de tendencias",
+  "main": "index.js",
+  "dependencies": {
+    "@aws-sdk/client-cloudwatch": "^3.450.0",
+    "@aws-sdk/client-ssm": "^3.450.0",
+    "@aws-sdk/client-sfn": "^3.450.0",
+    "@aws-sdk/client-sns": "^3.450.0"
+  }
+}

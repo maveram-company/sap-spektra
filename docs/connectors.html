@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="dark" data-lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Conectores — SAP Spektra Docs</title>
+<link rel="stylesheet" href="theme.css">
+<script src="theme-toggle.js"></script>
+<script src="lang-toggle.js"></script>
+<style>
+/* ── Connectors page specific styles ── */
+.page-top-bar{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:24px}
+.page-top-bar h1{margin:0}
+.btn-primary{
+  display:inline-flex;align-items:center;gap:6px;padding:8px 18px;border-radius:8px;
+  background:var(--gradient-brand);color:#fff;font-size:13px;font-weight:600;
+  border:none;cursor:pointer;text-decoration:none;transition:opacity .2s;
+}
+.btn-primary:hover{opacity:.9;text-decoration:none}
+
+/* Disconnection alert */
+.alert-danger{
+  background:rgba(239,68,68,0.08);border:1px solid rgba(239,68,68,0.25);
+  border-radius:var(--radius);padding:16px 20px;margin-bottom:24px;
+  display:flex;align-items:flex-start;gap:12px;
+}
+.alert-danger-icon{font-size:22px;flex-shrink:0;color:var(--danger)}
+.alert-danger-title{font-size:14px;font-weight:700;color:var(--danger)}
+.alert-danger-text{font-size:13px;color:var(--txt2);margin-top:2px}
+
+/* Connection method badges */
+.method-badge{
+  display:inline-flex;align-items:center;gap:4px;padding:3px 10px;
+  border-radius:6px;font-size:11px;font-weight:600;
+}
+.method-badge.cloud-connector{background:var(--cyan-dim);color:var(--cyan)}
+.method-badge.sentinel-agent{background:var(--violet-dim);color:var(--violet)}
+.method-badge.rfc-bapi{background:rgba(34,197,94,0.12);color:var(--success)}
+.method-badge.api-gateway{background:rgba(245,158,11,0.12);color:var(--warning)}
+
+/* Latency coloring */
+.latency-good{color:var(--success);font-weight:600}
+.latency-warn{color:var(--warning);font-weight:600}
+.latency-bad{color:var(--danger);font-weight:600}
+
+/* Status indicator */
+.status-dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:6px}
+.status-dot.connected{background:var(--success)}
+.status-dot.degraded{background:var(--warning)}
+.status-dot.disconnected{background:var(--danger)}
+
+/* Table enhancements */
+.conn-table td{vertical-align:middle}
+.sid-badge{
+  display:inline-block;padding:2px 8px;border-radius:6px;
+  font-size:12px;font-weight:700;font-family:'SF Mono',Monaco,Consolas,monospace;
+  background:var(--cyan-dim);color:var(--cyan);
+}
+</style>
+</head>
+<body>
+<div class="docs-wrapper">
+
+<!-- ══════════════════════════════════════════════════════════════════ -->
+<!--  SIDEBAR                                                         -->
+<!-- ══════════════════════════════════════════════════════════════════ -->
+<nav class="docs-sidebar">
+  <div class="sidebar-brand">
+    <div class="logo">&#9889;</div>
+    <div class="brand-text"><div class="brand-name">SAP Spektra</div><div class="brand-sub">Documentacion</div></div>
+  </div>
+  <div class="sidebar-section"><div class="sidebar-section-label">Inicio</div>
+    <a href="index.html" class="sidebar-link">Portal</a>
+    <a href="getting-started.html" class="sidebar-link">Primeros Pasos</a>
+  </div>
+  <div class="sidebar-section"><div class="sidebar-section-label">Command</div>
+    <a href="dashboard.html" class="sidebar-link">Dashboard</a>
+    <a href="landscape.html" class="sidebar-link">Landscape</a>
+    <a href="alerts.html" class="sidebar-link">Alertas</a>
+  </div>
+  <div class="sidebar-section"><div class="sidebar-section-label">Monitor</div>
+    <a href="systems.html" class="sidebar-link">Sistemas</a>
+    <a href="connectors.html" class="sidebar-link active">Conectores</a>
+    <a href="events.html" class="sidebar-link">Eventos</a>
+  </div>
+  <div class="sidebar-section"><div class="sidebar-section-label">Intelligence</div>
+    <a href="ai-analysis.html" class="sidebar-link">Analisis IA</a>
+    <a href="analytics.html" class="sidebar-link">Analytics</a>
+    <a href="reports.html" class="sidebar-link">Reportes</a>
+    <a href="comparison.html" class="sidebar-link">Comparacion</a>
+  </div>
+  <div class="sidebar-section"><div class="sidebar-section-label">Operations</div>
+    <a href="runbooks.html" class="sidebar-link">Runbooks</a>
+    <a href="approvals.html" class="sidebar-link">Aprobaciones</a>
+    <a href="operations.html" class="sidebar-link">Operaciones</a>
+    <a href="jobs.html" class="sidebar-link">Jobs (SM37)</a>
+    <a href="transports.html" class="sidebar-link">Transportes</a>
+    <a href="sla.html" class="sidebar-link">SLA</a>
+    <a href="ha-control.html" class="sidebar-link">HA Control</a>
+    <a href="certificates.html" class="sidebar-link">Certificados</a>
+  </div>
+  <div class="sidebar-section"><div class="sidebar-section-label">Admin</div>
+    <a href="admin.html" class="sidebar-link">Gestion</a>
+    <a href="settings.html" class="sidebar-link">Configuracion</a>
+    <a href="connect-system.html" class="sidebar-link">Conectar Sistema</a>
+  </div>
+</nav>
+
+<!-- ══════════════════════════════════════════════════════════════════ -->
+<!--  MAIN CONTENT                                                     -->
+<!-- ══════════════════════════════════════════════════════════════════ -->
+<main class="docs-main">
+
+  <div class="breadcrumb">
+    <a href="index.html">Docs</a><span class="sep">/</span>
+    <span class="es">Monitor</span><span class="en">Monitor</span><span class="sep">/</span>
+    <span class="es">Conectores</span><span class="en">Connectors</span>
+  </div>
+
+  <div class="page-header">
+    <h1><span class="es">Conectores</span><span class="en">Connectors</span></h1>
+    <p class="subtitle">
+      <span class="es">Gestione y supervise las conexiones entre sus sistemas SAP y la plataforma Spektra.</span>
+      <span class="en">Manage and monitor the connections between your SAP systems and the Spektra platform.</span>
+    </p>
+  </div>
+
+  <!-- ─── HEADER BAR ─── -->
+  <h2><span class="es">Encabezado de la pagina</span><span class="en">Page header</span></h2>
+
+  <div class="page-top-bar">
+    <div>
+      <h1 style="font-size:22px"><span class="es">Conectores</span><span class="en">Connectors</span></h1>
+      <p class="subtitle" style="margin-top:2px">
+        <span class="es">Conexiones de tus sistemas SAP con Spektra</span>
+        <span class="en">Connections from your SAP systems to Spektra</span>
+      </p>
+    </div>
+    <a href="connect-system.html" class="btn-primary">
+      + <span class="es">Conectar Sistema</span><span class="en">Connect System</span>
+    </a>
+  </div>
+
+  <p>
+    <span class="es">Al abrir la pagina <strong>Conectores</strong> (<em>Monitor &gt; Conectores</em>), lo primero que ve es el titulo junto con la descripcion <em>"Conexiones de tus sistemas SAP con Spektra"</em>. El boton <strong>"Conectar Sistema"</strong> en la esquina superior derecha lo lleva al asistente para vincular un nuevo sistema.</span>
+    <span class="en">When you open the <strong>Connectors</strong> page (<em>Monitor &gt; Connectors</em>), the first thing you see is the title alongside the description <em>"Connections from your SAP systems to Spektra."</em> The <strong>"Connect System"</strong> button in the upper-right corner takes you to the wizard for linking a new system.</span>
+  </p>
+
+  <!-- ─── KPI SUMMARY CARDS ─── -->
+  <h2><span class="es">Tarjetas de resumen (KPIs)</span><span class="en">Summary cards (KPIs)</span></h2>
+
+  <p>
+    <span class="es">Debajo del encabezado se muestran <strong>cuatro tarjetas de resumen</strong> en una fila horizontal. Cada una presenta un icono, un valor numerico grande y una etiqueta descriptiva:</span>
+    <span class="en">Below the header, <strong>four summary cards</strong> appear in a horizontal row. Each one shows an icon, a large numeric value, and a descriptive label:</span>
+  </p>
+
+  <div class="kpi-grid" style="grid-template-columns:repeat(4,1fr)">
+    <div class="kpi-card">
+      <div class="card-icon cyan">&#128268;</div>
+      <div><div class="kpi-value">12</div><div class="kpi-label"><span class="es">Total Conexiones</span><span class="en">Total Connections</span></div></div>
+    </div>
+    <div class="kpi-card">
+      <div class="card-icon success">&#10004;</div>
+      <div><div class="kpi-value text-success">9</div><div class="kpi-label"><span class="es">Conectados</span><span class="en">Connected</span></div></div>
+    </div>
+    <div class="kpi-card">
+      <div class="card-icon warning">&#9888;</div>
+      <div><div class="kpi-value text-warning">2</div><div class="kpi-label"><span class="es">Degradados</span><span class="en">Degraded</span></div></div>
+    </div>
+    <div class="kpi-card">
+      <div class="card-icon danger">&#10006;</div>
+      <div><div class="kpi-value text-danger">1</div><div class="kpi-label"><span class="es">Desconectados</span><span class="en">Disconnected</span></div></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h4><span class="es">Descripcion de cada KPI</span><span class="en">KPI descriptions</span></h4>
+    <table>
+      <thead>
+        <tr>
+          <th>KPI</th>
+          <th><span class="es">Icono</span><span class="en">Icon</span></th>
+          <th><span class="es">Significado</span><span class="en">Meaning</span></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong><span class="es">Total Conexiones</span><span class="en">Total Connections</span></strong></td>
+          <td><span class="es">Enchufe (cian)</span><span class="en">Plug (cyan)</span></td>
+          <td>
+            <span class="es">Cantidad total de conexiones configuradas entre sistemas SAP y Spektra, independientemente de su estado.</span>
+            <span class="en">Total number of configured connections between SAP systems and Spektra, regardless of their status.</span>
+          </td>
+        </tr>
+        <tr>
+          <td><strong><span class="es">Conectados</span><span class="en">Connected</span></strong></td>
+          <td><span class="es">Checkmark (verde)</span><span class="en">Checkmark (green)</span></td>
+          <td>
+            <span class="es">Conexiones que estan funcionando correctamente, respondiendo a heartbeats dentro del umbral esperado.</span>
+            <span class="en">Connections that are working correctly, responding to heartbeats within the expected threshold.</span>
+          </td>
+        </tr>
+        <tr>
+          <td><strong><span class="es">Degradados</span><span class="en">Degraded</span></strong></td>
+          <td><span class="es">Triangulo de alerta (amarillo)</span><span class="en">Alert triangle (yellow)</span></td>
+          <td>
+            <span class="es">Conexiones con latencia elevada o heartbeats intermitentes. El sistema responde pero su rendimiento esta por debajo de lo esperado.</span>
+            <span class="en">Connections with elevated latency or intermittent heartbeats. The system responds but its performance is below expectations.</span>
+          </td>
+        </tr>
+        <tr>
+          <td><strong><span class="es">Desconectados</span><span class="en">Disconnected</span></strong></td>
+          <td><span class="es">X (rojo)</span><span class="en">X (red)</span></td>
+          <td>
+            <span class="es">Conexiones sin respuesta. El agente o Cloud Connector no ha enviado un heartbeat en el tiempo limite configurado.</span>
+            <span class="en">Unresponsive connections. The agent or Cloud Connector has not sent a heartbeat within the configured time limit.</span>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ─── DISCONNECTION ALERT ─── -->
+  <h2><span class="es">Alerta de desconexion</span><span class="en">Disconnection alert</span></h2>
+
+  <p>
+    <span class="es">Cuando existe al menos una conexion en estado <strong>Desconectado</strong>, aparece automaticamente una tarjeta de alerta roja justo debajo de las tarjetas de resumen. Esta alerta le informa cuantas conexiones no responden y le orienta sobre que verificar:</span>
+    <span class="en">When at least one connection is in <strong>Disconnected</strong> status, a red alert card automatically appears just below the summary cards. This alert tells you how many connections are unresponsive and guides you on what to check:</span>
+  </p>
+
+  <div class="alert-danger">
+    <span class="alert-danger-icon">&#9888;&#65039;</span>
+    <div>
+      <div class="alert-danger-title">
+        <span class="es">1 conexion sin respuesta</span>
+        <span class="en">1 unresponsive connection</span>
+      </div>
+      <div class="alert-danger-text">
+        <span class="es">Verificar estado del agente o Cloud Connector. Revise la conectividad de red y que el servicio del agente Sentinel este activo en el servidor correspondiente.</span>
+        <span class="en">Check the agent or Cloud Connector status. Review network connectivity and ensure the Sentinel agent service is active on the corresponding server.</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="callout warning">
+    <span class="callout-icon">&#9888;&#65039;</span>
+    <div>
+      <span class="es">Si el numero de desconexiones es mayor a uno, el mensaje se actualiza. Por ejemplo: <em>"3 conexiones sin respuesta"</em>. La alerta desaparece automaticamente cuando todas las conexiones vuelven al estado Conectado o Degradado.</span>
+      <span class="en">If the disconnection count is greater than one, the message updates accordingly. For example: <em>"3 unresponsive connections."</em> The alert automatically disappears once all connections return to Connected or Degraded status.</span>
+    </div>
+  </div>
+
+  <!-- ─── CONNECTIONS TABLE ─── -->
+  <h2><span class="es">Tabla de conexiones SAP</span><span class="en">SAP connections table</span></h2>
+
+  <p>
+    <span class="es">La seccion principal de la pagina es una tabla titulada <strong>"Conexiones SAP"</strong> que lista todas las conexiones configuradas. La tabla esta ordenada por prioridad: primero aparecen las conexiones <strong>desconectadas</strong> (rojo), luego las <strong>degradadas</strong> (amarillo) y finalmente las <strong>conectadas</strong> (verde). Esto asegura que los problemas mas urgentes sean visibles al instante.</span>
+    <span class="en">The main section of the page is a table titled <strong>"SAP Connections"</strong> listing all configured connections. The table is sorted by priority: <strong>disconnected</strong> connections (red) appear first, then <strong>degraded</strong> (yellow), and finally <strong>connected</strong> (green). This ensures the most urgent issues are visible at a glance.</span>
+  </p>
+
+  <div class="card" style="padding:0;overflow:hidden">
+    <div style="padding:16px 20px;border-bottom:1px solid var(--brd);display:flex;align-items:center;justify-content:space-between">
+      <h3 style="margin:0;font-size:15px"><span class="es">Conexiones SAP</span><span class="en">SAP Connections</span></h3>
+      <span class="text-xs text-muted"><span class="es">12 conexiones</span><span class="en">12 connections</span></span>
+    </div>
+    <div class="table-wrap" style="border:none;border-radius:0;margin:0">
+      <table class="conn-table">
+        <thead>
+          <tr>
+            <th><span class="es">Estado</span><span class="en">Status</span></th>
+            <th>SID</th>
+            <th><span class="es">Sistema</span><span class="en">System</span></th>
+            <th><span class="es">Metodo de Conexion</span><span class="en">Connection Method</span></th>
+            <th><span class="es">Latencia</span><span class="en">Latency</span></th>
+            <th><span class="es">Ultimo Heartbeat</span><span class="en">Last Heartbeat</span></th>
+            <th><span class="es">Mensajes (24h)</span><span class="en">Messages (24h)</span></th>
+            <th><span class="es">Version</span><span class="en">Version</span></th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Disconnected first -->
+          <tr>
+            <td><span class="status-dot disconnected"></span><span class="text-danger font-semibold"><span class="es">Desconectado</span><span class="en">Disconnected</span></span></td>
+            <td><span class="sid-badge">D01</span></td>
+            <td>BW/4HANA DEV<br><span class="text-xs text-muted">ABAP &bull; DEV</span></td>
+            <td><span class="method-badge sentinel-agent">Sentinel Agent</span></td>
+            <td><span class="latency-bad">&mdash;</span></td>
+            <td class="text-danger"><span class="es">hace 4h 23m</span><span class="en">4h 23m ago</span></td>
+            <td>0</td>
+            <td>2.1.0</td>
+          </tr>
+          <!-- Degraded -->
+          <tr>
+            <td><span class="status-dot degraded"></span><span class="text-warning font-semibold"><span class="es">Degradado</span><span class="en">Degraded</span></span></td>
+            <td><span class="sid-badge">Q01</span></td>
+            <td>S/4HANA QAS<br><span class="text-xs text-muted">ABAP &bull; QAS</span></td>
+            <td><span class="method-badge cloud-connector">SAP Cloud Connector</span></td>
+            <td><span class="latency-warn">187 ms</span></td>
+            <td><span class="es">hace 2m</span><span class="en">2m ago</span></td>
+            <td>1,204</td>
+            <td>2.16.1</td>
+          </tr>
+          <tr>
+            <td><span class="status-dot degraded"></span><span class="text-warning font-semibold"><span class="es">Degradado</span><span class="en">Degraded</span></span></td>
+            <td><span class="sid-badge">Q02</span></td>
+            <td>SAP CRM QAS<br><span class="text-xs text-muted">ABAP &bull; QAS</span></td>
+            <td><span class="method-badge rfc-bapi">RFC/BAPI</span></td>
+            <td><span class="latency-warn">220 ms</span></td>
+            <td><span class="es">hace 5m</span><span class="en">5m ago</span></td>
+            <td>892</td>
+            <td>2.1.0</td>
+          </tr>
+          <!-- Connected -->
+          <tr>
+            <td><span class="status-dot connected"></span><span class="text-success font-semibold"><span class="es">Conectado</span><span class="en">Connected</span></span></td>
+            <td><span class="sid-badge">P01</span></td>
+            <td>SAP ERP PRD<br><span class="text-xs text-muted">ABAP &bull; PRD</span></td>
+            <td><span class="method-badge cloud-connector">SAP Cloud Connector</span></td>
+            <td><span class="latency-good">34 ms</span></td>
+            <td><span class="es">hace 30s</span><span class="en">30s ago</span></td>
+            <td>8,451</td>
+            <td>2.16.1</td>
+          </tr>
+          <tr>
+            <td><span class="status-dot connected"></span><span class="text-success font-semibold"><span class="es">Conectado</span><span class="en">Connected</span></span></td>
+            <td><span class="sid-badge">P02</span></td>
+            <td>S/4HANA PRD<br><span class="text-xs text-muted">ABAP &bull; PRD</span></td>
+            <td><span class="method-badge sentinel-agent">Sentinel Agent</span></td>
+            <td><span class="latency-good">22 ms</span></td>
+            <td><span class="es">hace 15s</span><span class="en">15s ago</span></td>
+            <td>12,306</td>
+            <td>2.1.0</td>
+          </tr>
+          <tr>
+            <td><span class="status-dot connected"></span><span class="text-success font-semibold"><span class="es">Conectado</span><span class="en">Connected</span></span></td>
+            <td><span class="sid-badge">P03</span></td>
+            <td>SAP BW PRD<br><span class="text-xs text-muted">ABAP &bull; PRD</span></td>
+            <td><span class="method-badge api-gateway">API Gateway</span></td>
+            <td><span class="latency-good">68 ms</span></td>
+            <td><span class="es">hace 1m</span><span class="en">1m ago</span></td>
+            <td>4,120</td>
+            <td>1.8.2</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <h3><span class="es">Columnas de la tabla</span><span class="en">Table columns</span></h3>
+
+  <div class="card">
+    <table>
+      <thead>
+        <tr>
+          <th><span class="es">Columna</span><span class="en">Column</span></th>
+          <th><span class="es">Descripcion</span><span class="en">Description</span></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong><span class="es">Estado</span><span class="en">Status</span></strong></td>
+          <td>
+            <span class="es">Un punto de color seguido del nombre del estado. <span class="status-dot connected" style="vertical-align:middle"></span>&nbsp;<strong class="text-success">Conectado</strong>: la conexion funciona correctamente. <span class="status-dot degraded" style="vertical-align:middle"></span>&nbsp;<strong class="text-warning">Degradado</strong>: responde pero con rendimiento reducido. <span class="status-dot disconnected" style="vertical-align:middle"></span>&nbsp;<strong class="text-danger">Desconectado</strong>: no hay respuesta.</span>
+            <span class="en">A colored dot followed by the status name. <span class="status-dot connected" style="vertical-align:middle"></span>&nbsp;<strong class="text-success">Connected</strong>: the connection is working correctly. <span class="status-dot degraded" style="vertical-align:middle"></span>&nbsp;<strong class="text-warning">Degraded</strong>: responds but with reduced performance. <span class="status-dot disconnected" style="vertical-align:middle"></span>&nbsp;<strong class="text-danger">Disconnected</strong>: no response.</span>
+          </td>
+        </tr>
+        <tr>
+          <td><strong>SID</strong></td>
+          <td>
+            <span class="es">Identificador de tres letras del sistema SAP, mostrado como un badge con fondo cian. Ejemplo: <span class="sid-badge">P01</span>.</span>
+            <span class="en">Three-letter SAP system identifier, shown as a badge with a cyan background. Example: <span class="sid-badge">P01</span>.</span>
+          </td>
+        </tr>
+        <tr>
+          <td><strong><span class="es">Sistema</span><span class="en">System</span></strong></td>
+          <td>
+            <span class="es">Nombre descriptivo del sistema (por ejemplo "SAP ERP PRD") con el tipo y ambiente debajo en texto pequeno (por ejemplo "ABAP &bull; PRD").</span>
+            <span class="en">Descriptive system name (e.g., "SAP ERP PRD") with the type and environment below in small text (e.g., "ABAP &bull; PRD").</span>
+          </td>
+        </tr>
+        <tr>
+          <td><strong><span class="es">Metodo de Conexion</span><span class="en">Connection Method</span></strong></td>
+          <td>
+            <span class="es">Badge que indica como se conecta el sistema a Spektra. Los metodos disponibles son:</span>
+            <span class="en">Badge indicating how the system connects to Spektra. Available methods are:</span>
+            <ul>
+              <li><span class="method-badge cloud-connector">SAP Cloud Connector</span> &mdash; <span class="es">Tunel seguro via SAP BTP</span><span class="en">Secure tunnel via SAP BTP</span></li>
+              <li><span class="method-badge sentinel-agent">Sentinel Agent</span> &mdash; <span class="es">Agente instalado en el servidor SAP</span><span class="en">Agent installed on the SAP server</span></li>
+              <li><span class="method-badge rfc-bapi">RFC/BAPI</span> &mdash; <span class="es">Conexion directa por protocolo RFC</span><span class="en">Direct connection via RFC protocol</span></li>
+              <li><span class="method-badge api-gateway">API Gateway</span> &mdash; <span class="es">Conexion a traves de una pasarela API</span><span class="en">Connection through an API gateway</span></li>
+            </ul>
+          </td>
+        </tr>
+        <tr>
+          <td><strong><span class="es">Latencia</span><span class="en">Latency</span></strong></td>
+          <td>
+            <span class="es">Tiempo de respuesta del ultimo heartbeat. El valor se colorea segun umbrales: <span class="latency-good">&lt;100 ms</span> (verde, optimo), <span class="latency-warn">100&ndash;250 ms</span> (amarillo, aceptable) y <span class="latency-bad">&gt;250 ms</span> (rojo, problematico). Si la conexion esta desconectada, se muestra un guion.</span>
+            <span class="en">Response time of the last heartbeat. The value is color-coded by threshold: <span class="latency-good">&lt;100 ms</span> (green, optimal), <span class="latency-warn">100&ndash;250 ms</span> (yellow, acceptable), and <span class="latency-bad">&gt;250 ms</span> (red, problematic). If the connection is disconnected, a dash is shown.</span>
+          </td>
+        </tr>
+        <tr>
+          <td><strong><span class="es">Ultimo Heartbeat</span><span class="en">Last Heartbeat</span></strong></td>
+          <td>
+            <span class="es">Tiempo transcurrido desde la ultima senal de vida recibida, en formato relativo (por ejemplo "hace 30s", "hace 2m", "hace 4h 23m"). Heartbeats antiguos se muestran en rojo.</span>
+            <span class="en">Time elapsed since the last received heartbeat, in relative format (e.g., "30s ago," "2m ago," "4h 23m ago"). Old heartbeats are shown in red.</span>
+          </td>
+        </tr>
+        <tr>
+          <td><strong><span class="es">Mensajes (24h)</span><span class="en">Messages (24h)</span></strong></td>
+          <td>
+            <span class="es">Numero total de mensajes (datos, metricas, eventos) intercambiados entre el sistema y Spektra en las ultimas 24 horas. Un valor de 0 en una conexion activa puede indicar un problema de configuracion.</span>
+            <span class="en">Total number of messages (data, metrics, events) exchanged between the system and Spektra in the last 24 hours. A value of 0 on an active connection may indicate a configuration issue.</span>
+          </td>
+        </tr>
+        <tr>
+          <td><strong><span class="es">Version</span><span class="en">Version</span></strong></td>
+          <td>
+            <span class="es">Version del agente o conector instalado. Mantenga todos los agentes actualizados a la ultima version estable para asegurar la compatibilidad y el acceso a las funcionalidades mas recientes.</span>
+            <span class="en">Version of the installed agent or connector. Keep all agents updated to the latest stable version to ensure compatibility and access to the newest features.</span>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ─── SORT ORDER ─── -->
+  <h3><span class="es">Orden de la tabla</span><span class="en">Table sort order</span></h3>
+  <p>
+    <span class="es">La tabla se ordena automaticamente por prioridad de estado para que los problemas mas criticos sean los primeros que usted ve:</span>
+    <span class="en">The table is automatically sorted by status priority so the most critical issues are the first you see:</span>
+  </p>
+  <div class="steps">
+    <div class="step">
+      <strong class="text-danger"><span class="es">Desconectados</span><span class="en">Disconnected</span></strong> &mdash;
+      <span class="es">Conexiones sin respuesta aparecen primero. Requieren atencion inmediata.</span>
+      <span class="en">Unresponsive connections appear first. They require immediate attention.</span>
+    </div>
+    <div class="step">
+      <strong class="text-warning"><span class="es">Degradados</span><span class="en">Degraded</span></strong> &mdash;
+      <span class="es">Conexiones con rendimiento reducido aparecen en segundo lugar. Deben ser investigadas.</span>
+      <span class="en">Connections with reduced performance appear second. They should be investigated.</span>
+    </div>
+    <div class="step">
+      <strong class="text-success"><span class="es">Conectados</span><span class="en">Connected</span></strong> &mdash;
+      <span class="es">Conexiones saludables aparecen al final. No requieren accion.</span>
+      <span class="en">Healthy connections appear last. No action required.</span>
+    </div>
+  </div>
+
+  <div class="callout info">
+    <span class="callout-icon">&#128161;</span>
+    <div>
+      <span class="es">Para conectar un nuevo sistema SAP a Spektra, use el boton <strong>"Conectar Sistema"</strong> o visite la seccion <a href="connect-system.html">Admin &gt; Conectar Sistema</a> donde encontrara el asistente paso a paso con instrucciones para cada metodo de conexion.</span>
+      <span class="en">To connect a new SAP system to Spektra, use the <strong>"Connect System"</strong> button or visit the <a href="connect-system.html">Admin &gt; Connect System</a> section where you will find the step-by-step wizard with instructions for each connection method.</span>
+    </div>
+  </div>
+
+  <!-- ─── Navigation ─── -->
+  <div style="display:flex;justify-content:space-between;margin-top:40px;padding-top:20px;border-top:1px solid var(--brd)">
+    <a href="systems.html" style="font-size:13px">&larr; <span class="es">Sistemas</span><span class="en">Systems</span></a>
+    <a href="events.html" style="font-size:13px"><span class="es">Eventos</span><span class="en">Events</span> &rarr;</a>
+  </div>
+
+</main>
+</div>
+</body>
+</html>

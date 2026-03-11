@@ -1,0 +1,278 @@
+<!DOCTYPE html><html lang="es" data-theme="dark" data-lang="es"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>SLA & Analytics — SAP Spektra Docs</title><link rel="stylesheet" href="theme.css"><script src="theme-toggle.js"></script><script src="lang-toggle.js"></script></head><body><div class="docs-wrapper">
+<nav class="docs-sidebar">
+  <div class="sidebar-brand"><div class="logo">&#9889;</div><div class="brand-text"><div class="brand-name">SAP Spektra</div><div class="brand-sub">Documentacion</div></div></div>
+  <div class="sidebar-section"><div class="sidebar-section-label">Inicio</div><a href="index.html" class="sidebar-link">Portal</a><a href="getting-started.html" class="sidebar-link">Primeros Pasos</a></div>
+  <div class="sidebar-section"><div class="sidebar-section-label">Command</div><a href="dashboard.html" class="sidebar-link">Dashboard</a><a href="landscape.html" class="sidebar-link">Landscape</a><a href="alerts.html" class="sidebar-link">Alertas</a></div>
+  <div class="sidebar-section"><div class="sidebar-section-label">Monitor</div><a href="systems.html" class="sidebar-link">Sistemas</a><a href="connectors.html" class="sidebar-link">Conectores</a><a href="events.html" class="sidebar-link">Eventos</a></div>
+  <div class="sidebar-section"><div class="sidebar-section-label">Intelligence</div><a href="ai-analysis.html" class="sidebar-link">Analisis IA</a><a href="analytics.html" class="sidebar-link">Analytics</a><a href="reports.html" class="sidebar-link">Reportes</a><a href="comparison.html" class="sidebar-link">Comparacion</a></div>
+  <div class="sidebar-section"><div class="sidebar-section-label">Operations</div><a href="runbooks.html" class="sidebar-link">Runbooks</a><a href="approvals.html" class="sidebar-link">Aprobaciones</a><a href="operations.html" class="sidebar-link">Operaciones</a><a href="jobs.html" class="sidebar-link">Jobs (SM37)</a><a href="transports.html" class="sidebar-link">Transportes</a><a href="sla.html" class="sidebar-link active">SLA</a><a href="ha-control.html" class="sidebar-link">HA Control</a><a href="certificates.html" class="sidebar-link">Certificados</a></div>
+  <div class="sidebar-section"><div class="sidebar-section-label">Admin</div><a href="admin.html" class="sidebar-link">Gestion</a><a href="settings.html" class="sidebar-link">Configuracion</a><a href="connect-system.html" class="sidebar-link">Conectar Sistema</a></div>
+</nav>
+<main class="docs-main">
+
+  <!-- ====== HEADER ====== -->
+  <section class="doc-section">
+    <h1><span class="es">SLA & Analytics</span><span class="en">SLA & Analytics</span></h1>
+    <p class="section-desc">
+      <span class="es">Metricas de servicio y rendimiento</span>
+      <span class="en">Service and performance metrics</span>
+    </p>
+    <p>
+      <span class="es">La pantalla de <strong>SLA & Analytics</strong> proporciona una vision consolidada de las metricas de nivel de servicio de todos sus sistemas SAP, junto con estadisticas de runbooks y alertas. Use esta vista para evaluar la salud general de su landscape y el cumplimiento de los acuerdos de nivel de servicio.</span>
+      <span class="en">The <strong>SLA & Analytics</strong> screen provides a consolidated view of service level metrics for all your SAP systems, along with runbook and alert statistics. Use this view to assess the overall health of your landscape and compliance with service level agreements.</span>
+    </p>
+  </section>
+
+  <!-- ====== SLA POR SISTEMA ====== -->
+  <section class="doc-section">
+    <h2><span class="es">SLA por Sistema</span><span class="en">SLA per System</span></h2>
+    <p>
+      <span class="es">En la parte superior de la pantalla vera una cuadricula de tarjetas, una por cada sistema SAP conectado. Cada tarjeta muestra:</span>
+      <span class="en">At the top of the screen you will see a card grid, one per connected SAP system. Each card shows:</span>
+    </p>
+
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px;margin:20px 0;">
+      <!-- Card PRD -->
+      <div style="background:var(--bg-secondary);border:1px solid var(--border-color);border-radius:8px;padding:20px;">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
+          <div>
+            <div style="font-weight:700;font-size:1.1em;"><span style="background:var(--accent-blue);color:#fff;padding:2px 8px;border-radius:4px;font-size:0.85em;margin-right:6px;">PRD</span> S4H Production</div>
+            <div style="font-size:0.85em;color:var(--text-tertiary);margin-top:4px;">Production</div>
+          </div>
+          <div style="width:56px;height:56px;border-radius:50%;border:4px solid #22c55e;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:1.1em;color:#22c55e;">96</div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;text-align:center;">
+          <div>
+            <div style="font-size:0.75em;color:var(--text-tertiary);">MTTR</div>
+            <div style="font-weight:600;">4.2 min</div>
+          </div>
+          <div>
+            <div style="font-size:0.75em;color:var(--text-tertiary);">MTBF</div>
+            <div style="font-weight:600;">2,880 min</div>
+          </div>
+          <div>
+            <div style="font-size:0.75em;color:var(--text-tertiary);"><span class="es">Disponibilidad</span><span class="en">Availability</span></div>
+            <div style="font-weight:600;color:#22c55e;">99.85%</div>
+          </div>
+        </div>
+      </div>
+      <!-- Card QAS -->
+      <div style="background:var(--bg-secondary);border:1px solid var(--border-color);border-radius:8px;padding:20px;">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
+          <div>
+            <div style="font-weight:700;font-size:1.1em;"><span style="background:#f59e0b;color:#000;padding:2px 8px;border-radius:4px;font-size:0.85em;margin-right:6px;">QAS</span> S4H Quality</div>
+            <div style="font-size:0.85em;color:var(--text-tertiary);">Quality</div>
+          </div>
+          <div style="width:56px;height:56px;border-radius:50%;border:4px solid #f59e0b;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:1.1em;color:#f59e0b;">78</div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;text-align:center;">
+          <div>
+            <div style="font-size:0.75em;color:var(--text-tertiary);">MTTR</div>
+            <div style="font-weight:600;">12.5 min</div>
+          </div>
+          <div>
+            <div style="font-size:0.75em;color:var(--text-tertiary);">MTBF</div>
+            <div style="font-weight:600;">960 min</div>
+          </div>
+          <div>
+            <div style="font-size:0.75em;color:var(--text-tertiary);"><span class="es">Disponibilidad</span><span class="en">Availability</span></div>
+            <div style="font-weight:600;color:#f59e0b;">98.71%</div>
+          </div>
+        </div>
+      </div>
+      <!-- Card DEV -->
+      <div style="background:var(--bg-secondary);border:1px solid var(--border-color);border-radius:8px;padding:20px;">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
+          <div>
+            <div style="font-weight:700;font-size:1.1em;"><span style="background:#22c55e;color:#fff;padding:2px 8px;border-radius:4px;font-size:0.85em;margin-right:6px;">DEV</span> S4H Development</div>
+            <div style="font-size:0.85em;color:var(--text-tertiary);">Development</div>
+          </div>
+          <div style="width:56px;height:56px;border-radius:50%;border:4px solid #22c55e;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:1.1em;color:#22c55e;">92</div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;text-align:center;">
+          <div>
+            <div style="font-size:0.75em;color:var(--text-tertiary);">MTTR</div>
+            <div style="font-weight:600;">6.8 min</div>
+          </div>
+          <div>
+            <div style="font-size:0.75em;color:var(--text-tertiary);">MTBF</div>
+            <div style="font-weight:600;">1,440 min</div>
+          </div>
+          <div>
+            <div style="font-size:0.75em;color:var(--text-tertiary);"><span class="es">Disponibilidad</span><span class="en">Availability</span></div>
+            <div style="font-weight:600;color:#22c55e;">99.53%</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <table class="doc-table">
+      <thead>
+        <tr>
+          <th><span class="es">Elemento</span><span class="en">Element</span></th>
+          <th><span class="es">Que muestra</span><span class="en">What it shows</span></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>SID</strong></td>
+          <td><span class="es">Identificador del sistema en badge de color, seguido del nombre descriptivo del sistema.</span><span class="en">System identifier in a colored badge, followed by the system descriptive name.</span></td>
+        </tr>
+        <tr>
+          <td><strong><span class="es">Entorno</span><span class="en">Environment</span></strong></td>
+          <td><span class="es">Tipo de entorno: Production, Quality, Development.</span><span class="en">Environment type: Production, Quality, Development.</span></td>
+        </tr>
+        <tr>
+          <td><strong><span class="es">Circulo de Salud</span><span class="en">Health Circle</span></strong></td>
+          <td>
+            <span class="es">Puntuacion numerica (0-100) dentro de un circulo coloreado segun el rango:
+              <br>&#8226; <span style="color:#22c55e;">Verde (80-100)</span> &mdash; Excelente salud del sistema.
+              <br>&#8226; <span style="color:#f59e0b;">Amarillo (60-79)</span> &mdash; Atencion requerida.
+              <br>&#8226; <span style="color:#ef4444;">Rojo (0-59)</span> &mdash; Estado critico.
+            </span>
+            <span class="en">Numeric score (0-100) inside a circle colored by range:
+              <br>&#8226; <span style="color:#22c55e;">Green (80-100)</span> &mdash; Excellent system health.
+              <br>&#8226; <span style="color:#f59e0b;">Yellow (60-79)</span> &mdash; Attention required.
+              <br>&#8226; <span style="color:#ef4444;">Red (0-59)</span> &mdash; Critical state.
+            </span>
+          </td>
+        </tr>
+        <tr>
+          <td><strong>MTTR</strong></td>
+          <td><span class="es"><em>Mean Time To Repair</em> &mdash; Tiempo promedio de reparacion en minutos. Cuanto mas bajo, mejor la capacidad de respuesta ante incidentes.</span><span class="en"><em>Mean Time To Repair</em> &mdash; Average repair time in minutes. The lower, the better the incident response capability.</span></td>
+        </tr>
+        <tr>
+          <td><strong>MTBF</strong></td>
+          <td><span class="es"><em>Mean Time Between Failures</em> &mdash; Tiempo promedio entre fallos en minutos. Cuanto mas alto, mas estable es el sistema.</span><span class="en"><em>Mean Time Between Failures</em> &mdash; Average time between failures in minutes. The higher, the more stable the system.</span></td>
+        </tr>
+        <tr>
+          <td><strong><span class="es">Disponibilidad</span><span class="en">Availability</span></strong></td>
+          <td><span class="es">Porcentaje de tiempo que el sistema ha estado operativo en el periodo medido. El color sigue la misma logica que el circulo de salud.</span><span class="en">Percentage of time the system has been operational in the measured period. Color follows the same logic as the health circle.</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- ====== ANALYTICS TABLES ====== -->
+  <section class="doc-section">
+    <h2><span class="es">Tablas de Analytics</span><span class="en">Analytics Tables</span></h2>
+    <p>
+      <span class="es">Debajo de las tarjetas de SLA por sistema, se muestran dos tablas lado a lado con estadisticas operativas:</span>
+      <span class="en">Below the SLA per system cards, two side-by-side tables are displayed with operational statistics:</span>
+    </p>
+
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:20px;margin:20px 0;">
+      <!-- Runbook Analytics -->
+      <div style="background:var(--bg-secondary);border:1px solid var(--border-color);border-radius:8px;padding:20px;">
+        <h3 style="margin-top:0;"><span class="es">Runbook Analytics</span><span class="en">Runbook Analytics</span></h3>
+        <table class="doc-table" style="font-size:0.9em;">
+          <tbody>
+            <tr>
+              <td><span class="es">Runbooks hoy</span><span class="en">Runbooks today</span></td>
+              <td style="text-align:right;font-weight:700;">12</td>
+            </tr>
+            <tr>
+              <td><span class="es">Tasa de exito</span><span class="en">Success rate</span></td>
+              <td style="text-align:right;font-weight:700;color:#22c55e;">94.5%</td>
+            </tr>
+            <tr>
+              <td><span class="es">Duracion promedio</span><span class="en">Average duration</span></td>
+              <td style="text-align:right;font-weight:700;">3m 24s</td>
+            </tr>
+            <tr>
+              <td><span class="es">Mas ejecutado</span><span class="en">Most executed</span></td>
+              <td style="text-align:right;font-weight:700;"><code style="color:var(--accent-cyan);">RB-001</code></td>
+            </tr>
+            <tr>
+              <td><span class="es">Pendientes aprobacion</span><span class="en">Pending approval</span></td>
+              <td style="text-align:right;font-weight:700;color:#f59e0b;">3</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Alert Statistics -->
+      <div style="background:var(--bg-secondary);border:1px solid var(--border-color);border-radius:8px;padding:20px;">
+        <h3 style="margin-top:0;"><span class="es">Estadisticas Alertas (7 dias)</span><span class="en">Alert Statistics (7 days)</span></h3>
+        <table class="doc-table" style="font-size:0.9em;">
+          <tbody>
+            <tr>
+              <td>Total</td>
+              <td style="text-align:right;font-weight:700;">87</td>
+            </tr>
+            <tr>
+              <td><span class="es">Criticas</span><span class="en">Critical</span></td>
+              <td style="text-align:right;font-weight:700;color:#ef4444;">5</td>
+            </tr>
+            <tr>
+              <td>Warnings</td>
+              <td style="text-align:right;font-weight:700;color:#f59e0b;">23</td>
+            </tr>
+            <tr>
+              <td><span class="es">Auto-resueltas</span><span class="en">Auto-resolved</span></td>
+              <td style="text-align:right;font-weight:700;color:#22c55e;">64</td>
+            </tr>
+            <tr>
+              <td><span class="es">Resolucion promedio</span><span class="en">Average resolution</span></td>
+              <td style="text-align:right;font-weight:700;">8m 12s</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====== METRIC DESCRIPTIONS ====== -->
+  <section class="doc-section">
+    <h2><span class="es">Descripcion de Metricas</span><span class="en">Metric Descriptions</span></h2>
+    <table class="doc-table">
+      <thead>
+        <tr>
+          <th><span class="es">Metrica</span><span class="en">Metric</span></th>
+          <th><span class="es">Que mide</span><span class="en">What it measures</span></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong><span class="es">Runbooks hoy</span><span class="en">Runbooks today</span></strong></td>
+          <td><span class="es">Cantidad total de runbooks ejecutados en el dia actual.</span><span class="en">Total number of runbooks executed on the current day.</span></td>
+        </tr>
+        <tr>
+          <td><strong><span class="es">Tasa de exito</span><span class="en">Success rate</span></strong></td>
+          <td><span class="es">Porcentaje de runbooks que terminaron con estado SUCCESS respecto al total ejecutado.</span><span class="en">Percentage of runbooks that ended with SUCCESS status out of total executed.</span></td>
+        </tr>
+        <tr>
+          <td><strong><span class="es">Duracion promedio</span><span class="en">Average duration</span></strong></td>
+          <td><span class="es">Tiempo promedio de ejecucion de todos los runbooks ejecutados hoy.</span><span class="en">Average execution time of all runbooks executed today.</span></td>
+        </tr>
+        <tr>
+          <td><strong><span class="es">Mas ejecutado</span><span class="en">Most executed</span></strong></td>
+          <td><span class="es">ID del runbook que se ha ejecutado con mayor frecuencia en el dia.</span><span class="en">ID of the runbook executed most frequently during the day.</span></td>
+        </tr>
+        <tr>
+          <td><strong><span class="es">Pendientes aprobacion</span><span class="en">Pending approval</span></strong></td>
+          <td><span class="es">Cantidad de solicitudes de aprobacion de runbooks esperando decision. Se vincula con la pantalla de <a href="approvals.html">Aprobaciones</a>.</span><span class="en">Number of runbook approval requests awaiting a decision. Links to the <a href="approvals.html">Approvals</a> screen.</span></td>
+        </tr>
+        <tr>
+          <td><strong><span class="es">Auto-resueltas</span><span class="en">Auto-resolved</span></strong></td>
+          <td><span class="es">Alertas que fueron resueltas automaticamente por un runbook sin intervencion humana.</span><span class="en">Alerts that were automatically resolved by a runbook without human intervention.</span></td>
+        </tr>
+        <tr>
+          <td><strong><span class="es">Resolucion promedio</span><span class="en">Average resolution</span></strong></td>
+          <td><span class="es">Tiempo promedio desde que se genera una alerta hasta que se resuelve (manual o automaticamente).</span><span class="en">Average time from alert generation to resolution (manual or automatic).</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- ====== TIPS ====== -->
+  <section class="doc-section">
+    <h2><span class="es">Consejos</span><span class="en">Tips</span></h2>
+    <ul>
+      <li><span class="es">Un MTTR alto en un sistema de produccion indica que los incidentes tardan demasiado en resolverse &mdash; considere agregar mas runbooks automaticos para mejorar este indicador.</span><span class="en">A high MTTR on a production system indicates incidents take too long to resolve &mdash; consider adding more automatic runbooks to improve this metric.</span></li>
+      <li><span class="es">Compare el MTBF entre sistemas similares para identificar cual necesita mayor atencion preventiva.</span><span class="en">Compare MTBF between similar systems to identify which needs more preventive attention.</span></li>
+      <li><span class="es">Un alto porcentaje de alertas <strong>auto-resueltas</strong> indica que los runbooks estan funcionando eficazmente como primera linea de respuesta.</span><span class="en">A high percentage of <strong>auto-resolved</strong> alerts indicates runbooks are working effectively as the first line of response.</span></li>
+    </ul>
+  </section>
+
+</main></div></body></html>

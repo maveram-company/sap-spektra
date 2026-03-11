@@ -1,0 +1,796 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="dark" data-lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <title>Gestion de Sistemas — SAP Spektra Docs</title>
+  <link rel="stylesheet" href="theme.css">
+  <script src="theme-toggle.js"></script>
+  <script src="lang-toggle.js"></script>
+  <style>
+    /* ── Admin page specific styles ── */
+    .admin-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 24px;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    .btn-connect {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 20px;
+      border-radius: 10px;
+      background: var(--gradient-brand);
+      color: #fff;
+      font-size: 13px;
+      font-weight: 600;
+      text-decoration: none;
+      border: none;
+      cursor: pointer;
+      transition: all 0.2s;
+      box-shadow: 0 0 16px rgba(6,182,212,0.25);
+    }
+    .btn-connect:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 0 24px rgba(6,182,212,0.35);
+      text-decoration: none;
+    }
+    .system-row {
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .system-row:hover {
+      background: var(--card-hover) !important;
+    }
+    .system-sid {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .system-sid-icon {
+      width: 28px;
+      height: 28px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      background: var(--cyan-dim);
+      color: var(--cyan);
+      flex-shrink: 0;
+    }
+    .system-sid-name {
+      font-weight: 700;
+      color: var(--txt1);
+      font-size: 14px;
+    }
+    .system-sid-id {
+      font-size: 11px;
+      color: var(--txt3);
+      font-family: 'SF Mono', Monaco, Consolas, monospace;
+    }
+    .health-score {
+      font-weight: 700;
+      font-size: 14px;
+    }
+    .health-high { color: var(--success); }
+    .health-mid  { color: var(--warning); }
+    .health-low  { color: var(--danger); }
+    .action-btns {
+      display: flex;
+      gap: 6px;
+    }
+    .action-btn {
+      width: 30px;
+      height: 30px;
+      border-radius: 8px;
+      border: 1px solid var(--card-border);
+      background: var(--card-bg);
+      color: var(--txt2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 13px;
+      transition: all 0.15s;
+    }
+    .action-btn:hover {
+      border-color: var(--cyan);
+      color: var(--cyan);
+    }
+    .action-btn.delete:hover {
+      border-color: var(--danger);
+      color: var(--danger);
+      background: rgba(239,68,68,0.08);
+    }
+    .action-btn.spinning {
+      animation: spin 1s linear infinite;
+    }
+    @keyframes spin {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+  </style>
+</head>
+<body>
+<div class="docs-wrapper">
+
+  <!-- ═══ SIDEBAR ═══ -->
+  <nav class="docs-sidebar">
+    <div class="sidebar-brand">
+      <div class="logo">&#9889;</div>
+      <div class="brand-text">
+        <div class="brand-name">SAP Spektra</div>
+        <div class="brand-sub">Documentacion</div>
+      </div>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-section-label">Inicio</div>
+      <a href="index.html" class="sidebar-link">Portal</a>
+      <a href="getting-started.html" class="sidebar-link">Primeros Pasos</a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-section-label">Command</div>
+      <a href="dashboard.html" class="sidebar-link">Dashboard</a>
+      <a href="landscape.html" class="sidebar-link">Landscape</a>
+      <a href="alerts.html" class="sidebar-link">Alertas</a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-section-label">Monitor</div>
+      <a href="systems.html" class="sidebar-link">Sistemas</a>
+      <a href="connectors.html" class="sidebar-link">Conectores</a>
+      <a href="events.html" class="sidebar-link">Eventos</a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-section-label">Intelligence</div>
+      <a href="ai-analysis.html" class="sidebar-link">Analisis IA</a>
+      <a href="analytics.html" class="sidebar-link">Analytics</a>
+      <a href="reports.html" class="sidebar-link">Reportes</a>
+      <a href="comparison.html" class="sidebar-link">Comparacion</a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-section-label">Operations</div>
+      <a href="runbooks.html" class="sidebar-link">Runbooks</a>
+      <a href="approvals.html" class="sidebar-link">Aprobaciones</a>
+      <a href="operations.html" class="sidebar-link">Operaciones</a>
+      <a href="jobs.html" class="sidebar-link">Jobs (SM37)</a>
+      <a href="transports.html" class="sidebar-link">Transportes</a>
+      <a href="sla.html" class="sidebar-link">SLA</a>
+      <a href="ha-control.html" class="sidebar-link">HA Control</a>
+      <a href="certificates.html" class="sidebar-link">Certificados</a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-section-label">Admin</div>
+      <a href="admin.html" class="sidebar-link active">Gestion</a>
+      <a href="settings.html" class="sidebar-link">Configuracion</a>
+      <a href="connect-system.html" class="sidebar-link">Conectar Sistema</a>
+    </div>
+  </nav>
+
+  <!-- ═══ MAIN CONTENT ═══ -->
+  <main class="docs-main">
+
+    <!-- Breadcrumb -->
+    <div class="breadcrumb">
+      <a href="index.html">SAP Spektra</a>
+      <span class="sep">/</span>
+      <span>Admin</span>
+      <span class="sep">/</span>
+      <span class="es">Gestion</span><span class="en">Management</span>
+    </div>
+
+    <!-- Page Header -->
+    <div class="page-header">
+      <h1><span class="es">Administracion</span><span class="en">Administration</span></h1>
+      <div class="subtitle">
+        <span class="es">Gestion de sistemas y configuracion</span>
+        <span class="en">System management and configuration</span>
+      </div>
+    </div>
+
+    <div class="callout warning">
+      <div class="callout-icon">&#128737;</div>
+      <div>
+        <span class="es">
+          Esta pagina requiere el rol <strong>Admin</strong>. Solo los administradores de la organizacion
+          pueden ver y gestionar los sistemas registrados desde este panel.
+        </span>
+        <span class="en">
+          This page requires the <strong>Admin</strong> role. Only organization administrators
+          can view and manage registered systems from this panel.
+        </span>
+      </div>
+    </div>
+
+    <!-- ════════════════════════════════════════════════════════════ -->
+    <!-- SECTION: Header Bar & Connect Button -->
+    <!-- ════════════════════════════════════════════════════════════ -->
+    <h2><span class="es">Encabezado y Boton de Conexion</span><span class="en">Header &amp; Connect Button</span></h2>
+
+    <div class="card">
+      <p>
+        <span class="es">
+          En la parte superior de la pagina veras el titulo <strong>"Administracion"</strong> junto con la descripcion
+          <em>"Gestion de sistemas y configuracion"</em>. A la derecha del encabezado se encuentra el boton principal de accion:
+        </span>
+        <span class="en">
+          At the top of the page you will see the title <strong>"Administracion"</strong> alongside the description
+          <em>"System management and configuration"</em>. On the right side of the header you will find the main action button:
+        </span>
+      </p>
+
+      <div class="admin-header mt-2">
+        <div>
+          <div class="text-primary font-bold" style="font-size:18px;">
+            <span class="es">Administracion</span><span class="en">Administration</span>
+          </div>
+          <div class="text-muted text-sm">
+            <span class="es">Gestion de sistemas y configuracion</span>
+            <span class="en">System management and configuration</span>
+          </div>
+        </div>
+        <a href="connect-system.html" class="btn-connect">
+          + <span class="es">Conectar Sistema</span><span class="en">Connect System</span>
+        </a>
+      </div>
+
+      <p>
+        <span class="es">
+          Al hacer clic en <strong>"Conectar Sistema"</strong>, seras redirigido al asistente de conexion
+          donde podras registrar un nuevo sistema SAP paso a paso. Consulta la
+          <a href="connect-system.html">guia de Conectar Sistema</a> para mas detalles.
+        </span>
+        <span class="en">
+          Clicking <strong>"Connect System"</strong> takes you to the connection wizard
+          where you can register a new SAP system step by step. See the
+          <a href="connect-system.html">Connect System guide</a> for details.
+        </span>
+      </p>
+    </div>
+
+    <!-- ════════════════════════════════════════════════════════════ -->
+    <!-- SECTION: Systems Table -->
+    <!-- ════════════════════════════════════════════════════════════ -->
+    <h2><span class="es">Tabla de Sistemas</span><span class="en">Systems Table</span></h2>
+
+    <p>
+      <span class="es">
+        El cuerpo principal de la pagina muestra una tabla con todos los sistemas SAP registrados en tu organizacion.
+        Cada fila es <strong>clickeable</strong> &mdash; al hacer clic en cualquier parte de la fila, navegaras
+        a la pagina de detalle de ese sistema.
+      </span>
+      <span class="en">
+        The main body of the page displays a table with all SAP systems registered in your organization.
+        Each row is <strong>clickable</strong> &mdash; clicking anywhere on the row navigates you
+        to that system's detail page.
+      </span>
+    </p>
+
+    <h3><span class="es">Columnas de la Tabla</span><span class="en">Table Columns</span></h3>
+
+    <p>
+      <span class="es">La tabla contiene las siguientes columnas:</span>
+      <span class="en">The table contains the following columns:</span>
+    </p>
+
+    <!-- Column: Sistema -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">
+          <div class="card-icon cyan">&#128421;</div>
+          <span class="es">Columna: Sistema</span><span class="en">Column: System</span>
+        </div>
+      </div>
+      <p>
+        <span class="es">
+          Muestra un <strong>icono de servidor</strong> seguido del <strong>SID</strong> (System ID, por ejemplo
+          <code>S4P</code>, <code>ECP</code>, <code>BWP</code>) en texto destacado, y debajo el identificador
+          unico del sistema en texto mas pequeno y monoespacio.
+        </span>
+        <span class="en">
+          Displays a <strong>server icon</strong> followed by the <strong>SID</strong> (System ID, for example
+          <code>S4P</code>, <code>ECP</code>, <code>BWP</code>) in bold text, and below it the unique
+          system identifier in smaller monospace text.
+        </span>
+      </p>
+      <div class="mt-2" style="display:flex;gap:24px;flex-wrap:wrap;">
+        <div class="system-sid">
+          <div class="system-sid-icon">&#128421;</div>
+          <div>
+            <div class="system-sid-name">S4P</div>
+            <div class="system-sid-id">sys_01hx7k...</div>
+          </div>
+        </div>
+        <div class="system-sid">
+          <div class="system-sid-icon">&#128421;</div>
+          <div>
+            <div class="system-sid-name">ECP</div>
+            <div class="system-sid-id">sys_01hy3m...</div>
+          </div>
+        </div>
+        <div class="system-sid">
+          <div class="system-sid-icon">&#128421;</div>
+          <div>
+            <div class="system-sid-name">BWP</div>
+            <div class="system-sid-id">sys_01hz9q...</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Column: Tipo -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">
+          <div class="card-icon violet">&#9881;</div>
+          <span class="es">Columna: Tipo</span><span class="en">Column: Type</span>
+        </div>
+      </div>
+      <p>
+        <span class="es">
+          Indica el <strong>tipo de producto SAP</strong> del sistema. Los valores mas comunes que veras son:
+        </span>
+        <span class="en">
+          Indicates the <strong>SAP product type</strong> of the system. The most common values you will see are:
+        </span>
+      </p>
+      <ul class="feature-list">
+        <li><code>S/4HANA</code></li>
+        <li><code>ECC</code></li>
+        <li><code>BW/4HANA</code></li>
+        <li><code>Solution Manager</code></li>
+        <li><code>BW</code></li>
+        <li><code>CRM</code></li>
+        <li><code>SRM</code></li>
+        <li><code>GTS</code></li>
+      </ul>
+    </div>
+
+    <!-- Column: Base de Datos -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">
+          <div class="card-icon cyan">&#128451;</div>
+          <span class="es">Columna: Base de Datos</span><span class="en">Column: Database</span>
+        </div>
+      </div>
+      <p>
+        <span class="es">
+          Muestra el <strong>motor de base de datos</strong> subyacente del sistema. Los valores posibles incluyen:
+        </span>
+        <span class="en">
+          Shows the <strong>underlying database engine</strong> for the system. Possible values include:
+        </span>
+      </p>
+      <ul class="feature-list">
+        <li><code>HANA</code> &mdash; SAP HANA</li>
+        <li><code>ASE</code> &mdash; SAP Adaptive Server Enterprise (Sybase)</li>
+        <li><code>MaxDB</code> &mdash; SAP MaxDB</li>
+        <li><code>Oracle</code> &mdash; Oracle Database</li>
+        <li><code>DB2</code> &mdash; IBM Db2</li>
+        <li><code>MSSQL</code> &mdash; Microsoft SQL Server</li>
+      </ul>
+    </div>
+
+    <!-- Column: Ambiente -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">
+          <div class="card-icon warning">&#127981;</div>
+          <span class="es">Columna: Ambiente</span><span class="en">Column: Environment</span>
+        </div>
+      </div>
+      <p>
+        <span class="es">
+          Un <strong>badge de color</strong> que identifica el entorno de despliegue del sistema.
+          El color cambia segun el tipo de ambiente:
+        </span>
+        <span class="en">
+          A <strong>colored badge</strong> identifying the system's deployment environment.
+          The color changes based on the environment type:
+        </span>
+      </p>
+      <div class="mt-2" style="display:flex;gap:12px;flex-wrap:wrap;">
+        <span class="badge danger">PRD</span>
+        <span class="badge warning">QAS</span>
+        <span class="badge cyan">DEV</span>
+      </div>
+      <ul class="feature-list mt-2">
+        <li>
+          <span class="es"><strong class="text-danger">PRD</strong> (Produccion) &mdash; Badge rojo. Sistemas en produccion activa.</span>
+          <span class="en"><strong class="text-danger">PRD</strong> (Production) &mdash; Red badge. Active production systems.</span>
+        </li>
+        <li>
+          <span class="es"><strong class="text-warning">QAS</strong> (Quality Assurance) &mdash; Badge amarillo. Sistemas de pruebas y calidad.</span>
+          <span class="en"><strong class="text-warning">QAS</strong> (Quality Assurance) &mdash; Yellow badge. Testing and quality systems.</span>
+        </li>
+        <li>
+          <span class="es"><strong class="text-cyan">DEV</strong> (Desarrollo) &mdash; Badge azul/cian. Sistemas de desarrollo.</span>
+          <span class="en"><strong class="text-cyan">DEV</strong> (Development) &mdash; Blue/cyan badge. Development systems.</span>
+        </li>
+      </ul>
+    </div>
+
+    <!-- Column: Modo -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">
+          <div class="card-icon violet">&#9734;</div>
+          <span class="es">Columna: Modo</span><span class="en">Column: Mode</span>
+        </div>
+      </div>
+      <p>
+        <span class="es">
+          Indica si el sistema esta registrado en modo <strong>Trial</strong> (prueba gratuita) o
+          <strong>Production</strong> (licencia completa). Se muestra como un badge:
+        </span>
+        <span class="en">
+          Indicates whether the system is registered in <strong>Trial</strong> (free trial) or
+          <strong>Production</strong> (full license) mode. Displayed as a badge:
+        </span>
+      </p>
+      <div class="mt-2" style="display:flex;gap:12px;flex-wrap:wrap;">
+        <span class="badge neutral">Trial</span>
+        <span class="badge violet">Production</span>
+      </div>
+    </div>
+
+    <!-- Column: Health -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">
+          <div class="card-icon success">&#10084;</div>
+          <span class="es">Columna: Health</span><span class="en">Column: Health</span>
+        </div>
+      </div>
+      <p>
+        <span class="es">
+          Muestra la <strong>puntuacion de salud</strong> del sistema en una escala de 0 a 100.
+          El color del numero cambia automaticamente segun el rango:
+        </span>
+        <span class="en">
+          Shows the system's <strong>health score</strong> on a scale of 0 to 100.
+          The number color changes automatically based on the range:
+        </span>
+      </p>
+      <div class="table-wrap mt-2">
+        <table>
+          <thead>
+            <tr>
+              <th><span class="es">Rango</span><span class="en">Range</span></th>
+              <th>Color</th>
+              <th><span class="es">Significado</span><span class="en">Meaning</span></th>
+              <th><span class="es">Ejemplo</span><span class="en">Example</span></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="font-semibold">90 &ndash; 100</td>
+              <td><span class="text-success font-bold">Verde</span></td>
+              <td>
+                <span class="es">Sistema saludable, sin problemas detectados</span>
+                <span class="en">Healthy system, no issues detected</span>
+              </td>
+              <td><span class="health-score health-high">96</span></td>
+            </tr>
+            <tr>
+              <td class="font-semibold">70 &ndash; 89</td>
+              <td><span class="text-warning font-bold">Amarillo</span></td>
+              <td>
+                <span class="es">Advertencia, algun componente requiere atencion</span>
+                <span class="en">Warning, some component requires attention</span>
+              </td>
+              <td><span class="health-score health-mid">78</span></td>
+            </tr>
+            <tr>
+              <td class="font-semibold">0 &ndash; 69</td>
+              <td><span class="text-danger font-bold">Rojo</span></td>
+              <td>
+                <span class="es">Critico, el sistema necesita intervencion inmediata</span>
+                <span class="en">Critical, the system needs immediate intervention</span>
+              </td>
+              <td><span class="health-score health-low">42</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Column: Estado -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">
+          <div class="card-icon cyan">&#9679;</div>
+          <span class="es">Columna: Estado</span><span class="en">Column: Status</span>
+        </div>
+      </div>
+      <p>
+        <span class="es">
+          Un <strong>badge de estado</strong> que indica si el sistema esta activo, inactivo o en mantenimiento:
+        </span>
+        <span class="en">
+          A <strong>status badge</strong> indicating whether the system is active, inactive, or under maintenance:
+        </span>
+      </p>
+      <div class="mt-2" style="display:flex;gap:12px;flex-wrap:wrap;">
+        <span class="badge success">&#9679; Active</span>
+        <span class="badge warning">&#9679; Maintenance</span>
+        <span class="badge neutral">&#9679; Inactive</span>
+        <span class="badge danger">&#9679; Disconnected</span>
+      </div>
+    </div>
+
+    <!-- Column: Acciones -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">
+          <div class="card-icon warning">&#9881;</div>
+          <span class="es">Columna: Acciones</span><span class="en">Column: Actions</span>
+        </div>
+      </div>
+      <p>
+        <span class="es">
+          La ultima columna contiene <strong>3 botones de icono</strong> para acciones rapidas sobre cada sistema:
+        </span>
+        <span class="en">
+          The last column contains <strong>3 icon buttons</strong> for quick actions on each system:
+        </span>
+      </p>
+
+      <div class="steps">
+        <div class="step">
+          <strong><span class="es">Health Check</span><span class="en">Health Check</span></strong> (&#8635;)
+          <br>
+          <span class="es">
+            Al hacer clic, el icono comienza a <strong>girar</strong> (animacion de spin) indicando que
+            se esta ejecutando una verificacion de salud del sistema en tiempo real. Cuando el chequeo
+            termina, el icono deja de girar y la puntuacion de Health en la tabla se actualiza automaticamente
+            con el nuevo valor.
+          </span>
+          <span class="en">
+            When clicked, the icon starts <strong>spinning</strong> (spin animation) indicating that
+            a real-time health check is being performed on the system. When the check finishes,
+            the icon stops spinning and the Health score in the table updates automatically
+            with the new value.
+          </span>
+        </div>
+        <div class="step">
+          <strong><span class="es">Editar</span><span class="en">Edit</span></strong> (&#9998;)
+          <br>
+          <span class="es">
+            Navega a la pagina de <strong>detalle del sistema</strong>, donde puedes ver toda la informacion
+            del sistema, modificar sus datos de configuracion, revisar metricas historicas y gestionar sus
+            conectores.
+          </span>
+          <span class="en">
+            Navigates to the <strong>system detail page</strong>, where you can view all the system's
+            information, modify its configuration data, review historical metrics, and manage its
+            connectors.
+          </span>
+        </div>
+        <div class="step">
+          <strong><span class="es">Eliminar</span><span class="en">Delete</span></strong> (&#128465;)
+          <br>
+          <span class="es">
+            Requiere <strong>doble clic</strong> como medida de seguridad. Al hacer el primer clic,
+            el boton cambia a <strong>color rojo</strong> y muestra un texto de confirmacion
+            (por ejemplo, "Confirmar"). Solo al hacer el segundo clic dentro de unos segundos
+            se procedera a eliminar el sistema. Si no confirmas, el boton vuelve a su estado normal.
+          </span>
+          <span class="en">
+            Requires a <strong>double click</strong> as a safety measure. On the first click,
+            the button turns <strong>red</strong> and shows a confirmation text
+            (e.g., "Confirm"). Only clicking a second time within a few seconds
+            will proceed with deleting the system. If you don't confirm, the button returns to normal.
+          </span>
+        </div>
+      </div>
+
+      <div class="mt-2" style="display:flex;gap:6px;align-items:center;">
+        <span class="text-xs text-muted"><span class="es">Vista previa de los botones:</span><span class="en">Button preview:</span></span>
+        <div class="action-btn" title="Health Check">&#8635;</div>
+        <div class="action-btn" title="Editar">&#9998;</div>
+        <div class="action-btn delete" title="Eliminar">&#128465;</div>
+      </div>
+    </div>
+
+    <!-- ════════════════════════════════════════════════════════════ -->
+    <!-- SECTION: Example Table -->
+    <!-- ════════════════════════════════════════════════════════════ -->
+    <h2><span class="es">Ejemplo de la Tabla</span><span class="en">Table Example</span></h2>
+
+    <p>
+      <span class="es">
+        A continuacion se muestra un ejemplo representativo de como se ve la tabla de sistemas en la pagina
+        de Administracion. Recuerda que <strong>cada fila es clickeable</strong> y te lleva al detalle del sistema.
+      </span>
+      <span class="en">
+        Below is a representative example of how the systems table looks on the Administration page.
+        Remember that <strong>each row is clickable</strong> and takes you to the system detail.
+      </span>
+    </p>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th><span class="es">Sistema</span><span class="en">System</span></th>
+            <th><span class="es">Tipo</span><span class="en">Type</span></th>
+            <th><span class="es">Base de Datos</span><span class="en">Database</span></th>
+            <th><span class="es">Ambiente</span><span class="en">Environment</span></th>
+            <th><span class="es">Modo</span><span class="en">Mode</span></th>
+            <th>Health</th>
+            <th><span class="es">Estado</span><span class="en">Status</span></th>
+            <th><span class="es">Acciones</span><span class="en">Actions</span></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="system-row">
+            <td>
+              <div class="system-sid">
+                <div class="system-sid-icon">&#128421;</div>
+                <div>
+                  <div class="system-sid-name">S4P</div>
+                  <div class="system-sid-id">sys_01hx7k9m</div>
+                </div>
+              </div>
+            </td>
+            <td>S/4HANA</td>
+            <td>HANA</td>
+            <td><span class="badge danger">PRD</span></td>
+            <td><span class="badge violet">Production</span></td>
+            <td><span class="health-score health-high">96</span></td>
+            <td><span class="badge success">&#9679; Active</span></td>
+            <td>
+              <div class="action-btns">
+                <div class="action-btn" title="Health Check">&#8635;</div>
+                <div class="action-btn" title="Editar">&#9998;</div>
+                <div class="action-btn delete" title="Eliminar">&#128465;</div>
+              </div>
+            </td>
+          </tr>
+          <tr class="system-row">
+            <td>
+              <div class="system-sid">
+                <div class="system-sid-icon">&#128421;</div>
+                <div>
+                  <div class="system-sid-name">ECP</div>
+                  <div class="system-sid-id">sys_01hy3m2n</div>
+                </div>
+              </div>
+            </td>
+            <td>ECC</td>
+            <td>ASE</td>
+            <td><span class="badge danger">PRD</span></td>
+            <td><span class="badge violet">Production</span></td>
+            <td><span class="health-score health-mid">78</span></td>
+            <td><span class="badge warning">&#9679; Maintenance</span></td>
+            <td>
+              <div class="action-btns">
+                <div class="action-btn" title="Health Check">&#8635;</div>
+                <div class="action-btn" title="Editar">&#9998;</div>
+                <div class="action-btn delete" title="Eliminar">&#128465;</div>
+              </div>
+            </td>
+          </tr>
+          <tr class="system-row">
+            <td>
+              <div class="system-sid">
+                <div class="system-sid-icon">&#128421;</div>
+                <div>
+                  <div class="system-sid-name">S4Q</div>
+                  <div class="system-sid-id">sys_01hz4p8r</div>
+                </div>
+              </div>
+            </td>
+            <td>S/4HANA</td>
+            <td>HANA</td>
+            <td><span class="badge warning">QAS</span></td>
+            <td><span class="badge violet">Production</span></td>
+            <td><span class="health-score health-high">92</span></td>
+            <td><span class="badge success">&#9679; Active</span></td>
+            <td>
+              <div class="action-btns">
+                <div class="action-btn" title="Health Check">&#8635;</div>
+                <div class="action-btn" title="Editar">&#9998;</div>
+                <div class="action-btn delete" title="Eliminar">&#128465;</div>
+              </div>
+            </td>
+          </tr>
+          <tr class="system-row">
+            <td>
+              <div class="system-sid">
+                <div class="system-sid-icon">&#128421;</div>
+                <div>
+                  <div class="system-sid-name">BWD</div>
+                  <div class="system-sid-id">sys_01ha6t1w</div>
+                </div>
+              </div>
+            </td>
+            <td>BW/4HANA</td>
+            <td>HANA</td>
+            <td><span class="badge cyan">DEV</span></td>
+            <td><span class="badge neutral">Trial</span></td>
+            <td><span class="health-score health-low">42</span></td>
+            <td><span class="badge danger">&#9679; Disconnected</span></td>
+            <td>
+              <div class="action-btns">
+                <div class="action-btn" title="Health Check">&#8635;</div>
+                <div class="action-btn" title="Editar">&#9998;</div>
+                <div class="action-btn delete" title="Eliminar">&#128465;</div>
+              </div>
+            </td>
+          </tr>
+          <tr class="system-row">
+            <td>
+              <div class="system-sid">
+                <div class="system-sid-icon">&#128421;</div>
+                <div>
+                  <div class="system-sid-name">SMP</div>
+                  <div class="system-sid-id">sys_01hb9v3x</div>
+                </div>
+              </div>
+            </td>
+            <td>Solution Manager</td>
+            <td>HANA</td>
+            <td><span class="badge danger">PRD</span></td>
+            <td><span class="badge violet">Production</span></td>
+            <td><span class="health-score health-high">94</span></td>
+            <td><span class="badge success">&#9679; Active</span></td>
+            <td>
+              <div class="action-btns">
+                <div class="action-btn" title="Health Check">&#8635;</div>
+                <div class="action-btn" title="Editar">&#9998;</div>
+                <div class="action-btn delete" title="Eliminar">&#128465;</div>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- ════════════════════════════════════════════════════════════ -->
+    <!-- SECTION: Row Navigation -->
+    <!-- ════════════════════════════════════════════════════════════ -->
+    <h2><span class="es">Navegacion desde las Filas</span><span class="en">Row Navigation</span></h2>
+
+    <div class="card">
+      <p>
+        <span class="es">
+          Todas las filas de la tabla son <strong>clickeables</strong>. Al hacer clic en cualquier parte
+          de una fila (excepto en los botones de accion), seras redirigido a la <strong>pagina de detalle
+          del sistema</strong>, donde encontraras informacion completa incluyendo metricas en tiempo real,
+          historicos de rendimiento, conectores asociados y opciones de configuracion avanzada.
+        </span>
+        <span class="en">
+          All table rows are <strong>clickable</strong>. Clicking anywhere on a row (except on the action
+          buttons) will redirect you to the <strong>system detail page</strong>, where you'll find complete
+          information including real-time metrics, performance history, associated connectors, and
+          advanced configuration options.
+        </span>
+      </p>
+    </div>
+
+    <div class="callout info">
+      <div class="callout-icon">&#128161;</div>
+      <div>
+        <span class="es">
+          <strong>Consejo:</strong> Puedes llegar a esta pagina desde el menu lateral haciendo clic en
+          <strong>Admin &rarr; Gestion</strong>, o desde el Dashboard haciendo clic en el enlace
+          de administracion cuando esta disponible para tu rol.
+        </span>
+        <span class="en">
+          <strong>Tip:</strong> You can reach this page from the sidebar by clicking
+          <strong>Admin &rarr; Management</strong>, or from the Dashboard by clicking the
+          administration link when available for your role.
+        </span>
+      </div>
+    </div>
+
+  </main>
+</div>
+</body>
+</html>

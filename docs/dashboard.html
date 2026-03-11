@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="dark" data-lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <title>Dashboard — SAP Spektra Docs</title>
+  <link rel="stylesheet" href="theme.css">
+  <script src="theme-toggle.js"></script>
+  <script src="lang-toggle.js"></script>
+</head>
+<body>
+<div class="docs-wrapper">
+  <!-- Sidebar -->
+  <nav class="docs-sidebar">
+    <div class="sidebar-brand">
+      <div class="logo">&#9889;</div>
+      <div class="brand-text">
+        <div class="brand-name">SAP Spektra</div>
+        <div class="brand-sub">Documentacion</div>
+      </div>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-section-label">Inicio</div>
+      <a href="index.html" class="sidebar-link">Portal</a>
+      <a href="getting-started.html" class="sidebar-link">Primeros Pasos</a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-section-label">Command</div>
+      <a href="dashboard.html" class="sidebar-link active">Dashboard</a>
+      <a href="landscape.html" class="sidebar-link">Landscape</a>
+      <a href="alerts.html" class="sidebar-link">Alertas</a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-section-label">Monitor</div>
+      <a href="systems.html" class="sidebar-link">Sistemas</a>
+      <a href="connectors.html" class="sidebar-link">Conectores</a>
+      <a href="events.html" class="sidebar-link">Eventos</a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-section-label">Intelligence</div>
+      <a href="ai-analysis.html" class="sidebar-link">Analisis IA</a>
+      <a href="analytics.html" class="sidebar-link">Analytics</a>
+      <a href="reports.html" class="sidebar-link">Reportes</a>
+      <a href="comparison.html" class="sidebar-link">Comparacion</a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-section-label">Operations</div>
+      <a href="runbooks.html" class="sidebar-link">Runbooks</a>
+      <a href="approvals.html" class="sidebar-link">Aprobaciones</a>
+      <a href="operations.html" class="sidebar-link">Operaciones</a>
+      <a href="jobs.html" class="sidebar-link">Jobs (SM37)</a>
+      <a href="transports.html" class="sidebar-link">Transportes</a>
+      <a href="sla.html" class="sidebar-link">SLA</a>
+      <a href="ha-control.html" class="sidebar-link">HA Control</a>
+      <a href="certificates.html" class="sidebar-link">Certificados</a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-section-label">Admin</div>
+      <a href="admin.html" class="sidebar-link">Gestion</a>
+      <a href="settings.html" class="sidebar-link">Configuracion</a>
+      <a href="connect-system.html" class="sidebar-link">Conectar Sistema</a>
+    </div>
+  </nav>
+
+  <main class="docs-main">
+    <!-- Breadcrumb -->
+    <div class="breadcrumb">
+      <a href="index.html">SAP Spektra</a>
+      <span class="sep">/</span>
+      <span class="es">Dashboard</span><span class="en">Dashboard</span>
+    </div>
+
+    <!-- Page Header -->
+    <div class="page-header">
+      <h1><span class="es">Dashboard</span><span class="en">Dashboard</span></h1>
+      <div class="subtitle">
+        <span class="es">Vista general del estado de tu landscape SAP en tiempo real</span>
+        <span class="en">Real-time overview of your SAP landscape health</span>
+      </div>
+    </div>
+
+    <!-- ════════════════════════════════════════════════════════════ -->
+    <!-- SECTION: Header Bar -->
+    <!-- ════════════════════════════════════════════════════════════ -->
+    <h2><span class="es">Barra de Encabezado</span><span class="en">Header Bar</span></h2>
+
+    <div class="card">
+      <p>
+        <span class="es">
+          Al abrir el Dashboard, la parte superior de la pagina muestra un saludo personalizado con el formato
+          <strong>"Hola, [tu nombre de usuario]"</strong>. Debajo del saludo aparece el nombre de tu organizacion
+          y la fecha actual.
+        </span>
+        <span class="en">
+          When you open the Dashboard, the top of the page displays a personalized greeting in the format
+          <strong>"Hola, [your username]"</strong>. Below the greeting, you will see your organization name
+          and the current date.
+        </span>
+      </p>
+      <p>
+        <span class="es">
+          A la derecha del encabezado hay un <strong>boton de refrescar</strong> que permite actualizar manualmente
+          todos los datos de la pagina sin necesidad de recargar el navegador.
+        </span>
+        <span class="en">
+          On the right side of the header, there is a <strong>refresh button</strong> that lets you manually
+          update all page data without reloading the browser.
+        </span>
+      </p>
+    </div>
+
+    <!-- ════════════════════════════════════════════════════════════ -->
+    <!-- SECTION: KPI Cards -->
+    <!-- ════════════════════════════════════════════════════════════ -->
+    <h2><span class="es">Tarjetas KPI</span><span class="en">KPI Cards</span></h2>
+
+    <p>
+      <span class="es">
+        Justo debajo del encabezado se presenta una grilla de <strong>4 tarjetas KPI</strong> que resumen el
+        estado general de tu landscape. Cada tarjeta incluye un icono circular con gradiente, un numero grande
+        con efecto de brillo (glow), una etiqueta descriptiva y un indicador de cambio porcentual.
+      </span>
+      <span class="en">
+        Just below the header, a grid of <strong>4 KPI cards</strong> summarizes the overall state of your
+        landscape. Each card includes a gradient circle icon, a large number with a glow effect, a descriptive
+        label, and a percentage change indicator.
+      </span>
+    </p>
+
+    <div class="kpi-grid">
+      <!-- KPI 1 -->
+      <div class="kpi-card">
+        <div class="card-icon cyan">&#9881;</div>
+        <div>
+          <div class="kpi-label">
+            <span class="es">Sistemas Activos</span><span class="en">Active Systems</span>
+          </div>
+          <div class="kpi-value text-cyan">--</div>
+          <div class="text-xs text-muted">
+            <span class="es">Color primario (cian). Muestra cuantos sistemas estan conectados y activos.</span>
+            <span class="en">Primary color (cyan). Shows how many systems are connected and active.</span>
+          </div>
+        </div>
+      </div>
+      <!-- KPI 2 -->
+      <div class="kpi-card">
+        <div class="card-icon success">&#10003;</div>
+        <div>
+          <div class="kpi-label">
+            <span class="es">Sistemas Saludables</span><span class="en">Healthy Systems</span>
+          </div>
+          <div class="kpi-value text-success">--</div>
+          <div class="text-xs text-muted">
+            <span class="es">Color verde (exito). Sistemas sin alertas activas ni degradacion.</span>
+            <span class="en">Green color (success). Systems with no active alerts or degradation.</span>
+          </div>
+        </div>
+      </div>
+      <!-- KPI 3 -->
+      <div class="kpi-card">
+        <div class="card-icon danger">&#9888;</div>
+        <div>
+          <div class="kpi-label">
+            <span class="es">Breaches Activos</span><span class="en">Active Breaches</span>
+          </div>
+          <div class="kpi-value text-danger">--</div>
+          <div class="text-xs text-muted">
+            <span class="es">Color rojo (peligro) si el valor es mayor a 0. Indica violaciones de SLA activas.</span>
+            <span class="en">Red color (danger) when value is greater than 0. Indicates active SLA breaches.</span>
+          </div>
+        </div>
+      </div>
+      <!-- KPI 4 -->
+      <div class="kpi-card">
+        <div class="card-icon warning">&#128276;</div>
+        <div>
+          <div class="kpi-label">
+            <span class="es">Aprobaciones Pendientes</span><span class="en">Pending Approvals</span>
+          </div>
+          <div class="kpi-value text-warning">--</div>
+          <div class="text-xs text-muted">
+            <span class="es">Color ambar (advertencia) si hay aprobaciones pendientes por revisar.</span>
+            <span class="en">Amber color (warning) when there are pending approvals to review.</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="callout info">
+      <div class="callout-icon">&#128161;</div>
+      <div>
+        <span class="es">
+          Cada tarjeta KPI muestra un <strong>indicador de cambio porcentual</strong> respecto al periodo anterior
+          (por ejemplo, <code>+12%</code> o <code>-5%</code>). Una flecha verde hacia arriba indica mejora, y una
+          roja hacia abajo indica degradacion.
+        </span>
+        <span class="en">
+          Each KPI card shows a <strong>percentage change indicator</strong> compared to the previous period
+          (for example, <code>+12%</code> or <code>-5%</code>). A green upward arrow indicates improvement,
+          and a red downward arrow indicates degradation.
+        </span>
+      </div>
+    </div>
+
+    <!-- ════════════════════════════════════════════════════════════ -->
+    <!-- SECTION: Landscape SAP -->
+    <!-- ════════════════════════════════════════════════════════════ -->
+    <h2><span class="es">Seccion Landscape SAP</span><span class="en">SAP Landscape Section</span></h2>
+
+    <div class="card">
+      <p>
+        <span class="es">
+          Debajo de las tarjetas KPI, veras el encabezado <strong>"Landscape SAP"</strong> acompanado de una
+          <strong>pastilla (pill)</strong> que muestra el numero total de sistemas registrados. Por ejemplo:
+          <span class="badge cyan">12 sistemas</span>.
+        </span>
+        <span class="en">
+          Below the KPI cards, you will see the heading <strong>"Landscape SAP"</strong> accompanied by a
+          <strong>pill badge</strong> showing the total number of registered systems. For example:
+          <span class="badge cyan">12 systems</span>.
+        </span>
+      </p>
+    </div>
+
+    <!-- ════════════════════════════════════════════════════════════ -->
+    <!-- SECTION: System Cards Grid -->
+    <!-- ════════════════════════════════════════════════════════════ -->
+    <h2><span class="es">Grilla de Tarjetas de Sistema</span><span class="en">System Cards Grid</span></h2>
+
+    <p>
+      <span class="es">
+        Los sistemas se muestran en una grilla responsive de <strong>1 a 4 columnas</strong>. Cada tarjeta
+        de sistema contiene la siguiente informacion:
+      </span>
+      <span class="en">
+        Systems are displayed in a responsive grid of <strong>1 to 4 columns</strong>. Each system card
+        contains the following information:
+      </span>
+    </p>
+
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">
+          <span class="es">Encabezado de la tarjeta</span><span class="en">Card Header</span>
+        </div>
+      </div>
+      <ul class="feature-list">
+        <li>
+          <span class="es">
+            <strong>SID</strong> — El identificador del sistema (por ejemplo, <code>S4P</code>, <code>ECP</code>)
+            mostrado con texto en gradiente que lo hace visualmente destacado.
+          </span>
+          <span class="en">
+            <strong>SID</strong> — The system identifier (for example, <code>S4P</code>, <code>ECP</code>)
+            displayed with gradient text that makes it visually prominent.
+          </span>
+        </li>
+        <li>
+          <span class="es">
+            <strong>Badge de estado</strong> — Un indicador de color junto al SID que refleja el estado
+            actual del sistema:
+            <span class="badge success">Healthy</span>
+            <span class="badge warning">Warning</span>
+            <span class="badge danger">Degraded</span>
+            <span class="badge danger">Critical</span>
+          </span>
+          <span class="en">
+            <strong>Status badge</strong> — A colored indicator next to the SID reflecting the current
+            system status:
+            <span class="badge success">Healthy</span>
+            <span class="badge warning">Warning</span>
+            <span class="badge danger">Degraded</span>
+            <span class="badge danger">Critical</span>
+          </span>
+        </li>
+        <li>
+          <span class="es">
+            <strong>Descripcion</strong> — Un texto corto que describe el sistema, junto a un badge de modo:
+            <span class="badge violet">Production</span> o <span class="badge neutral">Trial</span>.
+          </span>
+          <span class="en">
+            <strong>Description</strong> — A short text describing the system, alongside a mode badge:
+            <span class="badge violet">Production</span> or <span class="badge neutral">Trial</span>.
+          </span>
+        </li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">
+          <span class="es">Health Gauge (Indicador de Salud)</span><span class="en">Health Gauge</span>
+        </div>
+      </div>
+      <p>
+        <span class="es">
+          En el centro de cada tarjeta de sistema se muestra un <strong>gauge circular SVG</strong> que
+          indica la puntuacion de salud del sistema en una escala de <strong>0 a 100</strong>. El color del
+          arco del gauge cambia segun la puntuacion:
+        </span>
+        <span class="en">
+          At the center of each system card, a <strong>circular SVG gauge</strong> displays the system's
+          health score on a scale of <strong>0 to 100</strong>. The gauge arc color changes based on
+          the score:
+        </span>
+      </p>
+      <ul class="feature-list">
+        <li>
+          <span class="es"><strong class="text-success">Verde</strong> — Puntuacion alta (sistema saludable, tipicamente 80&ndash;100)</span>
+          <span class="en"><strong class="text-success">Green</strong> — High score (healthy system, typically 80&ndash;100)</span>
+        </li>
+        <li>
+          <span class="es"><strong class="text-warning">Ambar</strong> — Puntuacion media (advertencia, tipicamente 50&ndash;79)</span>
+          <span class="en"><strong class="text-warning">Amber</strong> — Medium score (warning, typically 50&ndash;79)</span>
+        </li>
+        <li>
+          <span class="es"><strong class="text-danger">Rojo</strong> — Puntuacion baja (critico, tipicamente 0&ndash;49)</span>
+          <span class="en"><strong class="text-danger">Red</strong> — Low score (critical, typically 0&ndash;49)</span>
+        </li>
+      </ul>
+      <p>
+        <span class="es">El numero de la puntuacion aparece en grande dentro del circulo con un efecto de brillo.</span>
+        <span class="en">The score number appears large inside the circle with a glow effect.</span>
+      </p>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">
+          <span class="es">Metricas del Sistema</span><span class="en">System Metrics</span>
+        </div>
+      </div>
+      <p>
+        <span class="es">
+          En la parte inferior de cada tarjeta se muestran <strong>4 metricas</strong> organizadas en una
+          cuadricula compacta:
+        </span>
+        <span class="en">
+          At the bottom of each card, <strong>4 metrics</strong> are displayed in a compact grid:
+        </span>
+      </p>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th><span class="es">Metrica</span><span class="en">Metric</span></th>
+              <th><span class="es">Descripcion</span><span class="en">Description</span></th>
+              <th><span class="es">Ejemplos de Valor</span><span class="en">Example Values</span></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="font-semibold"><span class="es">Tipo</span><span class="en">Type</span></td>
+              <td>
+                <span class="es">Tipo de producto SAP del sistema</span>
+                <span class="en">SAP product type of the system</span>
+              </td>
+              <td><code>S/4HANA</code>, <code>ECC</code>, <code>BW/4HANA</code>, <code>Solution Manager</code></td>
+            </tr>
+            <tr>
+              <td class="font-semibold"><span class="es">Base de Datos</span><span class="en">Database</span></td>
+              <td>
+                <span class="es">Motor de base de datos subyacente</span>
+                <span class="en">Underlying database engine</span>
+              </td>
+              <td><code>HANA</code>, <code>ASE</code>, <code>MaxDB</code>, <code>Oracle</code></td>
+            </tr>
+            <tr>
+              <td class="font-semibold"><span class="es">Ambiente</span><span class="en">Environment</span></td>
+              <td>
+                <span class="es">Entorno de despliegue del sistema</span>
+                <span class="en">System deployment environment</span>
+              </td>
+              <td>
+                <span class="badge danger">PRD</span>
+                <span class="badge warning">QAS</span>
+                <span class="badge cyan">DEV</span>
+              </td>
+            </tr>
+            <tr>
+              <td class="font-semibold">Breaches</td>
+              <td>
+                <span class="es">Cantidad de violaciones de SLA activas para este sistema</span>
+                <span class="en">Number of active SLA breaches for this system</span>
+              </td>
+              <td><code>0</code>, <code>3</code>, <code>7</code></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ════════════════════════════════════════════════════════════ -->
+    <!-- SECTION: Quick Actions -->
+    <!-- ════════════════════════════════════════════════════════════ -->
+    <h2><span class="es">Acciones Rapidas</span><span class="en">Quick Actions</span></h2>
+
+    <div class="card">
+      <p>
+        <span class="es">
+          Si existen <strong>aprobaciones pendientes</strong> (el KPI de aprobaciones es mayor a 0),
+          en la parte inferior del Dashboard aparece una <strong>tarjeta de alerta de color ambar</strong>
+          que informa al usuario que hay solicitudes esperando revision.
+        </span>
+        <span class="en">
+          If there are <strong>pending approvals</strong> (the approvals KPI is greater than 0),
+          an <strong>amber-colored alert card</strong> appears at the bottom of the Dashboard informing
+          the user that there are requests awaiting review.
+        </span>
+      </p>
+      <div class="callout warning">
+        <div class="callout-icon">&#9888;&#65039;</div>
+        <div>
+          <span class="es">
+            Esta tarjeta incluye un boton <strong>"Ver Aprobaciones"</strong> que te lleva directamente
+            a la pagina de Aprobaciones para que puedas revisar y actuar sobre las solicitudes pendientes.
+          </span>
+          <span class="en">
+            This card includes a <strong>"Ver Aprobaciones"</strong> (View Approvals) button that takes
+            you directly to the Approvals page so you can review and act on pending requests.
+          </span>
+        </div>
+      </div>
+      <p>
+        <span class="es">
+          Si no hay aprobaciones pendientes, esta seccion no se muestra &mdash; el Dashboard mantiene
+          un diseno limpio sin elementos innecesarios.
+        </span>
+        <span class="en">
+          If there are no pending approvals, this section is not displayed &mdash; the Dashboard keeps
+          a clean layout without unnecessary elements.
+        </span>
+      </p>
+    </div>
+
+    <!-- ════════════════════════════════════════════════════════════ -->
+    <!-- SECTION: Summary -->
+    <!-- ════════════════════════════════════════════════════════════ -->
+    <h2><span class="es">Resumen Visual</span><span class="en">Visual Summary</span></h2>
+
+    <div class="card">
+      <p>
+        <span class="es">El Dashboard esta organizado de arriba hacia abajo en el siguiente orden:</span>
+        <span class="en">The Dashboard is organized from top to bottom in the following order:</span>
+      </p>
+      <div class="steps">
+        <div class="step">
+          <span class="es">
+            <strong>Encabezado</strong> &mdash; Saludo personalizado, nombre de organizacion, fecha y boton de refrescar.
+          </span>
+          <span class="en">
+            <strong>Header</strong> &mdash; Personalized greeting, organization name, date, and refresh button.
+          </span>
+        </div>
+        <div class="step">
+          <span class="es">
+            <strong>Tarjetas KPI</strong> &mdash; 4 tarjetas en grilla con metricas clave: sistemas activos, saludables, breaches y aprobaciones.
+          </span>
+          <span class="en">
+            <strong>KPI Cards</strong> &mdash; 4 cards in a grid with key metrics: active systems, healthy systems, breaches, and approvals.
+          </span>
+        </div>
+        <div class="step">
+          <span class="es">
+            <strong>Landscape SAP</strong> &mdash; Encabezado con conteo total de sistemas y grilla de tarjetas de sistema.
+          </span>
+          <span class="en">
+            <strong>SAP Landscape</strong> &mdash; Heading with total system count and system card grid.
+          </span>
+        </div>
+        <div class="step">
+          <span class="es">
+            <strong>Tarjetas de Sistema</strong> &mdash; Grilla de 1-4 columnas donde cada tarjeta muestra SID, estado, health gauge y metricas.
+          </span>
+          <span class="en">
+            <strong>System Cards</strong> &mdash; 1-4 column grid where each card shows SID, status, health gauge, and metrics.
+          </span>
+        </div>
+        <div class="step">
+          <span class="es">
+            <strong>Acciones Rapidas</strong> &mdash; Alerta ambar con boton para ver aprobaciones pendientes (solo visible si hay pendientes).
+          </span>
+          <span class="en">
+            <strong>Quick Actions</strong> &mdash; Amber alert with button to view pending approvals (only visible when there are pending items).
+          </span>
+        </div>
+      </div>
+    </div>
+
+  </main>
+</div>
+</body>
+</html>

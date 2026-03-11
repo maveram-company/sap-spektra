@@ -1,0 +1,7 @@
+{
+  "name": "sap-alwaysops-teams-agent",
+  "version": "1.0.0",
+  "description": "Avvale SAP AlwaysOps - Agente de notificaciones para Microsoft Teams via webhooks",
+  "main": "index.js",
+  "dependencies": {}
+}

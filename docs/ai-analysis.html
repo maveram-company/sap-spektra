@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="dark" data-lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Analisis IA — SAP Spektra Docs</title>
+  <link rel="stylesheet" href="theme.css">
+  <script src="theme-toggle.js"></script>
+  <script src="lang-toggle.js"></script>
+  <style>
+    /* ── Use-case card grid ── */
+    .uc-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 14px;
+      margin-bottom: 28px;
+    }
+    @media (min-width: 1100px) { .uc-grid { grid-template-columns: repeat(3, 1fr); } }
+
+    .uc-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-left: 4px solid var(--brd);
+      border-radius: var(--radius);
+      padding: 16px;
+      transition: all 0.2s;
+      cursor: pointer;
+    }
+    .uc-card:hover { border-color: var(--cyan); box-shadow: 0 0 16px var(--card-hover); }
+    .uc-card.border-danger  { border-left-color: var(--danger); }
+    .uc-card.border-warning { border-left-color: var(--warning); }
+    .uc-card.border-primary { border-left-color: var(--cyan); }
+    .uc-card.border-accent  { border-left-color: var(--violet); }
+    .uc-card.border-success { border-left-color: var(--success); }
+    .uc-id { font-size: 11px; font-weight: 700; margin-right: 6px; }
+    .uc-id.text-danger  { color: var(--danger); }
+    .uc-id.text-warning { color: var(--warning); }
+    .uc-id.text-primary { color: var(--cyan); }
+    .uc-id.text-accent  { color: var(--violet); }
+    .uc-id.text-success { color: var(--success); }
+    .uc-name { font-size: 14px; font-weight: 600; color: var(--txt1); }
+    .uc-desc { font-size: 12px; color: var(--txt3); margin-top: 4px; }
+
+    /* ── Chat container ── */
+    .chat-box {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius);
+      display: flex;
+      flex-direction: column;
+      min-height: 400px;
+    }
+    .chat-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--brd);
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--txt1);
+    }
+    .chat-header .icon-brain { color: var(--cyan); }
+    .chat-header .icon-sparkle { color: var(--violet); font-size: 13px; }
+    .chat-messages {
+      flex: 1;
+      overflow-y: auto;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    /* User bubble */
+    .msg-user {
+      align-self: flex-end;
+      max-width: 75%;
+      background: var(--cyan);
+      color: #fff;
+      border-radius: 12px 12px 4px 12px;
+      padding: 10px 16px;
+      font-size: 13px;
+    }
+    /* AI bubble */
+    .msg-ai-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+    }
+    .msg-ai-avatar {
+      flex-shrink: 0;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: var(--cyan-dim);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      color: var(--cyan);
+      margin-top: 2px;
+    }
+    .msg-ai {
+      max-width: 80%;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px 12px 12px 4px;
+      padding: 10px 16px;
+      font-size: 13px;
+      color: var(--txt1);
+      line-height: 1.6;
+    }
+    .msg-ai strong { font-weight: 600; }
+    /* Typing indicator */
+    .typing-dots {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      padding: 12px 16px;
+    }
+    .typing-dots span {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--txt3);
+      animation: bounce-dot 1.2s infinite ease-in-out;
+    }
+    .typing-dots span:nth-child(2) { animation-delay: 0.15s; }
+    .typing-dots span:nth-child(3) { animation-delay: 0.3s; }
+    @keyframes bounce-dot {
+      0%, 80%, 100% { transform: translateY(0); }
+      40% { transform: translateY(-6px); }
+    }
+    /* Chat input */
+    .chat-input-bar {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 16px;
+      border-top: 1px solid var(--brd);
+    }
+    .chat-input {
+      flex: 1;
+      background: var(--bg3);
+      border: 1px solid var(--brd);
+      border-radius: 8px;
+      padding: 10px 14px;
+      font-size: 13px;
+      color: var(--txt1);
+      outline: none;
+      font-family: inherit;
+    }
+    .chat-input::placeholder { color: var(--txt3); }
+    .chat-input:focus { border-color: var(--cyan); }
+    .chat-send {
+      flex-shrink: 0;
+      width: 38px;
+      height: 38px;
+      border-radius: 8px;
+      border: none;
+      background: var(--cyan);
+      color: #fff;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      transition: opacity 0.2s;
+    }
+    .chat-send:hover { opacity: 0.85; }
+
+    /* ── Upgrade banner ── */
+    .upgrade-banner {
+      background: var(--violet-dim);
+      border: 1px solid rgba(139,92,246,0.25);
+      border-radius: var(--radius);
+      padding: 32px;
+      text-align: center;
+      margin: 40px 0;
+    }
+    .upgrade-banner h3 { color: var(--violet); font-size: 18px; margin-bottom: 8px; }
+    .upgrade-banner p { color: var(--txt2); font-size: 13px; }
+
+    /* ── Screenshot placeholder ── */
+    .screenshot-placeholder {
+      background: var(--bg3);
+      border: 1px dashed var(--brd);
+      border-radius: var(--radius);
+      padding: 48px 20px;
+      text-align: center;
+      color: var(--txt3);
+      font-size: 12px;
+      margin: 16px 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="docs-wrapper">
+
+    <!-- ═══ SIDEBAR ═══ -->
+    <nav class="docs-sidebar">
+      <div class="sidebar-brand">
+        <div class="logo">&#9889;</div>
+        <div class="brand-text">
+          <div class="brand-name">SAP Spektra</div>
+          <div class="brand-sub">
+            <span class="es">DOCUMENTACION</span>
+            <span class="en">DOCUMENTATION</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="sidebar-section">
+        <div class="sidebar-section-label">
+          <span class="es">Inicio</span>
+          <span class="en">Start</span>
+        </div>
+        <a href="index.html" class="sidebar-link">
+          &#127968;
+          <span class="es">Portal de Documentacion</span>
+          <span class="en">Documentation Portal</span>
+        </a>
+        <a href="getting-started.html" class="sidebar-link">
+          &#128640;
+          <span class="es">Primeros Pasos</span>
+          <span class="en">Getting Started</span>
+        </a>
+      </div>
+
+      <div class="sidebar-section">
+        <div class="sidebar-section-label">Command</div>
+        <a href="dashboard.html" class="sidebar-link">&#128202; Dashboard</a>
+        <a href="landscape.html" class="sidebar-link">&#127760; Landscape</a>
+        <a href="alerts.html" class="sidebar-link">
+          &#9888;&#65039;
+          <span class="es">Alertas</span>
+          <span class="en">Alerts</span>
+        </a>
+      </div>
+
+      <div class="sidebar-section">
+        <div class="sidebar-section-label">Monitor</div>
+        <a href="systems.html" class="sidebar-link">
+          &#128421;
+          <span class="es">Sistemas</span>
+          <span class="en">Systems</span>
+        </a>
+        <a href="connectors.html" class="sidebar-link">
+          &#128268;
+          <span class="es">Conectores</span>
+          <span class="en">Connectors</span>
+        </a>
+        <a href="events.html" class="sidebar-link">
+          &#128196;
+          <span class="es">Eventos</span>
+          <span class="en">Events</span>
+        </a>
+      </div>
+
+      <div class="sidebar-section">
+        <div class="sidebar-section-label">Intelligence</div>
+        <a href="ai-analysis.html" class="sidebar-link active">
+          &#129504;
+          <span class="es">Analisis IA</span>
+          <span class="en">AI Analysis</span>
+        </a>
+        <a href="analytics.html" class="sidebar-link">&#128200; Analytics</a>
+        <a href="reports.html" class="sidebar-link">
+          &#128209;
+          <span class="es">Reportes</span>
+          <span class="en">Reports</span>
+        </a>
+        <a href="comparison.html" class="sidebar-link">
+          &#128260;
+          <span class="es">Comparacion</span>
+          <span class="en">Comparison</span>
+        </a>
+      </div>
+
+      <div class="sidebar-section">
+        <div class="sidebar-section-label">Operations</div>
+        <a href="runbooks.html" class="sidebar-link">&#128214; Runbooks</a>
+        <a href="approvals.html" class="sidebar-link">
+          &#9989;
+          <span class="es">Aprobaciones</span>
+          <span class="en">Approvals</span>
+        </a>
+        <a href="operations.html" class="sidebar-link">
+          &#128197;
+          <span class="es">Operaciones</span>
+          <span class="en">Operations</span>
+        </a>
+        <a href="jobs.html" class="sidebar-link">&#9654;&#65039; Jobs SM37</a>
+        <a href="transports.html" class="sidebar-link">
+          &#128230;
+          <span class="es">Transportes</span>
+          <span class="en">Transports</span>
+        </a>
+        <a href="sla.html" class="sidebar-link">&#11088; SLA</a>
+        <a href="ha-control.html" class="sidebar-link">&#128147; HA Control</a>
+        <a href="certificates.html" class="sidebar-link">
+          &#128273;
+          <span class="es">Certificados</span>
+          <span class="en">Certificates</span>
+        </a>
+      </div>
+
+      <div class="sidebar-section">
+        <div class="sidebar-section-label">Admin</div>
+        <a href="admin.html" class="sidebar-link">
+          &#128737;
+          <span class="es">Gestion</span>
+          <span class="en">Management</span>
+        </a>
+        <a href="settings.html" class="sidebar-link">
+          &#9881;&#65039;
+          <span class="es">Configuracion</span>
+          <span class="en">Settings</span>
+        </a>
+        <a href="connect-system.html" class="sidebar-link">
+          &#128279;
+          <span class="es">Conectar Sistema</span>
+          <span class="en">Connect System</span>
+        </a>
+      </div>
+    </nav>
+
+    <!-- ═══ MAIN CONTENT ═══ -->
+    <main class="docs-main">
+
+      <!-- Breadcrumb -->
+      <div class="breadcrumb">
+        <a href="index.html">Docs</a>
+        <span class="sep">/</span>
+        <span>Intelligence</span>
+        <span class="sep">/</span>
+        <span class="es">Analisis IA</span>
+        <span class="en">AI Analysis</span>
+      </div>
+
+      <!-- Page header -->
+      <div class="page-header">
+        <h1>
+          <span class="es">Analisis IA</span>
+          <span class="en">AI Analysis</span>
+        </h1>
+        <p class="subtitle">Amazon Bedrock (Claude) &mdash; 7
+          <span class="es">casos de uso</span>
+          <span class="en">use cases</span>
+        </p>
+      </div>
+
+      <!-- ────────────────────────────────────────────── -->
+      <!-- FEATURE GATE                                   -->
+      <!-- ────────────────────────────────────────────── -->
+      <h2>
+        <span class="es">Requisito del plan</span>
+        <span class="en">Plan requirement</span>
+      </h2>
+      <p>
+        <span class="es">La funcionalidad de <strong>Analisis IA</strong> esta disponible unicamente en los planes que incluyen el modulo <code>ai_analysis</code>. Si tu plan actual no lo incluye, veras un banner en el centro de la pantalla invitandote a actualizar tu suscripcion.</span>
+        <span class="en">The <strong>AI Analysis</strong> feature is available only on plans that include the <code>ai_analysis</code> module. If your current plan does not include it, you will see a banner in the center of the screen inviting you to upgrade your subscription.</span>
+      </p>
+
+      <div class="upgrade-banner">
+        <h3>&#128274;
+          <span class="es">Funcionalidad premium</span>
+          <span class="en">Premium feature</span>
+        </h3>
+        <p>
+          <span class="es">Si ves este banner, tu plan no incluye <strong>Analisis IA con Bedrock</strong>. Contacta a tu administrador o actualiza tu plan para desbloquear esta seccion.</span>
+          <span class="en">If you see this banner, your plan does not include <strong>AI Analysis with Bedrock</strong>. Contact your admin or upgrade your plan to unlock this section.</span>
+        </p>
+      </div>
+
+      <!-- ────────────────────────────────────────────── -->
+      <!-- 7 USE CASE CARDS                               -->
+      <!-- ────────────────────────────────────────────── -->
+      <h2>
+        <span class="es">Tarjetas de casos de uso</span>
+        <span class="en">Use case cards</span>
+      </h2>
+      <p>
+        <span class="es">La parte superior de la pagina muestra una cuadricula de <strong>7 tarjetas</strong>, distribuidas en 1 a 3 columnas segun el ancho de pantalla. Cada tarjeta representa un caso de uso de IA especializado para monitoreo SAP.</span>
+        <span class="en">The top of the page displays a grid of <strong>7 cards</strong>, laid out in 1 to 3 columns depending on screen width. Each card represents a specialized AI use case for SAP monitoring.</span>
+      </p>
+
+      <h3>
+        <span class="es">Estructura de cada tarjeta</span>
+        <span class="en">Card structure</span>
+      </h3>
+      <ul class="feature-list">
+        <li>
+          <span class="es"><strong>Borde izquierdo de color</strong> &mdash; identifica la categoria de la tarjeta (rojo para peligro, amarillo para advertencia, cian para primario, violeta para acento, verde para exito).</span>
+          <span class="en"><strong>Color-coded left border</strong> &mdash; identifies the card category (red for danger, yellow for warning, cyan for primary, violet for accent, green for success).</span>
+        </li>
+        <li>
+          <span class="es"><strong>ID coloreado</strong> &mdash; etiqueta corta como <code>UC1</code>, <code>UC2</code>, etc., en el color correspondiente.</span>
+          <span class="en"><strong>Colored ID label</strong> &mdash; short tag like <code>UC1</code>, <code>UC2</code>, etc., in the matching color.</span>
+        </li>
+        <li>
+          <span class="es"><strong>Nombre</strong> &mdash; titulo descriptivo del caso de uso.</span>
+          <span class="en"><strong>Name</strong> &mdash; descriptive title of the use case.</span>
+        </li>
+        <li>
+          <span class="es"><strong>Descripcion</strong> &mdash; breve explicacion de lo que hace el caso de uso.</span>
+          <span class="en"><strong>Description</strong> &mdash; brief explanation of what the use case does.</span>
+        </li>
+        <li>
+          <span class="es"><strong>Click</strong> &mdash; al hacer clic en cualquier tarjeta, se envia la consulta predefinida del caso de uso directamente al chat de IA (la seccion inferior).</span>
+          <span class="en"><strong>Click</strong> &mdash; clicking any card sends the pre-defined use case query directly to the AI chat (lower section).</span>
+        </li>
+      </ul>
+
+      <h3>
+        <span class="es">Los 7 casos de uso</span>
+        <span class="en">The 7 use cases</span>
+      </h3>
+
+      <!-- Example visual of cards -->
+      <div class="uc-grid">
+        <div class="uc-card border-danger">
+          <div><span class="uc-id text-danger">UC1</span><span class="uc-name">
+            <span class="es">Analisis Incidentes</span>
+            <span class="en">Incident Analysis</span>
+          </span></div>
+          <p class="uc-desc">
+            <span class="es">Diagnostico en tiempo real de breaches. Analiza incidentes de CPU, memoria u otros recursos criticos.</span>
+            <span class="en">Real-time breach diagnosis. Analyzes CPU, memory or other critical resource incidents.</span>
+          </p>
+        </div>
+        <div class="uc-card border-warning">
+          <div><span class="uc-id text-warning">UC2</span><span class="uc-name">
+            <span class="es">Prediccion Disco</span>
+            <span class="en">Disk Prediction</span>
+          </span></div>
+          <p class="uc-desc">
+            <span class="es">Forecast de crecimiento de disco con regresion lineal. Predice cuando un filesystem se quedara sin espacio.</span>
+            <span class="en">Disk growth forecast with linear regression. Predicts when a filesystem will run out of space.</span>
+          </p>
+        </div>
+        <div class="uc-card border-primary">
+          <div><span class="uc-id text-primary">UC3</span><span class="uc-name">Safety Gate</span></div>
+          <p class="uc-desc">
+            <span class="es">Evaluacion de seguridad pre-ejecucion. Verifica si es seguro ejecutar un runbook en un sistema en este momento.</span>
+            <span class="en">Pre-execution safety assessment. Checks if it is safe to execute a runbook on a system right now.</span>
+          </p>
+        </div>
+        <div class="uc-card border-accent">
+          <div><span class="uc-id text-accent">UC4</span><span class="uc-name">
+            <span class="es">Digest Ejecutivo</span>
+            <span class="en">Executive Digest</span>
+          </span></div>
+          <p class="uc-desc">
+            <span class="es">Resumen diario automatico generado a las 22:00 UTC. Panorama completo del estado del landscape.</span>
+            <span class="en">Automatic daily summary generated at 22:00 UTC. Full overview of landscape health.</span>
+          </p>
+        </div>
+        <div class="uc-card border-success">
+          <div><span class="uc-id text-success">UC5</span><span class="uc-name">
+            <span class="es">Adaptacion Runbooks</span>
+            <span class="en">Adaptive Thresholds</span>
+          </span></div>
+          <p class="uc-desc">
+            <span class="es">Ajustes especificos por sistema. Adapta runbooks a las particularidades de cada entorno SAP (tipo de DB, version, etc.).</span>
+            <span class="en">System-specific tuning. Adapts runbooks to the specifics of each SAP environment (DB type, version, etc.).</span>
+          </p>
+        </div>
+        <div class="uc-card border-accent">
+          <div><span class="uc-id text-accent">UC6</span><span class="uc-name">
+            <span class="es">Chatbot (Estado General)</span>
+            <span class="en">Chatbot (System Status)</span>
+          </span></div>
+          <p class="uc-desc">
+            <span class="es">Interfaz conversacional de autoservicio. Consulta el estado general de todos los sistemas en lenguaje natural.</span>
+            <span class="en">Self-service conversational interface. Query the overall status of all systems in natural language.</span>
+          </p>
+        </div>
+        <div class="uc-card border-warning">
+          <div><span class="uc-id text-warning">UC7</span><span class="uc-name">
+            <span class="es">Evaluacion de Riesgo</span>
+            <span class="en">Risk Assessment</span>
+          </span></div>
+          <p class="uc-desc">
+            <span class="es">Evalua el riesgo de operaciones programadas. Analiza si un reinicio o cambio en un sistema es seguro en el horario actual.</span>
+            <span class="en">Evaluates risk of scheduled operations. Analyzes whether a restart or change on a system is safe at the current time.</span>
+          </p>
+        </div>
+      </div>
+
+      <div class="callout info">
+        <span class="callout-icon">&#128161;</span>
+        <div>
+          <span class="es">Al hacer clic en una tarjeta, la consulta predefinida se envia automaticamente al chat. El cursor se posiciona en el campo de entrada para que puedas seguir escribiendo inmediatamente.</span>
+          <span class="en">Clicking a card automatically sends the pre-defined query to the chat. The cursor is placed in the input field so you can continue typing immediately.</span>
+        </div>
+      </div>
+
+      <!-- ────────────────────────────────────────────── -->
+      <!-- CHAT INTERFACE                                 -->
+      <!-- ────────────────────────────────────────────── -->
+      <h2>
+        <span class="es">Interfaz de Chat IA</span>
+        <span class="en">AI Chat Interface</span>
+      </h2>
+      <p>
+        <span class="es">Debajo de las tarjetas de casos de uso se encuentra el panel de chat. Este es el componente principal de interaccion con la IA.</span>
+        <span class="en">Below the use case cards you will find the chat panel. This is the main interaction component with the AI.</span>
+      </p>
+
+      <h3>
+        <span class="es">Cabecera del chat</span>
+        <span class="en">Chat header</span>
+      </h3>
+      <p>
+        <span class="es">La barra superior del chat muestra un icono de cerebro (&#129504;), el texto <strong>"Chat IA"</strong> y un icono de destellos (&#10024;). Esto indica que el chat esta potenciado por Amazon Bedrock con Claude.</span>
+        <span class="en">The top bar of the chat shows a brain icon (&#129504;), the text <strong>"Chat IA"</strong> and a sparkles icon (&#10024;). This indicates the chat is powered by Amazon Bedrock with Claude.</span>
+      </p>
+
+      <h3>
+        <span class="es">Area de mensajes</span>
+        <span class="en">Message area</span>
+      </h3>
+      <ul class="feature-list">
+        <li>
+          <span class="es"><strong>Mensajes del usuario</strong> &mdash; aparecen alineados a la derecha con fondo cian (turquesa) y texto blanco. Bordes redondeados con la esquina inferior derecha angulada.</span>
+          <span class="en"><strong>User messages</strong> &mdash; appear right-aligned with a cyan (turquoise) background and white text. Rounded corners with a sharp bottom-right edge.</span>
+        </li>
+        <li>
+          <span class="es"><strong>Mensajes de la IA</strong> &mdash; aparecen alineados a la izquierda. Incluyen un avatar circular con un icono de Bot. El texto se muestra dentro de una burbuja con borde sutil y fondo de la superficie. La esquina inferior izquierda es angulada.</span>
+          <span class="en"><strong>AI messages</strong> &mdash; appear left-aligned. They include a circular avatar with a Bot icon. Text is shown inside a bubble with a subtle border and surface background. The bottom-left corner is sharp.</span>
+        </li>
+      </ul>
+
+      <h3>
+        <span class="es">Mensaje de bienvenida</span>
+        <span class="en">Welcome message</span>
+      </h3>
+      <p>
+        <span class="es">Al abrir la pagina, el chat muestra un mensaje de bienvenida de la IA que dice:</span>
+        <span class="en">When opening the page, the chat displays a welcome message from the AI that reads:</span>
+      </p>
+
+      <!-- Example chat -->
+      <div class="chat-box mt-2 mb-3">
+        <div class="chat-header">
+          <span class="icon-brain">&#129504;</span>
+          Chat IA
+          <span class="icon-sparkle">&#10024;</span>
+        </div>
+        <div class="chat-messages">
+          <div class="msg-ai-row">
+            <div class="msg-ai-avatar">&#129302;</div>
+            <div class="msg-ai">
+              <strong>
+                <span class="es">Bienvenido al Analisis IA de SAP Spektra.</span>
+                <span class="en">Welcome to SAP Spektra AI Analysis.</span>
+              </strong><br><br>
+              <span class="es">Soy tu asistente potenciado por Amazon Bedrock (Claude). Puedo ayudarte con 7 casos de uso especializados para monitoreo SAP.</span>
+              <span class="en">I am your assistant powered by Amazon Bedrock (Claude). I can help you with 7 specialized use cases for SAP monitoring.</span>
+              <br><br>
+              <span class="es">Selecciona un caso de uso arriba o escribe tu consulta directamente.</span>
+              <span class="en">Select a use case above or type your query directly.</span>
+            </div>
+          </div>
+        </div>
+        <div class="chat-input-bar">
+          <input type="text" class="chat-input" placeholder="Escribe tu consulta SAP..." disabled>
+          <button class="chat-send" disabled>&#10148;</button>
+        </div>
+      </div>
+
+      <h3>
+        <span class="es">Indicador de escritura</span>
+        <span class="en">Typing indicator</span>
+      </h3>
+      <p>
+        <span class="es">Cuando la IA esta procesando tu consulta, se muestra un indicador de escritura: tres puntos que rebotan dentro de una burbuja alineada a la izquierda, junto al avatar del Bot. Esto simula que la IA esta "escribiendo" su respuesta.</span>
+        <span class="en">When the AI is processing your query, a typing indicator appears: three bouncing dots inside a left-aligned bubble, next to the Bot avatar. This simulates the AI "typing" its response.</span>
+      </p>
+
+      <div class="chat-box" style="min-height:auto;">
+        <div class="chat-messages" style="padding:16px;">
+          <div class="msg-ai-row">
+            <div class="msg-ai-avatar">&#129302;</div>
+            <div class="msg-ai" style="padding:10px 16px;">
+              <div class="typing-dots">
+                <span></span><span></span><span></span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <h3>
+        <span class="es">Campo de entrada y envio</span>
+        <span class="en">Input field and send</span>
+      </h3>
+      <ul class="feature-list">
+        <li>
+          <span class="es">En la parte inferior del chat hay un <strong>campo de texto</strong> con el placeholder <em>"Escribe tu consulta SAP..."</em>.</span>
+          <span class="en">At the bottom of the chat there is a <strong>text field</strong> with the placeholder <em>"Escribe tu consulta SAP..."</em>.</span>
+        </li>
+        <li>
+          <span class="es">A la derecha del campo hay un <strong>boton de envio</strong> con un icono de flecha (Send). Tambien puedes presionar <kbd>Enter</kbd> para enviar el mensaje.</span>
+          <span class="en">To the right of the field is a <strong>send button</strong> with an arrow icon (Send). You can also press <kbd>Enter</kbd> to send the message.</span>
+        </li>
+        <li>
+          <span class="es">El boton se desactiva mientras la IA esta respondiendo (indicador de escritura visible) o si el campo esta vacio.</span>
+          <span class="en">The button is disabled while the AI is responding (typing indicator visible) or if the field is empty.</span>
+        </li>
+      </ul>
+
+      <h3>
+        <span class="es">Formato de respuestas IA</span>
+        <span class="en">AI response formatting</span>
+      </h3>
+      <p>
+        <span class="es">Las respuestas de la IA soportan formato basico de Markdown:</span>
+        <span class="en">AI responses support basic Markdown formatting:</span>
+      </p>
+      <ul class="feature-list">
+        <li>
+          <span class="es"><strong>Texto en negrita</strong> &mdash; delimitado con doble asterisco <code>**texto**</code>.</span>
+          <span class="en"><strong>Bold text</strong> &mdash; delimited with double asterisks <code>**text**</code>.</span>
+        </li>
+        <li>
+          <span class="es"><strong>Saltos de linea</strong> &mdash; cada linea nueva se renderiza como un <code>&lt;br&gt;</code>.</span>
+          <span class="en"><strong>Line breaks</strong> &mdash; each new line is rendered as a <code>&lt;br&gt;</code>.</span>
+        </li>
+      </ul>
+
+      <h3>
+        <span class="es">Flujo tipico de uso</span>
+        <span class="en">Typical usage flow</span>
+      </h3>
+      <div class="steps">
+        <div class="step">
+          <span class="es">Haz clic en una de las 7 tarjetas de caso de uso (p. ej., <strong>UC1 &mdash; Analisis Incidentes</strong>) o escribe tu pregunta directamente en el campo de entrada.</span>
+          <span class="en">Click one of the 7 use case cards (e.g., <strong>UC1 &mdash; Incident Analysis</strong>) or type your question directly in the input field.</span>
+        </div>
+        <div class="step">
+          <span class="es">Tu mensaje aparece alineado a la derecha con fondo cian. El indicador de escritura (tres puntos) se muestra mientras la IA procesa la consulta.</span>
+          <span class="en">Your message appears right-aligned with cyan background. The typing indicator (three dots) shows while the AI processes the query.</span>
+        </div>
+        <div class="step">
+          <span class="es">La IA responde con un analisis detallado, incluyendo texto en negrita para resaltar hallazgos clave. La respuesta se alinea a la izquierda con el avatar del Bot.</span>
+          <span class="en">The AI responds with a detailed analysis, including bold text to highlight key findings. The response is left-aligned with the Bot avatar.</span>
+        </div>
+        <div class="step">
+          <span class="es">El chat hace scroll automatico hacia el mensaje mas reciente. Puedes continuar la conversacion escribiendo nuevas consultas.</span>
+          <span class="en">The chat auto-scrolls to the most recent message. You can continue the conversation by typing new queries.</span>
+        </div>
+      </div>
+
+      <!-- Footer -->
+      <div style="margin-top:48px;padding:24px 0;border-top:1px solid var(--brd);text-align:center;font-size:12px;color:var(--txt3);">
+        &copy; 2026 Maveram.
+        <span class="es">Todos los derechos reservados.</span>
+        <span class="en">All rights reserved.</span>
+      </div>
+
+    </main>
+  </div>
+</body>
+</html>

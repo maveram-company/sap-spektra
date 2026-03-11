@@ -1,0 +1,527 @@
+<!DOCTYPE html><html lang="es" data-theme="dark" data-lang="es"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Certificados & Licencias — SAP Spektra Docs</title><link rel="stylesheet" href="theme.css"><script src="theme-toggle.js"></script><script src="lang-toggle.js"></script></head><body><div class="docs-wrapper">
+<nav class="docs-sidebar">
+  <div class="sidebar-brand"><div class="logo">&#9889;</div><div class="brand-text"><div class="brand-name">SAP Spektra</div><div class="brand-sub">Documentacion</div></div></div>
+  <div class="sidebar-section"><div class="sidebar-section-label">Inicio</div><a href="index.html" class="sidebar-link">Portal</a><a href="getting-started.html" class="sidebar-link">Primeros Pasos</a></div>
+  <div class="sidebar-section"><div class="sidebar-section-label">Command</div><a href="dashboard.html" class="sidebar-link">Dashboard</a><a href="landscape.html" class="sidebar-link">Landscape</a><a href="alerts.html" class="sidebar-link">Alertas</a></div>
+  <div class="sidebar-section"><div class="sidebar-section-label">Monitor</div><a href="systems.html" class="sidebar-link">Sistemas</a><a href="connectors.html" class="sidebar-link">Conectores</a><a href="events.html" class="sidebar-link">Eventos</a></div>
+  <div class="sidebar-section"><div class="sidebar-section-label">Intelligence</div><a href="ai-analysis.html" class="sidebar-link">Analisis IA</a><a href="analytics.html" class="sidebar-link">Analytics</a><a href="reports.html" class="sidebar-link">Reportes</a><a href="comparison.html" class="sidebar-link">Comparacion</a></div>
+  <div class="sidebar-section"><div class="sidebar-section-label">Operations</div><a href="runbooks.html" class="sidebar-link">Runbooks</a><a href="approvals.html" class="sidebar-link">Aprobaciones</a><a href="operations.html" class="sidebar-link">Operaciones</a><a href="jobs.html" class="sidebar-link">Jobs (SM37)</a><a href="transports.html" class="sidebar-link">Transportes</a><a href="sla.html" class="sidebar-link">SLA</a><a href="ha-control.html" class="sidebar-link">HA Control</a><a href="certificates.html" class="sidebar-link active">Certificados</a></div>
+  <div class="sidebar-section"><div class="sidebar-section-label">Admin</div><a href="admin.html" class="sidebar-link">Gestion</a><a href="settings.html" class="sidebar-link">Configuracion</a><a href="connect-system.html" class="sidebar-link">Conectar Sistema</a></div>
+</nav>
+<main class="docs-main">
+
+  <!-- ====== HEADER ====== -->
+  <section class="doc-section">
+    <h1><span class="es">Certificados & Licencias</span><span class="en">Certificates & Licenses</span></h1>
+    <p class="section-desc">
+      <span class="es">Tracker de expiracion &mdash; evita interrupciones por vencimiento</span>
+      <span class="en">Expiration tracker &mdash; prevent outages from expired credentials</span>
+    </p>
+    <p>
+      <span class="es">La pantalla de <strong>Certificados & Licencias</strong> centraliza el seguimiento de todos los certificados SSL, PSE y SNC, asi como las licencias SAP (SLICENSE) de su landscape. SAP Spektra monitorea automaticamente las fechas de vencimiento y le alerta con anticipacion para que pueda renovar antes de que se produzcan interrupciones en conexiones HTTPS, RFC o PI/PO.</span>
+      <span class="en">The <strong>Certificates & Licenses</strong> screen centralizes the tracking of all SSL, PSE, and SNC certificates, as well as SAP licenses (SLICENSE) across your landscape. SAP Spektra automatically monitors expiration dates and alerts you in advance so you can renew before outages occur on HTTPS, RFC, or PI/PO connections.</span>
+    </p>
+  </section>
+
+  <!-- ====== KPI SUMMARY ====== -->
+  <section class="doc-section">
+    <h2><span class="es">Resumen de Indicadores (KPI)</span><span class="en">KPI Summary</span></h2>
+    <p>
+      <span class="es">En la parte superior de la pantalla vera cuatro tarjetas de indicadores clave que resumen el estado general de sus certificados y licencias:</span>
+      <span class="en">At the top of the screen you will see four key indicator cards summarizing the overall status of your certificates and licenses:</span>
+    </p>
+
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:16px;margin:20px 0;">
+      <div style="background:var(--bg-secondary);border:1px solid var(--border-color);border-radius:8px;padding:20px;text-align:center;border-top:3px solid #ef4444;">
+        <div style="font-size:2em;font-weight:700;color:#ef4444;">2</div>
+        <div style="font-size:0.9em;color:var(--text-secondary);margin-top:4px;"><span class="es">Cert. Expirados</span><span class="en">Expired Certs</span></div>
+      </div>
+      <div style="background:var(--bg-secondary);border:1px solid var(--border-color);border-radius:8px;padding:20px;text-align:center;border-top:3px solid #f59e0b;">
+        <div style="font-size:2em;font-weight:700;color:#f59e0b;">5</div>
+        <div style="font-size:0.9em;color:var(--text-secondary);margin-top:4px;"><span class="es">Por Vencer</span><span class="en">Expiring Soon</span></div>
+      </div>
+      <div style="background:var(--bg-secondary);border:1px solid var(--border-color);border-radius:8px;padding:20px;text-align:center;border-top:3px solid #22c55e;">
+        <div style="font-size:2em;font-weight:700;color:#22c55e;">18</div>
+        <div style="font-size:0.9em;color:var(--text-secondary);margin-top:4px;"><span class="es">Cert. Vigentes</span><span class="en">Valid Certs</span></div>
+      </div>
+      <div style="background:var(--bg-secondary);border:1px solid var(--border-color);border-radius:8px;padding:20px;text-align:center;border-top:3px solid var(--accent-blue);">
+        <div style="font-size:2em;font-weight:700;color:var(--accent-blue);">6</div>
+        <div style="font-size:0.9em;color:var(--text-secondary);margin-top:4px;"><span class="es">Licencias SAP</span><span class="en">SAP Licenses</span></div>
+      </div>
+    </div>
+
+    <table class="doc-table">
+      <thead>
+        <tr>
+          <th><span class="es">Tarjeta</span><span class="en">Card</span></th>
+          <th><span class="es">Que indica</span><span class="en">What it indicates</span></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong><span class="es">Cert. Expirados</span><span class="en">Expired Certs</span></strong></td>
+          <td>
+            <span class="es">Cantidad de certificados cuya fecha de vencimiento ya paso (dias restantes &le; 0). Se muestra en <span style="color:#ef4444;font-weight:600;">rojo</span> porque requiere accion inmediata. Un certificado expirado puede causar fallos en conexiones HTTPS, RFC y PI/PO.</span>
+            <span class="en">Number of certificates whose expiration date has already passed (days left &le; 0). Shown in <span style="color:#ef4444;font-weight:600;">red</span> because it requires immediate action. An expired certificate can cause HTTPS, RFC, and PI/PO connection failures.</span>
+          </td>
+        </tr>
+        <tr>
+          <td><strong><span class="es">Por Vencer</span><span class="en">Expiring Soon</span></strong></td>
+          <td>
+            <span class="es">Suma de certificados y licencias que venceran pronto (dentro del umbral de advertencia configurado). Se muestra en <span style="color:#f59e0b;font-weight:600;">amarillo/ambar</span> para indicar que debe planificar la renovacion.</span>
+            <span class="en">Sum of certificates and licenses that will expire soon (within the configured warning threshold). Shown in <span style="color:#f59e0b;font-weight:600;">yellow/amber</span> to indicate you should plan renewal.</span>
+          </td>
+        </tr>
+        <tr>
+          <td><strong><span class="es">Cert. Vigentes</span><span class="en">Valid Certs</span></strong></td>
+          <td>
+            <span class="es">Cantidad de certificados con estado OK &mdash; su fecha de vencimiento esta fuera del umbral de advertencia. Se muestra en <span style="color:#22c55e;font-weight:600;">verde</span>.</span>
+            <span class="en">Number of certificates with OK status &mdash; their expiration date is outside the warning threshold. Shown in <span style="color:#22c55e;font-weight:600;">green</span>.</span>
+          </td>
+        </tr>
+        <tr>
+          <td><strong><span class="es">Licencias SAP</span><span class="en">SAP Licenses</span></strong></td>
+          <td>
+            <span class="es">Cantidad total de licencias SAP (SLICENSE) registradas en todos los sistemas conectados. Se muestra en <span style="color:var(--accent-blue);font-weight:600;">azul</span>.</span>
+            <span class="en">Total number of SAP licenses (SLICENSE) registered across all connected systems. Shown in <span style="color:var(--accent-blue);font-weight:600;">blue</span>.</span>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- ====== CERTIFICATES TABLE ====== -->
+  <section class="doc-section">
+    <h2>
+      <span class="es">Certificados SSL / PSE / SNC</span><span class="en">SSL / PSE / SNC Certificates</span>
+      <span style="background:var(--cyan-dim);color:var(--cyan);padding:2px 10px;border-radius:100px;font-size:11px;font-weight:600;margin-left:10px;vertical-align:middle;">25</span>
+    </h2>
+    <p>
+      <span class="es">La tabla principal muestra todos los certificados SSL, PSE y SNC de su landscape, <strong>ordenados por dias restantes de forma ascendente</strong> (los mas urgentes primero). Cada fila contiene la siguiente informacion:</span>
+      <span class="en">The main table shows all SSL, PSE, and SNC certificates across your landscape, <strong>sorted by days remaining in ascending order</strong> (most urgent first). Each row contains the following information:</span>
+    </p>
+
+    <table class="doc-table">
+      <thead>
+        <tr>
+          <th><span class="es">Columna</span><span class="en">Column</span></th>
+          <th><span class="es">Que muestra</span><span class="en">What it shows</span></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong><span class="es">Estado</span><span class="en">Status</span></strong></td>
+          <td>
+            <span class="es">Icono visual que indica el estado del certificado:
+              <br>&#8226; <span style="color:#22c55e;">&#9745;</span> <strong style="color:#22c55e;">OK</strong> &mdash; Certificado vigente, sin riesgo de vencimiento proximo.
+              <br>&#8226; <span style="color:#f59e0b;">&#9888;</span> <strong style="color:#f59e0b;">Warning</strong> &mdash; El certificado vencera pronto (dentro del umbral de advertencia).
+              <br>&#8226; <span style="color:#ef4444;">&#10060;</span> <strong style="color:#ef4444;">Critical</strong> &mdash; El certificado ya expiro o esta a punto de expirar.
+            </span>
+            <span class="en">Visual icon indicating the certificate status:
+              <br>&#8226; <span style="color:#22c55e;">&#9745;</span> <strong style="color:#22c55e;">OK</strong> &mdash; Certificate is valid, no risk of imminent expiration.
+              <br>&#8226; <span style="color:#f59e0b;">&#9888;</span> <strong style="color:#f59e0b;">Warning</strong> &mdash; The certificate will expire soon (within the warning threshold).
+              <br>&#8226; <span style="color:#ef4444;">&#10060;</span> <strong style="color:#ef4444;">Critical</strong> &mdash; The certificate has already expired or is about to expire.
+            </span>
+          </td>
+        </tr>
+        <tr>
+          <td><strong><span class="es">Sistema</span><span class="en">System</span></strong></td>
+          <td>
+            <span class="es">SID del sistema SAP donde esta instalado el certificado, mostrado como badge de color (ej. <span style="background:var(--accent-blue);color:#fff;padding:1px 6px;border-radius:3px;font-size:0.85em;">PRD</span>).</span>
+            <span class="en">SID of the SAP system where the certificate is installed, shown as a colored badge (e.g. <span style="background:var(--accent-blue);color:#fff;padding:1px 6px;border-radius:3px;font-size:0.85em;">PRD</span>).</span>
+          </td>
+        </tr>
+        <tr>
+          <td><strong><span class="es">Tipo</span><span class="en">Type</span></strong></td>
+          <td>
+            <span class="es">Tipo de certificado:
+              <br>&#8226; <strong>SSL</strong> &mdash; Certificado SSL/TLS para conexiones HTTPS.
+              <br>&#8226; <strong>PSE</strong> &mdash; Personal Security Environment, usado por SAP para comunicaciones seguras.
+              <br>&#8226; <strong>SNC</strong> &mdash; Secure Network Communications, usado para encriptacion de comunicaciones RFC.
+            </span>
+            <span class="en">Certificate type:
+              <br>&#8226; <strong>SSL</strong> &mdash; SSL/TLS certificate for HTTPS connections.
+              <br>&#8226; <strong>PSE</strong> &mdash; Personal Security Environment, used by SAP for secure communications.
+              <br>&#8226; <strong>SNC</strong> &mdash; Secure Network Communications, used for RFC communication encryption.
+            </span>
+          </td>
+        </tr>
+        <tr>
+          <td><strong>CN / Subject</strong></td>
+          <td>
+            <span class="es">Nombre comun (Common Name) o subject del certificado, mostrado en formato <code style="color:var(--cyan);">monoespaciado</code>. Identifica a que dominio, servidor o entidad pertenece el certificado (ej. <code>*.sapserver.company.com</code>).</span>
+            <span class="en">Common Name or subject of the certificate, shown in <code style="color:var(--cyan);">monospace</code> format. Identifies which domain, server, or entity the certificate belongs to (e.g. <code>*.sapserver.company.com</code>).</span>
+          </td>
+        </tr>
+        <tr>
+          <td><strong><span class="es">Emisor</span><span class="en">Issuer</span></strong></td>
+          <td>
+            <span class="es">Autoridad certificadora (CA) que emitio el certificado (ej. <em>DigiCert</em>, <em>SAP Trust Community</em>, <em>Internal CA</em>).</span>
+            <span class="en">Certificate Authority (CA) that issued the certificate (e.g. <em>DigiCert</em>, <em>SAP Trust Community</em>, <em>Internal CA</em>).</span>
+          </td>
+        </tr>
+        <tr>
+          <td><strong><span class="es">Vence</span><span class="en">Expires</span></strong></td>
+          <td>
+            <span class="es">Fecha de vencimiento del certificado, formateada en formato colombiano (dd/mm/aaaa). Las fechas pasadas se muestran en rojo.</span>
+            <span class="en">Certificate expiration date, formatted in locale date format. Past dates are shown in red.</span>
+          </td>
+        </tr>
+        <tr>
+          <td><strong><span class="es">Dias</span><span class="en">Days</span></strong></td>
+          <td>
+            <span class="es">Badge de dias restantes hasta el vencimiento:
+              <br>&#8226; <span style="background:rgba(239,68,68,0.12);color:#ef4444;padding:2px 8px;border-radius:100px;font-size:0.85em;font-weight:600;">EXPIRADO</span> &mdash; El certificado ya vencio (dias &le; 0).
+              <br>&#8226; <span style="background:rgba(239,68,68,0.12);color:#ef4444;padding:2px 8px;border-radius:100px;font-size:0.85em;font-weight:600;">X dias</span> &mdash; Estado critico, muy pocos dias restantes.
+              <br>&#8226; <span style="background:rgba(245,158,11,0.12);color:#f59e0b;padding:2px 8px;border-radius:100px;font-size:0.85em;font-weight:600;">X dias</span> &mdash; Warning, el vencimiento se acerca.
+              <br>&#8226; <span style="background:rgba(34,197,94,0.12);color:#22c55e;padding:2px 8px;border-radius:100px;font-size:0.85em;font-weight:600;">X dias</span> &mdash; OK, suficiente tiempo restante.
+            </span>
+            <span class="en">Days remaining badge until expiration:
+              <br>&#8226; <span style="background:rgba(239,68,68,0.12);color:#ef4444;padding:2px 8px;border-radius:100px;font-size:0.85em;font-weight:600;">EXPIRED</span> &mdash; The certificate has already expired (days &le; 0).
+              <br>&#8226; <span style="background:rgba(239,68,68,0.12);color:#ef4444;padding:2px 8px;border-radius:100px;font-size:0.85em;font-weight:600;">X days</span> &mdash; Critical status, very few days remaining.
+              <br>&#8226; <span style="background:rgba(245,158,11,0.12);color:#f59e0b;padding:2px 8px;border-radius:100px;font-size:0.85em;font-weight:600;">X days</span> &mdash; Warning, expiration is approaching.
+              <br>&#8226; <span style="background:rgba(34,197,94,0.12);color:#22c55e;padding:2px 8px;border-radius:100px;font-size:0.85em;font-weight:600;">X days</span> &mdash; OK, sufficient time remaining.
+            </span>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- ====== CERTIFICATES TABLE EXAMPLE ====== -->
+  <section class="doc-section">
+    <h3><span class="es">Ejemplo de Tabla de Certificados</span><span class="en">Certificates Table Example</span></h3>
+    <div style="overflow-x:auto;">
+      <table class="doc-table" style="font-size:0.9em;">
+        <thead>
+          <tr>
+            <th><span class="es">Estado</span><span class="en">Status</span></th>
+            <th><span class="es">Sistema</span><span class="en">System</span></th>
+            <th><span class="es">Tipo</span><span class="en">Type</span></th>
+            <th>CN / Subject</th>
+            <th><span class="es">Emisor</span><span class="en">Issuer</span></th>
+            <th><span class="es">Vence</span><span class="en">Expires</span></th>
+            <th><span class="es">Dias</span><span class="en">Days</span></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span style="color:#ef4444;font-size:1.1em;">&#10060;</span></td>
+            <td><span style="background:var(--accent-blue);color:#fff;padding:1px 6px;border-radius:3px;font-size:0.85em;">PRD</span></td>
+            <td>SSL</td>
+            <td><code>prd.sap.company.com</code></td>
+            <td>DigiCert Global G2</td>
+            <td><span style="color:#ef4444;">15/02/2026</span></td>
+            <td><span style="background:rgba(239,68,68,0.12);color:#ef4444;padding:2px 8px;border-radius:100px;font-size:0.85em;font-weight:600;"><span class="es">EXPIRADO</span><span class="en">EXPIRED</span></span></td>
+          </tr>
+          <tr>
+            <td><span style="color:#ef4444;font-size:1.1em;">&#10060;</span></td>
+            <td><span style="background:var(--accent-blue);color:#fff;padding:1px 6px;border-radius:3px;font-size:0.85em;">PRD</span></td>
+            <td>PSE</td>
+            <td><code>CN=PRD_SAPSSL, O=Company</code></td>
+            <td>Internal CA</td>
+            <td><span style="color:#ef4444;">01/03/2026</span></td>
+            <td><span style="background:rgba(239,68,68,0.12);color:#ef4444;padding:2px 8px;border-radius:100px;font-size:0.85em;font-weight:600;"><span class="es">EXPIRADO</span><span class="en">EXPIRED</span></span></td>
+          </tr>
+          <tr>
+            <td><span style="color:#f59e0b;font-size:1.1em;">&#9888;</span></td>
+            <td><span style="background:#f59e0b;color:#000;padding:1px 6px;border-radius:3px;font-size:0.85em;">QAS</span></td>
+            <td>SSL</td>
+            <td><code>qas.sap.company.com</code></td>
+            <td>DigiCert Global G2</td>
+            <td>28/03/2026</td>
+            <td><span style="background:rgba(245,158,11,0.12);color:#f59e0b;padding:2px 8px;border-radius:100px;font-size:0.85em;font-weight:600;"><span class="es">17 dias</span><span class="en">17 days</span></span></td>
+          </tr>
+          <tr>
+            <td><span style="color:#f59e0b;font-size:1.1em;">&#9888;</span></td>
+            <td><span style="background:var(--accent-blue);color:#fff;padding:1px 6px;border-radius:3px;font-size:0.85em;">PRD</span></td>
+            <td>SNC</td>
+            <td><code>CN=PRD_SNC, O=Company</code></td>
+            <td>SAP Trust Community</td>
+            <td>15/04/2026</td>
+            <td><span style="background:rgba(245,158,11,0.12);color:#f59e0b;padding:2px 8px;border-radius:100px;font-size:0.85em;font-weight:600;"><span class="es">35 dias</span><span class="en">35 days</span></span></td>
+          </tr>
+          <tr>
+            <td><span style="color:#22c55e;font-size:1.1em;">&#9745;</span></td>
+            <td><span style="background:#22c55e;color:#fff;padding:1px 6px;border-radius:3px;font-size:0.85em;">DEV</span></td>
+            <td>SSL</td>
+            <td><code>dev.sap.company.com</code></td>
+            <td>DigiCert Global G2</td>
+            <td>22/09/2026</td>
+            <td><span style="background:rgba(34,197,94,0.12);color:#22c55e;padding:2px 8px;border-radius:100px;font-size:0.85em;font-weight:600;"><span class="es">195 dias</span><span class="en">195 days</span></span></td>
+          </tr>
+          <tr>
+            <td><span style="color:#22c55e;font-size:1.1em;">&#9745;</span></td>
+            <td><span style="background:var(--accent-blue);color:#fff;padding:1px 6px;border-radius:3px;font-size:0.85em;">PRD</span></td>
+            <td>PSE</td>
+            <td><code>CN=PRD_WDPSSL, O=Company</code></td>
+            <td>Internal CA</td>
+            <td>10/12/2026</td>
+            <td><span style="background:rgba(34,197,94,0.12);color:#22c55e;padding:2px 8px;border-radius:100px;font-size:0.85em;font-weight:600;"><span class="es">274 dias</span><span class="en">274 days</span></span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ====== LICENSES TABLE ====== -->
+  <section class="doc-section">
+    <h2>
+      <span class="es">Licencias SAP (SLICENSE)</span><span class="en">SAP Licenses (SLICENSE)</span>
+      <span style="background:var(--cyan-dim);color:var(--cyan);padding:2px 10px;border-radius:100px;font-size:11px;font-weight:600;margin-left:10px;vertical-align:middle;">6</span>
+    </h2>
+    <p>
+      <span class="es">La segunda tabla muestra las licencias SAP registradas en sus sistemas, equivalente a la informacion de la transaccion <code>SLICENSE</code>. Las licencias se ordenan por <strong>dias restantes de forma ascendente</strong> (las mas proximas a vencer primero).</span>
+      <span class="en">The second table shows the SAP licenses registered on your systems, equivalent to the information from transaction <code>SLICENSE</code>. Licenses are sorted by <strong>days remaining in ascending order</strong> (closest to expiration first).</span>
+    </p>
+
+    <table class="doc-table">
+      <thead>
+        <tr>
+          <th><span class="es">Columna</span><span class="en">Column</span></th>
+          <th><span class="es">Que muestra</span><span class="en">What it shows</span></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong><span class="es">Estado</span><span class="en">Status</span></strong></td>
+          <td>
+            <span class="es">Icono de estado identico al de certificados:
+              <br>&#8226; <span style="color:#22c55e;">&#9745;</span> OK &mdash; Licencia vigente.
+              <br>&#8226; <span style="color:#f59e0b;">&#9888;</span> Warning &mdash; La licencia vencera pronto.
+              <br>&#8226; <span style="color:#ef4444;">&#10060;</span> Critical &mdash; La licencia ya expiro.
+            </span>
+            <span class="en">Status icon identical to certificates:
+              <br>&#8226; <span style="color:#22c55e;">&#9745;</span> OK &mdash; License is valid.
+              <br>&#8226; <span style="color:#f59e0b;">&#9888;</span> Warning &mdash; License will expire soon.
+              <br>&#8226; <span style="color:#ef4444;">&#10060;</span> Critical &mdash; License has already expired.
+            </span>
+          </td>
+        </tr>
+        <tr>
+          <td><strong><span class="es">Sistema</span><span class="en">System</span></strong></td>
+          <td>
+            <span class="es">SID del sistema SAP al que pertenece la licencia, mostrado como badge de color.</span>
+            <span class="en">SID of the SAP system the license belongs to, shown as a colored badge.</span>
+          </td>
+        </tr>
+        <tr>
+          <td><strong><span class="es">Tipo</span><span class="en">Type</span></strong></td>
+          <td>
+            <span class="es">Tipo de licencia SAP (ej. <em>Permanent</em>, <em>Temporary</em>, <em>Maintenance</em>).</span>
+            <span class="en">SAP license type (e.g. <em>Permanent</em>, <em>Temporary</em>, <em>Maintenance</em>).</span>
+          </td>
+        </tr>
+        <tr>
+          <td><strong>Hardware Key</strong></td>
+          <td>
+            <span class="es">Clave de hardware del sistema asociada a la licencia, mostrada en formato <code style="color:var(--cyan);">monoespaciado</code>. Identifica de forma unica la instalacion SAP.</span>
+            <span class="en">System hardware key associated with the license, shown in <code style="color:var(--cyan);">monospace</code> format. Uniquely identifies the SAP installation.</span>
+          </td>
+        </tr>
+        <tr>
+          <td><strong><span class="es">Valido Desde</span><span class="en">Valid From</span></strong></td>
+          <td>
+            <span class="es">Fecha de inicio de validez de la licencia.</span>
+            <span class="en">License validity start date.</span>
+          </td>
+        </tr>
+        <tr>
+          <td><strong><span class="es">Valido Hasta</span><span class="en">Valid Until</span></strong></td>
+          <td>
+            <span class="es">Fecha de vencimiento de la licencia. Las fechas pasadas se muestran en rojo.</span>
+            <span class="en">License expiration date. Past dates are shown in red.</span>
+          </td>
+        </tr>
+        <tr>
+          <td><strong><span class="es">Dias</span><span class="en">Days</span></strong></td>
+          <td>
+            <span class="es">Badge de dias restantes identico al de certificados, con la misma codificacion de color por estado (EXPIRADO / critico / warning / OK).</span>
+            <span class="en">Days remaining badge identical to certificates, with the same color coding by status (EXPIRED / critical / warning / OK).</span>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- ====== LICENSES TABLE EXAMPLE ====== -->
+  <section class="doc-section">
+    <h3><span class="es">Ejemplo de Tabla de Licencias</span><span class="en">Licenses Table Example</span></h3>
+    <div style="overflow-x:auto;">
+      <table class="doc-table" style="font-size:0.9em;">
+        <thead>
+          <tr>
+            <th><span class="es">Estado</span><span class="en">Status</span></th>
+            <th><span class="es">Sistema</span><span class="en">System</span></th>
+            <th><span class="es">Tipo</span><span class="en">Type</span></th>
+            <th>Hardware Key</th>
+            <th><span class="es">Valido Desde</span><span class="en">Valid From</span></th>
+            <th><span class="es">Valido Hasta</span><span class="en">Valid Until</span></th>
+            <th><span class="es">Dias</span><span class="en">Days</span></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span style="color:#f59e0b;font-size:1.1em;">&#9888;</span></td>
+            <td><span style="background:#f59e0b;color:#000;padding:1px 6px;border-radius:3px;font-size:0.85em;">QAS</span></td>
+            <td>Temporary</td>
+            <td><code>T1234567890</code></td>
+            <td>01/01/2026</td>
+            <td>30/04/2026</td>
+            <td><span style="background:rgba(245,158,11,0.12);color:#f59e0b;padding:2px 8px;border-radius:100px;font-size:0.85em;font-weight:600;"><span class="es">50 dias</span><span class="en">50 days</span></span></td>
+          </tr>
+          <tr>
+            <td><span style="color:#f59e0b;font-size:1.1em;">&#9888;</span></td>
+            <td><span style="background:#22c55e;color:#fff;padding:1px 6px;border-radius:3px;font-size:0.85em;">DEV</span></td>
+            <td>Temporary</td>
+            <td><code>D5678901234</code></td>
+            <td>01/02/2026</td>
+            <td>31/05/2026</td>
+            <td><span style="background:rgba(245,158,11,0.12);color:#f59e0b;padding:2px 8px;border-radius:100px;font-size:0.85em;font-weight:600;"><span class="es">81 dias</span><span class="en">81 days</span></span></td>
+          </tr>
+          <tr>
+            <td><span style="color:#22c55e;font-size:1.1em;">&#9745;</span></td>
+            <td><span style="background:var(--accent-blue);color:#fff;padding:1px 6px;border-radius:3px;font-size:0.85em;">PRD</span></td>
+            <td>Permanent</td>
+            <td><code>P9876543210</code></td>
+            <td>01/01/2025</td>
+            <td>31/12/2026</td>
+            <td><span style="background:rgba(34,197,94,0.12);color:#22c55e;padding:2px 8px;border-radius:100px;font-size:0.85em;font-weight:600;"><span class="es">295 dias</span><span class="en">295 days</span></span></td>
+          </tr>
+          <tr>
+            <td><span style="color:#22c55e;font-size:1.1em;">&#9745;</span></td>
+            <td><span style="background:var(--accent-blue);color:#fff;padding:1px 6px;border-radius:3px;font-size:0.85em;">PRD</span></td>
+            <td>Maintenance</td>
+            <td><code>P9876543210</code></td>
+            <td>01/06/2025</td>
+            <td>31/05/2027</td>
+            <td><span style="background:rgba(34,197,94,0.12);color:#22c55e;padding:2px 8px;border-radius:100px;font-size:0.85em;font-weight:600;"><span class="es">446 dias</span><span class="en">446 days</span></span></td>
+          </tr>
+          <tr>
+            <td><span style="color:#22c55e;font-size:1.1em;">&#9745;</span></td>
+            <td><span style="background:#22c55e;color:#fff;padding:1px 6px;border-radius:3px;font-size:0.85em;">DEV</span></td>
+            <td>Permanent</td>
+            <td><code>D5678901234</code></td>
+            <td>15/03/2025</td>
+            <td>14/03/2027</td>
+            <td><span style="background:rgba(34,197,94,0.12);color:#22c55e;padding:2px 8px;border-radius:100px;font-size:0.85em;font-weight:600;"><span class="es">368 dias</span><span class="en">368 days</span></span></td>
+          </tr>
+          <tr>
+            <td><span style="color:#22c55e;font-size:1.1em;">&#9745;</span></td>
+            <td><span style="background:#f59e0b;color:#000;padding:1px 6px;border-radius:3px;font-size:0.85em;">QAS</span></td>
+            <td>Permanent</td>
+            <td><code>T1234567890</code></td>
+            <td>01/07/2025</td>
+            <td>30/06/2027</td>
+            <td><span style="background:rgba(34,197,94,0.12);color:#22c55e;padding:2px 8px;border-radius:100px;font-size:0.85em;font-weight:600;"><span class="es">476 dias</span><span class="en">476 days</span></span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ====== CRITICAL ALERT ====== -->
+  <section class="doc-section">
+    <h2><span class="es">Alerta de Certificados Expirados</span><span class="en">Expired Certificates Alert</span></h2>
+    <p>
+      <span class="es">Cuando existen certificados expirados, se muestra una tarjeta de alerta critica en la parte inferior de la pantalla. Esta tarjeta tiene borde rojo y contiene un resumen de la situacion para que tome accion inmediata:</span>
+      <span class="en">When expired certificates exist, a critical alert card is displayed at the bottom of the screen. This card has a red border and contains a situation summary so you can take immediate action:</span>
+    </p>
+
+    <div style="background:rgba(239,68,68,0.1);border:1px solid #ef4444;border-radius:8px;padding:20px;margin:16px 0;">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;">
+        <span style="color:#ef4444;font-size:1.3em;">&#10060;</span>
+        <strong style="color:#ef4444;font-size:1.05em;"><span class="es">2 certificado(s) expirado(s)</span><span class="en">2 expired certificate(s)</span></strong>
+      </div>
+      <p style="margin:0;color:var(--txt2);">
+        <span class="es">Accion inmediata requerida. Los certificados expirados pueden causar interrupciones en conexiones HTTPS, RFC y PI/PO.</span>
+        <span class="en">Immediate action required. Expired certificates can cause disruptions in HTTPS, RFC, and PI/PO connections.</span>
+      </p>
+    </div>
+
+    <p>
+      <span class="es">Esta alerta solo se muestra cuando hay al menos un certificado con dias restantes &le; 0. El numero que aparece en el titulo refleja la cantidad exacta de certificados expirados en ese momento. Si todos los certificados estan vigentes, esta seccion no aparece en la pantalla.</span>
+      <span class="en">This alert is only shown when there is at least one certificate with days remaining &le; 0. The number shown in the title reflects the exact count of expired certificates at that moment. If all certificates are valid, this section does not appear on the screen.</span>
+    </p>
+  </section>
+
+  <!-- ====== STATUS COLORS ====== -->
+  <section class="doc-section">
+    <h2><span class="es">Codificacion de Colores</span><span class="en">Color Coding</span></h2>
+    <p>
+      <span class="es">Toda la pantalla utiliza una codificacion de colores coherente para facilitar la identificacion rapida del estado de cada certificado o licencia:</span>
+      <span class="en">The entire screen uses consistent color coding to facilitate quick identification of each certificate or license status:</span>
+    </p>
+
+    <table class="doc-table">
+      <thead>
+        <tr>
+          <th><span class="es">Color</span><span class="en">Color</span></th>
+          <th><span class="es">Estado</span><span class="en">Status</span></th>
+          <th><span class="es">Significado</span><span class="en">Meaning</span></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span style="display:inline-block;width:16px;height:16px;border-radius:4px;background:#ef4444;vertical-align:middle;"></span> <span style="color:#ef4444;font-weight:600;"><span class="es">Rojo</span><span class="en">Red</span></span></td>
+          <td>Critical</td>
+          <td>
+            <span class="es">Certificado/licencia expirado o a punto de expirar. El badge muestra "EXPIRADO" o un conteo muy bajo de dias en rojo. Requiere accion inmediata.</span>
+            <span class="en">Certificate/license expired or about to expire. Badge shows "EXPIRED" or a very low day count in red. Requires immediate action.</span>
+          </td>
+        </tr>
+        <tr>
+          <td><span style="display:inline-block;width:16px;height:16px;border-radius:4px;background:#f59e0b;vertical-align:middle;"></span> <span style="color:#f59e0b;font-weight:600;"><span class="es">Amarillo</span><span class="en">Yellow</span></span></td>
+          <td>Warning</td>
+          <td>
+            <span class="es">El vencimiento se acerca (dentro del umbral de advertencia). Debe planificar la renovacion para evitar interrupciones futuras.</span>
+            <span class="en">Expiration is approaching (within the warning threshold). You should plan renewal to avoid future disruptions.</span>
+          </td>
+        </tr>
+        <tr>
+          <td><span style="display:inline-block;width:16px;height:16px;border-radius:4px;background:#22c55e;vertical-align:middle;"></span> <span style="color:#22c55e;font-weight:600;"><span class="es">Verde</span><span class="en">Green</span></span></td>
+          <td>OK</td>
+          <td>
+            <span class="es">Certificado/licencia vigente con suficiente tiempo antes del vencimiento. No requiere accion.</span>
+            <span class="en">Valid certificate/license with sufficient time before expiration. No action required.</span>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- ====== TIPS ====== -->
+  <section class="doc-section">
+    <h2><span class="es">Consejos</span><span class="en">Tips</span></h2>
+    <ul>
+      <li>
+        <span class="es">Priorice siempre los certificados de sistemas <strong>Production (PRD)</strong> &mdash; un certificado expirado en produccion puede causar la caida de interfaces criticas como IDocs, conexiones RFC o servicios web.</span>
+        <span class="en">Always prioritize <strong>Production (PRD)</strong> system certificates &mdash; an expired certificate in production can bring down critical interfaces such as IDocs, RFC connections, or web services.</span>
+      </li>
+      <li>
+        <span class="es">Revise esta pantalla semanalmente. Los certificados en estado <strong>Warning</strong> deben gestionarse con antelacion para evitar que lleguen a estado critico.</span>
+        <span class="en">Review this screen weekly. Certificates in <strong>Warning</strong> status should be managed in advance to prevent them from reaching critical status.</span>
+      </li>
+      <li>
+        <span class="es">Las licencias SAP de tipo <strong>Temporary</strong> tienen periodos de validez mas cortos &mdash; asegurese de solicitar la licencia permanente antes de que expire la temporal para evitar que el sistema quede inaccesible.</span>
+        <span class="en"><strong>Temporary</strong> SAP licenses have shorter validity periods &mdash; make sure to request the permanent license before the temporary one expires to avoid the system becoming inaccessible.</span>
+      </li>
+      <li>
+        <span class="es">Los certificados <strong>SNC</strong> son especialmente importantes para la seguridad de las comunicaciones RFC entre sistemas &mdash; si un certificado SNC expira, las conexiones RFC seguras dejaran de funcionar.</span>
+        <span class="en"><strong>SNC</strong> certificates are especially important for the security of RFC communications between systems &mdash; if an SNC certificate expires, secure RFC connections will stop working.</span>
+      </li>
+      <li>
+        <span class="es">Use la tabla ordenada por <strong>dias restantes</strong> como su lista de prioridades: los primeros elementos de la tabla son siempre los que requieren atencion mas urgente.</span>
+        <span class="en">Use the table sorted by <strong>days remaining</strong> as your priority list: the first items in the table always require the most urgent attention.</span>
+      </li>
+      <li>
+        <span class="es">Coordine la renovacion de certificados <strong>PSE</strong> con su equipo de Basis, ya que requiere acceso al SAP Trust Manager (transaccion <code>STRUST</code>) y puede necesitar reinicio del servidor de aplicaciones.</span>
+        <span class="en">Coordinate <strong>PSE</strong> certificate renewal with your Basis team, as it requires access to SAP Trust Manager (transaction <code>STRUST</code>) and may require an application server restart.</span>
+      </li>
+    </ul>
+  </section>
+
+</main></div>
+<button class="theme-toggle" onclick="toggleTheme()"></button>
+<button class="lang-toggle" onclick="toggleLang()">ES</button>
+</body></html>

@@ -1,0 +1,1628 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="dark" data-lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <title>Configuracion — SAP Spektra Docs</title>
+  <link rel="stylesheet" href="theme.css">
+  <script src="theme-toggle.js"></script>
+  <script src="lang-toggle.js"></script>
+  <style>
+    /* ── Settings page specific styles ── */
+    .settings-layout {
+      display: flex;
+      gap: 24px;
+      margin-top: 16px;
+    }
+    .settings-nav {
+      min-width: 180px;
+      flex-shrink: 0;
+    }
+    .settings-nav-link {
+      display: block;
+      padding: 8px 14px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--txt2);
+      text-decoration: none;
+      transition: all 0.15s;
+      border-left: 2px solid transparent;
+      margin-bottom: 2px;
+    }
+    .settings-nav-link:hover {
+      color: var(--txt1);
+      background: var(--bg3);
+      text-decoration: none;
+    }
+    .settings-nav-link.active {
+      color: var(--cyan);
+      background: var(--cyan-dim);
+      border-left-color: var(--cyan);
+      font-weight: 600;
+    }
+    .settings-content {
+      flex: 1;
+      min-width: 0;
+    }
+    @media (max-width: 768px) {
+      .settings-layout { flex-direction: column; }
+      .settings-nav { min-width: auto; display: flex; gap: 4px; flex-wrap: wrap; }
+      .settings-nav-link { border-left: none; border-bottom: 2px solid transparent; }
+      .settings-nav-link.active { border-bottom-color: var(--cyan); border-left-color: transparent; }
+    }
+    .toggle-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--brd);
+    }
+    .toggle-row:last-child { border-bottom: none; }
+    .toggle-label { font-size: 13px; color: var(--txt1); }
+    .toggle-desc { font-size: 11px; color: var(--txt3); }
+    .toggle-switch {
+      width: 40px;
+      height: 22px;
+      border-radius: 11px;
+      background: var(--bg3);
+      border: 1px solid var(--card-border);
+      position: relative;
+      flex-shrink: 0;
+    }
+    .toggle-switch.on {
+      background: var(--cyan-dim);
+      border-color: var(--cyan);
+    }
+    .toggle-switch::after {
+      content: '';
+      position: absolute;
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background: var(--txt3);
+      top: 2px;
+      left: 2px;
+      transition: all 0.2s;
+    }
+    .toggle-switch.on::after {
+      left: 20px;
+      background: var(--cyan);
+    }
+    .role-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius);
+      padding: 20px;
+      margin-bottom: 12px;
+    }
+    .role-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 8px;
+    }
+    .role-name {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--txt1);
+    }
+    .role-level {
+      font-size: 11px;
+      font-weight: 600;
+      padding: 2px 10px;
+      border-radius: 100px;
+    }
+    .perm-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 10px;
+    }
+    .perm-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 3px 10px;
+      border-radius: 100px;
+      font-size: 11px;
+      font-weight: 500;
+      background: var(--bg3);
+      color: var(--txt2);
+      border: 1px solid var(--card-border);
+    }
+    .integration-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius);
+      padding: 16px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 10px;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .integration-info {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex: 1;
+      min-width: 0;
+    }
+    .integration-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      flex-shrink: 0;
+      background: var(--bg3);
+    }
+    .integration-name {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--txt1);
+    }
+    .integration-desc {
+      font-size: 11px;
+      color: var(--txt3);
+    }
+    .btn-small {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 14px;
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: 600;
+      border: 1px solid var(--card-border);
+      background: var(--card-bg);
+      color: var(--txt2);
+      cursor: pointer;
+      transition: all 0.15s;
+      text-decoration: none;
+    }
+    .btn-small:hover {
+      border-color: var(--cyan);
+      color: var(--cyan);
+      text-decoration: none;
+    }
+    .btn-small.primary {
+      background: var(--gradient-brand);
+      color: #fff;
+      border: none;
+    }
+    .btn-small.danger {
+      border-color: var(--danger);
+      color: var(--danger);
+    }
+    .btn-small.danger:hover {
+      background: rgba(239,68,68,0.08);
+    }
+    .plan-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius);
+      padding: 24px;
+      text-align: center;
+      transition: all 0.2s;
+      position: relative;
+    }
+    .plan-card:hover {
+      border-color: var(--cyan);
+      box-shadow: 0 0 24px rgba(6,182,212,0.08);
+    }
+    .plan-card.popular {
+      border-color: var(--cyan);
+      box-shadow: 0 0 30px rgba(6,182,212,0.12);
+    }
+    .plan-card.popular::before {
+      content: 'Most Popular';
+      position: absolute;
+      top: -10px;
+      left: 50%;
+      transform: translateX(-50%);
+      padding: 2px 14px;
+      border-radius: 100px;
+      background: var(--gradient-brand);
+      color: #fff;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+    }
+    .plan-name {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--txt1);
+      margin-bottom: 4px;
+    }
+    .plan-price {
+      font-size: 32px;
+      font-weight: 800;
+      color: var(--cyan);
+      margin: 8px 0;
+    }
+    .plan-price span {
+      font-size: 14px;
+      font-weight: 400;
+      color: var(--txt3);
+    }
+    .plan-desc {
+      font-size: 12px;
+      color: var(--txt3);
+      margin-bottom: 12px;
+    }
+    .progress-bar-wrap {
+      background: var(--bg3);
+      border-radius: 6px;
+      height: 8px;
+      overflow: hidden;
+      margin-top: 4px;
+    }
+    .progress-bar-fill {
+      height: 100%;
+      border-radius: 6px;
+      transition: width 0.3s;
+    }
+    .usage-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px;
+    }
+    .usage-label {
+      font-size: 13px;
+      color: var(--txt2);
+    }
+    .usage-value {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--txt1);
+    }
+    .user-avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      font-weight: 700;
+      color: #fff;
+      flex-shrink: 0;
+    }
+    .user-info {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .checkmark { color: var(--success); }
+    .crossmark { color: var(--txt3); opacity: 0.4; }
+  </style>
+</head>
+<body>
+<div class="docs-wrapper">
+
+  <!-- ═══ SIDEBAR ═══ -->
+  <nav class="docs-sidebar">
+    <div class="sidebar-brand">
+      <div class="logo">&#9889;</div>
+      <div class="brand-text">
+        <div class="brand-name">SAP Spektra</div>
+        <div class="brand-sub">Documentacion</div>
+      </div>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-section-label">Inicio</div>
+      <a href="index.html" class="sidebar-link">Portal</a>
+      <a href="getting-started.html" class="sidebar-link">Primeros Pasos</a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-section-label">Command</div>
+      <a href="dashboard.html" class="sidebar-link">Dashboard</a>
+      <a href="landscape.html" class="sidebar-link">Landscape</a>
+      <a href="alerts.html" class="sidebar-link">Alertas</a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-section-label">Monitor</div>
+      <a href="systems.html" class="sidebar-link">Sistemas</a>
+      <a href="connectors.html" class="sidebar-link">Conectores</a>
+      <a href="events.html" class="sidebar-link">Eventos</a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-section-label">Intelligence</div>
+      <a href="ai-analysis.html" class="sidebar-link">Analisis IA</a>
+      <a href="analytics.html" class="sidebar-link">Analytics</a>
+      <a href="reports.html" class="sidebar-link">Reportes</a>
+      <a href="comparison.html" class="sidebar-link">Comparacion</a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-section-label">Operations</div>
+      <a href="runbooks.html" class="sidebar-link">Runbooks</a>
+      <a href="approvals.html" class="sidebar-link">Aprobaciones</a>
+      <a href="operations.html" class="sidebar-link">Operaciones</a>
+      <a href="jobs.html" class="sidebar-link">Jobs (SM37)</a>
+      <a href="transports.html" class="sidebar-link">Transportes</a>
+      <a href="sla.html" class="sidebar-link">SLA</a>
+      <a href="ha-control.html" class="sidebar-link">HA Control</a>
+      <a href="certificates.html" class="sidebar-link">Certificados</a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-section-label">Admin</div>
+      <a href="admin.html" class="sidebar-link">Gestion</a>
+      <a href="settings.html" class="sidebar-link active">Configuracion</a>
+      <a href="connect-system.html" class="sidebar-link">Conectar Sistema</a>
+    </div>
+  </nav>
+
+  <!-- ═══ MAIN CONTENT ═══ -->
+  <main class="docs-main">
+
+    <!-- Breadcrumb -->
+    <div class="breadcrumb">
+      <a href="index.html">SAP Spektra</a>
+      <span class="sep">/</span>
+      <span>Admin</span>
+      <span class="sep">/</span>
+      <span class="es">Configuracion</span><span class="en">Settings</span>
+    </div>
+
+    <!-- Page Header -->
+    <div class="page-header">
+      <h1><span class="es">Configuracion</span><span class="en">Settings</span></h1>
+      <div class="subtitle">
+        <span class="es">Ajustes de organizacion, usuarios, integraciones, notificaciones y facturacion</span>
+        <span class="en">Organization settings, users, integrations, notifications, and billing</span>
+      </div>
+    </div>
+
+    <div class="callout warning">
+      <div class="callout-icon">&#128737;</div>
+      <div>
+        <span class="es">
+          Esta pagina requiere el rol <strong>Escalation</strong> o superior. Las secciones marcadas como
+          "admin only" solo son visibles para usuarios con rol <strong>Admin</strong>.
+        </span>
+        <span class="en">
+          This page requires the <strong>Escalation</strong> role or higher. Sections marked as
+          "admin only" are only visible to users with the <strong>Admin</strong> role.
+        </span>
+      </div>
+    </div>
+
+    <!-- ════════════════════════════════════════════════════════════ -->
+    <!-- SECTION: Settings Layout Overview -->
+    <!-- ════════════════════════════════════════════════════════════ -->
+    <h2><span class="es">Estructura de la Pagina</span><span class="en">Page Structure</span></h2>
+
+    <div class="card">
+      <p>
+        <span class="es">
+          La pagina de Configuracion presenta un <strong>menu lateral izquierdo</strong> dentro del area de contenido
+          que te permite navegar entre <strong>7 sub-secciones</strong>. Al seleccionar una opcion del menu, el contenido
+          de la derecha se actualiza para mostrar la seccion correspondiente.
+        </span>
+        <span class="en">
+          The Settings page features a <strong>left sidebar menu</strong> within the content area
+          that lets you navigate between <strong>7 sub-sections</strong>. When you select an option from the menu,
+          the content on the right updates to show the corresponding section.
+        </span>
+      </p>
+
+      <div class="settings-layout mt-2">
+        <div class="settings-nav">
+          <a href="#general" class="settings-nav-link active">General</a>
+          <a href="#usuarios" class="settings-nav-link"><span class="es">Usuarios</span><span class="en">Users</span></a>
+          <a href="#roles" class="settings-nav-link"><span class="es">Roles y Permisos</span><span class="en">Roles &amp; Permissions</span></a>
+          <a href="#integraciones" class="settings-nav-link"><span class="es">Integraciones</span><span class="en">Integrations</span></a>
+          <a href="#notificaciones" class="settings-nav-link"><span class="es">Notificaciones</span><span class="en">Notifications</span></a>
+          <a href="#plan" class="settings-nav-link"><span class="es">Plan y Facturacion</span><span class="en">Plan &amp; Billing</span></a>
+          <a href="#auditoria" class="settings-nav-link"><span class="es">Auditoria</span><span class="en">Audit Log</span></a>
+        </div>
+        <div class="settings-content">
+          <p class="text-sm text-muted">
+            <span class="es">&larr; Selecciona una seccion del menu para ver su contenido. Cada seccion se describe en detalle a continuacion.</span>
+            <span class="en">&larr; Select a section from the menu to view its content. Each section is described in detail below.</span>
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ════════════════════════════════════════════════════════════ -->
+    <!-- SUB-SECTION 1: General -->
+    <!-- ════════════════════════════════════════════════════════════ -->
+    <h2 id="general"><span class="es">1. General</span><span class="en">1. General</span></h2>
+
+    <p>
+      <span class="es">
+        La seccion General muestra la informacion basica de tu organizacion y los ajustes globales del sistema.
+        Esta dividida en varias sub-areas:
+      </span>
+      <span class="en">
+        The General section shows your organization's basic information and global system settings.
+        It's divided into several sub-areas:
+      </span>
+    </p>
+
+    <!-- Organization Info -->
+    <h3><span class="es">Informacion de la Organizacion</span><span class="en">Organization Information</span></h3>
+
+    <div class="card">
+      <p>
+        <span class="es">En la parte superior veras los datos basicos de tu organizacion:</span>
+        <span class="en">At the top you'll see your organization's basic data:</span>
+      </p>
+      <div class="table-wrap mt-2">
+        <table>
+          <thead>
+            <tr>
+              <th><span class="es">Campo</span><span class="en">Field</span></th>
+              <th><span class="es">Descripcion</span><span class="en">Description</span></th>
+              <th><span class="es">Ejemplo</span><span class="en">Example</span></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="font-semibold"><span class="es">Nombre</span><span class="en">Name</span></td>
+              <td><span class="es">Nombre de la organizacion</span><span class="en">Organization name</span></td>
+              <td>Acme Corporation</td>
+            </tr>
+            <tr>
+              <td class="font-semibold">Slug / URL</td>
+              <td><span class="es">Identificador unico en la URL</span><span class="en">Unique URL identifier</span></td>
+              <td><code>acme-corp</code></td>
+            </tr>
+            <tr>
+              <td class="font-semibold"><span class="es">Zona Horaria</span><span class="en">Timezone</span></td>
+              <td><span class="es">Zona horaria para alertas y reportes</span><span class="en">Timezone for alerts and reports</span></td>
+              <td><code>America/Bogota</code></td>
+            </tr>
+            <tr>
+              <td class="font-semibold"><span class="es">Idioma</span><span class="en">Language</span></td>
+              <td><span class="es">Idioma por defecto de la interfaz</span><span class="en">Default interface language</span></td>
+              <td><span class="es">Espanol</span><span class="en">Spanish</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Usage Overview -->
+    <h3><span class="es">Resumen de Uso</span><span class="en">Usage Overview</span></h3>
+
+    <div class="card">
+      <p>
+        <span class="es">
+          Debajo de la informacion de la organizacion se muestra un resumen visual del uso actual con
+          <strong>barras de progreso</strong> que indican cuanto del limite del plan estas utilizando:
+        </span>
+        <span class="en">
+          Below the organization info, a visual usage summary is displayed with
+          <strong>progress bars</strong> showing how much of your plan limit you're using:
+        </span>
+      </p>
+
+      <div class="mt-2">
+        <div class="usage-row">
+          <span class="usage-label"><span class="es">Sistemas</span><span class="en">Systems</span></span>
+          <span class="usage-value">8 / 25</span>
+        </div>
+        <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:32%;background:var(--cyan);"></div></div>
+
+        <div class="usage-row mt-2">
+          <span class="usage-label"><span class="es">Usuarios</span><span class="en">Users</span></span>
+          <span class="usage-value">5 / 15</span>
+        </div>
+        <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:33%;background:var(--cyan);"></div></div>
+
+        <div class="usage-row mt-2">
+          <span class="usage-label"><span class="es">Integraciones</span><span class="en">Integrations</span></span>
+          <span class="usage-value">2 / 5</span>
+        </div>
+        <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:40%;background:var(--violet);"></div></div>
+
+        <div class="usage-row mt-2">
+          <span class="usage-label"><span class="es">Llamadas IA (mes)</span><span class="en">AI Calls (month)</span></span>
+          <span class="usage-value">1,240 / 5,000</span>
+        </div>
+        <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:25%;background:var(--violet);"></div></div>
+      </div>
+    </div>
+
+    <!-- Monitoring Thresholds -->
+    <h3><span class="es">Umbrales de Monitoreo</span><span class="en">Monitoring Thresholds</span></h3>
+
+    <div class="card">
+      <p>
+        <span class="es">
+          Una tabla editable donde defines los <strong>umbrales de advertencia y critico</strong> para las metricas
+          principales del monitoreo. Cuando un sistema supera estos valores, se genera una alerta automaticamente.
+        </span>
+        <span class="en">
+          An editable table where you define the <strong>warning and critical thresholds</strong> for main monitoring
+          metrics. When a system exceeds these values, an alert is automatically generated.
+        </span>
+      </p>
+      <div class="table-wrap mt-2">
+        <table>
+          <thead>
+            <tr>
+              <th><span class="es">Metrica</span><span class="en">Metric</span></th>
+              <th><span class="es">Advertencia</span><span class="en">Warning</span></th>
+              <th><span class="es">Critico</span><span class="en">Critical</span></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="font-semibold">CPU</td>
+              <td><span class="text-warning font-semibold">80%</span></td>
+              <td><span class="text-danger font-semibold">95%</span></td>
+            </tr>
+            <tr>
+              <td class="font-semibold"><span class="es">Memoria</span><span class="en">Memory</span></td>
+              <td><span class="text-warning font-semibold">85%</span></td>
+              <td><span class="text-danger font-semibold">95%</span></td>
+            </tr>
+            <tr>
+              <td class="font-semibold"><span class="es">Disco</span><span class="en">Disk</span></td>
+              <td><span class="text-warning font-semibold">80%</span></td>
+              <td><span class="text-danger font-semibold">90%</span></td>
+            </tr>
+            <tr>
+              <td class="font-semibold"><span class="es">Tiempo de Respuesta</span><span class="en">Response Time</span></td>
+              <td><span class="text-warning font-semibold">500ms</span></td>
+              <td><span class="text-danger font-semibold">1000ms</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Escalation Policy -->
+    <h3><span class="es">Politica de Escalacion</span><span class="en">Escalation Policy</span></h3>
+
+    <div class="card">
+      <p>
+        <span class="es">
+          Define la cadena de escalacion cuando una alerta no es atendida dentro del tiempo establecido.
+          Cada nivel tiene un <strong>timeout</strong> (en minutos) y uno o mas <strong>destinatarios</strong>.
+        </span>
+        <span class="en">
+          Defines the escalation chain when an alert is not addressed within the set time.
+          Each level has a <strong>timeout</strong> (in minutes) and one or more <strong>recipients</strong>.
+        </span>
+      </p>
+      <div class="table-wrap mt-2">
+        <table>
+          <thead>
+            <tr>
+              <th><span class="es">Nivel</span><span class="en">Level</span></th>
+              <th>Timeout</th>
+              <th><span class="es">Destinatarios</span><span class="en">Recipients</span></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><span class="badge cyan">L1</span></td>
+              <td>15 min</td>
+              <td><span class="es">Operadores en turno</span><span class="en">On-call operators</span></td>
+            </tr>
+            <tr>
+              <td><span class="badge warning">L2</span></td>
+              <td>30 min</td>
+              <td><span class="es">Equipo de escalacion</span><span class="en">Escalation team</span></td>
+            </tr>
+            <tr>
+              <td><span class="badge danger">Admin</span></td>
+              <td>60 min</td>
+              <td><span class="es">Administradores de la organizacion</span><span class="en">Organization administrators</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Maintenance Windows -->
+    <h3><span class="es">Ventanas de Mantenimiento</span><span class="en">Maintenance Windows</span></h3>
+
+    <div class="card">
+      <p>
+        <span class="es">
+          Una tabla que muestra las <strong>ventanas de mantenimiento programadas</strong>. Durante estos periodos,
+          las alertas del sistema se silencian automaticamente para evitar falsos positivos.
+        </span>
+        <span class="en">
+          A table showing <strong>scheduled maintenance windows</strong>. During these periods,
+          system alerts are automatically silenced to avoid false positives.
+        </span>
+      </p>
+      <div class="table-wrap mt-2">
+        <table>
+          <thead>
+            <tr>
+              <th><span class="es">Sistema</span><span class="en">System</span></th>
+              <th><span class="es">Dia</span><span class="en">Day</span></th>
+              <th><span class="es">Hora</span><span class="en">Time</span></th>
+              <th><span class="es">Duracion</span><span class="en">Duration</span></th>
+              <th><span class="es">Estado</span><span class="en">Status</span></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="font-semibold">S4P</td>
+              <td><span class="es">Domingo</span><span class="en">Sunday</span></td>
+              <td>02:00</td>
+              <td>4h</td>
+              <td><span class="badge success">Activo</span></td>
+            </tr>
+            <tr>
+              <td class="font-semibold">ECP</td>
+              <td><span class="es">Sabado</span><span class="en">Saturday</span></td>
+              <td>22:00</td>
+              <td>6h</td>
+              <td><span class="badge success">Activo</span></td>
+            </tr>
+            <tr>
+              <td class="font-semibold">BWP</td>
+              <td><span class="es">Domingo</span><span class="en">Sunday</span></td>
+              <td>01:00</td>
+              <td>3h</td>
+              <td><span class="badge neutral">Pausado</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- API Keys -->
+    <h3><span class="es">Llaves API</span><span class="en">API Keys</span></h3>
+
+    <div class="card">
+      <p>
+        <span class="es">
+          Seccion para gestionar las <strong>llaves de API</strong> utilizadas por integraciones externas.
+          Cada llave muestra su nombre, un valor <strong>enmascarado</strong> (solo los ultimos 4 caracteres visibles),
+          estado y un boton para copiar el valor completo.
+        </span>
+        <span class="en">
+          Section for managing <strong>API keys</strong> used by external integrations.
+          Each key shows its name, a <strong>masked</strong> value (only last 4 characters visible),
+          status, and a button to copy the full value.
+        </span>
+      </p>
+      <div class="table-wrap mt-2">
+        <table>
+          <thead>
+            <tr>
+              <th><span class="es">Nombre</span><span class="en">Name</span></th>
+              <th><span class="es">Llave</span><span class="en">Key</span></th>
+              <th><span class="es">Estado</span><span class="en">Status</span></th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="font-semibold">Production API</td>
+              <td><code>sk_live_••••••••••••4x7R</code></td>
+              <td><span class="badge success">Activo</span></td>
+              <td><span class="btn-small">&#128203; <span class="es">Copiar</span><span class="en">Copy</span></span></td>
+            </tr>
+            <tr>
+              <td class="font-semibold">Webhook Key</td>
+              <td><code>wh_key_••••••••••••9mZp</code></td>
+              <td><span class="badge success">Activo</span></td>
+              <td><span class="btn-small">&#128203; <span class="es">Copiar</span><span class="en">Copy</span></span></td>
+            </tr>
+            <tr>
+              <td class="font-semibold">Test Key</td>
+              <td><code>sk_test_••••••••••••2bNq</code></td>
+              <td><span class="badge neutral">Inactivo</span></td>
+              <td><span class="btn-small">&#128203; <span class="es">Copiar</span><span class="en">Copy</span></span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Danger Zone -->
+    <h3><span class="es">Zona de Peligro</span><span class="en">Danger Zone</span></h3>
+
+    <div class="card" style="border-color:var(--danger);">
+      <p>
+        <span class="es">
+          Al final de la seccion General, encontraras la <strong>Zona de Peligro</strong> con borde rojo.
+          Aqui se encuentra la opcion de <strong>eliminar la organizacion</strong>. Esta accion es permanente
+          y requiere confirmacion escribiendo el nombre de la organizacion.
+        </span>
+        <span class="en">
+          At the bottom of the General section, you'll find the <strong>Danger Zone</strong> with a red border.
+          Here you'll find the option to <strong>delete the organization</strong>. This action is permanent
+          and requires confirmation by typing the organization name.
+        </span>
+      </p>
+      <div class="mt-2">
+        <span class="btn-small danger"><span class="es">Eliminar Organizacion</span><span class="en">Delete Organization</span></span>
+      </div>
+    </div>
+
+    <!-- ════════════════════════════════════════════════════════════ -->
+    <!-- SUB-SECTION 2: Usuarios -->
+    <!-- ════════════════════════════════════════════════════════════ -->
+    <h2 id="usuarios"><span class="es">2. Usuarios</span><span class="en">2. Users</span></h2>
+
+    <div class="callout info">
+      <div class="callout-icon">&#128274;</div>
+      <div>
+        <span class="es">
+          Esta seccion solo es visible para usuarios con rol <strong>Admin</strong>.
+        </span>
+        <span class="en">
+          This section is only visible to users with the <strong>Admin</strong> role.
+        </span>
+      </div>
+    </div>
+
+    <div class="card">
+      <p>
+        <span class="es">
+          La seccion de Usuarios muestra una tabla con todos los miembros de tu organizacion. En la parte
+          superior hay un boton <strong>"Invitar Usuario"</strong> que abre un modal para agregar nuevos miembros.
+        </span>
+        <span class="en">
+          The Users section shows a table with all members of your organization. At the top there's an
+          <strong>"Invite User"</strong> button that opens a modal to add new members.
+        </span>
+      </p>
+    </div>
+
+    <h3><span class="es">Tabla de Usuarios</span><span class="en">Users Table</span></h3>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th><span class="es">Usuario</span><span class="en">User</span></th>
+            <th>Rol</th>
+            <th><span class="es">Estado</span><span class="en">Status</span></th>
+            <th><span class="es">Ultimo acceso</span><span class="en">Last login</span></th>
+            <th><span class="es">Acciones</span><span class="en">Actions</span></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>
+              <div class="user-info">
+                <div class="user-avatar" style="background:var(--gradient-brand);">CM</div>
+                <div>
+                  <div class="text-primary font-semibold text-sm">Carlos Mendez</div>
+                  <div class="text-xs text-muted">carlos@acme.com</div>
+                </div>
+              </div>
+            </td>
+            <td><span class="badge danger">Admin</span></td>
+            <td><span class="badge success">Activo</span></td>
+            <td class="text-sm text-muted"><span class="es">Hace 2h</span><span class="en">2h ago</span></td>
+            <td>
+              <span class="btn-small">&#9998;</span>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <div class="user-info">
+                <div class="user-avatar" style="background:linear-gradient(135deg,var(--warning),#f97316);">LR</div>
+                <div>
+                  <div class="text-primary font-semibold text-sm">Laura Rodriguez</div>
+                  <div class="text-xs text-muted">laura@acme.com</div>
+                </div>
+              </div>
+            </td>
+            <td><span class="badge warning">Escalation</span></td>
+            <td><span class="badge success">Activo</span></td>
+            <td class="text-sm text-muted"><span class="es">Hace 1d</span><span class="en">1d ago</span></td>
+            <td>
+              <span class="btn-small">&#9998;</span>
+              <span class="btn-small danger">&#128465;</span>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <div class="user-info">
+                <div class="user-avatar" style="background:linear-gradient(135deg,var(--cyan),#0e7490);">JP</div>
+                <div>
+                  <div class="text-primary font-semibold text-sm">Juan Perez</div>
+                  <div class="text-xs text-muted">juan@acme.com</div>
+                </div>
+              </div>
+            </td>
+            <td><span class="badge cyan">Operator</span></td>
+            <td><span class="badge success">Activo</span></td>
+            <td class="text-sm text-muted"><span class="es">Hace 5h</span><span class="en">5h ago</span></td>
+            <td>
+              <span class="btn-small">&#9998;</span>
+              <span class="btn-small danger">&#128465;</span>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <div class="user-info">
+                <div class="user-avatar" style="background:var(--bg3);color:var(--txt3);">AG</div>
+                <div>
+                  <div class="text-primary font-semibold text-sm">Ana Gomez</div>
+                  <div class="text-xs text-muted">ana@acme.com</div>
+                </div>
+              </div>
+            </td>
+            <td><span class="badge neutral">Viewer</span></td>
+            <td><span class="badge violet">Invited</span></td>
+            <td class="text-sm text-muted">&mdash;</td>
+            <td>
+              <span class="btn-small">&#9998;</span>
+              <span class="btn-small danger">&#128465;</span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3><span class="es">Modal de Invitacion</span><span class="en">Invite Modal</span></h3>
+
+    <div class="card">
+      <p>
+        <span class="es">
+          Al hacer clic en <strong>"Invitar Usuario"</strong>, se abre un modal con los siguientes campos:
+        </span>
+        <span class="en">
+          Clicking <strong>"Invite User"</strong> opens a modal with the following fields:
+        </span>
+      </p>
+      <ul class="feature-list">
+        <li><span class="es"><strong>Nombre</strong> &mdash; Nombre completo del usuario</span><span class="en"><strong>Name</strong> &mdash; User's full name</span></li>
+        <li><span class="es"><strong>Email</strong> &mdash; Direccion de correo electronico</span><span class="en"><strong>Email</strong> &mdash; Email address</span></li>
+        <li>
+          <span class="es"><strong>Rol</strong> &mdash; Selector con las opciones: </span><span class="en"><strong>Role</strong> &mdash; Selector with options: </span>
+          <span class="badge danger">Admin</span>
+          <span class="badge warning">Escalation</span>
+          <span class="badge cyan">Operator</span>
+          <span class="badge neutral">Viewer</span>
+        </li>
+      </ul>
+      <p>
+        <span class="es">
+          El usuario invitado recibira un correo con un enlace para activar su cuenta. Mientras no acepte,
+          su estado aparecera como <span class="badge violet">Invited</span>.
+        </span>
+        <span class="en">
+          The invited user will receive an email with a link to activate their account. Until they accept,
+          their status will show as <span class="badge violet">Invited</span>.
+        </span>
+      </p>
+    </div>
+
+    <!-- ════════════════════════════════════════════════════════════ -->
+    <!-- SUB-SECTION 3: Roles y Permisos -->
+    <!-- ════════════════════════════════════════════════════════════ -->
+    <h2 id="roles"><span class="es">3. Roles y Permisos</span><span class="en">3. Roles &amp; Permissions</span></h2>
+
+    <p>
+      <span class="es">
+        SAP Spektra utiliza un <strong>modelo jerarquico de roles</strong>. Cada rol tiene un nivel numerico
+        y hereda todos los permisos de los roles inferiores. Se presentan como <strong>4 tarjetas</strong>
+        organizadas de mayor a menor nivel:
+      </span>
+      <span class="en">
+        SAP Spektra uses a <strong>hierarchical role model</strong>. Each role has a numeric level
+        and inherits all permissions from lower roles. They are presented as <strong>4 cards</strong>
+        organized from highest to lowest level:
+      </span>
+    </p>
+
+    <!-- Admin role -->
+    <div class="role-card" style="border-color:var(--danger);">
+      <div class="role-header">
+        <div class="role-name">Admin</div>
+        <span class="badge danger">Level 40</span>
+      </div>
+      <p class="text-sm">
+        <span class="es">Acceso completo a la plataforma. Puede gestionar usuarios, configuracion, facturacion y eliminar recursos.</span>
+        <span class="en">Full platform access. Can manage users, settings, billing, and delete resources.</span>
+      </p>
+      <div class="perm-pills">
+        <span class="perm-pill"><span class="es">Gestionar usuarios</span><span class="en">Manage users</span></span>
+        <span class="perm-pill"><span class="es">Facturacion</span><span class="en">Billing</span></span>
+        <span class="perm-pill"><span class="es">Eliminar sistemas</span><span class="en">Delete systems</span></span>
+        <span class="perm-pill"><span class="es">Configuracion global</span><span class="en">Global settings</span></span>
+        <span class="perm-pill"><span class="es">API Keys</span><span class="en">API Keys</span></span>
+        <span class="perm-pill"><span class="es">Auditoria</span><span class="en">Audit log</span></span>
+        <span class="perm-pill"><span class="es">Todos los permisos inferiores</span><span class="en">All lower permissions</span></span>
+      </div>
+    </div>
+
+    <!-- Escalation role -->
+    <div class="role-card" style="border-color:var(--warning);">
+      <div class="role-header">
+        <div class="role-name">Escalation</div>
+        <span class="badge warning">Level 30</span>
+      </div>
+      <p class="text-sm">
+        <span class="es">Puede aprobar operaciones criticas, modificar reglas de alerta y gestionar politicas de escalacion.</span>
+        <span class="en">Can approve critical operations, modify alert rules, and manage escalation policies.</span>
+      </p>
+      <div class="perm-pills">
+        <span class="perm-pill"><span class="es">Aprobar operaciones</span><span class="en">Approve operations</span></span>
+        <span class="perm-pill"><span class="es">Modificar alertas</span><span class="en">Modify alerts</span></span>
+        <span class="perm-pill"><span class="es">Politicas de escalacion</span><span class="en">Escalation policies</span></span>
+        <span class="perm-pill"><span class="es">Gestionar integraciones</span><span class="en">Manage integrations</span></span>
+        <span class="perm-pill"><span class="es">Todos los permisos inferiores</span><span class="en">All lower permissions</span></span>
+      </div>
+    </div>
+
+    <!-- Operator role -->
+    <div class="role-card" style="border-color:var(--cyan);">
+      <div class="role-header">
+        <div class="role-name">Operator</div>
+        <span class="badge cyan">Level 20</span>
+      </div>
+      <p class="text-sm">
+        <span class="es">Puede ejecutar runbooks, gestionar incidentes, conectar sistemas y operar transportes.</span>
+        <span class="en">Can execute runbooks, manage incidents, connect systems, and operate transports.</span>
+      </p>
+      <div class="perm-pills">
+        <span class="perm-pill"><span class="es">Ejecutar runbooks</span><span class="en">Execute runbooks</span></span>
+        <span class="perm-pill"><span class="es">Gestionar incidentes</span><span class="en">Manage incidents</span></span>
+        <span class="perm-pill"><span class="es">Conectar sistemas</span><span class="en">Connect systems</span></span>
+        <span class="perm-pill"><span class="es">Health checks</span><span class="en">Health checks</span></span>
+        <span class="perm-pill"><span class="es">Transportes</span><span class="en">Transports</span></span>
+        <span class="perm-pill"><span class="es">Todos los permisos inferiores</span><span class="en">All lower permissions</span></span>
+      </div>
+    </div>
+
+    <!-- Viewer role -->
+    <div class="role-card">
+      <div class="role-header">
+        <div class="role-name">Viewer</div>
+        <span class="badge neutral">Level 10</span>
+      </div>
+      <p class="text-sm">
+        <span class="es">Acceso de solo lectura. Puede ver dashboards, metricas, alertas y reportes, pero no puede ejecutar acciones.</span>
+        <span class="en">Read-only access. Can view dashboards, metrics, alerts, and reports, but cannot execute actions.</span>
+      </p>
+      <div class="perm-pills">
+        <span class="perm-pill"><span class="es">Ver dashboard</span><span class="en">View dashboard</span></span>
+        <span class="perm-pill"><span class="es">Ver metricas</span><span class="en">View metrics</span></span>
+        <span class="perm-pill"><span class="es">Ver alertas</span><span class="en">View alerts</span></span>
+        <span class="perm-pill"><span class="es">Ver reportes</span><span class="en">View reports</span></span>
+        <span class="perm-pill"><span class="es">Analisis IA (lectura)</span><span class="en">AI Analysis (read)</span></span>
+      </div>
+    </div>
+
+    <div class="callout info">
+      <div class="callout-icon">&#128161;</div>
+      <div>
+        <span class="es">
+          <strong>Modelo jerarquico:</strong> Cada nivel hereda automaticamente todos los permisos de los niveles
+          inferiores. Por ejemplo, un usuario <strong>Escalation (L30)</strong> tiene todos los permisos de
+          <strong>Operator (L20)</strong> y <strong>Viewer (L10)</strong>, ademas de los suyos propios.
+        </span>
+        <span class="en">
+          <strong>Hierarchical model:</strong> Each level automatically inherits all permissions from lower levels.
+          For example, an <strong>Escalation (L30)</strong> user has all permissions of
+          <strong>Operator (L20)</strong> and <strong>Viewer (L10)</strong>, plus their own.
+        </span>
+      </div>
+    </div>
+
+    <!-- ════════════════════════════════════════════════════════════ -->
+    <!-- SUB-SECTION 4: Integraciones -->
+    <!-- ════════════════════════════════════════════════════════════ -->
+    <h2 id="integraciones"><span class="es">4. Integraciones</span><span class="en">4. Integrations</span></h2>
+
+    <p>
+      <span class="es">
+        La seccion de Integraciones muestra las plataformas externas que puedes conectar con SAP Spektra.
+        Cada integracion se presenta como una tarjeta con el nombre, descripcion, estado de conexion y un
+        boton de accion.
+      </span>
+      <span class="en">
+        The Integrations section shows external platforms you can connect with SAP Spektra.
+        Each integration is presented as a card with the name, description, connection status, and an
+        action button.
+      </span>
+    </p>
+
+    <!-- Slack -->
+    <div class="integration-card">
+      <div class="integration-info">
+        <div class="integration-icon" style="background:rgba(74,21,75,0.15);color:#E01E5A;">&#128172;</div>
+        <div>
+          <div class="integration-name">Slack</div>
+          <div class="integration-desc">
+            <span class="es">Recibe alertas y notificaciones en canales de Slack</span>
+            <span class="en">Receive alerts and notifications in Slack channels</span>
+          </div>
+        </div>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px;">
+        <span class="badge success">&#9679; Connected</span>
+        <span class="btn-small"><span class="es">Configurar</span><span class="en">Configure</span></span>
+      </div>
+    </div>
+
+    <!-- Teams -->
+    <div class="integration-card">
+      <div class="integration-info">
+        <div class="integration-icon" style="background:rgba(69,90,180,0.15);color:#6264A7;">&#128488;</div>
+        <div>
+          <div class="integration-name">Microsoft Teams</div>
+          <div class="integration-desc">
+            <span class="es">Notificaciones y alertas en canales de Teams</span>
+            <span class="en">Notifications and alerts in Teams channels</span>
+          </div>
+        </div>
+      </div>
+      <span class="btn-small"><span class="es">Conectar</span><span class="en">Connect</span></span>
+    </div>
+
+    <!-- Email SES -->
+    <div class="integration-card">
+      <div class="integration-info">
+        <div class="integration-icon" style="background:var(--cyan-dim);color:var(--cyan);">&#9993;</div>
+        <div>
+          <div class="integration-name">Email (AWS SES)</div>
+          <div class="integration-desc">
+            <span class="es">Envio de alertas y reportes por correo electronico</span>
+            <span class="en">Send alerts and reports via email</span>
+          </div>
+        </div>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px;">
+        <span class="badge success">&#9679; Connected</span>
+        <span class="btn-small"><span class="es">Configurar</span><span class="en">Configure</span></span>
+      </div>
+    </div>
+
+    <!-- ServiceNow -->
+    <div class="integration-card">
+      <div class="integration-info">
+        <div class="integration-icon" style="background:rgba(98,195,112,0.12);color:#62C370;">&#127899;</div>
+        <div>
+          <div class="integration-name">ServiceNow</div>
+          <div class="integration-desc">
+            <span class="es">Sincroniza incidentes y cambios con ServiceNow</span>
+            <span class="en">Sync incidents and changes with ServiceNow</span>
+          </div>
+        </div>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px;">
+        <span class="badge violet">Premium</span>
+        <span class="btn-small"><span class="es">Conectar</span><span class="en">Connect</span></span>
+      </div>
+    </div>
+
+    <!-- Jira -->
+    <div class="integration-card">
+      <div class="integration-info">
+        <div class="integration-icon" style="background:rgba(0,82,204,0.12);color:#0052CC;">&#128203;</div>
+        <div>
+          <div class="integration-name">Jira</div>
+          <div class="integration-desc">
+            <span class="es">Crea y sincroniza tickets de Jira desde alertas</span>
+            <span class="en">Create and sync Jira tickets from alerts</span>
+          </div>
+        </div>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px;">
+        <span class="badge violet">Premium</span>
+        <span class="btn-small"><span class="es">Conectar</span><span class="en">Connect</span></span>
+      </div>
+    </div>
+
+    <!-- PagerDuty -->
+    <div class="integration-card">
+      <div class="integration-info">
+        <div class="integration-icon" style="background:rgba(6,167,80,0.12);color:#06A750;">&#128276;</div>
+        <div>
+          <div class="integration-name">PagerDuty</div>
+          <div class="integration-desc">
+            <span class="es">Escalacion automatica de incidentes via PagerDuty</span>
+            <span class="en">Automatic incident escalation via PagerDuty</span>
+          </div>
+        </div>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px;">
+        <span class="badge violet">Premium</span>
+        <span class="btn-small"><span class="es">Conectar</span><span class="en">Connect</span></span>
+      </div>
+    </div>
+
+    <div class="callout info">
+      <div class="callout-icon">&#128161;</div>
+      <div>
+        <span class="es">
+          Las integraciones marcadas con <span class="badge violet">Premium</span> solo estan disponibles en
+          los planes Professional y Enterprise. Actualiza tu plan desde la seccion
+          <a href="#plan">Plan y Facturacion</a> para acceder a ellas.
+        </span>
+        <span class="en">
+          Integrations marked with <span class="badge violet">Premium</span> are only available on
+          the Professional and Enterprise plans. Upgrade your plan from the
+          <a href="#plan">Plan &amp; Billing</a> section to access them.
+        </span>
+      </div>
+    </div>
+
+    <!-- ════════════════════════════════════════════════════════════ -->
+    <!-- SUB-SECTION 5: Notificaciones -->
+    <!-- ════════════════════════════════════════════════════════════ -->
+    <h2 id="notificaciones"><span class="es">5. Notificaciones</span><span class="en">5. Notifications</span></h2>
+
+    <p>
+      <span class="es">
+        La seccion de Notificaciones permite configurar que tipo de comunicaciones deseas recibir.
+        Los ajustes se organizan en tarjetas con <strong>interruptores (toggles)</strong> que puedes
+        activar o desactivar.
+      </span>
+      <span class="en">
+        The Notifications section lets you configure what types of communications you want to receive.
+        Settings are organized in cards with <strong>toggle switches</strong> that you can
+        enable or disable.
+      </span>
+    </p>
+
+    <!-- Email Notifications -->
+    <h3>Email</h3>
+
+    <div class="card">
+      <div class="toggle-row">
+        <div>
+          <div class="toggle-label"><span class="es">Breaches y alertas criticas</span><span class="en">Breaches and critical alerts</span></div>
+          <div class="toggle-desc"><span class="es">Recibir email inmediato cuando se detecte un breach o alerta critica</span><span class="en">Receive immediate email when a breach or critical alert is detected</span></div>
+        </div>
+        <div class="toggle-switch on"></div>
+      </div>
+      <div class="toggle-row">
+        <div>
+          <div class="toggle-label"><span class="es">Solicitudes de aprobacion</span><span class="en">Approval requests</span></div>
+          <div class="toggle-desc"><span class="es">Notificacion cuando hay una operacion pendiente de aprobacion</span><span class="en">Notification when there's an operation pending approval</span></div>
+        </div>
+        <div class="toggle-switch on"></div>
+      </div>
+      <div class="toggle-row">
+        <div>
+          <div class="toggle-label"><span class="es">Reportes de compliance</span><span class="en">Compliance reports</span></div>
+          <div class="toggle-desc"><span class="es">Enviar reportes de cumplimiento generados automaticamente</span><span class="en">Send auto-generated compliance reports</span></div>
+        </div>
+        <div class="toggle-switch"></div>
+      </div>
+    </div>
+
+    <!-- Summary Notifications -->
+    <h3><span class="es">Resumenes</span><span class="en">Summaries</span></h3>
+
+    <div class="card">
+      <div class="toggle-row">
+        <div>
+          <div class="toggle-label"><span class="es">Digesto diario</span><span class="en">Daily digest</span></div>
+          <div class="toggle-desc"><span class="es">Resumen diario de actividad a las 22:00</span><span class="en">Daily activity summary at 22:00</span></div>
+        </div>
+        <div class="toggle-switch on"></div>
+      </div>
+      <div class="toggle-row">
+        <div>
+          <div class="toggle-label"><span class="es">Reporte semanal</span><span class="en">Weekly report</span></div>
+          <div class="toggle-desc"><span class="es">Resumen semanal los lunes a las 08:00</span><span class="en">Weekly summary on Mondays at 08:00</span></div>
+        </div>
+        <div class="toggle-switch on"></div>
+      </div>
+    </div>
+
+    <!-- ════════════════════════════════════════════════════════════ -->
+    <!-- SUB-SECTION 6: Plan y Facturacion -->
+    <!-- ════════════════════════════════════════════════════════════ -->
+    <h2 id="plan"><span class="es">6. Plan y Facturacion</span><span class="en">6. Plan &amp; Billing</span></h2>
+
+    <div class="callout info">
+      <div class="callout-icon">&#128274;</div>
+      <div>
+        <span class="es">
+          Esta seccion solo es visible para usuarios con rol <strong>Admin</strong>.
+        </span>
+        <span class="en">
+          This section is only visible to users with the <strong>Admin</strong> role.
+        </span>
+      </div>
+    </div>
+
+    <!-- Current Plan -->
+    <h3><span class="es">Plan Actual</span><span class="en">Current Plan</span></h3>
+
+    <div class="card" style="border-color:var(--cyan);">
+      <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;">
+        <div>
+          <div class="text-primary font-bold" style="font-size:16px;">Professional</div>
+          <div class="text-sm text-muted">
+            <span class="es">Monitoreo avanzado con IA y automatizacion completa para equipos en crecimiento.</span>
+            <span class="en">Advanced monitoring with AI and full automation for growing teams.</span>
+          </div>
+          <div class="text-sm mt-1">
+            <span class="text-cyan font-bold" style="font-size:22px;">$799</span>
+            <span class="text-muted"> / <span class="es">mes</span><span class="en">month</span></span>
+          </div>
+          <div class="text-xs text-muted mt-1">
+            <span class="es">Proxima facturacion: 1 Abr 2026</span>
+            <span class="en">Next billing: Apr 1, 2026</span>
+          </div>
+        </div>
+        <span class="btn-small"><span class="es">Gestionar plan</span><span class="en">Manage plan</span></span>
+      </div>
+    </div>
+
+    <!-- Plan Cards -->
+    <h3><span class="es">Planes Disponibles</span><span class="en">Available Plans</span></h3>
+
+    <div class="grid-3 mt-2">
+      <!-- Starter -->
+      <div class="plan-card">
+        <div class="plan-name">Starter</div>
+        <div class="plan-desc">
+          <span class="es">Para equipos pequenos que inician con SAP monitoring</span>
+          <span class="en">For small teams starting with SAP monitoring</span>
+        </div>
+        <div class="plan-price">$299 <span>/ <span class="es">mes</span><span class="en">mo</span></span></div>
+        <span class="btn-small" style="width:100%;justify-content:center;">
+          <span class="es">Seleccionar</span><span class="en">Select</span>
+        </span>
+      </div>
+
+      <!-- Professional -->
+      <div class="plan-card popular">
+        <div class="plan-name">Professional</div>
+        <div class="plan-desc">
+          <span class="es">IA avanzada y automatizacion completa para equipos en crecimiento</span>
+          <span class="en">Advanced AI and full automation for growing teams</span>
+        </div>
+        <div class="plan-price">$799 <span>/ <span class="es">mes</span><span class="en">mo</span></span></div>
+        <span class="btn-small primary" style="width:100%;justify-content:center;">
+          <span class="es">Plan Actual</span><span class="en">Current Plan</span>
+        </span>
+      </div>
+
+      <!-- Enterprise -->
+      <div class="plan-card">
+        <div class="plan-name">Enterprise</div>
+        <div class="plan-desc">
+          <span class="es">Soluciones a medida para grandes organizaciones con soporte dedicado</span>
+          <span class="en">Custom solutions for large organizations with dedicated support</span>
+        </div>
+        <div class="plan-price"><span class="es" style="font-size:22px;">Personalizado</span><span class="en" style="font-size:22px;">Custom</span></div>
+        <span class="btn-small" style="width:100%;justify-content:center;">
+          <span class="es">Contactar Ventas</span><span class="en">Contact Sales</span>
+        </span>
+      </div>
+    </div>
+
+    <!-- Feature Comparison Table -->
+    <h3><span class="es">Comparacion de Funcionalidades</span><span class="en">Feature Comparison</span></h3>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th><span class="es">Funcionalidad</span><span class="en">Feature</span></th>
+            <th>Starter</th>
+            <th>Professional</th>
+            <th>Enterprise</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="es">Sistemas monitoreados</span><span class="en">Monitored systems</span></td>
+            <td>5</td>
+            <td>25</td>
+            <td><span class="es">Ilimitado</span><span class="en">Unlimited</span></td>
+          </tr>
+          <tr>
+            <td><span class="es">Usuarios</span><span class="en">Users</span></td>
+            <td>3</td>
+            <td>15</td>
+            <td><span class="es">Ilimitado</span><span class="en">Unlimited</span></td>
+          </tr>
+          <tr>
+            <td>Dashboard</td>
+            <td><span class="checkmark">&#10003;</span></td>
+            <td><span class="checkmark">&#10003;</span></td>
+            <td><span class="checkmark">&#10003;</span></td>
+          </tr>
+          <tr>
+            <td><span class="es">Alertas en tiempo real</span><span class="en">Real-time alerts</span></td>
+            <td><span class="checkmark">&#10003;</span></td>
+            <td><span class="checkmark">&#10003;</span></td>
+            <td><span class="checkmark">&#10003;</span></td>
+          </tr>
+          <tr>
+            <td>Health Checks</td>
+            <td><span class="checkmark">&#10003;</span></td>
+            <td><span class="checkmark">&#10003;</span></td>
+            <td><span class="checkmark">&#10003;</span></td>
+          </tr>
+          <tr>
+            <td><span class="es">Metricas basicas</span><span class="en">Basic metrics</span></td>
+            <td><span class="checkmark">&#10003;</span></td>
+            <td><span class="checkmark">&#10003;</span></td>
+            <td><span class="checkmark">&#10003;</span></td>
+          </tr>
+          <tr>
+            <td><span class="es">Conectores SAP</span><span class="en">SAP Connectors</span></td>
+            <td><span class="checkmark">&#10003;</span></td>
+            <td><span class="checkmark">&#10003;</span></td>
+            <td><span class="checkmark">&#10003;</span></td>
+          </tr>
+          <tr>
+            <td><span class="es">Analisis IA</span><span class="en">AI Analysis</span></td>
+            <td><span class="crossmark">&mdash;</span></td>
+            <td><span class="checkmark">&#10003;</span></td>
+            <td><span class="checkmark">&#10003;</span></td>
+          </tr>
+          <tr>
+            <td><span class="es">Llamadas IA / mes</span><span class="en">AI calls / month</span></td>
+            <td><span class="crossmark">&mdash;</span></td>
+            <td>5,000</td>
+            <td><span class="es">Ilimitado</span><span class="en">Unlimited</span></td>
+          </tr>
+          <tr>
+            <td>Runbooks</td>
+            <td><span class="crossmark">&mdash;</span></td>
+            <td><span class="checkmark">&#10003;</span></td>
+            <td><span class="checkmark">&#10003;</span></td>
+          </tr>
+          <tr>
+            <td><span class="es">Aprobaciones</span><span class="en">Approvals</span></td>
+            <td><span class="crossmark">&mdash;</span></td>
+            <td><span class="checkmark">&#10003;</span></td>
+            <td><span class="checkmark">&#10003;</span></td>
+          </tr>
+          <tr>
+            <td>SLA Monitoring</td>
+            <td><span class="crossmark">&mdash;</span></td>
+            <td><span class="checkmark">&#10003;</span></td>
+            <td><span class="checkmark">&#10003;</span></td>
+          </tr>
+          <tr>
+            <td><span class="es">Transportes</span><span class="en">Transports</span></td>
+            <td><span class="crossmark">&mdash;</span></td>
+            <td><span class="checkmark">&#10003;</span></td>
+            <td><span class="checkmark">&#10003;</span></td>
+          </tr>
+          <tr>
+            <td>Jobs SM37</td>
+            <td><span class="crossmark">&mdash;</span></td>
+            <td><span class="checkmark">&#10003;</span></td>
+            <td><span class="checkmark">&#10003;</span></td>
+          </tr>
+          <tr>
+            <td>HA Control</td>
+            <td><span class="crossmark">&mdash;</span></td>
+            <td><span class="checkmark">&#10003;</span></td>
+            <td><span class="checkmark">&#10003;</span></td>
+          </tr>
+          <tr>
+            <td><span class="es">Integraciones Premium</span><span class="en">Premium Integrations</span></td>
+            <td><span class="crossmark">&mdash;</span></td>
+            <td><span class="checkmark">&#10003;</span></td>
+            <td><span class="checkmark">&#10003;</span></td>
+          </tr>
+          <tr>
+            <td><span class="es">Retencion de datos</span><span class="en">Data retention</span></td>
+            <td>30 <span class="es">dias</span><span class="en">days</span></td>
+            <td>90 <span class="es">dias</span><span class="en">days</span></td>
+            <td>365 <span class="es">dias</span><span class="en">days</span></td>
+          </tr>
+          <tr>
+            <td><span class="es">Reportes automatizados</span><span class="en">Automated reports</span></td>
+            <td><span class="crossmark">&mdash;</span></td>
+            <td><span class="checkmark">&#10003;</span></td>
+            <td><span class="checkmark">&#10003;</span></td>
+          </tr>
+          <tr>
+            <td><span class="es">Comparacion de sistemas</span><span class="en">System comparison</span></td>
+            <td><span class="crossmark">&mdash;</span></td>
+            <td><span class="checkmark">&#10003;</span></td>
+            <td><span class="checkmark">&#10003;</span></td>
+          </tr>
+          <tr>
+            <td><span class="es">Certificados SSL/TLS</span><span class="en">SSL/TLS Certificates</span></td>
+            <td><span class="checkmark">&#10003;</span></td>
+            <td><span class="checkmark">&#10003;</span></td>
+            <td><span class="checkmark">&#10003;</span></td>
+          </tr>
+          <tr>
+            <td><span class="es">Soporte</span><span class="en">Support</span></td>
+            <td>Email</td>
+            <td><span class="es">Prioritario</span><span class="en">Priority</span></td>
+            <td><span class="es">Dedicado 24/7</span><span class="en">Dedicated 24/7</span></td>
+          </tr>
+          <tr>
+            <td>SSO / SAML</td>
+            <td><span class="crossmark">&mdash;</span></td>
+            <td><span class="crossmark">&mdash;</span></td>
+            <td><span class="checkmark">&#10003;</span></td>
+          </tr>
+          <tr>
+            <td><span class="es">SLA garantizado</span><span class="en">Guaranteed SLA</span></td>
+            <td><span class="crossmark">&mdash;</span></td>
+            <td>99.9%</td>
+            <td>99.99%</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- ════════════════════════════════════════════════════════════ -->
+    <!-- SUB-SECTION 7: Auditoria -->
+    <!-- ════════════════════════════════════════════════════════════ -->
+    <h2 id="auditoria"><span class="es">7. Auditoria</span><span class="en">7. Audit Log</span></h2>
+
+    <p>
+      <span class="es">
+        La seccion de Auditoria registra todas las acciones relevantes realizadas en la plataforma.
+        En la parte superior hay un <strong>campo de busqueda</strong> que permite filtrar por accion,
+        usuario o detalle. Tambien hay un boton <strong>"Exportar CSV"</strong> para descargar el registro.
+      </span>
+      <span class="en">
+        The Audit section logs all relevant actions performed on the platform.
+        At the top there's a <strong>search field</strong> that lets you filter by action,
+        user, or detail. There's also an <strong>"Export CSV"</strong> button to download the log.
+      </span>
+    </p>
+
+    <h3><span class="es">Tabla de Auditoria</span><span class="en">Audit Table</span></h3>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th><span class="es">Fecha</span><span class="en">Date</span></th>
+            <th><span class="es">Usuario</span><span class="en">User</span></th>
+            <th><span class="es">Accion</span><span class="en">Action</span></th>
+            <th><span class="es">Recurso</span><span class="en">Resource</span></th>
+            <th><span class="es">Detalle</span><span class="en">Detail</span></th>
+            <th><span class="es">Nivel</span><span class="en">Level</span></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="text-sm">2026-03-11 14:32</td>
+            <td class="text-sm">Carlos Mendez</td>
+            <td><code>system.register</code></td>
+            <td class="font-mono text-sm">sys_01hx7k9m</td>
+            <td class="text-sm">
+              <span class="es">Sistema S4P registrado via agente</span>
+              <span class="en">System S4P registered via agent</span>
+            </td>
+            <td><span class="badge cyan">info</span></td>
+          </tr>
+          <tr>
+            <td class="text-sm">2026-03-11 13:15</td>
+            <td class="text-sm">Laura Rodriguez</td>
+            <td><code>approval.approve</code></td>
+            <td class="font-mono text-sm">apr_01ha4v2x</td>
+            <td class="text-sm">
+              <span class="es">Aprobada operacion de reinicio en ECP</span>
+              <span class="en">Approved restart operation on ECP</span>
+            </td>
+            <td><span class="badge success">success</span></td>
+          </tr>
+          <tr>
+            <td class="text-sm">2026-03-11 11:47</td>
+            <td class="text-sm">Sistema</td>
+            <td><code>breach.detected</code></td>
+            <td class="font-mono text-sm">brch_01hb8r5p</td>
+            <td class="text-sm">
+              <span class="es">CPU al 97% en S4P durante 15min</span>
+              <span class="en">CPU at 97% on S4P for 15min</span>
+            </td>
+            <td><span class="badge danger">critical</span></td>
+          </tr>
+          <tr>
+            <td class="text-sm">2026-03-11 10:22</td>
+            <td class="text-sm">Juan Perez</td>
+            <td><code>runbook.execute</code></td>
+            <td class="font-mono text-sm">rb_cache_clear</td>
+            <td class="text-sm">
+              <span class="es">Ejecutado runbook de limpieza de cache en ECP</span>
+              <span class="en">Executed cache cleanup runbook on ECP</span>
+            </td>
+            <td><span class="badge cyan">info</span></td>
+          </tr>
+          <tr>
+            <td class="text-sm">2026-03-10 16:30</td>
+            <td class="text-sm">Carlos Mendez</td>
+            <td><code>user.invite</code></td>
+            <td class="font-mono text-sm">usr_ana_gomez</td>
+            <td class="text-sm">
+              <span class="es">Invitado ana@acme.com como Viewer</span>
+              <span class="en">Invited ana@acme.com as Viewer</span>
+            </td>
+            <td><span class="badge cyan">info</span></td>
+          </tr>
+          <tr>
+            <td class="text-sm">2026-03-10 09:15</td>
+            <td class="text-sm">Sistema</td>
+            <td><code>ha.failover</code></td>
+            <td class="font-mono text-sm">ha_s4p_cluster</td>
+            <td class="text-sm">
+              <span class="es">Failover automatico ejecutado en cluster S4P</span>
+              <span class="en">Automatic failover executed on S4P cluster</span>
+            </td>
+            <td><span class="badge warning">warning</span></td>
+          </tr>
+          <tr>
+            <td class="text-sm">2026-03-09 20:45</td>
+            <td class="text-sm">Carlos Mendez</td>
+            <td><code>settings.update</code></td>
+            <td class="font-mono text-sm">org_settings</td>
+            <td class="text-sm">
+              <span class="es">Umbral de CPU critico cambiado de 90% a 95%</span>
+              <span class="en">CPU critical threshold changed from 90% to 95%</span>
+            </td>
+            <td><span class="badge cyan">info</span></td>
+          </tr>
+          <tr>
+            <td class="text-sm">2026-03-09 08:00</td>
+            <td class="text-sm">Sistema</td>
+            <td><code>compliance.report</code></td>
+            <td class="font-mono text-sm">rpt_weekly_0309</td>
+            <td class="text-sm">
+              <span class="es">Reporte semanal de compliance generado</span>
+              <span class="en">Weekly compliance report generated</span>
+            </td>
+            <td><span class="badge success">success</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="card mt-2">
+      <p>
+        <span class="es">
+          Los <strong>tipos de accion</strong> se muestran como etiquetas con formato de codigo (<code>code</code>).
+          El campo <strong>Recurso</strong> se muestra en fuente monoespacio para facilitar la identificacion
+          de IDs del sistema. La columna <strong>Nivel</strong> usa badges de colores que indican la severidad
+          del evento:
+        </span>
+        <span class="en">
+          <strong>Action types</strong> are displayed as code-formatted labels (<code>code</code>).
+          The <strong>Resource</strong> field is shown in monospace font for easy ID identification.
+          The <strong>Level</strong> column uses colored badges indicating event severity:
+        </span>
+      </p>
+      <div class="mt-1" style="display:flex;gap:8px;flex-wrap:wrap;">
+        <span class="badge cyan">info</span>
+        <span class="badge success">success</span>
+        <span class="badge warning">warning</span>
+        <span class="badge danger">critical</span>
+      </div>
+    </div>
+
+    <div class="callout info">
+      <div class="callout-icon">&#128161;</div>
+      <div>
+        <span class="es">
+          <strong>Exportar CSV:</strong> Haz clic en el boton "Exportar CSV" en la parte superior derecha
+          de la tabla para descargar todo el registro de auditoria en formato CSV, util para reportes de
+          compliance o investigaciones internas.
+        </span>
+        <span class="en">
+          <strong>Export CSV:</strong> Click the "Export CSV" button at the top right
+          of the table to download the entire audit log in CSV format, useful for compliance reports
+          or internal investigations.
+        </span>
+      </div>
+    </div>
+
+  </main>
+</div>
+</body>
+</html>

@@ -1,0 +1,14 @@
+{
+  "name": "sap-alwaysops-bedrock-advisor",
+  "version": "1.0.0",
+  "description": "Avvale SAP AlwaysOps - Asesor IA con 5 módulos Bedrock (UC1-UC5): análisis, forecast, safety gate, digest, adaptación",
+  "main": "index.js",
+  "dependencies": {
+    "@aws-sdk/client-bedrock-runtime": "^3.450.0",
+    "@aws-sdk/client-sns": "^3.450.0",
+    "@aws-sdk/client-cloudwatch": "^3.450.0",
+    "@aws-sdk/client-dynamodb": "^3.450.0",
+    "@aws-sdk/lib-dynamodb": "^3.450.0",
+    "@aws-sdk/client-ssm": "^3.450.0"
+  }
+}

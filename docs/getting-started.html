@@ -1,0 +1,1297 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="dark" data-lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Primeros Pasos — SAP Spektra by Maveram</title>
+  <link rel="stylesheet" href="theme.css">
+  <script src="theme-toggle.js"></script>
+  <script src="lang-toggle.js"></script>
+  <style>
+    /* ── Login mockup ── */
+    .login-mockup {
+      max-width: 340px;
+      margin: 16px auto;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius);
+      padding: 32px 28px;
+      text-align: center;
+    }
+    .login-mockup .mock-logo {
+      width: 56px;
+      height: 56px;
+      border-radius: 16px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, #06b6d4, #8b5cf6);
+      box-shadow: 0 0 24px rgba(6,182,212,0.3);
+      font-size: 24px;
+      color: #fff;
+      margin-bottom: 12px;
+    }
+    .login-mockup .mock-title {
+      font-size: 18px;
+      font-weight: 700;
+      background: linear-gradient(90deg, #e2e8f0, #06b6d4);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .login-mockup .mock-field {
+      width: 100%;
+      padding: 10px 14px;
+      margin: 6px 0;
+      background: var(--bg3);
+      border: 1px solid var(--brd);
+      border-radius: 8px;
+      color: var(--txt2);
+      font-size: 13px;
+      text-align: left;
+    }
+    .login-mockup .mock-btn {
+      width: 100%;
+      padding: 10px;
+      margin-top: 10px;
+      border-radius: 8px;
+      border: none;
+      background: linear-gradient(135deg, #06b6d4, #8b5cf6);
+      color: #fff;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: default;
+    }
+    .login-mockup .mock-divider {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin: 16px 0;
+      font-size: 11px;
+      color: var(--txt3);
+    }
+    .login-mockup .mock-divider::before,
+    .login-mockup .mock-divider::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--brd);
+    }
+    .demo-roles {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-top: 8px;
+    }
+    .demo-role-btn {
+      padding: 8px;
+      border-radius: 8px;
+      border: 1px solid var(--brd);
+      background: var(--bg3);
+      color: var(--txt2);
+      font-size: 12px;
+      font-weight: 600;
+      cursor: default;
+      text-align: center;
+    }
+
+    /* ── Navbar mockup ── */
+    .nav-mockup {
+      background: rgba(2,6,23,0.92);
+      border: 1px solid rgba(6,182,212,0.12);
+      border-radius: var(--radius);
+      padding: 12px 20px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin: 16px 0;
+      overflow-x: auto;
+      position: relative;
+    }
+    .nav-mockup::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(6,182,212,0.3), rgba(139,92,246,0.3), transparent);
+      border-radius: var(--radius) var(--radius) 0 0;
+    }
+    .nav-mockup .nm-logo {
+      width: 28px;
+      height: 28px;
+      border-radius: 8px;
+      background: linear-gradient(135deg, #06b6d4, #7c3aed);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      color: #fff;
+      flex-shrink: 0;
+    }
+    .nav-mockup .nm-brand {
+      font-size: 12px;
+      font-weight: 700;
+      background: linear-gradient(90deg, #e2e8f0, #06b6d4);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      flex-shrink: 0;
+    }
+    .nav-mockup .nm-sections {
+      display: flex;
+      gap: 4px;
+      flex-shrink: 0;
+    }
+    .nav-mockup .nm-section {
+      padding: 4px 10px;
+      border-radius: 6px;
+      font-size: 11px;
+      font-weight: 600;
+      color: rgba(148,163,184,0.7);
+      white-space: nowrap;
+    }
+    .nav-mockup .nm-section.active {
+      color: #06b6d4;
+      background: rgba(6,182,212,0.1);
+    }
+    .nav-mockup .nm-spacer { flex: 1; }
+    .nav-mockup .nm-right {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-shrink: 0;
+    }
+    .nm-indicator {
+      display: flex;
+      align-items: center;
+      gap: 3px;
+      font-size: 10px;
+      font-family: monospace;
+    }
+    .nm-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      display: inline-block;
+    }
+
+    /* ── Role comparison grid ── */
+    .role-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 16px;
+      margin: 16px 0;
+    }
+    .role-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius);
+      padding: 20px;
+      transition: all 0.2s;
+    }
+    .role-card:hover {
+      border-color: var(--cyan);
+    }
+    .role-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+    .role-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+    }
+    .role-name {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--txt1);
+    }
+    .role-level {
+      font-size: 10px;
+      font-weight: 600;
+      color: var(--txt3);
+    }
+    .role-perms {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    .role-perms li {
+      padding: 4px 0;
+      font-size: 12px;
+      color: var(--txt2);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .role-perms li::before {
+      content: '';
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    /* ── Plan cards ── */
+    .plan-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 16px;
+      margin: 16px 0;
+    }
+    .plan-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius);
+      padding: 24px;
+      position: relative;
+      transition: all 0.2s;
+    }
+    .plan-card:hover {
+      border-color: var(--cyan);
+    }
+    .plan-card.popular {
+      border-color: var(--cyan);
+      box-shadow: 0 0 30px rgba(6,182,212,0.1);
+    }
+    .plan-popular-tag {
+      position: absolute;
+      top: -10px;
+      right: 16px;
+      background: linear-gradient(135deg, #06b6d4, #8b5cf6);
+      color: #fff;
+      font-size: 10px;
+      font-weight: 700;
+      padding: 3px 12px;
+      border-radius: 100px;
+      letter-spacing: 0.5px;
+    }
+    .plan-name {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--txt1);
+      margin-bottom: 4px;
+    }
+    .plan-price {
+      font-size: 28px;
+      font-weight: 800;
+      color: var(--cyan);
+    }
+    .plan-price .period {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--txt3);
+    }
+    .plan-features {
+      list-style: none;
+      padding: 0;
+      margin: 16px 0 0;
+    }
+    .plan-features li {
+      padding: 5px 0;
+      font-size: 13px;
+      color: var(--txt2);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .plan-check {
+      color: var(--success);
+      font-size: 14px;
+      flex-shrink: 0;
+    }
+
+    /* ── Dashboard mockup KPIs ── */
+    .dash-kpis {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 12px;
+      margin: 16px 0;
+    }
+    .dash-kpi {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius);
+      padding: 16px;
+      text-align: center;
+    }
+    .dash-kpi .kval {
+      font-size: 26px;
+      font-weight: 800;
+      color: var(--txt1);
+    }
+    .dash-kpi .klabel {
+      font-size: 11px;
+      color: var(--txt3);
+      margin-top: 2px;
+    }
+
+    /* ── System card mockup ── */
+    .sys-card-mock {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius);
+      padding: 16px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      max-width: 320px;
+    }
+    .sys-gauge {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      font-weight: 800;
+      color: #fff;
+      flex-shrink: 0;
+    }
+    .sys-info .sys-sid {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--txt1);
+    }
+    .sys-info .sys-detail {
+      font-size: 11px;
+      color: var(--txt3);
+    }
+
+    /* ── Footer ── */
+    .docs-footer {
+      margin-top: 48px;
+      padding: 24px 0;
+      border-top: 1px solid var(--brd);
+      text-align: center;
+      font-size: 12px;
+      color: var(--txt3);
+    }
+  </style>
+</head>
+<body>
+  <div class="docs-wrapper">
+
+    <!-- ═══ SIDEBAR ═══ -->
+    <aside class="docs-sidebar">
+      <div class="sidebar-brand">
+        <div class="logo">&#9889;</div>
+        <div class="brand-text">
+          <div class="brand-name">SAP Spektra</div>
+          <div class="brand-sub">
+            <span class="es">DOCUMENTACION</span>
+            <span class="en">DOCUMENTATION</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Primeros Pasos -->
+      <div class="sidebar-section">
+        <div class="sidebar-section-label">
+          <span class="es">Inicio</span>
+          <span class="en">Start</span>
+        </div>
+        <a href="index.html" class="sidebar-link">
+          &#127968;
+          <span class="es">Portal de Documentacion</span>
+          <span class="en">Documentation Portal</span>
+        </a>
+        <a href="getting-started.html" class="sidebar-link active">
+          &#128640;
+          <span class="es">Primeros Pasos</span>
+          <span class="en">Getting Started</span>
+        </a>
+      </div>
+
+      <!-- Command -->
+      <div class="sidebar-section">
+        <div class="sidebar-section-label">Command</div>
+        <a href="dashboard.html" class="sidebar-link">&#128202; Dashboard</a>
+        <a href="landscape.html" class="sidebar-link">&#127760; Landscape</a>
+        <a href="alerts.html" class="sidebar-link">
+          &#9888;&#65039;
+          <span class="es">Alertas</span>
+          <span class="en">Alerts</span>
+        </a>
+      </div>
+
+      <!-- Monitor -->
+      <div class="sidebar-section">
+        <div class="sidebar-section-label">Monitor</div>
+        <a href="systems.html" class="sidebar-link">
+          &#128421;
+          <span class="es">Sistemas</span>
+          <span class="en">Systems</span>
+        </a>
+        <a href="connectors.html" class="sidebar-link">
+          &#128268;
+          <span class="es">Conectores</span>
+          <span class="en">Connectors</span>
+        </a>
+        <a href="events.html" class="sidebar-link">
+          &#128196;
+          <span class="es">Eventos</span>
+          <span class="en">Events</span>
+        </a>
+      </div>
+
+      <!-- Intelligence -->
+      <div class="sidebar-section">
+        <div class="sidebar-section-label">Intelligence</div>
+        <a href="ai.html" class="sidebar-link">
+          &#129504;
+          <span class="es">Analisis IA</span>
+          <span class="en">AI Analysis</span>
+        </a>
+        <a href="analytics.html" class="sidebar-link">&#128200; Analytics</a>
+        <a href="reports.html" class="sidebar-link">
+          &#128209;
+          <span class="es">Reportes</span>
+          <span class="en">Reports</span>
+        </a>
+        <a href="comparison.html" class="sidebar-link">
+          &#128260;
+          <span class="es">Comparacion</span>
+          <span class="en">Comparison</span>
+        </a>
+      </div>
+
+      <!-- Operations -->
+      <div class="sidebar-section">
+        <div class="sidebar-section-label">Operations</div>
+        <a href="runbooks.html" class="sidebar-link">&#128214; Runbooks</a>
+        <a href="approvals.html" class="sidebar-link">
+          &#9989;
+          <span class="es">Aprobaciones</span>
+          <span class="en">Approvals</span>
+        </a>
+        <a href="operations.html" class="sidebar-link">
+          &#128197;
+          <span class="es">Operaciones</span>
+          <span class="en">Operations</span>
+        </a>
+        <a href="jobs.html" class="sidebar-link">&#9654;&#65039; Jobs SM37</a>
+        <a href="transports.html" class="sidebar-link">
+          &#128230;
+          <span class="es">Transportes</span>
+          <span class="en">Transports</span>
+        </a>
+        <a href="sla.html" class="sidebar-link">&#11088; SLA</a>
+        <a href="ha.html" class="sidebar-link">&#128147; HA Control</a>
+        <a href="certificates.html" class="sidebar-link">
+          &#128273;
+          <span class="es">Certificados</span>
+          <span class="en">Certificates</span>
+        </a>
+      </div>
+
+      <!-- Admin -->
+      <div class="sidebar-section">
+        <div class="sidebar-section-label">Admin</div>
+        <a href="admin.html" class="sidebar-link">
+          &#128737;
+          <span class="es">Gestion</span>
+          <span class="en">Management</span>
+        </a>
+        <a href="settings.html" class="sidebar-link">
+          &#9881;&#65039;
+          <span class="es">Configuracion</span>
+          <span class="en">Settings</span>
+        </a>
+      </div>
+
+      <!-- Additional -->
+      <div class="sidebar-section">
+        <div class="sidebar-section-label">
+          <span class="es">Adicional</span>
+          <span class="en">Additional</span>
+        </div>
+        <a href="connect.html" class="sidebar-link">
+          &#128279;
+          <span class="es">Conectar Sistema</span>
+          <span class="en">Connect System</span>
+        </a>
+      </div>
+    </aside>
+
+    <!-- ═══ MAIN CONTENT ═══ -->
+    <main class="docs-main">
+
+      <!-- Breadcrumb -->
+      <div class="breadcrumb">
+        <a href="index.html">
+          <span class="es">Documentacion</span>
+          <span class="en">Documentation</span>
+        </a>
+        <span class="sep">/</span>
+        <span>
+          <span class="es">Primeros Pasos</span>
+          <span class="en">Getting Started</span>
+        </span>
+      </div>
+
+      <!-- Page header -->
+      <div class="page-header">
+        <h1>
+          <span class="es">Primeros Pasos</span>
+          <span class="en">Getting Started</span>
+        </h1>
+        <p class="subtitle">
+          <span class="es">Todo lo que necesitas para comenzar a usar SAP Spektra by Maveram.</span>
+          <span class="en">Everything you need to start using SAP Spektra by Maveram.</span>
+        </p>
+      </div>
+
+      <!-- ════════════════════════════════════════════════════════════
+           1. LOGIN
+           ════════════════════════════════════════════════════════════ -->
+      <h2 id="login">
+        <span class="es">1. Iniciar Sesion</span>
+        <span class="en">1. Login</span>
+      </h2>
+
+      <p>
+        <span class="es">
+          Al acceder a SAP Spektra veras la pantalla de login. Esta pantalla cuenta con el logotipo de SAP Spektra
+          con un degradado de cian a violeta, campos de usuario y contrasena, y el boton <strong>"Iniciar Sesion"</strong>.
+        </span>
+        <span class="en">
+          When you access SAP Spektra you will see the login screen. This screen features the SAP Spektra logo
+          with a cyan-to-violet gradient, username and password fields, and the <strong>"Iniciar Sesion"</strong> (Sign In) button.
+        </span>
+      </p>
+
+      <!-- Login visual mockup -->
+      <div class="login-mockup">
+        <div class="mock-logo">&#9889;</div>
+        <div class="mock-title">SAP Spektra</div>
+        <p style="font-size:9px;color:var(--txt3);letter-spacing:1px;margin:2px 0 16px">by Maveram</p>
+        <div class="mock-field">
+          <span class="es">Usuario</span>
+          <span class="en">Username</span>
+        </div>
+        <div class="mock-field">
+          <span class="es">Contrasena</span>
+          <span class="en">Password</span>
+        </div>
+        <div class="mock-btn">
+          <span class="es">Iniciar Sesion</span>
+          <span class="en">Sign In</span>
+        </div>
+        <div class="mock-divider">
+          <span class="es">o acceso demo</span>
+          <span class="en">or demo access</span>
+        </div>
+        <div class="demo-roles">
+          <div class="demo-role-btn">Admin</div>
+          <div class="demo-role-btn">Operator</div>
+          <div class="demo-role-btn">Escalation</div>
+          <div class="demo-role-btn">Viewer</div>
+        </div>
+      </div>
+
+      <div class="callout info">
+        <div class="callout-icon">&#128161;</div>
+        <div>
+          <span class="es">
+            <strong>Modo Demo:</strong> Debajo del formulario hay 4 botones de acceso rapido por rol
+            (admin, operator, escalation, viewer). Cualquier contrasena funciona; el rol se asigna
+            automaticamente segun el nombre de usuario que ingreses.
+          </span>
+          <span class="en">
+            <strong>Demo Mode:</strong> Below the form there are 4 quick-access buttons by role
+            (admin, operator, escalation, viewer). Any password works; the role is assigned
+            automatically based on the username you enter.
+          </span>
+        </div>
+      </div>
+
+      <!-- ════════════════════════════════════════════════════════════
+           2. NAVEGACION
+           ════════════════════════════════════════════════════════════ -->
+      <h2 id="navegacion">
+        <span class="es">2. Navegacion</span>
+        <span class="en">2. Navigation</span>
+      </h2>
+
+      <p>
+        <span class="es">
+          Una vez dentro, veras la barra de navegacion superior fija con fondo oscuro.
+          Contiene el logotipo SAP Spektra a la izquierda, seguido de 5 secciones desplegables.
+        </span>
+        <span class="en">
+          Once inside, you will see the fixed top navigation bar with a dark background.
+          It contains the SAP Spektra logo on the left, followed by 5 dropdown sections.
+        </span>
+      </p>
+
+      <!-- Nav mockup -->
+      <div class="nav-mockup">
+        <div class="nm-logo">&#9889;</div>
+        <div class="nm-brand">SAP Spektra</div>
+        <div class="nm-sections">
+          <div class="nm-section active">Command</div>
+          <div class="nm-section">Monitor</div>
+          <div class="nm-section">Intelligence</div>
+          <div class="nm-section">Operations</div>
+          <div class="nm-section">Admin</div>
+        </div>
+        <div class="nm-spacer"></div>
+        <div class="nm-right">
+          <div class="nm-indicator">
+            <span class="nm-dot" style="background:#22c55e;box-shadow:0 0 4px rgba(34,197,94,0.6)"></span>
+            <span style="color:rgba(34,197,94,0.9)">7</span>
+          </div>
+          <div class="nm-indicator">
+            <span class="nm-dot" style="background:#eab308;box-shadow:0 0 4px rgba(234,179,8,0.6)"></span>
+            <span style="color:rgba(234,179,8,0.9)">2</span>
+          </div>
+          <div class="nm-indicator">
+            <span class="nm-dot" style="background:#ef4444;box-shadow:0 0 4px rgba(239,68,68,0.6)"></span>
+            <span style="color:rgba(239,68,68,0.9)">1</span>
+          </div>
+          <span style="color:rgba(148,163,184,0.45);font-size:10px;font-family:monospace">14:32:05</span>
+          <span style="font-size:14px;cursor:default">&#9728;&#65039;</span>
+          <span style="font-size:14px;cursor:default;position:relative">
+            &#128276;
+            <span style="position:absolute;top:-2px;right:-2px;width:6px;height:6px;border-radius:50%;background:#06b6d4"></span>
+          </span>
+          <span style="width:24px;height:24px;border-radius:50%;background:linear-gradient(135deg,#06b6d4,#7c3aed);display:inline-flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:#fff">A</span>
+        </div>
+      </div>
+
+      <h3>
+        <span class="es">Secciones del Menu</span>
+        <span class="en">Menu Sections</span>
+      </h3>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>
+                <span class="es">Seccion</span>
+                <span class="en">Section</span>
+              </th>
+              <th>
+                <span class="es">Paginas</span>
+                <span class="en">Pages</span>
+              </th>
+              <th>
+                <span class="es">Descripcion</span>
+                <span class="en">Description</span>
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><span class="badge cyan">Command</span></td>
+              <td>Dashboard, Landscape, Alertas</td>
+              <td>
+                <span class="es">Vista ejecutiva del estado general de tu landscape SAP.</span>
+                <span class="en">Executive view of your SAP landscape overall status.</span>
+              </td>
+            </tr>
+            <tr>
+              <td><span class="badge success">Monitor</span></td>
+              <td>
+                <span class="es">Sistemas, Conectores, Eventos</span>
+                <span class="en">Systems, Connectors, Events</span>
+              </td>
+              <td>
+                <span class="es">Monitoreo detallado de cada sistema, conexiones y logs de eventos.</span>
+                <span class="en">Detailed monitoring of each system, connections and event logs.</span>
+              </td>
+            </tr>
+            <tr>
+              <td><span class="badge violet">Intelligence</span></td>
+              <td>
+                <span class="es">Analisis IA, Analytics, Reportes, Comparacion</span>
+                <span class="en">AI Analysis, Analytics, Reports, Comparison</span>
+              </td>
+              <td>
+                <span class="es">Analisis con IA (Amazon Bedrock / Claude), graficas, reportes y comparativas.</span>
+                <span class="en">AI analysis (Amazon Bedrock / Claude), charts, reports and comparisons.</span>
+              </td>
+            </tr>
+            <tr>
+              <td><span class="badge success">Operations</span></td>
+              <td>Runbooks, Aprobaciones, Operaciones, Jobs SM37, Transportes, SLA, HA Control, Certificados</td>
+              <td>
+                <span class="es">Automatizacion, ejecucion y gestion de operaciones SAP dia a dia.</span>
+                <span class="en">Automation, execution and management of daily SAP operations.</span>
+              </td>
+            </tr>
+            <tr>
+              <td><span class="badge warning">Admin</span></td>
+              <td>
+                <span class="es">Gestion, Configuracion</span>
+                <span class="en">Management, Settings</span>
+              </td>
+              <td>
+                <span class="es">Administracion de usuarios, organizacion, planes y preferencias.</span>
+                <span class="en">User administration, organization, plans and preferences.</span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>
+        <span class="es">Controles del Lado Derecho</span>
+        <span class="en">Right-Side Controls</span>
+      </h3>
+
+      <p>
+        <span class="es">En el extremo derecho de la barra de navegacion encontraras:</span>
+        <span class="en">On the right side of the navigation bar you will find:</span>
+      </p>
+
+      <ul class="feature-list">
+        <li>
+          <span class="es"><strong>Indicadores de salud</strong> &mdash; tres puntos de color (verde/amarillo/rojo) con el conteo de sistemas en cada estado.</span>
+          <span class="en"><strong>Health indicators</strong> &mdash; three colored dots (green/yellow/red) with the count of systems in each state.</span>
+        </li>
+        <li>
+          <span class="es"><strong>Reloj</strong> &mdash; hora actual en formato local, actualizado cada segundo.</span>
+          <span class="en"><strong>Clock</strong> &mdash; current time in local format, updated every second.</span>
+        </li>
+        <li>
+          <span class="es"><strong>Toggle de tema</strong> &mdash; boton de sol/luna para alternar entre modo oscuro y claro.</span>
+          <span class="en"><strong>Theme toggle</strong> &mdash; sun/moon button to switch between dark and light mode.</span>
+        </li>
+        <li>
+          <span class="es"><strong>Campana de notificaciones</strong> &mdash; con punto cian pulsante cuando hay notificaciones nuevas. Al hacer clic, se despliega un panel con las ultimas alertas, aprobaciones y eventos.</span>
+          <span class="en"><strong>Notifications bell</strong> &mdash; with a pulsing cyan dot when there are new notifications. Clicking it opens a panel with the latest alerts, approvals and events.</span>
+        </li>
+        <li>
+          <span class="es"><strong>Avatar de usuario</strong> &mdash; muestra la inicial del usuario con degradado cian-violeta. Al hacer clic, se despliega un menu con Perfil, Configuracion y Cerrar Sesion.</span>
+          <span class="en"><strong>User avatar</strong> &mdash; shows the user's initial with a cyan-violet gradient. Clicking it opens a dropdown with Profile, Settings and Logout.</span>
+        </li>
+      </ul>
+
+      <div class="callout info">
+        <div class="callout-icon">&#128269;</div>
+        <div>
+          <span class="es">
+            <strong>Auto-hide:</strong> La barra de navegacion se oculta automaticamente al hacer scroll
+            hacia abajo para maximizar el espacio visible. Al hacer scroll hacia arriba, reaparece.
+          </span>
+          <span class="en">
+            <strong>Auto-hide:</strong> The navigation bar automatically hides when scrolling down
+            to maximize visible space. Scrolling up brings it back.
+          </span>
+        </div>
+      </div>
+
+      <!-- ════════════════════════════════════════════════════════════
+           3. ROLES DE USUARIO
+           ════════════════════════════════════════════════════════════ -->
+      <h2 id="roles">
+        <span class="es">3. Roles de Usuario</span>
+        <span class="en">3. User Roles</span>
+      </h2>
+
+      <p>
+        <span class="es">
+          SAP Spektra utiliza un sistema de 4 roles jerarquicos. Cada rol tiene un nivel numerico
+          que determina sus permisos. Un rol superior hereda todos los permisos de los roles inferiores.
+        </span>
+        <span class="en">
+          SAP Spektra uses a 4-tier hierarchical role system. Each role has a numeric level
+          that determines its permissions. A higher role inherits all permissions from lower roles.
+        </span>
+      </p>
+
+      <div class="role-grid">
+        <!-- Admin -->
+        <div class="role-card" style="border-top: 2px solid var(--cyan);">
+          <div class="role-header">
+            <div class="role-icon" style="background:var(--cyan-dim);color:var(--cyan)">&#128737;</div>
+            <div>
+              <div class="role-name">Admin</div>
+              <div class="role-level">
+                <span class="es">Nivel 40 &mdash; Acceso total</span>
+                <span class="en">Level 40 &mdash; Full access</span>
+              </div>
+            </div>
+          </div>
+          <ul class="role-perms">
+            <li style="--dot-color:var(--cyan)"><span style="background:var(--cyan)" class="role-dot"></span>
+              <span class="es">Gestionar usuarios y organizacion</span>
+              <span class="en">Manage users and organization</span>
+            </li>
+            <li><span style="background:var(--cyan)" class="role-dot"></span>
+              <span class="es">Modificar configuracion y planes</span>
+              <span class="en">Modify settings and plans</span>
+            </li>
+            <li><span style="background:var(--cyan)" class="role-dot"></span>
+              <span class="es">Acceso a todas las operaciones</span>
+              <span class="en">Access to all operations</span>
+            </li>
+            <li><span style="background:var(--cyan)" class="role-dot"></span>
+              <span class="es">Aprobar cualquier accion</span>
+              <span class="en">Approve any action</span>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Escalation -->
+        <div class="role-card" style="border-top: 2px solid var(--violet);">
+          <div class="role-header">
+            <div class="role-icon" style="background:var(--violet-dim);color:var(--violet)">&#128640;</div>
+            <div>
+              <div class="role-name">Escalation</div>
+              <div class="role-level">
+                <span class="es">Nivel 30 &mdash; Operador avanzado</span>
+                <span class="en">Level 30 &mdash; Advanced operator</span>
+              </div>
+            </div>
+          </div>
+          <ul class="role-perms">
+            <li>
+              <span class="es">Aprobar operaciones criticas</span>
+              <span class="en">Approve critical operations</span>
+            </li>
+            <li>
+              <span class="es">Modificar reglas de alertas</span>
+              <span class="en">Modify alert rules</span>
+            </li>
+            <li>
+              <span class="es">Ejecutar runbooks avanzados</span>
+              <span class="en">Execute advanced runbooks</span>
+            </li>
+            <li>
+              <span class="es">Gestionar incidentes escalados</span>
+              <span class="en">Manage escalated incidents</span>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Operator -->
+        <div class="role-card" style="border-top: 2px solid var(--success);">
+          <div class="role-header">
+            <div class="role-icon" style="background:rgba(34,197,94,0.12);color:var(--success)">&#128736;</div>
+            <div>
+              <div class="role-name">Operator</div>
+              <div class="role-level">
+                <span class="es">Nivel 20 &mdash; Operador estandar</span>
+                <span class="en">Level 20 &mdash; Standard operator</span>
+              </div>
+            </div>
+          </div>
+          <ul class="role-perms">
+            <li>
+              <span class="es">Monitorear sistemas en tiempo real</span>
+              <span class="en">Monitor systems in real time</span>
+            </li>
+            <li>
+              <span class="es">Ejecutar runbooks pre-aprobados</span>
+              <span class="en">Execute pre-approved runbooks</span>
+            </li>
+            <li>
+              <span class="es">Gestionar incidentes</span>
+              <span class="en">Manage incidents</span>
+            </li>
+            <li>
+              <span class="es">Crear y responder alertas</span>
+              <span class="en">Create and respond to alerts</span>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Viewer -->
+        <div class="role-card" style="border-top: 2px solid var(--txt3);">
+          <div class="role-header">
+            <div class="role-icon" style="background:var(--bg3);color:var(--txt3)">&#128065;</div>
+            <div>
+              <div class="role-name">Viewer</div>
+              <div class="role-level">
+                <span class="es">Nivel 10 &mdash; Solo lectura</span>
+                <span class="en">Level 10 &mdash; Read only</span>
+              </div>
+            </div>
+          </div>
+          <ul class="role-perms">
+            <li>
+              <span class="es">Ver dashboards y metricas</span>
+              <span class="en">View dashboards and metrics</span>
+            </li>
+            <li>
+              <span class="es">Consultar reportes</span>
+              <span class="en">View reports</span>
+            </li>
+            <li>
+              <span class="es">Ver estado de sistemas</span>
+              <span class="en">View system status</span>
+            </li>
+            <li>
+              <span class="es">Sin permisos de ejecucion</span>
+              <span class="en">No execution permissions</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="callout warning">
+        <div class="callout-icon">&#9888;&#65039;</div>
+        <div>
+          <span class="es">
+            <strong>Importante:</strong> La seccion <strong>Admin</strong> del menu solo es visible para
+            usuarios con rol Admin. Las opciones de Configuracion son accesibles para Admin y Escalation.
+          </span>
+          <span class="en">
+            <strong>Important:</strong> The <strong>Admin</strong> menu section is only visible to
+            Admin role users. Settings options are accessible to Admin and Escalation roles.
+          </span>
+        </div>
+      </div>
+
+      <!-- ════════════════════════════════════════════════════════════
+           4. PLANES
+           ════════════════════════════════════════════════════════════ -->
+      <h2 id="planes">
+        <span class="es">4. Planes</span>
+        <span class="en">4. Plans</span>
+      </h2>
+
+      <p>
+        <span class="es">
+          SAP Spektra ofrece 3 planes para adaptarse a organizaciones de cualquier tamano.
+          Cada plan incluye diferentes limites de sistemas, usuarios y llamadas de IA.
+        </span>
+        <span class="en">
+          SAP Spektra offers 3 plans to fit organizations of any size.
+          Each plan includes different limits for systems, users and AI calls.
+        </span>
+      </p>
+
+      <div class="plan-grid">
+        <!-- Starter -->
+        <div class="plan-card">
+          <div class="plan-name">Starter</div>
+          <div class="plan-price">$299<span class="period"> /
+            <span class="es">mes</span>
+            <span class="en">mo</span>
+          </span></div>
+          <ul class="plan-features">
+            <li>
+              <span class="plan-check">&#10003;</span>
+              <span class="es">Monitoreo basico</span>
+              <span class="en">Basic monitoring</span>
+            </li>
+            <li>
+              <span class="plan-check">&#10003;</span>
+              <span class="es">5 sistemas SAP</span>
+              <span class="en">5 SAP systems</span>
+            </li>
+            <li>
+              <span class="plan-check">&#10003;</span>
+              <span class="es">3 usuarios</span>
+              <span class="en">3 users</span>
+            </li>
+            <li>
+              <span class="plan-check">&#10003;</span>
+              <span class="es">10 llamadas IA / dia</span>
+              <span class="en">10 AI calls / day</span>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Professional -->
+        <div class="plan-card popular">
+          <div class="plan-popular-tag">
+            <span class="es">MAS POPULAR</span>
+            <span class="en">MOST POPULAR</span>
+          </div>
+          <div class="plan-name">Professional</div>
+          <div class="plan-price">$799<span class="period"> /
+            <span class="es">mes</span>
+            <span class="en">mo</span>
+          </span></div>
+          <ul class="plan-features">
+            <li>
+              <span class="plan-check">&#10003;</span>
+              <span class="es">Funcionalidades completas</span>
+              <span class="en">Full features</span>
+            </li>
+            <li>
+              <span class="plan-check">&#10003;</span>
+              <span class="es">25 sistemas SAP</span>
+              <span class="en">25 SAP systems</span>
+            </li>
+            <li>
+              <span class="plan-check">&#10003;</span>
+              <span class="es">15 usuarios</span>
+              <span class="en">15 users</span>
+            </li>
+            <li>
+              <span class="plan-check">&#10003;</span>
+              <span class="es">100 llamadas IA / dia</span>
+              <span class="en">100 AI calls / day</span>
+            </li>
+            <li>
+              <span class="plan-check">&#10003;</span>
+              <span class="es">Orquestacion HA</span>
+              <span class="en">HA orchestration</span>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Enterprise -->
+        <div class="plan-card">
+          <div class="plan-name">Enterprise</div>
+          <div class="plan-price" style="font-size:20px">
+            <span class="es">Precio personalizado</span>
+            <span class="en">Custom pricing</span>
+          </div>
+          <ul class="plan-features">
+            <li>
+              <span class="plan-check">&#10003;</span>
+              <span class="es">Sistemas ilimitados</span>
+              <span class="en">Unlimited systems</span>
+            </li>
+            <li>
+              <span class="plan-check">&#10003;</span>
+              <span class="es">Usuarios ilimitados</span>
+              <span class="en">Unlimited users</span>
+            </li>
+            <li>
+              <span class="plan-check">&#10003;</span>
+              <span class="es">Llamadas IA ilimitadas</span>
+              <span class="en">Unlimited AI calls</span>
+            </li>
+            <li>
+              <span class="plan-check">&#10003;</span>
+              SSO (Single Sign-On)
+            </li>
+            <li>
+              <span class="plan-check">&#10003;</span>
+              <span class="es">Soporte dedicado</span>
+              <span class="en">Dedicated support</span>
+            </li>
+            <li>
+              <span class="plan-check">&#10003;</span>
+              Multi-cloud
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- ════════════════════════════════════════════════════════════
+           5. PRIMER VISTAZO
+           ════════════════════════════════════════════════════════════ -->
+      <h2 id="primer-vistazo">
+        <span class="es">5. Primer Vistazo al Dashboard</span>
+        <span class="en">5. First Look at the Dashboard</span>
+      </h2>
+
+      <p>
+        <span class="es">
+          Al iniciar sesion llegaras al Dashboard, tu centro de mando principal.
+          Aqui tienes una vision general instantanea del estado de todo tu landscape SAP.
+        </span>
+        <span class="en">
+          After logging in you will land on the Dashboard, your main command center.
+          Here you get an instant overview of your entire SAP landscape status.
+        </span>
+      </p>
+
+      <h3>
+        <span class="es">Tarjetas KPI</span>
+        <span class="en">KPI Cards</span>
+      </h3>
+
+      <p>
+        <span class="es">En la parte superior del Dashboard veras 4 tarjetas KPI con metricas clave:</span>
+        <span class="en">At the top of the Dashboard you will see 4 KPI cards with key metrics:</span>
+      </p>
+
+      <div class="dash-kpis">
+        <div class="dash-kpi">
+          <div class="kval" style="color:var(--cyan)">10</div>
+          <div class="klabel">
+            <span class="es">Sistemas Activos</span>
+            <span class="en">Active Systems</span>
+          </div>
+        </div>
+        <div class="dash-kpi">
+          <div class="kval" style="color:var(--success)">8</div>
+          <div class="klabel">
+            <span class="es">Sistemas Saludables</span>
+            <span class="en">Healthy Systems</span>
+          </div>
+        </div>
+        <div class="dash-kpi">
+          <div class="kval" style="color:var(--danger)">3</div>
+          <div class="klabel">Breaches Activos</div>
+        </div>
+        <div class="dash-kpi">
+          <div class="kval" style="color:var(--warning)">2</div>
+          <div class="klabel">
+            <span class="es">Aprobaciones Pendientes</span>
+            <span class="en">Pending Approvals</span>
+          </div>
+        </div>
+      </div>
+
+      <h3>SAP Landscape</h3>
+
+      <p>
+        <span class="es">
+          Debajo de los KPIs encontraras la grilla del SAP Landscape: una coleccion de tarjetas
+          que representan cada sistema SAP conectado. Cada tarjeta de sistema muestra:
+        </span>
+        <span class="en">
+          Below the KPIs you will find the SAP Landscape grid: a collection of cards
+          representing each connected SAP system. Each system card shows:
+        </span>
+      </p>
+
+      <ul class="feature-list">
+        <li>
+          <span class="es"><strong>SID</strong> &mdash; Identificador del sistema (ej: EP1, BP1, SOL).</span>
+          <span class="en"><strong>SID</strong> &mdash; System identifier (e.g., EP1, BP1, SOL).</span>
+        </li>
+        <li>
+          <span class="es"><strong>Indicador de salud</strong> &mdash; Gauge circular con porcentaje (verde &ge; 90%, amarillo 70-89%, rojo &lt; 70%).</span>
+          <span class="en"><strong>Health gauge</strong> &mdash; Circular gauge with percentage (green &ge; 90%, yellow 70-89%, red &lt; 70%).</span>
+        </li>
+        <li>
+          <span class="es"><strong>Tipo</strong> &mdash; Tipo de sistema SAP (S/4HANA, BW/4HANA, ECC, etc.).</span>
+          <span class="en"><strong>Type</strong> &mdash; SAP system type (S/4HANA, BW/4HANA, ECC, etc.).</span>
+        </li>
+        <li>
+          <span class="es"><strong>Base de datos</strong> &mdash; Motor de base de datos (HANA, Oracle, SQL Server, etc.).</span>
+          <span class="en"><strong>Database</strong> &mdash; Database engine (HANA, Oracle, SQL Server, etc.).</span>
+        </li>
+        <li>
+          <span class="es"><strong>Entorno</strong> &mdash; DEV, QAS o PRD.</span>
+          <span class="en"><strong>Environment</strong> &mdash; DEV, QAS or PRD.</span>
+        </li>
+        <li>
+          <span class="es"><strong>Breaches</strong> &mdash; Numero de SLA breaches activos en ese sistema.</span>
+          <span class="en"><strong>Breaches</strong> &mdash; Number of active SLA breaches on that system.</span>
+        </li>
+      </ul>
+
+      <p>
+        <span class="es">Ejemplo de una tarjeta de sistema:</span>
+        <span class="en">Example of a system card:</span>
+      </p>
+
+      <div class="sys-card-mock">
+        <div class="sys-gauge" style="background:conic-gradient(#22c55e 0deg, #22c55e 334.8deg, rgba(255,255,255,0.1) 334.8deg);">
+          93%
+        </div>
+        <div class="sys-info">
+          <div class="sys-sid">EP1</div>
+          <div class="sys-detail">S/4HANA &middot; HANA &middot; PRD</div>
+          <div class="sys-detail" style="margin-top:4px">
+            <span class="badge success" style="font-size:10px">
+              <span class="es">Saludable</span>
+              <span class="en">Healthy</span>
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <h3 class="mt-3">
+        <span class="es">Aprobaciones Pendientes</span>
+        <span class="en">Pending Approvals</span>
+      </h3>
+
+      <p>
+        <span class="es">
+          Si hay operaciones esperando aprobacion, el Dashboard muestra una alerta prominente
+          con el numero de aprobaciones pendientes. Haz clic para ir directamente a la cola de aprobaciones.
+        </span>
+        <span class="en">
+          If there are operations awaiting approval, the Dashboard shows a prominent alert
+          with the number of pending approvals. Click it to go directly to the approvals queue.
+        </span>
+      </p>
+
+      <div class="callout warning">
+        <div class="callout-icon">&#128276;</div>
+        <div>
+          <span class="es">
+            <strong>2 aprobaciones pendientes</strong> &mdash; Hay operaciones que requieren tu autorizacion
+            antes de ejecutarse. Revisa la cola en <em>Operations &gt; Aprobaciones</em>.
+          </span>
+          <span class="en">
+            <strong>2 pending approvals</strong> &mdash; There are operations requiring your authorization
+            before execution. Check the queue at <em>Operations &gt; Approvals</em>.
+          </span>
+        </div>
+      </div>
+
+      <!-- ── Next steps ── -->
+      <h2>
+        <span class="es">Siguientes Pasos</span>
+        <span class="en">Next Steps</span>
+      </h2>
+
+      <div class="steps">
+        <div class="step">
+          <strong>
+            <span class="es">Conecta tu primer sistema SAP</span>
+            <span class="en">Connect your first SAP system</span>
+          </strong>
+          <p class="text-sm" style="margin-top:4px">
+            <span class="es">Ve a <a href="connect.html">Conectar Sistema</a> para vincular tu primer sistema SAP con Spektra.</span>
+            <span class="en">Go to <a href="connect.html">Connect System</a> to link your first SAP system with Spektra.</span>
+          </p>
+        </div>
+        <div class="step">
+          <strong>
+            <span class="es">Explora el Landscape</span>
+            <span class="en">Explore the Landscape</span>
+          </strong>
+          <p class="text-sm" style="margin-top:4px">
+            <span class="es">Revisa el <a href="landscape.html">Landscape</a> para ver todos tus sistemas agrupados visualmente.</span>
+            <span class="en">Check the <a href="landscape.html">Landscape</a> to see all your systems grouped visually.</span>
+          </p>
+        </div>
+        <div class="step">
+          <strong>
+            <span class="es">Configura alertas</span>
+            <span class="en">Set up alerts</span>
+          </strong>
+          <p class="text-sm" style="margin-top:4px">
+            <span class="es">Personaliza las reglas de <a href="alerts.html">Alertas</a> para recibir notificaciones en tiempo real.</span>
+            <span class="en">Customize <a href="alerts.html">Alert</a> rules to receive real-time notifications.</span>
+          </p>
+        </div>
+        <div class="step">
+          <strong>
+            <span class="es">Prueba la IA</span>
+            <span class="en">Try the AI</span>
+          </strong>
+          <p class="text-sm" style="margin-top:4px">
+            <span class="es">Abre <a href="ai.html">Analisis IA</a> y chatea con Claude para obtener recomendaciones sobre tus sistemas.</span>
+            <span class="en">Open <a href="ai.html">AI Analysis</a> and chat with Claude to get recommendations about your systems.</span>
+          </p>
+        </div>
+      </div>
+
+      <!-- ── Footer ── -->
+      <div class="docs-footer">
+        &copy; 2026 Maveram.
+        <span class="es">Todos los derechos reservados.</span>
+        <span class="en">All rights reserved.</span>
+      </div>
+
+    </main>
+  </div>
+</body>
+</html>

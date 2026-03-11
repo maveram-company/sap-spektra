@@ -1,0 +1,905 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="dark" data-lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Comparacion — SAP Spektra Docs</title>
+  <link rel="stylesheet" href="theme.css">
+  <script src="theme-toggle.js"></script>
+  <script src="lang-toggle.js"></script>
+  <style>
+    /* ── Filter bar ── */
+    .filter-bar {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+    .filter-bar label {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--txt2);
+    }
+    .filter-select {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 8px;
+      padding: 8px 12px;
+      font-size: 13px;
+      color: var(--txt1);
+      font-family: inherit;
+      outline: none;
+      min-width: 280px;
+    }
+    .filter-select:focus { border-color: var(--cyan); }
+
+    /* ── System comparison cards ── */
+    .sys-cards-grid {
+      display: grid;
+      gap: 16px;
+      margin-bottom: 28px;
+    }
+    .sys-cards-grid.cols-3 { grid-template-columns: repeat(3, 1fr); }
+    .sys-cards-grid.cols-1 { grid-template-columns: 1fr; max-width: 400px; }
+    @media (max-width: 900px) { .sys-cards-grid.cols-3 { grid-template-columns: 1fr; } }
+
+    .sys-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius);
+      padding: 20px;
+      text-align: center;
+      border-top: 3px solid var(--brd);
+    }
+    .sys-card.border-dev { border-top-color: #3b82f6; }
+    .sys-card.border-qas { border-top-color: #f59e0b; }
+    .sys-card.border-prd { border-top-color: #8b5cf6; }
+
+    .sys-card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px;
+    }
+    .sys-card-sid {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--txt1);
+    }
+    .sys-card-sid .icon { color: var(--txt3); font-size: 15px; }
+    .sys-card-type { font-size: 12px; color: var(--txt3); margin-bottom: 16px; }
+
+    /* ── Health gauge mock ── */
+    .gauge-mock {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      border: 8px solid var(--bg3);
+      border-top-color: var(--success);
+      border-right-color: var(--success);
+      border-bottom-color: var(--success);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 12px;
+      position: relative;
+    }
+    .gauge-mock.warning-gauge {
+      border-top-color: var(--warning);
+      border-right-color: var(--warning);
+      border-bottom-color: var(--bg3);
+    }
+    .gauge-value {
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--txt1);
+    }
+
+    /* ── Status badge inline ── */
+    .status-badge-healthy {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 3px 10px;
+      border-radius: 100px;
+      font-size: 11px;
+      font-weight: 600;
+      background: rgba(34,197,94,0.12);
+      color: var(--success);
+    }
+    .status-badge-degraded {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 3px 10px;
+      border-radius: 100px;
+      font-size: 11px;
+      font-weight: 600;
+      background: rgba(245,158,11,0.12);
+      color: var(--warning);
+    }
+
+    /* ── Metrics grid inside card ── */
+    .metrics-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 8px;
+      text-align: center;
+      border-top: 1px solid var(--brd);
+      padding-top: 12px;
+      margin-bottom: 12px;
+    }
+    .metric-label {
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--txt3);
+    }
+    .metric-value {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--txt1);
+    }
+    .metric-value.outlier { color: var(--danger); }
+
+    /* ── SAP info rows ── */
+    .sap-info {
+      border-top: 1px solid var(--brd);
+      padding-top: 12px;
+      text-align: left;
+    }
+    .sap-info-row {
+      display: flex;
+      justify-content: space-between;
+      font-size: 12px;
+      padding: 3px 0;
+    }
+    .sap-info-label { color: var(--txt3); }
+    .sap-info-value { font-weight: 500; color: var(--txt1); }
+    .sap-info-value.diff { color: var(--warning); }
+
+    /* ── Bar chart mock ── */
+    .comparison-chart-mock {
+      display: flex;
+      align-items: flex-end;
+      gap: 20px;
+      height: 200px;
+      padding: 0 24px;
+      justify-content: center;
+    }
+    .chart-group {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+    }
+    .chart-bars {
+      display: flex;
+      align-items: flex-end;
+      gap: 4px;
+    }
+    .chart-bar {
+      width: 18px;
+      border-radius: 3px 3px 0 0;
+    }
+    .chart-bar.dev { background: #3b82f6; }
+    .chart-bar.qas { background: #f59e0b; }
+    .chart-bar.prd { background: #8b5cf6; }
+    .chart-label { font-size: 10px; color: var(--txt3); }
+    .chart-legend {
+      display: flex;
+      gap: 16px;
+      justify-content: center;
+      margin-top: 12px;
+      font-size: 11px;
+      color: var(--txt2);
+    }
+    .chart-legend .dot {
+      display: inline-block;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      margin-right: 4px;
+    }
+
+    /* ── Consistency status ── */
+    .consistency-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 4px 12px;
+      border-radius: 100px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+    .consistency-badge.ok { background: rgba(34,197,94,0.12); color: var(--success); }
+    .consistency-badge.warn { background: rgba(245,158,11,0.12); color: var(--warning); }
+    .consistency-badge.bad { background: rgba(239,68,68,0.12); color: var(--danger); }
+
+    /* ── Upgrade banner ── */
+    .upgrade-banner {
+      background: var(--violet-dim);
+      border: 1px solid rgba(139,92,246,0.25);
+      border-radius: var(--radius);
+      padding: 32px;
+      text-align: center;
+      margin: 40px 0;
+    }
+    .upgrade-banner h3 { color: var(--violet); font-size: 18px; margin-bottom: 8px; }
+    .upgrade-banner p { color: var(--txt2); font-size: 13px; }
+
+    /* ── Info callout for single system ── */
+    .single-sys-note {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius);
+      padding: 32px 20px;
+      text-align: center;
+    }
+    .single-sys-note .icon { font-size: 24px; color: var(--txt3); margin-bottom: 8px; }
+    .single-sys-note p { font-size: 13px; color: var(--txt2); max-width: 480px; margin: 0 auto; }
+  </style>
+</head>
+<body>
+  <div class="docs-wrapper">
+
+    <!-- ═══ SIDEBAR ═══ -->
+    <nav class="docs-sidebar">
+      <div class="sidebar-brand">
+        <div class="logo">&#9889;</div>
+        <div class="brand-text">
+          <div class="brand-name">SAP Spektra</div>
+          <div class="brand-sub">
+            <span class="es">DOCUMENTACION</span>
+            <span class="en">DOCUMENTATION</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="sidebar-section">
+        <div class="sidebar-section-label">
+          <span class="es">Inicio</span>
+          <span class="en">Start</span>
+        </div>
+        <a href="index.html" class="sidebar-link">
+          &#127968;
+          <span class="es">Portal de Documentacion</span>
+          <span class="en">Documentation Portal</span>
+        </a>
+        <a href="getting-started.html" class="sidebar-link">
+          &#128640;
+          <span class="es">Primeros Pasos</span>
+          <span class="en">Getting Started</span>
+        </a>
+      </div>
+
+      <div class="sidebar-section">
+        <div class="sidebar-section-label">Command</div>
+        <a href="dashboard.html" class="sidebar-link">&#128202; Dashboard</a>
+        <a href="landscape.html" class="sidebar-link">&#127760; Landscape</a>
+        <a href="alerts.html" class="sidebar-link">
+          &#9888;&#65039;
+          <span class="es">Alertas</span>
+          <span class="en">Alerts</span>
+        </a>
+      </div>
+
+      <div class="sidebar-section">
+        <div class="sidebar-section-label">Monitor</div>
+        <a href="systems.html" class="sidebar-link">
+          &#128421;
+          <span class="es">Sistemas</span>
+          <span class="en">Systems</span>
+        </a>
+        <a href="connectors.html" class="sidebar-link">
+          &#128268;
+          <span class="es">Conectores</span>
+          <span class="en">Connectors</span>
+        </a>
+        <a href="events.html" class="sidebar-link">
+          &#128196;
+          <span class="es">Eventos</span>
+          <span class="en">Events</span>
+        </a>
+      </div>
+
+      <div class="sidebar-section">
+        <div class="sidebar-section-label">Intelligence</div>
+        <a href="ai-analysis.html" class="sidebar-link">
+          &#129504;
+          <span class="es">Analisis IA</span>
+          <span class="en">AI Analysis</span>
+        </a>
+        <a href="analytics.html" class="sidebar-link">&#128200; Analytics</a>
+        <a href="reports.html" class="sidebar-link">
+          &#128209;
+          <span class="es">Reportes</span>
+          <span class="en">Reports</span>
+        </a>
+        <a href="comparison.html" class="sidebar-link active">
+          &#128260;
+          <span class="es">Comparacion</span>
+          <span class="en">Comparison</span>
+        </a>
+      </div>
+
+      <div class="sidebar-section">
+        <div class="sidebar-section-label">Operations</div>
+        <a href="runbooks.html" class="sidebar-link">&#128214; Runbooks</a>
+        <a href="approvals.html" class="sidebar-link">
+          &#9989;
+          <span class="es">Aprobaciones</span>
+          <span class="en">Approvals</span>
+        </a>
+        <a href="operations.html" class="sidebar-link">
+          &#128197;
+          <span class="es">Operaciones</span>
+          <span class="en">Operations</span>
+        </a>
+        <a href="jobs.html" class="sidebar-link">&#9654;&#65039; Jobs SM37</a>
+        <a href="transports.html" class="sidebar-link">
+          &#128230;
+          <span class="es">Transportes</span>
+          <span class="en">Transports</span>
+        </a>
+        <a href="sla.html" class="sidebar-link">&#11088; SLA</a>
+        <a href="ha-control.html" class="sidebar-link">&#128147; HA Control</a>
+        <a href="certificates.html" class="sidebar-link">
+          &#128273;
+          <span class="es">Certificados</span>
+          <span class="en">Certificates</span>
+        </a>
+      </div>
+
+      <div class="sidebar-section">
+        <div class="sidebar-section-label">Admin</div>
+        <a href="admin.html" class="sidebar-link">
+          &#128737;
+          <span class="es">Gestion</span>
+          <span class="en">Management</span>
+        </a>
+        <a href="settings.html" class="sidebar-link">
+          &#9881;&#65039;
+          <span class="es">Configuracion</span>
+          <span class="en">Settings</span>
+        </a>
+        <a href="connect-system.html" class="sidebar-link">
+          &#128279;
+          <span class="es">Conectar Sistema</span>
+          <span class="en">Connect System</span>
+        </a>
+      </div>
+    </nav>
+
+    <!-- ═══ MAIN CONTENT ═══ -->
+    <main class="docs-main">
+
+      <!-- Breadcrumb -->
+      <div class="breadcrumb">
+        <a href="index.html">Docs</a>
+        <span class="sep">/</span>
+        <span>Intelligence</span>
+        <span class="sep">/</span>
+        <span class="es">Comparacion</span>
+        <span class="en">Comparison</span>
+      </div>
+
+      <!-- Page header -->
+      <div class="page-header">
+        <h1>
+          <span class="es">Comparacion</span>
+          <span class="en">Comparison</span>
+        </h1>
+        <p class="subtitle">
+          <span class="es">Compara metricas entre sistemas de una misma linea SAP</span>
+          <span class="en">Compare metrics across systems within the same SAP line</span>
+        </p>
+      </div>
+
+      <!-- ────────────────────────────────────────────── -->
+      <!-- FEATURE GATE                                   -->
+      <!-- ────────────────────────────────────────────── -->
+      <h2>
+        <span class="es">Requisito del plan</span>
+        <span class="en">Plan requirement</span>
+      </h2>
+      <p>
+        <span class="es">La funcionalidad de <strong>Comparacion</strong> requiere que tu plan incluya el modulo <code>comparison</code>. Si no esta incluido, veras un banner de upgrade en lugar del contenido de comparacion.</span>
+        <span class="en">The <strong>Comparison</strong> feature requires your plan to include the <code>comparison</code> module. If it is not included, you will see an upgrade banner instead of the comparison content.</span>
+      </p>
+
+      <div class="upgrade-banner">
+        <h3>&#128274;
+          <span class="es">Funcionalidad premium</span>
+          <span class="en">Premium feature</span>
+        </h3>
+        <p>
+          <span class="es">Si ves este banner, tu plan no incluye <strong>Comparacion de Sistemas</strong>. Contacta a tu administrador o actualiza tu plan.</span>
+          <span class="en">If you see this banner, your plan does not include <strong>System Comparison</strong>. Contact your admin or upgrade your plan.</span>
+        </p>
+      </div>
+
+      <!-- ────────────────────────────────────────────── -->
+      <!-- SID LINE SELECTOR                              -->
+      <!-- ────────────────────────────────────────────── -->
+      <h2>
+        <span class="es">Selector de linea SID</span>
+        <span class="en">SID line selector</span>
+      </h2>
+      <p>
+        <span class="es">En la parte superior encontraras un <strong>dropdown</strong> que permite elegir una linea SID. Cada linea agrupa los sistemas SAP que comparten la misma funcion pero operan en distintos entornos (DEV, QAS, PRD).</span>
+        <span class="en">At the top you will find a <strong>dropdown</strong> to select a SID line. Each line groups SAP systems that share the same function but operate in different environments (DEV, QAS, PRD).</span>
+      </p>
+
+      <div class="filter-bar">
+        <label>
+          <span class="es">Linea SID:</span>
+          <span class="en">SID Line:</span>
+        </label>
+        <select class="filter-select" disabled>
+          <option>ERP &mdash; S/4HANA ERP</option>
+          <option>BW &mdash; BW/4HANA Analytics</option>
+          <option>SOL &mdash; Solution Manager</option>
+          <option>CRM &mdash; Customer Relationship</option>
+          <option>GRC &mdash; Governance Risk Compliance</option>
+          <option>PO &mdash; Process Orchestration</option>
+          <option>EWM &mdash; Extended Warehouse</option>
+        </select>
+      </div>
+
+      <div class="callout info">
+        <span class="callout-icon">&#128161;</span>
+        <div>
+          <span class="es">La linea <strong>ERP</strong> es la unica con multiples entornos (ED1 DEV, EQ1 QAS, EP1 PRD). Las demas lineas (BW, SOL, CRM, GRC, PO, EWM) tienen un solo sistema cada una.</span>
+          <span class="en">The <strong>ERP</strong> line is the only one with multiple environments (ED1 DEV, EQ1 QAS, EP1 PRD). The remaining lines (BW, SOL, CRM, GRC, PO, EWM) each have a single system.</span>
+        </div>
+      </div>
+
+      <!-- ────────────────────────────────────────────── -->
+      <!-- SYSTEM CARDS BY ENVIRONMENT                    -->
+      <!-- ────────────────────────────────────────────── -->
+      <h2>
+        <span class="es">Tarjetas de sistema por entorno</span>
+        <span class="en">System cards by environment</span>
+      </h2>
+      <p>
+        <span class="es">Para la linea seleccionada, se muestran tarjetas ordenadas de <strong>DEV &rarr; QAS &rarr; PRD</strong>. Si la linea tiene 3 sistemas, las tarjetas se distribuyen en 3 columnas. Si tiene 1, se muestra en una sola columna angosta.</span>
+        <span class="en">For the selected line, cards are shown ordered <strong>DEV &rarr; QAS &rarr; PRD</strong>. If the line has 3 systems, cards are distributed in 3 columns. If it has 1, a single narrow column is shown.</span>
+      </p>
+
+      <h3>
+        <span class="es">Estructura de cada tarjeta</span>
+        <span class="en">Card structure</span>
+      </h3>
+
+      <!-- Example: 3-column ERP line -->
+      <div class="sys-cards-grid cols-3">
+        <!-- DEV -->
+        <div class="sys-card border-dev">
+          <div class="sys-card-header">
+            <div class="sys-card-sid"><span class="icon">&#128421;</span> ED1</div>
+            <span class="badge" style="background:rgba(59,130,246,0.12);color:#3b82f6">DEV</span>
+          </div>
+          <div class="sys-card-type">S/4HANA &mdash; SAP ERP Desarrollo</div>
+          <div class="gauge-mock">
+            <span class="gauge-value">92</span>
+          </div>
+          <div style="margin-bottom:12px">
+            <span class="status-badge-healthy">&#9679; Healthy</span>
+          </div>
+          <div class="metrics-row">
+            <div><div class="metric-label">CPU</div><div class="metric-value">22%</div></div>
+            <div><div class="metric-label">
+              <span class="es">Memoria</span>
+              <span class="en">Memory</span>
+            </div><div class="metric-value">45%</div></div>
+            <div><div class="metric-label">
+              <span class="es">Disco</span>
+              <span class="en">Disk</span>
+            </div><div class="metric-value">38%</div></div>
+          </div>
+          <div class="sap-info">
+            <div class="sap-info-row"><span class="sap-info-label">SAP Release</span><span class="sap-info-value">7.57</span></div>
+            <div class="sap-info-row"><span class="sap-info-label">Kernel</span><span class="sap-info-value">7.93</span></div>
+            <div class="sap-info-row"><span class="sap-info-label">SAP Notes</span><span class="sap-info-value diff">142</span></div>
+            <div class="sap-info-row"><span class="sap-info-label">Cliente</span><span class="sap-info-value">100</span></div>
+          </div>
+        </div>
+        <!-- QAS -->
+        <div class="sys-card border-qas">
+          <div class="sys-card-header">
+            <div class="sys-card-sid"><span class="icon">&#128421;</span> EQ1</div>
+            <span class="badge warning">QAS</span>
+          </div>
+          <div class="sys-card-type">S/4HANA &mdash; SAP ERP Calidad</div>
+          <div class="gauge-mock warning-gauge">
+            <span class="gauge-value">78</span>
+          </div>
+          <div style="margin-bottom:12px">
+            <span class="status-badge-degraded">&#9679; Degraded</span>
+          </div>
+          <div class="metrics-row">
+            <div><div class="metric-label">CPU</div><div class="metric-value outlier">68%</div></div>
+            <div><div class="metric-label">
+              <span class="es">Memoria</span>
+              <span class="en">Memory</span>
+            </div><div class="metric-value outlier">78%</div></div>
+            <div><div class="metric-label">
+              <span class="es">Disco</span>
+              <span class="en">Disk</span>
+            </div><div class="metric-value outlier">85%</div></div>
+          </div>
+          <div class="sap-info">
+            <div class="sap-info-row"><span class="sap-info-label">SAP Release</span><span class="sap-info-value">7.57</span></div>
+            <div class="sap-info-row"><span class="sap-info-label">Kernel</span><span class="sap-info-value">7.93</span></div>
+            <div class="sap-info-row"><span class="sap-info-label">SAP Notes</span><span class="sap-info-value diff">138</span></div>
+            <div class="sap-info-row"><span class="sap-info-label">Cliente</span><span class="sap-info-value">200</span></div>
+          </div>
+        </div>
+        <!-- PRD -->
+        <div class="sys-card border-prd">
+          <div class="sys-card-header">
+            <div class="sys-card-sid"><span class="icon">&#128421;</span> EP1</div>
+            <span class="badge success">PRD</span>
+          </div>
+          <div class="sys-card-type">S/4HANA &mdash; SAP ERP Productivo</div>
+          <div class="gauge-mock">
+            <span class="gauge-value">95</span>
+          </div>
+          <div style="margin-bottom:12px">
+            <span class="status-badge-healthy">&#9679; Healthy</span>
+          </div>
+          <div class="metrics-row">
+            <div><div class="metric-label">CPU</div><div class="metric-value">42%</div></div>
+            <div><div class="metric-label">
+              <span class="es">Memoria</span>
+              <span class="en">Memory</span>
+            </div><div class="metric-value">65%</div></div>
+            <div><div class="metric-label">
+              <span class="es">Disco</span>
+              <span class="en">Disk</span>
+            </div><div class="metric-value">58%</div></div>
+          </div>
+          <div class="sap-info">
+            <div class="sap-info-row"><span class="sap-info-label">SAP Release</span><span class="sap-info-value">7.57</span></div>
+            <div class="sap-info-row"><span class="sap-info-label">Kernel</span><span class="sap-info-value">7.93</span></div>
+            <div class="sap-info-row"><span class="sap-info-label">SAP Notes</span><span class="sap-info-value diff">145</span></div>
+            <div class="sap-info-row"><span class="sap-info-label">Cliente</span><span class="sap-info-value">100</span></div>
+          </div>
+        </div>
+      </div>
+
+      <h3>
+        <span class="es">Elementos de cada tarjeta</span>
+        <span class="en">Card elements</span>
+      </h3>
+      <ul class="feature-list">
+        <li>
+          <span class="es"><strong>Borde superior de color</strong> &mdash; azul para DEV, amarillo para QAS, violeta para PRD. Identifica visualmente el entorno de un vistazo.</span>
+          <span class="en"><strong>Color-coded top border</strong> &mdash; blue for DEV, yellow for QAS, violet for PRD. Visually identifies the environment at a glance.</span>
+        </li>
+        <li>
+          <span class="es"><strong>SID y badge de entorno</strong> &mdash; la esquina superior izquierda muestra un icono de servidor y el SID (p. ej., ED1). La esquina superior derecha muestra un badge de color con el nombre del entorno.</span>
+          <span class="en"><strong>SID and environment badge</strong> &mdash; the top-left shows a server icon and the SID (e.g., ED1). The top-right shows a colored badge with the environment name.</span>
+        </li>
+        <li>
+          <span class="es"><strong>Tipo y descripcion</strong> &mdash; debajo del encabezado, se muestra el tipo de sistema (p. ej., S/4HANA) seguido de un guion y la descripcion.</span>
+          <span class="en"><strong>Type and description</strong> &mdash; below the header, the system type (e.g., S/4HANA) is shown followed by a dash and the description.</span>
+        </li>
+        <li>
+          <span class="es"><strong>Health Gauge</strong> &mdash; un medidor circular que muestra el puntaje de salud del sistema (0-100). Los colores se adaptan al estado (verde = saludable, amarillo = degradado).</span>
+          <span class="en"><strong>Health Gauge</strong> &mdash; a circular gauge showing the system health score (0-100). Colors adapt to status (green = healthy, yellow = degraded).</span>
+        </li>
+        <li>
+          <span class="es"><strong>Status badge</strong> &mdash; etiqueta con punto indicador y texto del estado (Healthy, Degraded, etc.).</span>
+          <span class="en"><strong>Status badge</strong> &mdash; label with dot indicator and status text (Healthy, Degraded, etc.).</span>
+        </li>
+        <li>
+          <span class="es"><strong>Metricas CPU/Memoria/Disco</strong> &mdash; tres columnas con las metricas principales. Los valores <span style="color:var(--danger)">atipicos (outliers)</span> se resaltan en rojo: se marca como outlier el valor mas alto de CPU, Memoria o Disco cuando hay diferencias entre entornos.</span>
+          <span class="en"><strong>CPU/Memory/Disk metrics</strong> &mdash; three columns with main metrics. <span style="color:var(--danger)">Outlier values</span> are highlighted in red: the highest CPU, Memory or Disk value is marked as outlier when there are differences across environments.</span>
+        </li>
+        <li>
+          <span class="es"><strong>Informacion SAP</strong> &mdash; seccion inferior con SAP Release, Kernel version, SAP Notes y Cliente. Los valores que <span style="color:var(--warning)">difieren entre entornos</span> se resaltan en amarillo, facilitando la deteccion de inconsistencias.</span>
+          <span class="en"><strong>SAP information</strong> &mdash; bottom section with SAP Release, Kernel version, SAP Notes and Client. Values that <span style="color:var(--warning)">differ across environments</span> are highlighted in yellow, making it easy to spot inconsistencies.</span>
+        </li>
+      </ul>
+
+      <!-- ────────────────────────────────────────────── -->
+      <!-- COMPARISON BAR CHART                           -->
+      <!-- ────────────────────────────────────────────── -->
+      <h2>
+        <span class="es">Grafica de barras comparativa</span>
+        <span class="en">Comparison bar chart</span>
+      </h2>
+      <p>
+        <span class="es">Cuando la linea seleccionada tiene <strong>mas de un sistema</strong>, se muestra una grafica de barras agrupadas que compara 4 metricas entre todos los entornos: Health Score, CPU (%), Memoria (%) y Disco (%).</span>
+        <span class="en">When the selected line has <strong>more than one system</strong>, a grouped bar chart is displayed comparing 4 metrics across all environments: Health Score, CPU (%), Memory (%) and Disk (%).</span>
+      </p>
+
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">
+            <span class="es">Comparacion de Metricas</span>
+            <span class="en">Metrics Comparison</span>
+          </div>
+        </div>
+        <div class="comparison-chart-mock">
+          <div class="chart-group">
+            <div class="chart-bars">
+              <div class="chart-bar dev" style="height:138px"></div>
+              <div class="chart-bar qas" style="height:117px"></div>
+              <div class="chart-bar prd" style="height:142px"></div>
+            </div>
+            <div class="chart-label">Health Score</div>
+          </div>
+          <div class="chart-group">
+            <div class="chart-bars">
+              <div class="chart-bar dev" style="height:33px"></div>
+              <div class="chart-bar qas" style="height:102px"></div>
+              <div class="chart-bar prd" style="height:63px"></div>
+            </div>
+            <div class="chart-label">CPU (%)</div>
+          </div>
+          <div class="chart-group">
+            <div class="chart-bars">
+              <div class="chart-bar dev" style="height:67px"></div>
+              <div class="chart-bar qas" style="height:117px"></div>
+              <div class="chart-bar prd" style="height:97px"></div>
+            </div>
+            <div class="chart-label">
+              <span class="es">Memoria (%)</span>
+              <span class="en">Memory (%)</span>
+            </div>
+          </div>
+          <div class="chart-group">
+            <div class="chart-bars">
+              <div class="chart-bar dev" style="height:57px"></div>
+              <div class="chart-bar qas" style="height:127px"></div>
+              <div class="chart-bar prd" style="height:87px"></div>
+            </div>
+            <div class="chart-label">
+              <span class="es">Disco (%)</span>
+              <span class="en">Disk (%)</span>
+            </div>
+          </div>
+        </div>
+        <div class="chart-legend">
+          <span><span class="dot" style="background:#3b82f6"></span> ED1 (DEV)</span>
+          <span><span class="dot" style="background:#f59e0b"></span> EQ1 (QAS)</span>
+          <span><span class="dot" style="background:#8b5cf6"></span> EP1 (PRD)</span>
+        </div>
+      </div>
+
+      <p class="mt-2">
+        <span class="es">Cada metrica muestra una barra por entorno, con colores correspondientes al mapa de colores (azul DEV, amarillo QAS, violeta PRD). Puedes pasar el cursor sobre cada barra para ver el valor exacto en un tooltip.</span>
+        <span class="en">Each metric shows one bar per environment, with colors matching the color map (blue DEV, yellow QAS, violet PRD). You can hover over each bar to see the exact value in a tooltip.</span>
+      </p>
+
+      <!-- ────────────────────────────────────────────── -->
+      <!-- LANDSCAPE CONSISTENCY TABLE                    -->
+      <!-- ────────────────────────────────────────────── -->
+      <h2>
+        <span class="es">Tabla de consistencia de landscape</span>
+        <span class="en">Landscape consistency table</span>
+      </h2>
+      <p>
+        <span class="es">Cuando la linea tiene <strong>multiples entornos</strong> y existen datos de validacion disponibles, se muestra una tabla de consistencia de landscape. Esta tabla realiza una <strong>validacion cruzada</strong> de configuraciones entre los entornos DEV, QAS y PRD.</span>
+        <span class="en">When the line has <strong>multiple environments</strong> and validation data is available, a landscape consistency table is shown. This table performs <strong>cross-validation</strong> of configurations across the DEV, QAS and PRD environments.</span>
+      </p>
+
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">
+            <span class="es">Consistencia de Landscape</span>
+            <span class="en">Landscape Consistency</span>
+          </div>
+          <span class="consistency-badge warn">
+            <span class="es">Con advertencias</span>
+            <span class="en">With warnings</span>
+          </span>
+        </div>
+        <p class="text-xs text-muted mb-2">
+          <span class="es">Validacion cruzada de configuraciones entre entornos &mdash; Ultima verificacion: 11/3/2026, 08:00:00</span>
+          <span class="en">Cross-validation of configurations across environments &mdash; Last check: 3/11/2026, 08:00:00</span>
+        </p>
+
+        <div class="table-wrap" style="margin-top:12px">
+          <table>
+            <thead>
+              <tr>
+                <th>
+                  <span class="es">Verificacion</span>
+                  <span class="en">Verification</span>
+                </th>
+                <th>DEV</th>
+                <th>QAS</th>
+                <th>PRD</th>
+                <th>
+                  <span class="es">Estado</span>
+                  <span class="en">Status</span>
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>
+                  <strong>SAP Kernel</strong>
+                  <div class="text-xs text-muted">
+                    <span class="es">Version del kernel SAP</span>
+                    <span class="en">SAP kernel version</span>
+                  </div>
+                </td>
+                <td>7.93</td>
+                <td>7.93</td>
+                <td>7.93</td>
+                <td><span style="color:var(--success)">&#10003; ok</span></td>
+              </tr>
+              <tr>
+                <td>
+                  <strong>SAP Notes</strong>
+                  <div class="text-xs text-muted">
+                    <span class="es">Notas SAP aplicadas</span>
+                    <span class="en">Applied SAP Notes</span>
+                  </div>
+                </td>
+                <td><span style="color:var(--warning);font-weight:500">142</span></td>
+                <td><span style="color:var(--warning);font-weight:500">138</span></td>
+                <td><span style="color:var(--danger);font-weight:500">145</span></td>
+                <td><span style="color:var(--warning)">&#9888; warning</span></td>
+              </tr>
+              <tr>
+                <td>
+                  <strong>ABAP Release</strong>
+                  <div class="text-xs text-muted">
+                    <span class="es">Version del stack ABAP</span>
+                    <span class="en">ABAP stack version</span>
+                  </div>
+                </td>
+                <td>7.57</td>
+                <td>7.57</td>
+                <td>7.57</td>
+                <td><span style="color:var(--success)">&#10003; ok</span></td>
+              </tr>
+              <tr>
+                <td>
+                  <strong>DB Version</strong>
+                  <div class="text-xs text-muted">
+                    <span class="es">Version de base de datos</span>
+                    <span class="en">Database version</span>
+                  </div>
+                </td>
+                <td>HANA 2.0 SPS07</td>
+                <td>HANA 2.0 SPS07</td>
+                <td>HANA 2.0 SPS07</td>
+                <td><span style="color:var(--success)">&#10003; ok</span></td>
+              </tr>
+              <tr>
+                <td>
+                  <strong>
+                    <span class="es">Replicacion HSR</span>
+                    <span class="en">HSR Replication</span>
+                  </strong>
+                  <div class="text-xs text-muted">
+                    <span class="es">Estado de HANA System Replication</span>
+                    <span class="en">HANA System Replication status</span>
+                  </div>
+                </td>
+                <td><span style="color:var(--warning);font-weight:500">&mdash;</span></td>
+                <td>SOK</td>
+                <td>SOK</td>
+                <td><span style="color:var(--warning)">&#9888; warning</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <h3>
+        <span class="es">Columnas de la tabla</span>
+        <span class="en">Table columns</span>
+      </h3>
+      <ul class="feature-list">
+        <li>
+          <span class="es"><strong>Verificacion</strong> &mdash; nombre del aspecto que se esta validando, con un detalle opcional debajo.</span>
+          <span class="en"><strong>Verificacion</strong> (Verification) &mdash; name of the aspect being validated, with optional detail below.</span>
+        </li>
+        <li>
+          <span class="es"><strong>DEV / QAS / PRD</strong> &mdash; valor de cada entorno. Las diferencias se resaltan: valores que no coinciden con PRD se marcan en <span style="color:var(--warning)">amarillo</span>, y el valor de PRD que difiere de los demas se marca en <span style="color:var(--danger)">rojo</span>.</span>
+          <span class="en"><strong>DEV / QAS / PRD</strong> &mdash; value for each environment. Differences are highlighted: values that don't match PRD are shown in <span style="color:var(--warning)">yellow</span>, and the PRD value that differs from others is shown in <span style="color:var(--danger)">red</span>.</span>
+        </li>
+        <li>
+          <span class="es"><strong>Estado</strong> &mdash; icono y texto de estado. Un check verde (&#10003; ok) indica consistencia. Un triangulo amarillo (&#9888; warning) indica diferencias que requieren atencion.</span>
+          <span class="en"><strong>Estado</strong> (Status) &mdash; status icon and text. A green check (&#10003; ok) indicates consistency. A yellow triangle (&#9888; warning) indicates differences that need attention.</span>
+        </li>
+      </ul>
+
+      <h3>
+        <span class="es">Badge de estado general</span>
+        <span class="en">Overall status badge</span>
+      </h3>
+      <p>
+        <span class="es">En la esquina superior derecha de la tabla aparece un badge con el estado general de la validacion:</span>
+        <span class="en">In the top-right corner of the table a badge shows the overall validation status:</span>
+      </p>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Badge</th>
+              <th>
+                <span class="es">Significado</span>
+                <span class="en">Meaning</span>
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><span class="consistency-badge ok">Consistente</span></td>
+              <td>
+                <span class="es">Todas las verificaciones pasan. No hay diferencias entre entornos.</span>
+                <span class="en">All checks pass. No differences between environments.</span>
+              </td>
+            </tr>
+            <tr>
+              <td><span class="consistency-badge warn">
+                <span class="es">Con advertencias</span>
+                <span class="en">With warnings</span>
+              </span></td>
+              <td>
+                <span class="es">Algunas verificaciones muestran diferencias menores que requieren revision.</span>
+                <span class="en">Some checks show minor differences that require review.</span>
+              </td>
+            </tr>
+            <tr>
+              <td><span class="consistency-badge bad">
+                <span class="es">Inconsistente</span>
+                <span class="en">Inconsistent</span>
+              </span></td>
+              <td>
+                <span class="es">Hay inconsistencias criticas entre entornos que deben resolverse.</span>
+                <span class="en">There are critical inconsistencies between environments that must be resolved.</span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- ────────────────────────────────────────────── -->
+      <!-- SINGLE SYSTEM NOTE                             -->
+      <!-- ────────────────────────────────────────────── -->
+      <h2>
+        <span class="es">Lineas con un solo sistema</span>
+        <span class="en">Lines with a single system</span>
+      </h2>
+      <p>
+        <span class="es">Si seleccionas una linea SID que contiene <strong>un unico sistema</strong> (p. ej., BW, SOL, CRM, GRC, PO, EWM), la grafica de barras y la tabla de consistencia no se muestran. En su lugar, veras un mensaje informativo:</span>
+        <span class="en">If you select a SID line that contains a <strong>single system</strong> (e.g., BW, SOL, CRM, GRC, PO, EWM), the bar chart and consistency table are not shown. Instead, you will see an informational message:</span>
+      </p>
+
+      <div class="single-sys-note">
+        <div class="icon">&#8505;&#65039;</div>
+        <p>
+          <span class="es">Esta linea SID solo contiene un sistema (PRD). La comparacion de landscape requiere al menos dos entornos (DEV/QAS/PRD).</span>
+          <span class="en">This SID line only contains one system (PRD). Landscape comparison requires at least two environments (DEV/QAS/PRD).</span>
+        </p>
+      </div>
+
+      <p class="mt-2">
+        <span class="es">En este caso, la tarjeta del sistema se muestra en una sola columna angosta, con toda la informacion habitual (gauge, metricas, info SAP), pero sin comparacion ni resaltado de diferencias.</span>
+        <span class="en">In this case, the system card is shown in a single narrow column, with all the usual information (gauge, metrics, SAP info), but without comparison or difference highlighting.</span>
+      </p>
+
+      <!-- Footer -->
+      <div style="margin-top:48px;padding:24px 0;border-top:1px solid var(--brd);text-align:center;font-size:12px;color:var(--txt3);">
+        &copy; 2026 Maveram.
+        <span class="es">Todos los derechos reservados.</span>
+        <span class="en">All rights reserved.</span>
+      </div>
+
+    </main>
+  </div>
+</body>
+</html>

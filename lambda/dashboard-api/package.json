@@ -1,0 +1,13 @@
+{
+  "name": "sap-alwaysops-dashboard-api",
+  "version": "1.0.0",
+  "description": "Avvale SAP AlwaysOps - API REST para dashboard de monitoreo + chatbot + operaciones",
+  "main": "index.js",
+  "dependencies": {
+    "@aws-sdk/client-cloudwatch": "^3.450.0",
+    "@aws-sdk/client-ssm": "^3.450.0",
+    "@aws-sdk/client-dynamodb": "^3.450.0",
+    "@aws-sdk/lib-dynamodb": "^3.450.0",
+    "@aws-sdk/client-lambda": "^3.450.0"
+  }
+}

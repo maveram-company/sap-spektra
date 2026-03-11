@@ -1,0 +1,1437 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="dark" data-lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SAP Spektra by Maveram — Documentacion</title>
+  <link rel="stylesheet" href="theme.css">
+  <script src="theme-toggle.js"></script>
+  <script src="lang-toggle.js"></script>
+  <style>
+    /* ── Hero section ── */
+    .hero {
+      position: relative;
+      padding: 60px 0 48px;
+      margin-bottom: 40px;
+      text-align: center;
+      overflow: hidden;
+    }
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: -60%;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 600px;
+      height: 600px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(6,182,212,0.08) 0%, rgba(139,92,246,0.06) 40%, transparent 70%);
+      pointer-events: none;
+    }
+    .hero-logo {
+      width: 72px;
+      height: 72px;
+      border-radius: 20px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, #06b6d4, #8b5cf6);
+      box-shadow: 0 0 40px rgba(6,182,212,0.3), 0 0 80px rgba(139,92,246,0.15);
+      font-size: 32px;
+      color: #fff;
+      margin-bottom: 20px;
+    }
+    .hero h1 {
+      font-size: 36px;
+      font-weight: 800;
+      background: linear-gradient(90deg, #e2e8f0, #06b6d4, #8b5cf6);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 6px;
+    }
+    .hero .by-line {
+      font-size: 13px;
+      color: var(--txt3);
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+    .hero .tagline {
+      font-size: 16px;
+      color: var(--txt2);
+      max-width: 500px;
+      margin: 0 auto;
+    }
+
+    /* ── Feature highlights bar ── */
+    .highlights {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 16px;
+      margin-bottom: 40px;
+    }
+    .highlight-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius);
+      padding: 20px;
+      text-align: center;
+      transition: all 0.2s;
+    }
+    .highlight-card:hover {
+      border-color: var(--cyan);
+      box-shadow: 0 0 20px rgba(6,182,212,0.08);
+    }
+    .highlight-icon {
+      font-size: 28px;
+      margin-bottom: 8px;
+    }
+    .highlight-title {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--txt1);
+      margin-bottom: 4px;
+    }
+    .highlight-desc {
+      font-size: 12px;
+      color: var(--txt3);
+    }
+
+    /* ── Pitch section ── */
+    .pitch-section {
+      margin: 48px 0;
+      padding: 32px;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius);
+      position: relative;
+      overflow: hidden;
+    }
+    .pitch-section::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, rgba(6,182,212,0.5), rgba(139,92,246,0.5), transparent);
+    }
+    .pitch-title {
+      font-size: 22px;
+      font-weight: 800;
+      text-align: center;
+      background: var(--gradient-title);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 8px;
+    }
+    .pitch-subtitle {
+      text-align: center;
+      font-size: 14px;
+      color: var(--txt3);
+      margin-bottom: 32px;
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    /* ── Pain Points ── */
+    .pain-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 16px;
+      margin-bottom: 32px;
+    }
+    .pain-card {
+      padding: 16px;
+      border-radius: 10px;
+      background: rgba(239,68,68,0.04);
+      border: 1px solid rgba(239,68,68,0.12);
+    }
+    .pain-card .pain-icon { font-size: 20px; margin-bottom: 6px; }
+    .pain-card .pain-label { font-size: 13px; font-weight: 600; color: var(--txt1); margin-bottom: 4px; }
+    .pain-card .pain-desc { font-size: 12px; color: var(--txt3); }
+
+    /* ── Solution Cards ── */
+    .solution-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 16px;
+      margin-bottom: 32px;
+    }
+    .solution-card {
+      padding: 16px;
+      border-radius: 10px;
+      background: rgba(6,182,212,0.04);
+      border: 1px solid rgba(6,182,212,0.12);
+    }
+    .solution-card .sol-icon { font-size: 20px; margin-bottom: 6px; }
+    .solution-card .sol-label { font-size: 13px; font-weight: 600; color: var(--txt1); margin-bottom: 4px; }
+    .solution-card .sol-desc { font-size: 12px; color: var(--txt3); }
+
+    /* ── Plans ── */
+    .plans-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 20px;
+      margin-bottom: 24px;
+    }
+    .plan-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius);
+      padding: 24px;
+      text-align: center;
+      position: relative;
+      transition: all 0.2s;
+    }
+    .plan-card:hover {
+      border-color: var(--cyan);
+      box-shadow: 0 0 24px rgba(6,182,212,0.08);
+    }
+    .plan-card.popular {
+      border-color: var(--cyan);
+      box-shadow: 0 0 20px rgba(6,182,212,0.12);
+    }
+    .plan-popular-badge {
+      position: absolute;
+      top: -10px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--gradient-brand);
+      color: #fff;
+      font-size: 10px;
+      font-weight: 700;
+      padding: 3px 14px;
+      border-radius: 100px;
+      letter-spacing: 0.5px;
+    }
+    .plan-name {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--txt1);
+      margin-bottom: 4px;
+    }
+    .plan-desc {
+      font-size: 12px;
+      color: var(--txt3);
+      margin-bottom: 16px;
+    }
+    .plan-price {
+      font-size: 32px;
+      font-weight: 800;
+      color: var(--txt1);
+      margin-bottom: 4px;
+    }
+    .plan-price .per-month {
+      font-size: 13px;
+      font-weight: 400;
+      color: var(--txt3);
+    }
+    .plan-limits {
+      margin: 16px 0;
+      padding: 12px;
+      border-radius: 8px;
+      background: var(--bg3);
+      font-size: 12px;
+      color: var(--txt2);
+      text-align: left;
+    }
+    .plan-limits p { margin: 3px 0; }
+    .plan-features {
+      text-align: left;
+      font-size: 12px;
+      color: var(--txt2);
+      margin-top: 12px;
+    }
+    .plan-features .feat-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 3px 0;
+    }
+    .plan-features .feat-check {
+      color: var(--success);
+      font-weight: 700;
+      font-size: 14px;
+    }
+    .plan-cta {
+      display: inline-block;
+      margin-top: 16px;
+      padding: 10px 24px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.2s;
+    }
+    .plan-cta.primary {
+      background: var(--gradient-brand);
+      color: #fff;
+      box-shadow: 0 0 16px rgba(6,182,212,0.25);
+    }
+    .plan-cta.primary:hover {
+      box-shadow: 0 0 28px rgba(6,182,212,0.4);
+      text-decoration: none;
+    }
+    .plan-cta.outline {
+      border: 1px solid var(--brd);
+      color: var(--txt2);
+    }
+    .plan-cta.outline:hover {
+      border-color: var(--cyan);
+      color: var(--cyan);
+      text-decoration: none;
+    }
+
+    /* ── Feature comparison table ── */
+    .comparison-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+      margin: 16px 0;
+    }
+    .comparison-table thead { background: var(--table-header); }
+    .comparison-table th {
+      text-align: left;
+      padding: 10px 14px;
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--txt3);
+      text-transform: uppercase;
+      letter-spacing: .06em;
+    }
+    .comparison-table th.plan-col { text-align: center; }
+    .comparison-table td {
+      padding: 8px 14px;
+      border-top: 1px solid var(--brd);
+      color: var(--txt2);
+    }
+    .comparison-table td.plan-col { text-align: center; }
+    .comparison-table tr:nth-child(even) { background: var(--table-stripe); }
+    .check-yes { color: var(--success); font-weight: 700; }
+    .check-no { color: var(--txt3); }
+
+    /* ── Stat bar ── */
+    .stats-bar {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 16px;
+      text-align: center;
+      margin: 32px 0;
+    }
+    .stat-item .stat-value {
+      font-size: 28px;
+      font-weight: 800;
+      background: var(--gradient-brand);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .stat-item .stat-label {
+      font-size: 11px;
+      color: var(--txt3);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-top: 2px;
+    }
+
+    /* ── Section heading for card groups ── */
+    .section-heading {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin: 32px 0 16px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid var(--brd);
+    }
+    .section-heading-icon {
+      width: 28px;
+      height: 28px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      background: var(--cyan-dim);
+      color: var(--cyan);
+    }
+    .section-heading h2 {
+      margin: 0;
+      padding: 0;
+      border: none;
+      font-size: 18px;
+    }
+
+    /* ── Card grid ── */
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+    .doc-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius);
+      padding: 20px;
+      text-decoration: none;
+      color: inherit;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      transition: all 0.2s;
+    }
+    .doc-card:hover {
+      text-decoration: none;
+      border-color: var(--cyan);
+      box-shadow: 0 0 24px rgba(6,182,212,0.08);
+      transform: translateY(-2px);
+    }
+    .doc-card .card-icon-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .doc-card .card-emoji {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      flex-shrink: 0;
+    }
+    .doc-card .card-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--txt1);
+    }
+    .doc-card .card-desc {
+      font-size: 12px;
+      color: var(--txt3);
+      line-height: 1.5;
+    }
+    .doc-card .card-tag {
+      display: inline-block;
+      font-size: 10px;
+      font-weight: 600;
+      padding: 2px 8px;
+      border-radius: 100px;
+      margin-top: auto;
+      width: fit-content;
+    }
+
+    /* ── Footer ── */
+    .docs-footer {
+      margin-top: 48px;
+      padding: 24px 0;
+      border-top: 1px solid var(--brd);
+      text-align: center;
+      font-size: 12px;
+      color: var(--txt3);
+    }
+  </style>
+</head>
+<body>
+  <div class="docs-wrapper">
+
+    <!-- ═══ SIDEBAR ═══ -->
+    <aside class="docs-sidebar">
+      <div class="sidebar-brand">
+        <div class="logo">&#9889;</div>
+        <div class="brand-text">
+          <div class="brand-name">SAP Spektra</div>
+          <div class="brand-sub">
+            <span class="es">DOCUMENTACION</span>
+            <span class="en">DOCUMENTATION</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="sidebar-section">
+        <div class="sidebar-section-label">
+          <span class="es">Inicio</span>
+          <span class="en">Start</span>
+        </div>
+        <a href="index.html" class="sidebar-link active">Portal</a>
+        <a href="getting-started.html" class="sidebar-link">
+          <span class="es">Primeros Pasos</span>
+          <span class="en">Getting Started</span>
+        </a>
+      </div>
+
+      <div class="sidebar-section">
+        <div class="sidebar-section-label">Command</div>
+        <a href="dashboard.html" class="sidebar-link">Dashboard</a>
+        <a href="landscape.html" class="sidebar-link">Landscape</a>
+        <a href="alerts.html" class="sidebar-link">
+          <span class="es">Alertas</span>
+          <span class="en">Alerts</span>
+        </a>
+      </div>
+
+      <div class="sidebar-section">
+        <div class="sidebar-section-label">Monitor</div>
+        <a href="systems.html" class="sidebar-link">
+          <span class="es">Sistemas</span>
+          <span class="en">Systems</span>
+        </a>
+        <a href="connectors.html" class="sidebar-link">
+          <span class="es">Conectores</span>
+          <span class="en">Connectors</span>
+        </a>
+        <a href="events.html" class="sidebar-link">
+          <span class="es">Eventos</span>
+          <span class="en">Events</span>
+        </a>
+      </div>
+
+      <div class="sidebar-section">
+        <div class="sidebar-section-label">Intelligence</div>
+        <a href="ai-analysis.html" class="sidebar-link">
+          <span class="es">Analisis IA</span>
+          <span class="en">AI Analysis</span>
+        </a>
+        <a href="analytics.html" class="sidebar-link">Analytics</a>
+        <a href="reports.html" class="sidebar-link">
+          <span class="es">Reportes</span>
+          <span class="en">Reports</span>
+        </a>
+        <a href="comparison.html" class="sidebar-link">
+          <span class="es">Comparacion</span>
+          <span class="en">Comparison</span>
+        </a>
+      </div>
+
+      <div class="sidebar-section">
+        <div class="sidebar-section-label">Operations</div>
+        <a href="runbooks.html" class="sidebar-link">Runbooks</a>
+        <a href="approvals.html" class="sidebar-link">
+          <span class="es">Aprobaciones</span>
+          <span class="en">Approvals</span>
+        </a>
+        <a href="operations.html" class="sidebar-link">
+          <span class="es">Operaciones</span>
+          <span class="en">Operations</span>
+        </a>
+        <a href="jobs.html" class="sidebar-link">Jobs (SM37)</a>
+        <a href="transports.html" class="sidebar-link">
+          <span class="es">Transportes</span>
+          <span class="en">Transports</span>
+        </a>
+        <a href="sla.html" class="sidebar-link">SLA</a>
+        <a href="ha-control.html" class="sidebar-link">HA Control</a>
+        <a href="certificates.html" class="sidebar-link">
+          <span class="es">Certificados</span>
+          <span class="en">Certificates</span>
+        </a>
+      </div>
+
+      <div class="sidebar-section">
+        <div class="sidebar-section-label">Admin</div>
+        <a href="admin.html" class="sidebar-link">
+          <span class="es">Gestion</span>
+          <span class="en">Management</span>
+        </a>
+        <a href="settings.html" class="sidebar-link">
+          <span class="es">Configuracion</span>
+          <span class="en">Settings</span>
+        </a>
+        <a href="connect-system.html" class="sidebar-link">
+          <span class="es">Conectar Sistema</span>
+          <span class="en">Connect System</span>
+        </a>
+      </div>
+    </aside>
+
+    <!-- ═══ MAIN CONTENT ═══ -->
+    <main class="docs-main">
+
+      <!-- ── Hero ── -->
+      <div class="hero">
+        <div class="hero-logo">&#9889;</div>
+        <h1>SAP Spektra</h1>
+        <div class="by-line">by Maveram</div>
+        <p class="tagline">
+          <span class="es">Mission Control for SAP Operations</span>
+          <span class="en">Mission Control for SAP Operations</span>
+        </p>
+      </div>
+
+      <!-- ── Feature Highlights ── -->
+      <div class="highlights">
+        <div class="highlight-card">
+          <div class="highlight-icon">&#128225;</div>
+          <div class="highlight-title">
+            <span class="es">Monitoreo 24/7</span>
+            <span class="en">24/7 Monitoring</span>
+          </div>
+          <div class="highlight-desc">
+            <span class="es">Supervisa tus sistemas SAP en tiempo real con alertas inteligentes y dashboards unificados.</span>
+            <span class="en">Monitor your SAP systems in real time with intelligent alerts and unified dashboards.</span>
+          </div>
+        </div>
+        <div class="highlight-card">
+          <div class="highlight-icon">&#129504;</div>
+          <div class="highlight-title">
+            <span class="es">IA Integrada</span>
+            <span class="en">Integrated AI</span>
+          </div>
+          <div class="highlight-desc">
+            <span class="es">7 casos de uso con IA: root-cause, predicciones, recomendaciones, security review y mas.</span>
+            <span class="en">7 AI use cases: root-cause, predictions, recommendations, security review and more.</span>
+          </div>
+        </div>
+        <div class="highlight-card">
+          <div class="highlight-icon">&#128214;</div>
+          <div class="highlight-title">
+            <span class="es">25+ Runbooks</span>
+            <span class="en">25+ Runbooks</span>
+          </div>
+          <div class="highlight-desc">
+            <span class="es">Automatizacion con Cost-Safe Gate, dry-run, aprobaciones y ejecucion paso a paso.</span>
+            <span class="en">Automation with Cost-Safe Gate, dry-run, approvals and step-by-step execution.</span>
+          </div>
+        </div>
+        <div class="highlight-card">
+          <div class="highlight-icon">&#9889;</div>
+          <div class="highlight-title">
+            <span class="es">Setup en 25 min</span>
+            <span class="en">25-min Setup</span>
+          </div>
+          <div class="highlight-desc">
+            <span class="es">Conecta via Spektra Agent o Cloud Connector y empieza a monitorear de inmediato.</span>
+            <span class="en">Connect via Spektra Agent or Cloud Connector and start monitoring immediately.</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ═══════════════════════════════════════════ -->
+      <!-- ══ PITCH COMERCIAL ══ -->
+      <!-- ═══════════════════════════════════════════ -->
+
+      <div class="pitch-section">
+        <div class="pitch-title">
+          <span class="es">¿Por que SAP Spektra?</span>
+          <span class="en">Why SAP Spektra?</span>
+        </div>
+        <div class="pitch-subtitle">
+          <span class="es">Las operaciones SAP son complejas. Spektra las simplifica con inteligencia artificial, automatizacion y visibilidad total — en una sola plataforma SaaS.</span>
+          <span class="en">SAP operations are complex. Spektra simplifies them with artificial intelligence, automation and total visibility — in a single SaaS platform.</span>
+        </div>
+
+        <!-- Pain Points -->
+        <h3 style="font-size:15px;font-weight:700;color:var(--txt1);margin-bottom:14px">
+          <span class="es">&#128308; El problema</span>
+          <span class="en">&#128308; The problem</span>
+        </h3>
+        <div class="pain-grid">
+          <div class="pain-card">
+            <div class="pain-icon">&#128337;</div>
+            <div class="pain-label">
+              <span class="es">Tiempos de respuesta lentos</span>
+              <span class="en">Slow response times</span>
+            </div>
+            <div class="pain-desc">
+              <span class="es">Sin monitoreo centralizado, los equipos SAP Basis reaccionan tarde a incidentes criticos.</span>
+              <span class="en">Without centralized monitoring, SAP Basis teams react late to critical incidents.</span>
+            </div>
+          </div>
+          <div class="pain-card">
+            <div class="pain-icon">&#128209;</div>
+            <div class="pain-label">
+              <span class="es">Operaciones manuales riesgosas</span>
+              <span class="en">Risky manual operations</span>
+            </div>
+            <div class="pain-desc">
+              <span class="es">Tareas repetitivas ejecutadas manualmente aumentan el riesgo de error humano en produccion.</span>
+              <span class="en">Repetitive tasks executed manually increase the risk of human error in production.</span>
+            </div>
+          </div>
+          <div class="pain-card">
+            <div class="pain-icon">&#128683;</div>
+            <div class="pain-label">
+              <span class="es">Falta de visibilidad cross-system</span>
+              <span class="en">Lack of cross-system visibility</span>
+            </div>
+            <div class="pain-desc">
+              <span class="es">Landscapes SAP con multiples SIDs, ambientes y proveedores cloud son dificiles de gestionar sin una vista unificada.</span>
+              <span class="en">SAP landscapes with multiple SIDs, environments and cloud providers are hard to manage without a unified view.</span>
+            </div>
+          </div>
+          <div class="pain-card">
+            <div class="pain-icon">&#128176;</div>
+            <div class="pain-label">
+              <span class="es">Costos no controlados</span>
+              <span class="en">Uncontrolled costs</span>
+            </div>
+            <div class="pain-desc">
+              <span class="es">Ejecutar operaciones sin validacion de impacto genera costos inesperados y downtime evitable.</span>
+              <span class="en">Executing operations without impact validation creates unexpected costs and avoidable downtime.</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Solution -->
+        <h3 style="font-size:15px;font-weight:700;color:var(--txt1);margin-bottom:14px">
+          <span class="es">&#128994; La solucion: SAP Spektra</span>
+          <span class="en">&#128994; The solution: SAP Spektra</span>
+        </h3>
+        <div class="solution-grid">
+          <div class="solution-card">
+            <div class="sol-icon">&#128202;</div>
+            <div class="sol-label">
+              <span class="es">Dashboard unificado</span>
+              <span class="en">Unified Dashboard</span>
+            </div>
+            <div class="sol-desc">
+              <span class="es">KPIs en tiempo real de todos tus sistemas SAP. Health score, breaches activos y alertas en un solo lugar.</span>
+              <span class="en">Real-time KPIs across all your SAP systems. Health score, active breaches and alerts in one place.</span>
+            </div>
+          </div>
+          <div class="solution-card">
+            <div class="sol-icon">&#129504;</div>
+            <div class="sol-label">
+              <span class="es">IA con 7 casos de uso</span>
+              <span class="en">AI with 7 use cases</span>
+            </div>
+            <div class="sol-desc">
+              <span class="es">Root-cause analysis, prediccion de incidentes, recomendaciones, security review, capacity planning, performance y SAP Notes.</span>
+              <span class="en">Root-cause analysis, incident prediction, recommendations, security review, capacity planning, performance and SAP Notes.</span>
+            </div>
+          </div>
+          <div class="solution-card">
+            <div class="sol-icon">&#128214;</div>
+            <div class="sol-label">
+              <span class="es">Automatizacion inteligente</span>
+              <span class="en">Intelligent automation</span>
+            </div>
+            <div class="sol-desc">
+              <span class="es">25+ runbooks con Cost-Safe Gate que previene ejecuciones peligrosas. Dry-run antes de ejecutar en produccion.</span>
+              <span class="en">25+ runbooks with Cost-Safe Gate that prevents dangerous executions. Dry-run before executing in production.</span>
+            </div>
+          </div>
+          <div class="solution-card">
+            <div class="sol-icon">&#128147;</div>
+            <div class="sol-label">
+              <span class="es">HA & DR Orchestration</span>
+              <span class="en">HA & DR Orchestration</span>
+            </div>
+            <div class="sol-desc">
+              <span class="es">5 estrategias de Alta Disponibilidad (Hot Standby, Warm Standby, Pilot Light, Backup/Restore, Cross-Region DR) con takeover/failover automatizado.</span>
+              <span class="en">5 High Availability strategies (Hot Standby, Warm Standby, Pilot Light, Backup/Restore, Cross-Region DR) with automated takeover/failover.</span>
+            </div>
+          </div>
+          <div class="solution-card">
+            <div class="sol-icon">&#128272;</div>
+            <div class="sol-label">
+              <span class="es">Compliance & Auditoria</span>
+              <span class="en">Compliance & Audit</span>
+            </div>
+            <div class="sol-desc">
+              <span class="es">Log de auditoria con cadena de hash SHA-256, reportes automaticos para SOX/ISO 27001, y tracker de certificados SSL/PSE/SNC.</span>
+              <span class="en">Audit log with SHA-256 hash chain, automatic reports for SOX/ISO 27001, and SSL/PSE/SNC certificate tracker.</span>
+            </div>
+          </div>
+          <div class="solution-card">
+            <div class="sol-icon">&#128268;</div>
+            <div class="sol-label">
+              <span class="es">Multi-Cloud & SAP RISE</span>
+              <span class="en">Multi-Cloud & SAP RISE</span>
+            </div>
+            <div class="sol-desc">
+              <span class="es">Compatible con AWS, Azure, GCP y SAP RISE/BTP. Conecta via Spektra Agent (on-premise) o SAP Cloud Connector.</span>
+              <span class="en">Compatible with AWS, Azure, GCP and SAP RISE/BTP. Connect via Spektra Agent (on-premise) or SAP Cloud Connector.</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Stats bar -->
+        <div class="stats-bar">
+          <div class="stat-item">
+            <div class="stat-value">25+</div>
+            <div class="stat-label">Runbooks</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-value">7</div>
+            <div class="stat-label">
+              <span class="es">Casos de uso IA</span>
+              <span class="en">AI Use Cases</span>
+            </div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-value">5</div>
+            <div class="stat-label">
+              <span class="es">Estrategias HA/DR</span>
+              <span class="en">HA/DR Strategies</span>
+            </div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-value">25 min</div>
+            <div class="stat-label">
+              <span class="es">Tiempo de Setup</span>
+              <span class="en">Setup Time</span>
+            </div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-value">4</div>
+            <div class="stat-label">
+              <span class="es">Roles de usuario</span>
+              <span class="en">User Roles</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ═══════════════════════════════════════════ -->
+      <!-- ══ PLANES Y PRECIOS ══ -->
+      <!-- ═══════════════════════════════════════════ -->
+
+      <div class="pitch-section">
+        <div class="pitch-title">
+          <span class="es">Planes y Precios</span>
+          <span class="en">Plans & Pricing</span>
+        </div>
+        <div class="pitch-subtitle">
+          <span class="es">Elige el plan que se adapte a tu operacion SAP. Escala cuando lo necesites.</span>
+          <span class="en">Choose the plan that fits your SAP operation. Scale when you need to.</span>
+        </div>
+
+        <div class="plans-grid">
+          <!-- Starter -->
+          <div class="plan-card">
+            <div class="plan-name">Starter</div>
+            <div class="plan-desc">
+              <span class="es">Para equipos que inician con monitoreo SAP</span>
+              <span class="en">For teams starting with SAP monitoring</span>
+            </div>
+            <div class="plan-price">
+              $0 <span class="per-month">
+                <span class="es">/mes</span>
+                <span class="en">/month</span>
+              </span>
+            </div>
+            <div class="plan-limits">
+              <p><span class="es">3 sistemas</span><span class="en">3 systems</span></p>
+              <p><span class="es">2 usuarios</span><span class="en">2 users</span></p>
+              <p><span class="es">5 llamadas IA/dia</span><span class="en">5 AI calls/day</span></p>
+              <p><span class="es">7 dias de retencion</span><span class="en">7 days retention</span></p>
+            </div>
+            <div class="plan-features">
+              <div class="feat-item"><span class="feat-check">&#10003;</span> <span class="es">Monitoreo de sistemas</span><span class="en">System monitoring</span></div>
+              <div class="feat-item"><span class="feat-check">&#10003;</span> Dashboard</div>
+              <div class="feat-item"><span class="feat-check">&#10003;</span> <span class="es">Alertas basicas</span><span class="en">Basic alerts</span></div>
+            </div>
+            <a href="getting-started.html" class="plan-cta outline">
+              <span class="es">Empezar Gratis</span>
+              <span class="en">Start Free</span>
+            </a>
+          </div>
+
+          <!-- Professional -->
+          <div class="plan-card popular">
+            <div class="plan-popular-badge">
+              <span class="es">&#11088; Mas Popular</span>
+              <span class="en">&#11088; Most Popular</span>
+            </div>
+            <div class="plan-name">Professional</div>
+            <div class="plan-desc">
+              <span class="es">Para operaciones SAP con automatizacion completa</span>
+              <span class="en">For SAP operations with full automation</span>
+            </div>
+            <div class="plan-price">
+              $299 <span class="per-month">
+                <span class="es">/mes</span>
+                <span class="en">/month</span>
+              </span>
+            </div>
+            <div class="plan-limits">
+              <p><span class="es">25 sistemas</span><span class="en">25 systems</span></p>
+              <p><span class="es">10 usuarios</span><span class="en">10 users</span></p>
+              <p><span class="es">100 llamadas IA/dia</span><span class="en">100 AI calls/day</span></p>
+              <p><span class="es">90 dias de retencion</span><span class="en">90 days retention</span></p>
+            </div>
+            <div class="plan-features">
+              <div class="feat-item"><span class="feat-check">&#10003;</span> <span class="es">Todo de Starter +</span><span class="en">Everything in Starter +</span></div>
+              <div class="feat-item"><span class="feat-check">&#10003;</span> <span class="es">Alertas avanzadas con IA</span><span class="en">Advanced AI alerts</span></div>
+              <div class="feat-item"><span class="feat-check">&#10003;</span> <span class="es">Runbooks automatizados (25+)</span><span class="en">Automated runbooks (25+)</span></div>
+              <div class="feat-item"><span class="feat-check">&#10003;</span> <span class="es">Analisis con IA (7 casos)</span><span class="en">AI Analysis (7 use cases)</span></div>
+              <div class="feat-item"><span class="feat-check">&#10003;</span> Chatbot IA</div>
+              <div class="feat-item"><span class="feat-check">&#10003;</span> <span class="es">Aprobaciones y scheduling</span><span class="en">Approvals & scheduling</span></div>
+              <div class="feat-item"><span class="feat-check">&#10003;</span> <span class="es">Integraciones (Slack, Email)</span><span class="en">Integrations (Slack, Email)</span></div>
+              <div class="feat-item"><span class="feat-check">&#10003;</span> <span class="es">Analytics y Comparacion</span><span class="en">Analytics & Comparison</span></div>
+            </div>
+            <a href="getting-started.html" class="plan-cta primary">Upgrade</a>
+          </div>
+
+          <!-- Enterprise -->
+          <div class="plan-card">
+            <div class="plan-name">Enterprise</div>
+            <div class="plan-desc">
+              <span class="es">Para organizaciones con compliance y HA avanzados</span>
+              <span class="en">For organizations with advanced compliance and HA</span>
+            </div>
+            <div class="plan-price">
+              <span class="es">Personalizado</span>
+              <span class="en">Custom</span>
+            </div>
+            <div class="plan-limits">
+              <p><span class="es">Sistemas ilimitados</span><span class="en">Unlimited systems</span></p>
+              <p><span class="es">Usuarios ilimitados</span><span class="en">Unlimited users</span></p>
+              <p><span class="es">1,000 llamadas IA/dia</span><span class="en">1,000 AI calls/day</span></p>
+              <p><span class="es">365 dias de retencion</span><span class="en">365 days retention</span></p>
+            </div>
+            <div class="plan-features">
+              <div class="feat-item"><span class="feat-check">&#10003;</span> <span class="es">Todo de Professional +</span><span class="en">Everything in Professional +</span></div>
+              <div class="feat-item"><span class="feat-check">&#10003;</span> <span class="es">Orquestacion HA (Failover)</span><span class="en">HA Orchestration (Failover)</span></div>
+              <div class="feat-item"><span class="feat-check">&#10003;</span> Compliance (SOX, ISO 27001)</div>
+              <div class="feat-item"><span class="feat-check">&#10003;</span> <span class="es">Log de auditoria</span><span class="en">Audit log</span></div>
+              <div class="feat-item"><span class="feat-check">&#10003;</span> <span class="es">Runbooks personalizados</span><span class="en">Custom runbooks</span></div>
+              <div class="feat-item"><span class="feat-check">&#10003;</span> SSO / SAML</div>
+              <div class="feat-item"><span class="feat-check">&#10003;</span> <span class="es">Acceso API</span><span class="en">API Access</span></div>
+              <div class="feat-item"><span class="feat-check">&#10003;</span> <span class="es">Integraciones avanzadas (ServiceNow, Jira)</span><span class="en">Advanced integrations (ServiceNow, Jira)</span></div>
+              <div class="feat-item"><span class="feat-check">&#10003;</span> Multi-Cloud (Azure, GCP)</div>
+              <div class="feat-item"><span class="feat-check">&#10003;</span> <span class="es">Integracion SAP RISE</span><span class="en">SAP RISE Integration</span></div>
+              <div class="feat-item"><span class="feat-check">&#10003;</span> <span class="es">Soporte dedicado</span><span class="en">Dedicated support</span></div>
+            </div>
+            <a href="mailto:sales@maveram.com" class="plan-cta outline">
+              <span class="es">Contactar Ventas</span>
+              <span class="en">Contact Sales</span>
+            </a>
+          </div>
+        </div>
+
+        <!-- Feature comparison table -->
+        <h3 style="font-size:15px;font-weight:700;color:var(--txt1);margin:24px 0 12px">
+          <span class="es">Comparacion completa de funcionalidades</span>
+          <span class="en">Full feature comparison</span>
+        </h3>
+        <div class="table-wrap">
+          <table class="comparison-table">
+            <thead>
+              <tr>
+                <th>
+                  <span class="es">Funcionalidad</span>
+                  <span class="en">Feature</span>
+                </th>
+                <th class="plan-col">Starter</th>
+                <th class="plan-col">Professional</th>
+                <th class="plan-col">Enterprise</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><span class="es">Monitoreo de sistemas</span><span class="en">System monitoring</span></td>
+                <td class="plan-col"><span class="check-yes">&#10003;</span></td>
+                <td class="plan-col"><span class="check-yes">&#10003;</span></td>
+                <td class="plan-col"><span class="check-yes">&#10003;</span></td>
+              </tr>
+              <tr>
+                <td>Dashboard</td>
+                <td class="plan-col"><span class="check-yes">&#10003;</span></td>
+                <td class="plan-col"><span class="check-yes">&#10003;</span></td>
+                <td class="plan-col"><span class="check-yes">&#10003;</span></td>
+              </tr>
+              <tr>
+                <td><span class="es">Alertas basicas</span><span class="en">Basic alerts</span></td>
+                <td class="plan-col"><span class="check-yes">&#10003;</span></td>
+                <td class="plan-col"><span class="check-yes">&#10003;</span></td>
+                <td class="plan-col"><span class="check-yes">&#10003;</span></td>
+              </tr>
+              <tr>
+                <td><span class="es">Alertas avanzadas con IA</span><span class="en">Advanced AI alerts</span></td>
+                <td class="plan-col"><span class="check-no">&mdash;</span></td>
+                <td class="plan-col"><span class="check-yes">&#10003;</span></td>
+                <td class="plan-col"><span class="check-yes">&#10003;</span></td>
+              </tr>
+              <tr>
+                <td><span class="es">Runbooks automatizados (25+)</span><span class="en">Automated runbooks (25+)</span></td>
+                <td class="plan-col"><span class="check-no">&mdash;</span></td>
+                <td class="plan-col"><span class="check-yes">&#10003;</span></td>
+                <td class="plan-col"><span class="check-yes">&#10003;</span></td>
+              </tr>
+              <tr>
+                <td><span class="es">Analisis con IA (7 casos de uso)</span><span class="en">AI Analysis (7 use cases)</span></td>
+                <td class="plan-col"><span class="check-no">&mdash;</span></td>
+                <td class="plan-col"><span class="check-yes">&#10003;</span></td>
+                <td class="plan-col"><span class="check-yes">&#10003;</span></td>
+              </tr>
+              <tr>
+                <td>Chatbot IA</td>
+                <td class="plan-col"><span class="check-no">&mdash;</span></td>
+                <td class="plan-col"><span class="check-yes">&#10003;</span></td>
+                <td class="plan-col"><span class="check-yes">&#10003;</span></td>
+              </tr>
+              <tr>
+                <td><span class="es">Flujos de aprobacion</span><span class="en">Approval workflows</span></td>
+                <td class="plan-col"><span class="check-no">&mdash;</span></td>
+                <td class="plan-col"><span class="check-yes">&#10003;</span></td>
+                <td class="plan-col"><span class="check-yes">&#10003;</span></td>
+              </tr>
+              <tr>
+                <td><span class="es">Operaciones programadas</span><span class="en">Scheduled operations</span></td>
+                <td class="plan-col"><span class="check-no">&mdash;</span></td>
+                <td class="plan-col"><span class="check-yes">&#10003;</span></td>
+                <td class="plan-col"><span class="check-yes">&#10003;</span></td>
+              </tr>
+              <tr>
+                <td><span class="es">Integraciones (Slack, Email)</span><span class="en">Integrations (Slack, Email)</span></td>
+                <td class="plan-col"><span class="check-no">&mdash;</span></td>
+                <td class="plan-col"><span class="check-yes">&#10003;</span></td>
+                <td class="plan-col"><span class="check-yes">&#10003;</span></td>
+              </tr>
+              <tr>
+                <td>Analytics</td>
+                <td class="plan-col"><span class="check-no">&mdash;</span></td>
+                <td class="plan-col"><span class="check-yes">&#10003;</span></td>
+                <td class="plan-col"><span class="check-yes">&#10003;</span></td>
+              </tr>
+              <tr>
+                <td><span class="es">Comparacion de sistemas</span><span class="en">System comparison</span></td>
+                <td class="plan-col"><span class="check-no">&mdash;</span></td>
+                <td class="plan-col"><span class="check-yes">&#10003;</span></td>
+                <td class="plan-col"><span class="check-yes">&#10003;</span></td>
+              </tr>
+              <tr>
+                <td><span class="es">Orquestacion HA (Failover)</span><span class="en">HA Orchestration (Failover)</span></td>
+                <td class="plan-col"><span class="check-no">&mdash;</span></td>
+                <td class="plan-col"><span class="check-no">&mdash;</span></td>
+                <td class="plan-col"><span class="check-yes">&#10003;</span></td>
+              </tr>
+              <tr>
+                <td>Compliance (SOX, ISO 27001)</td>
+                <td class="plan-col"><span class="check-no">&mdash;</span></td>
+                <td class="plan-col"><span class="check-no">&mdash;</span></td>
+                <td class="plan-col"><span class="check-yes">&#10003;</span></td>
+              </tr>
+              <tr>
+                <td><span class="es">Log de auditoria</span><span class="en">Audit log</span></td>
+                <td class="plan-col"><span class="check-no">&mdash;</span></td>
+                <td class="plan-col"><span class="check-no">&mdash;</span></td>
+                <td class="plan-col"><span class="check-yes">&#10003;</span></td>
+              </tr>
+              <tr>
+                <td><span class="es">Runbooks personalizados</span><span class="en">Custom runbooks</span></td>
+                <td class="plan-col"><span class="check-no">&mdash;</span></td>
+                <td class="plan-col"><span class="check-no">&mdash;</span></td>
+                <td class="plan-col"><span class="check-yes">&#10003;</span></td>
+              </tr>
+              <tr>
+                <td>SSO / SAML</td>
+                <td class="plan-col"><span class="check-no">&mdash;</span></td>
+                <td class="plan-col"><span class="check-no">&mdash;</span></td>
+                <td class="plan-col"><span class="check-yes">&#10003;</span></td>
+              </tr>
+              <tr>
+                <td><span class="es">Acceso API</span><span class="en">API Access</span></td>
+                <td class="plan-col"><span class="check-no">&mdash;</span></td>
+                <td class="plan-col"><span class="check-no">&mdash;</span></td>
+                <td class="plan-col"><span class="check-yes">&#10003;</span></td>
+              </tr>
+              <tr>
+                <td><span class="es">Integraciones avanzadas (ServiceNow, Jira)</span><span class="en">Advanced integrations (ServiceNow, Jira)</span></td>
+                <td class="plan-col"><span class="check-no">&mdash;</span></td>
+                <td class="plan-col"><span class="check-no">&mdash;</span></td>
+                <td class="plan-col"><span class="check-yes">&#10003;</span></td>
+              </tr>
+              <tr>
+                <td>Multi-Cloud (Azure, GCP)</td>
+                <td class="plan-col"><span class="check-no">&mdash;</span></td>
+                <td class="plan-col"><span class="check-no">&mdash;</span></td>
+                <td class="plan-col"><span class="check-yes">&#10003;</span></td>
+              </tr>
+              <tr>
+                <td><span class="es">Integracion SAP RISE</span><span class="en">SAP RISE Integration</span></td>
+                <td class="plan-col"><span class="check-no">&mdash;</span></td>
+                <td class="plan-col"><span class="check-no">&mdash;</span></td>
+                <td class="plan-col"><span class="check-yes">&#10003;</span></td>
+              </tr>
+              <tr>
+                <td><span class="es">Soporte dedicado</span><span class="en">Dedicated support</span></td>
+                <td class="plan-col"><span class="check-no">&mdash;</span></td>
+                <td class="plan-col"><span class="check-no">&mdash;</span></td>
+                <td class="plan-col"><span class="check-yes">&#10003;</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- ═══════════════════════════════════════════ -->
+      <!-- ══ DOCUMENTACION POR SECCION ══ -->
+      <!-- ═══════════════════════════════════════════ -->
+
+      <!-- ── Primeros Pasos ── -->
+      <div class="section-heading">
+        <div class="section-heading-icon">&#128640;</div>
+        <h2>
+          <span class="es">Primeros Pasos</span>
+          <span class="en">Getting Started</span>
+        </h2>
+      </div>
+      <div class="card-grid">
+        <a href="getting-started.html" class="doc-card">
+          <div class="card-icon-row">
+            <div class="card-emoji" style="background:var(--cyan-dim);color:var(--cyan)">&#128640;</div>
+            <div class="card-title">
+              <span class="es">Primeros Pasos</span>
+              <span class="en">Getting Started</span>
+            </div>
+          </div>
+          <div class="card-desc">
+            <span class="es">Login, navegacion, roles de usuario, planes y tu primer vistazo al Dashboard.</span>
+            <span class="en">Login, navigation, user roles, plans and your first look at the Dashboard.</span>
+          </div>
+          <span class="card-tag badge cyan">
+            <span class="es">Empieza aqui</span>
+            <span class="en">Start here</span>
+          </span>
+        </a>
+        <a href="connect-system.html" class="doc-card">
+          <div class="card-icon-row">
+            <div class="card-emoji" style="background:var(--violet-dim);color:var(--violet)">&#128279;</div>
+            <div class="card-title">
+              <span class="es">Conectar Sistema</span>
+              <span class="en">Connect System</span>
+            </div>
+          </div>
+          <div class="card-desc">
+            <span class="es">Como conectar tu primer sistema SAP a Spektra via Agent o Cloud Connector.</span>
+            <span class="en">How to connect your first SAP system to Spektra via Agent or Cloud Connector.</span>
+          </div>
+          <span class="card-tag badge violet">Setup</span>
+        </a>
+      </div>
+
+      <!-- ── Command ── -->
+      <div class="section-heading">
+        <div class="section-heading-icon">&#127919;</div>
+        <h2>Command</h2>
+      </div>
+      <div class="card-grid">
+        <a href="dashboard.html" class="doc-card">
+          <div class="card-icon-row">
+            <div class="card-emoji" style="background:var(--cyan-dim);color:var(--cyan)">&#128202;</div>
+            <div class="card-title">Dashboard</div>
+          </div>
+          <div class="card-desc">
+            <span class="es">Vista general con KPIs, estado del landscape SAP, breaches activos y aprobaciones pendientes.</span>
+            <span class="en">Overview with KPIs, SAP landscape health, active breaches and pending approvals.</span>
+          </div>
+          <span class="card-tag badge cyan">Command</span>
+        </a>
+        <a href="landscape.html" class="doc-card">
+          <div class="card-icon-row">
+            <div class="card-emoji" style="background:var(--cyan-dim);color:var(--cyan)">&#127760;</div>
+            <div class="card-title">Landscape</div>
+          </div>
+          <div class="card-desc">
+            <span class="es">Mapa visual de todos tus sistemas SAP, agrupados por SID line y entorno (DEV/QAS/PRD).</span>
+            <span class="en">Visual map of all your SAP systems, grouped by SID line and environment (DEV/QAS/PRD).</span>
+          </div>
+          <span class="card-tag badge cyan">Command</span>
+        </a>
+        <a href="alerts.html" class="doc-card">
+          <div class="card-icon-row">
+            <div class="card-emoji" style="background:rgba(245,158,11,0.12);color:var(--warning)">&#9888;&#65039;</div>
+            <div class="card-title">
+              <span class="es">Alertas</span>
+              <span class="en">Alerts</span>
+            </div>
+          </div>
+          <div class="card-desc">
+            <span class="es">Centro de alertas con escalamiento L1/L2/Admin, filtros por severidad y acciones de resolucion.</span>
+            <span class="en">Alert center with L1/L2/Admin escalation, severity filters and resolution actions.</span>
+          </div>
+          <span class="card-tag badge cyan">Command</span>
+        </a>
+      </div>
+
+      <!-- ── Monitor ── -->
+      <div class="section-heading">
+        <div class="section-heading-icon">&#128421;</div>
+        <h2>Monitor</h2>
+      </div>
+      <div class="card-grid">
+        <a href="systems.html" class="doc-card">
+          <div class="card-icon-row">
+            <div class="card-emoji" style="background:var(--cyan-dim);color:var(--cyan)">&#128421;</div>
+            <div class="card-title">
+              <span class="es">Sistemas</span>
+              <span class="en">Systems</span>
+            </div>
+          </div>
+          <div class="card-desc">
+            <span class="es">Detalle individual con 8 tabs: overview, hosts, topologia, SAP Monitor, database, instancias, dependencias y breaches.</span>
+            <span class="en">Individual detail with 8 tabs: overview, hosts, topology, SAP Monitor, database, instances, dependencies and breaches.</span>
+          </div>
+          <span class="card-tag badge success">Monitor</span>
+        </a>
+        <a href="connectors.html" class="doc-card">
+          <div class="card-icon-row">
+            <div class="card-emoji" style="background:var(--cyan-dim);color:var(--cyan)">&#128268;</div>
+            <div class="card-title">
+              <span class="es">Conectores</span>
+              <span class="en">Connectors</span>
+            </div>
+          </div>
+          <div class="card-desc">
+            <span class="es">Estado de conexiones: latencia, heartbeat, mensajes y metodo (Agent, Cloud Connector, RFC/BAPI).</span>
+            <span class="en">Connection status: latency, heartbeat, messages and method (Agent, Cloud Connector, RFC/BAPI).</span>
+          </div>
+          <span class="card-tag badge success">Monitor</span>
+        </a>
+        <a href="events.html" class="doc-card">
+          <div class="card-icon-row">
+            <div class="card-emoji" style="background:var(--cyan-dim);color:var(--cyan)">&#128196;</div>
+            <div class="card-title">
+              <span class="es">Eventos</span>
+              <span class="en">Events</span>
+            </div>
+          </div>
+          <div class="card-desc">
+            <span class="es">Log centralizado con 4 niveles (INFO/WARNING/ERROR/CRITICAL), filtro por fuente y paginacion.</span>
+            <span class="en">Centralized log with 4 levels (INFO/WARNING/ERROR/CRITICAL), source filter and pagination.</span>
+          </div>
+          <span class="card-tag badge success">Monitor</span>
+        </a>
+      </div>
+
+      <!-- ── Intelligence ── -->
+      <div class="section-heading">
+        <div class="section-heading-icon" style="background:var(--violet-dim);color:var(--violet)">&#129504;</div>
+        <h2>Intelligence</h2>
+      </div>
+      <div class="card-grid">
+        <a href="ai-analysis.html" class="doc-card">
+          <div class="card-icon-row">
+            <div class="card-emoji" style="background:var(--violet-dim);color:var(--violet)">&#129504;</div>
+            <div class="card-title">
+              <span class="es">Analisis IA</span>
+              <span class="en">AI Analysis</span>
+            </div>
+          </div>
+          <div class="card-desc">
+            <span class="es">7 casos de uso: root-cause, prediccion, recomendaciones, security review, capacity planning, performance y SAP Notes.</span>
+            <span class="en">7 use cases: root-cause, prediction, recommendations, security review, capacity planning, performance and SAP Notes.</span>
+          </div>
+          <span class="card-tag badge violet">Intelligence</span>
+        </a>
+        <a href="analytics.html" class="doc-card">
+          <div class="card-icon-row">
+            <div class="card-emoji" style="background:var(--violet-dim);color:var(--violet)">&#128200;</div>
+            <div class="card-title">Analytics</div>
+          </div>
+          <div class="card-desc">
+            <span class="es">Graficas de ejecucion de runbooks, tasa de exito, top runbooks y distribucion por tipo.</span>
+            <span class="en">Runbook execution charts, success rates, top runbooks and distribution by type.</span>
+          </div>
+          <span class="card-tag badge violet">Intelligence</span>
+        </a>
+        <a href="reports.html" class="doc-card">
+          <div class="card-icon-row">
+            <div class="card-emoji" style="background:var(--violet-dim);color:var(--violet)">&#128209;</div>
+            <div class="card-title">
+              <span class="es">Reportes</span>
+              <span class="en">Reports</span>
+            </div>
+          </div>
+          <div class="card-desc">
+            <span class="es">4 tipos: diario, semanal, salud del sistema y auditoria. Genera y descarga en JSON.</span>
+            <span class="en">4 types: daily, weekly, system health and audit. Generate and download as JSON.</span>
+          </div>
+          <span class="card-tag badge violet">Intelligence</span>
+        </a>
+        <a href="comparison.html" class="doc-card">
+          <div class="card-icon-row">
+            <div class="card-emoji" style="background:var(--violet-dim);color:var(--violet)">&#128260;</div>
+            <div class="card-title">
+              <span class="es">Comparacion</span>
+              <span class="en">Comparison</span>
+            </div>
+          </div>
+          <div class="card-desc">
+            <span class="es">Compara DEV vs QAS vs PRD por SID line. Grafica de barras y tabla de consistencia del landscape.</span>
+            <span class="en">Compare DEV vs QAS vs PRD by SID line. Bar chart and landscape consistency table.</span>
+          </div>
+          <span class="card-tag badge violet">Intelligence</span>
+        </a>
+      </div>
+
+      <!-- ── Operations ── -->
+      <div class="section-heading">
+        <div class="section-heading-icon" style="background:rgba(34,197,94,0.12);color:var(--success)">&#9881;&#65039;</div>
+        <h2>Operations</h2>
+      </div>
+      <div class="card-grid">
+        <a href="runbooks.html" class="doc-card">
+          <div class="card-icon-row">
+            <div class="card-emoji" style="background:rgba(34,197,94,0.12);color:var(--success)">&#128214;</div>
+            <div class="card-title">Runbooks</div>
+          </div>
+          <div class="card-desc">
+            <span class="es">Catalogo de 25+ runbooks con Cost-Safe Gate, dry-run, ejecucion paso a paso y historial.</span>
+            <span class="en">Catalog of 25+ runbooks with Cost-Safe Gate, dry-run, step-by-step execution and history.</span>
+          </div>
+          <span class="card-tag badge success">Operations</span>
+        </a>
+        <a href="approvals.html" class="doc-card">
+          <div class="card-icon-row">
+            <div class="card-emoji" style="background:rgba(34,197,94,0.12);color:var(--success)">&#9989;</div>
+            <div class="card-title">
+              <span class="es">Aprobaciones</span>
+              <span class="en">Approvals</span>
+            </div>
+          </div>
+          <div class="card-desc">
+            <span class="es">4 tabs (Pendientes/Aprobadas/Rechazadas/Expiradas) con flujo de autorizacion por rol.</span>
+            <span class="en">4 tabs (Pending/Approved/Rejected/Expired) with role-based authorization flow.</span>
+          </div>
+          <span class="card-tag badge success">Operations</span>
+        </a>
+        <a href="operations.html" class="doc-card">
+          <div class="card-icon-row">
+            <div class="card-emoji" style="background:rgba(34,197,94,0.12);color:var(--success)">&#128197;</div>
+            <div class="card-title">
+              <span class="es">Operaciones</span>
+              <span class="en">Operations</span>
+            </div>
+          </div>
+          <div class="card-desc">
+            <span class="es">Registro de operaciones con modal de creacion: sistema, tipo, riesgo y programacion.</span>
+            <span class="en">Operations log with creation modal: system, type, risk and scheduling.</span>
+          </div>
+          <span class="card-tag badge success">Operations</span>
+        </a>
+        <a href="jobs.html" class="doc-card">
+          <div class="card-icon-row">
+            <div class="card-emoji" style="background:rgba(34,197,94,0.12);color:var(--success)">&#9654;&#65039;</div>
+            <div class="card-title">Jobs (SM37)</div>
+          </div>
+          <div class="card-desc">
+            <span class="es">Monitoreo de jobs SAP con KPIs, 5 estados, filtros y detalle de jobs fallidos.</span>
+            <span class="en">SAP job monitoring with KPIs, 5 statuses, filters and failed job details.</span>
+          </div>
+          <span class="card-tag badge success">Operations</span>
+        </a>
+        <a href="transports.html" class="doc-card">
+          <div class="card-icon-row">
+            <div class="card-emoji" style="background:rgba(34,197,94,0.12);color:var(--success)">&#128230;</div>
+            <div class="card-title">
+              <span class="es">Transportes</span>
+              <span class="en">Transports</span>
+            </div>
+          </div>
+          <div class="card-desc">
+            <span class="es">Diagrama visual DEV&#8594;QAS&#8594;PRD, codigos RC coloreados y detalle de errores.</span>
+            <span class="en">Visual DEV&#8594;QAS&#8594;PRD diagram, color-coded RC codes and error details.</span>
+          </div>
+          <span class="card-tag badge success">Operations</span>
+        </a>
+        <a href="sla.html" class="doc-card">
+          <div class="card-icon-row">
+            <div class="card-emoji" style="background:rgba(34,197,94,0.12);color:var(--success)">&#11088;</div>
+            <div class="card-title">SLA</div>
+          </div>
+          <div class="card-desc">
+            <span class="es">Metricas MTTR, MTBF y Disponibilidad por sistema. Tablas de runbook analytics y estadisticas de alertas.</span>
+            <span class="en">MTTR, MTBF and Availability metrics per system. Runbook analytics and alert statistics tables.</span>
+          </div>
+          <span class="card-tag badge success">Operations</span>
+        </a>
+        <a href="ha-control.html" class="doc-card">
+          <div class="card-icon-row">
+            <div class="card-emoji" style="background:rgba(34,197,94,0.12);color:var(--success)">&#128147;</div>
+            <div class="card-title">HA Control</div>
+          </div>
+          <div class="card-desc">
+            <span class="es">5 estrategias HA/DR, takeover/failover con pasos, prerequisites, evidencia con hash SHA-256.</span>
+            <span class="en">5 HA/DR strategies, takeover/failover with steps, prerequisites, evidence with SHA-256 hash.</span>
+          </div>
+          <span class="card-tag badge success">Operations</span>
+        </a>
+        <a href="certificates.html" class="doc-card">
+          <div class="card-icon-row">
+            <div class="card-emoji" style="background:rgba(34,197,94,0.12);color:var(--success)">&#128273;</div>
+            <div class="card-title">
+              <span class="es">Certificados & Licencias</span>
+              <span class="en">Certificates & Licenses</span>
+            </div>
+          </div>
+          <div class="card-desc">
+            <span class="es">Tracker de SSL/PSE/SNC y licencias SAP (SLICENSE) con alertas de expiracion y dias restantes.</span>
+            <span class="en">SSL/PSE/SNC and SAP license (SLICENSE) tracker with expiration alerts and days remaining.</span>
+          </div>
+          <span class="card-tag badge success">Operations</span>
+        </a>
+      </div>
+
+      <!-- ── Admin ── -->
+      <div class="section-heading">
+        <div class="section-heading-icon" style="background:rgba(245,158,11,0.12);color:var(--warning)">&#128737;</div>
+        <h2>Admin</h2>
+      </div>
+      <div class="card-grid">
+        <a href="admin.html" class="doc-card">
+          <div class="card-icon-row">
+            <div class="card-emoji" style="background:rgba(245,158,11,0.12);color:var(--warning)">&#128737;</div>
+            <div class="card-title">
+              <span class="es">Gestion</span>
+              <span class="en">Management</span>
+            </div>
+          </div>
+          <div class="card-desc">
+            <span class="es">Panel de gestion con tabla de sistemas, acciones rapidas y registro de actividad.</span>
+            <span class="en">Management panel with systems table, quick actions and activity log.</span>
+          </div>
+          <span class="card-tag badge warning">Admin</span>
+        </a>
+        <a href="settings.html" class="doc-card">
+          <div class="card-icon-row">
+            <div class="card-emoji" style="background:rgba(245,158,11,0.12);color:var(--warning)">&#9881;&#65039;</div>
+            <div class="card-title">
+              <span class="es">Configuracion</span>
+              <span class="en">Settings</span>
+            </div>
+          </div>
+          <div class="card-desc">
+            <span class="es">7 secciones: General, Usuarios, Roles, Integraciones, Notificaciones, Facturacion y Auditoria.</span>
+            <span class="en">7 sections: General, Users, Roles, Integrations, Notifications, Billing and Audit.</span>
+          </div>
+          <span class="card-tag badge warning">Admin</span>
+        </a>
+        <a href="connect-system.html" class="doc-card">
+          <div class="card-icon-row">
+            <div class="card-emoji" style="background:rgba(245,158,11,0.12);color:var(--warning)">&#128279;</div>
+            <div class="card-title">
+              <span class="es">Conectar Sistema</span>
+              <span class="en">Connect System</span>
+            </div>
+          </div>
+          <div class="card-desc">
+            <span class="es">Wizard de 2 caminos: Spektra Agent (on-premise, 4 pasos) o Cloud Connector (SAP RISE/BTP, 3 pasos).</span>
+            <span class="en">2-path wizard: Spektra Agent (on-premise, 4 steps) or Cloud Connector (SAP RISE/BTP, 3 steps).</span>
+          </div>
+          <span class="card-tag badge warning">Admin</span>
+        </a>
+      </div>
+
+      <!-- ── Footer ── -->
+      <div class="docs-footer">
+        &copy; 2026 Maveram.
+        <span class="es">Todos los derechos reservados.</span>
+        <span class="en">All rights reserved.</span>
+      </div>
+
+    </main>
+  </div>
+
+  <!-- ── Toggles ── -->
+  <button class="theme-toggle" onclick="toggleTheme()"></button>
+  <button class="lang-toggle" onclick="toggleLang()">ES</button>
+</body>
+</html>

@@ -1,0 +1,3172 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Avvale SAP AlwaysOps — Setup Portal v2.0</title>
+<style>
+/*  Avvale SAP AlwaysOps Setup Portal v2.0 — Estilos  */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#060a0d;--bg-card:#0d1117;--bg-card-h:#151b23;--bg-input:#0a0f14;
+  --accent:#47b1a3;--accent-dim:rgba(71,177,163,.15);--accent-glow:rgba(71,177,163,.3);
+  --txt:#ffffff;--txt2:#557483;--txt3:#3d5a6a;
+  --border:rgba(85,116,131,.25);--border-f:#47b1a3;
+  --ok:#5ab031;--ok-dim:rgba(90,176,49,.15);
+  --warn:#aace7c;--warn-dim:rgba(170,206,124,.15);
+  --err:#f25757;--err-dim:rgba(242,87,87,.15);
+  --info:#989fce;--info-dim:rgba(152,159,206,.15);
+  --r:12px;--rs:8px;--rl:16px;
+  --sh:0 4px 24px rgba(0,0,0,.3);--sh-lg:0 8px 40px rgba(0,0,0,.5);
+  --tr:.3s cubic-bezier(.4,0,.2,1);
+}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Arial,sans-serif;background:var(--bg);color:var(--txt);min-height:100vh;line-height:1.6}
+a{color:var(--accent);text-decoration:none}
+/* ── Header ── */
+.header{display:flex;align-items:center;justify-content:space-between;padding:16px 32px;background:rgba(6,10,13,.95);border-bottom:1px solid var(--border);backdrop-filter:blur(12px);position:sticky;top:0;z-index:100}
+.header-brand{display:flex;align-items:center;gap:12px}
+.header-logo{width:40px;height:40px;display:flex;align-items:center;justify-content:center}
+.header-title{font-size:20px;font-weight:600;color:var(--txt)}
+.header-title span{color:var(--accent)}
+.header-version{font-size:13px;color:var(--txt3);background:var(--accent-dim);padding:4px 12px;border-radius:20px;border:1px solid rgba(129,140,248,.2)}
+/* ── Phase Indicator ── */
+.phase-bar{display:flex;justify-content:center;gap:8px;padding:24px 16px 8px;flex-wrap:wrap}
+.phase-dot{display:flex;align-items:center;gap:8px;padding:8px 18px;border-radius:30px;font-size:13px;font-weight:600;color:var(--txt3);border:1px solid var(--border);transition:var(--tr);cursor:default;white-space:nowrap}
+.phase-dot.active{color:var(--accent);border-color:var(--accent);background:var(--accent-dim);box-shadow:0 0 16px var(--accent-glow)}
+.phase-dot.done{color:var(--ok);border-color:rgba(52,211,153,.3);background:var(--ok-dim)}
+.phase-dot .ph-icon{width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;background:var(--border);color:var(--txt3);flex-shrink:0;transition:var(--tr)}
+.phase-dot.active .ph-icon{background:var(--accent);color:#fff}
+.phase-dot.done .ph-icon{background:var(--ok);color:#fff}
+/* sub-step labels */
+.step-labels{display:flex;justify-content:center;gap:6px;padding:4px 16px 16px;flex-wrap:wrap}
+.step-label{font-size:11px;color:var(--txt3);padding:3px 10px;border-radius:14px;border:1px solid transparent;transition:var(--tr)}
+.step-label.active{color:var(--accent);border-color:var(--accent);background:var(--accent-dim)}
+.step-label.done{color:var(--ok);border-color:rgba(52,211,153,.2)}
+/* ── Container ── */
+.container{max-width:860px;margin:0 auto;padding:0 20px 60px}
+/* ── Step Panels ── */
+.step-panel{display:none;animation:fadeUp .4s ease}
+.step-panel.active{display:block}
+@keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+/* ── Cards ── */
+.card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--r);padding:24px;margin-bottom:16px;transition:var(--tr)}
+.card:hover{border-color:rgba(129,140,248,.15)}
+.card-title{font-size:18px;font-weight:700;margin-bottom:6px}
+.card-sub{font-size:14px;color:var(--txt2);margin-bottom:20px}
+/* ── Checklist ── */
+.checklist{display:flex;flex-direction:column;gap:10px}
+.check-item{display:flex;align-items:center;gap:12px;padding:12px 16px;border-radius:var(--rs);background:var(--bg-input);border:1px solid var(--border);transition:var(--tr)}
+.check-item.pass{border-color:rgba(52,211,153,.3);background:var(--ok-dim)}
+.check-item.fail{border-color:rgba(248,113,113,.3);background:var(--err-dim)}
+.check-icon{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:14px}
+.check-item.pass .check-icon{background:var(--ok);color:#fff}
+.check-item.fail .check-icon{background:var(--err);color:#fff}
+.check-item.pending .check-icon{background:var(--border);color:var(--txt3)}
+.check-label{font-size:14px;font-weight:500}
+.check-detail{font-size:12px;color:var(--txt3);margin-left:auto;white-space:nowrap}
+/* ── Buttons ── */
+.btn{display:inline-flex;align-items:center;gap:8px;padding:10px 22px;border-radius:var(--rs);font-size:14px;font-weight:600;border:none;cursor:pointer;transition:var(--tr)}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.btn-primary{background:var(--accent);color:#fff}
+.btn-primary:hover:not(:disabled){background:#248b7e;box-shadow:0 0 20px var(--accent-glow)}
+.btn-secondary{background:var(--bg-input);color:var(--txt);border:1px solid var(--border)}
+.btn-secondary:hover:not(:disabled){border-color:var(--accent);color:var(--accent)}
+.btn-danger{background:var(--err);color:#fff}
+.btn-danger:hover:not(:disabled){background:#ef4444}
+.btn-success{background:var(--ok);color:#060a0d}
+.btn-success:hover:not(:disabled){background:#10b981}
+.btn-sm{padding:6px 14px;font-size:12px}
+.btn-block{width:100%;justify-content:center}
+/* ── Forms ── */
+.form-group{margin-bottom:16px}
+.form-label{display:block;font-size:13px;font-weight:600;color:var(--txt2);margin-bottom:6px}
+.form-input,.form-select{width:100%;padding:10px 14px;border-radius:var(--rs);border:1px solid var(--border);background:var(--bg-input);color:var(--txt);font-size:14px;transition:var(--tr);outline:none}
+.form-input:focus,.form-select:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-dim)}
+.form-select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%2394a3b8'%3E%3Cpath d='M6 8L1 3h10z'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media(max-width:600px){.form-row{grid-template-columns:1fr}}
+.form-hint{font-size:12px;color:var(--txt3);margin-top:4px}
+/* ── Tabs ── */
+.tabs{display:flex;gap:4px;margin-bottom:20px;background:var(--bg-input);border-radius:var(--rs);padding:4px;border:1px solid var(--border)}
+.tab-btn{flex:1;padding:8px 16px;border-radius:6px;border:none;background:transparent;color:var(--txt3);font-size:13px;font-weight:600;cursor:pointer;transition:var(--tr)}
+.tab-btn.active{background:var(--accent);color:#fff}
+.tab-content{display:none}
+.tab-content.active{display:block}
+/* ── Log console ── */
+.log-console{background:#060a0d;border:1px solid var(--border);border-radius:var(--rs);padding:14px;font-family:'Menlo','Consolas',monospace;font-size:12px;color:#aace7c;max-height:260px;overflow-y:auto;line-height:1.7;white-space:pre-wrap;word-break:break-all}
+.log-console::-webkit-scrollbar{width:6px}
+.log-console::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
+/* ── Toast ── */
+.toast-container{position:fixed;top:80px;right:20px;z-index:999;display:flex;flex-direction:column;gap:8px}
+.toast{padding:12px 20px;border-radius:var(--rs);font-size:13px;font-weight:500;animation:slideIn .3s ease;max-width:380px;display:flex;align-items:center;gap:10px;box-shadow:var(--sh-lg)}
+.toast-error{background:rgba(242,87,87,.15);color:#f25757;border:1px solid rgba(248,113,113,.3)}
+.toast-success{background:rgba(90,176,49,.15);color:#5ab031;border:1px solid rgba(52,211,153,.3)}
+.toast-info{background:rgba(152,159,206,.15);color:#989fce;border:1px solid rgba(56,189,248,.3)}
+@keyframes slideIn{from{opacity:0;transform:translateX(40px)}to{opacity:1;transform:translateX(0)}}
+/* ── Spinner ── */
+.spinner{width:20px;height:20px;border:3px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin .7s linear infinite;display:inline-block}
+.spinner-sm{width:14px;height:14px;border-width:2px}
+@keyframes spin{to{transform:rotate(360deg)}}
+/* ── Nav Footer ── */
+.nav-footer{display:flex;justify-content:space-between;margin-top:28px;padding-top:20px;border-top:1px solid var(--border)}
+/* ── Success Card ── */
+.success-card{background:linear-gradient(135deg,rgba(52,211,153,.1),rgba(129,140,248,.1));border:1px solid rgba(52,211,153,.3);border-radius:var(--rl);padding:32px;text-align:center}
+.success-card h2{color:var(--ok);margin-bottom:8px}
+/* ── Mode cards ── */
+.mode-cards{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px}
+@media(max-width:600px){.mode-cards{grid-template-columns:1fr}}
+.mode-card{padding:20px;border-radius:var(--r);border:2px solid var(--border);cursor:pointer;transition:var(--tr);text-align:center}
+.mode-card:hover{border-color:rgba(129,140,248,.3)}
+.mode-card.selected{border-color:var(--accent);background:var(--accent-dim);box-shadow:0 0 20px var(--accent-glow)}
+.mode-card h3{font-size:16px;margin-bottom:4px}
+.mode-card .price{font-size:22px;font-weight:800;color:var(--accent);margin:8px 0}
+.mode-card .price-sub{font-size:12px;color:var(--txt3)}
+/* ── Permissions grid ── */
+.perm-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px}
+.perm-item{display:flex;align-items:center;gap:8px;padding:10px;border-radius:var(--rs);background:var(--bg-input);border:1px solid var(--border);font-size:13px}
+.perm-item.ok{border-color:rgba(52,211,153,.3);background:var(--ok-dim)}
+.perm-item.no{border-color:rgba(248,113,113,.3);background:var(--err-dim)}
+/* ── Discovery cards ── */
+.discovery-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px;margin-top:16px}
+.disc-card{padding:16px;border-radius:var(--r);border:2px solid var(--border);cursor:pointer;transition:var(--tr)}
+.disc-card:hover{border-color:rgba(129,140,248,.3)}
+.disc-card.selected{border-color:var(--accent);background:var(--accent-dim)}
+.disc-card h4{font-size:14px;margin-bottom:4px}
+.disc-card p{font-size:12px;color:var(--txt3)}
+/* ── Inline Scan badges & progress ── */
+.scan-badge{display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border-radius:12px;font-size:11px;font-weight:600;margin-top:6px}
+.scan-badge.queued{background:rgba(107,114,128,.15);color:#6B7280}
+.scan-badge.running{background:rgba(59,130,246,.15);color:#3B82F6}
+.scan-badge.success{background:rgba(16,185,129,.15);color:#10B981}
+.scan-badge.fail{background:rgba(239,68,68,.15);color:#EF4444}
+.scan-badge .scan-spin{width:10px;height:10px;border:2px solid rgba(59,130,246,.3);border-top-color:#3B82F6;border-radius:50%;animation:spin .7s linear infinite;display:inline-block}
+.scan-mini-progress{width:100%;height:3px;background:var(--border);border-radius:2px;margin-top:6px;overflow:hidden}
+.scan-mini-progress .scan-fill{height:100%;background:linear-gradient(90deg,var(--accent),var(--ok));border-radius:2px;transition:width .4s ease}
+.scan-phase-label{font-size:10px;color:var(--txt3);margin-top:2px}
+.scan-result-info{font-size:11px;color:var(--ok);margin-top:4px;line-height:1.4}
+.scan-error-info{font-size:11px;color:var(--err);margin-top:4px}
+.scan-actions-bar{display:flex;align-items:center;gap:8px;margin:12px 0;flex-wrap:wrap}
+.scan-actions-bar .scan-summary{font-size:12px;color:var(--txt3);margin-left:auto}
+.btn-scan{padding:6px 14px;font-size:12px;font-weight:600;border-radius:var(--rs);border:1px solid var(--border);background:var(--bg-input);color:var(--txt2);cursor:pointer;transition:var(--tr);display:inline-flex;align-items:center;gap:5px}
+.btn-scan:hover{border-color:var(--accent);color:var(--accent)}
+.btn-scan:disabled{opacity:.4;cursor:not-allowed}
+.btn-scan.btn-scan-primary{background:var(--accent);color:#fff;border-color:var(--accent)}
+.btn-scan.btn-scan-primary:hover:not(:disabled){background:#248b7e}
+/* ── Landscape results card ── */
+.landscape-card{padding:14px 18px;border-radius:var(--rs);background:var(--bg-input);border:1px solid var(--border);margin-bottom:10px}
+.landscape-card h4{font-size:14px;margin-bottom:6px;display:flex;align-items:center;gap:8px}
+.landscape-card .landscape-nodes{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
+.landscape-card .landscape-node{font-size:11px;padding:3px 10px;border-radius:12px;background:var(--accent-dim);color:var(--accent);border:1px solid rgba(71,177,163,.3)}
+/* ── Deploy steps ── */
+.deploy-step{display:flex;align-items:center;gap:12px;padding:10px 14px;border-radius:var(--rs);margin-bottom:6px;background:var(--bg-input);border:1px solid var(--border);font-size:13px}
+.deploy-step .ds-icon{width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:12px}
+.deploy-step.pending .ds-icon{background:var(--border);color:var(--txt3)}
+.deploy-step.running .ds-icon{background:var(--info);color:#fff}
+.deploy-step.done .ds-icon{background:var(--ok);color:#fff}
+.deploy-step.error .ds-icon{background:var(--err);color:#fff}
+/* ── Progress bar ── */
+.progress-bar{width:100%;height:8px;background:var(--bg-input);border-radius:4px;overflow:hidden;margin:12px 0}
+.progress-fill{height:100%;background:linear-gradient(90deg,var(--accent),var(--ok));border-radius:4px;transition:width .5s ease}
+/* ── Summary table ── */
+.summary-table{width:100%;border-collapse:collapse;font-size:14px}
+.summary-table tr{border-bottom:1px solid var(--border)}
+.summary-table td{padding:10px 12px}
+.summary-table td:first-child{color:var(--txt2);width:40%}
+.summary-table td:last-child{font-weight:500}
+/* ── Copyable block ── */
+.code-block{background:#060a0d;border:1px solid var(--border);border-radius:var(--rs);padding:14px;font-family:'Menlo','Consolas',monospace;font-size:13px;color:#aace7c;position:relative;overflow-x:auto;white-space:pre-wrap}
+.code-block .copy-btn{position:absolute;top:8px;right:8px;background:var(--border);color:var(--txt2);border:none;padding:4px 10px;border-radius:4px;font-size:11px;cursor:pointer}
+.code-block .copy-btn:hover{background:var(--accent);color:#fff}
+/* ── Health grid ── */
+.health-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:10px}
+.health-item{display:flex;align-items:center;gap:10px;padding:12px;border-radius:var(--rs);border:1px solid var(--border);background:var(--bg-input)}
+.health-item.healthy{border-color:rgba(52,211,153,.3);background:var(--ok-dim)}
+.health-item.unhealthy{border-color:rgba(248,113,113,.3);background:var(--err-dim)}
+/* ── Danger zone ── */
+.danger-zone{border:1px solid rgba(248,113,113,.3);border-radius:var(--r);padding:20px;margin-top:24px;background:rgba(248,113,113,.05)}
+.danger-zone h4{color:var(--err);margin-bottom:8px}
+/* ── Confetti ── */
+.confetti-canvas{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:1000}
+/* ── Checkbox ── */
+.custom-check{display:flex;align-items:center;gap:10px;cursor:pointer;font-size:14px;user-select:none}
+.custom-check input{display:none}
+.custom-check .box{width:20px;height:20px;border:2px solid var(--border);border-radius:4px;display:flex;align-items:center;justify-content:center;transition:var(--tr);flex-shrink:0}
+.custom-check input:checked+.box{background:var(--accent);border-color:var(--accent)}
+.custom-check input:checked+.box::after{content:'✓';color:#fff;font-size:13px}
+/* ── Cost card ── */
+.cost-card{background:linear-gradient(135deg,var(--accent-dim),rgba(99,102,241,.1));border:1px solid rgba(129,140,248,.3);border-radius:var(--r);padding:20px;text-align:center}
+.cost-card .cost-value{font-size:28px;font-weight:800;color:var(--accent)}
+/* ── Timer ── */
+.elapsed{font-size:13px;color:var(--txt3);font-family:'Menlo',monospace}
+/* ── Responsive ── */
+@media(max-width:600px){
+  .header{padding:12px 16px;flex-wrap:wrap;gap:8px}
+  .container{padding:0 12px 40px}
+  .card{padding:16px}
+  .phase-bar{gap:6px}
+  .phase-dot{padding:6px 12px;font-size:12px}
+  .perm-grid,.health-grid{grid-template-columns:1fr}
+}
+/* ── Tema Claro (Light Mode) ── */
+[data-theme="light"]{
+  --bg:#f4f6f9;--bg-card:#ffffff;--bg-card-h:#f0f2f5;--bg-input:#f8f9fa;
+  --accent:#47b1a3;--accent-dim:rgba(71,177,163,.12);--accent-glow:rgba(71,177,163,.2);
+  --txt:#1a1a2e;--txt2:#5f6368;--txt3:#8a9199;
+  --border:rgba(0,0,0,.12);--border-f:#47b1a3;
+  --ok:#2e8b57;--ok-dim:rgba(46,139,87,.1);
+  --warn:#b8860b;--warn-dim:rgba(184,134,11,.1);
+  --err:#d32f2f;--err-dim:rgba(211,47,47,.1);
+  --info:#5c6bc0;--info-dim:rgba(92,107,192,.1);
+  --sh:0 2px 8px rgba(0,0,0,.08);--sh-lg:0 4px 16px rgba(0,0,0,.12);
+}
+[data-theme="light"] .header{background:rgba(255,255,255,.95);border-bottom-color:rgba(0,0,0,.1)}
+[data-theme="light"] .log-console{background:#1e1e2e;color:#a6e3a1}
+[data-theme="light"] .code-block{background:#1e1e2e;color:#a6e3a1}
+[data-theme="light"] .btn-primary:hover:not(:disabled){background:#3a9a8d}
+[data-theme="light"] .btn-success{color:#fff}
+[data-theme="light"] .success-card{background:linear-gradient(135deg,rgba(71,177,163,.08),rgba(92,107,192,.08))}
+/* ── Toggle de tema ── */
+.theme-toggle{display:flex;align-items:center;gap:8px}
+.theme-toggle-btn{width:36px;height:36px;border-radius:50%;border:1px solid var(--border);background:var(--bg-card);color:var(--txt2);font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:var(--tr)}
+.theme-toggle-btn:hover{border-color:var(--accent);color:var(--accent);background:var(--accent-dim)}
+</style>
+</head>
+<body>
+
+<!-- Header -->
+<header class="header">
+  <div class="header-brand">
+    <div class="header-logo"><img src="/avvale-logo.png" alt="Avvale" width="36" height="36" style="object-fit:contain"></div>
+    <div class="header-title">Avvale <span>SAP AlwaysOps</span></div>
+  </div>
+  <div style="display:flex;align-items:center;gap:12px">
+    <div class="header-version">Setup Portal v2.0</div>
+    <div class="theme-toggle">
+      <button class="theme-toggle-btn" id="themeToggle" onclick="toggleTheme()" title="Cambiar tema">☀</button>
+    </div>
+  </div>
+</header>
+
+<!-- Phase Indicator -->
+<div class="phase-bar" id="phaseBar">
+  <div class="phase-dot active" id="phaseA"><div class="ph-icon">A</div>Entorno</div>
+  <div class="phase-dot" id="phaseB"><div class="ph-icon">B</div>Configurar</div>
+  <div class="phase-dot" id="phaseC"><div class="ph-icon">C</div>Desplegar</div>
+</div>
+<div class="step-labels" id="stepLabels"></div>
+
+<!-- Toast container -->
+<div class="toast-container" id="toastContainer"></div>
+
+<div class="container">
+
+<!-- ═══════════ STEP 0 ═══════════ -->
+<section class="step-panel" id="step0">
+  <div class="card">
+    <div class="card-title">Verificacion de Prerequisitos</div>
+    <div class="card-sub">Comprobando tu sistema antes de continuar...</div>
+    <div class="checklist" id="prereqChecklist">
+      <div class="check-item pending" id="chk-os"><div class="check-icon"><div class="spinner spinner-sm"></div></div><div class="check-label">Sistema operativo</div><div class="check-detail" id="chk-os-detail">Detectando...</div></div>
+      <div class="check-item pending" id="chk-node"><div class="check-icon"><div class="spinner spinner-sm"></div></div><div class="check-label">Node.js</div><div class="check-detail" id="chk-node-detail">Verificando...</div></div>
+      <div class="check-item pending" id="chk-git"><div class="check-icon"><div class="spinner spinner-sm"></div></div><div class="check-label">Git</div><div class="check-detail" id="chk-git-detail">Verificando...</div></div>
+      <div class="check-item pending" id="chk-aws"><div class="check-icon"><div class="spinner spinner-sm"></div></div><div class="check-label">AWS CLI</div><div class="check-detail" id="chk-aws-detail">Verificando...</div></div>
+    </div>
+    <div id="awsInstallPrompt" style="display:none;margin-top:16px">
+      <button class="btn btn-primary" onclick="goToStep(1)">Instalar AWS CLI</button>
+    </div>
+  </div>
+  <div class="nav-footer">
+    <div></div>
+    <button class="btn btn-primary" id="step0Next" disabled onclick="onStep0Next()">Continuar</button>
+  </div>
+</section>
+
+<!-- ═══════════ STEP 1 ═══════════ -->
+<section class="step-panel" id="step1">
+  <div class="card">
+    <div class="card-title">Instalar AWS CLI</div>
+    <div class="card-sub">Se requiere AWS CLI para continuar.</div>
+    <div id="installAutoSection" style="display:none">
+      <p style="margin-bottom:12px;font-size:14px;color:var(--txt2)">Se puede instalar automaticamente en tu sistema.</p>
+      <button class="btn btn-primary" id="btnInstallAws" onclick="installAwsCli()">Instalar Ahora</button>
+      <div class="log-console" id="installLog" style="margin-top:16px;display:none"></div>
+    </div>
+    <div id="installManualSection" style="display:none">
+      <p style="margin-bottom:12px;font-size:14px;color:var(--txt2)">Se requiere instalacion manual. Ejecuta este comando:</p>
+      <div class="code-block" id="installCmd"><button class="copy-btn" onclick="copyBlock(this)">Copiar</button></div>
+      <button class="btn btn-secondary" style="margin-top:16px" onclick="recheckPrereqs()">Ya lo instale, verificar de nuevo</button>
+    </div>
+  </div>
+  <div class="nav-footer">
+    <button class="btn btn-secondary" onclick="goToStep(0)">Atras</button>
+    <button class="btn btn-primary" id="step1Next" disabled onclick="goToStep(2)">Continuar</button>
+  </div>
+</section>
+
+<!-- ═══════════ STEP 2 ═══════════ -->
+<section class="step-panel" id="step2">
+  <div class="card">
+    <div class="card-title">Credenciales AWS</div>
+    <div class="card-sub">Configura tus credenciales para conectar con AWS.</div>
+    <div class="tabs">
+      <button class="tab-btn active" onclick="switchCredTab('manual')">Access Keys</button>
+      <button class="tab-btn" onclick="switchCredTab('sso')">AWS SSO</button>
+      <button class="tab-btn" onclick="switchCredTab('existing')">Perfil Existente</button>
+    </div>
+    <!-- Manual tab -->
+    <div class="tab-content active" id="tabManual">
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Access Key ID</label>
+          <input class="form-input" id="awsAccessKey" placeholder="AKIA..." autocomplete="off">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Secret Access Key</label>
+          <input class="form-input" id="awsSecretKey" type="password" placeholder="••••••••" autocomplete="off">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Region</label>
+          <select class="form-select" id="awsRegion">
+            <option value="us-east-1">us-east-1 (N. Virginia)</option>
+            <option value="us-east-2">us-east-2 (Ohio)</option>
+            <option value="us-west-1">us-west-1 (N. California)</option>
+            <option value="us-west-2">us-west-2 (Oregon)</option>
+            <option value="eu-west-1">eu-west-1 (Irlanda)</option>
+            <option value="eu-central-1">eu-central-1 (Frankfurt)</option>
+            <option value="ap-southeast-1">ap-southeast-1 (Singapore)</option>
+            <option value="sa-east-1">sa-east-1 (Sao Paulo)</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Nombre del Perfil</label>
+          <input class="form-input" id="awsProfile" value="sap-alwaysops" placeholder="sap-alwaysops">
+        </div>
+      </div>
+    </div>
+    <!-- SSO tab -->
+    <div class="tab-content" id="tabSso">
+      <div style="background:var(--ok-dim);border:1px solid rgba(52,211,153,.2);border-radius:8px;padding:12px;margin-bottom:16px;font-size:13px;color:var(--txt2)">
+        Usa AWS IAM Identity Center (SSO) para autenticarte. Se descubriran tus cuentas y roles automaticamente.
+      </div>
+      <!-- Paso 1: URL + Region + Conectar -->
+      <div id="ssoStep1">
+        <div class="form-group">
+          <label class="form-label">SSO Start URL</label>
+          <input class="form-input" id="ssoStartUrl" placeholder="https://d-xxxxxxxxxx.awsapps.com/start" autocomplete="off">
+        </div>
+        <div class="form-group">
+          <label class="form-label">SSO Region</label>
+          <select class="form-select" id="ssoRegion">
+            <option value="us-east-1">us-east-1 (N. Virginia)</option>
+            <option value="us-east-2">us-east-2 (Ohio)</option>
+            <option value="us-west-2">us-west-2 (Oregon)</option>
+            <option value="eu-west-1">eu-west-1 (Irlanda)</option>
+            <option value="eu-central-1">eu-central-1 (Frankfurt)</option>
+            <option value="sa-east-1">sa-east-1 (Sao Paulo)</option>
+          </select>
+        </div>
+        <button class="btn btn-primary" id="btnSsoConnect" onclick="ssoConnect()">Conectar SSO</button>
+        <!-- Perfiles SSO existentes -->
+        <div id="ssoExistingSection" style="display:none;margin-top:16px;padding-top:16px;border-top:1px solid var(--border)">
+          <div style="font-size:12px;color:var(--txt3);margin-bottom:6px">O usa un perfil SSO existente (ya configurado):</div>
+          <select class="form-select" id="ssoExistingProfile" onchange="fillSsoFromProfile()"></select>
+        </div>
+      </div>
+      <!-- Paso 2: Esperando auth en browser -->
+      <div id="ssoStep2" style="display:none">
+        <div style="text-align:center;padding:20px 0">
+          <div class="spinner"></div>
+          <div style="margin-top:12px;font-size:14px;color:var(--accent)">Completa la autenticacion en tu navegador</div>
+          <div id="ssoDeviceCode" style="margin-top:12px;padding:12px;background:var(--card);border:1px solid var(--border);border-radius:8px;font-family:monospace;font-size:18px;letter-spacing:2px"></div>
+          <div style="margin-top:8px;font-size:12px;color:var(--txt3)">Si el navegador no se abrio, ve a: <a id="ssoVerifLink" href="#" target="_blank" style="color:var(--accent)"></a></div>
+        </div>
+      </div>
+      <!-- Paso 3: Seleccionar cuenta + rol -->
+      <div id="ssoStep3" style="display:none">
+        <div class="form-group">
+          <label class="form-label">Cuenta AWS</label>
+          <select class="form-select" id="ssoAccountSelect" onchange="ssoLoadRoles()">
+            <option value="">Cargando cuentas...</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Rol</label>
+          <select class="form-select" id="ssoRoleSelect" onchange="ssoConfigureAndValidate()">
+            <option value="">Selecciona una cuenta primero</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Region de Deploy</label>
+          <select class="form-select" id="ssoDeployRegion">
+            <option value="us-east-1">us-east-1 (N. Virginia)</option>
+            <option value="us-east-2">us-east-2 (Ohio)</option>
+            <option value="us-west-2">us-west-2 (Oregon)</option>
+            <option value="eu-west-1">eu-west-1 (Irlanda)</option>
+            <option value="eu-central-1">eu-central-1 (Frankfurt)</option>
+            <option value="sa-east-1">sa-east-1 (Sao Paulo)</option>
+          </select>
+        </div>
+      </div>
+    </div>
+    <!-- Existing tab -->
+    <div class="tab-content" id="tabExisting">
+      <div class="form-group">
+        <label class="form-label">Seleccionar Perfil</label>
+        <select class="form-select" id="awsExistingProfile"><option value="">Cargando perfiles...</option></select>
+      </div>
+    </div>
+    <div style="display:flex;gap:10px;margin-top:8px">
+      <button class="btn btn-secondary" id="btnValidateCreds" onclick="validateAws()">Validar</button>
+      <button class="btn btn-primary" id="btnSaveCreds" disabled onclick="saveAwsCreds()">Guardar y Continuar</button>
+    </div>
+    <div id="awsValidResult" style="display:none;margin-top:16px"></div>
+  </div>
+  <div class="nav-footer">
+    <button class="btn btn-secondary" onclick="goToStep(state.prereqs&&state.prereqs.awscli?0:1)">Atras</button>
+    <div></div>
+  </div>
+</section>
+
+<!-- ═══════════ STEP 3 ═══════════ -->
+<section class="step-panel" id="step3">
+  <div class="card">
+    <div class="card-title">AWS Verificado</div>
+    <div class="card-sub">Confirmando conexion y permisos IAM...</div>
+    <div id="awsInfoCard" style="display:none" class="card" style="margin-top:12px">
+      <table class="summary-table" id="awsInfoTable"></table>
+    </div>
+    <div style="margin-top:20px">
+      <div class="card-title" style="font-size:15px;margin-bottom:12px">Permisos IAM</div>
+      <div class="perm-grid" id="permGrid"><div class="spinner"></div></div>
+    </div>
+  </div>
+  <div class="nav-footer">
+    <button class="btn btn-secondary" onclick="goToStep(2)">Atras</button>
+    <button class="btn btn-primary" id="step3Next" disabled onclick="goToStep(4)">Continuar</button>
+  </div>
+</section>
+
+<!-- ═══════════ STEP 4: Plan de Despliegue ═══════════ -->
+<section class="step-panel" id="step4">
+  <div class="card">
+    <div class="card-title">Plan de Despliegue</div>
+    <div class="card-sub">Elige el tipo de licencia y define los sistemas SAP que vas a monitorear.</div>
+
+    <!-- Seleccion de Plan -->
+    <div class="mode-cards" id="planCards">
+      <div class="mode-card selected" onclick="selectPlan('TRIAL')" data-plan="TRIAL">
+        <h3>Trial</h3>
+        <div class="price">Desde $7.95</div>
+        <div class="price-sub">USD / mes (estimado)</div>
+        <p style="font-size:12px;color:var(--txt3);margin-top:8px">1 sistema SAP<br>Hasta 2 servidores<br>Sin Alta Disponibilidad</p>
+      </div>
+      <div class="mode-card" onclick="selectPlan('PRODUCTION')" data-plan="PRODUCTION">
+        <h3>Produccion</h3>
+        <div class="price">Desde $12.30</div>
+        <div class="price-sub">USD / mes (estimado)</div>
+        <p style="font-size:12px;color:var(--txt3);margin-top:8px">Multiples sistemas SAP<br>Multiples ambientes<br>Alta Disponibilidad</p>
+      </div>
+    </div>
+
+    <!-- Seccion Trial (1 sistema simple) -->
+    <div id="planTrialSection">
+      <div style="padding:14px 18px;border-radius:var(--rs);background:var(--bg-input);border:1px solid var(--border);margin-top:16px">
+        <h4 style="font-size:14px;color:var(--txt2);margin-bottom:10px">Sistema SAP</h4>
+        <div class="form-row">
+          <div class="form-group" style="margin-bottom:0"><label class="form-label">Nombre del Sistema</label>
+            <input class="form-input" id="trialSysName" placeholder="Ej: OMP, S4P, ERP" oninput="updatePlanSystems()">
+          </div>
+          <div class="form-group" style="margin-bottom:0"><label class="form-label">Ambiente</label>
+            <select class="form-select" id="trialSysEnv" onchange="updatePlanSystems()">
+              <option value="PRD">Produccion (PRD)</option><option value="QAS">Calidad (QAS)</option><option value="DEV">Desarrollo (DEV)</option>
+            </select>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Seccion Produccion (multiples sistemas) -->
+    <div id="planProdSection" style="display:none">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin:16px 0 12px">
+        <h4 style="font-size:14px;color:var(--txt2)">Sistemas SAP a monitorear</h4>
+        <button class="btn btn-secondary btn-sm" onclick="addSystem()">+ Agregar Sistema</button>
+      </div>
+      <div id="prodSystemsList"></div>
+    </div>
+
+    <!-- Calculadora de costo -->
+    <div class="cost-card" style="margin-top:20px">
+      <div style="font-size:13px;color:var(--txt2);margin-bottom:4px">Estimacion de Costo Mensual</div>
+      <div id="costBreakdown" style="font-size:12px;color:var(--txt3);margin-bottom:6px"></div>
+      <div class="cost-value" id="costTotal">~$5.50</div>
+      <div style="font-size:12px;color:var(--txt3);margin-top:4px">USD / mes — El costo final depende del uso real de AWS</div>
+    </div>
+  </div>
+  <div class="nav-footer">
+    <button class="btn btn-secondary" onclick="goToStep(3)">Atras</button>
+    <button class="btn btn-primary" id="step4Next" onclick="goToStep(5)">Continuar</button>
+  </div>
+</section>
+
+<!-- ═══════════ STEP 5: Seleccion + Inline Scan ═══════════ -->
+<section class="step-panel" id="step5">
+  <div class="card">
+    <div class="card-title">Seleccion e Inline Scan</div>
+    <div class="card-sub">Selecciona instancias EC2 — el escaneo SAP inicia automaticamente al seleccionar. Region: <strong id="discoverRegionLabel"></strong></div>
+    <div id="discoveryResults" style="display:none">
+
+      <!-- Tabs de sistemas (solo si Produccion con >1 sistema) -->
+      <div id="systemTabs" style="display:none;margin-bottom:16px">
+        <div class="tabs" id="systemTabsBar"></div>
+      </div>
+
+      <!-- Arquitectura por sistema -->
+      <h4 style="margin:8px 0 10px;font-size:14px;color:var(--txt2)" id="archTitle">Tipo de Arquitectura SAP</h4>
+      <div style="display:grid;gap:12px;margin-bottom:16px" id="archModeCards"></div>
+
+      <!-- HA scope (si aplica) -->
+      <div id="haScopeSection" style="display:none;margin-bottom:16px;padding:14px 18px;border-radius:var(--rs);background:var(--bg-input);border:1px solid var(--border)">
+        <h4 style="font-size:14px;color:var(--txt2);margin-bottom:10px">Donde aplica la Alta Disponibilidad?</h4>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px" id="haScopeCards"></div>
+      </div>
+
+      <!-- Grids de instancias -->
+      <div id="serverGridsContainer"></div>
+
+      <!-- Scan Actions Bar -->
+      <div class="scan-actions-bar" id="scanActionsBar" style="display:none">
+        <button class="btn-scan btn-scan-primary" id="btnScanAll" onclick="scanAllInstances()" title="Escanear todas las instancias seleccionadas">▶ Escanear Todos</button>
+        <button class="btn-scan" id="btnRetryFailed" onclick="retryFailedScans()" style="display:none" title="Reintentar escaneos fallidos">↻ Reintentar Fallidos</button>
+        <button class="btn-scan" id="btnResetScans" onclick="resetAllScans()" style="display:none" title="Limpiar estado de escaneos">✕ Limpiar</button>
+        <span class="scan-summary" id="scanSummaryText"></span>
+      </div>
+
+      <!-- Landscape Results (se llena con resultados de escaneos) -->
+      <div id="landscapeResults" style="display:none;margin-top:16px">
+        <h4 style="font-size:14px;color:var(--txt2);margin-bottom:10px">Landscape SAP Detectado</h4>
+        <div id="landscapeCards"></div>
+      </div>
+
+      <!-- Resumen -->
+      <div id="serverSelectionSummary" style="display:none;margin-top:16px;padding:14px 18px;border-radius:var(--rs);background:var(--ok-dim);border:1px solid rgba(52,211,153,.3)">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px"><span style="color:var(--ok);font-size:16px">✓</span><strong style="font-size:14px">Servidores seleccionados</strong></div>
+        <div id="serverSummaryText" style="font-size:13px;color:var(--txt2);margin-left:24px"></div>
+      </div>
+
+      <!-- Costo actualizado en tiempo real -->
+      <div class="cost-card" style="margin-top:16px">
+        <div style="font-size:12px;color:var(--txt3)">Costo estimado actualizado</div>
+        <div class="cost-value" id="step5CostTotal">—</div>
+        <div id="step5CostDetail" style="font-size:12px;color:var(--txt3);margin-top:4px"></div>
+      </div>
+
+      <div class="form-row" style="margin-top:20px">
+        <div><h4 style="font-size:14px;color:var(--txt2);margin-bottom:6px">VPCs</h4><div id="vpcList"></div></div>
+        <div><h4 style="font-size:14px;color:var(--txt2);margin-bottom:6px">Bedrock</h4><div id="bedrockStatus"></div></div>
+      </div>
+    </div>
+  </div>
+  <div class="nav-footer">
+    <button class="btn btn-secondary" onclick="goToStep(4)">Atras</button>
+    <button class="btn btn-primary" id="step5Next" disabled onclick="goToStep(6)">Continuar</button>
+  </div>
+</section>
+
+<!-- ═══════════ STEP 6: Configuracion + Credenciales (auto-scan SSM) ═══════════ -->
+<section class="step-panel" id="step6">
+  <!-- Estado de escaneo -->
+  <div class="card" id="step6ScanCard">
+    <div class="card-title">Escaneando Configuracion SAP</div>
+    <div class="card-sub" id="step6ScanSub">Conectando via Systems Manager...</div>
+    <div id="step6ScanStatus" style="margin-top:16px"></div>
+    <div id="step6ScanDetails" style="display:none;margin-top:16px">
+      <div style="font-size:13px;color:var(--txt2);margin-bottom:8px;font-weight:600">Configuracion detectada:</div>
+      <div class="checklist" id="step6ScanChecklist"></div>
+    </div>
+  </div>
+
+  <!-- Config auto-llenada -->
+  <div id="step6ConfigForm" style="display:none">
+    <div class="card">
+      <div class="card-title">Configuracion del Sistema</div>
+      <div class="card-sub">Auto-detectado via SSM. Puedes ajustar si es necesario.</div>
+      <!-- Tabs de sistemas si >1 -->
+      <div id="cfgSystemTabs" style="display:none;margin-bottom:16px">
+        <div class="tabs" id="cfgSystemTabsBar"></div>
+      </div>
+      <div id="cfgSystemContent">
+        <div class="form-row">
+          <div class="form-group"><label class="form-label">Nombre del Stack</label><input class="form-input" id="cfgStackName" value="sap-alwaysops"></div>
+          <div class="form-group"><label class="form-label">Email del Administrador</label><input class="form-input" id="cfgEmail" type="email" placeholder="admin@empresa.com"></div>
+        </div>
+      </div>
+      <!-- Tabla de sistemas escaneados -->
+      <div id="cfgSystemsTable" style="margin-top:16px"></div>
+    </div>
+
+    <!-- Credenciales SAP -->
+    <div class="card">
+      <div class="card-title">Credenciales SAP <span style="font-size:12px;color:var(--txt3);font-weight:400">(Opcional)</span></div>
+      <div class="card-sub">Auto-detectadas. Solo completa las contrasenas.</div>
+      <h4 style="font-size:14px;color:var(--txt2);margin-bottom:12px">Base de Datos</h4>
+      <div class="form-row">
+        <div class="form-group"><label class="form-label">Host</label><input class="form-input" id="dbHost" placeholder="10.0.1.50"></div>
+        <div class="form-group"><label class="form-label">Puerto</label><input class="form-input" id="dbPort" placeholder="30015"></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label class="form-label">Usuario</label><input class="form-input" id="dbUser" placeholder="SYSTEM"></div>
+        <div class="form-group"><label class="form-label">Contrasena</label><input class="form-input" id="dbPass" type="password"></div>
+      </div>
+      <button class="btn btn-secondary btn-sm" onclick="testDbConn()">Probar Conexion DB</button>
+      <div id="dbTestResult" style="margin-top:10px"></div>
+      <hr style="border:none;border-top:1px solid var(--border);margin:24px 0">
+      <h4 style="font-size:14px;color:var(--txt2);margin-bottom:12px">Aplicacion SAP</h4>
+      <div class="form-row">
+        <div class="form-group"><label class="form-label">Cliente</label><input class="form-input" id="sapClient" placeholder="001"></div>
+        <div class="form-group"><label class="form-label">Usuario</label><input class="form-input" id="sapUser" placeholder="SAP_MONITOR"></div>
+      </div>
+      <div class="form-group"><label class="form-label">Contrasena</label><input class="form-input" id="sapPass" type="password" style="max-width:50%"></div>
+    </div>
+  </div>
+  <div class="nav-footer">
+    <button class="btn btn-secondary" onclick="goToStep(5)">Atras</button>
+    <button class="btn btn-primary" id="step6Next" disabled onclick="saveConfig();goToStep(7)">Continuar</button>
+  </div>
+</section>
+
+<!-- ═══════════ STEP 7: Revision ═══════════ -->
+<section class="step-panel" id="step7">
+  <div class="card">
+    <div class="card-title">Revision y Confirmacion</div>
+    <div class="card-sub">Revisa toda la configuracion antes de desplegar.</div>
+    <!-- Tabla de sistemas -->
+    <div id="reviewSystemsTable" style="margin-bottom:20px"></div>
+    <table class="summary-table" id="reviewTable"></table>
+  </div>
+  <div class="cost-card" style="margin-bottom:20px">
+    <div style="font-size:13px;color:var(--txt2);margin-bottom:4px">Costo Mensual Estimado</div>
+    <div id="reviewCostBreakdown" style="font-size:12px;color:var(--txt3);margin-bottom:6px"></div>
+    <div class="cost-value" id="costEstimate">—</div>
+    <div style="font-size:12px;color:var(--txt3);margin-top:4px">USD / mes — Depende del uso real de AWS</div>
+  </div>
+  <label class="custom-check" style="margin-bottom:8px">
+    <input type="checkbox" id="confirmCheck" onchange="document.getElementById('btnDeploy').disabled=!this.checked">
+    <div class="box"></div>
+    He revisado la configuracion y deseo desplegar Avvale SAP AlwaysOps.
+  </label>
+  <div class="nav-footer">
+    <button class="btn btn-secondary" onclick="goToStep(6)">Atras</button>
+    <button class="btn btn-primary" id="btnDeploy" disabled onclick="startDeploy()">Desplegar</button>
+  </div>
+</section>
+
+<!-- ═══════════ STEP 8 ═══════════ -->
+<section class="step-panel" id="step8">
+  <div class="card">
+    <div class="card-title">Progreso del Despliegue</div>
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">
+      <span class="card-sub" id="deployPercent" style="margin:0">0%</span>
+      <span class="elapsed" id="deployTimer">00:00</span>
+    </div>
+    <div class="progress-bar"><div class="progress-fill" id="deployProgressBar" style="width:0%"></div></div>
+    <div id="deploySteps"></div>
+    <div style="margin-top:16px">
+      <div style="font-size:13px;color:var(--txt2);margin-bottom:6px">Registro en vivo</div>
+      <div class="log-console" id="deployLog"></div>
+    </div>
+    <div id="deployActions" style="margin-top:16px;display:flex;gap:10px">
+      <button class="btn btn-danger btn-sm" id="btnCancelDeploy" onclick="cancelDeploy()">Cancelar</button>
+      <button class="btn btn-secondary btn-sm" id="btnRetryStep" style="display:none" onclick="retryDeployStep()">Reintentar Paso</button>
+    </div>
+  </div>
+  <div id="deploySuccess" style="display:none">
+    <div class="success-card">
+      <h2>Despliegue Exitoso</h2>
+      <p style="color:var(--txt2);margin-bottom:16px">Avvale SAP AlwaysOps se ha desplegado correctamente.</p>
+      <div class="card" style="text-align:left;margin-top:12px">
+        <table class="summary-table" id="deployResultTable"></table>
+      </div>
+      <button class="btn btn-primary" style="margin-top:16px" onclick="goToStep(9)">Ver Estado de Salud</button>
+    </div>
+  </div>
+  <div id="deployError" style="display:none">
+    <div class="card" style="border-color:rgba(248,113,113,.3)">
+      <div class="card-title" style="color:var(--err)">Error en Despliegue</div>
+      <p id="deployErrorMsg" style="font-size:14px;color:var(--txt2);margin-bottom:12px"></p>
+      <button class="btn btn-primary btn-sm" onclick="startDeploy()">Reintentar Despliegue</button>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ STEP 9 ═══════════ -->
+<section class="step-panel" id="step9">
+  <div class="card">
+    <div class="card-title">Salud Post-Despliegue</div>
+    <div class="card-sub">Estado actual de los recursos desplegados.</div>
+    <div class="health-grid" id="healthGrid"><div class="spinner"></div></div>
+  </div>
+  <div class="card">
+    <div class="card-title" style="font-size:15px">Enlaces Rapidos</div>
+    <div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:8px">
+      <a class="btn btn-primary btn-sm" id="linkDashboard" href="#" target="_blank" onclick="return openDashboard(event)">Abrir Dashboard</a>
+      <button class="btn btn-secondary btn-sm" id="linkAPI" onclick="copyApiUrl()">API URL</button>
+      <button class="btn btn-secondary btn-sm" onclick="downloadReport()">Descargar Reporte</button>
+    </div>
+  </div>
+  <div class="danger-zone">
+    <h4>Zona de Peligro</h4>
+    <p style="font-size:13px;color:var(--txt2);margin-bottom:12px">Eliminar completamente el stack y todos sus recursos. Esta accion es irreversible.</p>
+    <button class="btn btn-danger btn-sm" id="btnTeardown" onclick="confirmTeardown()">Eliminar Stack</button>
+  </div>
+</section>
+
+</div><!-- /container -->
+
+<canvas class="confetti-canvas" id="confettiCanvas"></canvas>
+
+<script>
+/* ================================================================
+   Avvale SAP AlwaysOps Setup Portal v2.0 — JavaScript
+   ================================================================ */
+
+// ── Toggle de Tema (claro/oscuro) ──
+// Lee la preferencia guardada o usa 'dark' por defecto
+(function initTheme(){
+  var saved = localStorage.getItem('sap-setup-theme');
+  var theme = saved || 'dark';
+  document.documentElement.setAttribute('data-theme', theme);
+  updateThemeIcon(theme);
+})();
+function toggleTheme(){
+  var current = document.documentElement.getAttribute('data-theme') || 'dark';
+  var next = current === 'dark' ? 'light' : 'dark';
+  document.documentElement.setAttribute('data-theme', next);
+  localStorage.setItem('sap-setup-theme', next);
+  updateThemeIcon(next);
+}
+function updateThemeIcon(theme){
+  var btn = document.getElementById('themeToggle');
+  if(btn) btn.textContent = theme === 'dark' ? '\u2600' : '\uD83C\uDF19';
+}
+
+// ── Error Logger Global ──
+window.onerror = function(msg, url, line, col, error) {
+  console.error('[AlwaysOps Error]', { msg, line, col, stack: error ? error.stack : '' });
+  fetch('/api/client-error', {
+    method: 'POST', headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ msg: String(msg), line, col, stack: error ? error.stack : '' })
+  }).catch(function(){});
+  return false;
+};
+window.addEventListener('unhandledrejection', function(e) {
+  var m = e.reason ? (e.reason.message || String(e.reason)) : 'Unknown';
+  console.error('[AlwaysOps Rejection]', m);
+  fetch('/api/client-error', {
+    method: 'POST', headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ msg: m, stack: e.reason ? e.reason.stack : '' })
+  }).catch(function(){});
+});
+
+// ── Estado global ──
+const state = {
+  currentStep: 0,
+  maxReachedStep: 0,
+  systemInfo: null,
+  prereqs: null,
+  installMethod: null,
+  credentialMode: 'manual',
+  profiles: [],
+  awsValidated: null,
+  aws: null,
+  permissions: null,
+  regions: [],
+  discovery: null,
+  selectedRegion: 'us-east-1',
+  selectedInstanceId: '',
+  // Plan
+  plan: { mode: 'TRIAL', systems: [{ name: '', environment: 'PRD' }] },
+  currentSystemIndex: 0,
+  // Configuracion por sistema (se llena en Step 5/6)
+  systemConfigs: [],
+  // Compatibilidad (apuntan al sistema actual)
+  archMode: 'standalone',
+  haScope: '',
+  selectedAppInstanceId: '',
+  selectedAppSecondaryId: '',
+  selectedDbInstanceId: '',
+  selectedDbSecondaryId: '',
+  selectedMode: 'TRIAL',
+  config: {},
+  credentials: null,
+  deployPollInterval: null,
+  logOffset: 0,
+  deployStartTime: null,
+  healthChecks: null,
+  // Inline Scan
+  scans: {},           // { instanceId: { scanId, status, progress, phase, results, error } }
+  scanPollInterval: null,
+  scanIdMap: {}        // { instanceId: scanId } para mapeo rapido
+};
+
+// ── Constantes de pasos ──
+const STEP_NAMES = [
+  'Prerequisitos', 'Instalar AWS CLI', 'Credenciales AWS',
+  'AWS Verificado', 'Plan', 'Seleccion + Scan',
+  'Configuracion', 'Revision', 'Despliegue', 'Salud'
+];
+const PHASE_STEPS = { A: [0,1,2], B: [3,4,5,6], C: [7,8,9] };
+
+// ── Utilidades ──
+function esc(s) {
+  if (s == null) return '';
+  const d = document.createElement('div');
+  d.textContent = String(s);
+  return d.innerHTML;
+}
+
+function toast(msg, type='error') {
+  const c = document.getElementById('toastContainer');
+  const t = document.createElement('div');
+  t.className = 'toast toast-' + type;
+  const icons = { error: '✕', success: '✓', info: 'ℹ' };
+  t.innerHTML = '<span>' + (icons[type]||'') + '</span><span>' + esc(msg) + '</span>';
+  c.appendChild(t);
+  setTimeout(() => { t.style.opacity = '0'; t.style.transform = 'translateX(40px)'; setTimeout(() => t.remove(), 300); }, 4500);
+}
+
+async function api(method, path, body) {
+  try {
+    const opts = { method, headers: { 'Content-Type': 'application/json' } };
+    if (body) opts.body = JSON.stringify(body);
+    const r = await fetch(path, opts);
+    if (!r.ok) {
+      const e = await r.json().catch(() => ({ error: 'Error del servidor' }));
+      throw new Error(e.error || e.message || 'Error ' + r.status);
+    }
+    return await r.json();
+  } catch (e) {
+    toast(e.message);
+    throw e;
+  }
+}
+
+function copyBlock(btn) {
+  const text = btn.parentElement.textContent.replace('Copiar', '').trim();
+  navigator.clipboard.writeText(text).then(() => { btn.textContent = 'Copiado!'; setTimeout(() => btn.textContent = 'Copiar', 1500); });
+}
+
+function formatTime(sec) {
+  const m = Math.floor(sec / 60).toString().padStart(2, '0');
+  const s = (sec % 60).toString().padStart(2, '0');
+  return m + ':' + s;
+}
+
+// ── Navegacion ──
+function goToStep(n) {
+  if (n < 0 || n > 9) return;
+  document.querySelectorAll('.step-panel').forEach(p => p.classList.remove('active'));
+  const panel = document.getElementById('step' + n);
+  if (panel) panel.classList.add('active');
+  state.currentStep = n;
+  if (n > state.maxReachedStep) state.maxReachedStep = n;
+  updatePhaseIndicator();
+  if (n === 0) runPrereqCheck();
+  if (n === 1) loadInstallMethod();
+  if (n === 2) loadProfiles();
+  if (n === 3) checkAwsConnection();
+  if (n === 4) initStep4();
+  if (n === 5) loadStep5();
+  if (n === 6) loadStep6();
+  if (n === 7) buildReview();
+  if (n === 9) loadHealth();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+  // Mock mode: auto-fill datos simulados despues de que el step se cargue
+  if (MOCK_MODE) setTimeout(function() { mockAutoFill(n); }, 600);
+}
+
+function updatePhaseIndicator() {
+  const s = state.currentStep;
+  ['A','B','C'].forEach(ph => {
+    const el = document.getElementById('phase' + ph);
+    const steps = PHASE_STEPS[ph];
+    const isActive = steps.includes(s);
+    const isDone = steps.every(st => st < s) || (ph === 'C' && s === 9 && state.healthChecks);
+    el.className = 'phase-dot' + (isDone ? ' done' : isActive ? ' active' : '');
+    el.querySelector('.ph-icon').textContent = isDone ? '✓' : ph;
+  });
+  // sub-step labels
+  const labelsEl = document.getElementById('stepLabels');
+  labelsEl.innerHTML = STEP_NAMES.map((name, i) => {
+    let cls = 'step-label';
+    if (i === s) cls += ' active';
+    else if (i < state.maxReachedStep) cls += ' done';
+    return '<span class="' + cls + '">' + i + '. ' + esc(name) + '</span>';
+  }).join('');
+}
+
+// ── STEP 0: Prerequisitos ──
+async function runPrereqCheck() {
+  const items = ['os','node','git','aws'];
+  items.forEach(id => {
+    const el = document.getElementById('chk-' + id);
+    el.className = 'check-item pending';
+    el.querySelector('.check-icon').innerHTML = '<div class="spinner spinner-sm"></div>';
+    document.getElementById('chk-' + id + '-detail').textContent = 'Verificando...';
+  });
+  document.getElementById('step0Next').disabled = true;
+  document.getElementById('awsInstallPrompt').style.display = 'none';
+
+  try {
+    const [info, prereqs] = await Promise.all([
+      api('GET', '/api/system/info'),
+      api('GET', '/api/prereqs/check')
+    ]);
+    state.systemInfo = info;
+    state.prereqs = prereqs;
+
+    setCheck('os', true, info.os || info.platform || 'Detectado');
+    setCheck('node', prereqs.node, prereqs.nodeVersion || (prereqs.node ? 'OK' : 'No encontrado'));
+    setCheck('git', prereqs.git, prereqs.gitVersion || (prereqs.git ? 'OK' : 'No encontrado'));
+    setCheck('aws', prereqs.awscli, prereqs.awscliVersion || (prereqs.awscli ? 'OK' : 'No encontrado'));
+
+    if (!prereqs.awscli) {
+      document.getElementById('awsInstallPrompt').style.display = 'block';
+    }
+    if (prereqs.node && prereqs.git && prereqs.awscli) {
+      document.getElementById('step0Next').disabled = false;
+    }
+  } catch (e) {
+    items.forEach(id => setCheck(id, false, 'Error'));
+  }
+}
+
+function setCheck(id, pass, detail) {
+  const el = document.getElementById('chk-' + id);
+  el.className = 'check-item ' + (pass ? 'pass' : 'fail');
+  el.querySelector('.check-icon').innerHTML = pass ? '✓' : '✕';
+  document.getElementById('chk-' + id + '-detail').textContent = detail;
+}
+
+function onStep0Next() {
+  if (state.prereqs && state.prereqs.awscli) {
+    goToStep(2); // skip install step
+  } else {
+    goToStep(1);
+  }
+}
+
+// ── STEP 1: Instalar AWS CLI ──
+async function loadInstallMethod() {
+  try {
+    const m = await api('GET', '/api/prereqs/install-method');
+    state.installMethod = m;
+    if (m.autoInstallable) {
+      document.getElementById('installAutoSection').style.display = 'block';
+      document.getElementById('installManualSection').style.display = 'none';
+    } else {
+      document.getElementById('installAutoSection').style.display = 'none';
+      document.getElementById('installManualSection').style.display = 'block';
+      const cmdEl = document.getElementById('installCmd');
+      cmdEl.textContent = m.command || m.instructions || 'brew install awscli';
+      cmdEl.innerHTML = '<button class="copy-btn" onclick="copyBlock(this)">Copiar</button>' + esc(m.command || m.instructions || 'brew install awscli');
+    }
+  } catch(e) { /* toast already shown */ }
+}
+
+async function installAwsCli() {
+  const btn = document.getElementById('btnInstallAws');
+  btn.disabled = true;
+  btn.innerHTML = '<div class="spinner spinner-sm"></div> Instalando...';
+  const logEl = document.getElementById('installLog');
+  logEl.style.display = 'block';
+  logEl.textContent = 'Iniciando instalacion...\n';
+
+  try {
+    await api('POST', '/api/prereqs/install-awscli');
+    // Poll status
+    const poll = setInterval(async () => {
+      try {
+        const s = await api('GET', '/api/prereqs/install-status');
+        if (s.logs) { logEl.textContent = s.logs; logEl.scrollTop = logEl.scrollHeight; }
+        if (s.status === 'completed' || s.done) {
+          clearInterval(poll);
+          logEl.textContent += '\n✓ Instalacion completada.';
+          toast('AWS CLI instalado correctamente', 'success');
+          btn.innerHTML = '✓ Instalado';
+          document.getElementById('step1Next').disabled = false;
+          setTimeout(() => goToStep(2), 1200);
+        } else if (s.status === 'error' || s.error) {
+          clearInterval(poll);
+          logEl.textContent += '\n✕ Error: ' + (s.error || 'Fallo la instalacion');
+          btn.disabled = false;
+          btn.textContent = 'Reintentar';
+        }
+      } catch(e) { clearInterval(poll); btn.disabled = false; btn.textContent = 'Reintentar'; }
+    }, 2000);
+  } catch(e) { btn.disabled = false; btn.textContent = 'Reintentar'; }
+}
+
+async function recheckPrereqs() {
+  try {
+    const prereqs = await api('GET', '/api/prereqs/check');
+    state.prereqs = prereqs;
+    if (prereqs.awscli) {
+      toast('AWS CLI detectado correctamente', 'success');
+      setTimeout(() => goToStep(2), 800);
+    } else {
+      toast('AWS CLI aun no detectado');
+    }
+  } catch(e) { /* toast already shown */ }
+}
+
+// ── STEP 2: Credenciales AWS ──
+function switchCredTab(mode) {
+  state.credentialMode = mode;
+  const tabs = ['manual', 'sso', 'existing'];
+  document.querySelectorAll('#step2 .tab-btn').forEach((b,i) => b.classList.toggle('active', tabs[i]===mode));
+  document.getElementById('tabManual').classList.toggle('active', mode === 'manual');
+  document.getElementById('tabSso').classList.toggle('active', mode === 'sso');
+  document.getElementById('tabExisting').classList.toggle('active', mode === 'existing');
+  // Mostrar/ocultar botones segun modo
+  document.getElementById('btnValidateCreds').style.display = mode === 'sso' ? 'none' : '';
+  if (mode === 'existing') loadProfiles();
+  if (mode === 'sso') loadSsoProfiles();
+  // Reset validacion al cambiar tab
+  document.getElementById('awsValidResult').style.display = 'none';
+  document.getElementById('btnSaveCreds').disabled = true;
+}
+
+async function loadProfiles() {
+  try {
+    const r = await api('GET', '/api/aws/profiles');
+    state.profiles = r.profiles || r || [];
+    const sel = document.getElementById('awsExistingProfile');
+    sel.innerHTML = state.profiles.length
+      ? state.profiles.map(p => '<option value="' + esc(p) + '">' + esc(p) + '</option>').join('')
+      : '<option value="">No se encontraron perfiles</option>';
+  } catch(e) { /* toast */ }
+}
+
+async function loadSsoProfiles() {
+  try {
+    const r = await api('GET', '/api/aws/sso/profiles');
+    const profiles = (r.profiles || []).filter(p => p.ssoAccountId && p.ssoRoleName);
+    const section = document.getElementById('ssoExistingSection');
+    if (profiles.length > 0) {
+      section.style.display = 'block';
+      const sel = document.getElementById('ssoExistingProfile');
+      sel.innerHTML = profiles.map(p =>
+        '<option value="' + esc(p.name) + '"' +
+        ' data-url="' + esc(p.ssoStartUrl||'') + '"' +
+        ' data-region="' + esc(p.ssoRegion||'') + '"' +
+        ' data-account="' + esc(p.ssoAccountId||'') + '"' +
+        ' data-role="' + esc(p.ssoRoleName||'') + '"' +
+        ' data-deploy="' + esc(p.region||'') + '"' +
+        ' data-session="' + esc(p.ssoSessionName||'') + '"' +
+        '>' + esc(p.name) + ' (' + esc(p.ssoAccountId) + ' / ' + esc(p.ssoRoleName) + ')</option>'
+      ).join('');
+    } else {
+      section.style.display = 'none';
+    }
+  } catch(e) { /* toast */ }
+}
+
+function fillSsoFromProfile() {
+  const sel = document.getElementById('ssoExistingProfile');
+  const opt = sel.selectedOptions[0];
+  if (!opt || !opt.value) return;
+  // Usar perfil existente directamente: validar y activar
+  state.ssoProfileName = opt.value;
+  state.ssoSessionName = opt.dataset.session || null;
+  // Disparar validacion directa
+  validateExistingSsoProfile(opt.value);
+}
+
+async function validateExistingSsoProfile(profileName) {
+  const resEl = document.getElementById('awsValidResult');
+  resEl.style.display = 'block';
+  resEl.innerHTML = '<div class="spinner"></div><div style="margin-top:8px;font-size:13px;color:var(--txt2)">Validando perfil SSO: ' + esc(profileName) + '...</div>';
+  try {
+    const r = await api('POST', '/api/aws/sso/validate', { profileName });
+    if (r.success) {
+      state.awsValidated = r;
+      state.ssoProfileName = profileName;
+      resEl.innerHTML = '<div class="card" style="border-color:rgba(52,211,153,.3);background:var(--ok-dim)">' +
+        '<div style="display:flex;align-items:center;gap:8px;margin-bottom:8px"><span style="color:var(--ok);font-size:18px">✓</span><strong>SSO Autenticado</strong></div>' +
+        '<table class="summary-table"><tr><td>Account ID</td><td>' + esc(r.account) + '</td></tr>' +
+        '<tr><td>ARN</td><td style="font-size:12px;word-break:break-all">' + esc(r.arn) + '</td></tr>' +
+        '<tr><td>Region</td><td>' + esc(r.region) + '</td></tr>' +
+        '<tr><td>Perfil</td><td>' + esc(profileName) + '</td></tr></table></div>';
+      document.getElementById('btnSaveCreds').disabled = false;
+    } else {
+      resEl.innerHTML = '<div class="card" style="border-color:rgba(248,113,113,.3);background:var(--err-dim)"><span style="color:var(--err)">Sesion SSO expirada.</span> Usa "Conectar SSO" para re-autenticarte.</div>';
+    }
+  } catch(e) {
+    resEl.innerHTML = '<div class="card" style="border-color:rgba(248,113,113,.3);background:var(--err-dim)"><span style="color:var(--err)">Error:</span> ' + esc(e.message) + '</div>';
+  }
+}
+
+// ── SSO OIDC Device Flow: Conectar → Auth → Descubrir cuentas/roles ──
+async function ssoConnect() {
+  const ssoUrl = document.getElementById('ssoStartUrl').value.trim();
+  if (!ssoUrl) { toast('Ingresa la SSO Start URL', 'error'); return; }
+
+  const ssoRegion = document.getElementById('ssoRegion').value;
+  const btn = document.getElementById('btnSsoConnect');
+  btn.disabled = true;
+  btn.textContent = 'Conectando...';
+
+  // Abrir ventana ANTES del await para evitar que el browser bloquee el popup
+  const popup = window.open('about:blank', '_blank');
+
+  try {
+    // 1. Iniciar flujo OIDC (registrar cliente + device auth)
+    const auth = await api('POST', '/api/aws/sso/start-auth', { ssoStartUrl: ssoUrl, ssoRegion });
+    if (!auth.success) throw new Error(auth.error);
+
+    state.ssoOidc = { ...auth, ssoStartUrl: ssoUrl, ssoRegion };
+
+    // 2. Mostrar paso 2 (esperando auth en browser)
+    document.getElementById('ssoStep1').style.display = 'none';
+    document.getElementById('ssoStep2').style.display = 'block';
+    document.getElementById('ssoDeviceCode').textContent = auth.userCode;
+    const verifLink = document.getElementById('ssoVerifLink');
+    verifLink.href = auth.verificationUriComplete || auth.verificationUri;
+    verifLink.textContent = auth.verificationUri;
+
+    // Redirigir la ventana que ya abrimos al URL de verificacion
+    if (popup && !popup.closed) {
+      popup.location.href = auth.verificationUriComplete || auth.verificationUri;
+    }
+
+    // 3. Iniciar polling cada 5 segundos
+    ssoStartPolling();
+
+  } catch(e) {
+    if (popup && !popup.closed) popup.close();
+    toast(e.message, 'error');
+    btn.disabled = false;
+    btn.textContent = 'Conectar SSO';
+  }
+}
+
+async function ssoStartPolling() {
+  const oidc = state.ssoOidc;
+  const interval = (oidc.interval || 5) * 1000;
+
+  const poll = async () => {
+    try {
+      const r = await api('POST', '/api/aws/sso/poll-token', {
+        ssoRegion: oidc.ssoRegion,
+        clientId: oidc.clientId,
+        clientSecret: oidc.clientSecret,
+        deviceCode: oidc.deviceCode,
+        ssoStartUrl: oidc.ssoStartUrl
+      });
+
+      if (r.success && r.accessToken) {
+        // Auth completada! Guardar token y descubrir cuentas
+        state.ssoAccessToken = r.accessToken;
+        state.ssoRegion = oidc.ssoRegion;
+        state.ssoStartUrl = oidc.ssoStartUrl;
+        await ssoLoadAccounts();
+        return; // Parar polling
+      }
+      if (r.pending) {
+        // Todavia esperando, seguir polling
+        state.ssoPollTimer = setTimeout(poll, r.slowDown ? interval + 5000 : interval);
+        return;
+      }
+      // Error
+      throw new Error(r.error || 'Auth fallida');
+    } catch(e) {
+      document.getElementById('ssoStep2').style.display = 'none';
+      document.getElementById('ssoStep1').style.display = 'block';
+      document.getElementById('btnSsoConnect').disabled = false;
+      document.getElementById('btnSsoConnect').textContent = 'Conectar SSO';
+      toast('SSO auth fallida: ' + e.message, 'error');
+    }
+  };
+
+  state.ssoPollTimer = setTimeout(poll, interval);
+}
+
+async function ssoLoadAccounts() {
+  // Mostrar paso 3
+  document.getElementById('ssoStep2').style.display = 'none';
+  document.getElementById('ssoStep3').style.display = 'block';
+
+  try {
+    const r = await api('POST', '/api/aws/sso/list-accounts', {
+      ssoRegion: state.ssoRegion,
+      accessToken: state.ssoAccessToken
+    });
+    if (!r.success) throw new Error(r.error);
+
+    const sel = document.getElementById('ssoAccountSelect');
+    sel.innerHTML = '<option value="">-- Selecciona una cuenta --</option>' +
+      (r.accounts || []).map(a =>
+        '<option value="' + esc(a.accountId) + '">' +
+        esc(a.accountName || a.accountId) + ' (' + esc(a.accountId) + ')' +
+        (a.emailAddress ? ' - ' + esc(a.emailAddress) : '') +
+        '</option>'
+      ).join('');
+  } catch(e) {
+    toast('Error listando cuentas: ' + e.message, 'error');
+  }
+}
+
+async function ssoLoadRoles() {
+  const accountId = document.getElementById('ssoAccountSelect').value;
+  const roleSel = document.getElementById('ssoRoleSelect');
+  if (!accountId) {
+    roleSel.innerHTML = '<option value="">Selecciona una cuenta primero</option>';
+    return;
+  }
+  roleSel.innerHTML = '<option value="">Cargando roles...</option>';
+
+  try {
+    const r = await api('POST', '/api/aws/sso/list-roles', {
+      ssoRegion: state.ssoRegion,
+      accessToken: state.ssoAccessToken,
+      accountId
+    });
+    if (!r.success) throw new Error(r.error);
+
+    roleSel.innerHTML = (r.roles || []).map(role =>
+      '<option value="' + esc(role.roleName) + '">' + esc(role.roleName) + '</option>'
+    ).join('');
+
+    // Auto-validar cuando hay cuenta y rol
+    if (r.roles && r.roles.length > 0) {
+      ssoConfigureAndValidate();
+    }
+  } catch(e) {
+    toast('Error listando roles: ' + e.message, 'error');
+    roleSel.innerHTML = '<option value="">Error cargando roles</option>';
+  }
+}
+
+async function ssoConfigureAndValidate() {
+  const accountId = document.getElementById('ssoAccountSelect').value;
+  const roleName = document.getElementById('ssoRoleSelect').value;
+  const deployRegion = document.getElementById('ssoDeployRegion').value;
+
+  if (!accountId || !roleName) return;
+
+  const resEl = document.getElementById('awsValidResult');
+  resEl.style.display = 'block';
+  resEl.innerHTML = '<div class="spinner"></div><div style="margin-top:8px;font-size:13px;color:var(--txt2)">Validando credenciales SSO...</div>';
+
+  try {
+    // Validar usando el access token directamente (sin depender del cache)
+    const val = await api('POST', '/api/aws/sso/validate-token', {
+      ssoRegion: state.ssoRegion,
+      accessToken: state.ssoAccessToken,
+      accountId,
+      roleName,
+      deployRegion
+    });
+
+    if (val.success) {
+      state.awsValidated = val;
+      state.ssoProfileName = 'sap-alwaysops-sso';
+
+      // Guardar perfil en ~/.aws/config para referencia futura
+      api('POST', '/api/aws/sso/configure', {
+        profileName: 'sap-alwaysops-sso',
+        ssoStartUrl: state.ssoStartUrl,
+        ssoRegion: state.ssoRegion,
+        ssoAccountId: accountId,
+        ssoRoleName: roleName,
+        region: deployRegion
+      }).catch(() => {});
+
+      resEl.innerHTML = '<div class="card" style="border-color:rgba(52,211,153,.3);background:var(--ok-dim)">' +
+        '<div style="display:flex;align-items:center;gap:8px;margin-bottom:8px"><span style="color:var(--ok);font-size:18px">✓</span><strong>SSO Autenticado</strong></div>' +
+        '<table class="summary-table"><tr><td>Account ID</td><td>' + esc(val.account) + '</td></tr>' +
+        '<tr><td>ARN</td><td style="font-size:12px;word-break:break-all">' + esc(val.arn) + '</td></tr>' +
+        '<tr><td>Rol</td><td>' + esc(roleName) + '</td></tr>' +
+        '<tr><td>Region</td><td>' + esc(val.region) + '</td></tr></table></div>';
+      document.getElementById('btnSaveCreds').disabled = false;
+    } else {
+      resEl.innerHTML = '<div class="card" style="border-color:rgba(248,113,113,.3);background:var(--err-dim)"><span style="color:var(--err)">SSO validacion fallida:</span> ' + esc(val.error || val.help) + '</div>';
+    }
+  } catch(e) {
+    resEl.innerHTML = '<div class="card" style="border-color:rgba(248,113,113,.3);background:var(--err-dim)"><span style="color:var(--err)">Error:</span> ' + esc(e.message) + '</div>';
+  }
+}
+
+async function validateAws() {
+  const resEl = document.getElementById('awsValidResult');
+  resEl.style.display = 'block';
+  resEl.innerHTML = '<div class="spinner"></div>';
+
+  if (state.credentialMode === 'sso') {
+    // SSO: re-validar el perfil configurado o existente
+    const profileName = state.ssoProfileName || 'sap-alwaysops-sso';
+    try {
+      const r = await api('POST', '/api/aws/sso/validate', { profileName });
+      if (r.success) {
+        state.awsValidated = r;
+        resEl.innerHTML = '<div class="card" style="border-color:rgba(52,211,153,.3);background:var(--ok-dim)">' +
+          '<div style="display:flex;align-items:center;gap:8px;margin-bottom:8px"><span style="color:var(--ok);font-size:18px">✓</span><strong>SSO Autenticado</strong></div>' +
+          '<table class="summary-table"><tr><td>Account ID</td><td>' + esc(r.account) + '</td></tr>' +
+          '<tr><td>ARN</td><td style="font-size:12px;word-break:break-all">' + esc(r.arn) + '</td></tr>' +
+          '<tr><td>Region</td><td>' + esc(r.region) + '</td></tr></table></div>';
+        document.getElementById('btnSaveCreds').disabled = false;
+      } else {
+        resEl.innerHTML = '<div class="card" style="border-color:rgba(248,113,113,.3);background:var(--err-dim)"><span style="color:var(--err)">Sesion SSO no activa.</span> Usa "Conectar SSO" para autenticarte.</div>';
+      }
+    } catch(e) {
+      resEl.innerHTML = '<div class="card" style="border-color:rgba(248,113,113,.3);background:var(--err-dim)"><span style="color:var(--err)">Error:</span> ' + esc(e.message) + '</div>';
+    }
+    return;
+  }
+
+  let payload;
+  if (state.credentialMode === 'manual') {
+    payload = {
+      accessKeyId: document.getElementById('awsAccessKey').value.trim(),
+      secretAccessKey: document.getElementById('awsSecretKey').value,
+      region: document.getElementById('awsRegion').value,
+      profile: document.getElementById('awsProfile').value.trim()
+    };
+  } else {
+    payload = { profile: document.getElementById('awsExistingProfile').value };
+  }
+
+  try {
+    const r = await api('POST', '/api/aws/credentials/validate', payload);
+    state.awsValidated = r;
+    resEl.innerHTML = '<div class="card" style="border-color:rgba(52,211,153,.3);background:var(--ok-dim)">' +
+      '<div style="display:flex;align-items:center;gap:8px;margin-bottom:8px"><span style="color:var(--ok);font-size:18px">✓</span><strong>Credenciales validas</strong></div>' +
+      '<table class="summary-table"><tr><td>Account ID</td><td>' + esc(r.accountId || r.account) + '</td></tr>' +
+      '<tr><td>ARN</td><td style="font-size:12px;word-break:break-all">' + esc(r.arn) + '</td></tr>' +
+      '<tr><td>Region</td><td>' + esc(r.region || payload.region) + '</td></tr></table></div>';
+    document.getElementById('btnSaveCreds').disabled = false;
+  } catch(e) {
+    resEl.innerHTML = '<div class="card" style="border-color:rgba(248,113,113,.3);background:var(--err-dim)"><span style="color:var(--err)">✕ Validacion fallida:</span> ' + esc(e.message) + '</div>';
+    document.getElementById('btnSaveCreds').disabled = true;
+  }
+}
+
+async function saveAwsCreds() {
+  if (state.credentialMode === 'sso') {
+    // Las credenciales ya fueron configuradas como env vars por validate-token
+    toast('SSO configurado correctamente', 'success');
+    goToStep(3);
+    return;
+  }
+
+  let payload;
+  if (state.credentialMode === 'manual') {
+    payload = {
+      accessKeyId: document.getElementById('awsAccessKey').value.trim(),
+      secretAccessKey: document.getElementById('awsSecretKey').value,
+      region: document.getElementById('awsRegion').value,
+      profile: document.getElementById('awsProfile').value.trim()
+    };
+  } else {
+    payload = { profile: document.getElementById('awsExistingProfile').value };
+  }
+  try {
+    await api('POST', '/api/aws/credentials/save', payload);
+    toast('Credenciales guardadas', 'success');
+    goToStep(3);
+  } catch(e) { /* toast */ }
+}
+
+// ── STEP 3: AWS Verified ──
+async function checkAwsConnection() {
+  const infoCard = document.getElementById('awsInfoCard');
+  const permGrid = document.getElementById('permGrid');
+  const nextBtn = document.getElementById('step3Next');
+  infoCard.style.display = 'none';
+  permGrid.innerHTML = '<div class="spinner"></div>';
+  nextBtn.disabled = true;
+
+  try {
+    const aws = await api('GET', '/api/aws/check');
+    state.aws = aws;
+    infoCard.style.display = 'block';
+    document.getElementById('awsInfoTable').innerHTML =
+      '<tr><td>Cuenta</td><td>' + esc(aws.accountId || aws.account) + '</td></tr>' +
+      '<tr><td>ARN</td><td style="font-size:12px;word-break:break-all">' + esc(aws.arn) + '</td></tr>' +
+      '<tr><td>Region</td><td>' + esc(aws.region) + '</td></tr>';
+
+    const perms = await api('POST', '/api/aws/permissions/check');
+    state.permissions = perms;
+    var checks = perms.checks || [];
+    if (checks.length > 0) {
+      permGrid.innerHTML = checks.map(function(c) {
+        var ok = c.allowed;
+        return '<div class="perm-item ' + (ok ? 'ok' : 'no') + '">' +
+          '<span>' + (ok ? '✓' : '✕') + '</span>' +
+          '<span>' + esc(c.service) + '</span>' +
+          '<span style="font-size:11px;color:var(--txt3);margin-left:auto">' + esc(c.action) + '</span></div>';
+      }).join('');
+      // Resumen
+      var summaryHtml = '<div style="margin-top:12px;padding:10px 14px;border-radius:var(--rs);font-size:13px;'
+        + (perms.requiredOk
+          ? 'background:var(--ok-dim);border:1px solid rgba(52,211,153,.3);color:var(--ok)">'
+            + '✓ ' + esc(perms.summary) + ' — Permisos requeridos OK'
+          : 'background:var(--err-dim);border:1px solid rgba(248,113,113,.3);color:var(--err)">'
+            + '✕ Faltan permisos requeridos: ' + esc((perms.missingRequired || []).join(', ')))
+        + '</div>';
+      if (perms.missingOptional && perms.missingOptional.length > 0) {
+        summaryHtml += '<div style="margin-top:6px;font-size:12px;color:var(--warn)">⚠ Opcionales no disponibles: ' + esc(perms.missingOptional.join(', ')) + '</div>';
+      }
+      permGrid.insertAdjacentHTML('beforeend', summaryHtml);
+    } else {
+      permGrid.innerHTML = '<p style="color:var(--txt3)">No se pudieron verificar permisos</p>';
+    }
+    // Solo bloquear si faltan permisos requeridos
+    nextBtn.disabled = perms.requiredOk === false;
+  } catch(e) { permGrid.innerHTML = '<p style="color:var(--err)">Error al verificar permisos</p>'; }
+}
+
+// ── STEP 4: Plan de Despliegue ──
+function initStep4() {
+  selectPlan(state.plan.mode);
+}
+
+function selectPlan(mode) {
+  state.plan.mode = mode;
+  // Resaltar card seleccionada
+  document.querySelectorAll('#planCards .mode-card').forEach(function(c) {
+    c.classList.toggle('selected', c.getAttribute('data-plan') === mode);
+  });
+  // Mostrar/ocultar secciones
+  document.getElementById('planTrialSection').style.display = mode === 'TRIAL' ? 'block' : 'none';
+  document.getElementById('planProdSection').style.display = mode === 'PRODUCTION' ? 'block' : 'none';
+
+  if (mode === 'TRIAL') {
+    if (!state.plan.systems.length || state.plan.systems.length > 1) {
+      state.plan.systems = [{ name: '', environment: 'PRD' }];
+    }
+    var nameEl = document.getElementById('trialSysName');
+    var envEl = document.getElementById('trialSysEnv');
+    if (nameEl && state.plan.systems[0]) {
+      nameEl.value = state.plan.systems[0].name || '';
+      envEl.value = state.plan.systems[0].environment || 'PRD';
+    }
+  } else {
+    if (state.plan.systems.length < 2) {
+      state.plan.systems = [
+        { name: '', environment: 'PRD' },
+        { name: '', environment: 'QAS' }
+      ];
+    }
+    renderProdSystemsList();
+  }
+  updateCostEstimate();
+}
+
+function addSystem() {
+  if (state.plan.systems.length >= 10) {
+    toast('Maximo 10 sistemas permitidos', 'info');
+    return;
+  }
+  var envs = ['PRD', 'QAS', 'DEV', 'SBX', 'TST'];
+  var nextEnv = envs[state.plan.systems.length % envs.length];
+  state.plan.systems.push({ name: '', environment: nextEnv });
+  renderProdSystemsList();
+  updateCostEstimate();
+}
+
+function removeSystem(index) {
+  if (state.plan.systems.length <= 1) {
+    toast('Se requiere al menos 1 sistema', 'info');
+    return;
+  }
+  state.plan.systems.splice(index, 1);
+  renderProdSystemsList();
+  updateCostEstimate();
+}
+
+function renderProdSystemsList() {
+  var container = document.getElementById('prodSystemsList');
+  var html = '';
+  state.plan.systems.forEach(function(sys, i) {
+    html += '<div style="display:flex;align-items:center;gap:12px;padding:12px 16px;border-radius:var(--rs);background:var(--bg-input);border:1px solid var(--border);margin-bottom:8px">';
+    html += '<span style="font-size:13px;color:var(--txt3);font-weight:600;min-width:24px">' + (i + 1) + '.</span>';
+    html += '<input class="form-input" style="flex:1" placeholder="Nombre del Sistema (Ej: OMP, S4P)" value="' + esc(sys.name) + '" oninput="updateProdSystem(' + i + ',\'name\',this.value)">';
+    html += '<select class="form-select" style="width:160px" onchange="updateProdSystem(' + i + ',\'environment\',this.value)">';
+    ['PRD', 'QAS', 'DEV', 'SBX', 'TST'].forEach(function(env) {
+      html += '<option value="' + env + '"' + (sys.environment === env ? ' selected' : '') + '>' + env + '</option>';
+    });
+    html += '</select>';
+    if (state.plan.systems.length > 1) {
+      html += '<button class="btn btn-danger btn-sm" onclick="removeSystem(' + i + ')" style="padding:6px 10px">\u2715</button>';
+    }
+    html += '</div>';
+  });
+  container.innerHTML = html;
+}
+
+function updateProdSystem(index, field, value) {
+  if (state.plan.systems[index]) {
+    state.plan.systems[index][field] = value;
+  }
+  updateCostEstimate();
+}
+
+function updatePlanSystems() {
+  if (state.plan.mode === 'TRIAL') {
+    var nameEl = document.getElementById('trialSysName');
+    var envEl = document.getElementById('trialSysEnv');
+    if (state.plan.systems[0]) {
+      state.plan.systems[0].name = nameEl ? nameEl.value : '';
+      state.plan.systems[0].environment = envEl ? envEl.value : 'PRD';
+    }
+  }
+  updateCostEstimate();
+}
+
+function updateCostEstimate() {
+  var baseCost = 6.50;
+  var perServer = 1.45;
+  var systems = state.plan.systems;
+  var estimatedServers = 0;
+
+  if (state.plan.mode === 'TRIAL') {
+    estimatedServers = 1;
+  } else {
+    estimatedServers = systems.length * 2;
+  }
+
+  // Si ya hay systemConfigs con servidores asignados, usar esos
+  if (state.systemConfigs && state.systemConfigs.length > 0) {
+    var total = 0;
+    state.systemConfigs.forEach(function(sc) {
+      total += sc.serverCount || 0;
+    });
+    if (total > 0) estimatedServers = total;
+  }
+
+  var totalCost = baseCost + (perServer * estimatedServers);
+
+  var breakdownEl = document.getElementById('costBreakdown');
+  var totalEl = document.getElementById('costTotal');
+  if (breakdownEl) {
+    breakdownEl.textContent = systems.length + ' sistema' + (systems.length > 1 ? 's' : '') +
+      ' \u00d7 ~' + Math.ceil(estimatedServers / Math.max(systems.length, 1)) + ' servidores = ' + estimatedServers + ' servidores';
+  }
+  if (totalEl) {
+    totalEl.textContent = '~$' + totalCost.toFixed(2);
+  }
+}
+
+function getServerCount(cfg) {
+  if (!cfg) return 0;
+  var count = 0;
+  if (cfg.archMode === 'standalone') {
+    count = cfg.selectedAppInstanceId ? 1 : 0;
+  } else if (cfg.archMode === 'distributed') {
+    if (cfg.selectedAppInstanceId) count++;
+    if (cfg.selectedDbInstanceId) count++;
+  } else if (cfg.archMode === 'ha') {
+    if (cfg.selectedAppInstanceId) count++;
+    if (cfg.selectedDbInstanceId) count++;
+    if (cfg.haScope === 'app' || cfg.haScope === 'both') {
+      if (cfg.selectedAppSecondaryId) count++;
+    }
+    if (cfg.haScope === 'db' || cfg.haScope === 'both') {
+      if (cfg.selectedDbSecondaryId) count++;
+    }
+  }
+  return count;
+}
+
+// ── STEP 5: Discovery + Arquitectura ──
+async function loadStep5() {
+  // Inicializar systemConfigs desde plan.systems
+  if (!state.systemConfigs || state.systemConfigs.length !== state.plan.systems.length) {
+    state.systemConfigs = state.plan.systems.map(function(sys, i) {
+      var existing = (state.systemConfigs && state.systemConfigs[i]) || {};
+      return {
+        name: sys.name || ('Sistema ' + (i + 1)),
+        environment: sys.environment || 'PRD',
+        archMode: existing.archMode || 'standalone',
+        haScope: existing.haScope || '',
+        selectedAppInstanceId: existing.selectedAppInstanceId || '',
+        selectedAppSecondaryId: existing.selectedAppSecondaryId || '',
+        selectedDbInstanceId: existing.selectedDbInstanceId || '',
+        selectedDbSecondaryId: existing.selectedDbSecondaryId || '',
+        serverCount: existing.serverCount || 0,
+        sid: existing.sid || '',
+        dbType: existing.dbType || '',
+        osType: existing.osType || '',
+        dbHost: existing.dbHost || '',
+        dbPort: existing.dbPort || '',
+        dbUser: existing.dbUser || '',
+        dbPass: existing.dbPass || '',
+        sapClient: existing.sapClient || '',
+        sapUser: existing.sapUser || '',
+        sapPass: existing.sapPass || '',
+        hostname: existing.hostname || '',
+        sapDiscovery: existing.sapDiscovery || null
+      };
+    });
+  }
+
+  state.currentSystemIndex = 0;
+  loadCurrentSystemConfig();
+  renderSystemTabs();
+
+  var regionLabel = document.getElementById('discoverRegionLabel');
+  if (regionLabel) regionLabel.textContent = state.selectedRegion || 'us-east-1';
+
+  await runDiscovery();
+}
+
+function renderSystemTabs() {
+  var tabsContainer = document.getElementById('systemTabs');
+  var tabsBar = document.getElementById('systemTabsBar');
+
+  if (state.plan.mode === 'TRIAL' || state.systemConfigs.length <= 1) {
+    tabsContainer.style.display = 'none';
+    var title = document.getElementById('archTitle');
+    if (title) {
+      var sysName = state.systemConfigs[0] ? state.systemConfigs[0].name : '';
+      title.textContent = 'Tipo de Arquitectura SAP' + (sysName ? ' \u2014 ' + sysName : '');
+    }
+    return;
+  }
+
+  tabsContainer.style.display = 'block';
+  tabsBar.innerHTML = state.systemConfigs.map(function(sys, i) {
+    var label = sys.name || ('Sistema ' + (i + 1));
+    var badge = sys.serverCount > 0 ? ' \u2713' : '';
+    return '<button class="tab-btn' + (i === state.currentSystemIndex ? ' active' : '') + '" onclick="switchSystem(' + i + ')">' +
+      esc(label) + ' (' + esc(sys.environment) + ')' + badge + '</button>';
+  }).join('');
+}
+
+function switchSystem(index) {
+  saveCurrentSystemConfig();
+  state.currentSystemIndex = index;
+  loadCurrentSystemConfig();
+  renderSystemTabs();
+  initArchCards();
+  renderServerGrids();
+}
+
+function saveCurrentSystemConfig() {
+  var cfg = state.systemConfigs[state.currentSystemIndex];
+  if (!cfg) return;
+  cfg.archMode = state.archMode;
+  cfg.haScope = state.haScope;
+  cfg.selectedAppInstanceId = state.selectedAppInstanceId;
+  cfg.selectedAppSecondaryId = state.selectedAppSecondaryId;
+  cfg.selectedDbInstanceId = state.selectedDbInstanceId;
+  cfg.selectedDbSecondaryId = state.selectedDbSecondaryId;
+  cfg.serverCount = getServerCount(cfg);
+}
+
+function loadCurrentSystemConfig() {
+  var cfg = state.systemConfigs[state.currentSystemIndex];
+  if (!cfg) return;
+  state.archMode = cfg.archMode || 'standalone';
+  state.haScope = cfg.haScope || '';
+  state.selectedAppInstanceId = cfg.selectedAppInstanceId || '';
+  state.selectedAppSecondaryId = cfg.selectedAppSecondaryId || '';
+  state.selectedDbInstanceId = cfg.selectedDbInstanceId || '';
+  state.selectedDbSecondaryId = cfg.selectedDbSecondaryId || '';
+}
+
+async function runDiscovery() {
+  var region = state.selectedRegion || 'us-east-1';
+  var container = document.getElementById('serverGridsContainer');
+  container.innerHTML = '<div class="spinner" style="margin:20px auto"></div>';
+  document.getElementById('discoveryResults').style.display = 'block';
+
+  try {
+    var d = await api('GET', '/api/aws/discover?region=' + encodeURIComponent(region));
+    state.discovery = d;
+    var disc = d.discovery || d;
+
+    var instances = disc.ec2Instances || disc.ssmInstances || disc.instances || [];
+    state._discoveredInstances = instances;
+
+    initArchCards();
+    renderServerGrids();
+
+    // VPCs
+    var vpcs = disc.vpcs || [];
+    document.getElementById('vpcList').innerHTML = vpcs.length
+      ? vpcs.map(function(v) { return '<div style="font-size:13px;color:var(--txt2);padding:4px 0">' + esc(v.vpcId || v.id || v) + (v.cidr ? ' (' + esc(v.cidr) + ')' : '') + '</div>'; }).join('')
+      : '<p style="color:var(--txt3);font-size:13px">Sin VPCs</p>';
+
+    // Bedrock
+    var bedrockAvail = disc.bedrockAvailable;
+    document.getElementById('bedrockStatus').innerHTML = bedrockAvail !== undefined
+      ? '<div class="check-item ' + (bedrockAvail ? 'pass' : 'fail') + '" style="margin:0"><div class="check-icon">' +
+        (bedrockAvail ? '\u2713' : '\u2715') + '</div><div class="check-label">' +
+        (bedrockAvail ? 'Disponible' : 'No disponible en esta region') + '</div></div>'
+      : '<p style="color:var(--txt3);font-size:13px">Sin datos</p>';
+  } catch(e) {
+    container.innerHTML = '<p style="color:var(--err)">Error al escanear: ' + esc(e.message) + '</p>';
+  }
+}
+
+function initArchCards() {
+  var cardsContainer = document.getElementById('archModeCards');
+  var currentMode = state.archMode;
+  var isTrial = state.plan.mode === 'TRIAL';
+
+  var cards = [
+    { mode: 'standalone', title: 'Servidor Unico', desc: 'App + BD en la misma instancia', icon: '\uD83D\uDDA5\uFE0F' },
+    { mode: 'distributed', title: 'Distribuido', desc: 'App Server y DB Server separados', icon: '\uD83D\uDD00' }
+  ];
+
+  if (!isTrial) {
+    cards.push({ mode: 'ha', title: 'Alta Disponibilidad', desc: 'Servidores primarios y secundarios', icon: '\uD83D\uDEE1\uFE0F' });
+  }
+
+  cardsContainer.innerHTML = cards.map(function(c) {
+    return '<div class="mode-card' + (currentMode === c.mode ? ' selected' : '') + '" data-mode="' + c.mode + '" onclick="selectArchMode(\'' + c.mode + '\')" style="text-align:center">'
+      + '<div style="font-size:24px;margin-bottom:4px">' + c.icon + '</div>'
+      + '<h3>' + esc(c.title) + '</h3>'
+      + '<p style="font-size:12px;color:var(--txt3)">' + esc(c.desc) + '</p></div>';
+  }).join('');
+
+  // HA Scope cards
+  var scopeContainer = document.getElementById('haScopeCards');
+  var scopes = [
+    { scope: 'app', title: 'Solo App Server', desc: 'HA en aplicacion' },
+    { scope: 'db', title: 'Solo DB Server', desc: 'HA en base de datos' },
+    { scope: 'both', title: 'Ambos', desc: 'HA completo' }
+  ];
+  scopeContainer.innerHTML = scopes.map(function(s) {
+    return '<div class="mode-card' + (state.haScope === s.scope ? ' selected' : '') + '" data-scope="' + s.scope + '" onclick="selectHaScope(\'' + s.scope + '\')" style="text-align:center;padding:12px">'
+      + '<h3 style="font-size:13px">' + esc(s.title) + '</h3>'
+      + '<p style="font-size:11px;color:var(--txt3)">' + esc(s.desc) + '</p></div>';
+  }).join('');
+
+  document.getElementById('haScopeSection').style.display = state.archMode === 'ha' ? 'block' : 'none';
+}
+
+function selectArchMode(mode) {
+  state.archMode = mode;
+  state.haScope = '';
+  state.selectedAppSecondaryId = '';
+  state.selectedDbSecondaryId = '';
+
+  if (mode === 'standalone') {
+    if (state.selectedAppInstanceId) {
+      state.selectedDbInstanceId = state.selectedAppInstanceId;
+    }
+  }
+
+  document.querySelectorAll('#archModeCards .mode-card').forEach(function(c) {
+    c.classList.toggle('selected', c.getAttribute('data-mode') === mode);
+  });
+
+  document.getElementById('haScopeSection').style.display = mode === 'ha' ? 'block' : 'none';
+  if (mode !== 'ha') {
+    document.querySelectorAll('#haScopeCards .mode-card').forEach(function(c) {
+      c.classList.remove('selected');
+    });
+  }
+
+  renderServerGrids();
+}
+
+function selectHaScope(scope) {
+  state.haScope = scope;
+  state.selectedAppSecondaryId = '';
+  state.selectedDbSecondaryId = '';
+
+  document.querySelectorAll('#haScopeCards .mode-card').forEach(function(c) {
+    c.classList.toggle('selected', c.getAttribute('data-scope') === scope);
+  });
+
+  renderServerGrids();
+}
+
+function buildInstanceGrid(gridId, selectedId, role, label) {
+  var instances = state._discoveredInstances || [];
+  var html = '<h4 style="font-size:14px;color:var(--txt2);margin:12px 0 8px">' + label + '</h4>';
+  if (instances.length === 0) {
+    html += '<p style="color:var(--txt3);font-size:13px">No se encontraron instancias EC2.</p>';
+  } else {
+    html += '<div class="discovery-grid" id="' + gridId + '">';
+    html += instances.map(function(inst) {
+      var id = inst.instanceId || inst.InstanceId || inst.id;
+      var name = inst.name || inst.Name || id;
+      var iType = inst.instanceType || inst.type || inst.platformName || '';
+      var iState = inst.state || inst.State || (inst.isOnline ? 'Online' : 'Offline') || '';
+      var sel = selectedId === id ? ' selected' : '';
+      // Inline scan badge
+      var scanHtml = buildScanBadgeHtml(id);
+      return '<div class="disc-card' + sel + '" onclick="selectServerInstance(\'' + esc(id) + '\', \'' + role + '\')">'
+        + '<h4>' + esc(name) + '</h4>'
+        + '<p>' + esc(id) + '</p>'
+        + '<p>' + esc(iType) + ' &middot; ' + esc(iState) + '</p>'
+        + scanHtml
+        + '</div>';
+    }).join('');
+    html += '</div>';
+  }
+  return html;
+}
+
+// Generar HTML del badge de escaneo para una instancia
+function buildScanBadgeHtml(instanceId) {
+  var scan = state.scans[instanceId];
+  if (!scan) return '';
+  var st = scan.status;
+  var html = '';
+  if (st === 'queued') {
+    html = '<div class="scan-badge queued">⏳ En cola</div>';
+  } else if (st === 'running') {
+    var phaseLbl = scan.phase || 'Iniciando';
+    var pct = scan.progress || 0;
+    html = '<div class="scan-badge running"><span class="scan-spin"></span> ' + esc(phaseLbl) + '</div>'
+      + '<div class="scan-mini-progress"><div class="scan-fill" style="width:' + pct + '%"></div></div>'
+      + '<div class="scan-phase-label">' + pct + '% completado</div>';
+  } else if (st === 'success') {
+    var r = scan.results;
+    var info = '';
+    if (r) {
+      var parts = [];
+      // Manejar formato nested (sap.sid) y flat (sid)
+      var sid = (r.sap && r.sap.sid) || r.sid;
+      var dbType = (r.sap && r.sap.dbType) || r.dbType;
+      var haEnabled = (r.ha && r.ha.enabled) || r.haEnabled;
+      var haType = (r.ha && r.ha.type) || r.haType;
+      var kernelVer = (r.kernel && typeof r.kernel === 'object') ? r.kernel.version : r.kernel;
+      if (sid) parts.push('SID: ' + sid);
+      if (dbType) parts.push(dbType);
+      if (haEnabled) parts.push('HA: ' + (haType || 'Si'));
+      if (kernelVer) parts.push('K' + kernelVer);
+      info = parts.join(' · ');
+    }
+    html = '<div class="scan-badge success">✓ Escaneado</div>';
+    if (info) html += '<div class="scan-result-info">' + esc(info) + '</div>';
+  } else if (st === 'fail') {
+    html = '<div class="scan-badge fail">✕ Error</div>';
+    if (scan.error) html += '<div class="scan-error-info">' + esc(scan.error) + '</div>';
+    html += '<button class="btn-scan" style="margin-top:4px;padding:3px 8px;font-size:10px" onclick="event.stopPropagation();retrySingleScan(\'' + esc(instanceId) + '\')">↻ Reintentar</button>';
+  }
+  return html;
+}
+
+function renderServerGrids() {
+  var container = document.getElementById('serverGridsContainer');
+  if (!container) return;
+  var instances = state._discoveredInstances || [];
+  if (!instances.length) {
+    container.innerHTML = '';
+    updateServerSummary();
+    return;
+  }
+
+  var html = '';
+  var mode = state.archMode;
+  var scope = state.haScope;
+
+  if (mode === 'standalone') {
+    html += buildInstanceGrid('gridSingle', state.selectedAppInstanceId, 'single', 'Servidor SAP (App + BD)');
+
+  } else if (mode === 'distributed') {
+    html += '<div class="form-row" style="margin-top:4px">';
+    html += '<div>' + buildInstanceGrid('gridApp', state.selectedAppInstanceId, 'app', 'App Server (Primario)') + '</div>';
+    html += '<div>' + buildInstanceGrid('gridDb', state.selectedDbInstanceId, 'db', 'DB Server (Primario)') + '</div>';
+    html += '</div>';
+
+  } else if (mode === 'ha') {
+    if (!scope) {
+      html += '<p style="color:var(--txt3);font-size:13px;margin:12px 0">Selecciona donde aplica la Alta Disponibilidad arriba.</p>';
+    } else if (scope === 'app') {
+      html += buildInstanceGrid('gridApp', state.selectedAppInstanceId, 'app', 'App Server \u2014 Primario');
+      html += buildInstanceGrid('gridAppSec', state.selectedAppSecondaryId, 'app_sec', 'App Server \u2014 Secundario (HA)');
+      html += '<div style="margin-top:8px">';
+      html += buildInstanceGrid('gridDb', state.selectedDbInstanceId, 'db', 'DB Server');
+      html += '</div>';
+
+    } else if (scope === 'db') {
+      html += buildInstanceGrid('gridApp', state.selectedAppInstanceId, 'app', 'App Server');
+      html += '<div style="margin-top:8px">';
+      html += buildInstanceGrid('gridDb', state.selectedDbInstanceId, 'db', 'DB Server \u2014 Primario');
+      html += buildInstanceGrid('gridDbSec', state.selectedDbSecondaryId, 'db_sec', 'DB Server \u2014 Secundario (HA)');
+      html += '</div>';
+
+    } else if (scope === 'both') {
+      html += '<div class="form-row" style="margin-top:4px">';
+      html += '<div>' + buildInstanceGrid('gridApp', state.selectedAppInstanceId, 'app', 'App Server \u2014 Primario');
+      html += buildInstanceGrid('gridAppSec', state.selectedAppSecondaryId, 'app_sec', 'App Server \u2014 Secundario (HA)') + '</div>';
+      html += '<div>' + buildInstanceGrid('gridDb', state.selectedDbInstanceId, 'db', 'DB Server \u2014 Primario');
+      html += buildInstanceGrid('gridDbSec', state.selectedDbSecondaryId, 'db_sec', 'DB Server \u2014 Secundario (HA)') + '</div>';
+      html += '</div>';
+    }
+  }
+
+  container.innerHTML = html;
+  updateServerSummary();
+}
+
+function selectServerInstance(id, role) {
+  if (role === 'single') {
+    state.selectedAppInstanceId = id;
+    state.selectedDbInstanceId = id;
+    state.selectedInstanceId = id;
+  } else if (role === 'app') {
+    state.selectedAppInstanceId = id;
+    state.selectedInstanceId = id;
+  } else if (role === 'app_sec') {
+    state.selectedAppSecondaryId = id;
+  } else if (role === 'db') {
+    state.selectedDbInstanceId = id;
+  } else if (role === 'db_sec') {
+    state.selectedDbSecondaryId = id;
+  }
+
+  // INLINE SCAN: disparar escaneo automaticamente al seleccionar
+  triggerInlineScan(id);
+
+  renderServerGrids();
+}
+
+function updateServerSummary() {
+  var summaryDiv = document.getElementById('serverSelectionSummary');
+  var summaryText = document.getElementById('serverSummaryText');
+  var nextBtn = document.getElementById('step5Next');
+  var instances = state._discoveredInstances || [];
+
+  function getName(instId) {
+    var inst = instances.find(function(i) { return (i.instanceId || i.InstanceId || i.id) === instId; });
+    if (!inst) return instId || '\u2014';
+    return (inst.name || inst.Name || instId) + ' (' + instId + ')';
+  }
+
+  var mode = state.archMode;
+  var scope = state.haScope;
+  var allOk = false;
+  var lines = [];
+
+  if (mode === 'standalone') {
+    allOk = !!state.selectedAppInstanceId;
+    if (allOk) {
+      lines.push('<strong>Servidor unico:</strong> ' + esc(getName(state.selectedAppInstanceId)));
+    }
+
+  } else if (mode === 'distributed') {
+    allOk = !!state.selectedAppInstanceId && !!state.selectedDbInstanceId;
+    if (allOk) {
+      lines.push('<strong>App Server:</strong> ' + esc(getName(state.selectedAppInstanceId)));
+      lines.push('<strong>DB Server:</strong> ' + esc(getName(state.selectedDbInstanceId)));
+    }
+
+  } else if (mode === 'ha') {
+    if (scope === 'app') {
+      allOk = !!state.selectedAppInstanceId && !!state.selectedAppSecondaryId && !!state.selectedDbInstanceId;
+      if (allOk) {
+        lines.push('<strong>App Primario:</strong> ' + esc(getName(state.selectedAppInstanceId)));
+        lines.push('<strong>App Secundario (HA):</strong> ' + esc(getName(state.selectedAppSecondaryId)));
+        lines.push('<strong>DB Server:</strong> ' + esc(getName(state.selectedDbInstanceId)));
+      }
+    } else if (scope === 'db') {
+      allOk = !!state.selectedAppInstanceId && !!state.selectedDbInstanceId && !!state.selectedDbSecondaryId;
+      if (allOk) {
+        lines.push('<strong>App Server:</strong> ' + esc(getName(state.selectedAppInstanceId)));
+        lines.push('<strong>DB Primario:</strong> ' + esc(getName(state.selectedDbInstanceId)));
+        lines.push('<strong>DB Secundario (HA):</strong> ' + esc(getName(state.selectedDbSecondaryId)));
+      }
+    } else if (scope === 'both') {
+      allOk = !!state.selectedAppInstanceId && !!state.selectedAppSecondaryId && !!state.selectedDbInstanceId && !!state.selectedDbSecondaryId;
+      if (allOk) {
+        lines.push('<strong>App Primario:</strong> ' + esc(getName(state.selectedAppInstanceId)));
+        lines.push('<strong>App Secundario (HA):</strong> ' + esc(getName(state.selectedAppSecondaryId)));
+        lines.push('<strong>DB Primario:</strong> ' + esc(getName(state.selectedDbInstanceId)));
+        lines.push('<strong>DB Secundario (HA):</strong> ' + esc(getName(state.selectedDbSecondaryId)));
+      }
+    }
+  }
+
+  // Guardar config del sistema actual
+  saveCurrentSystemConfig();
+
+  // Actualizar costo en tiempo real
+  updateStep5Cost();
+
+  // Verificar si TODOS los sistemas tienen servidores asignados
+  var allSystemsOk = true;
+  if (state.plan.mode === 'PRODUCTION' && state.systemConfigs.length > 1) {
+    state.systemConfigs.forEach(function(cfg) {
+      if (getServerCount(cfg) === 0) allSystemsOk = false;
+    });
+  } else {
+    allSystemsOk = allOk;
+  }
+
+  if (allOk) {
+    summaryDiv.style.display = 'block';
+    summaryText.innerHTML = lines.join('<br>');
+  } else {
+    summaryDiv.style.display = 'none';
+  }
+
+  nextBtn.disabled = !allSystemsOk;
+  renderSystemTabs();
+}
+
+function updateStep5Cost() {
+  var baseCost = 6.50;
+  var perServer = 1.45;
+  var totalServers = 0;
+
+  state.systemConfigs.forEach(function(cfg) {
+    totalServers += getServerCount(cfg);
+  });
+
+  var totalCost = baseCost + (perServer * totalServers);
+
+  var costEl = document.getElementById('step5CostTotal');
+  var detailEl = document.getElementById('step5CostDetail');
+
+  if (totalServers > 0) {
+    costEl.textContent = '~$' + totalCost.toFixed(2) + '/mes';
+    detailEl.textContent = 'Base: $' + baseCost.toFixed(2) + ' + ' + totalServers + ' servidor' + (totalServers > 1 ? 'es' : '') + ' \u00d7 $' + perServer.toFixed(2) + ' = $' + (perServer * totalServers).toFixed(2);
+  } else {
+    costEl.textContent = '\u2014';
+    detailEl.textContent = 'Selecciona servidores para ver el costo';
+  }
+
+  updateCostEstimate();
+}
+
+// Compatibilidad
+function selectInstance(id) {
+  selectServerInstance(id, state.archMode === 'standalone' ? 'single' : 'app');
+}
+
+// ── INLINE SCAN: Escaneo automatico al seleccionar instancias ──
+
+// Disparar escaneo para una instancia (si no tiene ya un escaneo activo)
+function triggerInlineScan(instanceId) {
+  if (!instanceId) return;
+  var existing = state.scans[instanceId];
+  // No re-escanear si ya tiene un escaneo en progreso o exitoso
+  if (existing && (existing.status === 'running' || existing.status === 'queued' || existing.status === 'success')) return;
+
+  var instances = state._discoveredInstances || [];
+  var inst = instances.find(function(i) { return (i.instanceId || i.InstanceId || i.id) === instanceId; });
+  var platform = inst ? (inst.platform || inst.platformName || 'Linux') : 'Linux';
+  var region = state.selectedRegion || 'us-east-1';
+
+  // Marcar como queued inmediatamente para feedback visual
+  state.scans[instanceId] = { scanId: null, status: 'queued', progress: 0, phase: 'En cola', results: null, error: null };
+  updateScanActionsBar();
+  renderServerGrids();
+
+  // Llamar al API
+  api('POST', '/api/scan/start', { instanceId: instanceId, region: region, platform: platform })
+    .then(function(res) {
+      state.scans[instanceId].scanId = res.scanId;
+      state.scanIdMap[instanceId] = res.scanId;
+      // Iniciar polling si no esta activo
+      startScanPolling();
+    })
+    .catch(function(err) {
+      state.scans[instanceId].status = 'fail';
+      state.scans[instanceId].error = err.message || 'Error al iniciar escaneo';
+      updateScanActionsBar();
+      renderServerGrids();
+    });
+}
+
+// Escanear todas las instancias seleccionadas
+function scanAllInstances() {
+  var instanceIds = getSelectedInstanceIds();
+  if (instanceIds.length === 0) {
+    toast('Selecciona al menos una instancia primero', 'info');
+    return;
+  }
+
+  var region = state.selectedRegion || 'us-east-1';
+  var instancesToScan = [];
+  var instances = state._discoveredInstances || [];
+
+  instanceIds.forEach(function(id) {
+    var existing = state.scans[id];
+    if (existing && (existing.status === 'running' || existing.status === 'queued')) return; // Skip activos
+    var inst = instances.find(function(i) { return (i.instanceId || i.InstanceId || i.id) === id; });
+    var platform = inst ? (inst.platform || inst.platformName || 'Linux') : 'Linux';
+    state.scans[id] = { scanId: null, status: 'queued', progress: 0, phase: 'En cola', results: null, error: null };
+    instancesToScan.push({ instanceId: id, platform: platform });
+  });
+
+  if (instancesToScan.length === 0) {
+    toast('Todas las instancias ya tienen escaneos activos', 'info');
+    return;
+  }
+
+  updateScanActionsBar();
+  renderServerGrids();
+
+  api('POST', '/api/scan/batch', { instances: instancesToScan, region: region })
+    .then(function(res) {
+      var results = res.results || res;
+      if (Array.isArray(results)) {
+        results.forEach(function(r) {
+          if (state.scans[r.instanceId]) {
+            state.scans[r.instanceId].scanId = r.scanId;
+            state.scanIdMap[r.instanceId] = r.scanId;
+          }
+        });
+      }
+      startScanPolling();
+      toast(instancesToScan.length + ' escaneo(s) iniciados', 'info');
+    })
+    .catch(function(err) {
+      instancesToScan.forEach(function(inst) {
+        if (state.scans[inst.instanceId]) {
+          state.scans[inst.instanceId].status = 'fail';
+          state.scans[inst.instanceId].error = err.message;
+        }
+      });
+      updateScanActionsBar();
+      renderServerGrids();
+    });
+}
+
+// Reintentar escaneos fallidos
+function retryFailedScans() {
+  var failedIds = [];
+  Object.keys(state.scans).forEach(function(id) {
+    if (state.scans[id].status === 'fail') failedIds.push(id);
+  });
+  if (failedIds.length === 0) return;
+
+  failedIds.forEach(function(id) {
+    state.scans[id] = { scanId: null, status: 'queued', progress: 0, phase: 'Reintentando', results: null, error: null };
+  });
+  updateScanActionsBar();
+  renderServerGrids();
+
+  api('POST', '/api/scan/retry', {})
+    .then(function(res) {
+      var retried = res.retried || [];
+      retried.forEach(function(r) {
+        if (state.scans[r.instanceId]) {
+          state.scans[r.instanceId].scanId = r.scanId;
+          state.scanIdMap[r.instanceId] = r.scanId;
+        }
+      });
+      startScanPolling();
+      toast(retried.length + ' escaneo(s) reintentados', 'info');
+    })
+    .catch(function() {
+      failedIds.forEach(function(id) {
+        state.scans[id].status = 'fail';
+        state.scans[id].error = 'Error al reintentar';
+      });
+      updateScanActionsBar();
+      renderServerGrids();
+    });
+}
+
+// Reintentar un escaneo individual
+function retrySingleScan(instanceId) {
+  state.scans[instanceId] = { scanId: null, status: 'queued', progress: 0, phase: 'Reintentando', results: null, error: null };
+  updateScanActionsBar();
+  renderServerGrids();
+  triggerInlineScan(instanceId);
+}
+
+// Limpiar todos los escaneos
+function resetAllScans() {
+  if (state.scanPollInterval) {
+    clearInterval(state.scanPollInterval);
+    state.scanPollInterval = null;
+  }
+  state.scans = {};
+  state.scanIdMap = {};
+  api('POST', '/api/scan/reset', {}).catch(function() {});
+  updateScanActionsBar();
+  updateLandscapeResults();
+  renderServerGrids();
+  toast('Escaneos limpiados', 'info');
+}
+
+// Obtener IDs de instancias seleccionadas
+function getSelectedInstanceIds() {
+  var ids = [];
+  if (state.selectedAppInstanceId) ids.push(state.selectedAppInstanceId);
+  if (state.selectedDbInstanceId && ids.indexOf(state.selectedDbInstanceId) < 0) ids.push(state.selectedDbInstanceId);
+  if (state.selectedAppSecondaryId && ids.indexOf(state.selectedAppSecondaryId) < 0) ids.push(state.selectedAppSecondaryId);
+  if (state.selectedDbSecondaryId && ids.indexOf(state.selectedDbSecondaryId) < 0) ids.push(state.selectedDbSecondaryId);
+  return ids;
+}
+
+// Iniciar polling de estado de escaneos
+function startScanPolling() {
+  if (state.scanPollInterval) return; // Ya esta activo
+  state.scanPollInterval = setInterval(pollScanStatuses, 1500);
+}
+
+// Detener polling cuando no hay escaneos activos
+function stopScanPollingIfDone() {
+  var hasActive = Object.keys(state.scans).some(function(id) {
+    return state.scans[id].status === 'queued' || state.scans[id].status === 'running';
+  });
+  if (!hasActive && state.scanPollInterval) {
+    clearInterval(state.scanPollInterval);
+    state.scanPollInterval = null;
+  }
+}
+
+// Poll de estado de todos los escaneos
+async function pollScanStatuses() {
+  try {
+    var res = await api('GET', '/api/scan/status');
+    var scans = res.scans || res;
+    if (!scans || typeof scans !== 'object') return;
+
+    var updated = false;
+    // scans puede ser un objeto { scanId: statusObj } o un array
+    var scanList = Array.isArray(scans) ? scans : Object.values(scans);
+
+    scanList.forEach(function(s) {
+      var instId = s.instanceId;
+      if (!instId) return;
+      var prev = state.scans[instId];
+      if (!prev) return;
+
+      var changed = prev.status !== s.status || prev.progress !== s.progress;
+      prev.status = s.status;
+      prev.progress = s.progress || 0;
+      prev.scanId = s.scanId;
+
+      // Determinar fase actual
+      if (s.phases) {
+        var phaseKeys = Object.keys(s.phases);
+        for (var i = phaseKeys.length - 1; i >= 0; i--) {
+          if (s.phases[phaseKeys[i]] && s.phases[phaseKeys[i]].status !== 'pending') {
+            prev.phase = phaseKeys[i];
+            break;
+          }
+        }
+      }
+
+      if (s.results) prev.results = s.results;
+      if (s.error) prev.error = s.error;
+      if (changed) updated = true;
+    });
+
+    if (updated) {
+      renderServerGrids();
+      updateScanActionsBar();
+      updateLandscapeResults();
+    }
+
+    stopScanPollingIfDone();
+  } catch(e) {
+    // Silenciar errores de polling para no mostrar toast por cada poll
+  }
+}
+
+// Actualizar barra de acciones de escaneo
+function updateScanActionsBar() {
+  var bar = document.getElementById('scanActionsBar');
+  var retryBtn = document.getElementById('btnRetryFailed');
+  var resetBtn = document.getElementById('btnResetScans');
+  var summaryEl = document.getElementById('scanSummaryText');
+
+  var scanKeys = Object.keys(state.scans);
+  if (scanKeys.length === 0) {
+    bar.style.display = 'none';
+    return;
+  }
+
+  bar.style.display = 'flex';
+  var counts = { queued: 0, running: 0, success: 0, fail: 0 };
+  scanKeys.forEach(function(id) {
+    var st = state.scans[id].status;
+    if (counts[st] !== undefined) counts[st]++;
+  });
+
+  retryBtn.style.display = counts.fail > 0 ? 'inline-flex' : 'none';
+  resetBtn.style.display = scanKeys.length > 0 ? 'inline-flex' : 'none';
+
+  var parts = [];
+  if (counts.running > 0) parts.push(counts.running + ' escaneando');
+  if (counts.queued > 0) parts.push(counts.queued + ' en cola');
+  if (counts.success > 0) parts.push(counts.success + ' completados');
+  if (counts.fail > 0) parts.push(counts.fail + ' fallidos');
+  summaryEl.textContent = parts.join(' · ') + ' — ' + scanKeys.length + ' total';
+}
+
+// Construir vista de landscape agrupado por SID
+function updateLandscapeResults() {
+  var container = document.getElementById('landscapeResults');
+  var cardsContainer = document.getElementById('landscapeCards');
+  if (!container || !cardsContainer) return;
+
+  // Recolectar resultados exitosos (manejar formato nested y flat)
+  var sids = {};
+  Object.keys(state.scans).forEach(function(instId) {
+    var scan = state.scans[instId];
+    if (scan.status !== 'success' || !scan.results) return;
+    var r = scan.results;
+    var sid = (r.sap && r.sap.sid) || r.sid || 'Unknown';
+    if (!sids[sid]) {
+      sids[sid] = {
+        sid: sid,
+        product: (r.sap && r.sap.version) || r.version || (r.sap && r.sap.type) || r.type || '',
+        dbType: (r.sap && r.sap.dbType) || r.dbType || '',
+        haEnabled: (r.ha && r.ha.enabled) || r.haEnabled || false,
+        haType: (r.ha && r.ha.type) || r.haType || '',
+        nodes: []
+      };
+    }
+    var instances = state._discoveredInstances || [];
+    var inst = instances.find(function(i) { return (i.instanceId || i.InstanceId || i.id) === instId; });
+    var hostname = inst ? (inst.name || inst.Name || instId) : instId;
+    sids[sid].nodes.push({ instanceId: instId, hostname: hostname, confidence: r.confidence || 'high' });
+  });
+
+  var sidKeys = Object.keys(sids);
+  if (sidKeys.length === 0) {
+    container.style.display = 'none';
+    return;
+  }
+
+  container.style.display = 'block';
+  cardsContainer.innerHTML = sidKeys.map(function(sid) {
+    var s = sids[sid];
+    var haLabel = s.haEnabled ? ' HA (' + (s.haType || 'Cluster') + ')' : ' Standalone';
+    var nodeHtml = s.nodes.map(function(n) {
+      return '<span class="landscape-node">' + esc(n.hostname) + '</span>';
+    }).join('');
+    return '<div class="landscape-card">'
+      + '<h4><span style="color:var(--accent)">' + esc(s.sid) + '</span> — ' + esc(s.product) + haLabel + ' (' + s.nodes.length + ' nodos)</h4>'
+      + (s.dbType ? '<div style="font-size:12px;color:var(--txt3)">Base de datos: ' + esc(s.dbType) + '</div>' : '')
+      + '<div class="landscape-nodes">' + nodeHtml + '</div>'
+      + '</div>';
+  }).join('');
+
+  // Guardar landscape en systemConfigs
+  var firstSid = sids[sidKeys[0]];
+  if (firstSid && state.systemConfigs[state.currentSystemIndex]) {
+    var cfg = state.systemConfigs[state.currentSystemIndex];
+    cfg.sid = firstSid.sid;
+    cfg.dbType = firstSid.dbType;
+    cfg.sapDiscovery = firstSid;
+  }
+}
+
+// ── STEP 6: Configuracion + Credenciales ──
+// Usa resultados de inline scan (Step 5) cuando estan disponibles
+async function loadStep6() {
+  saveCurrentSystemConfig();
+
+  var scanCard = document.getElementById('step6ScanCard');
+  var configForm = document.getElementById('step6ConfigForm');
+  var nextBtn = document.getElementById('step6Next');
+
+  scanCard.style.display = 'block';
+  configForm.style.display = 'none';
+  nextBtn.disabled = true;
+
+  var totalSystems = state.systemConfigs.length;
+  var scanResults = [];
+  var successCount = 0;
+
+  for (var si = 0; si < totalSystems; si++) {
+    var cfg = state.systemConfigs[si];
+    var sysLabel = cfg.name || ('Sistema ' + (si + 1));
+    var scanInstanceId = cfg.selectedDbInstanceId || cfg.selectedAppInstanceId;
+
+    // Intentar usar resultados de inline scan
+    var inlineScan = scanInstanceId ? state.scans[scanInstanceId] : null;
+    if (inlineScan && inlineScan.status === 'success' && inlineScan.results) {
+      var r = inlineScan.results;
+      // Manejar formato nested (sap.sid) y flat (sid)
+      cfg.sid = cfg.sid || (r.sap && r.sap.sid) || r.sid || '';
+      cfg.dbType = cfg.dbType || (r.sap && r.sap.dbType) || r.dbType || '';
+      cfg.osType = cfg.osType || (r.os && r.os.os) || r.osType || '';
+      cfg.sapDiscovery = r;
+      if (r.dbHost) cfg.dbHost = cfg.dbHost || r.dbHost;
+      if (r.dbPort) cfg.dbPort = cfg.dbPort || r.dbPort;
+      if (r.dbUser) cfg.dbUser = cfg.dbUser || r.dbUser;
+      scanResults.push({ system: sysLabel, success: true, inline: true, results: {
+        sid: (r.sap && r.sap.sid) || r.sid,
+        dbType: (r.sap && r.sap.dbType) || r.dbType,
+        osType: (r.os && r.os.os) || r.osType
+      }});
+      successCount++;
+      continue;
+    }
+
+    // Fallback: escaneo tradicional si no hay inline
+    if (!scanInstanceId) {
+      scanResults.push({ system: sysLabel, success: false, error: 'Sin instancia seleccionada' });
+      continue;
+    }
+
+    document.getElementById('step6ScanSub').textContent =
+      totalSystems > 1
+        ? 'Escaneando sistema ' + (si + 1) + ' de ' + totalSystems + ': ' + sysLabel + '...'
+        : 'Conectando via Systems Manager...';
+
+    document.getElementById('step6ScanStatus').innerHTML =
+      '<div style="display:flex;align-items:center;gap:12px;padding:16px;border-radius:var(--rs);background:var(--info-dim);border:1px solid rgba(56,189,248,.3)">'
+      + '<div class="spinner"></div>'
+      + '<div><div style="font-size:14px;font-weight:600;color:var(--info)">Escaneando ' + esc(sysLabel) + '...</div>'
+      + '<div style="font-size:12px;color:var(--txt3);margin-top:2px">Detectando SID, base de datos, SO, hostname, puertos... (15-30 seg)</div></div></div>';
+
+    var instances = state._discoveredInstances || [];
+    var inst = instances.find(function(i) { return (i.instanceId || i.InstanceId || i.id) === scanInstanceId; });
+    var platform = inst ? (inst.platform || inst.platformName || 'Linux') : 'Linux';
+    var region = state.selectedRegion || 'us-east-1';
+
+    try {
+      var result = await api('POST', '/api/sap/discover', {
+        instanceId: scanInstanceId, platform: platform, region: region
+      });
+      if (!result.success) throw new Error(result.error || 'Error desconocido');
+
+      var disc = result.discovery;
+      var sug = disc.suggested || {};
+      cfg.sapDiscovery = disc;
+      cfg.sid = sug.sid || ''; cfg.dbType = sug.dbType || ''; cfg.osType = sug.osType || '';
+      cfg.dbHost = sug.dbHost || ''; cfg.dbPort = sug.dbPort || ''; cfg.dbUser = sug.dbUser || '';
+      cfg.sapClient = sug.sapClient || ''; cfg.sapUser = sug.sapUser || '';
+      if (disc.network) cfg.hostname = disc.network.hostname || '';
+      scanResults.push({ system: sysLabel, success: true, discovery: disc, suggested: sug });
+      successCount++;
+    } catch (e) {
+      scanResults.push({ system: sysLabel, success: false, error: e.message });
+    }
+  }
+
+  // Mostrar resumen
+  var checkHtml = '';
+  scanResults.forEach(function(r) {
+    if (r.success) {
+      var info = '';
+      if (r.inline && r.results) {
+        info = (r.results.sid ? 'SID: ' + r.results.sid : '') + (r.results.dbType ? ' | DB: ' + r.results.dbType : '') + ' (inline scan)';
+      } else if (r.suggested) {
+        info = (r.suggested.sid ? 'SID: ' + r.suggested.sid : '') + (r.suggested.dbType ? ' | DB: ' + r.suggested.dbType : '') + (r.suggested.osType ? ' | OS: ' + r.suggested.osType : '');
+      }
+      checkHtml += buildCheckItem(true, r.system, info);
+    } else {
+      checkHtml += buildCheckItem(false, r.system, r.error);
+    }
+  });
+
+  document.getElementById('step6ScanChecklist').innerHTML = checkHtml;
+  document.getElementById('step6ScanDetails').style.display = 'block';
+
+  var hasinline = scanResults.some(function(r){return r.inline;});
+  document.getElementById('step6ScanStatus').innerHTML =
+    '<div style="display:flex;align-items:center;gap:10px;padding:12px;border-radius:var(--rs);background:' +
+    (successCount > 0 ? 'var(--ok-dim);border:1px solid rgba(52,211,153,.3)' : 'var(--warn-dim);border:1px solid rgba(251,191,36,.3)') + '">'
+    + '<span style="font-size:18px">' + (successCount > 0 ? '\u2713' : '\u26A0') + '</span>'
+    + '<span style="font-size:13px;color:' + (successCount > 0 ? 'var(--ok)' : 'var(--warn)') + '">'
+    + successCount + ' de ' + totalSystems + ' sistema' + (totalSystems > 1 ? 's' : '') + ' escaneados correctamente.'
+    + (hasinline ? ' (via inline scan)' : '') + '</span></div>';
+
+  configForm.style.display = 'block';
+  nextBtn.disabled = false;
+
+  buildCfgSystemsTable();
+  state._cfgSystemIndex = 0;
+  fillCredentialsForSystem(0);
+  renderCfgSystemTabs();
+
+  toast(successCount + ' sistema' + (successCount > 1 ? 's' : '') + ' escaneado' + (successCount > 1 ? 's' : ''), 'success');
+}
+
+function renderCfgSystemTabs() {
+  var tabsContainer = document.getElementById('cfgSystemTabs');
+  var tabsBar = document.getElementById('cfgSystemTabsBar');
+
+  if (state.systemConfigs.length <= 1) {
+    tabsContainer.style.display = 'none';
+    return;
+  }
+
+  tabsContainer.style.display = 'block';
+
+  tabsBar.innerHTML = state.systemConfigs.map(function(sys, i) {
+    var label = sys.name || ('Sistema ' + (i + 1));
+    return '<button class="tab-btn' + (i === (state._cfgSystemIndex || 0) ? ' active' : '') + '" onclick="switchCfgSystem(' + i + ')">' +
+      esc(label) + ' (' + esc(sys.environment) + ')</button>';
+  }).join('');
+}
+
+function switchCfgSystem(index) {
+  saveCredentialsForSystem(state._cfgSystemIndex || 0);
+  state._cfgSystemIndex = index;
+  renderCfgSystemTabs();
+  fillCredentialsForSystem(index);
+}
+
+function fillCredentialsForSystem(index) {
+  var cfg = state.systemConfigs[index];
+  if (!cfg) return;
+
+  document.getElementById('dbHost').value = cfg.dbHost || '';
+  document.getElementById('dbPort').value = cfg.dbPort || '';
+  document.getElementById('dbUser').value = cfg.dbUser || '';
+  document.getElementById('dbPass').value = cfg.dbPass || '';
+  document.getElementById('sapClient').value = cfg.sapClient || '';
+  document.getElementById('sapUser').value = cfg.sapUser || '';
+  document.getElementById('sapPass').value = cfg.sapPass || '';
+}
+
+function saveCredentialsForSystem(index) {
+  var cfg = state.systemConfigs[index];
+  if (!cfg) return;
+
+  cfg.dbHost = document.getElementById('dbHost').value.trim();
+  cfg.dbPort = document.getElementById('dbPort').value.trim();
+  cfg.dbUser = document.getElementById('dbUser').value.trim();
+  cfg.dbPass = document.getElementById('dbPass').value;
+  cfg.sapClient = document.getElementById('sapClient').value.trim();
+  cfg.sapUser = document.getElementById('sapUser').value.trim();
+  cfg.sapPass = document.getElementById('sapPass').value;
+}
+
+function buildCfgSystemsTable() {
+  var container = document.getElementById('cfgSystemsTable');
+
+  var html = '<table class="summary-table">';
+  html += '<tr style="border-bottom:2px solid var(--border)"><td style="font-weight:700;color:var(--accent)">Sistema</td><td style="font-weight:700;color:var(--accent)">SID</td><td style="font-weight:700;color:var(--accent)">BD</td><td style="font-weight:700;color:var(--accent)">SO</td><td style="font-weight:700;color:var(--accent)">Arquitectura</td></tr>';
+
+  state.systemConfigs.forEach(function(cfg) {
+    var archLabel = cfg.archMode === 'standalone' ? 'Standalone'
+      : cfg.archMode === 'distributed' ? 'Distribuido'
+      : 'HA \u2014 ' + (cfg.haScope === 'app' ? 'App' : cfg.haScope === 'db' ? 'DB' : 'Ambos');
+
+    html += '<tr>';
+    html += '<td>' + esc(cfg.name || '\u2014') + ' (' + esc(cfg.environment) + ')</td>';
+    html += '<td>' + esc(cfg.sid || '\u2014') + '</td>';
+    html += '<td>' + esc(cfg.dbType || '\u2014') + '</td>';
+    html += '<td>' + esc(cfg.osType || '\u2014') + '</td>';
+    html += '<td>' + esc(archLabel) + '</td>';
+    html += '</tr>';
+  });
+
+  html += '</table>';
+  container.innerHTML = html;
+}
+
+function saveConfig() {
+  saveCredentialsForSystem(state._cfgSystemIndex || 0);
+
+  state.config = {
+    stackName: document.getElementById('cfgStackName').value.trim() || 'sap-alwaysops',
+    adminEmail: document.getElementById('cfgEmail').value.trim(),
+    mode: state.plan.mode,
+    region: state.selectedRegion,
+    systems: state.systemConfigs.map(function(cfg) {
+      return {
+        name: cfg.name,
+        environment: cfg.environment,
+        sid: cfg.sid,
+        dbType: cfg.dbType,
+        osType: cfg.osType,
+        archMode: cfg.archMode,
+        haScope: cfg.haScope,
+        appInstanceId: cfg.selectedAppInstanceId,
+        appSecondaryId: cfg.selectedAppSecondaryId,
+        dbInstanceId: cfg.selectedDbInstanceId,
+        dbSecondaryId: cfg.selectedDbSecondaryId,
+        serverCount: getServerCount(cfg),
+        credentials: {
+          db: { host: cfg.dbHost, port: cfg.dbPort, user: cfg.dbUser, password: cfg.dbPass || '' },
+          app: { client: cfg.sapClient, user: cfg.sapUser, password: cfg.sapPass || '' }
+        }
+      };
+    })
+  };
+
+  // Compatibilidad con formato antiguo (primer sistema)
+  var first = state.systemConfigs[0] || {};
+  state.config.systemId = 'alwaysops-' + (first.sid || 'sap').toLowerCase();
+  state.config.sid = first.sid;
+  state.config.dbType = first.dbType;
+  state.config.osType = first.osType;
+  state.config.archMode = first.archMode;
+  state.config.haScope = first.haScope;
+  state.config.appInstanceId = first.selectedAppInstanceId;
+  state.config.appSecondaryId = first.selectedAppSecondaryId;
+  state.config.dbInstanceId = first.selectedDbInstanceId;
+  state.config.dbSecondaryId = first.selectedDbSecondaryId;
+  state.config.ec2InstanceId = first.selectedAppInstanceId;
+  state.config.environment = first.environment;
+
+  state.credentials = {
+    db: { host: first.dbHost, port: first.dbPort, user: first.dbUser, password: first.dbPass || '' },
+    app: { client: first.sapClient, user: first.sapUser, password: first.sapPass || '' }
+  };
+}
+
+// Helper para construir items del checklist de descubrimiento
+function buildCheckItem(pass, label, detail) {
+  return '<div class="check-item ' + (pass ? 'pass' : 'fail') + '">'
+    + '<div class="check-icon">' + (pass ? '\u2713' : '\u2715') + '</div>'
+    + '<span class="check-label">' + esc(label) + '</span>'
+    + '<span class="check-detail">' + esc(detail) + '</span>'
+    + '</div>';
+}
+
+async function testDbConn() {
+  var resEl = document.getElementById('dbTestResult');
+  resEl.innerHTML = '<div class="spinner spinner-sm"></div> Probando conexion...';
+  try {
+    var r = await api('POST', '/api/test/db-connection', {
+      host: document.getElementById('dbHost').value.trim(),
+      port: document.getElementById('dbPort').value.trim(),
+      user: document.getElementById('dbUser').value.trim(),
+      password: document.getElementById('dbPass').value
+    });
+    resEl.innerHTML = '<span style="color:var(--ok)">\u2713 Conexion exitosa</span>';
+    toast('Conexion a base de datos exitosa', 'success');
+  } catch(e) {
+    resEl.innerHTML = '<span style="color:var(--err)">\u2715 ' + esc(e.message) + '</span>';
+  }
+}
+
+// ── STEP 7: Revision ──
+function buildReview() {
+  var baseCost = 6.50;
+  var perServer = 1.45;
+  var totalServers = 0;
+
+  // Tabla de sistemas
+  var sysHtml = '<table class="summary-table">';
+  sysHtml += '<tr style="border-bottom:2px solid var(--border)">';
+  sysHtml += '<td style="font-weight:700;color:var(--accent)">Sistema</td>';
+  sysHtml += '<td style="font-weight:700;color:var(--accent)">Ambiente</td>';
+  sysHtml += '<td style="font-weight:700;color:var(--accent)">Arquitectura</td>';
+  sysHtml += '<td style="font-weight:700;color:var(--accent)">Servidores</td>';
+  sysHtml += '<td style="font-weight:700;color:var(--accent)">Costo Est.</td>';
+  sysHtml += '</tr>';
+
+  state.systemConfigs.forEach(function(cfg) {
+    var count = getServerCount(cfg);
+    totalServers += count;
+    var cost = perServer * count;
+    var archLabel = cfg.archMode === 'standalone' ? 'Standalone'
+      : cfg.archMode === 'distributed' ? 'Distribuido'
+      : 'HA \u2014 ' + (cfg.haScope === 'app' ? 'App' : cfg.haScope === 'db' ? 'DB' : 'Ambos');
+
+    sysHtml += '<tr>';
+    sysHtml += '<td>' + esc(cfg.name || '\u2014') + (cfg.sid ? ' (' + esc(cfg.sid) + ')' : '') + '</td>';
+    sysHtml += '<td>' + esc(cfg.environment) + '</td>';
+    sysHtml += '<td>' + esc(archLabel) + '</td>';
+    sysHtml += '<td>' + count + '</td>';
+    sysHtml += '<td>$' + cost.toFixed(2) + '</td>';
+    sysHtml += '</tr>';
+  });
+
+  sysHtml += '</table>';
+  document.getElementById('reviewSystemsTable').innerHTML = sysHtml;
+
+  // Tabla de config general
+  var c = state.config;
+  var rows = [
+    ['Nombre del Stack', c.stackName],
+    ['Region', c.region],
+    ['Plan', c.mode === 'TRIAL' ? 'Trial' : 'Produccion'],
+    ['Total Sistemas', state.systemConfigs.length],
+    ['Total Servidores', totalServers],
+    ['Email Admin', c.adminEmail],
+    ['Credenciales SAP', state.credentials ? 'Configuradas' : 'No configuradas']
+  ];
+
+  document.getElementById('reviewTable').innerHTML = rows.map(function(r) {
+    return '<tr><td>' + esc(r[0]) + '</td><td>' + esc(r[1]) + '</td></tr>';
+  }).join('');
+
+  // Costo
+  var totalCost = baseCost + (perServer * totalServers);
+  document.getElementById('reviewCostBreakdown').textContent =
+    'Infra base: $' + baseCost.toFixed(2) + ' + ' + totalServers + ' servidores \u00d7 $' + perServer.toFixed(2) + ' = $' + (perServer * totalServers).toFixed(2);
+  document.getElementById('costEstimate').textContent = '~$' + totalCost.toFixed(2) + '/mes';
+
+  document.getElementById('confirmCheck').checked = false;
+  document.getElementById('btnDeploy').disabled = true;
+}
+
+// ── STEP 8: Deploy ──
+const DEPLOY_STEP_NAMES = [
+  'Validar configuracion',
+  'Crear bucket S3',
+  'Subir artefactos',
+  'Crear stack CloudFormation',
+  'Configurar Lambda',
+  'Configurar EventBridge',
+  'Configurar SNS',
+  'Verificacion final'
+];
+
+async function startDeploy() {
+  // Navegar a Step 8 (Despliegue) si no estamos ahi
+  if (state.currentStep !== 8) {
+    goToStep(8);
+  }
+  document.getElementById('deploySuccess').style.display = 'none';
+  document.getElementById('deployError').style.display = 'none';
+  document.getElementById('btnCancelDeploy').style.display = 'inline-flex';
+  document.getElementById('btnRetryStep').style.display = 'none';
+  state.logOffset = 0;
+  state.deployStartTime = Date.now();
+
+  // Build step UI
+  document.getElementById('deploySteps').innerHTML = DEPLOY_STEP_NAMES.map((name, i) =>
+    '<div class="deploy-step pending" id="ds' + i + '">' +
+    '<div class="ds-icon">○</div><span>' + esc(name) + '</span></div>'
+  ).join('');
+
+  document.getElementById('deployLog').textContent = '';
+  document.getElementById('deployProgressBar').style.width = '0%';
+  document.getElementById('deployPercent').textContent = '0%';
+
+  try {
+    await api('POST', '/api/deploy/start', { ...state.config, credentials: state.credentials });
+  } catch(e) { return; }
+
+  // Start polling
+  if (state.deployPollInterval) clearInterval(state.deployPollInterval);
+  state.deployPollInterval = setInterval(pollDeployStatus, 2000);
+  updateDeployTimer();
+}
+
+async function pollDeployStatus() {
+  try {
+    const s = await fetch('/api/deploy/status?offset=' + state.logOffset).then(r => r.json());
+
+    // Update steps
+    const currentStep = s.currentStep != null ? s.currentStep : (s.step || 0);
+    const totalSteps = s.totalSteps || DEPLOY_STEP_NAMES.length;
+    const pct = Math.round(((s.status === 'completed' ? totalSteps : currentStep) / totalSteps) * 100);
+    document.getElementById('deployProgressBar').style.width = pct + '%';
+    document.getElementById('deployPercent').textContent = pct + '%';
+
+    DEPLOY_STEP_NAMES.forEach((_, i) => {
+      const el = document.getElementById('ds' + i);
+      if (!el) return;
+      let cls = 'deploy-step ', icon = '○';
+      if (s.status === 'error' && s.failedStep === i) { cls += 'error'; icon = '✕'; }
+      else if (i < currentStep) { cls += 'done'; icon = '✓'; }
+      else if (i === currentStep && s.status !== 'completed') { cls += 'running'; icon = '<div class="spinner spinner-sm"></div>'; }
+      else { cls += 'pending'; }
+      el.className = cls;
+      el.querySelector('.ds-icon').innerHTML = icon;
+    });
+
+    // Logs
+    if (s.logs) {
+      const logEl = document.getElementById('deployLog');
+      if (Array.isArray(s.logs)) {
+        logEl.textContent += s.logs.join('\n') + '\n';
+        state.logOffset += s.logs.length;
+      } else {
+        logEl.textContent = s.logs;
+      }
+      logEl.scrollTop = logEl.scrollHeight;
+    }
+
+    // Completed
+    if (s.status === 'completed') {
+      clearInterval(state.deployPollInterval);
+      state.deployPollInterval = null;
+      document.getElementById('btnCancelDeploy').style.display = 'none';
+      document.getElementById('deploySuccess').style.display = 'block';
+      const result = s.result || s.outputs || {};
+      document.getElementById('deployResultTable').innerHTML =
+        '<tr><td>Dashboard URL</td><td><a href="' + esc(result.dashboardUrl || '#') + '" target="_blank">' + esc(result.dashboardUrl || 'N/A') + '</a></td></tr>' +
+        '<tr><td>API URL</td><td>' + esc(result.apiUrl || 'N/A') + '</td></tr>' +
+        '<tr><td>Stack ID</td><td style="font-size:12px">' + esc(result.stackId || 'N/A') + '</td></tr>';
+      launchConfetti();
+      toast('Despliegue completado exitosamente', 'success');
+    }
+
+    // Error
+    if (s.status === 'error') {
+      clearInterval(state.deployPollInterval);
+      state.deployPollInterval = null;
+      document.getElementById('btnCancelDeploy').style.display = 'none';
+      document.getElementById('btnRetryStep').style.display = 'inline-flex';
+      document.getElementById('deployError').style.display = 'block';
+      document.getElementById('deployErrorMsg').textContent = s.error || 'Error desconocido en el despliegue.';
+    }
+  } catch(e) { /* continue polling */ }
+}
+
+function updateDeployTimer() {
+  if (!state.deployStartTime) return;
+  const el = document.getElementById('deployTimer');
+  const update = () => {
+    if (!state.deployPollInterval && !state.deployStartTime) return;
+    const elapsed = Math.floor((Date.now() - state.deployStartTime) / 1000);
+    el.textContent = formatTime(elapsed);
+    if (state.deployPollInterval) requestAnimationFrame(update);
+  };
+  update();
+  // Also keep updating via interval for reliability
+  const timerInt = setInterval(() => {
+    if (!state.deployPollInterval) { clearInterval(timerInt); return; }
+    const elapsed = Math.floor((Date.now() - state.deployStartTime) / 1000);
+    el.textContent = formatTime(elapsed);
+  }, 1000);
+}
+
+async function cancelDeploy() {
+  if (!confirm('¿Estas seguro de cancelar el despliegue?')) return;
+  try {
+    await api('POST', '/api/deploy/cancel');
+    clearInterval(state.deployPollInterval);
+    state.deployPollInterval = null;
+    toast('Despliegue cancelado', 'info');
+  } catch(e) { /* toast */ }
+}
+
+async function retryDeployStep() {
+  document.getElementById('deployError').style.display = 'none';
+  document.getElementById('btnRetryStep').style.display = 'none';
+  document.getElementById('btnCancelDeploy').style.display = 'inline-flex';
+  try {
+    await api('POST', '/api/deploy/retry');
+    if (state.deployPollInterval) clearInterval(state.deployPollInterval);
+    state.deployPollInterval = setInterval(pollDeployStatus, 2000);
+  } catch(e) { /* toast */ }
+}
+
+// ── Confetti ──
+function launchConfetti() {
+  const canvas = document.getElementById('confettiCanvas');
+  const ctx = canvas.getContext('2d');
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+  const particles = [];
+  const colors = ['#47b1a3','#5ab031','#aace7c','#f25757','#989fce','#80ba24','#248b7e'];
+  for (let i = 0; i < 150; i++) {
+    particles.push({
+      x: Math.random() * canvas.width,
+      y: Math.random() * canvas.height - canvas.height,
+      w: Math.random() * 10 + 5,
+      h: Math.random() * 6 + 3,
+      color: colors[Math.floor(Math.random() * colors.length)],
+      vx: (Math.random() - 0.5) * 4,
+      vy: Math.random() * 3 + 2,
+      rot: Math.random() * 360,
+      rv: (Math.random() - 0.5) * 8
+    });
+  }
+  let frame = 0;
+  function draw() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    particles.forEach(p => {
+      p.x += p.vx;
+      p.y += p.vy;
+      p.rot += p.rv;
+      p.vy += 0.05;
+      ctx.save();
+      ctx.translate(p.x, p.y);
+      ctx.rotate(p.rot * Math.PI / 180);
+      ctx.fillStyle = p.color;
+      ctx.fillRect(-p.w/2, -p.h/2, p.w, p.h);
+      ctx.restore();
+    });
+    frame++;
+    if (frame < 180) requestAnimationFrame(draw);
+    else ctx.clearRect(0, 0, canvas.width, canvas.height);
+  }
+  draw();
+}
+
+// ── STEP 9: Health ──
+async function loadHealth() {
+  const grid = document.getElementById('healthGrid');
+  grid.innerHTML = '<div class="spinner"></div>';
+
+  try {
+    const h = await api('GET', '/api/deploy/health');
+    state.healthChecks = h;
+    const checks = h.checks || h.resources || h;
+    if (Array.isArray(checks)) {
+      grid.innerHTML = checks.map(c =>
+        '<div class="health-item ' + (c.healthy || c.status === 'healthy' || c.ok ? 'healthy' : 'unhealthy') + '">' +
+        '<span style="font-size:18px">' + (c.healthy || c.status === 'healthy' || c.ok ? '✓' : '✕') + '</span>' +
+        '<div><div style="font-weight:600;font-size:13px">' + esc(c.name || c.resource) + '</div>' +
+        '<div style="font-size:11px;color:var(--txt3)">' + esc(c.detail || c.status || '') + '</div></div></div>'
+      ).join('');
+    } else if (typeof checks === 'object') {
+      grid.innerHTML = Object.entries(checks).map(([k,v]) => {
+        const ok = typeof v === 'boolean' ? v : (v && (v.healthy || v.ok));
+        return '<div class="health-item ' + (ok ? 'healthy' : 'unhealthy') + '">' +
+          '<span style="font-size:18px">' + (ok ? '✓' : '✕') + '</span>' +
+          '<span style="font-size:13px;font-weight:600">' + esc(k) + '</span></div>';
+      }).join('');
+    }
+
+    // Links
+    const dashUrl = h.dashboardUrl || h.dashboard || '#';
+    const apiUrl = h.apiUrl || h.api || '#';
+    state._dashboardUrl = dashUrl;
+    state._apiUrl = apiUrl;
+    document.getElementById('linkDashboard').href = dashUrl;
+  } catch(e) { grid.innerHTML = '<p style="color:var(--err)">Error al verificar salud</p>'; }
+}
+
+function openDashboard(e) {
+  var link = document.getElementById('linkDashboard');
+  var href = link ? link.href : '#';
+  if (MOCK_MODE) {
+    e.preventDefault();
+    window.open('/mock/dashboard', '_blank');
+    return false;
+  }
+  if (!href || href === '#' || href.endsWith('#')) {
+    e.preventDefault();
+    toast('Dashboard URL no disponible aun', 'info');
+    return false;
+  }
+  return true;
+}
+
+function copyApiUrl() {
+  var url = state._apiUrl || '';
+  if (MOCK_MODE) url = 'https://abc123xyz.lambda-url.us-east-1.on.aws';
+  if (!url || url === '#') {
+    toast('API URL no disponible aun', 'info');
+    return;
+  }
+  navigator.clipboard.writeText(url).then(function() {
+    toast('API URL copiada: ' + url, 'success');
+  }).catch(function() {
+    prompt('API URL:', url);
+  });
+}
+
+async function downloadReport() {
+  try {
+    const r = await fetch('/api/deploy/report');
+    const blob = await r.blob();
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'sap-alwaysops-report.json';
+    a.click();
+    URL.revokeObjectURL(url);
+    toast('Reporte descargado', 'success');
+  } catch(e) { toast('Error al descargar reporte'); }
+}
+
+function confirmTeardown() {
+  const confirmed = prompt('Escribe "ELIMINAR" para confirmar la destruccion del stack:');
+  if (confirmed === 'ELIMINAR') {
+    teardownStack();
+  } else if (confirmed !== null) {
+    toast('Confirmacion incorrecta. Escribe ELIMINAR exactamente.', 'info');
+  }
+}
+
+async function teardownStack() {
+  const btn = document.getElementById('btnTeardown');
+  btn.disabled = true;
+  btn.innerHTML = '<div class="spinner spinner-sm"></div> Eliminando...';
+  try {
+    await api('POST', '/api/deploy/teardown');
+    toast('Stack eliminado correctamente', 'success');
+    btn.textContent = 'Eliminado';
+  } catch(e) {
+    btn.disabled = false;
+    btn.textContent = 'Eliminar Stack';
+  }
+}
+
+// ── Mock Mode: auto-fill todos los datos simulados ──
+var MOCK_MODE = false;
+
+async function checkMockMode() {
+  try {
+    var r = await fetch('/api/mock/status');
+    var d = await r.json();
+    MOCK_MODE = d.mock === true;
+    if (MOCK_MODE) {
+      toast('MODO MOCK — Datos simulados activos', 'info');
+    }
+  } catch(e) { /* no mock */ }
+}
+
+// Auto-fill datos en cada step cuando estamos en mock
+function mockAutoFill(step) {
+  if (!MOCK_MODE) return;
+
+  // ── Step 0: Prerequisitos — el mock API ya devuelve todo OK
+  // Solo esperamos a que el boton se habilite y auto-avanzamos
+  if (step === 0) {
+    setTimeout(function() {
+      if (state.currentStep !== 0) return; // ya avanzamos
+      var btn = document.getElementById('step0Next');
+      if (btn && !btn.disabled) {
+        toast('MOCK: Pre-requisitos OK, avanzando...', 'info');
+        onStep0Next();
+      }
+    }, 1500);
+  }
+
+  // ── Step 2: Credenciales — llenar access keys mock y auto-validar
+  if (step === 2) {
+    var akEl = document.getElementById('awsAccessKey');
+    var skEl = document.getElementById('awsSecretKey');
+    if (akEl && !akEl.value) akEl.value = 'AKIAIOSFODNN7EXAMPLE';
+    if (skEl && !skEl.value) skEl.value = 'wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY';
+    // Asegurar que estamos en tab manual
+    switchCredTab('manual');
+    // Auto-validar despues de llenar
+    setTimeout(async function() {
+      if (state.currentStep !== 2) return; // ya avanzamos
+      toast('MOCK: Validando credenciales simuladas...', 'info');
+      await validateAws();
+      // Esperar a que la validacion termine y auto-guardar
+      setTimeout(function() {
+        if (state.currentStep !== 2) return;
+        var saveBtn = document.getElementById('btnSaveCreds');
+        if (saveBtn && !saveBtn.disabled) {
+          saveAwsCreds(); // esto llama goToStep(3)
+        }
+      }, 1500);
+    }, 800);
+  }
+
+  // ── Step 3: AWS Verificado — el mock ya devuelve permisos OK
+  // Solo esperamos a que termine la verificacion y auto-avanzamos
+  if (step === 3) {
+    setTimeout(function() {
+      if (state.currentStep !== 3) return;
+      var btn = document.getElementById('step3Next');
+      if (btn && !btn.disabled) {
+        toast('MOCK: Permisos verificados, avanzando...', 'info');
+        goToStep(4);
+      } else {
+        // Reintentar: puede estar cargando aun
+        setTimeout(function() {
+          if (state.currentStep !== 3) return;
+          var btn2 = document.getElementById('step3Next');
+          if (btn2 && !btn2.disabled) {
+            toast('MOCK: Permisos verificados, avanzando...', 'info');
+            goToStep(4);
+          }
+        }, 3000);
+      }
+    }, 2500);
+  }
+
+  // ── Step 4: Plan de despliegue — seleccionar Trial y llenar nombre
+  if (step === 4) {
+    selectPlan('TRIAL');
+    var nameEl = document.getElementById('trialSysName');
+    if (nameEl) {
+      nameEl.value = 'OMP';
+      if (state.plan.systems[0]) {
+        state.plan.systems[0].name = 'OMP';
+        state.plan.systems[0].environment = 'PRD';
+      }
+      var envEl = document.getElementById('trialSysEnv');
+      if (envEl) envEl.value = 'PRD';
+      updateCostEstimate();
+    }
+    // Habilitar el boton de continuar
+    var s4next = document.getElementById('step4Next');
+    if (s4next) s4next.disabled = false;
+    toast('MOCK: Plan Trial seleccionado — Sistema OMP PRD', 'info');
+  }
+
+  // ── Step 5: Discovery + Arquitectura — auto-seleccionar primer servidor + inline scan
+  if (step === 5) {
+    // Esperar a que discovery termine (el API mock responde rapido)
+    setTimeout(function() {
+      var instances = state._discoveredInstances || [];
+      if (instances.length > 0) {
+        // Seleccionar standalone con el primer servidor (OMP)
+        selectArchMode('standalone');
+        var firstId = instances[0].instanceId || instances[0].InstanceId || instances[0].id;
+        selectServerInstance(firstId, 'single'); // Esto dispara inline scan automaticamente
+        toast('MOCK: Servidor ' + (instances[0].name || firstId) + ' seleccionado — escaneo inline iniciado', 'info');
+        // Habilitar boton continuar despues de que el escaneo termine
+        setTimeout(function() {
+          var btn = document.getElementById('step5Next');
+          if (btn) btn.disabled = false;
+        }, 5000);
+      }
+    }, 2000);
+  }
+
+  // ── Step 6: Config + Credenciales — llenar email, passwords y datos faltantes
+  if (step === 6) {
+    // Esperar a que el SSM scan termine (mock es rapido pero async)
+    setTimeout(function() {
+      // Email admin
+      var emailEl = document.getElementById('cfgEmail');
+      if (emailEl && !emailEl.value) emailEl.value = 'admin@sap-alwaysops-mock.com';
+      // Stack name
+      var stackEl = document.getElementById('cfgStackName');
+      if (stackEl && !stackEl.value) stackEl.value = 'sap-alwaysops-mock';
+
+      // Llenar credenciales de cada sistema
+      state.systemConfigs.forEach(function(cfg, i) {
+        if (!cfg.dbPass) cfg.dbPass = 'MockDBPass123!';
+        if (!cfg.sapPass) cfg.sapPass = 'MockSAPPass456!';
+        if (!cfg.sapClient) cfg.sapClient = '001';
+        if (!cfg.sapUser) cfg.sapUser = 'ALWAYSOPS_SVC';
+        if (!cfg.dbUser && !cfg.dbUser) cfg.dbUser = 'DBADMIN';
+      });
+
+      // Llenar los campos visibles del sistema actual
+      fillCredentialsForSystem(state._cfgSystemIndex || 0);
+
+      // Asegurar que los campos de password tienen valor
+      var dbPass = document.getElementById('dbPass');
+      var sapPass = document.getElementById('sapPass');
+      if (dbPass && !dbPass.value) dbPass.value = 'MockDBPass123!';
+      if (sapPass && !sapPass.value) sapPass.value = 'MockSAPPass456!';
+
+      // Habilitar boton continuar
+      var nextBtn = document.getElementById('step6Next');
+      if (nextBtn) nextBtn.disabled = false;
+
+      toast('MOCK: Credenciales simuladas completadas', 'info');
+    }, 3000);
+  }
+
+  // ── Step 7: Revision — auto-llenar config y marcar confirmacion
+  if (step === 7) {
+    // Primero guardar config (para que buildReview tenga los datos)
+    saveConfig();
+    buildReview();
+    setTimeout(function() {
+      // Marcar checkbox de confirmacion
+      var check = document.getElementById('confirmCheck');
+      if (check) {
+        check.checked = true;
+        // Habilitar boton de deploy
+        var deployBtn = document.getElementById('btnDeploy');
+        if (deployBtn) deployBtn.disabled = false;
+      }
+      toast('MOCK: Revision completada — Listo para desplegar', 'info');
+    }, 500);
+  }
+}
+
+// ── Init ──
+document.addEventListener('DOMContentLoaded', async () => {
+  await checkMockMode();
+  goToStep(0);
+});
+</script>
+</body>
+</html>
