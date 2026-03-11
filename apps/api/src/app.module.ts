@@ -17,6 +17,10 @@ import { AuditModule } from './modules/audit/audit.module';
 import { ConnectorsModule } from './modules/connectors/connectors.module';
 import { HAModule } from './modules/ha/ha.module';
 import { MetricsModule } from './modules/metrics/metrics.module';
+import { AnalyticsModule } from './modules/analytics/analytics.module';
+import { ChatModule } from './modules/chat/chat.module';
+import { PlansModule } from './modules/plans/plans.module';
+import { SettingsModule } from './modules/settings/settings.module';
 
 @Module({
   imports: [
@@ -40,6 +44,10 @@ import { MetricsModule } from './modules/metrics/metrics.module';
     ConnectorsModule,
     HAModule,
     MetricsModule,
+    AnalyticsModule,
+    ChatModule,
+    PlansModule,
+    SettingsModule,
   ],
 })
 export class AppModule {}
