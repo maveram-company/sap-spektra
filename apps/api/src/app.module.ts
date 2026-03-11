@@ -4,12 +4,17 @@ import configuration from './config/configuration';
 import { PrismaModule } from './infrastructure/prisma/prisma.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { HealthModule } from './modules/health/health.module';
+import { DashboardModule } from './modules/dashboard/dashboard.module';
 import { UsersModule } from './modules/users/users.module';
 import { SystemsModule } from './modules/systems/systems.module';
 import { TenantsModule } from './modules/tenants/tenants.module';
 import { AlertsModule } from './modules/alerts/alerts.module';
 import { EventsModule } from './modules/events/events.module';
-import { DashboardModule } from './modules/dashboard/dashboard.module';
+import { ApprovalsModule } from './modules/approvals/approvals.module';
+import { RunbooksModule } from './modules/runbooks/runbooks.module';
+import { OperationsModule } from './modules/operations/operations.module';
+import { AuditModule } from './modules/audit/audit.module';
+import { ConnectorsModule } from './modules/connectors/connectors.module';
 
 @Module({
   imports: [
@@ -26,6 +31,11 @@ import { DashboardModule } from './modules/dashboard/dashboard.module';
     TenantsModule,
     AlertsModule,
     EventsModule,
+    ApprovalsModule,
+    RunbooksModule,
+    OperationsModule,
+    AuditModule,
+    ConnectorsModule,
   ],
 })
 export class AppModule {}
