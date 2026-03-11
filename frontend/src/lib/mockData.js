@@ -7,17 +7,35 @@ function seeded(seed) {
   return x - Math.floor(x);
 }
 
-// ── Sistemas SAP ──
+// ══════════════════════════════════════════════════════════════
+// Modelo de dominio SAP — Jerarquía oficial:
+//   Landscape > System > Component > Instance > Host > Node
+//
+// - mockSystems:          Nivel SISTEMA (SID, tipo, salud, SLA)
+// - mockSystemInstances:  Nivel INSTANCIA (ASCS, PAS, AAS, HANA, por host)
+// - mockDiscovery:        Nivel INSTANCIA (descubrimiento automático)
+// - mockHASystems:        Nivel SISTEMA (topología HA, nodos primario/secundario)
+// - mockServerMetrics:    Nivel SISTEMA (métricas SAP agregadas)
+// - mockSAPMonitoring:    Nivel SISTEMA (SM12, SM13, SM37, SM21)
+// - mockSystemMeta:       Nivel SISTEMA (release, kernel, client)
+// - mockSIDLines:         Nivel LANDSCAPE (agrupación de sistemas DEV/QAS/PRD)
+//
+// Regla: cpu/mem/disk en mockSystems son métricas AGREGADAS del sistema
+// (promedio ponderado de sus instancias). Para detalle por host/instancia,
+// consultar mockSystemInstances + getSystemHosts().
+// ══════════════════════════════════════════════════════════════
+
+// ── Sistemas SAP (nivel SISTEMA — sin datos de host/instancia) ──
 export const mockSystems = [
-  { id: 'SAP-ERP-P01', sid: 'EP1', type: 'S/4HANA', dbType: 'SAP HANA 2.0', environment: 'PRD', mode: 'PRODUCTION', healthScore: 94, breaches: 0, status: 'healthy', host: '10.0.1.10', os: 'SUSE Linux 15', instanceId: 'i-0a1b2c3d4e5f00001', instanceType: 'r5.xlarge', cpu: 42, mem: 65, disk: 58, uptime: '12d 4h', mttr: 25, mtbf: 1440, availability: 99.8, lastCheck: new Date().toISOString(), description: 'Sistema ERP Productivo' },
-  { id: 'SAP-ERP-Q01', sid: 'EQ1', type: 'S/4HANA', dbType: 'SAP HANA 2.0', environment: 'QAS', mode: 'PRODUCTION', healthScore: 87, breaches: 1, status: 'warning', host: '10.0.2.10', os: 'SUSE Linux 15', instanceId: 'i-0a1b2c3d4e5f00002', instanceType: 'r5.xlarge', cpu: 45, mem: 78, disk: 85, uptime: '8d 12h', mttr: 32, mtbf: 480, availability: 99.2, lastCheck: new Date().toISOString(), description: 'Sistema ERP Calidad' },
-  { id: 'SAP-ERP-D01', sid: 'ED1', type: 'S/4HANA', dbType: 'SAP HANA 2.0', environment: 'DEV', mode: 'TRIAL', healthScore: 72, breaches: 3, status: 'degraded', host: '10.0.3.10', os: 'SUSE Linux 15', instanceId: 'i-0a1b2c3d4e5f00003', instanceType: 'r5.large', cpu: 32, mem: 52, disk: 41, uptime: '30d 6h', mttr: 15, mtbf: 2160, availability: 99.9, lastCheck: new Date().toISOString(), description: 'Sistema ERP Desarrollo' },
-  { id: 'SAP-BW-P01', sid: 'BP1', type: 'BW/4HANA', dbType: 'SAP ASE 16.0', environment: 'PRD', mode: 'PRODUCTION', healthScore: 91, breaches: 0, status: 'healthy', host: '10.0.1.20', os: 'SUSE Linux 15', instanceId: 'i-0a1b2c3d4e5f00010', instanceType: 'r5.2xlarge', cpu: 55, mem: 71, disk: 63, uptime: '22d 8h', mttr: 38, mtbf: 960, availability: 99.5, lastCheck: new Date().toISOString(), description: 'BW Productivo' },
-  { id: 'SAP-SOL-P01', sid: 'SM1', type: 'SolMan 7.2', dbType: 'MaxDB 7.9', environment: 'PRD', mode: 'PRODUCTION', healthScore: 45, breaches: 5, status: 'critical', host: '10.0.1.30', os: 'Windows Server 2019', instanceId: 'i-0a1b2c3d4e5f00004', instanceType: 'r5.large', cpu: 28, mem: 45, disk: 37, uptime: '45d 2h', mttr: 20, mtbf: 4320, availability: 99.95, lastCheck: new Date().toISOString(), description: 'Solution Manager' },
-  { id: 'SAP-CRM-P01', sid: 'CR1', type: 'CRM 7.0', dbType: 'Oracle 19c', environment: 'PRD', mode: 'PRODUCTION', healthScore: 88, breaches: 0, status: 'healthy', host: '10.0.1.40', os: 'RHEL 8', instanceId: 'i-0a1b2c3d4e5f00011', instanceType: 'r5.xlarge', cpu: 48, mem: 62, disk: 55, uptime: '18d 14h', mttr: 28, mtbf: 1200, availability: 99.7, lastCheck: new Date().toISOString(), description: 'CRM Productivo' },
-  { id: 'SAP-GRC-P01', sid: 'GR1', type: 'GRC 12.0', dbType: 'MSSQL 2019', environment: 'QAS', mode: 'PRODUCTION', healthScore: 96, breaches: 0, status: 'healthy', host: '10.0.1.50', os: 'Windows Server 2022', instanceId: 'i-0a1b2c3d4e5f00012', instanceType: 'r5.large', cpu: 35, mem: 48, disk: 42, uptime: '15d 6h', mttr: 22, mtbf: 1800, availability: 99.8, lastCheck: new Date().toISOString(), description: 'GRC Compliance' },
-  { id: 'SAP-PO-P01', sid: 'PO1', type: 'PI/PO 7.5', dbType: 'DB2 11.5', environment: 'PRD', mode: 'PRODUCTION', healthScore: 63, breaches: 2, status: 'degraded', host: '10.0.1.60', os: 'RHEL 9', instanceId: 'i-0a1b2c3d4e5f00013', instanceType: 'r5.large', cpu: 42, mem: 58, disk: 51, uptime: '25d 3h', mttr: 30, mtbf: 1440, availability: 99.6, lastCheck: new Date().toISOString(), description: 'Process Orchestration' },
-  { id: 'SAP-EWM-P01', sid: 'EW1', type: 'S/4HANA', dbType: 'SAP HANA 2.0', environment: 'PRD', mode: 'PRODUCTION', healthScore: 82, breaches: 1, status: 'warning', host: '10.0.1.70', os: 'SUSE Linux 15', instanceId: 'i-0a1b2c3d4e5f00014', instanceType: 'r5.xlarge', cpu: 38, mem: 60, disk: 48, uptime: '20d 1h', mttr: 26, mtbf: 1100, availability: 99.6, lastCheck: new Date().toISOString(), description: 'Extended Warehouse Mgmt' },
+  { id: 'SAP-ERP-P01', sid: 'EP1', type: 'S/4HANA', dbType: 'SAP HANA 2.0', environment: 'PRD', mode: 'PRODUCTION', healthScore: 94, breaches: 0, status: 'healthy', cpu: 42, mem: 65, disk: 58, mttr: 25, mtbf: 1440, availability: 99.8, lastCheck: new Date().toISOString(), description: 'Sistema ERP Productivo' },
+  { id: 'SAP-ERP-Q01', sid: 'EQ1', type: 'S/4HANA', dbType: 'SAP HANA 2.0', environment: 'QAS', mode: 'PRODUCTION', healthScore: 87, breaches: 1, status: 'warning', cpu: 45, mem: 78, disk: 85, mttr: 32, mtbf: 480, availability: 99.2, lastCheck: new Date().toISOString(), description: 'Sistema ERP Calidad' },
+  { id: 'SAP-ERP-D01', sid: 'ED1', type: 'S/4HANA', dbType: 'SAP HANA 2.0', environment: 'DEV', mode: 'TRIAL', healthScore: 72, breaches: 3, status: 'degraded', cpu: 32, mem: 52, disk: 41, mttr: 15, mtbf: 2160, availability: 99.9, lastCheck: new Date().toISOString(), description: 'Sistema ERP Desarrollo' },
+  { id: 'SAP-BW-P01', sid: 'BP1', type: 'BW/4HANA', dbType: 'SAP ASE 16.0', environment: 'PRD', mode: 'PRODUCTION', healthScore: 91, breaches: 0, status: 'healthy', cpu: 55, mem: 71, disk: 63, mttr: 38, mtbf: 960, availability: 99.5, lastCheck: new Date().toISOString(), description: 'BW Productivo' },
+  { id: 'SAP-SOL-P01', sid: 'SM1', type: 'SolMan 7.2', dbType: 'MaxDB 7.9', environment: 'PRD', mode: 'PRODUCTION', healthScore: 45, breaches: 5, status: 'critical', cpu: 28, mem: 45, disk: 37, mttr: 20, mtbf: 4320, availability: 99.95, lastCheck: new Date().toISOString(), description: 'Solution Manager' },
+  { id: 'SAP-CRM-P01', sid: 'CR1', type: 'CRM 7.0', dbType: 'Oracle 19c', environment: 'PRD', mode: 'PRODUCTION', healthScore: 88, breaches: 0, status: 'healthy', cpu: 48, mem: 62, disk: 55, mttr: 28, mtbf: 1200, availability: 99.7, lastCheck: new Date().toISOString(), description: 'CRM Productivo' },
+  { id: 'SAP-GRC-P01', sid: 'GR1', type: 'GRC 12.0', dbType: 'MSSQL 2019', environment: 'QAS', mode: 'PRODUCTION', healthScore: 96, breaches: 0, status: 'healthy', cpu: 35, mem: 48, disk: 42, mttr: 22, mtbf: 1800, availability: 99.8, lastCheck: new Date().toISOString(), description: 'GRC Compliance' },
+  { id: 'SAP-PO-P01', sid: 'PO1', type: 'PI/PO 7.5', dbType: 'DB2 11.5', environment: 'PRD', mode: 'PRODUCTION', healthScore: 63, breaches: 2, status: 'degraded', cpu: 42, mem: 58, disk: 51, mttr: 30, mtbf: 1440, availability: 99.6, lastCheck: new Date().toISOString(), description: 'Process Orchestration' },
+  { id: 'SAP-EWM-P01', sid: 'EW1', type: 'S/4HANA', dbType: 'SAP HANA 2.0', environment: 'PRD', mode: 'PRODUCTION', healthScore: 82, breaches: 1, status: 'warning', cpu: 38, mem: 60, disk: 48, mttr: 26, mtbf: 1100, availability: 99.6, lastCheck: new Date().toISOString(), description: 'Extended Warehouse Mgmt' },
 ];
 
 // ── Usuarios ──
@@ -652,9 +670,10 @@ export const mockApiKeys = [
 ];
 
 // ══════════════════════════════════════════════════════════════
-// P1.1: System → Instance[] Model
-// Maps each System ID to its SAP instances (ASCS, PAS, AAS, DB)
-// Real SAP systems have multiple instances running on separate hosts
+// Nivel INSTANCIA — System → Instance[] → Host
+// Cada sistema SAP tiene múltiples instancias (ASCS, PAS, AAS, HANA)
+// corriendo en hosts separados. Roles = Componentes SAP.
+// Jerarquía: System(mockSystems) > Component(role) > Instance(nr) > Host(hostname)
 // ══════════════════════════════════════════════════════════════
 export const mockSystemInstances = {
   // EP1 — S/4HANA PRD, healthScore 94, 5 instances across 5 hosts
