@@ -1,5 +1,6 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Header from '../components/layout/Header';
+import PageLoading from '../components/ui/PageLoading';
 import { mockAlerts, mockSystems, alertResolutionCategories } from '../lib/mockData';
 import { useAuth } from '../contexts/AuthContext';
 import {
@@ -20,12 +21,18 @@ import {
 
 function AlertsPage() {
   const { user, hasRole } = useAuth();
+  const [loading, setLoading] = useState(true);
   const [alerts, setAlerts] = useState(() => [...mockAlerts]);
   const [statusFilter, setStatusFilter] = useState('active');
   const [systemFilter, setSystemFilter] = useState('all');
   const [resolveModalAlertId, setResolveModalAlertId] = useState(null);
   const [resolutionCategory, setResolutionCategory] = useState('');
   const [resolutionNote, setResolutionNote] = useState('');
+
+  useEffect(() => {
+    const timer = setTimeout(() => setLoading(false), 400);
+    return () => clearTimeout(timer);
+  }, []);
 
   // Filtrado de alertas
   const filteredAlerts = alerts.filter((alert) => {
@@ -157,6 +164,8 @@ function AlertsPage() {
     { value: 'critical', label: 'Críticas' },
     { value: 'resolved', label: 'Resueltas' },
   ];
+
+  if (loading) return <PageLoading message="Cargando alertas..." />;
 
   return (
     <div className="min-h-screen">

@@ -1,5 +1,6 @@
-import { useState, useMemo } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import Header from '../components/layout/Header';
+import PageLoading from '../components/ui/PageLoading';
 import { mockEvents, mockSystems } from '../lib/mockData';
 import { Search, Filter, ChevronDown, AlertCircle, AlertTriangle, Info, CheckCircle } from 'lucide-react';
 
@@ -63,11 +64,17 @@ function formatTimestamp(iso) {
 }
 
 export default function EventsPage() {
+  const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
   const [levelFilter, setLevelFilter] = useState('all');
   const [systemFilter, setSystemFilter] = useState('all');
   const [sourceFilter, setSourceFilter] = useState('all'); // P2.4: SAP vs Platform
   const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setLoading(false), 400);
+    return () => clearTimeout(timer);
+  }, []);
 
   const filtered = useMemo(() => {
     return mockEvents.filter((evt) => {
@@ -92,6 +99,8 @@ export default function EventsPage() {
   }, [filtered, visibleCount]);
 
   const hasMore = visibleCount < filtered.length;
+
+  if (loading) return <PageLoading message="Cargando eventos..." />;
 
   return (
     <div>

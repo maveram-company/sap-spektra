@@ -4,7 +4,7 @@ import {
   GitCompare, Shield, Settings, Users,
   ChevronLeft, ChevronRight, Zap, AlertTriangle, List,
   Brain, FileText, BookOpen, Network, Star,
-  Activity, Play, Package, Key, Heart, Cloud
+  Activity, Play, Package, Key
 } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
 import { usePlan } from '../../hooks/usePlan';
@@ -20,7 +20,6 @@ const navigation = [
   { section: 'Monitor' },
   { name: 'Sistemas', href: '/systems', icon: Monitor },
   { name: 'Eventos', href: '/events', icon: List },
-  { name: 'Spektra Health', href: '/health', icon: Heart },
 
   { section: 'Intelligence' },
   { name: 'Análisis IA', href: '/ai', icon: Brain },
@@ -37,7 +36,6 @@ const navigation = [
   { name: 'SLA', href: '/sla', icon: Star },
 
   { section: 'Infrastructure' },
-  { name: 'Infraestructura', href: '/infrastructure', icon: Cloud },
   { name: 'HA Control', href: '/ha', icon: Activity },
   { name: 'Certificados', href: '/certificates', icon: Key },
 
