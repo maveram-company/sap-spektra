@@ -63,7 +63,7 @@ export default function ConnectorsPage() {
     <div>
       <Header
         title="Conectores"
-        subtitle="Conexiones de tus sistemas SAP con Spektra"
+        subtitle="Conexiones de tus sistemas SAP con Spektra (datos de demostración)"
         actions={
           <Button icon={Plus} onClick={() => navigate('/connect')}>
             Conectar Sistema

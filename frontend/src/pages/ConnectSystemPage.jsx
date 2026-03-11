@@ -282,6 +282,7 @@ export default function ConnectSystemPage() {
             </p>
             <p className="text-xs text-text-tertiary mb-6">
               Los datos comenzarán a aparecer en el dashboard en los próximos minutos.
+              En producción, los datos comenzarán a sincronizarse automáticamente.
             </p>
             <div className="flex gap-3 justify-center">
               <Button variant="outline" onClick={() => navigate('/connectors')}>Ver Conectores</Button>
@@ -489,6 +490,10 @@ export default function ConnectSystemPage() {
                     <CodeBlock title={agentForm.os === 'windows' ? 'PowerShell' : 'Bash'} code={cmds.verify} />
                   </div>
                 </div>
+
+                <p className="text-xs text-text-tertiary italic mt-1">
+                  Comandos de ejemplo para demostración. En producción, estas URLs serán proporcionadas por Maveram.
+                </p>
 
                 <div className="flex items-start gap-3 p-3 rounded-lg bg-warning-50 dark:bg-warning-900/20 border border-warning-200 dark:border-warning-800">
                   <AlertTriangle size={16} className="text-warning-600 flex-shrink-0 mt-0.5" />

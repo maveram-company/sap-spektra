@@ -791,7 +791,7 @@ export default function HAControlCenterPage() {
             <div className="flex items-center gap-2">
               <CheckCircle2 className="w-5 h-5 text-success-600" />
               <span className="text-sm font-medium text-success-700 dark:text-success-300">
-                Operación {runningOp.type.replace('_', ' ')} en {runningOp.systemId} completada exitosamente.
+                Operación demo completada: {runningOp.type.replace('_', ' ')} en {runningOp.systemId}.
               </span>
             </div>
             <button onClick={handleDismissComplete} className="text-xs text-success-600 dark:text-success-400 hover:underline">
@@ -1072,6 +1072,9 @@ export default function HAControlCenterPage() {
               )}
               <p className="text-sm text-text-secondary">
                 {descriptions[confirmDialog.type] || 'Se ejecutará la operación seleccionada.'}
+              </p>
+              <p className="text-xs text-text-tertiary italic">
+                Operación simulada — En producción, esta acción ejecutaría un failover real en su sistema SAP.
               </p>
               <div className="flex items-center justify-end gap-3 pt-2">
                 <button

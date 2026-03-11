@@ -44,7 +44,7 @@ export default function IntegrationsPage() {
                   <div>
                     <div className="flex items-center gap-2">
                       <h3 className="text-sm font-semibold text-text-primary">{integration.name}</h3>
-                      {integration.connected && <Badge variant="success" size="sm" dot>Conectado</Badge>}
+                      {integration.connected && <Badge variant="success" size="sm" dot>Conectado (demo)</Badge>}
                       {!available && <Badge variant="warning" size="sm">Premium</Badge>}
                     </div>
                     <p className="text-xs text-text-secondary mt-0.5">{integration.description}</p>

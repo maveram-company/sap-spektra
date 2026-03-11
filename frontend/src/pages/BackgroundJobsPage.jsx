@@ -47,7 +47,7 @@ export default function BackgroundJobsPage() {
 
   return (
     <div>
-      <Header title="Background Jobs" subtitle="Monitor de jobs SAP — equivalente SM37" />
+      <Header title="Background Jobs" subtitle="Monitor de jobs SAP — equivalente SM37 (datos de demostración)" />
       <div className="p-6 space-y-6">
         {/* KPI Cards */}
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">

@@ -59,7 +59,7 @@ export default function ApprovalsPage() {
 
   return (
     <div>
-      <Header title="Aprobaciones" subtitle="Gestiona las solicitudes de ejecución de runbooks" />
+      <Header title="Aprobaciones" subtitle="Gestiona las solicitudes de ejecución de runbooks (demo)" />
       <div className="p-6">
         <PageHeader title="Aprobaciones" description="Revisa y gestiona las solicitudes de ejecución automática" />
 

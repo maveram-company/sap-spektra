@@ -76,7 +76,7 @@ const NAV_HEIGHT = 52;
 const pendingApprovals = 2;
 const activeAlerts = 11;
 
-export default function TopNav() {
+export default function TopNav({ topOffset = 0 }) {
   const [activeDropdown, setActiveDropdown] = useState(null);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [navVisible, setNavVisible] = useState(true);
@@ -194,9 +194,10 @@ export default function TopNav() {
     <>
       <nav
         ref={navRef}
-        className="fixed top-0 left-0 right-0 z-50 transition-transform duration-300"
+        className="fixed left-0 right-0 z-50 transition-transform duration-300"
         style={{
-          transform: navVisible ? 'translateY(0)' : 'translateY(-100%)',
+          top: `${topOffset}px`,
+          transform: navVisible ? 'translateY(0)' : `translateY(-${NAV_HEIGHT + topOffset}px)`,
           background: 'rgba(2,6,23,0.92)',
           backdropFilter: 'blur(20px)',
           WebkitBackdropFilter: 'blur(20px)',

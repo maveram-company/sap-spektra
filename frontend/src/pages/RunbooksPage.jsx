@@ -32,23 +32,23 @@ export default function RunbooksPage() {
   // Ejecutar runbook
   const handleExecute = (runbook) => {
     if (!canExecute) {
-      showToast('No tienes permisos para ejecutar runbooks', 'info');
+      showToast('No tienes permisos para ejecutar runbooks (demo)', 'info');
       return;
     }
     if (runbook.costSafe) {
-      showToast(`Runbook ${runbook.id} ejecutado exitosamente`, 'success');
+      showToast(`Runbook ${runbook.id} ejecutado exitosamente (demo)`, 'success');
     } else {
-      showToast(`${runbook.id} requiere aprobación humana (costSafe=false)`, 'info');
+      showToast(`${runbook.id} requiere aprobación humana — costSafe=false (demo)`, 'info');
     }
   };
 
   // Dry-run de runbook
   const handleDryRun = (runbook) => {
     if (!canExecute) {
-      showToast('No tienes permisos para ejecutar dry-runs', 'info');
+      showToast('No tienes permisos para ejecutar dry-runs (demo)', 'info');
       return;
     }
-    showToast(`Dry-run de ${runbook.id} completado — sin cambios aplicados`, 'info');
+    showToast(`Dry-run de ${runbook.id} completado — sin cambios aplicados (demo)`, 'info');
   };
 
   // Configuración de tabs

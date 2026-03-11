@@ -45,7 +45,7 @@ export default function TransportsPage() {
 
   return (
     <div>
-      <Header title="Transporte de Órdenes" subtitle="Monitor STMS — gestión de transportes SAP" />
+      <Header title="Transporte de Órdenes" subtitle="Monitor STMS — gestión de transportes SAP (datos de demostración)" />
       <div className="p-6 space-y-6">
         {/* KPIs */}
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">

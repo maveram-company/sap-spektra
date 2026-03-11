@@ -89,7 +89,7 @@ export default function AIAnalysisPage() {
     {
       id: 'welcome',
       role: 'ai',
-      text: '**Bienvenido al Análisis IA de SAP Spektra.**\n\nSoy tu asistente potenciado por Amazon Bedrock (Claude). Puedo ayudarte con 7 casos de uso especializados para monitoreo SAP.\n\nSelecciona un caso de uso arriba o escribe tu consulta directamente.',
+      text: '**Bienvenido al Análisis IA de SAP Spektra.**\n\nSoy tu asistente potenciado por Amazon Bedrock (Claude). Puedo ayudarte con 7 casos de uso especializados para monitoreo SAP.\n\nSelecciona un caso de uso arriba o escribe tu consulta directamente.\n\n*Respuestas de demostración -- no conectado a Bedrock.*',
     },
   ]);
   const [input, setInput] = useState('');
@@ -151,7 +151,7 @@ export default function AIAnalysisPage() {
       <div className="flex flex-col h-full">
         <Header
           title="Analisis IA"
-          subtitle="Amazon Bedrock (Claude) — 7 casos de uso"
+          subtitle="Amazon Bedrock (Claude) — 7 casos de uso — Respuestas de demostración"
         />
         <div className="flex-1 p-6 flex items-center justify-center">
           <UpgradeBanner feature="Analisis IA con Bedrock" />
@@ -164,7 +164,7 @@ export default function AIAnalysisPage() {
     <div className="flex flex-col h-full">
       <Header
         title="Analisis IA"
-        subtitle="Amazon Bedrock (Claude) — 7 casos de uso"
+        subtitle="Amazon Bedrock (Claude) — 7 casos de uso — Respuestas de demostración"
       />
 
       <div className="flex-1 overflow-y-auto p-6 space-y-6">
