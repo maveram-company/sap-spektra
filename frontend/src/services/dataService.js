@@ -249,7 +249,12 @@ export const dataService = {
   // ── Analytics ──
   getAnalytics: async (systemId) => {
     if (isDemoMode()) { await delay(); return mockAnalytics; }
-    return api.getAnalytics(systemId);
+    return api.getAnalyticsOverview();
+  },
+
+  getRunbookAnalytics: async () => {
+    if (isDemoMode()) { await delay(); return mockAnalytics; }
+    return api.getRunbookAnalytics();
   },
 
   // ── Background Jobs ──
@@ -275,24 +280,33 @@ export const dataService = {
     return mockLicenses; // Future: license management endpoint
   },
 
+  // ── Plans ──
+  getPlans: async () => {
+    if (isDemoMode()) { await delay(300); return []; }
+    return api.getPlans();
+  },
+
   // ── Settings ──
   getThresholds: async () => {
     if (isDemoMode()) { await delay(300); return mockThresholds; }
-    return mockThresholds; // Future: settings endpoint
+    const settings = await api.getSettings();
+    return settings?.settings?.thresholds || mockThresholds;
   },
 
   getEscalationPolicy: async () => {
     if (isDemoMode()) { await delay(300); return mockEscalationPolicy; }
-    return mockEscalationPolicy; // Future: settings endpoint
+    const settings = await api.getSettings();
+    return settings?.settings?.escalation || mockEscalationPolicy;
   },
 
   getMaintenanceWindows: async () => {
     if (isDemoMode()) { await delay(300); return mockMaintenanceWindows; }
-    return mockMaintenanceWindows; // Future: settings endpoint
+    const settings = await api.getSettings();
+    return settings?.settings?.maintenanceWindows || mockMaintenanceWindows;
   },
 
   getApiKeys: async () => {
     if (isDemoMode()) { await delay(300); return mockApiKeys; }
-    return mockApiKeys; // Future: API key management endpoint
+    return api.getApiKeys();
   },
 };

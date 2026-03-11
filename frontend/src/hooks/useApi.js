@@ -127,6 +127,25 @@ export const api = {
   updateTenant: (data) => fetchApi('/tenant', { method: 'PATCH', body: data }),
   getTenantStats: () => fetchApi('/tenant/stats'),
 
+  // Analytics
+  getAnalyticsOverview: () => fetchApi('/analytics/overview'),
+  getRunbookAnalytics: () => fetchApi('/analytics/runbooks'),
+  getSystemTrends: (systemId, days) => fetchApi(`/analytics/systems/${systemId}/trends?days=${days || 7}`),
+
+  // Chat / AI
+  chat: (message, context) => fetchApi('/chat', { method: 'POST', body: { message, context } }),
+
+  // Plans
+  getPlans: () => fetchApi('/plans'),
+  getPlanByTier: (tier) => fetchApi(`/plans/${tier}`),
+
+  // Settings
+  getSettings: () => fetchApi('/settings'),
+  updateSettings: (data) => fetchApi('/settings', { method: 'PATCH', body: data }),
+  getApiKeys: () => fetchApi('/settings/api-keys'),
+  createApiKey: (name) => fetchApi('/settings/api-keys', { method: 'POST', body: { name } }),
+  revokeApiKey: (id) => fetchApi(`/settings/api-keys/${id}/revoke`, { method: 'PATCH' }),
+
   // Audit
   getAuditLog: (filters) => {
     const params = new URLSearchParams();
