@@ -15,6 +15,8 @@ import { RunbooksModule } from './modules/runbooks/runbooks.module';
 import { OperationsModule } from './modules/operations/operations.module';
 import { AuditModule } from './modules/audit/audit.module';
 import { ConnectorsModule } from './modules/connectors/connectors.module';
+import { HAModule } from './modules/ha/ha.module';
+import { MetricsModule } from './modules/metrics/metrics.module';
 
 @Module({
   imports: [
@@ -36,6 +38,8 @@ import { ConnectorsModule } from './modules/connectors/connectors.module';
     OperationsModule,
     AuditModule,
     ConnectorsModule,
+    HAModule,
+    MetricsModule,
   ],
 })
 export class AppModule {}

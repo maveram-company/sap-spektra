@@ -46,9 +46,19 @@ async function bootstrap() {
     .addBearerAuth()
     .addTag('Health', 'Service health checks')
     .addTag('Auth', 'Authentication & authorization')
+    .addTag('Dashboard', 'Aggregated dashboard data')
     .addTag('Tenant', 'Organization/tenant management')
     .addTag('Users', 'User management')
     .addTag('Systems', 'SAP system management')
+    .addTag('Alerts', 'Alert management')
+    .addTag('Events', 'Event log')
+    .addTag('Approvals', 'Approval workflows')
+    .addTag('Runbooks', 'Runbook management & execution')
+    .addTag('Operations', 'Operations, jobs, transports, certificates')
+    .addTag('Metrics', 'Host metrics, health snapshots, breaches, dependencies')
+    .addTag('HA/DR', 'High availability & disaster recovery')
+    .addTag('Connectors', 'System connectors')
+    .addTag('Audit', 'Audit log')
     .build();
 
   const document = SwaggerModule.createDocument(app, swaggerConfig);
