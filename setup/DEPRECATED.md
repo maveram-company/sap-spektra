@@ -2,6 +2,6 @@
 
 This was a standalone Express server that served mock data for frontend development before the NestJS API existed.
 
-The active backend is now **`apps/api/`** with `prisma:seed` for development data. The frontend connects directly to the NestJS API.
+**Status**: All source files have been removed from version control. Only this marker file remains.
 
-This directory is kept for reference but is **not used or maintained**.
+The active backend is **`apps/api/`** (NestJS + Prisma + PostgreSQL). The frontend connects directly to the NestJS API.
