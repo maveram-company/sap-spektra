@@ -1,6 +1,9 @@
 #!/bin/bash
 # ═══════════════════════════════════════════════════════════════
-#  SAP Spektra v1.4 — Script de Despliegue
+#  [LEGACY] SAP Spektra v1.4 — Script de Despliegue (Lambda/CloudFormation)
+#
+#  STATUS: DEPRECATED — This script deploys the old Lambda/CFN stack.
+#  The active runtime is apps/api/ (NestJS). Use scripts/dev-setup.sh for local dev.
 #
 #  Este script empaqueta las 20 Lambdas, las sube a S3,
 #  y despliega el stack de CloudFormation.

@@ -1,6 +1,8 @@
 #!/bin/bash
 # ============================================================================
-#  SAP Spektra v1.5 -- Supply Chain Audit Script
+#  [LEGACY] SAP Spektra v1.5 -- Supply Chain Audit Script
+#  STATUS: DEPRECATED — This audits the old Lambda stack dependencies.
+#  For active backend: cd apps/api && npm audit
 #  Verifica dependencias, lock files, y vulnerabilidades conocidas.
 #
 #  Uso:
