@@ -91,9 +91,8 @@ export default function SystemDetailPage() {
   const [activeTab, setActiveTab] = useState('overview');
   const [chartRange, setChartRange] = useState('6h');
   const [selectedHost, setSelectedHost] = useState('');
-  const [mountTime] = useState(() => Date.now());
-
   useEffect(() => {
+    let mounted = true;
     Promise.all([
       dataService.getSystemById(systemId),
       dataService.getServerMetrics(systemId),
@@ -104,6 +103,7 @@ export default function SystemDetailPage() {
       dataService.getSystemBreaches(systemId),
       dataService.getSystemHosts(systemId),
     ]).then(([sys, metrics, dependencies, monitoring, inst, meta, breaches, hosts]) => {
+      if (!mounted) return;
       setSystem(sys);
       setSm(metrics);
       setDeps(dependencies || []);
@@ -113,17 +113,17 @@ export default function SystemDetailPage() {
       setBreachesData(breaches);
       setHostsData(hosts);
       // Pre-load metric history for all hosts
-      const historyMap = {};
       if (hosts && hosts.length) {
         hosts.forEach(h => {
           dataService.getMetricHistory(h.hostname).then(hist => {
-            historyMap[h.hostname] = hist;
+            if (!mounted) return;
             setMetricHistoryData(prev => ({ ...prev, [h.hostname]: hist }));
           });
         });
       }
       setLoading(false);
     });
+    return () => { mounted = false; };
   }, [systemId]);
 
   // Derived data
@@ -146,7 +146,7 @@ export default function SystemDetailPage() {
     if (!effectiveHost) return [];
     const history = metricHistoryData[effectiveHost] || [];
     if (!history.length) return [];
-    const now = mountTime;
+    const now = Date.now();
     const rangeMinutes = chartRange === '1h' ? 60 : chartRange === '3h' ? 180 : 360;
     const pointsToShow = Math.min(history.length, Math.ceil(rangeMinutes / 5));
     const slice = history.slice(history.length - pointsToShow);
@@ -159,7 +159,7 @@ export default function SystemDetailPage() {
       Memory: p.mem,
       Disk: p.disk,
     }));
-  }, [effectiveHost, chartRange, mountTime, metricHistoryData]);
+  }, [effectiveHost, chartRange, metricHistoryData]);
 
   if (loading) return <PageLoading message="Cargando sistema..." />;
   if (!system) return <div className="p-6 text-text-secondary">Sistema no encontrado</div>;

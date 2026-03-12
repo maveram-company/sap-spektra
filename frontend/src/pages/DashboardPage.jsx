@@ -165,7 +165,7 @@ export default function DashboardPage() {
     setRefreshing(false);
   }, []);
 
-  useEffect(() => { loadData(); }, [loadData]); // eslint-disable-line react-hooks/set-state-in-effect -- carga inicial estándar de React
+  useEffect(() => { loadData(); }, [loadData]);
 
   if (loading) return <PageLoading message="Cargando dashboard..." />;
 

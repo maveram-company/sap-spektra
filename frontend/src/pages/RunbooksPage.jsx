@@ -34,19 +34,21 @@ export default function RunbooksPage() {
   const [executionSteps, setExecutionSteps] = useState([]);
 
   useEffect(() => {
+    let mounted = true;
     Promise.all([
       dataService.getRunbooks(),
       dataService.getRunbookExecutions(),
       dataService.getSystems(),
     ])
       .then(([rb, ex, sys]) => {
+        if (!mounted) return;
         setRunbooks(rb);
         setExecutions(ex);
         setSystems(sys);
       })
-      .catch((err) => console.error('Error loading runbooks:', err))
-      .finally(() => setLoading(false));
-    return () => { clearTimeout(toastTimerRef.current); };
+      .catch((err) => { if (mounted) console.error('Error loading runbooks:', err); })
+      .finally(() => { if (mounted) setLoading(false); });
+    return () => { mounted = false; clearTimeout(toastTimerRef.current); };
   }, []);
 
   // Mostrar notificación temporal

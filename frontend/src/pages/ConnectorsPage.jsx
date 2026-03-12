@@ -58,9 +58,9 @@ export default function ConnectorsPage() {
     dataService.getConnectors().then(data => { setConnectors(data); setLoading(false); });
   }, []);
 
-  const connected = useMemo(() => connectors.filter(c => c.status === 'connected').length, [connectors]);
-  const degraded = useMemo(() => connectors.filter(c => c.status === 'degraded').length, [connectors]);
-  const disconnected = useMemo(() => connectors.filter(c => c.status === 'disconnected').length, [connectors]);
+  const connected = connectors.filter(c => c.status === 'connected').length;
+  const degraded = connectors.filter(c => c.status === 'degraded').length;
+  const disconnected = connectors.filter(c => c.status === 'disconnected').length;
   const total = connectors.length;
 
   const sorted = useMemo(() =>

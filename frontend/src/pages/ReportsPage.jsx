@@ -41,11 +41,13 @@ export default function ReportsPage() {
   const toastTimerRef = useRef(null);
 
   useEffect(() => {
+    let mounted = true;
     Promise.all([dataService.getEvents(), dataService.getAlerts()]).then(([evts, alts]) => {
+      if (!mounted) return;
       setEvents(evts);
       setAlerts(alts);
     });
-    return () => { clearTimeout(toastTimerRef.current); };
+    return () => { mounted = false; clearTimeout(toastTimerRef.current); };
   }, []);
 
   // Mostrar notificación temporal
