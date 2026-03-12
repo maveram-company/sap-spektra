@@ -16,7 +16,7 @@ import Select from '../components/ui/Select';
 import Tabs from '../components/ui/Tabs';
 import Table, { TableHeader, TableBody, TableRow, TableHead, TableCell } from '../components/ui/Table';
 import PageLoading from '../components/ui/PageLoading';
-import { mockDepRemediation, mockBackupRunbooks } from '../lib/mockData';
+import { depRemediation, backupRunbooks } from '../lib/constants';
 import { dataService } from '../services/dataService';
 
 // ── Local Helpers ──
@@ -165,7 +165,7 @@ export default function SystemDetailPage() {
   if (!system) return <div className="p-6 text-text-secondary">Sistema no encontrado</div>;
 
   const db = sm?.dbInfo;
-  const backupRb = db ? mockBackupRunbooks[db.type] : null;
+  const backupRb = db ? backupRunbooks[db.type] : null;
 
   // ── Tab definitions (new order with hosts + topology) ──
   const tabs = [
@@ -1002,7 +1002,7 @@ export default function SystemDetailPage() {
               {deps
                 .filter(d => d.status === 'err' || d.status === 'warn')
                 .map((dep, i) => {
-                  const remediation = mockDepRemediation[dep.name];
+                  const remediation = depRemediation[dep.name];
                   return (
                     <div key={i} className="border border-border rounded-lg p-4">
                       <div className="flex items-center gap-2 mb-2">
