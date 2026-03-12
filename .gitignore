@@ -1,3 +1,38 @@
+# ── Dependencies ──
 node_modules/
-.DS_Store
+
+# ── Build output ──
+dist/
+build/
+*.tsbuildinfo
+
+# ── Environment & secrets ──
 *.env
+.env.*
+!*.env.example
+
+# ── OS artifacts ──
+.DS_Store
+Thumbs.db
+__MACOSX/
+
+# ── IDE / Editor ──
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# ── Logs ──
+*.log
+npm-debug.log*
+
+# ── Archives & binaries ──
+*.zip
+*.tar.gz
+*.rar
+
+# ── Misc ──
+.cache/
+coverage/
+*.pid
