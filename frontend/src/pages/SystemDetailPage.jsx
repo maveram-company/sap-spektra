@@ -159,7 +159,7 @@ export default function SystemDetailPage() {
       Memory: p.mem,
       Disk: p.disk,
     }));
-  }, [effectiveHost, chartRange, mountTime]);
+  }, [effectiveHost, chartRange, mountTime, metricHistoryData]);
 
   if (loading) return <PageLoading message="Cargando sistema..." />;
   if (!system) return <div className="p-6 text-text-secondary">Sistema no encontrado</div>;
