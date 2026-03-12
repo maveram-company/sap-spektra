@@ -1,6 +1,5 @@
 // ── Static configuration constants ──
-// Extracted from mockData.js — these are NOT mock data, they are
-// domain constants / reference config used by UI pages.
+// Domain constants and reference config used by UI pages.
 
 // ── HA Strategy metadata (labels, RTO/RPO, visual config) ──
 export const HA_STRATEGY_META = {

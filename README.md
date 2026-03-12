@@ -116,8 +116,6 @@ setup/          [DEPRECATED] Mock data server → replaced by apps/api/ + prisma
 ```bash
 ./scripts/dev-setup.sh    # Full local setup (Docker + install + migrate + seed)
 ./scripts/dev-start.sh    # Start API + Frontend concurrently
-./scripts/deploy.sh       # [LEGACY] Lambda/CloudFormation deployment
-./scripts/ci-gate.sh      # [LEGACY] CI validation for Lambda stack
 ```
 
 ---

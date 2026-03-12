@@ -21,6 +21,9 @@ import { AnalyticsModule } from './modules/analytics/analytics.module';
 import { ChatModule } from './modules/chat/chat.module';
 import { PlansModule } from './modules/plans/plans.module';
 import { SettingsModule } from './modules/settings/settings.module';
+import { LandscapeModule } from './modules/landscape/landscape.module';
+import { AiModule } from './modules/ai/ai.module';
+import { LicensesModule } from './modules/licenses/licenses.module';
 
 @Module({
   imports: [
@@ -48,6 +51,9 @@ import { SettingsModule } from './modules/settings/settings.module';
     ChatModule,
     PlansModule,
     SettingsModule,
+    LandscapeModule,
+    AiModule,
+    LicensesModule,
   ],
 })
 export class AppModule {}

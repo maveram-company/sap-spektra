@@ -110,6 +110,19 @@ export const api = {
   getHAConfigs: () => fetchApi('/ha'),
   getHAConfig: (systemId) => fetchApi(`/ha/${systemId}`),
   triggerFailover: (systemId) => fetchApi(`/ha/${systemId}/failover`, { method: 'PATCH' }),
+  getHAPrereqs: (systemId) => fetchApi(`/ha/${systemId}/prereqs`),
+  getHAOpsHistory: (systemId) => fetchApi(`/ha/${systemId}/ops-history`),
+  getHADrivers: (systemId) => fetchApi(`/ha/${systemId}/drivers`),
+
+  // Landscape
+  getLandscapeValidation: () => fetchApi('/landscape/validation'),
+
+  // AI
+  getAIUseCases: () => fetchApi('/ai/use-cases'),
+  getAIResponses: () => fetchApi('/ai/responses'),
+
+  // Licenses
+  getLicenses: () => fetchApi('/licenses'),
 
   // Connectors
   getConnectors: () => fetchApi('/connectors'),

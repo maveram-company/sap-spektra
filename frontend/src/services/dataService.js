@@ -23,14 +23,10 @@
 //   getMetricHistory — Time-series points are synthesized
 //   transformSystem — CPU/mem/disk/MTTR/MTBF/availability are synthesized
 //
-// STUB (no backend endpoint — always returns mock data):
-//   getLandscapeValidation — needs backend validation endpoint
-//   getAIUseCases — needs AI use-case registry endpoint
-//   getAIResponses — needs AI response cache endpoint
-//   getHAPrereqs — needs HA prerequisites endpoint
-//   getHAOpsHistory — needs HA operations history endpoint
-//   getHADrivers — needs HA driver registry endpoint
-//   getLicenses — needs SAP license management endpoint
+// BACKEND-DRIVEN (previously stubs, now connected):
+//   getLandscapeValidation, getAIUseCases, getAIResponses,
+//   getHAPrereqs, getHAOpsHistory, getHADrivers, getLicenses
+//   (fallback to mock data if API call fails)
 // ══════════════════════════════════════════════════════════════
 
 import config from '../config';
@@ -933,23 +929,20 @@ export const dataService = {
     }
   },
 
-  /* STUB: No backend endpoint. Needs GET /api/landscape/validation */
   getLandscapeValidation: async () => {
     if (isDemoMode()) { await delay(300); return mockLandscapeValidation; }
-    return mockLandscapeValidation;
+    try { return await api.getLandscapeValidation(); } catch { return mockLandscapeValidation; }
   },
 
   // ── AI / Chat ──
-  /* STUB: No backend endpoint. Needs GET /api/ai/use-cases */
   getAIUseCases: async () => {
     if (isDemoMode()) { await delay(300); return mockAIUseCases; }
-    return mockAIUseCases;
+    try { return await api.getAIUseCases(); } catch { return mockAIUseCases; }
   },
 
-  /* STUB: No backend endpoint. Needs GET /api/ai/responses */
   getAIResponses: async () => {
     if (isDemoMode()) { await delay(300); return mockAIResponses; }
-    return mockAIResponses;
+    try { return await api.getAIResponses(); } catch { return mockAIResponses; }
   },
 
   chat: async (message, context) => {
@@ -971,22 +964,19 @@ export const dataService = {
     return configs.map(transformHAConfig);
   },
 
-  /* STUB: No backend endpoint. Needs GET /api/ha/prereqs?strategy=X */
-  getHAPrereqs: async (strategy) => {
-    if (isDemoMode()) { await delay(300); return strategy ? mockHAPrereqs[strategy] : mockHAPrereqs; }
-    return mockHAPrereqs;
+  getHAPrereqs: async (systemId) => {
+    if (isDemoMode()) { await delay(300); return mockHAPrereqs; }
+    try { return await api.getHAPrereqs(systemId); } catch { return mockHAPrereqs; }
   },
 
-  /* STUB: No backend endpoint. Needs GET /api/ha/history */
-  getHAOpsHistory: async () => {
+  getHAOpsHistory: async (systemId) => {
     if (isDemoMode()) { await delay(300); return mockHAOpsHistory; }
-    return mockHAOpsHistory;
+    try { return await api.getHAOpsHistory(systemId); } catch { return mockHAOpsHistory; }
   },
 
-  /* STUB: No backend endpoint. Needs GET /api/ha/drivers */
-  getHADrivers: async () => {
+  getHADrivers: async (systemId) => {
     if (isDemoMode()) { await delay(300); return mockHADrivers; }
-    return mockHADrivers;
+    try { return await api.getHADrivers(systemId); } catch { return mockHADrivers; }
   },
 
   // ── Analytics ──
@@ -1067,10 +1057,9 @@ export const dataService = {
     return certs.map(transformCertificate);
   },
 
-  /* STUB: No backend endpoint. Needs GET /api/operations/licenses */
   getLicenses: async () => {
     if (isDemoMode()) { await delay(300); return mockLicenses; }
-    return mockLicenses;
+    try { return await api.getLicenses(); } catch { return mockLicenses; }
   },
 
   // ── Plans ──

@@ -54,26 +54,19 @@ export default function ComparisonPage() {
   }, []);
 
   // Opciones del selector de SID Lines
-  const lineOptions = useMemo(() =>
-    sidLines.map(l => ({
-      value: l.line,
-      label: `${l.line} — ${l.description}`,
-    })),
-  [sidLines]);
+  const lineOptions = sidLines.map(l => ({
+    value: l.line,
+    label: `${l.line} — ${l.description}`,
+  }));
 
   // Datos de la linea seleccionada
-  const currentLine = useMemo(() =>
-    sidLines.find(l => l.line === selectedLine),
-  [selectedLine, sidLines]);
+  const currentLine = sidLines.find(l => l.line === selectedLine);
 
   // Sistemas de la linea seleccionada, ordenados DEV -> QAS -> PRD
-  const lineSystems = useMemo(() => {
-    if (!currentLine) return [];
-    return currentLine.systems
-      .map(id => systems.find(s => s.id === id))
-      .filter(Boolean)
-      .sort((a, b) => (envOrder[a.environment] ?? 99) - (envOrder[b.environment] ?? 99));
-  }, [currentLine, systems]);
+  const lineSystems = !currentLine ? [] : currentLine.systems
+    .map(id => systems.find(s => s.id === id))
+    .filter(Boolean)
+    .sort((a, b) => (envOrder[a.environment] ?? 99) - (envOrder[b.environment] ?? 99));
 
   // Meta de cada sistema
   const lineSystemsMeta = useMemo(() => {

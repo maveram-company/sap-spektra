@@ -41,4 +41,25 @@ export class HAController {
   updateStatus(@TenantId() orgId: string, @Param('systemId') systemId: string, @Body() data: { status: string }) {
     return this.haService.updateStatus(orgId, systemId, data.status);
   }
+
+  @Get(':systemId/prereqs')
+  @Roles('viewer')
+  @ApiOperation({ summary: 'Get HA prerequisites checklist for a system' })
+  getPrereqs(@TenantId() orgId: string, @Param('systemId') systemId: string) {
+    return this.haService.getPrereqs(orgId, systemId);
+  }
+
+  @Get(':systemId/ops-history')
+  @Roles('viewer')
+  @ApiOperation({ summary: 'Get HA operations history for a system' })
+  getOpsHistory(@TenantId() orgId: string, @Param('systemId') systemId: string) {
+    return this.haService.getOpsHistory(orgId, systemId);
+  }
+
+  @Get(':systemId/drivers')
+  @Roles('viewer')
+  @ApiOperation({ summary: 'Get HA driver information for a system' })
+  getDrivers(@TenantId() orgId: string, @Param('systemId') systemId: string) {
+    return this.haService.getDrivers(orgId, systemId);
+  }
 }
