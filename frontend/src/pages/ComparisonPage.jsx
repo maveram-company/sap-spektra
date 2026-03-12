@@ -73,7 +73,7 @@ export default function ComparisonPage() {
       .map(id => systems.find(s => s.id === id))
       .filter(Boolean)
       .sort((a, b) => (envOrder[a.environment] ?? 99) - (envOrder[b.environment] ?? 99));
-  }, [currentLine]);
+  }, [currentLine, systems]);
 
   // Meta de cada sistema
   const lineSystemsMeta = useMemo(() => {
@@ -82,7 +82,7 @@ export default function ComparisonPage() {
       map[s.id] = systemMeta[s.id] || {};
     });
     return map;
-  }, [lineSystems]);
+  }, [lineSystems, systemMeta]);
 
   // Datos de comparacion para el grafico de barras
   const comparisonData = useMemo(() => {

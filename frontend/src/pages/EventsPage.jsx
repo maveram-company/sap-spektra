@@ -97,7 +97,7 @@ export default function EventsPage() {
       }
       return true;
     });
-  }, [search, levelFilter, systemFilter, sourceFilter]);
+  }, [search, levelFilter, systemFilter, sourceFilter, events]);
 
   const visible = useMemo(() => {
     return filtered.slice(0, visibleCount);
