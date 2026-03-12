@@ -79,12 +79,23 @@ describe('useApi - api helper functions', () => {
   it('throws error on non-ok response', async () => {
     global.fetch.mockResolvedValueOnce({
       ok: false,
+      status: 403,
+      json: () => Promise.resolve({ message: 'Forbidden' }),
+    });
+
+    const { api } = await import('./useApi.js');
+    await expect(api.healthCheck()).rejects.toThrow('Forbidden');
+  });
+
+  it('redirects to login on 401 response', async () => {
+    global.fetch.mockResolvedValueOnce({
+      ok: false,
       status: 401,
       json: () => Promise.resolve({ message: 'Unauthorized' }),
     });
 
     const { api } = await import('./useApi.js');
-    await expect(api.healthCheck()).rejects.toThrow('Unauthorized');
+    await expect(api.healthCheck()).rejects.toThrow('Sesión expirada');
   });
 
   it('throws generic error when response body has no message', async () => {

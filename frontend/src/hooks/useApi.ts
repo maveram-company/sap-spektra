@@ -190,6 +190,11 @@ async function fetchApi(endpoint, options = {}) {
   });
 
   if (!res.ok) {
+    if (res.status === 401) {
+      localStorage.removeItem('sap-spektra-auth');
+      window.location.href = '/login';
+      throw new Error('Sesión expirada');
+    }
     const errBody = await res.json().catch(() => ({}));
     throw new Error(errBody.message || errBody.error || `Error ${res.status}`);
   }

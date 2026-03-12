@@ -29,6 +29,35 @@ services:
       timeout: 5s
       retries: 5
 
+  api:
+    build:
+      context: ./apps/api
+      dockerfile: Dockerfile
+    container_name: spektra-api
+    ports:
+      - '3001:3001'
+    environment:
+      DATABASE_URL: postgresql://spektra:spektra_dev@postgres:5432/spektra_dev
+      REDIS_URL: redis://redis:6379
+      JWT_SECRET: spektra-dev-secret
+      CORS_ORIGIN: http://localhost:5173,http://localhost
+      NODE_ENV: development
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: spektra-frontend
+    ports:
+      - '80:80'
+    depends_on:
+      - api
+
 volumes:
   spektra_pgdata:
   spektra_redisdata:

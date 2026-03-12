@@ -57,7 +57,9 @@ export default (): AppConfig => ({
     level: process.env.LOG_LEVEL || 'debug',
   },
   cors: {
-    origin: (process.env.CORS_ORIGIN || 'http://localhost:5173').split(','),
+    origin: (process.env.CORS_ORIGIN || 'http://localhost:5173')
+      .split(',')
+      .map((o) => o.trim()),
   },
   seed: {
     scenario: process.env.SEED_SCENARIO || 'mixed-landscape-demo',

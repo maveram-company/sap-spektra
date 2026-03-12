@@ -26,14 +26,6 @@ export default function AuditLogPage() {
     return () => { mounted = false; };
   }, []);
 
-  if (loading) return <PageLoading message="Cargando log de auditoría..." />;
-
-  if (error) return (
-    <div className="max-w-5xl">
-      <EmptyState icon={AlertTriangle} title="Error al cargar auditoría" description={error} />
-    </div>
-  );
-
   const filtered = events.filter(e =>
     e.action.toLowerCase().includes(search.toLowerCase()) ||
     e.user.toLowerCase().includes(search.toLowerCase()) ||
@@ -41,6 +33,14 @@ export default function AuditLogPage() {
   );
 
   const { items: paginatedAudit, page: auditPage, totalPages: auditTotalPages, total: auditTotal, setPage: setAuditPage } = usePagination(filtered, 25);
+
+  if (loading) return <PageLoading message="Cargando log de auditoría..." />;
+
+  if (error) return (
+    <div className="max-w-5xl">
+      <EmptyState icon={AlertTriangle} title="Error al cargar auditoría" description={error} />
+    </div>
+  );
 
   const severityVariant = (s) => ({ critical: 'danger', warning: 'warning', info: 'default' }[s] || 'default');
 

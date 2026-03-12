@@ -150,6 +150,22 @@ export default function DashboardPage() {
   const { user } = useAuth();
   const { organization } = useTenant();
 
+  useEffect(() => {
+    let mounted = true;
+    (async () => {
+      const [systemsData, approvalsData] = await Promise.all([
+        dataService.getSystems(),
+        dataService.getApprovals(),
+      ]);
+      if (mounted) {
+        setSystems(systemsData);
+        setApprovals(approvalsData);
+        setLoading(false);
+      }
+    })();
+    return () => { mounted = false; };
+  }, []);
+
   const loadData = useCallback(async () => {
     setRefreshing(true);
     const [systemsData, approvalsData] = await Promise.all([
@@ -158,11 +174,8 @@ export default function DashboardPage() {
     ]);
     setSystems(systemsData);
     setApprovals(approvalsData);
-    setLoading(false);
     setRefreshing(false);
   }, []);
-
-  useEffect(() => { loadData(); }, [loadData]);
 
   if (loading) return <PageLoading message="Cargando dashboard..." />;
 

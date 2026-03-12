@@ -63,10 +63,13 @@ export default function ComparisonPage() {
   const currentLine = sidLines.find(l => l.line === selectedLine);
 
   // Sistemas de la linea seleccionada, ordenados DEV -> QAS -> PRD
-  const lineSystems = !currentLine ? [] : currentLine.systems
-    .map(id => systems.find(s => s.id === id))
-    .filter(Boolean)
-    .sort((a, b) => (envOrder[a.environment] ?? 99) - (envOrder[b.environment] ?? 99));
+  const lineSystems = useMemo(() => {
+    if (!currentLine) return [];
+    return currentLine.systems
+      .map(id => systems.find(s => s.id === id))
+      .filter(Boolean)
+      .sort((a, b) => (envOrder[a.environment] ?? 99) - (envOrder[b.environment] ?? 99));
+  }, [currentLine, systems]);
 
   // Meta de cada sistema
   const lineSystemsMeta = useMemo(() => {

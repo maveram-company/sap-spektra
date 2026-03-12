@@ -141,11 +141,12 @@ export default function SystemDetailPage() {
     return names.size;
   }, [instances]);
 
-  // Chart data per selected host
+  // Chart data per selected host — Date.now() es necesario para labels de tiempo relativo
   const chartData = useMemo(() => {
     if (!effectiveHost) return [];
     const history = metricHistoryData[effectiveHost] || [];
     if (!history.length) return [];
+    // eslint-disable-next-line react-hooks/purity -- timestamp para labels de chart, recalculado solo cuando cambian deps
     const now = Date.now();
     const rangeMinutes = chartRange === '1h' ? 60 : chartRange === '3h' ? 180 : 360;
     const pointsToShow = Math.min(history.length, Math.ceil(rangeMinutes / 5));
