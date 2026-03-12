@@ -63,14 +63,15 @@ function hashSeed(str) {
 // ── Transformadores: API → formato frontend ──
 
 function transformSystem(s) {
-  // Host cpu/memory/disk en BD son specs de hardware (cores, GB).
-  // Generamos porcentajes de uso realistas y consistentes basados en healthScore.
   const seed = hashSeed(s.id || s.sid || '');
-  const healthBias = (s.healthScore || 70) / 100; // Sistemas sanos = menor uso
+  const healthBias = (s.healthScore || 70) / 100;
 
-  const cpuUsage = Math.round(25 + (1 - healthBias) * 40 + seed * 15);
-  const memUsage = Math.round(35 + (1 - healthBias) * 35 + seed * 15);
-  const diskUsage = Math.round(30 + (1 - healthBias) * 30 + seed * 15);
+  // RISE_RESTRICTED systems have no OS-level metrics — SAP manages the infra
+  const isRiseRestricted = s.monitoringCapabilityProfile === 'RISE_RESTRICTED' || s.supportsOsMetrics === false;
+
+  const cpuUsage = isRiseRestricted ? null : Math.min(Math.round(25 + (1 - healthBias) * 40 + seed * 15), 95);
+  const memUsage = isRiseRestricted ? null : Math.min(Math.round(35 + (1 - healthBias) * 35 + seed * 15), 95);
+  const diskUsage = isRiseRestricted ? null : Math.min(Math.round(30 + (1 - healthBias) * 30 + seed * 15), 90);
 
   // SLA determinista por sistema
   const mttrBase = s.status === 'critical' ? 40 : s.status === 'warning' ? 30 : 20;
@@ -79,9 +80,10 @@ function transformSystem(s) {
   return {
     ...s,
     type: s.sapProduct || s.type || '',
-    cpu: Math.min(cpuUsage, 95),
-    mem: Math.min(memUsage, 95),
-    disk: Math.min(diskUsage, 90),
+    cpu: cpuUsage,
+    mem: memUsage,
+    disk: diskUsage,
+    isRiseRestricted,
     breaches: s._count?.breaches ?? (s.breaches || 0),
     mttr: Math.round(mttrBase + seed * 15),
     mtbf: Math.round(mtbfBase + seed * 500),

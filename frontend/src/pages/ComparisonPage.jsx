@@ -73,7 +73,7 @@ export default function ComparisonPage() {
       .map(id => systems.find(s => s.id === id))
       .filter(Boolean)
       .sort((a, b) => (envOrder[a.environment] ?? 99) - (envOrder[b.environment] ?? 99));
-  }, [currentLine]);
+  }, [currentLine, systems]);
 
   // Meta de cada sistema
   const lineSystemsMeta = useMemo(() => {
@@ -82,18 +82,29 @@ export default function ComparisonPage() {
       map[s.id] = systemMeta[s.id] || {};
     });
     return map;
-  }, [lineSystems]);
+  }, [lineSystems, systemMeta]);
+
+  // Algún sistema en la linea es RISE_RESTRICTED (sin metricas OS)
+  const hasRiseSystem = useMemo(() =>
+    lineSystems.some(s => s.isRiseRestricted),
+  [lineSystems]);
 
   // Datos de comparacion para el grafico de barras
   const comparisonData = useMemo(() => {
     if (lineSystems.length === 0) return [];
-    return [
+    const data = [
       { metric: 'Health Score', ...Object.fromEntries(lineSystems.map(s => [s.sid, s.healthScore])) },
-      { metric: 'CPU (%)', ...Object.fromEntries(lineSystems.map(s => [s.sid, s.cpu])) },
-      { metric: 'Memoria (%)', ...Object.fromEntries(lineSystems.map(s => [s.sid, s.mem])) },
-      { metric: 'Disco (%)', ...Object.fromEntries(lineSystems.map(s => [s.sid, s.disk])) },
     ];
-  }, [lineSystems]);
+    // Omitir metricas OS si algún sistema es RISE_RESTRICTED
+    if (!hasRiseSystem) {
+      data.push(
+        { metric: 'CPU (%)', ...Object.fromEntries(lineSystems.map(s => [s.sid, s.cpu])) },
+        { metric: 'Memoria (%)', ...Object.fromEntries(lineSystems.map(s => [s.sid, s.mem])) },
+        { metric: 'Disco (%)', ...Object.fromEntries(lineSystems.map(s => [s.sid, s.disk])) },
+      );
+    }
+    return data;
+  }, [lineSystems, hasRiseSystem]);
 
   const colors = ['#3b82f6', '#f59e0b', '#8b5cf6'];
 
@@ -192,7 +203,12 @@ export default function ComparisonPage() {
                           <StatusBadge status={sys.status} />
                         </div>
 
-                        {/* Metricas clave */}
+                        {/* Metricas clave — ocultas para RISE_RESTRICTED */}
+                        {sys.isRiseRestricted ? (
+                        <div className="border-t border-border pt-3 mb-3 text-center">
+                          <p className="text-[10px] text-text-tertiary">SAP RISE — Metricas OS no disponibles</p>
+                        </div>
+                        ) : (
                         <div className="grid grid-cols-3 gap-2 text-center border-t border-border pt-3 mb-3">
                           <div>
                             <p className="text-[10px] text-text-tertiary uppercase">CPU</p>
@@ -225,6 +241,7 @@ export default function ComparisonPage() {
                             </p>
                           </div>
                         </div>
+                        )}
 
                         {/* Info SAP (Release, Kernel, Notes) */}
                         <div className="border-t border-border pt-3 text-left space-y-1.5">

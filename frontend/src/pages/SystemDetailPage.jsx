@@ -1,7 +1,7 @@
 import { useState, useEffect, useMemo } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import {
-  ArrowLeft, Activity, Clock, Shield, AlertTriangle, TrendingUp, Server,
+  ArrowLeft, Activity, Clock, Shield, ShieldAlert, AlertTriangle, TrendingUp, Server,
   CheckCircle, XCircle, Database, Cpu, HardDrive, MemoryStick, Users, Zap, Terminal,
   Lock, Layers, FileWarning, Network, Globe, Mail, Radio, Bell, BarChart3
 } from 'lucide-react';
@@ -159,7 +159,7 @@ export default function SystemDetailPage() {
       Memory: p.mem,
       Disk: p.disk,
     }));
-  }, [effectiveHost, chartRange, mountTime]);
+  }, [effectiveHost, chartRange, mountTime, metricHistoryData]);
 
   if (loading) return <PageLoading message="Cargando sistema..." />;
   if (!system) return <div className="p-6 text-text-secondary">Sistema no encontrado</div>;
@@ -452,7 +452,19 @@ export default function SystemDetailPage() {
           </p>
         </div>
 
-        {/* Metric History chart */}
+        {/* Metric History chart — hidden for RISE_RESTRICTED (no OS-level metrics) */}
+        {system.isRiseRestricted ? (
+          <Card>
+            <div className="flex flex-col items-center gap-2 py-6">
+              <ShieldAlert size={24} className="text-text-tertiary" />
+              <p className="text-sm font-medium text-text-primary">SAP RISE — Infraestructura gestionada</p>
+              <p className="text-xs text-text-tertiary text-center max-w-md">
+                Las metricas de infraestructura (CPU, Memoria, Disco) no estan disponibles para sistemas
+                SAP RISE. SAP gestiona la infraestructura subyacente.
+              </p>
+            </div>
+          </Card>
+        ) : (
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
@@ -525,15 +537,16 @@ export default function SystemDetailPage() {
             </div>
           )}
         </Card>
+        )}
 
         {hosts.map((host) => {
-          // Determine card header accent based on worst metric
-          const cpuDanger  = host.cpu  >= 85;
-          const cpuWarn    = host.cpu  >= 70;
-          const memDanger  = host.mem  >= 85;
-          const memWarn    = host.mem  >= 70;
-          const diskDanger = host.disk >= 85;
-          const diskWarn   = host.disk >= 70;
+          // Determine card header accent based on worst metric (skip for RISE)
+          const cpuDanger  = !system.isRiseRestricted && host.cpu  >= 85;
+          const cpuWarn    = !system.isRiseRestricted && host.cpu  >= 70;
+          const memDanger  = !system.isRiseRestricted && host.mem  >= 85;
+          const memWarn    = !system.isRiseRestricted && host.mem  >= 70;
+          const diskDanger = !system.isRiseRestricted && host.disk >= 85;
+          const diskWarn   = !system.isRiseRestricted && host.disk >= 70;
           const anyDanger  = cpuDanger || memDanger || diskDanger;
           const anyWarn    = cpuWarn   || memWarn   || diskWarn;
 
@@ -566,7 +579,12 @@ export default function SystemDetailPage() {
               </CardHeader>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {/* Metric bars */}
+                {/* Metric bars — hidden for RISE_RESTRICTED */}
+                {system.isRiseRestricted ? (
+                <div className="flex items-center justify-center text-xs text-text-tertiary py-4">
+                  Metricas OS no disponibles (SAP RISE)
+                </div>
+                ) : (
                 <div className="space-y-3">
                   {[
                     { label: 'CPU', value: host.cpu, icon: <Cpu size={12} /> },
@@ -603,6 +621,7 @@ export default function SystemDetailPage() {
                     }`}>{host.availability}%</span>
                   </div>
                 </div>
+                )}
 
                 {/* Instances on this host */}
                 <div>
