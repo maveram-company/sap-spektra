@@ -1,0 +1,151 @@
+import { NotFoundException, BadRequestException } from '@nestjs/common';
+import { Test, TestingModule } from '@nestjs/testing';
+import { ApprovalsService } from './approvals.service';
+import { PrismaService } from '../../infrastructure/prisma/prisma.service';
+
+const ORG_ID = 'org-test-1';
+
+function mockApproval(overrides = {}) {
+  return {
+    id: 'apr-1',
+    organizationId: ORG_ID,
+    systemId: 'sys-1',
+    description: 'Restart PAS instance',
+    severity: 'high',
+    status: 'PENDING',
+    requestedBy: 'operator@acme.com',
+    createdAt: new Date(),
+    ...overrides,
+  };
+}
+
+describe('ApprovalsService', () => {
+  let service: ApprovalsService;
+  let prisma: Record<string, any>;
+
+  beforeEach(async () => {
+    prisma = {
+      approvalRequest: {
+        findMany: jest.fn(),
+        findFirst: jest.fn(),
+        create: jest.fn(),
+        update: jest.fn(),
+      },
+    };
+
+    const module: TestingModule = await Test.createTestingModule({
+      providers: [
+        ApprovalsService,
+        { provide: PrismaService, useValue: prisma },
+      ],
+    }).compile();
+
+    service = module.get<ApprovalsService>(ApprovalsService);
+  });
+
+  // ── findAll ──
+
+  describe('findAll', () => {
+    it('returns approvals for organization', async () => {
+      prisma.approvalRequest.findMany.mockResolvedValue([mockApproval()]);
+      const result = await service.findAll(ORG_ID);
+      expect(result).toHaveLength(1);
+    });
+
+    it('applies status and systemId filters', async () => {
+      prisma.approvalRequest.findMany.mockResolvedValue([]);
+      await service.findAll(ORG_ID, { status: 'PENDING', systemId: 'sys-1' });
+
+      expect(prisma.approvalRequest.findMany).toHaveBeenCalledWith(
+        expect.objectContaining({
+          where: expect.objectContaining({
+            organizationId: ORG_ID,
+            status: 'PENDING',
+            systemId: 'sys-1',
+          }),
+        }),
+      );
+    });
+  });
+
+  // ── findOne ──
+
+  describe('findOne', () => {
+    it('returns approval when found', async () => {
+      prisma.approvalRequest.findFirst.mockResolvedValue(mockApproval());
+      const result = await service.findOne(ORG_ID, 'apr-1');
+      expect(result.description).toBe('Restart PAS instance');
+    });
+
+    it('throws NotFoundException for missing approval', async () => {
+      prisma.approvalRequest.findFirst.mockResolvedValue(null);
+      await expect(service.findOne(ORG_ID, 'missing')).rejects.toThrow(NotFoundException);
+    });
+  });
+
+  // ── create ──
+
+  describe('create', () => {
+    it('creates a new approval request with PENDING status', async () => {
+      prisma.approvalRequest.create.mockResolvedValue(mockApproval());
+
+      const result = await service.create(ORG_ID, {
+        systemId: 'sys-1',
+        description: 'Restart PAS',
+        severity: 'high',
+        requestedBy: 'operator@acme.com',
+      });
+
+      expect(prisma.approvalRequest.create).toHaveBeenCalledWith(
+        expect.objectContaining({
+          data: expect.objectContaining({
+            organizationId: ORG_ID,
+            status: 'PENDING',
+          }),
+        }),
+      );
+      expect(result.status).toBe('PENDING');
+    });
+  });
+
+  // ── process ──
+
+  describe('process', () => {
+    it('approves a PENDING request', async () => {
+      prisma.approvalRequest.findFirst.mockResolvedValue(mockApproval());
+      prisma.approvalRequest.update.mockResolvedValue(
+        mockApproval({ status: 'APPROVED', processedBy: 'admin@acme.com' }),
+      );
+
+      const result = await service.process(ORG_ID, 'apr-1', 'APPROVED', 'admin@acme.com');
+      expect(result.status).toBe('APPROVED');
+    });
+
+    it('rejects a PENDING request', async () => {
+      prisma.approvalRequest.findFirst.mockResolvedValue(mockApproval());
+      prisma.approvalRequest.update.mockResolvedValue(
+        mockApproval({ status: 'REJECTED', processedBy: 'admin@acme.com' }),
+      );
+
+      const result = await service.process(ORG_ID, 'apr-1', 'REJECTED', 'admin@acme.com');
+      expect(result.status).toBe('REJECTED');
+    });
+
+    it('throws NotFoundException for missing approval', async () => {
+      prisma.approvalRequest.findFirst.mockResolvedValue(null);
+      await expect(
+        service.process(ORG_ID, 'missing', 'APPROVED', 'admin@acme.com'),
+      ).rejects.toThrow(NotFoundException);
+    });
+
+    it('throws BadRequestException when processing non-PENDING approval', async () => {
+      prisma.approvalRequest.findFirst.mockResolvedValue(
+        mockApproval({ status: 'APPROVED' }),
+      );
+
+      await expect(
+        service.process(ORG_ID, 'apr-1', 'REJECTED', 'admin@acme.com'),
+      ).rejects.toThrow(BadRequestException);
+    });
+  });
+});
