@@ -8,674 +8,528 @@
   <script src="theme-toggle.js"></script>
   <script src="lang-toggle.js"></script>
   <style>
-    /* ── KPI row ── */
-    .kpi-row {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-      gap: 14px;
-      margin-bottom: 28px;
-    }
-    .kpi-card {
-      background: var(--card-bg);
-      border: 1px solid var(--card-border);
-      border-radius: var(--radius);
-      padding: 16px;
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-    .kpi-icon {
-      width: 40px;
-      height: 40px;
-      border-radius: 10px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 18px;
-      flex-shrink: 0;
-      background: var(--bg3);
-    }
-    .kpi-icon.cyan    { color: var(--cyan); }
-    .kpi-icon.success { color: var(--success); }
-    .kpi-icon.danger  { color: var(--danger); }
-    .kpi-icon.violet  { color: var(--violet); }
-    .kpi-value { font-size: 22px; font-weight: 700; color: var(--txt1); }
-    .kpi-label { font-size: 11px; color: var(--txt3); }
-
-    /* ── Chart placeholder ── */
-    .chart-placeholder {
-      background: var(--bg3);
-      border: 1px dashed var(--brd);
-      border-radius: var(--radius);
-      padding: 48px 20px;
-      text-align: center;
-      color: var(--txt3);
-      font-size: 12px;
-    }
-
-    /* ── Charts grid ── */
-    .charts-row {
-      display: grid;
-      grid-template-columns: 2fr 1fr;
-      gap: 16px;
-      margin-bottom: 28px;
-    }
-    @media (max-width: 900px) { .charts-row { grid-template-columns: 1fr; } }
-
-    /* ── Progress bar ── */
-    .progress-bar-wrap {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-    .progress-bar-track {
-      width: 96px;
-      height: 8px;
-      background: var(--bg3);
-      border-radius: 100px;
-      overflow: hidden;
-    }
-    .progress-bar-fill {
-      height: 100%;
-      border-radius: 100px;
-    }
-
-    /* ── Filter bar ── */
-    .filter-bar {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      margin-bottom: 24px;
-    }
-    .filter-bar label {
-      font-size: 13px;
-      font-weight: 600;
-      color: var(--txt2);
-    }
-    .filter-select {
-      background: var(--card-bg);
-      border: 1px solid var(--card-border);
-      border-radius: 8px;
-      padding: 8px 12px;
-      font-size: 13px;
-      color: var(--txt1);
-      font-family: inherit;
-      outline: none;
-      min-width: 220px;
-    }
-    .filter-select:focus { border-color: var(--cyan); }
-
-    /* ── Upgrade banner ── */
-    .upgrade-banner {
-      background: var(--violet-dim);
-      border: 1px solid rgba(139,92,246,0.25);
-      border-radius: var(--radius);
-      padding: 32px;
-      text-align: center;
-      margin: 40px 0;
-    }
-    .upgrade-banner h3 { color: var(--violet); font-size: 18px; margin-bottom: 8px; }
-    .upgrade-banner p { color: var(--txt2); font-size: 13px; }
-
-    /* ── Bar chart mockup ── */
-    .bar-chart-mock {
-      display: flex;
-      align-items: flex-end;
-      gap: 6px;
-      height: 180px;
-      padding: 0 16px;
-    }
-    .bar-group {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 4px;
-    }
-    .bar-pair {
-      display: flex;
-      align-items: flex-end;
-      gap: 3px;
-      width: 100%;
-      justify-content: center;
-    }
-    .bar-success {
-      width: 14px;
-      background: var(--success);
-      border-radius: 3px 3px 0 0;
-    }
-    .bar-danger {
-      width: 14px;
-      background: var(--danger);
-      border-radius: 3px 3px 0 0;
-    }
-    .bar-label { font-size: 9px; color: var(--txt3); }
-
-    /* ── Donut mock ── */
-    .donut-mock {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      height: 180px;
-    }
-    .donut-ring {
-      width: 140px;
-      height: 140px;
-      border-radius: 50%;
-      border: 18px solid var(--danger);
-      border-top-color: var(--success);
-      border-right-color: var(--success);
-      border-bottom-color: var(--success);
-      position: relative;
-    }
-    .donut-center {
-      position: absolute;
-      inset: 0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 18px;
-      font-weight: 700;
-      color: var(--txt1);
-    }
-    .donut-legend {
-      display: flex;
-      gap: 16px;
-      margin-top: 12px;
-      font-size: 11px;
-      color: var(--txt2);
-    }
-    .donut-legend .dot {
-      display: inline-block;
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      margin-right: 4px;
-    }
+    .chart-placeholder{background:var(--bg3);border:1px dashed var(--brd);border-radius:var(--radius);height:220px;display:flex;align-items:center;justify-content:center;color:var(--txt3);font-size:13px;position:relative;overflow:hidden}
+    .chart-placeholder::after{content:'';position:absolute;bottom:0;left:0;right:0;height:60%;background:linear-gradient(180deg,transparent,rgba(6,182,212,0.04));pointer-events:none}
+    .time-window{display:flex;gap:0;border:1px solid var(--brd);border-radius:8px;overflow:hidden;margin-bottom:16px;width:fit-content}
+    .time-btn{padding:6px 16px;font-size:12px;font-weight:600;color:var(--txt3);background:var(--card-bg);cursor:pointer;border:none;transition:all .15s}
+    .time-btn:not(:last-child){border-right:1px solid var(--brd)}
+    .time-btn.active{background:var(--cyan-dim);color:var(--cyan)}
+    .time-btn:hover:not(.active){background:var(--bg3);color:var(--txt1)}
+    .stat-highlight{display:flex;align-items:center;gap:8px;padding:12px 16px;background:var(--bg3);border-radius:8px;margin-bottom:8px}
+    .stat-highlight .stat-val{font-size:20px;font-weight:700;color:var(--txt1)}
+    .stat-highlight .stat-label{font-size:12px;color:var(--txt3)}
+    .stat-highlight .stat-change{font-size:11px;font-weight:600;padding:2px 8px;border-radius:100px}
+    .stat-highlight .stat-change.up{background:rgba(34,197,94,0.12);color:var(--success)}
+    .stat-highlight .stat-change.down{background:rgba(239,68,68,0.12);color:var(--danger)}
+    .stat-highlight .stat-change.neutral{background:var(--bg3);color:var(--txt3)}
+    .trend-bar{display:flex;align-items:flex-end;gap:3px;height:60px;margin-top:8px}
+    .trend-bar .bar{width:14px;border-radius:3px 3px 0 0;background:var(--cyan);transition:height .3s}
+    .trend-bar .bar.success{background:var(--success)}
+    .trend-bar .bar.warning{background:var(--warning)}
+    .trend-bar .bar.danger{background:var(--danger)}
+    .mini-sparkline{display:flex;align-items:flex-end;gap:1px;height:24px}
+    .mini-sparkline .dot{width:3px;border-radius:1px;background:var(--cyan)}
   </style>
 </head>
 <body>
-  <div class="docs-wrapper">
+<div class="docs-wrapper">
 
-    <!-- ═══ SIDEBAR ═══ -->
-    <nav class="docs-sidebar">
-      <div class="sidebar-brand">
-        <div class="logo">&#9889;</div>
-        <div class="brand-text">
-          <div class="brand-name">SAP Spektra</div>
-          <div class="brand-sub">
-            <span class="es">DOCUMENTACION</span>
-            <span class="en">DOCUMENTATION</span>
-          </div>
-        </div>
+  <!-- ═══ SIDEBAR ═══ -->
+  <aside class="docs-sidebar">
+    <div class="sidebar-brand">
+      <div class="logo">S</div>
+      <div class="brand-text">
+        <div class="brand-name">SAP Spektra</div>
+        <div class="brand-sub"><span class="es">Documentacion v2.0</span><span class="en">Documentation v2.0</span></div>
       </div>
-
+    </div>
+    <nav>
       <div class="sidebar-section">
-        <div class="sidebar-section-label">
-          <span class="es">Inicio</span>
-          <span class="en">Start</span>
-        </div>
-        <a href="index.html" class="sidebar-link">
-          &#127968;
-          <span class="es">Portal de Documentacion</span>
-          <span class="en">Documentation Portal</span>
-        </a>
-        <a href="getting-started.html" class="sidebar-link">
-          &#128640;
-          <span class="es">Primeros Pasos</span>
-          <span class="en">Getting Started</span>
-        </a>
+        <div class="sidebar-section-label"><span class="es">Inicio</span><span class="en">Home</span></div>
+        <a class="sidebar-link" href="index.html"><span class="es">Portal</span><span class="en">Portal</span></a>
+        <a class="sidebar-link" href="getting-started.html"><span class="es">Primeros Pasos</span><span class="en">Getting Started</span></a>
       </div>
-
       <div class="sidebar-section">
         <div class="sidebar-section-label">Command</div>
-        <a href="dashboard.html" class="sidebar-link">&#128202; Dashboard</a>
-        <a href="landscape.html" class="sidebar-link">&#127760; Landscape</a>
-        <a href="alerts.html" class="sidebar-link">
-          &#9888;&#65039;
-          <span class="es">Alertas</span>
-          <span class="en">Alerts</span>
-        </a>
+        <a class="sidebar-link" href="dashboard.html">Dashboard</a>
+        <a class="sidebar-link" href="landscape.html">Landscape</a>
+        <a class="sidebar-link" href="alerts.html"><span class="es">Alertas</span><span class="en">Alerts</span></a>
       </div>
-
       <div class="sidebar-section">
         <div class="sidebar-section-label">Monitor</div>
-        <a href="systems.html" class="sidebar-link">
-          &#128421;
-          <span class="es">Sistemas</span>
-          <span class="en">Systems</span>
-        </a>
-        <a href="connectors.html" class="sidebar-link">
-          &#128268;
-          <span class="es">Conectores</span>
-          <span class="en">Connectors</span>
-        </a>
-        <a href="events.html" class="sidebar-link">
-          &#128196;
-          <span class="es">Eventos</span>
-          <span class="en">Events</span>
-        </a>
+        <a class="sidebar-link" href="systems.html"><span class="es">Sistemas</span><span class="en">Systems</span></a>
+        <a class="sidebar-link" href="connectors.html"><span class="es">Conectores</span><span class="en">Connectors</span></a>
+        <a class="sidebar-link" href="events.html"><span class="es">Eventos</span><span class="en">Events</span></a>
       </div>
-
       <div class="sidebar-section">
         <div class="sidebar-section-label">Intelligence</div>
-        <a href="ai-analysis.html" class="sidebar-link">
-          &#129504;
-          <span class="es">Analisis IA</span>
-          <span class="en">AI Analysis</span>
-        </a>
-        <a href="analytics.html" class="sidebar-link active">&#128200; Analytics</a>
-        <a href="reports.html" class="sidebar-link">
-          &#128209;
-          <span class="es">Reportes</span>
-          <span class="en">Reports</span>
-        </a>
-        <a href="comparison.html" class="sidebar-link">
-          &#128260;
-          <span class="es">Comparacion</span>
-          <span class="en">Comparison</span>
-        </a>
+        <a class="sidebar-link" href="ai-analysis.html"><span class="es">Analisis IA</span><span class="en">AI Analysis</span></a>
+        <a class="sidebar-link active" href="analytics.html">Analytics</a>
+        <a class="sidebar-link" href="reports.html"><span class="es">Reportes</span><span class="en">Reports</span></a>
+        <a class="sidebar-link" href="comparison.html"><span class="es">Comparacion</span><span class="en">Comparison</span></a>
       </div>
-
       <div class="sidebar-section">
         <div class="sidebar-section-label">Operations</div>
-        <a href="runbooks.html" class="sidebar-link">&#128214; Runbooks</a>
-        <a href="approvals.html" class="sidebar-link">
-          &#9989;
-          <span class="es">Aprobaciones</span>
-          <span class="en">Approvals</span>
-        </a>
-        <a href="operations.html" class="sidebar-link">
-          &#128197;
-          <span class="es">Operaciones</span>
-          <span class="en">Operations</span>
-        </a>
-        <a href="jobs.html" class="sidebar-link">&#9654;&#65039; Jobs SM37</a>
-        <a href="transports.html" class="sidebar-link">
-          &#128230;
-          <span class="es">Transportes</span>
-          <span class="en">Transports</span>
-        </a>
-        <a href="sla.html" class="sidebar-link">&#11088; SLA</a>
-        <a href="ha-control.html" class="sidebar-link">&#128147; HA Control</a>
-        <a href="certificates.html" class="sidebar-link">
-          &#128273;
-          <span class="es">Certificados</span>
-          <span class="en">Certificates</span>
-        </a>
+        <a class="sidebar-link" href="runbooks.html">Runbooks</a>
+        <a class="sidebar-link" href="approvals.html"><span class="es">Aprobaciones</span><span class="en">Approvals</span></a>
+        <a class="sidebar-link" href="operations.html"><span class="es">Operaciones</span><span class="en">Operations</span></a>
+        <a class="sidebar-link" href="jobs.html">Jobs SM37</a>
+        <a class="sidebar-link" href="transports.html"><span class="es">Transportes</span><span class="en">Transports</span></a>
+        <a class="sidebar-link" href="sla.html">SLA</a>
+        <a class="sidebar-link" href="ha-control.html">HA Control</a>
+        <a class="sidebar-link" href="certificates.html"><span class="es">Certificados</span><span class="en">Certificates</span></a>
       </div>
-
       <div class="sidebar-section">
         <div class="sidebar-section-label">Admin</div>
-        <a href="admin.html" class="sidebar-link">
-          &#128737;
-          <span class="es">Gestion</span>
-          <span class="en">Management</span>
-        </a>
-        <a href="settings.html" class="sidebar-link">
-          &#9881;&#65039;
-          <span class="es">Configuracion</span>
-          <span class="en">Settings</span>
-        </a>
-        <a href="connect-system.html" class="sidebar-link">
-          &#128279;
-          <span class="es">Conectar Sistema</span>
-          <span class="en">Connect System</span>
-        </a>
+        <a class="sidebar-link" href="admin.html"><span class="es">Gestion</span><span class="en">Management</span></a>
+        <a class="sidebar-link" href="settings.html"><span class="es">Configuracion</span><span class="en">Settings</span></a>
+        <a class="sidebar-link" href="connect-system.html"><span class="es">Conectar Sistema</span><span class="en">Connect System</span></a>
       </div>
     </nav>
+  </aside>
 
-    <!-- ═══ MAIN CONTENT ═══ -->
-    <main class="docs-main">
-
-    <div class="demo-disclaimer">
-      <span class="es"><strong>Nota:</strong> Esta documentación describe la interfaz de SAP Spektra con datos simulados. Las integraciones, conectividad SAP y operaciones de backend son funcionalidad planificada — actualmente el producto opera en modo demostración.</span>
-      <span class="en"><strong>Note:</strong> This documentation describes SAP Spektra's interface with simulated data. Integrations, SAP connectivity, and backend operations are planned functionality — the product currently operates in demo mode.</span>
+  <!-- ═══ MAIN ═══ -->
+  <main class="docs-main">
+    <div class="breadcrumb">
+      <a href="index.html">Spektra</a> <span class="sep">/</span> Intelligence <span class="sep">/</span> Analytics
     </div>
 
-      <!-- Breadcrumb -->
-      <div class="breadcrumb">
-        <a href="index.html">Docs</a>
-        <span class="sep">/</span>
-        <span>Intelligence</span>
-        <span class="sep">/</span>
-        <span>Analytics</span>
-      </div>
-
-      <!-- Page header -->
-      <div class="page-header">
-        <h1>Analytics</h1>
-        <p class="subtitle">
-          <span class="es">Metricas de ejecucion de runbooks</span>
-          <span class="en">Runbook execution metrics</span>
-        </p>
-      </div>
-
-      <!-- ────────────────────────────────────────────── -->
-      <!-- SYSTEM FILTER                                  -->
-      <!-- ────────────────────────────────────────────── -->
-      <h2>
-        <span class="es">Filtro de sistema</span>
-        <span class="en">System filter</span>
-      </h2>
-      <p>
-        <span class="es">En la parte superior de la pagina encontraras un <strong>dropdown de filtro</strong> que permite seleccionar un sistema especifico o ver los datos de todos los sistemas agregados. Por defecto esta seleccionado <em>"Todos los sistemas"</em>.</span>
-        <span class="en">At the top of the page you will find a <strong>filter dropdown</strong> that lets you select a specific system or view aggregated data from all systems. By default <em>"Todos los sistemas"</em> (All systems) is selected.</span>
+    <div class="page-header">
+      <h1>Analytics</h1>
+      <p class="subtitle">
+        <span class="es">Panel de analitica centralizado con KPIs del landscape, tendencias de salud, estadisticas de runbooks y metricas operacionales agregadas.</span>
+        <span class="en">Centralized analytics dashboard with landscape KPIs, health trends, runbook statistics, and aggregated operational metrics.</span>
       </p>
+    </div>
 
-      <div class="filter-bar">
-        <label>
-          <span class="es">Sistema:</span>
-          <span class="en">System:</span>
-        </label>
-        <select class="filter-select" disabled>
-          <option>
-            <span class="es">Todos los sistemas</span>
-            <span class="en">All systems</span>
-          </option>
-          <option>EP1 - S/4HANA</option>
-          <option>EQ1 - S/4HANA</option>
-          <option>ED1 - S/4HANA</option>
-        </select>
+    <!-- Overview KPIs -->
+    <h2><span class="es">KPIs del Landscape</span><span class="en">Landscape KPIs</span></h2>
+    <div class="kpi-grid">
+      <div class="kpi-card">
+        <div class="card-icon cyan">&#9641;</div>
+        <div>
+          <div class="kpi-value">24</div>
+          <div class="kpi-label"><span class="es">Sistemas Totales</span><span class="en">Total Systems</span></div>
+        </div>
       </div>
+      <div class="kpi-card">
+        <div class="card-icon success">&#9829;</div>
+        <div>
+          <div class="kpi-value">84.2</div>
+          <div class="kpi-label"><span class="es">Salud Promedio</span><span class="en">Avg Health</span></div>
+        </div>
+      </div>
+      <div class="kpi-card">
+        <div class="card-icon warning">&#9888;</div>
+        <div>
+          <div class="kpi-value">47</div>
+          <div class="kpi-label"><span class="es">Alertas Totales (7d)</span><span class="en">Total Alerts (7d)</span></div>
+        </div>
+      </div>
+      <div class="kpi-card">
+        <div class="card-icon violet">&#9881;</div>
+        <div>
+          <div class="kpi-value">156</div>
+          <div class="kpi-label"><span class="es">Operaciones (30d)</span><span class="en">Operations (30d)</span></div>
+        </div>
+      </div>
+    </div>
 
-      <!-- ────────────────────────────────────────────── -->
-      <!-- FEATURE GATE                                   -->
-      <!-- ────────────────────────────────────────────── -->
-      <h2>
-        <span class="es">Requisito del plan</span>
-        <span class="en">Plan requirement</span>
-      </h2>
-      <p>
-        <span class="es">Analytics requiere que tu plan incluya la funcionalidad <code>analytics</code>. Si no esta incluida, veras un banner de upgrade en lugar de las metricas y graficas.</span>
-        <span class="en">Analytics requires your plan to include the <code>analytics</code> feature. If it is not included, you will see an upgrade banner instead of metrics and charts.</span>
+    <!-- KPI Detail Cards -->
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title"><span class="es">Sistemas por Entorno</span><span class="en">Systems by Environment</span></div>
+        </div>
+        <div class="stat-highlight">
+          <div><div class="stat-val">10</div><div class="stat-label">Production (PRD)</div></div>
+        </div>
+        <div class="stat-highlight">
+          <div><div class="stat-val">6</div><div class="stat-label">Quality (QAS)</div></div>
+        </div>
+        <div class="stat-highlight">
+          <div><div class="stat-val">5</div><div class="stat-label">Development (DEV)</div></div>
+        </div>
+        <div class="stat-highlight">
+          <div><div class="stat-val">3</div><div class="stat-label">Sandbox (SBX)</div></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title"><span class="es">Alertas por Severidad</span><span class="en">Alerts by Severity</span></div>
+        </div>
+        <div class="stat-highlight">
+          <div><div class="stat-val text-danger">8</div><div class="stat-label"><span class="es">Criticas</span><span class="en">Critical</span></div></div>
+          <span class="stat-change up">+3</span>
+        </div>
+        <div class="stat-highlight">
+          <div><div class="stat-val text-warning">15</div><div class="stat-label"><span class="es">Advertencias</span><span class="en">Warnings</span></div></div>
+          <span class="stat-change down">-2</span>
+        </div>
+        <div class="stat-highlight">
+          <div><div class="stat-val text-cyan">24</div><div class="stat-label"><span class="es">Informativas</span><span class="en">Informational</span></div></div>
+          <span class="stat-change neutral">0</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Runbook Analytics -->
+    <h2><span class="es">Analitica de Runbooks</span><span class="en">Runbook Analytics</span></h2>
+
+    <div class="kpi-grid">
+      <div class="kpi-card">
+        <div class="card-icon violet">&#9654;</div>
+        <div>
+          <div class="kpi-value">342</div>
+          <div class="kpi-label"><span class="es">Ejecuciones Totales (30d)</span><span class="en">Total Executions (30d)</span></div>
+        </div>
+      </div>
+      <div class="kpi-card">
+        <div class="card-icon success">&#10003;</div>
+        <div>
+          <div class="kpi-value">94.7%</div>
+          <div class="kpi-label"><span class="es">Tasa de Exito</span><span class="en">Success Rate</span></div>
+        </div>
+      </div>
+      <div class="kpi-card">
+        <div class="card-icon cyan">&#9202;</div>
+        <div>
+          <div class="kpi-value">2.4m</div>
+          <div class="kpi-label"><span class="es">Duracion Promedio</span><span class="en">Avg Duration</span></div>
+        </div>
+      </div>
+      <div class="kpi-card">
+        <div class="card-icon warning">&#9888;</div>
+        <div>
+          <div class="kpi-value">18</div>
+          <div class="kpi-label"><span class="es">Fallos (30d)</span><span class="en">Failures (30d)</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Daily Execution Trend -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title"><span class="es">Tendencia Diaria de Ejecuciones</span><span class="en">Daily Execution Trend</span></div>
+        <div class="time-window">
+          <button class="time-btn">7d</button>
+          <button class="time-btn active">14d</button>
+          <button class="time-btn">30d</button>
+        </div>
+      </div>
+      <div class="chart-placeholder">
+        <span class="es">Grafico de barras — Ejecuciones diarias (exito vs fallo)</span>
+        <span class="en">Bar chart — Daily executions (success vs failure)</span>
+      </div>
+      <div class="trend-bar mt-2">
+        <div class="bar success" style="height:45px" title="Mar 1: 22 ok"></div>
+        <div class="bar success" style="height:38px" title="Mar 2: 19 ok"></div>
+        <div class="bar success" style="height:52px" title="Mar 3: 26 ok"></div>
+        <div class="bar success" style="height:40px" title="Mar 4: 20 ok"></div>
+        <div class="bar warning" style="height:30px" title="Mar 5: 15 ok, 2 fail"></div>
+        <div class="bar success" style="height:48px" title="Mar 6: 24 ok"></div>
+        <div class="bar success" style="height:35px" title="Mar 7: 18 ok"></div>
+        <div class="bar success" style="height:42px" title="Mar 8: 21 ok"></div>
+        <div class="bar danger" style="height:20px" title="Mar 9: 8 ok, 5 fail"></div>
+        <div class="bar success" style="height:55px" title="Mar 10: 28 ok"></div>
+        <div class="bar success" style="height:50px" title="Mar 11: 25 ok"></div>
+        <div class="bar success" style="height:36px" title="Mar 12: 18 ok"></div>
+        <div class="bar success" style="height:44px" title="Mar 13: 22 ok"></div>
+        <div class="bar success" style="height:46px" title="Mar 14: 23 ok"></div>
+      </div>
+      <p class="text-xs text-muted mt-1">
+        <span class="es">Cada barra representa ejecuciones diarias. Verde = exito, Amarillo = parcial, Rojo = fallo significativo.</span>
+        <span class="en">Each bar represents daily executions. Green = success, Yellow = partial, Red = significant failure.</span>
       </p>
+    </div>
 
-      <div class="upgrade-banner">
-        <h3>&#128274;
-          <span class="es">Funcionalidad premium</span>
-          <span class="en">Premium feature</span>
-        </h3>
-        <p>
-          <span class="es">Si ves este banner, tu plan no incluye <strong>Analytics de Runbooks</strong>. Contacta a tu administrador o actualiza tu plan.</span>
-          <span class="en">If you see this banner, your plan does not include <strong>Runbook Analytics</strong>. Contact your admin or upgrade your plan.</span>
-        </p>
+    <!-- System Health Trends -->
+    <h2><span class="es">Tendencias de Salud del Sistema</span><span class="en">System Health Trends</span></h2>
+
+    <div class="time-window">
+      <button class="time-btn">7d</button>
+      <button class="time-btn active">14d</button>
+      <button class="time-btn">30d</button>
+    </div>
+
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">S4P — S/4HANA Production</div>
+          <span class="badge success">96</span>
+        </div>
+        <div class="chart-placeholder" style="height:140px">
+          <span class="es">Tendencia salud 14 dias — Estable ~95-97</span>
+          <span class="en">Health trend 14 days — Stable ~95-97</span>
+        </div>
+        <div class="stat-highlight mt-1">
+          <div><div class="stat-label"><span class="es">Promedio 14d</span><span class="en">14d Average</span></div><div class="stat-val">95.8</div></div>
+          <span class="stat-change up">+0.4</span>
+        </div>
       </div>
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">ECP — ECC Production</div>
+          <span class="badge success">82</span>
+        </div>
+        <div class="chart-placeholder" style="height:140px">
+          <span class="es">Tendencia salud 14 dias — Ligera mejora</span>
+          <span class="en">Health trend 14 days — Slight improvement</span>
+        </div>
+        <div class="stat-highlight mt-1">
+          <div><div class="stat-label"><span class="es">Promedio 14d</span><span class="en">14d Average</span></div><div class="stat-val">80.1</div></div>
+          <span class="stat-change up">+2.1</span>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">BWP — BW/4HANA Production</div>
+          <span class="badge warning">64</span>
+        </div>
+        <div class="chart-placeholder" style="height:140px">
+          <span class="es">Tendencia salud 14 dias — Degradacion progresiva</span>
+          <span class="en">Health trend 14 days — Progressive degradation</span>
+        </div>
+        <div class="stat-highlight mt-1">
+          <div><div class="stat-label"><span class="es">Promedio 14d</span><span class="en">14d Average</span></div><div class="stat-val">71.3</div></div>
+          <span class="stat-change down">-8.2</span>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">SLT — SLT Replication</div>
+          <span class="badge danger">38</span>
+        </div>
+        <div class="chart-placeholder" style="height:140px">
+          <span class="es">Tendencia salud 14 dias — Caida abrupta</span>
+          <span class="en">Health trend 14 days — Sharp decline</span>
+        </div>
+        <div class="stat-highlight mt-1">
+          <div><div class="stat-label"><span class="es">Promedio 14d</span><span class="en">14d Average</span></div><div class="stat-val">58.4</div></div>
+          <span class="stat-change down">-22.6</span>
+        </div>
+      </div>
+    </div>
 
-      <!-- ────────────────────────────────────────────── -->
-      <!-- 4 KPI CARDS                                    -->
-      <!-- ────────────────────────────────────────────── -->
-      <h2>
-        <span class="es">Tarjetas KPI</span>
-        <span class="en">KPI cards</span>
-      </h2>
-      <p>
-        <span class="es">La primera fila muestra <strong>4 indicadores clave de rendimiento</strong> (KPI) en tarjetas horizontales:</span>
-        <span class="en">The first row displays <strong>4 key performance indicators</strong> (KPIs) in horizontal cards:</span>
+    <!-- Top Performing Runbooks -->
+    <h2><span class="es">Runbooks con Mejor Rendimiento</span><span class="en">Top Performing Runbooks</span></h2>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Runbook</th>
+            <th><span class="es">Ejecuciones</span><span class="en">Executions</span></th>
+            <th><span class="es">Tasa Exito</span><span class="en">Success Rate</span></th>
+            <th><span class="es">Duracion Prom.</span><span class="en">Avg Duration</span></th>
+            <th><span class="es">Ultimo Uso</span><span class="en">Last Used</span></th>
+            <th>Trend</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="text-cyan font-bold">1</td>
+            <td>
+              <div class="font-semibold text-primary">RB-HEALTH-CHECK</div>
+              <div class="text-xs text-muted"><span class="es">Verificacion de salud automatica</span><span class="en">Automated health check</span></div>
+            </td>
+            <td class="font-bold">89</td>
+            <td><span class="badge success">100%</span></td>
+            <td class="font-mono text-sm">45s</td>
+            <td class="text-sm">2h ago</td>
+            <td>
+              <div class="mini-sparkline">
+                <div class="dot" style="height:16px"></div><div class="dot" style="height:18px"></div>
+                <div class="dot" style="height:14px"></div><div class="dot" style="height:20px"></div>
+                <div class="dot" style="height:22px"></div><div class="dot" style="height:18px"></div>
+                <div class="dot" style="height:24px"></div>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td class="text-cyan font-bold">2</td>
+            <td>
+              <div class="font-semibold text-primary">RB-LOG-COLLECT</div>
+              <div class="text-xs text-muted"><span class="es">Recoleccion centralizada de logs</span><span class="en">Centralized log collection</span></div>
+            </td>
+            <td class="font-bold">67</td>
+            <td><span class="badge success">98.5%</span></td>
+            <td class="font-mono text-sm">1m 20s</td>
+            <td class="text-sm">30min ago</td>
+            <td>
+              <div class="mini-sparkline">
+                <div class="dot" style="height:12px"></div><div class="dot" style="height:16px"></div>
+                <div class="dot" style="height:14px"></div><div class="dot" style="height:18px"></div>
+                <div class="dot" style="height:16px"></div><div class="dot" style="height:20px"></div>
+                <div class="dot" style="height:18px"></div>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td class="text-cyan font-bold">3</td>
+            <td>
+              <div class="font-semibold text-primary">RB-CACHE-CLEAR</div>
+              <div class="text-xs text-muted"><span class="es">Limpieza de cache de aplicacion</span><span class="en">Application cache cleanup</span></div>
+            </td>
+            <td class="font-bold">52</td>
+            <td><span class="badge success">96.2%</span></td>
+            <td class="font-mono text-sm">2m 10s</td>
+            <td class="text-sm">4h ago</td>
+            <td>
+              <div class="mini-sparkline">
+                <div class="dot" style="height:18px"></div><div class="dot" style="height:14px"></div>
+                <div class="dot" style="height:16px"></div><div class="dot" style="height:12px"></div>
+                <div class="dot" style="height:18px"></div><div class="dot" style="height:16px"></div>
+                <div class="dot" style="height:14px"></div>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td class="text-cyan font-bold">4</td>
+            <td>
+              <div class="font-semibold text-primary">RB-HANA-MEMORY-CLEANUP</div>
+              <div class="text-xs text-muted"><span class="es">Limpieza de memoria HANA</span><span class="en">HANA memory cleanup</span></div>
+            </td>
+            <td class="font-bold">38</td>
+            <td><span class="badge success">94.7%</span></td>
+            <td class="font-mono text-sm">3m 45s</td>
+            <td class="text-sm">1d ago</td>
+            <td>
+              <div class="mini-sparkline">
+                <div class="dot" style="height:10px"></div><div class="dot" style="height:14px"></div>
+                <div class="dot" style="height:12px"></div><div class="dot" style="height:16px"></div>
+                <div class="dot" style="height:14px"></div><div class="dot" style="height:10px"></div>
+                <div class="dot" style="height:12px"></div>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td class="text-cyan font-bold">5</td>
+            <td>
+              <div class="font-semibold text-primary">RB-JOB-RESTART-CHAIN</div>
+              <div class="text-xs text-muted"><span class="es">Reinicio de cadena de batch jobs</span><span class="en">Batch job chain restart</span></div>
+            </td>
+            <td class="font-bold">31</td>
+            <td><span class="badge warning">87.1%</span></td>
+            <td class="font-mono text-sm">5m 30s</td>
+            <td class="text-sm">6h ago</td>
+            <td>
+              <div class="mini-sparkline">
+                <div class="dot" style="height:16px"></div><div class="dot" style="height:12px"></div>
+                <div class="dot" style="height:8px"></div><div class="dot" style="height:14px"></div>
+                <div class="dot" style="height:10px"></div><div class="dot" style="height:16px"></div>
+                <div class="dot" style="height:12px"></div>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td class="text-cyan font-bold">6</td>
+            <td>
+              <div class="font-semibold text-primary">RB-TRANSPORT-IMPORT</div>
+              <div class="text-xs text-muted"><span class="es">Importacion de transportes</span><span class="en">Transport import</span></div>
+            </td>
+            <td class="font-bold">28</td>
+            <td><span class="badge success">92.9%</span></td>
+            <td class="font-mono text-sm">4m 15s</td>
+            <td class="text-sm">3h ago</td>
+            <td>
+              <div class="mini-sparkline">
+                <div class="dot" style="height:8px"></div><div class="dot" style="height:12px"></div>
+                <div class="dot" style="height:10px"></div><div class="dot" style="height:14px"></div>
+                <div class="dot" style="height:12px"></div><div class="dot" style="height:10px"></div>
+                <div class="dot" style="height:8px"></div>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td class="text-cyan font-bold">7</td>
+            <td>
+              <div class="font-semibold text-primary">RB-NETWORK-DIAG</div>
+              <div class="text-xs text-muted"><span class="es">Diagnostico de conectividad de red</span><span class="en">Network connectivity diagnostic</span></div>
+            </td>
+            <td class="font-bold">22</td>
+            <td><span class="badge success">100%</span></td>
+            <td class="font-mono text-sm">1m 50s</td>
+            <td class="text-sm">12h ago</td>
+            <td>
+              <div class="mini-sparkline">
+                <div class="dot" style="height:6px"></div><div class="dot" style="height:8px"></div>
+                <div class="dot" style="height:10px"></div><div class="dot" style="height:8px"></div>
+                <div class="dot" style="height:6px"></div><div class="dot" style="height:10px"></div>
+                <div class="dot" style="height:8px"></div>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Callout -->
+    <div class="callout info mt-2">
+      <div class="callout-icon">&#8505;</div>
+      <div>
+        <span class="es"><strong>Nota:</strong> Los datos de analitica se actualizan cada 5 minutos. Las tendencias de salud se recalculan al cambiar la ventana de tiempo. Los runbooks se ordenan por ejecuciones totales en el periodo seleccionado.</span>
+        <span class="en"><strong>Note:</strong> Analytics data refreshes every 5 minutes. Health trends recalculate when the time window changes. Runbooks are sorted by total executions in the selected period.</span>
+      </div>
+    </div>
+
+    <!-- API Reference -->
+    <h2><span class="es">Referencia API</span><span class="en">API Reference</span></h2>
+    <div class="card">
+      <h4>GET /api/analytics/overview</h4>
+      <p class="text-sm text-muted">
+        <span class="es">Obtiene los KPIs agregados del landscape completo.</span>
+        <span class="en">Gets aggregated KPIs for the entire landscape.</span>
       </p>
+      <pre><code>GET /api/analytics/overview
 
-      <div class="kpi-row">
-        <div class="kpi-card">
-          <div class="kpi-icon cyan">&#9889;</div>
-          <div>
-            <div class="kpi-value">847</div>
-            <div class="kpi-label">
-              <span class="es">Total Ejecuciones</span>
-              <span class="en">Total Executions</span>
-            </div>
-          </div>
-        </div>
-        <div class="kpi-card">
-          <div class="kpi-icon success">&#10003;</div>
-          <div>
-            <div class="kpi-value">94.2%</div>
-            <div class="kpi-label">
-              <span class="es">Tasa de Exito</span>
-              <span class="en">Success Rate</span>
-            </div>
-          </div>
-        </div>
-        <div class="kpi-card">
-          <div class="kpi-icon danger">&#9888;</div>
-          <div>
-            <div class="kpi-value">49</div>
-            <div class="kpi-label">
-              <span class="es">Fallidas</span>
-              <span class="en">Failed</span>
-            </div>
-          </div>
-        </div>
-        <div class="kpi-card">
-          <div class="kpi-icon violet">&#128200;</div>
-          <div>
-            <div class="kpi-value">12.1</div>
-            <div class="kpi-label">
-              <span class="es">Promedio/Dia</span>
-              <span class="en">Average/Day</span>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <ul class="feature-list">
-        <li>
-          <span class="es"><strong>Total Ejecuciones</strong> &mdash; cantidad total de runbooks ejecutados en el periodo. Icono de actividad en cian.</span>
-          <span class="en"><strong>Total Executions</strong> &mdash; total count of runbooks executed in the period. Cyan activity icon.</span>
-        </li>
-        <li>
-          <span class="es"><strong>Tasa de Exito (%)</strong> &mdash; porcentaje de ejecuciones exitosas sobre el total. Icono de check verde.</span>
-          <span class="en"><strong>Success Rate (%)</strong> &mdash; percentage of successful executions out of total. Green check icon.</span>
-        </li>
-        <li>
-          <span class="es"><strong>Fallidas</strong> &mdash; numero de ejecuciones fallidas. Icono de advertencia en rojo.</span>
-          <span class="en"><strong>Failed</strong> &mdash; number of failed executions. Red warning icon.</span>
-        </li>
-        <li>
-          <span class="es"><strong>Promedio/Dia</strong> &mdash; numero promedio de ejecuciones diarias. Icono de tendencia en violeta.</span>
-          <span class="en"><strong>Average/Day</strong> &mdash; average number of daily executions. Violet trend icon.</span>
-        </li>
-      </ul>
-
-      <!-- ────────────────────────────────────────────── -->
-      <!-- CHARTS                                         -->
-      <!-- ────────────────────────────────────────────── -->
-      <h2>
-        <span class="es">Graficas</span>
-        <span class="en">Charts</span>
-      </h2>
-      <p>
-        <span class="es">Debajo de los KPI se muestran dos graficas lado a lado (en escritorio). En movil se apilan verticalmente.</span>
-        <span class="en">Below the KPIs two charts are displayed side by side (on desktop). On mobile they stack vertically.</span>
+Response: {
+  "totalSystems": 24,
+  "avgHealth": 84.2,
+  "totalAlerts7d": 47,
+  "totalOperations30d": 156,
+  "systemsByEnv": { "PRD": 10, "QAS": 6, "DEV": 5, "SBX": 3 }
+}</code></pre>
+    </div>
+    <div class="card">
+      <h4>GET /api/analytics/runbooks</h4>
+      <p class="text-sm text-muted">
+        <span class="es">Estadisticas detalladas de ejecucion de runbooks.</span>
+        <span class="en">Detailed runbook execution statistics.</span>
       </p>
+      <pre><code>GET /api/analytics/runbooks?range=30d&amp;sort=executions
 
-      <div class="charts-row">
-        <!-- Daily trend chart -->
-        <div class="card">
-          <div class="card-header">
-            <div class="card-title">
-              <span class="es">Tendencia Diaria</span>
-              <span class="en">Daily Trend</span>
-            </div>
-          </div>
-          <p class="text-sm mb-2">
-            <span class="es">Grafica de barras que muestra la cantidad de ejecuciones exitosas (verde) y fallidas (rojo) por dia, durante los ultimos 14 dias. El eje X muestra la fecha (formato MM-DD) y el eje Y muestra el conteo.</span>
-            <span class="en">Bar chart showing the number of successful (green) and failed (red) executions per day, over the last 14 days. X-axis shows date (MM-DD format) and Y-axis shows count.</span>
-          </p>
-          <div class="bar-chart-mock">
-            <div class="bar-group"><div class="bar-pair"><div class="bar-success" style="height:90px"></div><div class="bar-danger" style="height:12px"></div></div><div class="bar-label">03-01</div></div>
-            <div class="bar-group"><div class="bar-pair"><div class="bar-success" style="height:70px"></div><div class="bar-danger" style="height:8px"></div></div><div class="bar-label">03-02</div></div>
-            <div class="bar-group"><div class="bar-pair"><div class="bar-success" style="height:110px"></div><div class="bar-danger" style="height:18px"></div></div><div class="bar-label">03-03</div></div>
-            <div class="bar-group"><div class="bar-pair"><div class="bar-success" style="height:85px"></div><div class="bar-danger" style="height:6px"></div></div><div class="bar-label">03-04</div></div>
-            <div class="bar-group"><div class="bar-pair"><div class="bar-success" style="height:95px"></div><div class="bar-danger" style="height:14px"></div></div><div class="bar-label">03-05</div></div>
-            <div class="bar-group"><div class="bar-pair"><div class="bar-success" style="height:75px"></div><div class="bar-danger" style="height:10px"></div></div><div class="bar-label">03-06</div></div>
-            <div class="bar-group"><div class="bar-pair"><div class="bar-success" style="height:100px"></div><div class="bar-danger" style="height:4px"></div></div><div class="bar-label">03-07</div></div>
-          </div>
-          <div style="display:flex;gap:16px;justify-content:center;margin-top:8px;font-size:11px;color:var(--txt3)">
-            <span><span style="display:inline-block;width:8px;height:8px;border-radius:2px;background:var(--success);margin-right:4px"></span>
-              <span class="es">Exitosos</span>
-              <span class="en">Successful</span>
-            </span>
-            <span><span style="display:inline-block;width:8px;height:8px;border-radius:2px;background:var(--danger);margin-right:4px"></span>
-              <span class="es">Fallidos</span>
-              <span class="en">Failed</span>
-            </span>
-          </div>
-        </div>
-
-        <!-- Distribution donut -->
-        <div class="card">
-          <div class="card-header">
-            <div class="card-title">
-              <span class="es">Distribucion</span>
-              <span class="en">Distribution</span>
-            </div>
-          </div>
-          <p class="text-sm mb-2">
-            <span class="es">Grafica de dona (donut) que muestra el porcentaje de ejecuciones exitosas vs. fallidas. La etiqueta de cada segmento muestra nombre y porcentaje.</span>
-            <span class="en">Donut chart showing the percentage of successful vs. failed executions. Each segment label shows name and percentage.</span>
-          </p>
-          <div class="donut-mock">
-            <div style="position:relative;display:inline-block">
-              <div class="donut-ring"></div>
-              <div class="donut-center">94%</div>
-            </div>
-            <div class="donut-legend">
-              <span><span class="dot" style="background:var(--success)"></span>
-                <span class="es">Exitosos 94%</span>
-                <span class="en">Successful 94%</span>
-              </span>
-              <span><span class="dot" style="background:var(--danger)"></span>
-                <span class="es">Fallidos 6%</span>
-                <span class="en">Failed 6%</span>
-              </span>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- ────────────────────────────────────────────── -->
-      <!-- TOP RUNBOOKS TABLE                             -->
-      <!-- ────────────────────────────────────────────── -->
-      <h2>
-        <span class="es">Tabla de Top Runbooks</span>
-        <span class="en">Top Runbooks table</span>
-      </h2>
-      <p>
-        <span class="es">Debajo de las graficas se muestra una tabla con los runbooks mas ejecutados, ordenados de mayor a menor cantidad de ejecuciones.</span>
-        <span class="en">Below the charts a table displays the most executed runbooks, sorted from highest to lowest execution count.</span>
+Response: {
+  "totalExecutions": 342,
+  "successRate": 0.947,
+  "avgDuration": 144,
+  "runbooks": [
+    { "name": "RB-HEALTH-CHECK", "executions": 89, "successRate": 1.0 },
+    ...
+  ]
+}</code></pre>
+    </div>
+    <div class="card">
+      <h4>GET /api/analytics/health-trends</h4>
+      <p class="text-sm text-muted">
+        <span class="es">Tendencias de salud de sistemas en la ventana de tiempo seleccionada.</span>
+        <span class="en">System health trends in the selected time window.</span>
       </p>
+      <pre><code>GET /api/analytics/health-trends?range=14d&amp;sid=S4P
 
-      <div class="table-wrap">
-        <table>
-          <thead>
-            <tr>
-              <th>Runbook</th>
-              <th>
-                <span class="es">Nombre</span>
-                <span class="en">Name</span>
-              </th>
-              <th>
-                <span class="es">Ejecuciones</span>
-                <span class="en">Executions</span>
-              </th>
-              <th>
-                <span class="es">Tasa de Exito</span>
-                <span class="en">Success Rate</span>
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td><code>RB-BACKUP-001</code></td>
-              <td style="font-weight:500">Verify backup status</td>
-              <td>198</td>
-              <td>
-                <div class="progress-bar-wrap">
-                  <div class="progress-bar-track"><div class="progress-bar-fill" style="width:99.5%;background:var(--success)"></div></div>
-                  <span class="text-xs font-semibold">99.5%</span>
-                </div>
-              </td>
-            </tr>
-            <tr>
-              <td><code>RB-HANA-001</code></td>
-              <td style="font-weight:500">Reclaim HANA memory</td>
-              <td>156</td>
-              <td>
-                <div class="progress-bar-wrap">
-                  <div class="progress-bar-track"><div class="progress-bar-fill" style="width:98.1%;background:var(--success)"></div></div>
-                  <span class="text-xs font-semibold">98.1%</span>
-                </div>
-              </td>
-            </tr>
-            <tr>
-              <td><code>RB-ABAP-001</code></td>
-              <td style="font-weight:500">Clean sessions + restart WPs</td>
-              <td>134</td>
-              <td>
-                <div class="progress-bar-wrap">
-                  <div class="progress-bar-track"><div class="progress-bar-fill" style="width:96.3%;background:var(--success)"></div></div>
-                  <span class="text-xs font-semibold">96.3%</span>
-                </div>
-              </td>
-            </tr>
-            <tr>
-              <td><code>RB-ASE-001</code></td>
-              <td style="font-weight:500">Dump tran log + kill old tx</td>
-              <td>112</td>
-              <td>
-                <div class="progress-bar-wrap">
-                  <div class="progress-bar-track"><div class="progress-bar-fill" style="width:97.3%;background:var(--success)"></div></div>
-                  <span class="text-xs font-semibold">97.3%</span>
-                </div>
-              </td>
-            </tr>
-            <tr>
-              <td><code>RB-WP-001</code></td>
-              <td style="font-weight:500">Clean PRIV/Hold WPs</td>
-              <td>98</td>
-              <td>
-                <div class="progress-bar-wrap">
-                  <div class="progress-bar-track"><div class="progress-bar-fill" style="width:96.9%;background:var(--success)"></div></div>
-                  <span class="text-xs font-semibold">96.9%</span>
-                </div>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-
-      <h3>
-        <span class="es">Columnas de la tabla</span>
-        <span class="en">Table columns</span>
-      </h3>
-      <ul class="feature-list">
-        <li>
-          <span class="es"><strong>Runbook</strong> &mdash; identificador del runbook en formato <code>code</code> (fuente monoespaciada con fondo gris).</span>
-          <span class="en"><strong>Runbook</strong> &mdash; runbook identifier in <code>code</code> format (monospaced font with grey background).</span>
-        </li>
-        <li>
-          <span class="es"><strong>Nombre</strong> &mdash; nombre descriptivo del runbook en texto con peso medio.</span>
-          <span class="en"><strong>Name</strong> &mdash; descriptive runbook name in medium-weight text.</span>
-        </li>
-        <li>
-          <span class="es"><strong>Ejecuciones</strong> &mdash; cantidad total de veces que se ha ejecutado este runbook.</span>
-          <span class="en"><strong>Executions</strong> &mdash; total number of times this runbook has been executed.</span>
-        </li>
-        <li>
-          <span class="es"><strong>Tasa de Exito</strong> &mdash; porcentaje de ejecuciones exitosas, visualizado con una barra de progreso horizontal y el porcentaje numerico a la derecha. El color de la barra cambia: verde si &gt; 95%, amarillo si &gt; 90%, rojo si &le; 90%.</span>
-          <span class="en"><strong>Success Rate</strong> &mdash; percentage of successful executions, shown with a horizontal progress bar and the numeric percentage on the right. Bar color changes: green if &gt; 95%, yellow if &gt; 90%, red if &le; 90%.</span>
-        </li>
-      </ul>
-
-      <!-- Footer -->
-      <div style="margin-top:48px;padding:24px 0;border-top:1px solid var(--brd);text-align:center;font-size:12px;color:var(--txt3);">
-        &copy; 2026 Maveram.
-        <span class="es">Todos los derechos reservados.</span>
-        <span class="en">All rights reserved.</span>
-      </div>
-
-    </main>
-  </div>
+Response: {
+  "sid": "S4P",
+  "range": "14d",
+  "average": 95.8,
+  "change": +0.4,
+  "dataPoints": [
+    { "date": "2026-02-27", "healthScore": 95 },
+    { "date": "2026-02-28", "healthScore": 96 },
+    ...
+  ]
+}</code></pre>
+    </div>
+  </main>
+</div>
 </body>
 </html>

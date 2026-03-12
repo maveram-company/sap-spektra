@@ -16,7 +16,7 @@
       <div class="logo">&#9889;</div>
       <div class="brand-text">
         <div class="brand-name">SAP Spektra</div>
-        <div class="brand-sub">Documentacion</div>
+        <div class="brand-sub">Documentacion v2.0</div>
       </div>
     </div>
     <div class="sidebar-section">
@@ -63,11 +63,6 @@
   </nav>
 
   <main class="docs-main">
-
-    <div class="demo-disclaimer">
-      <span class="es"><strong>Nota:</strong> Esta documentación describe la interfaz de SAP Spektra con datos simulados. Las integraciones, conectividad SAP y operaciones de backend son funcionalidad planificada — actualmente el producto opera en modo demostración.</span>
-      <span class="en"><strong>Note:</strong> This documentation describes SAP Spektra's interface with simulated data. Integrations, SAP connectivity, and backend operations are planned functionality — the product currently operates in demo mode.</span>
-    </div>
     <!-- Breadcrumb -->
     <div class="breadcrumb">
       <a href="index.html">SAP Spektra</a>
@@ -77,597 +72,559 @@
 
     <!-- Page Header -->
     <div class="page-header">
-      <h1><span class="es">Alertas</span><span class="en">Alerts</span></h1>
+      <h1><span class="es">Gestion de Alertas</span><span class="en">Alert Management</span></h1>
       <div class="subtitle">
-        <span class="es">Gestion de alertas y escalamiento</span>
-        <span class="en">Alert management and escalation</span>
+        <span class="es">Tabla de alertas con filtros avanzados, gestion de incidencias, escalamiento y flujo de resolucion completo.</span>
+        <span class="en">Alert table with advanced filters, incident management, escalation and full resolution workflow.</span>
       </div>
     </div>
 
-    <!-- ════════════════════════════════════════════════════════════ -->
-    <!-- SECTION: Escalation Flow -->
-    <!-- ════════════════════════════════════════════════════════════ -->
-    <h2><span class="es">Flujo de Escalamiento</span><span class="en">Escalation Flow</span></h2>
+    <!-- Alert Statistics -->
+    <h2><span class="es">Estadisticas de Alertas</span><span class="en">Alert Statistics</span></h2>
 
-    <p>
-      <span class="es">
-        En la parte superior de la pagina se muestra una <strong>tarjeta con el flujo visual de escalamiento</strong>.
-        Este flujo representa como las alertas no atendidas se escalan automaticamente a traves de tres niveles:
-      </span>
-      <span class="en">
-        At the top of the page, a <strong>card with a visual escalation flow</strong> is displayed.
-        This flow represents how unattended alerts are automatically escalated through three levels:
-      </span>
-    </p>
-
-    <div class="card">
-      <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;justify-content:center;">
-        <!-- L1 -->
-        <div style="text-align:center;">
-          <span class="badge warning" style="font-size:13px;padding:6px 16px;">L1</span>
-          <div class="text-xs text-muted mt-1">
-            <span class="es">Advertencia &mdash; 30 min</span>
-            <span class="en">Warning &mdash; 30 min</span>
-          </div>
-        </div>
-        <!-- Arrow -->
-        <div class="text-muted" style="font-size:20px;">&#8594;</div>
-        <!-- L2 -->
-        <div style="text-align:center;">
-          <span class="badge danger" style="font-size:13px;padding:6px 16px;">L2</span>
-          <div class="text-xs text-muted mt-1">
-            <span class="es">Peligro &mdash; 60 min</span>
-            <span class="en">Danger &mdash; 60 min</span>
-          </div>
-        </div>
-        <!-- Arrow -->
-        <div class="text-muted" style="font-size:20px;">&#8594;</div>
-        <!-- Admin -->
-        <div style="text-align:center;">
-          <span class="badge cyan" style="font-size:13px;padding:6px 16px;">Admin</span>
-          <div class="text-xs text-muted mt-1">
-            <span class="es">Primario &mdash; 120 min</span>
-            <span class="en">Primary &mdash; 120 min</span>
-          </div>
-        </div>
-      </div>
-      <p class="mt-2">
-        <span class="es">
-          El flujo se lee de izquierda a derecha. Si una alerta no se gestiona dentro del tiempo asignado
-          al nivel actual, se escala automaticamente al siguiente nivel. Los tiempos indicados
-          (30, 60 y 120 minutos) representan el tiempo maximo antes del escalamiento.
-        </span>
-        <span class="en">
-          The flow reads from left to right. If an alert is not handled within the time assigned
-          to the current level, it automatically escalates to the next level. The indicated times
-          (30, 60, and 120 minutes) represent the maximum time before escalation.
-        </span>
-      </p>
-    </div>
-
-    <!-- ════════════════════════════════════════════════════════════ -->
-    <!-- SECTION: Filter Toolbar -->
-    <!-- ════════════════════════════════════════════════════════════ -->
-    <h2><span class="es">Barra de Filtros</span><span class="en">Filter Toolbar</span></h2>
-
-    <div class="card">
-      <p>
-        <span class="es">
-          Debajo del flujo de escalamiento se encuentra una <strong>barra de filtros</strong> que permite
-          controlar que alertas se muestran en la pagina. Contiene los siguientes elementos:
-        </span>
-        <span class="en">
-          Below the escalation flow, there is a <strong>filter toolbar</strong> that allows you to
-          control which alerts are displayed on the page. It contains the following elements:
-        </span>
-      </p>
-
-      <h4><span class="es">Grupo de Botones de Estado</span><span class="en">Status Button Group</span></h4>
-      <p>
-        <span class="es">
-          Un grupo de 4 botones que permiten filtrar alertas por su estado actual:
-        </span>
-        <span class="en">
-          A group of 4 buttons that allow filtering alerts by their current status:
-        </span>
-      </p>
-      <div style="display:flex;gap:8px;flex-wrap:wrap;margin:8px 0 16px;">
-        <span class="badge cyan" style="padding:4px 12px;">
-          <span class="es">Activas</span><span class="en">Active</span>
-        </span>
-        <span class="badge neutral" style="padding:4px 12px;">
-          <span class="es">Todas</span><span class="en">All</span>
-        </span>
-        <span class="badge danger" style="padding:4px 12px;">
-          <span class="es">Criticas</span><span class="en">Critical</span>
-        </span>
-        <span class="badge success" style="padding:4px 12px;">
-          <span class="es">Resueltas</span><span class="en">Resolved</span>
-        </span>
-      </div>
-
-      <h4><span class="es">Dropdown de Sistema</span><span class="en">System Dropdown</span></h4>
-      <p>
-        <span class="es">
-          Un menu desplegable que permite filtrar alertas por un sistema SAP especifico. Al seleccionar
-          un sistema, solo se muestran las alertas correspondientes a ese SID.
-        </span>
-        <span class="en">
-          A dropdown menu that allows filtering alerts by a specific SAP system. When you select a
-          system, only alerts corresponding to that SID are shown.
-        </span>
-      </p>
-
-      <h4><span class="es">Contador de Alertas</span><span class="en">Alert Count</span></h4>
-      <p>
-        <span class="es">
-          Junto a los filtros se muestra un <strong>contador</strong> que indica cuantas alertas coinciden
-          con los filtros seleccionados actualmente (por ejemplo, "12 alertas").
-        </span>
-        <span class="en">
-          Next to the filters, a <strong>counter</strong> shows how many alerts match the currently
-          selected filters (for example, "12 alerts").
-        </span>
-      </p>
-    </div>
-
-    <!-- ════════════════════════════════════════════════════════════ -->
-    <!-- SECTION: Alert Cards -->
-    <!-- ════════════════════════════════════════════════════════════ -->
-    <h2><span class="es">Tarjetas de Alerta</span><span class="en">Alert Cards</span></h2>
-
-    <p>
-      <span class="es">
-        Las alertas se muestran como <strong>tarjetas individuales</strong> apiladas verticalmente. Cada
-        tarjeta de alerta contiene varias secciones de informacion:
-      </span>
-      <span class="en">
-        Alerts are displayed as <strong>individual cards</strong> stacked vertically. Each alert card
-        contains several information sections:
-      </span>
-    </p>
-
-    <!-- Sub: Header Badges -->
-    <div class="card">
-      <div class="card-header">
-        <div class="card-title">
-          <span class="es">Badges del Encabezado</span><span class="en">Header Badges</span>
-        </div>
-      </div>
-      <p>
-        <span class="es">
-          La parte superior de cada tarjeta de alerta muestra una fila de badges informativos:
-        </span>
-        <span class="en">
-          The top of each alert card shows a row of informative badges:
-        </span>
-      </p>
-      <ul class="feature-list">
-        <li>
-          <span class="es">
-            <strong>Badge de nivel</strong> &mdash; Indica la severidad de la alerta con un icono y color:
-            <span class="badge danger">Critica</span> (rojo, icono de alerta),
-            <span class="badge warning">Advertencia</span> (ambar, icono de precaucion),
-            <span class="badge cyan">Informativa</span> (cian, icono de informacion).
-          </span>
-          <span class="en">
-            <strong>Level badge</strong> &mdash; Indicates alert severity with an icon and color:
-            <span class="badge danger">Critical</span> (red, alert icon),
-            <span class="badge warning">Warning</span> (amber, caution icon),
-            <span class="badge cyan">Informational</span> (cyan, info icon).
-          </span>
-        </li>
-        <li>
-          <span class="es">
-            <strong>Badge de escalamiento</strong> &mdash; Muestra el nivel de escalamiento actual:
-            <span class="badge warning">L1</span> o <span class="badge danger">L2</span>.
-          </span>
-          <span class="en">
-            <strong>Escalation badge</strong> &mdash; Shows the current escalation level:
-            <span class="badge warning">L1</span> or <span class="badge danger">L2</span>.
-          </span>
-        </li>
-        <li>
-          <span class="es">
-            <strong>Badges de estado</strong> &mdash; Indicadores adicionales como "Activa", "En gestion",
-            "Resuelta", etc.
-          </span>
-          <span class="en">
-            <strong>Status badges</strong> &mdash; Additional indicators such as "Active", "Acknowledged",
-            "Resolved", etc.
-          </span>
-        </li>
-      </ul>
-    </div>
-
-    <!-- Sub: System Info -->
-    <div class="card">
-      <div class="card-header">
-        <div class="card-title">
-          <span class="es">Informacion del Sistema</span><span class="en">System Information</span>
-        </div>
-      </div>
-      <p>
-        <span class="es">
-          Debajo de los badges, cada alerta muestra los datos del sistema afectado:
-        </span>
-        <span class="en">
-          Below the badges, each alert shows the data of the affected system:
-        </span>
-      </p>
-      <ul class="feature-list">
-        <li>
-          <span class="es"><strong>SID</strong> &mdash; Identificador del sistema SAP donde se origino la alerta (por ejemplo, <code>S4P</code>).</span>
-          <span class="en"><strong>SID</strong> &mdash; SAP system identifier where the alert originated (for example, <code>S4P</code>).</span>
-        </li>
-        <li>
-          <span class="es"><strong>System ID</strong> &mdash; Identificador interno del sistema en SAP Spektra.</span>
-          <span class="en"><strong>System ID</strong> &mdash; Internal system identifier in SAP Spektra.</span>
-        </li>
-        <li>
-          <span class="es"><strong>Hora</strong> &mdash; Fecha y hora en que se genero la alerta.</span>
-          <span class="en"><strong>Time</strong> &mdash; Date and time when the alert was generated.</span>
-        </li>
-      </ul>
-    </div>
-
-    <!-- Sub: Title and Message -->
-    <div class="card">
-      <div class="card-header">
-        <div class="card-title">
-          <span class="es">Titulo y Mensaje</span><span class="en">Title and Message</span>
-        </div>
-      </div>
-      <p>
-        <span class="es">
-          Cada alerta incluye un <strong>titulo</strong> descriptivo del problema detectado y un
-          <strong>mensaje</strong> con detalles adicionales sobre la condicion que disparo la alerta.
-          Por ejemplo:
-        </span>
-        <span class="en">
-          Each alert includes a descriptive <strong>title</strong> of the detected problem and a
-          <strong>message</strong> with additional details about the condition that triggered the alert.
-          For example:
-        </span>
-      </p>
-      <div class="callout danger">
-        <div class="callout-icon">&#9888;</div>
+    <div class="kpi-grid">
+      <div class="kpi-card">
+        <div class="card-icon danger">&#128680;</div>
         <div>
-          <strong>CPU Usage Critical</strong><br>
-          <span class="text-sm">
-            <span class="es">Uso de CPU al 98% en el servidor de aplicacion hanadb01 del sistema S4P. Se requiere accion inmediata.</span>
-            <span class="en">CPU usage at 98% on application server hanadb01 of system S4P. Immediate action required.</span>
-          </span>
+          <div class="kpi-value">47</div>
+          <div class="kpi-label"><span class="es">Alertas Totales</span><span class="en">Total Alerts</span></div>
         </div>
       </div>
-    </div>
-
-    <!-- Sub: Acknowledgment -->
-    <div class="card">
-      <div class="card-header">
-        <div class="card-title">
-          <span class="es">Informacion de Gestion</span><span class="en">Acknowledgment Information</span>
-        </div>
-      </div>
-      <p>
-        <span class="es">
-          Cuando un operador toma una alerta en gestion, la tarjeta muestra informacion de quien
-          se hizo responsable:
-        </span>
-        <span class="en">
-          When an operator acknowledges an alert, the card shows information about who took
-          responsibility:
-        </span>
-      </p>
-      <ul class="feature-list">
-        <li>
-          <span class="es"><strong>Tomada por</strong> &mdash; Nombre del operador que acepto la alerta.</span>
-          <span class="en"><strong>Acknowledged by</strong> &mdash; Name of the operator who accepted the alert.</span>
-        </li>
-        <li>
-          <span class="es"><strong>Cuando</strong> &mdash; Fecha y hora en que se tomo la alerta.</span>
-          <span class="en"><strong>When</strong> &mdash; Date and time when the alert was acknowledged.</span>
-        </li>
-      </ul>
-    </div>
-
-    <!-- Sub: Resolution -->
-    <div class="card">
-      <div class="card-header">
-        <div class="card-title">
-          <span class="es">Informacion de Resolucion</span><span class="en">Resolution Information</span>
-        </div>
-      </div>
-      <p>
-        <span class="es">
-          Las alertas resueltas muestran una <strong>caja verde de resolucion</strong> con los siguientes datos:
-        </span>
-        <span class="en">
-          Resolved alerts display a <strong>green resolution box</strong> with the following data:
-        </span>
-      </p>
-      <div class="callout success">
-        <div class="callout-icon">&#10003;</div>
+      <div class="kpi-card">
+        <div class="card-icon warning">&#9203;</div>
         <div>
-          <ul class="feature-list">
-            <li>
-              <span class="es"><strong>Categoria</strong> &mdash; Tipo de resolucion aplicada (por ejemplo, "Falsa alarma", "Resuelto manualmente", "Auto-resuelto").</span>
-              <span class="en"><strong>Category</strong> &mdash; Type of resolution applied (for example, "False alarm", "Manually resolved", "Auto-resolved").</span>
-            </li>
-            <li>
-              <span class="es"><strong>Nota</strong> &mdash; Comentario del operador explicando como se resolvio el problema.</span>
-              <span class="en"><strong>Note</strong> &mdash; Operator comment explaining how the issue was resolved.</span>
-            </li>
-            <li>
-              <span class="es"><strong>Resuelto por</strong> &mdash; Nombre del usuario que cerro la alerta.</span>
-              <span class="en"><strong>Resolved by</strong> &mdash; Name of the user who closed the alert.</span>
-            </li>
-            <li>
-              <span class="es"><strong>Cuando</strong> &mdash; Fecha y hora de la resolucion.</span>
-              <span class="en"><strong>When</strong> &mdash; Date and time of the resolution.</span>
-            </li>
-          </ul>
+          <div class="kpi-value">12</div>
+          <div class="kpi-label"><span class="es">Abiertas</span><span class="en">Open</span></div>
+        </div>
+      </div>
+      <div class="kpi-card">
+        <div class="card-icon cyan">&#128269;</div>
+        <div>
+          <div class="kpi-value">8</div>
+          <div class="kpi-label"><span class="es">En Revision</span><span class="en">Under Review</span></div>
+        </div>
+      </div>
+      <div class="kpi-card">
+        <div class="card-icon success">&#9989;</div>
+        <div>
+          <div class="kpi-value">27</div>
+          <div class="kpi-label"><span class="es">Resueltas</span><span class="en">Resolved</span></div>
         </div>
       </div>
     </div>
 
-    <!-- ════════════════════════════════════════════════════════════ -->
-    <!-- SECTION: Action Buttons -->
-    <!-- ════════════════════════════════════════════════════════════ -->
-    <h2><span class="es">Botones de Accion</span><span class="en">Action Buttons</span></h2>
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">
+            <div class="card-icon danger">&#128200;</div>
+            <span class="es">Por Nivel</span><span class="en">By Level</span>
+          </div>
+        </div>
+        <div class="table-wrap" style="border:none;margin:0">
+          <table>
+            <tbody>
+              <tr>
+                <td><span class="badge danger">Critical</span></td>
+                <td><span class="es">5 alertas</span><span class="en">5 alerts</span></td>
+                <td>10.6%</td>
+              </tr>
+              <tr>
+                <td><span class="badge warning">Warning</span></td>
+                <td><span class="es">18 alertas</span><span class="en">18 alerts</span></td>
+                <td>38.3%</td>
+              </tr>
+              <tr>
+                <td><span class="badge cyan">Info</span></td>
+                <td><span class="es">24 alertas</span><span class="en">24 alerts</span></td>
+                <td>51.1%</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">
+            <div class="card-icon violet">&#128421;</div>
+            <span class="es">Por Sistema</span><span class="en">By System</span>
+          </div>
+        </div>
+        <div class="table-wrap" style="border:none;margin:0">
+          <table>
+            <tbody>
+              <tr>
+                <td><code>PRD</code></td>
+                <td><span class="es">8 alertas</span><span class="en">8 alerts</span></td>
+                <td>17.0%</td>
+              </tr>
+              <tr>
+                <td><code>QAS</code></td>
+                <td><span class="es">15 alertas</span><span class="en">15 alerts</span></td>
+                <td>31.9%</td>
+              </tr>
+              <tr>
+                <td><code>DEV</code></td>
+                <td><span class="es">14 alertas</span><span class="en">14 alerts</span></td>
+                <td>29.8%</td>
+              </tr>
+              <tr>
+                <td><code>SBX</code></td>
+                <td><span class="es">10 alertas</span><span class="en">10 alerts</span></td>
+                <td>21.3%</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
 
-    <p>
-      <span class="es">
-        En la parte inferior de cada tarjeta de alerta activa se encuentran los <strong>botones de accion</strong>
-        que permiten gestionar la alerta:
-      </span>
-      <span class="en">
-        At the bottom of each active alert card, there are <strong>action buttons</strong> that allow
-        you to manage the alert:
-      </span>
-    </p>
+    <!-- Filters -->
+    <h2><span class="es">Filtros de Busqueda</span><span class="en">Search Filters</span></h2>
 
     <div class="card">
-      <div class="table-wrap">
+      <div class="card-header">
+        <div class="card-title">
+          <div class="card-icon cyan">&#128270;</div>
+          <span class="es">Filtros Disponibles</span><span class="en">Available Filters</span>
+        </div>
+      </div>
+      <p>
+        <span class="es">La tabla de alertas soporta filtros multiples que se combinan con logica AND para refinar los resultados:</span>
+        <span class="en">The alerts table supports multiple filters that combine with AND logic to refine results:</span>
+      </p>
+      <div class="table-wrap" style="margin-top:12px">
         <table>
           <thead>
             <tr>
-              <th><span class="es">Boton</span><span class="en">Button</span></th>
-              <th><span class="es">Descripcion</span><span class="en">Description</span></th>
-              <th><span class="es">Disponibilidad</span><span class="en">Availability</span></th>
+              <th><span class="es">Filtro</span><span class="en">Filter</span></th>
+              <th><span class="es">Tipo</span><span class="en">Type</span></th>
+              <th><span class="es">Opciones</span><span class="en">Options</span></th>
+              <th><span class="es">Parametro API</span><span class="en">API Parameter</span></th>
             </tr>
           </thead>
           <tbody>
             <tr>
-              <td class="font-semibold">
-                <span class="es">Tomar en gestion</span><span class="en">Acknowledge</span>
-              </td>
+              <td><span class="es">Estado</span><span class="en">Status</span></td>
+              <td>Select</td>
               <td>
-                <span class="es">
-                  Asigna la alerta al operador actual. Indica que alguien esta revisando el problema.
-                  Tras hacer clic, la tarjeta muestra quien tomo la alerta y cuando.
-                </span>
-                <span class="en">
-                  Assigns the alert to the current operator. Indicates someone is reviewing the issue.
-                  After clicking, the card shows who acknowledged the alert and when.
-                </span>
+                <span class="badge warning">OPEN</span>
+                <span class="badge cyan">EN REVISION</span>
+                <span class="badge success">RESOLVED</span>
               </td>
-              <td>
-                <span class="es">Alertas activas sin gestionar</span>
-                <span class="en">Active unacknowledged alerts</span>
-              </td>
+              <td><code>?status=OPEN</code></td>
             </tr>
             <tr>
-              <td class="font-semibold">
-                <span class="es">Resolver</span><span class="en">Resolve</span>
-              </td>
+              <td><span class="es">Nivel</span><span class="en">Level</span></td>
+              <td>Select</td>
               <td>
-                <span class="es">
-                  Abre el modal de resolucion para cerrar la alerta. Requiere seleccionar una categoria
-                  y opcionalmente escribir una nota explicativa.
-                </span>
-                <span class="en">
-                  Opens the resolution modal to close the alert. Requires selecting a category and
-                  optionally writing an explanatory note.
-                </span>
+                <span class="badge danger">CRITICAL</span>
+                <span class="badge warning">WARNING</span>
+                <span class="badge cyan">INFO</span>
               </td>
-              <td>
-                <span class="es">Alertas activas (gestionadas o no)</span>
-                <span class="en">Active alerts (acknowledged or not)</span>
-              </td>
+              <td><code>?level=CRITICAL</code></td>
             </tr>
             <tr>
-              <td class="font-semibold">
-                <span class="es">Ejecutar Runbook</span><span class="en">Execute Runbook</span>
-              </td>
-              <td>
-                <span class="es">
-                  Ejecuta un runbook de remediacion asociado a la alerta. Solo aparece si la alerta
-                  tiene un runbook vinculado.
-                </span>
-                <span class="en">
-                  Executes a remediation runbook associated with the alert. Only appears if the alert
-                  has a linked runbook.
-                </span>
-              </td>
-              <td>
-                <span class="es">Solo si hay un runbook vinculado</span>
-                <span class="en">Only if a linked runbook exists</span>
-              </td>
+              <td><span class="es">Sistema</span><span class="en">System</span></td>
+              <td>Select</td>
+              <td><span class="es">Lista dinamica de SIDs registrados</span><span class="en">Dynamic list of registered SIDs</span></td>
+              <td><code>?systemId=uuid</code></td>
+            </tr>
+            <tr>
+              <td><span class="es">Rango de Fecha</span><span class="en">Date Range</span></td>
+              <td>DatePicker</td>
+              <td><span class="es">Desde/Hasta</span><span class="en">From/To</span></td>
+              <td><code>?from=...&amp;to=...</code></td>
+            </tr>
+            <tr>
+              <td><span class="es">Busqueda de Texto</span><span class="en">Text Search</span></td>
+              <td>Input</td>
+              <td><span class="es">Busca en titulo y mensaje</span><span class="en">Searches in title and message</span></td>
+              <td><code>?search=keyword</code></td>
             </tr>
           </tbody>
         </table>
       </div>
     </div>
 
-    <!-- ════════════════════════════════════════════════════════════ -->
-    <!-- SECTION: Resolution Modal -->
-    <!-- ════════════════════════════════════════════════════════════ -->
-    <h2><span class="es">Modal de Resolucion</span><span class="en">Resolution Modal</span></h2>
+    <!-- Alert Table -->
+    <h2><span class="es">Tabla de Alertas</span><span class="en">Alerts Table</span></h2>
 
-    <p>
-      <span class="es">
-        Al hacer clic en el boton <strong>"Resolver"</strong>, se abre un <strong>dialogo modal</strong>
-        que permite registrar la resolucion de la alerta. El modal contiene los siguientes elementos:
-      </span>
-      <span class="en">
-        When clicking the <strong>"Resolver"</strong> (Resolve) button, a <strong>modal dialog</strong>
-        opens allowing you to record the alert resolution. The modal contains the following elements:
-      </span>
-    </p>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th><span class="es">Nivel</span><span class="en">Level</span></th>
+            <th><span class="es">Sistema</span><span class="en">System</span></th>
+            <th><span class="es">Titulo</span><span class="en">Title</span></th>
+            <th><span class="es">Estado</span><span class="en">Status</span></th>
+            <th><span class="es">Escalamiento</span><span class="en">Escalation</span></th>
+            <th><span class="es">Fecha</span><span class="en">Date</span></th>
+            <th><span class="es">Acciones</span><span class="en">Actions</span></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="badge danger">CRITICAL</span></td>
+            <td><code>PRD</code></td>
+            <td><span class="es">CPU al 98% por mas de 15 minutos</span><span class="en">CPU at 98% for over 15 minutes</span></td>
+            <td><span class="badge warning">OPEN</span></td>
+            <td><span class="badge danger">L3</span></td>
+            <td>2026-03-12 09:15</td>
+            <td><span class="badge cyan" style="cursor:pointer"><span class="es">Tomar</span><span class="en">Take</span></span></td>
+          </tr>
+          <tr>
+            <td><span class="badge danger">CRITICAL</span></td>
+            <td><code>PRD</code></td>
+            <td><span class="es">Tablespace SAPHANA al 95%</span><span class="en">SAPHANA tablespace at 95%</span></td>
+            <td><span class="badge cyan">EN REVISION</span></td>
+            <td><span class="badge danger">L3</span></td>
+            <td>2026-03-12 08:42</td>
+            <td><span class="badge success" style="cursor:pointer"><span class="es">Resolver</span><span class="en">Resolve</span></span></td>
+          </tr>
+          <tr>
+            <td><span class="badge warning">WARNING</span></td>
+            <td><code>QAS</code></td>
+            <td><span class="es">Replicacion HANA con retraso de 120s</span><span class="en">HANA replication lag of 120s</span></td>
+            <td><span class="badge warning">OPEN</span></td>
+            <td><span class="badge warning">L2</span></td>
+            <td>2026-03-12 08:30</td>
+            <td><span class="badge cyan" style="cursor:pointer"><span class="es">Tomar</span><span class="en">Take</span></span></td>
+          </tr>
+          <tr>
+            <td><span class="badge warning">WARNING</span></td>
+            <td><code>QAS</code></td>
+            <td><span class="es">Job ZBACKUP_DAILY fallido 3 veces consecutivas</span><span class="en">Job ZBACKUP_DAILY failed 3 consecutive times</span></td>
+            <td><span class="badge cyan">EN REVISION</span></td>
+            <td><span class="badge warning">L2</span></td>
+            <td>2026-03-12 07:00</td>
+            <td><span class="badge success" style="cursor:pointer"><span class="es">Resolver</span><span class="en">Resolve</span></span></td>
+          </tr>
+          <tr>
+            <td><span class="badge cyan">INFO</span></td>
+            <td><code>DEV</code></td>
+            <td><span class="es">Mantenimiento programado completado</span><span class="en">Scheduled maintenance completed</span></td>
+            <td><span class="badge success">RESOLVED</span></td>
+            <td><span class="badge neutral">L1</span></td>
+            <td>2026-03-11 23:00</td>
+            <td><span class="text-muted text-xs">&mdash;</span></td>
+          </tr>
+          <tr>
+            <td><span class="badge cyan">INFO</span></td>
+            <td><code>SBX</code></td>
+            <td><span class="es">Certificado SSL vence en 30 dias</span><span class="en">SSL certificate expires in 30 days</span></td>
+            <td><span class="badge success">RESOLVED</span></td>
+            <td><span class="badge neutral">L1</span></td>
+            <td>2026-03-11 14:20</td>
+            <td><span class="text-muted text-xs">&mdash;</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Take Action: "Tomar en gestion" -->
+    <h2><span class="es">Accion: Tomar en Gestion</span><span class="en">Action: Acknowledge Alert</span></h2>
 
     <div class="card">
       <div class="card-header">
         <div class="card-title">
-          <span class="es">Componentes del Modal</span><span class="en">Modal Components</span>
+          <div class="card-icon cyan">&#128073;</div>
+          <span class="es">Flujo de Acknowledgement</span><span class="en">Acknowledgement Flow</span>
         </div>
       </div>
-
-      <h4><span class="es">Dropdown de Categoria</span><span class="en">Category Dropdown</span></h4>
       <p>
-        <span class="es">
-          Un menu desplegable con categorias predefinidas de resolucion. Debes seleccionar una
-          categoria que mejor describa como se resolvio la alerta. Las categorias disponibles incluyen:
-        </span>
-        <span class="en">
-          A dropdown menu with predefined resolution categories. You must select a category that
-          best describes how the alert was resolved. Available categories include:
-        </span>
+        <span class="es">Cuando un operador hace clic en "Tomar en gestion", la alerta pasa del estado <span class="badge warning">OPEN</span> a <span class="badge cyan">EN REVISION</span>. Este cambio registra automaticamente:</span>
+        <span class="en">When an operator clicks "Acknowledge", the alert moves from <span class="badge warning">OPEN</span> to <span class="badge cyan">EN REVISION</span> status. This change automatically records:</span>
       </p>
-      <ul class="feature-list">
-        <li>
-          <span class="es"><strong>Resuelto manualmente</strong> &mdash; El operador realizo acciones manuales para corregir el problema.</span>
-          <span class="en"><strong>Manually resolved</strong> &mdash; The operator performed manual actions to fix the problem.</span>
-        </li>
-        <li>
-          <span class="es"><strong>Auto-resuelto</strong> &mdash; El problema se corrigio automaticamente sin intervencion.</span>
-          <span class="en"><strong>Auto-resolved</strong> &mdash; The problem was fixed automatically without intervention.</span>
-        </li>
-        <li>
-          <span class="es"><strong>Falsa alarma</strong> &mdash; La alerta fue generada erroneamente; no habia problema real.</span>
-          <span class="en"><strong>False alarm</strong> &mdash; The alert was generated erroneously; there was no real problem.</span>
-        </li>
-        <li>
-          <span class="es"><strong>Runbook ejecutado</strong> &mdash; Se ejecuto un runbook automatizado que resolvio el problema.</span>
-          <span class="en"><strong>Runbook executed</strong> &mdash; An automated runbook was executed that resolved the problem.</span>
-        </li>
-        <li>
-          <span class="es"><strong>Escalado a proveedor</strong> &mdash; Se abrio un ticket con SAP u otro proveedor.</span>
-          <span class="en"><strong>Escalated to vendor</strong> &mdash; A ticket was opened with SAP or another vendor.</span>
-        </li>
-        <li>
-          <span class="es"><strong>Otro</strong> &mdash; Otra categoria no listada anteriormente.</span>
-          <span class="en"><strong>Other</strong> &mdash; Another category not listed above.</span>
-        </li>
-      </ul>
+      <div class="table-wrap" style="margin-top:12px">
+        <table>
+          <thead>
+            <tr>
+              <th><span class="es">Campo</span><span class="en">Field</span></th>
+              <th><span class="es">Valor</span><span class="en">Value</span></th>
+              <th><span class="es">Descripcion</span><span class="en">Description</span></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>status</code></td>
+              <td><span class="badge cyan">EN_REVISION</span></td>
+              <td><span class="es">Nuevo estado de la alerta</span><span class="en">New alert status</span></td>
+            </tr>
+            <tr>
+              <td><code>ackBy</code></td>
+              <td><code>userId</code></td>
+              <td><span class="es">ID del usuario que tomo la alerta</span><span class="en">ID of the user who acknowledged the alert</span></td>
+            </tr>
+            <tr>
+              <td><code>ackAt</code></td>
+              <td><code>2026-03-12T09:20:00Z</code></td>
+              <td><span class="es">Timestamp del acknowledgement</span><span class="en">Acknowledgement timestamp</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
 
-      <h4 class="mt-2"><span class="es">Nota de Resolucion</span><span class="en">Resolution Note</span></h4>
+    <div class="callout info">
+      <div class="callout-icon">&#128161;</div>
+      <div>
+        <span class="es"><strong>Auditoria:</strong> Cada cambio de estado queda registrado en el historial de la alerta con el usuario, timestamp y accion realizada. Esto es fundamental para cumplir con los SLA y trazabilidad.</span>
+        <span class="en"><strong>Audit:</strong> Every status change is recorded in the alert history with the user, timestamp and action performed. This is essential for SLA compliance and traceability.</span>
+      </div>
+    </div>
+
+    <div class="steps">
+      <div class="step">
+        <strong><span class="es">Alerta creada</span><span class="en">Alert created</span></strong>
+        <p class="text-sm text-muted"><span class="es">El sistema detecta una anomalia y genera la alerta con estado <span class="badge warning">OPEN</span>.</span><span class="en">The system detects an anomaly and generates the alert with <span class="badge warning">OPEN</span> status.</span></p>
+      </div>
+      <div class="step">
+        <strong><span class="es">Tomar en gestion</span><span class="en">Acknowledge</span></strong>
+        <p class="text-sm text-muted"><span class="es">Un operador o admin hace clic en "Tomar". Se registran <code>ackBy</code> y <code>ackAt</code>. Estado: <span class="badge cyan">EN REVISION</span>.</span><span class="en">An operator or admin clicks "Take". <code>ackBy</code> and <code>ackAt</code> are recorded. Status: <span class="badge cyan">EN REVISION</span>.</span></p>
+      </div>
+      <div class="step">
+        <strong><span class="es">Investigar y resolver</span><span class="en">Investigate and resolve</span></strong>
+        <p class="text-sm text-muted"><span class="es">El responsable investiga la causa raiz, aplica la correccion y documenta la resolucion.</span><span class="en">The assignee investigates the root cause, applies the fix and documents the resolution.</span></p>
+      </div>
+      <div class="step">
+        <strong><span class="es">Cerrar alerta</span><span class="en">Close alert</span></strong>
+        <p class="text-sm text-muted"><span class="es">Se selecciona la categoria de resolucion, se agrega la nota obligatoria y se marca como <span class="badge success">RESOLVED</span>.</span><span class="en">The resolution category is selected, the mandatory note is added and it is marked as <span class="badge success">RESOLVED</span>.</span></p>
+      </div>
+    </div>
+
+    <!-- Resolve Action -->
+    <h2><span class="es">Accion: Resolver Alerta</span><span class="en">Action: Resolve Alert</span></h2>
+
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">
+          <div class="card-icon success">&#9989;</div>
+          <span class="es">Modal de Resolucion</span><span class="en">Resolution Modal</span>
+        </div>
+      </div>
       <p>
-        <span class="es">
-          Un <strong>campo de texto</strong> (textarea) donde puedes escribir una nota libre explicando
-          los detalles de la resolucion. Este campo es opcional pero recomendado para mantener un
-          historial claro de las acciones tomadas.
-        </span>
-        <span class="en">
-          A <strong>text field</strong> (textarea) where you can write a free-form note explaining
-          the resolution details. This field is optional but recommended to maintain a clear history
-          of actions taken.
-        </span>
+        <span class="es">Al hacer clic en "Resolver", se abre un modal que requiere dos campos obligatorios antes de cerrar la alerta:</span>
+        <span class="en">Clicking "Resolve" opens a modal that requires two mandatory fields before closing the alert:</span>
       </p>
 
-      <h4 class="mt-2"><span class="es">Botones del Modal</span><span class="en">Modal Buttons</span></h4>
-      <p>
-        <span class="es">El modal presenta dos botones en la parte inferior:</span>
-        <span class="en">The modal presents two buttons at the bottom:</span>
+      <h4><span class="es">1. Categoria de Resolucion</span><span class="en">1. Resolution Category</span></h4>
+      <p class="text-sm"><span class="es">Selecciona una de las 5 categorias predefinidas:</span><span class="en">Select one of the 5 predefined categories:</span></p>
+
+      <div class="table-wrap" style="margin-top:8px">
+        <table>
+          <thead>
+            <tr>
+              <th><span class="es">Categoria</span><span class="en">Category</span></th>
+              <th>Clave / Key</th>
+              <th><span class="es">Descripcion</span><span class="en">Description</span></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><span class="badge success"><span class="es">Correccion Aplicada</span><span class="en">Fix Applied</span></span></td>
+              <td><code>FIX_APPLIED</code></td>
+              <td><span class="es">Se identifico y corrigio el problema</span><span class="en">The issue was identified and fixed</span></td>
+            </tr>
+            <tr>
+              <td><span class="badge cyan"><span class="es">Falso Positivo</span><span class="en">False Positive</span></span></td>
+              <td><code>FALSE_POSITIVE</code></td>
+              <td><span class="es">La alerta fue incorrecta, no habia problema real</span><span class="en">The alert was incorrect, there was no real issue</span></td>
+            </tr>
+            <tr>
+              <td><span class="badge warning"><span class="es">Mitigado</span><span class="en">Mitigated</span></span></td>
+              <td><code>MITIGATED</code></td>
+              <td><span class="es">El impacto fue reducido pero la causa raiz persiste</span><span class="en">Impact was reduced but root cause persists</span></td>
+            </tr>
+            <tr>
+              <td><span class="badge violet"><span class="es">Escalado</span><span class="en">Escalated</span></span></td>
+              <td><code>ESCALATED</code></td>
+              <td><span class="es">Se escalo a un equipo superior o a SAP</span><span class="en">Escalated to a higher team or to SAP</span></td>
+            </tr>
+            <tr>
+              <td><span class="badge neutral"><span class="es">Auto-resuelto</span><span class="en">Auto-resolved</span></span></td>
+              <td><code>AUTO_RESOLVED</code></td>
+              <td><span class="es">El problema se resolvio sin intervencion</span><span class="en">The issue resolved itself without intervention</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h4 class="mt-2"><span class="es">2. Nota Obligatoria</span><span class="en">2. Mandatory Note</span></h4>
+      <p class="text-sm">
+        <span class="es">Se debe incluir una descripcion de la resolucion con un minimo de 20 caracteres. Este campo es obligatorio y queda registrado en la auditoria.</span>
+        <span class="en">A resolution description must be included with a minimum of 20 characters. This field is mandatory and is recorded in the audit trail.</span>
       </p>
-      <ul class="feature-list">
-        <li>
-          <span class="es">
-            <strong>Cancelar</strong> &mdash; Cierra el modal sin guardar cambios. La alerta permanece en su estado actual.
-          </span>
-          <span class="en">
-            <strong>Cancelar</strong> (Cancel) &mdash; Closes the modal without saving changes. The alert remains in its current state.
-          </span>
-        </li>
-        <li>
-          <span class="es">
-            <strong>Confirmar</strong> &mdash; Registra la resolucion con la categoria y nota proporcionadas. La alerta
-            pasa al estado "Resuelta" y muestra la caja verde de resolucion en su tarjeta.
-          </span>
-          <span class="en">
-            <strong>Confirmar</strong> (Confirm) &mdash; Records the resolution with the provided category and note. The alert
-            changes to "Resolved" status and displays the green resolution box on its card.
-          </span>
-        </li>
-      </ul>
+      <pre><code>{
+  "resolutionCategory": "FIX_APPLIED",
+  "resolutionNote": "Se identifico alto consumo de CPU por el job ZREPORT_HEAVY. Se cancelo el job y se reprogramo para horario nocturno.",
+  "resolvedBy": "admin@acme-corp.com",
+  "resolvedAt": "2026-03-12T10:00:00Z"
+}</code></pre>
+    </div>
+
+    <div class="callout danger">
+      <div class="callout-icon">&#9888;&#65039;</div>
+      <div>
+        <span class="es"><strong>Obligatorio:</strong> No es posible resolver una alerta sin seleccionar una categoria y escribir una nota. El boton "Confirmar" permanece deshabilitado hasta que ambos campos esten completos.</span>
+        <span class="en"><strong>Mandatory:</strong> It is not possible to resolve an alert without selecting a category and writing a note. The "Confirm" button remains disabled until both fields are complete.</span>
+      </div>
+    </div>
+
+    <!-- Escalation Levels -->
+    <h2><span class="es">Niveles de Escalamiento</span><span class="en">Escalation Levels</span></h2>
+
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">
+          <div class="card-icon warning">&#128200;</div>
+          <span class="es">Matriz de Escalamiento</span><span class="en">Escalation Matrix</span>
+        </div>
+      </div>
+      <div class="table-wrap" style="border:none;margin:0">
+        <table>
+          <thead>
+            <tr>
+              <th><span class="es">Nivel</span><span class="en">Level</span></th>
+              <th><span class="es">Criterio</span><span class="en">Criteria</span></th>
+              <th><span class="es">Tiempo Maximo</span><span class="en">Max Time</span></th>
+              <th><span class="es">Notificacion</span><span class="en">Notification</span></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><span class="badge neutral">L1</span></td>
+              <td><span class="es">Alertas informativas y de bajo impacto</span><span class="en">Informational and low-impact alerts</span></td>
+              <td><span class="es">24 horas</span><span class="en">24 hours</span></td>
+              <td><span class="es">Email al equipo</span><span class="en">Email to team</span></td>
+            </tr>
+            <tr>
+              <td><span class="badge warning">L2</span></td>
+              <td><span class="es">Warnings con impacto en rendimiento</span><span class="en">Warnings with performance impact</span></td>
+              <td><span class="es">4 horas</span><span class="en">4 hours</span></td>
+              <td><span class="es">Email + notificacion in-app</span><span class="en">Email + in-app notification</span></td>
+            </tr>
+            <tr>
+              <td><span class="badge danger">L3</span></td>
+              <td><span class="es">Alertas criticas con impacto en produccion</span><span class="en">Critical alerts with production impact</span></td>
+              <td><span class="es">30 minutos</span><span class="en">30 minutes</span></td>
+              <td><span class="es">Email + in-app + escalado a management</span><span class="en">Email + in-app + escalation to management</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </div>
 
     <div class="callout warning">
-      <div class="callout-icon">&#9888;</div>
+      <div class="callout-icon">&#9888;&#65039;</div>
       <div>
-        <span class="es">
-          <strong>Importante:</strong> Una vez resuelta, la alerta no puede volver a abrirse. Asegurate
-          de que el problema esta efectivamente corregido antes de confirmar la resolucion.
-        </span>
-        <span class="en">
-          <strong>Important:</strong> Once resolved, the alert cannot be reopened. Make sure the issue
-          is effectively fixed before confirming the resolution.
-        </span>
+        <span class="es"><strong>Escalamiento automatico:</strong> Si una alerta no es atendida dentro del tiempo maximo de su nivel de escalamiento, se escala automaticamente al siguiente nivel y se notifica a los supervisores.</span>
+        <span class="en"><strong>Automatic escalation:</strong> If an alert is not attended within the maximum time of its escalation level, it is automatically escalated to the next level and supervisors are notified.</span>
       </div>
     </div>
 
-    <!-- ════════════════════════════════════════════════════════════ -->
-    <!-- SECTION: Visual Summary -->
-    <!-- ════════════════════════════════════════════════════════════ -->
-    <h2><span class="es">Resumen Visual</span><span class="en">Visual Summary</span></h2>
+    <!-- API Endpoints -->
+    <h2><span class="es">Endpoints de Alertas</span><span class="en">Alert Endpoints</span></h2>
 
     <div class="card">
-      <p>
-        <span class="es">La pagina de Alertas esta organizada de arriba hacia abajo en el siguiente orden:</span>
-        <span class="en">The Alerts page is organized from top to bottom in the following order:</span>
-      </p>
-      <div class="steps">
-        <div class="step">
-          <span class="es">
-            <strong>Encabezado</strong> &mdash; Titulo "Alertas" con subtitulo "Gestion de alertas y escalamiento".
-          </span>
-          <span class="en">
-            <strong>Header</strong> &mdash; Title "Alertas" with subtitle "Alert management and escalation".
-          </span>
-        </div>
-        <div class="step">
-          <span class="es">
-            <strong>Flujo de Escalamiento</strong> &mdash; Diagrama horizontal con tres niveles: L1 (30 min), L2 (60 min), Admin (120 min).
-          </span>
-          <span class="en">
-            <strong>Escalation Flow</strong> &mdash; Horizontal diagram with three levels: L1 (30 min), L2 (60 min), Admin (120 min).
-          </span>
-        </div>
-        <div class="step">
-          <span class="es">
-            <strong>Barra de Filtros</strong> &mdash; Botones de estado (Activas, Todas, Criticas, Resueltas), dropdown de sistema y contador de alertas.
-          </span>
-          <span class="en">
-            <strong>Filter Toolbar</strong> &mdash; Status buttons (Active, All, Critical, Resolved), system dropdown, and alert counter.
-          </span>
-        </div>
-        <div class="step">
-          <span class="es">
-            <strong>Tarjetas de Alerta</strong> &mdash; Lista de alertas con badges, informacion de sistema, titulo, mensaje, gestion, resolucion y botones de accion.
-          </span>
-          <span class="en">
-            <strong>Alert Cards</strong> &mdash; List of alerts with badges, system info, title, message, acknowledgment, resolution, and action buttons.
-          </span>
-        </div>
-        <div class="step">
-          <span class="es">
-            <strong>Modal de Resolucion</strong> &mdash; Dialogo emergente con dropdown de categoria, nota de texto y botones Cancelar/Confirmar.
-          </span>
-          <span class="en">
-            <strong>Resolution Modal</strong> &mdash; Popup dialog with category dropdown, text note, and Cancel/Confirm buttons.
-          </span>
+      <div class="card-header">
+        <div class="card-title">
+          <div class="card-icon violet">&#128268;</div>
+          API Reference
         </div>
       </div>
+      <div class="table-wrap" style="border:none;margin:0">
+        <table>
+          <thead>
+            <tr>
+              <th><span class="es">Metodo</span><span class="en">Method</span></th>
+              <th>Endpoint</th>
+              <th><span class="es">Descripcion</span><span class="en">Description</span></th>
+              <th>Roles</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><span class="badge cyan">GET</span></td>
+              <td><code>/api/alerts</code></td>
+              <td><span class="es">Lista alertas con paginacion y filtros</span><span class="en">List alerts with pagination and filters</span></td>
+              <td><span class="es">Todos</span><span class="en">All</span></td>
+            </tr>
+            <tr>
+              <td><span class="badge cyan">GET</span></td>
+              <td><code>/api/alerts/:id</code></td>
+              <td><span class="es">Detalle de una alerta especifica</span><span class="en">Specific alert detail</span></td>
+              <td><span class="es">Todos</span><span class="en">All</span></td>
+            </tr>
+            <tr>
+              <td><span class="badge violet">PATCH</span></td>
+              <td><code>/api/alerts/:id/ack</code></td>
+              <td><span class="es">Tomar alerta en gestion (acknowledge)</span><span class="en">Acknowledge alert</span></td>
+              <td>ADMIN, OPERATOR</td>
+            </tr>
+            <tr>
+              <td><span class="badge violet">PATCH</span></td>
+              <td><code>/api/alerts/:id/resolve</code></td>
+              <td><span class="es">Resolver alerta con categoria y nota</span><span class="en">Resolve alert with category and note</span></td>
+              <td>ADMIN, OPERATOR</td>
+            </tr>
+            <tr>
+              <td><span class="badge cyan">GET</span></td>
+              <td><code>/api/alerts/stats</code></td>
+              <td><span class="es">Estadisticas agregadas de alertas</span><span class="en">Aggregated alert statistics</span></td>
+              <td><span class="es">Todos</span><span class="en">All</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- RBAC -->
+    <h2><span class="es">Permisos por Rol</span><span class="en">Permissions by Role</span></h2>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th><span class="es">Accion</span><span class="en">Action</span></th>
+            <th><span class="badge cyan">ADMIN</span></th>
+            <th><span class="badge success">OPERATOR</span></th>
+            <th><span class="badge neutral">VIEWER</span></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="es">Ver alertas</span><span class="en">View alerts</span></td>
+            <td><span class="text-success">&#10003;</span></td>
+            <td><span class="text-success">&#10003;</span></td>
+            <td><span class="text-success">&#10003;</span></td>
+          </tr>
+          <tr>
+            <td><span class="es">Filtrar alertas</span><span class="en">Filter alerts</span></td>
+            <td><span class="text-success">&#10003;</span></td>
+            <td><span class="text-success">&#10003;</span></td>
+            <td><span class="text-success">&#10003;</span></td>
+          </tr>
+          <tr>
+            <td><span class="es">Tomar en gestion</span><span class="en">Acknowledge</span></td>
+            <td><span class="text-success">&#10003;</span></td>
+            <td><span class="text-success">&#10003;</span></td>
+            <td><span class="text-danger">&#10007;</span></td>
+          </tr>
+          <tr>
+            <td><span class="es">Resolver alerta</span><span class="en">Resolve alert</span></td>
+            <td><span class="text-success">&#10003;</span></td>
+            <td><span class="text-success">&#10003;</span></td>
+            <td><span class="text-danger">&#10007;</span></td>
+          </tr>
+          <tr>
+            <td><span class="es">Ver estadisticas</span><span class="en">View statistics</span></td>
+            <td><span class="text-success">&#10003;</span></td>
+            <td><span class="text-success">&#10003;</span></td>
+            <td><span class="text-success">&#10003;</span></td>
+          </tr>
+        </tbody>
+      </table>
     </div>
 
   </main>

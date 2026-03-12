@@ -2,797 +2,438 @@
 <html lang="es" data-theme="dark" data-lang="es">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1.0">
-  <title>Gestion de Sistemas — SAP Spektra Docs</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin / Gestion — SAP Spektra Docs</title>
   <link rel="stylesheet" href="theme.css">
   <script src="theme-toggle.js"></script>
   <script src="lang-toggle.js"></script>
-  <style>
-    /* ── Admin page specific styles ── */
-    .admin-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 24px;
-      flex-wrap: wrap;
-      gap: 12px;
-    }
-    .btn-connect {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 10px 20px;
-      border-radius: 10px;
-      background: var(--gradient-brand);
-      color: #fff;
-      font-size: 13px;
-      font-weight: 600;
-      text-decoration: none;
-      border: none;
-      cursor: pointer;
-      transition: all 0.2s;
-      box-shadow: 0 0 16px rgba(6,182,212,0.25);
-    }
-    .btn-connect:hover {
-      transform: translateY(-1px);
-      box-shadow: 0 0 24px rgba(6,182,212,0.35);
-      text-decoration: none;
-    }
-    .system-row {
-      cursor: pointer;
-      transition: all 0.15s;
-    }
-    .system-row:hover {
-      background: var(--card-hover) !important;
-    }
-    .system-sid {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-    .system-sid-icon {
-      width: 28px;
-      height: 28px;
-      border-radius: 8px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 14px;
-      background: var(--cyan-dim);
-      color: var(--cyan);
-      flex-shrink: 0;
-    }
-    .system-sid-name {
-      font-weight: 700;
-      color: var(--txt1);
-      font-size: 14px;
-    }
-    .system-sid-id {
-      font-size: 11px;
-      color: var(--txt3);
-      font-family: 'SF Mono', Monaco, Consolas, monospace;
-    }
-    .health-score {
-      font-weight: 700;
-      font-size: 14px;
-    }
-    .health-high { color: var(--success); }
-    .health-mid  { color: var(--warning); }
-    .health-low  { color: var(--danger); }
-    .action-btns {
-      display: flex;
-      gap: 6px;
-    }
-    .action-btn {
-      width: 30px;
-      height: 30px;
-      border-radius: 8px;
-      border: 1px solid var(--card-border);
-      background: var(--card-bg);
-      color: var(--txt2);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      font-size: 13px;
-      transition: all 0.15s;
-    }
-    .action-btn:hover {
-      border-color: var(--cyan);
-      color: var(--cyan);
-    }
-    .action-btn.delete:hover {
-      border-color: var(--danger);
-      color: var(--danger);
-      background: rgba(239,68,68,0.08);
-    }
-    .action-btn.spinning {
-      animation: spin 1s linear infinite;
-    }
-    @keyframes spin {
-      from { transform: rotate(0deg); }
-      to { transform: rotate(360deg); }
-    }
-  </style>
 </head>
 <body>
 <div class="docs-wrapper">
 
-  <!-- ═══ SIDEBAR ═══ -->
+  <!-- ═══ Sidebar ═══ -->
   <nav class="docs-sidebar">
     <div class="sidebar-brand">
-      <div class="logo">&#9889;</div>
+      <div class="logo">S</div>
       <div class="brand-text">
         <div class="brand-name">SAP Spektra</div>
-        <div class="brand-sub">Documentacion</div>
+        <div class="brand-sub">Documentacion v2.0</div>
       </div>
     </div>
+
     <div class="sidebar-section">
       <div class="sidebar-section-label">Inicio</div>
-      <a href="index.html" class="sidebar-link">Portal</a>
-      <a href="getting-started.html" class="sidebar-link">Primeros Pasos</a>
+      <a href="index.html" class="sidebar-link"><span class="es">Portal</span><span class="en">Portal</span></a>
+      <a href="getting-started.html" class="sidebar-link"><span class="es">Primeros Pasos</span><span class="en">Getting Started</span></a>
     </div>
     <div class="sidebar-section">
       <div class="sidebar-section-label">Command</div>
       <a href="dashboard.html" class="sidebar-link">Dashboard</a>
       <a href="landscape.html" class="sidebar-link">Landscape</a>
-      <a href="alerts.html" class="sidebar-link">Alertas</a>
+      <a href="alerts.html" class="sidebar-link"><span class="es">Alertas</span><span class="en">Alerts</span></a>
     </div>
     <div class="sidebar-section">
       <div class="sidebar-section-label">Monitor</div>
-      <a href="systems.html" class="sidebar-link">Sistemas</a>
-      <a href="connectors.html" class="sidebar-link">Conectores</a>
-      <a href="events.html" class="sidebar-link">Eventos</a>
+      <a href="systems.html" class="sidebar-link"><span class="es">Sistemas</span><span class="en">Systems</span></a>
+      <a href="connectors.html" class="sidebar-link"><span class="es">Conectores</span><span class="en">Connectors</span></a>
+      <a href="events.html" class="sidebar-link"><span class="es">Eventos</span><span class="en">Events</span></a>
     </div>
     <div class="sidebar-section">
       <div class="sidebar-section-label">Intelligence</div>
-      <a href="ai-analysis.html" class="sidebar-link">Analisis IA</a>
+      <a href="ai-analysis.html" class="sidebar-link"><span class="es">Analisis IA</span><span class="en">AI Analysis</span></a>
       <a href="analytics.html" class="sidebar-link">Analytics</a>
-      <a href="reports.html" class="sidebar-link">Reportes</a>
-      <a href="comparison.html" class="sidebar-link">Comparacion</a>
+      <a href="reports.html" class="sidebar-link"><span class="es">Reportes</span><span class="en">Reports</span></a>
+      <a href="comparison.html" class="sidebar-link"><span class="es">Comparacion</span><span class="en">Comparison</span></a>
     </div>
     <div class="sidebar-section">
       <div class="sidebar-section-label">Operations</div>
       <a href="runbooks.html" class="sidebar-link">Runbooks</a>
-      <a href="approvals.html" class="sidebar-link">Aprobaciones</a>
-      <a href="operations.html" class="sidebar-link">Operaciones</a>
-      <a href="jobs.html" class="sidebar-link">Jobs (SM37)</a>
-      <a href="transports.html" class="sidebar-link">Transportes</a>
+      <a href="approvals.html" class="sidebar-link"><span class="es">Aprobaciones</span><span class="en">Approvals</span></a>
+      <a href="operations.html" class="sidebar-link"><span class="es">Operaciones</span><span class="en">Operations</span></a>
+      <a href="jobs.html" class="sidebar-link">Jobs SM37</a>
+      <a href="transports.html" class="sidebar-link"><span class="es">Transportes</span><span class="en">Transports</span></a>
       <a href="sla.html" class="sidebar-link">SLA</a>
       <a href="ha-control.html" class="sidebar-link">HA Control</a>
-      <a href="certificates.html" class="sidebar-link">Certificados</a>
+      <a href="certificates.html" class="sidebar-link"><span class="es">Certificados</span><span class="en">Certificates</span></a>
     </div>
     <div class="sidebar-section">
       <div class="sidebar-section-label">Admin</div>
-      <a href="admin.html" class="sidebar-link active">Gestion</a>
-      <a href="settings.html" class="sidebar-link">Configuracion</a>
-      <a href="connect-system.html" class="sidebar-link">Conectar Sistema</a>
+      <a href="admin.html" class="sidebar-link active"><span class="es">Gestion</span><span class="en">Management</span></a>
+      <a href="settings.html" class="sidebar-link"><span class="es">Configuracion</span><span class="en">Settings</span></a>
+      <a href="connect-system.html" class="sidebar-link"><span class="es">Conectar Sistema</span><span class="en">Connect System</span></a>
     </div>
   </nav>
 
-  <!-- ═══ MAIN CONTENT ═══ -->
+  <!-- ═══ Main Content ═══ -->
   <main class="docs-main">
 
-    <div class="demo-disclaimer">
-      <span class="es"><strong>Nota:</strong> Esta documentación describe la interfaz de SAP Spektra con datos simulados. Las integraciones, conectividad SAP y operaciones de backend son funcionalidad planificada — actualmente el producto opera en modo demostración.</span>
-      <span class="en"><strong>Note:</strong> This documentation describes SAP Spektra's interface with simulated data. Integrations, SAP connectivity, and backend operations are planned functionality — the product currently operates in demo mode.</span>
-    </div>
-
-    <!-- Breadcrumb -->
     <div class="breadcrumb">
-      <a href="index.html">SAP Spektra</a>
+      <a href="index.html">Docs</a>
       <span class="sep">/</span>
       <span>Admin</span>
       <span class="sep">/</span>
-      <span class="es">Gestion</span><span class="en">Management</span>
+      <span class="text-primary"><span class="es">Gestion</span><span class="en">Management</span></span>
     </div>
 
-    <!-- Page Header -->
     <div class="page-header">
-      <h1><span class="es">Administracion</span><span class="en">Administration</span></h1>
+      <h1><span class="es">Gestion de Sistemas SAP</span><span class="en">SAP System Management</span></h1>
       <div class="subtitle">
-        <span class="es">Gestion de sistemas y configuracion</span>
-        <span class="en">System management and configuration</span>
+        <span class="es">Administracion centralizada de todos los sistemas SAP conectados a Spektra</span>
+        <span class="en">Centralized administration of all SAP systems connected to Spektra</span>
       </div>
     </div>
 
-    <div class="callout warning">
-      <div class="callout-icon">&#128737;</div>
-      <div>
-        <span class="es">
-          Esta pagina requiere el rol <strong>Admin</strong>. Solo los administradores de la organizacion
-          pueden ver y gestionar los sistemas registrados desde este panel.
-        </span>
-        <span class="en">
-          This page requires the <strong>Admin</strong> role. Only organization administrators
-          can view and manage registered systems from this panel.
-        </span>
-      </div>
+    <div class="demo-disclaimer">
+      <strong><span class="es">Acceso Administrativo:</span><span class="en">Administrative Access:</span></strong>
+      <span class="es">Este modulo requiere rol <code>admin</code> (nivel 40) para crear, editar o eliminar sistemas. Los roles <code>operator</code> (20) y <code>viewer</code> (10) solo pueden visualizar.</span>
+      <span class="en">This module requires <code>admin</code> role (level 40) to create, edit, or delete systems. Roles <code>operator</code> (20) and <code>viewer</code> (10) can only view.</span>
     </div>
 
-    <!-- ════════════════════════════════════════════════════════════ -->
-    <!-- SECTION: Header Bar & Connect Button -->
-    <!-- ════════════════════════════════════════════════════════════ -->
-    <h2><span class="es">Encabezado y Boton de Conexion</span><span class="en">Header &amp; Connect Button</span></h2>
-
-    <div class="card">
-      <p>
-        <span class="es">
-          En la parte superior de la pagina veras el titulo <strong>"Administracion"</strong> junto con la descripcion
-          <em>"Gestion de sistemas y configuracion"</em>. A la derecha del encabezado se encuentra el boton principal de accion:
-        </span>
-        <span class="en">
-          At the top of the page you will see the title <strong>"Administracion"</strong> alongside the description
-          <em>"System management and configuration"</em>. On the right side of the header you will find the main action button:
-        </span>
-      </p>
-
-      <div class="admin-header mt-2">
+    <!-- ── KPI Cards ── -->
+    <div class="kpi-grid">
+      <div class="kpi-card">
+        <div class="card-icon cyan">&#128187;</div>
         <div>
-          <div class="text-primary font-bold" style="font-size:18px;">
-            <span class="es">Administracion</span><span class="en">Administration</span>
-          </div>
-          <div class="text-muted text-sm">
-            <span class="es">Gestion de sistemas y configuracion</span>
-            <span class="en">System management and configuration</span>
-          </div>
+          <div class="kpi-value">7</div>
+          <div class="kpi-label"><span class="es">Sistemas Totales</span><span class="en">Total Systems</span></div>
         </div>
-        <a href="connect-system.html" class="btn-connect">
+      </div>
+      <div class="kpi-card">
+        <div class="card-icon success">&#9889;</div>
+        <div>
+          <div class="kpi-value">5</div>
+          <div class="kpi-label"><span class="es">En Linea</span><span class="en">Online</span></div>
+        </div>
+      </div>
+      <div class="kpi-card">
+        <div class="card-icon warning">&#128260;</div>
+        <div>
+          <div class="kpi-value">1</div>
+          <div class="kpi-label"><span class="es">Mantenimiento</span><span class="en">Maintenance</span></div>
+        </div>
+      </div>
+      <div class="kpi-card">
+        <div class="card-icon danger">&#10060;</div>
+        <div>
+          <div class="kpi-value">1</div>
+          <div class="kpi-label"><span class="es">Sin Conexion</span><span class="en">Offline</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── Actions Bar ── -->
+    <div class="card mb-2" style="padding:12px 16px;">
+      <div style="display:flex;gap:12px;align-items:center;justify-content:space-between;flex-wrap:wrap;">
+        <div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap;">
+          <input type="text" placeholder="Buscar por SID... / Search by SID..." style="min-width:220px;background:var(--bg3);border:1px solid var(--brd);color:var(--txt1);padding:8px 12px;border-radius:8px;font-size:13px;">
+          <select style="background:var(--bg3);border:1px solid var(--brd);color:var(--txt1);padding:8px 12px;border-radius:8px;font-size:13px;">
+            <option value=""><span class="es">Todos los estados</span></option>
+            <option value="online">Online</option>
+            <option value="maintenance">Maintenance</option>
+            <option value="offline">Offline</option>
+          </select>
+          <select style="background:var(--bg3);border:1px solid var(--brd);color:var(--txt1);padding:8px 12px;border-radius:8px;font-size:13px;">
+            <option value="">All Environments</option>
+            <option value="production">Production</option>
+            <option value="quality">Quality</option>
+            <option value="development">Development</option>
+            <option value="sandbox">Sandbox</option>
+          </select>
+        </div>
+        <a href="connect-system.html" style="background:var(--gradient-brand);color:#fff;border:none;padding:8px 20px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;gap:6px;">
           + <span class="es">Conectar Sistema</span><span class="en">Connect System</span>
         </a>
       </div>
-
-      <p>
-        <span class="es">
-          Al hacer clic en <strong>"Conectar Sistema"</strong>, seras redirigido al asistente de conexion
-          donde podras registrar un nuevo sistema SAP paso a paso. Consulta la
-          <a href="connect-system.html">guia de Conectar Sistema</a> para mas detalles.
-        </span>
-        <span class="en">
-          Clicking <strong>"Connect System"</strong> takes you to the connection wizard
-          where you can register a new SAP system step by step. See the
-          <a href="connect-system.html">Connect System guide</a> for details.
-        </span>
-      </p>
     </div>
 
-    <!-- ════════════════════════════════════════════════════════════ -->
-    <!-- SECTION: Systems Table -->
-    <!-- ════════════════════════════════════════════════════════════ -->
-    <h2><span class="es">Tabla de Sistemas</span><span class="en">Systems Table</span></h2>
-
-    <p>
-      <span class="es">
-        El cuerpo principal de la pagina muestra una tabla con todos los sistemas SAP registrados en tu organizacion.
-        Cada fila es <strong>clickeable</strong> &mdash; al hacer clic en cualquier parte de la fila, navegaras
-        a la pagina de detalle de ese sistema.
-      </span>
-      <span class="en">
-        The main body of the page displays a table with all SAP systems registered in your organization.
-        Each row is <strong>clickable</strong> &mdash; clicking anywhere on the row navigates you
-        to that system's detail page.
-      </span>
-    </p>
-
-    <h3><span class="es">Columnas de la Tabla</span><span class="en">Table Columns</span></h3>
-
-    <p>
-      <span class="es">La tabla contiene las siguientes columnas:</span>
-      <span class="en">The table contains the following columns:</span>
-    </p>
-
-    <!-- Column: Sistema -->
-    <div class="card">
-      <div class="card-header">
-        <div class="card-title">
-          <div class="card-icon cyan">&#128421;</div>
-          <span class="es">Columna: Sistema</span><span class="en">Column: System</span>
-        </div>
-      </div>
-      <p>
-        <span class="es">
-          Muestra un <strong>icono de servidor</strong> seguido del <strong>SID</strong> (System ID, por ejemplo
-          <code>S4P</code>, <code>ECP</code>, <code>BWP</code>) en texto destacado, y debajo el identificador
-          unico del sistema en texto mas pequeno y monoespacio.
-        </span>
-        <span class="en">
-          Displays a <strong>server icon</strong> followed by the <strong>SID</strong> (System ID, for example
-          <code>S4P</code>, <code>ECP</code>, <code>BWP</code>) in bold text, and below it the unique
-          system identifier in smaller monospace text.
-        </span>
-      </p>
-      <div class="mt-2" style="display:flex;gap:24px;flex-wrap:wrap;">
-        <div class="system-sid">
-          <div class="system-sid-icon">&#128421;</div>
-          <div>
-            <div class="system-sid-name">S4P</div>
-            <div class="system-sid-id">sys_01hx7k...</div>
-          </div>
-        </div>
-        <div class="system-sid">
-          <div class="system-sid-icon">&#128421;</div>
-          <div>
-            <div class="system-sid-name">ECP</div>
-            <div class="system-sid-id">sys_01hy3m...</div>
-          </div>
-        </div>
-        <div class="system-sid">
-          <div class="system-sid-icon">&#128421;</div>
-          <div>
-            <div class="system-sid-name">BWP</div>
-            <div class="system-sid-id">sys_01hz9q...</div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Column: Tipo -->
-    <div class="card">
-      <div class="card-header">
-        <div class="card-title">
-          <div class="card-icon violet">&#9881;</div>
-          <span class="es">Columna: Tipo</span><span class="en">Column: Type</span>
-        </div>
-      </div>
-      <p>
-        <span class="es">
-          Indica el <strong>tipo de producto SAP</strong> del sistema. Los valores mas comunes que veras son:
-        </span>
-        <span class="en">
-          Indicates the <strong>SAP product type</strong> of the system. The most common values you will see are:
-        </span>
-      </p>
-      <ul class="feature-list">
-        <li><code>S/4HANA</code></li>
-        <li><code>ECC</code></li>
-        <li><code>BW/4HANA</code></li>
-        <li><code>Solution Manager</code></li>
-        <li><code>BW</code></li>
-        <li><code>CRM</code></li>
-        <li><code>SRM</code></li>
-        <li><code>GTS</code></li>
-      </ul>
-    </div>
-
-    <!-- Column: Base de Datos -->
-    <div class="card">
-      <div class="card-header">
-        <div class="card-title">
-          <div class="card-icon cyan">&#128451;</div>
-          <span class="es">Columna: Base de Datos</span><span class="en">Column: Database</span>
-        </div>
-      </div>
-      <p>
-        <span class="es">
-          Muestra el <strong>motor de base de datos</strong> subyacente del sistema. Los valores posibles incluyen:
-        </span>
-        <span class="en">
-          Shows the <strong>underlying database engine</strong> for the system. Possible values include:
-        </span>
-      </p>
-      <ul class="feature-list">
-        <li><code>HANA</code> &mdash; SAP HANA</li>
-        <li><code>ASE</code> &mdash; SAP Adaptive Server Enterprise (Sybase)</li>
-        <li><code>MaxDB</code> &mdash; SAP MaxDB</li>
-        <li><code>Oracle</code> &mdash; Oracle Database</li>
-        <li><code>DB2</code> &mdash; IBM Db2</li>
-        <li><code>MSSQL</code> &mdash; Microsoft SQL Server</li>
-      </ul>
-    </div>
-
-    <!-- Column: Ambiente -->
-    <div class="card">
-      <div class="card-header">
-        <div class="card-title">
-          <div class="card-icon warning">&#127981;</div>
-          <span class="es">Columna: Ambiente</span><span class="en">Column: Environment</span>
-        </div>
-      </div>
-      <p>
-        <span class="es">
-          Un <strong>badge de color</strong> que identifica el entorno de despliegue del sistema.
-          El color cambia segun el tipo de ambiente:
-        </span>
-        <span class="en">
-          A <strong>colored badge</strong> identifying the system's deployment environment.
-          The color changes based on the environment type:
-        </span>
-      </p>
-      <div class="mt-2" style="display:flex;gap:12px;flex-wrap:wrap;">
-        <span class="badge danger">PRD</span>
-        <span class="badge warning">QAS</span>
-        <span class="badge cyan">DEV</span>
-      </div>
-      <ul class="feature-list mt-2">
-        <li>
-          <span class="es"><strong class="text-danger">PRD</strong> (Produccion) &mdash; Badge rojo. Sistemas en produccion activa.</span>
-          <span class="en"><strong class="text-danger">PRD</strong> (Production) &mdash; Red badge. Active production systems.</span>
-        </li>
-        <li>
-          <span class="es"><strong class="text-warning">QAS</strong> (Quality Assurance) &mdash; Badge amarillo. Sistemas de pruebas y calidad.</span>
-          <span class="en"><strong class="text-warning">QAS</strong> (Quality Assurance) &mdash; Yellow badge. Testing and quality systems.</span>
-        </li>
-        <li>
-          <span class="es"><strong class="text-cyan">DEV</strong> (Desarrollo) &mdash; Badge azul/cian. Sistemas de desarrollo.</span>
-          <span class="en"><strong class="text-cyan">DEV</strong> (Development) &mdash; Blue/cyan badge. Development systems.</span>
-        </li>
-      </ul>
-    </div>
-
-    <!-- Column: Modo -->
-    <div class="card">
-      <div class="card-header">
-        <div class="card-title">
-          <div class="card-icon violet">&#9734;</div>
-          <span class="es">Columna: Modo</span><span class="en">Column: Mode</span>
-        </div>
-      </div>
-      <p>
-        <span class="es">
-          Indica si el sistema esta registrado en modo <strong>Trial</strong> (prueba gratuita) o
-          <strong>Production</strong> (licencia completa). Se muestra como un badge:
-        </span>
-        <span class="en">
-          Indicates whether the system is registered in <strong>Trial</strong> (free trial) or
-          <strong>Production</strong> (full license) mode. Displayed as a badge:
-        </span>
-      </p>
-      <div class="mt-2" style="display:flex;gap:12px;flex-wrap:wrap;">
-        <span class="badge neutral">Trial</span>
-        <span class="badge violet">Production</span>
-      </div>
-    </div>
-
-    <!-- Column: Health -->
-    <div class="card">
-      <div class="card-header">
-        <div class="card-title">
-          <div class="card-icon success">&#10084;</div>
-          <span class="es">Columna: Health</span><span class="en">Column: Health</span>
-        </div>
-      </div>
-      <p>
-        <span class="es">
-          Muestra la <strong>puntuacion de salud</strong> del sistema en una escala de 0 a 100.
-          El color del numero cambia automaticamente segun el rango:
-        </span>
-        <span class="en">
-          Shows the system's <strong>health score</strong> on a scale of 0 to 100.
-          The number color changes automatically based on the range:
-        </span>
-      </p>
-      <div class="table-wrap mt-2">
-        <table>
-          <thead>
-            <tr>
-              <th><span class="es">Rango</span><span class="en">Range</span></th>
-              <th>Color</th>
-              <th><span class="es">Significado</span><span class="en">Meaning</span></th>
-              <th><span class="es">Ejemplo</span><span class="en">Example</span></th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td class="font-semibold">90 &ndash; 100</td>
-              <td><span class="text-success font-bold">Verde</span></td>
-              <td>
-                <span class="es">Sistema saludable, sin problemas detectados</span>
-                <span class="en">Healthy system, no issues detected</span>
-              </td>
-              <td><span class="health-score health-high">96</span></td>
-            </tr>
-            <tr>
-              <td class="font-semibold">70 &ndash; 89</td>
-              <td><span class="text-warning font-bold">Amarillo</span></td>
-              <td>
-                <span class="es">Advertencia, algun componente requiere atencion</span>
-                <span class="en">Warning, some component requires attention</span>
-              </td>
-              <td><span class="health-score health-mid">78</span></td>
-            </tr>
-            <tr>
-              <td class="font-semibold">0 &ndash; 69</td>
-              <td><span class="text-danger font-bold">Rojo</span></td>
-              <td>
-                <span class="es">Critico, el sistema necesita intervencion inmediata</span>
-                <span class="en">Critical, the system needs immediate intervention</span>
-              </td>
-              <td><span class="health-score health-low">42</span></td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-
-    <!-- Column: Estado -->
-    <div class="card">
-      <div class="card-header">
-        <div class="card-title">
-          <div class="card-icon cyan">&#9679;</div>
-          <span class="es">Columna: Estado</span><span class="en">Column: Status</span>
-        </div>
-      </div>
-      <p>
-        <span class="es">
-          Un <strong>badge de estado</strong> que indica si el sistema esta activo, inactivo o en mantenimiento:
-        </span>
-        <span class="en">
-          A <strong>status badge</strong> indicating whether the system is active, inactive, or under maintenance:
-        </span>
-      </p>
-      <div class="mt-2" style="display:flex;gap:12px;flex-wrap:wrap;">
-        <span class="badge success">&#9679; Active</span>
-        <span class="badge warning">&#9679; Maintenance</span>
-        <span class="badge neutral">&#9679; Inactive</span>
-        <span class="badge danger">&#9679; Disconnected</span>
-      </div>
-    </div>
-
-    <!-- Column: Acciones -->
-    <div class="card">
-      <div class="card-header">
-        <div class="card-title">
-          <div class="card-icon warning">&#9881;</div>
-          <span class="es">Columna: Acciones</span><span class="en">Column: Actions</span>
-        </div>
-      </div>
-      <p>
-        <span class="es">
-          La ultima columna contiene <strong>3 botones de icono</strong> para acciones rapidas sobre cada sistema:
-        </span>
-        <span class="en">
-          The last column contains <strong>3 icon buttons</strong> for quick actions on each system:
-        </span>
-      </p>
-
-      <div class="steps">
-        <div class="step">
-          <strong><span class="es">Health Check</span><span class="en">Health Check</span></strong> (&#8635;)
-          <br>
-          <span class="es">
-            Al hacer clic, el icono comienza a <strong>girar</strong> (animacion de spin) indicando que
-            se esta ejecutando una verificacion de salud del sistema en tiempo real. Cuando el chequeo
-            termina, el icono deja de girar y la puntuacion de Health en la tabla se actualiza automaticamente
-            con el nuevo valor.
-          </span>
-          <span class="en">
-            When clicked, the icon starts <strong>spinning</strong> (spin animation) indicating that
-            a real-time health check is being performed on the system. When the check finishes,
-            the icon stops spinning and the Health score in the table updates automatically
-            with the new value.
-          </span>
-        </div>
-        <div class="step">
-          <strong><span class="es">Editar</span><span class="en">Edit</span></strong> (&#9998;)
-          <br>
-          <span class="es">
-            Navega a la pagina de <strong>detalle del sistema</strong>, donde puedes ver toda la informacion
-            del sistema, modificar sus datos de configuracion, revisar metricas historicas y gestionar sus
-            conectores.
-          </span>
-          <span class="en">
-            Navigates to the <strong>system detail page</strong>, where you can view all the system's
-            information, modify its configuration data, review historical metrics, and manage its
-            connectors.
-          </span>
-        </div>
-        <div class="step">
-          <strong><span class="es">Eliminar</span><span class="en">Delete</span></strong> (&#128465;)
-          <br>
-          <span class="es">
-            Requiere <strong>doble clic</strong> como medida de seguridad. Al hacer el primer clic,
-            el boton cambia a <strong>color rojo</strong> y muestra un texto de confirmacion
-            (por ejemplo, "Confirmar"). Solo al hacer el segundo clic dentro de unos segundos
-            se procedera a eliminar el sistema. Si no confirmas, el boton vuelve a su estado normal.
-          </span>
-          <span class="en">
-            Requires a <strong>double click</strong> as a safety measure. On the first click,
-            the button turns <strong>red</strong> and shows a confirmation text
-            (e.g., "Confirm"). Only clicking a second time within a few seconds
-            will proceed with deleting the system. If you don't confirm, the button returns to normal.
-          </span>
-        </div>
-      </div>
-
-      <div class="mt-2" style="display:flex;gap:6px;align-items:center;">
-        <span class="text-xs text-muted"><span class="es">Vista previa de los botones:</span><span class="en">Button preview:</span></span>
-        <div class="action-btn" title="Health Check">&#8635;</div>
-        <div class="action-btn" title="Editar">&#9998;</div>
-        <div class="action-btn delete" title="Eliminar">&#128465;</div>
-      </div>
-    </div>
-
-    <!-- ════════════════════════════════════════════════════════════ -->
-    <!-- SECTION: Example Table -->
-    <!-- ════════════════════════════════════════════════════════════ -->
-    <h2><span class="es">Ejemplo de la Tabla</span><span class="en">Table Example</span></h2>
-
-    <p>
-      <span class="es">
-        A continuacion se muestra un ejemplo representativo de como se ve la tabla de sistemas en la pagina
-        de Administracion. Recuerda que <strong>cada fila es clickeable</strong> y te lleva al detalle del sistema.
-      </span>
-      <span class="en">
-        Below is a representative example of how the systems table looks on the Administration page.
-        Remember that <strong>each row is clickable</strong> and takes you to the system detail.
-      </span>
-    </p>
+    <!-- ── Systems Table ── -->
+    <h2><span class="es">Lista de Sistemas</span><span class="en">System List</span></h2>
 
     <div class="table-wrap">
       <table>
         <thead>
           <tr>
-            <th><span class="es">Sistema</span><span class="en">System</span></th>
+            <th>SID</th>
+            <th><span class="es">Descripcion</span><span class="en">Description</span></th>
             <th><span class="es">Tipo</span><span class="en">Type</span></th>
-            <th><span class="es">Base de Datos</span><span class="en">Database</span></th>
             <th><span class="es">Ambiente</span><span class="en">Environment</span></th>
-            <th><span class="es">Modo</span><span class="en">Mode</span></th>
-            <th>Health</th>
-            <th><span class="es">Estado</span><span class="en">Status</span></th>
+            <th>Status</th>
+            <th><span class="es">Ultimo Chequeo</span><span class="en">Last Check</span></th>
+            <th><span class="es">Conector</span><span class="en">Connector</span></th>
             <th><span class="es">Acciones</span><span class="en">Actions</span></th>
           </tr>
         </thead>
         <tbody>
-          <tr class="system-row">
-            <td>
-              <div class="system-sid">
-                <div class="system-sid-icon">&#128421;</div>
-                <div>
-                  <div class="system-sid-name">S4P</div>
-                  <div class="system-sid-id">sys_01hx7k9m</div>
-                </div>
-              </div>
-            </td>
-            <td>S/4HANA</td>
-            <td>HANA</td>
-            <td><span class="badge danger">PRD</span></td>
-            <td><span class="badge violet">Production</span></td>
-            <td><span class="health-score health-high">96</span></td>
-            <td><span class="badge success">&#9679; Active</span></td>
-            <td>
-              <div class="action-btns">
-                <div class="action-btn" title="Health Check">&#8635;</div>
-                <div class="action-btn" title="Editar">&#9998;</div>
-                <div class="action-btn delete" title="Eliminar">&#128465;</div>
-              </div>
-            </td>
+          <tr>
+            <td class="font-mono font-bold text-primary">PRD</td>
+            <td>SAP ECC 6.0 <span class="es">Productivo</span><span class="en">Production</span></td>
+            <td><span class="badge cyan">ECC</span></td>
+            <td><span class="badge success">Production</span></td>
+            <td><span class="badge success">online</span></td>
+            <td class="font-mono text-sm text-muted">2026-03-12 09:45</td>
+            <td><span class="badge neutral">Cloud Connector</span></td>
+            <td><a href="#" class="text-cyan text-sm"><span class="es">Editar</span><span class="en">Edit</span></a></td>
           </tr>
-          <tr class="system-row">
-            <td>
-              <div class="system-sid">
-                <div class="system-sid-icon">&#128421;</div>
-                <div>
-                  <div class="system-sid-name">ECP</div>
-                  <div class="system-sid-id">sys_01hy3m2n</div>
-                </div>
-              </div>
-            </td>
-            <td>ECC</td>
-            <td>ASE</td>
-            <td><span class="badge danger">PRD</span></td>
-            <td><span class="badge violet">Production</span></td>
-            <td><span class="health-score health-mid">78</span></td>
-            <td><span class="badge warning">&#9679; Maintenance</span></td>
-            <td>
-              <div class="action-btns">
-                <div class="action-btn" title="Health Check">&#8635;</div>
-                <div class="action-btn" title="Editar">&#9998;</div>
-                <div class="action-btn delete" title="Eliminar">&#128465;</div>
-              </div>
-            </td>
+          <tr>
+            <td class="font-mono font-bold text-primary">QAS</td>
+            <td>SAP ECC 6.0 <span class="es">Calidad</span><span class="en">Quality</span></td>
+            <td><span class="badge cyan">ECC</span></td>
+            <td><span class="badge warning">Quality</span></td>
+            <td><span class="badge success">online</span></td>
+            <td class="font-mono text-sm text-muted">2026-03-12 09:44</td>
+            <td><span class="badge neutral">Cloud Connector</span></td>
+            <td><a href="#" class="text-cyan text-sm"><span class="es">Editar</span><span class="en">Edit</span></a></td>
           </tr>
-          <tr class="system-row">
-            <td>
-              <div class="system-sid">
-                <div class="system-sid-icon">&#128421;</div>
-                <div>
-                  <div class="system-sid-name">S4Q</div>
-                  <div class="system-sid-id">sys_01hz4p8r</div>
-                </div>
-              </div>
-            </td>
-            <td>S/4HANA</td>
-            <td>HANA</td>
-            <td><span class="badge warning">QAS</span></td>
-            <td><span class="badge violet">Production</span></td>
-            <td><span class="health-score health-high">92</span></td>
-            <td><span class="badge success">&#9679; Active</span></td>
-            <td>
-              <div class="action-btns">
-                <div class="action-btn" title="Health Check">&#8635;</div>
-                <div class="action-btn" title="Editar">&#9998;</div>
-                <div class="action-btn delete" title="Eliminar">&#128465;</div>
-              </div>
-            </td>
+          <tr>
+            <td class="font-mono font-bold text-primary">DEV</td>
+            <td>SAP ECC 6.0 <span class="es">Desarrollo</span><span class="en">Development</span></td>
+            <td><span class="badge cyan">ECC</span></td>
+            <td><span class="badge violet">Development</span></td>
+            <td><span class="badge success">online</span></td>
+            <td class="font-mono text-sm text-muted">2026-03-12 09:43</td>
+            <td><span class="badge neutral">Spektra Agent</span></td>
+            <td><a href="#" class="text-cyan text-sm"><span class="es">Editar</span><span class="en">Edit</span></a></td>
           </tr>
-          <tr class="system-row">
-            <td>
-              <div class="system-sid">
-                <div class="system-sid-icon">&#128421;</div>
-                <div>
-                  <div class="system-sid-name">BWD</div>
-                  <div class="system-sid-id">sys_01ha6t1w</div>
-                </div>
-              </div>
-            </td>
-            <td>BW/4HANA</td>
-            <td>HANA</td>
-            <td><span class="badge cyan">DEV</span></td>
-            <td><span class="badge neutral">Trial</span></td>
-            <td><span class="health-score health-low">42</span></td>
-            <td><span class="badge danger">&#9679; Disconnected</span></td>
-            <td>
-              <div class="action-btns">
-                <div class="action-btn" title="Health Check">&#8635;</div>
-                <div class="action-btn" title="Editar">&#9998;</div>
-                <div class="action-btn delete" title="Eliminar">&#128465;</div>
-              </div>
-            </td>
+          <tr>
+            <td class="font-mono font-bold text-primary">FIN</td>
+            <td>SAP S/4HANA Finance</td>
+            <td><span class="badge violet">S/4HANA</span></td>
+            <td><span class="badge success">Production</span></td>
+            <td><span class="badge success">online</span></td>
+            <td class="font-mono text-sm text-muted">2026-03-12 09:45</td>
+            <td><span class="badge neutral">RFC/BAPI</span></td>
+            <td><a href="#" class="text-cyan text-sm"><span class="es">Editar</span><span class="en">Edit</span></a></td>
           </tr>
-          <tr class="system-row">
-            <td>
-              <div class="system-sid">
-                <div class="system-sid-icon">&#128421;</div>
-                <div>
-                  <div class="system-sid-name">SMP</div>
-                  <div class="system-sid-id">sys_01hb9v3x</div>
-                </div>
-              </div>
-            </td>
-            <td>Solution Manager</td>
-            <td>HANA</td>
-            <td><span class="badge danger">PRD</span></td>
-            <td><span class="badge violet">Production</span></td>
-            <td><span class="health-score health-high">94</span></td>
-            <td><span class="badge success">&#9679; Active</span></td>
-            <td>
-              <div class="action-btns">
-                <div class="action-btn" title="Health Check">&#8635;</div>
-                <div class="action-btn" title="Editar">&#9998;</div>
-                <div class="action-btn delete" title="Eliminar">&#128465;</div>
-              </div>
-            </td>
+          <tr>
+            <td class="font-mono font-bold text-primary">BW4</td>
+            <td>SAP BW/4HANA Analytics</td>
+            <td><span class="badge warning">BW/4HANA</span></td>
+            <td><span class="badge success">Production</span></td>
+            <td><span class="badge success">online</span></td>
+            <td class="font-mono text-sm text-muted">2026-03-12 09:42</td>
+            <td><span class="badge neutral">API Gateway</span></td>
+            <td><a href="#" class="text-cyan text-sm"><span class="es">Editar</span><span class="en">Edit</span></a></td>
+          </tr>
+          <tr>
+            <td class="font-mono font-bold text-primary">SBX</td>
+            <td>SAP S/4HANA Sandbox</td>
+            <td><span class="badge violet">S/4HANA</span></td>
+            <td><span class="badge neutral">Sandbox</span></td>
+            <td><span class="badge warning">maintenance</span></td>
+            <td class="font-mono text-sm text-muted">2026-03-12 08:00</td>
+            <td><span class="badge neutral">Spektra Agent</span></td>
+            <td><a href="#" class="text-cyan text-sm"><span class="es">Editar</span><span class="en">Edit</span></a></td>
+          </tr>
+          <tr>
+            <td class="font-mono font-bold text-primary">CRM</td>
+            <td>SAP CRM 7.0</td>
+            <td><span class="badge danger">CRM</span></td>
+            <td><span class="badge success">Production</span></td>
+            <td><span class="badge danger">offline</span></td>
+            <td class="font-mono text-sm text-danger">2026-03-11 23:15</td>
+            <td><span class="badge neutral">Cloud Connector</span></td>
+            <td><a href="#" class="text-cyan text-sm"><span class="es">Editar</span><span class="en">Edit</span></a></td>
           </tr>
         </tbody>
       </table>
     </div>
 
-    <!-- ════════════════════════════════════════════════════════════ -->
-    <!-- SECTION: Row Navigation -->
-    <!-- ════════════════════════════════════════════════════════════ -->
-    <h2><span class="es">Navegacion desde las Filas</span><span class="en">Row Navigation</span></h2>
+    <!-- ── System Details Section ── -->
+    <h2><span class="es">Detalle de Sistema: PRD</span><span class="en">System Detail: PRD</span></h2>
 
-    <div class="card">
-      <p>
-        <span class="es">
-          Todas las filas de la tabla son <strong>clickeables</strong>. Al hacer clic en cualquier parte
-          de una fila (excepto en los botones de accion), seras redirigido a la <strong>pagina de detalle
-          del sistema</strong>, donde encontraras informacion completa incluyendo metricas en tiempo real,
-          historicos de rendimiento, conectores asociados y opciones de configuracion avanzada.
-        </span>
-        <span class="en">
-          All table rows are <strong>clickable</strong>. Clicking anywhere on a row (except on the action
-          buttons) will redirect you to the <strong>system detail page</strong>, where you'll find complete
-          information including real-time metrics, performance history, associated connectors, and
-          advanced configuration options.
-        </span>
-      </p>
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title"><div class="card-icon cyan">&#128196;</div> <span class="es">Informacion General</span><span class="en">General Information</span></div>
+        </div>
+        <div class="table-wrap" style="margin-bottom:0;">
+          <table>
+            <tbody>
+              <tr><td class="font-semibold" style="width:40%;">SID</td><td class="font-mono">PRD</td></tr>
+              <tr><td class="font-semibold">Hostname</td><td class="font-mono">sapapp01.prod.local</td></tr>
+              <tr><td class="font-semibold">Instance Nr.</td><td class="font-mono">00</td></tr>
+              <tr><td class="font-semibold">Client</td><td class="font-mono">100</td></tr>
+              <tr><td class="font-semibold"><span class="es">Tipo</span><span class="en">Type</span></td><td>SAP ECC 6.0</td></tr>
+              <tr><td class="font-semibold"><span class="es">Version Kernel</span><span class="en">Kernel Version</span></td><td class="font-mono">7.53</td></tr>
+              <tr><td class="font-semibold">DB</td><td>HANA 2.0 SPS06</td></tr>
+              <tr><td class="font-semibold">OS</td><td>SLES 15 SP4</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title"><div class="card-icon success">&#128200;</div> <span class="es">Metricas Actuales</span><span class="en">Current Metrics</span></div>
+        </div>
+        <div class="table-wrap" style="margin-bottom:0;">
+          <table>
+            <tbody>
+              <tr><td class="font-semibold" style="width:40%;">CPU</td><td><span class="text-success">34%</span></td></tr>
+              <tr><td class="font-semibold"><span class="es">Memoria</span><span class="en">Memory</span></td><td><span class="text-warning">72%</span></td></tr>
+              <tr><td class="font-semibold"><span class="es">Disco</span><span class="en">Disk</span></td><td><span class="text-success">45%</span></td></tr>
+              <tr><td class="font-semibold"><span class="es">Usuarios Activos</span><span class="en">Active Users</span></td><td>156</td></tr>
+              <tr><td class="font-semibold"><span class="es">Dialog Processes</span><span class="en">Dialog Processes</span></td><td>12/40 <span class="text-muted">(30%)</span></td></tr>
+              <tr><td class="font-semibold">Uptime</td><td>45d 12h 33m</td></tr>
+              <tr><td class="font-semibold"><span class="es">Resp. Promedio</span><span class="en">Avg Response</span></td><td>245ms</td></tr>
+              <tr><td class="font-semibold"><span class="es">Jobs Activos</span><span class="en">Active Jobs</span></td><td>8</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
     </div>
 
-    <div class="callout info">
-      <div class="callout-icon">&#128161;</div>
+    <!-- ── Admin-Only Features ── -->
+    <h2><span class="es">Funciones Administrativas</span><span class="en">Administrative Functions</span></h2>
+
+    <div class="callout warning mb-2">
+      <div class="callout-icon">&#128274;</div>
       <div>
-        <span class="es">
-          <strong>Consejo:</strong> Puedes llegar a esta pagina desde el menu lateral haciendo clic en
-          <strong>Admin &rarr; Gestion</strong>, o desde el Dashboard haciendo clic en el enlace
-          de administracion cuando esta disponible para tu rol.
-        </span>
-        <span class="en">
-          <strong>Tip:</strong> You can reach this page from the sidebar by clicking
-          <strong>Admin &rarr; Management</strong>, or from the Dashboard by clicking the
-          administration link when available for your role.
-        </span>
+        <span class="es">Las siguientes acciones requieren rol <code>admin</code> (nivel 40). Proceda con precaucion en sistemas productivos.</span>
+        <span class="en">The following actions require <code>admin</code> role (level 40). Proceed with caution on production systems.</span>
       </div>
+    </div>
+
+    <div class="grid-3">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title"><div class="card-icon cyan">&#128260;</div> <span class="es">Reiniciar Servicios</span><span class="en">Restart Services</span></div>
+        </div>
+        <p class="text-sm text-muted"><span class="es">Reinicio controlado de servicios SAP (dispatcher, ICM, message server).</span><span class="en">Controlled restart of SAP services (dispatcher, ICM, message server).</span></p>
+        <button style="margin-top:8px;background:var(--cyan-dim);color:var(--cyan);border:1px solid rgba(6,182,212,0.3);padding:6px 14px;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;">
+          <span class="es">Reiniciar</span><span class="en">Restart</span>
+        </button>
+      </div>
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title"><div class="card-icon warning">&#128736;&#65039;</div> <span class="es">Modo Mantenimiento</span><span class="en">Maintenance Mode</span></div>
+        </div>
+        <p class="text-sm text-muted"><span class="es">Activar modo mantenimiento para suspender alertas y notificaciones.</span><span class="en">Activate maintenance mode to suspend alerts and notifications.</span></p>
+        <button style="margin-top:8px;background:rgba(245,158,11,0.12);color:var(--warning);border:1px solid rgba(245,158,11,0.3);padding:6px 14px;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;">
+          <span class="es">Activar</span><span class="en">Activate</span>
+        </button>
+      </div>
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title"><div class="card-icon danger">&#128465;&#65039;</div> <span class="es">Eliminar Sistema</span><span class="en">Delete System</span></div>
+        </div>
+        <p class="text-sm text-muted"><span class="es">Desconectar y eliminar permanentemente este sistema de Spektra.</span><span class="en">Disconnect and permanently remove this system from Spektra.</span></p>
+        <button style="margin-top:8px;background:rgba(239,68,68,0.12);color:var(--danger);border:1px solid rgba(239,68,68,0.3);padding:6px 14px;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;">
+          <span class="es">Eliminar</span><span class="en">Delete</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- ── Role Permissions ── -->
+    <h2><span class="es">Permisos por Rol</span><span class="en">Role Permissions</span></h2>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th><span class="es">Accion</span><span class="en">Action</span></th>
+            <th>admin (40)</th>
+            <th>escalation (30)</th>
+            <th>operator (20)</th>
+            <th>viewer (10)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="es">Ver lista de sistemas</span><span class="en">View system list</span></td>
+            <td><span class="badge success">&#10003;</span></td>
+            <td><span class="badge success">&#10003;</span></td>
+            <td><span class="badge success">&#10003;</span></td>
+            <td><span class="badge success">&#10003;</span></td>
+          </tr>
+          <tr>
+            <td><span class="es">Ver detalle de sistema</span><span class="en">View system details</span></td>
+            <td><span class="badge success">&#10003;</span></td>
+            <td><span class="badge success">&#10003;</span></td>
+            <td><span class="badge success">&#10003;</span></td>
+            <td><span class="badge success">&#10003;</span></td>
+          </tr>
+          <tr>
+            <td><span class="es">Conectar nuevo sistema</span><span class="en">Connect new system</span></td>
+            <td><span class="badge success">&#10003;</span></td>
+            <td><span class="badge neutral">--</span></td>
+            <td><span class="badge neutral">--</span></td>
+            <td><span class="badge neutral">--</span></td>
+          </tr>
+          <tr>
+            <td><span class="es">Editar configuracion</span><span class="en">Edit configuration</span></td>
+            <td><span class="badge success">&#10003;</span></td>
+            <td><span class="badge neutral">--</span></td>
+            <td><span class="badge neutral">--</span></td>
+            <td><span class="badge neutral">--</span></td>
+          </tr>
+          <tr>
+            <td><span class="es">Reiniciar servicios</span><span class="en">Restart services</span></td>
+            <td><span class="badge success">&#10003;</span></td>
+            <td><span class="badge success">&#10003;</span></td>
+            <td><span class="badge neutral">--</span></td>
+            <td><span class="badge neutral">--</span></td>
+          </tr>
+          <tr>
+            <td><span class="es">Modo mantenimiento</span><span class="en">Maintenance mode</span></td>
+            <td><span class="badge success">&#10003;</span></td>
+            <td><span class="badge neutral">--</span></td>
+            <td><span class="badge neutral">--</span></td>
+            <td><span class="badge neutral">--</span></td>
+          </tr>
+          <tr>
+            <td><span class="es">Eliminar sistema</span><span class="en">Delete system</span></td>
+            <td><span class="badge success">&#10003;</span></td>
+            <td><span class="badge neutral">--</span></td>
+            <td><span class="badge neutral">--</span></td>
+            <td><span class="badge neutral">--</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- ── Connection Methods ── -->
+    <h2><span class="es">Metodos de Conexion</span><span class="en">Connection Methods</span></h2>
+    <p class="text-muted mb-2">
+      <span class="es">Spektra soporta multiples metodos de conexion a sistemas SAP. Para agregar un nuevo sistema, use el asistente de conexion.</span>
+      <span class="en">Spektra supports multiple connection methods to SAP systems. To add a new system, use the connection wizard.</span>
+    </p>
+
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title"><div class="card-icon cyan">&#9729;&#65039;</div> SAP Cloud Connector</div>
+          <span class="badge success"><span class="es">Recomendado</span><span class="en">Recommended</span></span>
+        </div>
+        <p class="text-sm text-muted"><span class="es">Conexion segura via SAP BTP Cloud Connector. Ideal para sistemas en la nube y on-premise con BTP.</span><span class="en">Secure connection via SAP BTP Cloud Connector. Ideal for cloud and on-premise systems with BTP.</span></p>
+      </div>
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title"><div class="card-icon violet">&#128225;</div> Spektra Agent</div>
+          <span class="badge violet">On-Premise</span>
+        </div>
+        <p class="text-sm text-muted"><span class="es">Agente ligero instalado directamente en el servidor SAP. Comunicacion cifrada via WebSocket.</span><span class="en">Lightweight agent installed directly on the SAP server. Encrypted communication via WebSocket.</span></p>
+      </div>
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title"><div class="card-icon warning">&#128268;</div> RFC/BAPI</div>
+          <span class="badge warning">Legacy</span>
+        </div>
+        <p class="text-sm text-muted"><span class="es">Conexion directa via RFC para sistemas legacy. Requiere apertura de puertos y usuario de servicio.</span><span class="en">Direct RFC connection for legacy systems. Requires port opening and service user.</span></p>
+      </div>
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title"><div class="card-icon success">&#127760;</div> API Gateway</div>
+          <span class="badge cyan">REST</span>
+        </div>
+        <p class="text-sm text-muted"><span class="es">Conexion via SAP API Gateway o SAP Integration Suite para APIs OData y REST.</span><span class="en">Connection via SAP API Gateway or SAP Integration Suite for OData and REST APIs.</span></p>
+      </div>
+    </div>
+
+    <div class="card mt-2" style="text-align:center;padding:24px;">
+      <p class="text-muted mb-1"><span class="es">Para registrar un nuevo sistema SAP en Spektra:</span><span class="en">To register a new SAP system in Spektra:</span></p>
+      <a href="connect-system.html" style="background:var(--gradient-brand);color:#fff;border:none;padding:10px 28px;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;text-decoration:none;display:inline-block;">
+        <span class="es">Iniciar Asistente de Conexion</span><span class="en">Start Connection Wizard</span>
+      </a>
     </div>
 
   </main>

@@ -1,270 +1,435 @@
-<!DOCTYPE html><html lang="es" data-theme="dark" data-lang="es"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Operaciones — SAP Spektra Docs</title><link rel="stylesheet" href="theme.css"><script src="theme-toggle.js"></script><script src="lang-toggle.js"></script></head><body><div class="docs-wrapper">
-<nav class="docs-sidebar">
-  <div class="sidebar-brand"><div class="logo">&#9889;</div><div class="brand-text"><div class="brand-name">SAP Spektra</div><div class="brand-sub">Documentacion</div></div></div>
-  <div class="sidebar-section"><div class="sidebar-section-label">Inicio</div><a href="index.html" class="sidebar-link">Portal</a><a href="getting-started.html" class="sidebar-link">Primeros Pasos</a></div>
-  <div class="sidebar-section"><div class="sidebar-section-label">Command</div><a href="dashboard.html" class="sidebar-link">Dashboard</a><a href="landscape.html" class="sidebar-link">Landscape</a><a href="alerts.html" class="sidebar-link">Alertas</a></div>
-  <div class="sidebar-section"><div class="sidebar-section-label">Monitor</div><a href="systems.html" class="sidebar-link">Sistemas</a><a href="connectors.html" class="sidebar-link">Conectores</a><a href="events.html" class="sidebar-link">Eventos</a></div>
-  <div class="sidebar-section"><div class="sidebar-section-label">Intelligence</div><a href="ai-analysis.html" class="sidebar-link">Analisis IA</a><a href="analytics.html" class="sidebar-link">Analytics</a><a href="reports.html" class="sidebar-link">Reportes</a><a href="comparison.html" class="sidebar-link">Comparacion</a></div>
-  <div class="sidebar-section"><div class="sidebar-section-label">Operations</div><a href="runbooks.html" class="sidebar-link">Runbooks</a><a href="approvals.html" class="sidebar-link">Aprobaciones</a><a href="operations.html" class="sidebar-link active">Operaciones</a><a href="jobs.html" class="sidebar-link">Jobs (SM37)</a><a href="transports.html" class="sidebar-link">Transportes</a><a href="sla.html" class="sidebar-link">SLA</a><a href="ha-control.html" class="sidebar-link">HA Control</a><a href="certificates.html" class="sidebar-link">Certificados</a></div>
-  <div class="sidebar-section"><div class="sidebar-section-label">Admin</div><a href="admin.html" class="sidebar-link">Gestion</a><a href="settings.html" class="sidebar-link">Configuracion</a><a href="connect-system.html" class="sidebar-link">Conectar Sistema</a></div>
-</nav>
-<main class="docs-main">
+<!DOCTYPE html>
+<html lang="es" data-theme="dark" data-lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Operaciones - SAP Spektra Docs</title>
+  <link rel="stylesheet" href="theme.css">
+  <script src="theme-toggle.js"></script>
+  <script src="lang-toggle.js"></script>
+  <style>
+    .btn{padding:8px 18px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;border:none;transition:all .2s}
+    .btn-primary{background:var(--gradient-brand);color:#fff}
+    .btn-primary:hover{opacity:.9;transform:translateY(-1px)}
+    .risk-bar{display:flex;align-items:center;gap:6px}
+    .risk-dot{width:10px;height:10px;border-radius:50%}
+    .risk-dot.low{background:var(--success)}
+    .risk-dot.medium{background:var(--warning)}
+    .risk-dot.high{background:#f97316}
+    .risk-dot.critical{background:var(--danger)}
+    .type-icon{display:inline-flex;align-items:center;gap:6px;font-size:13px;font-weight:600}
+    .cron-tag{display:inline-block;background:var(--code-bg);border:1px solid var(--code-border);border-radius:6px;padding:2px 8px;font-family:'SF Mono',Monaco,Consolas,monospace;font-size:11px;color:var(--violet)}
+    .json-block{background:var(--code-bg);border:1px solid var(--code-border);border-radius:var(--radius);padding:14px;margin:8px 0;font-family:'SF Mono',Monaco,Consolas,monospace;font-size:12px;color:var(--txt2);overflow-x:auto;white-space:pre}
+    .detail-grid{display:grid;grid-template-columns:160px 1fr;gap:8px 16px;font-size:13px}
+    .detail-grid dt{color:var(--txt3);font-weight:600}
+    .detail-grid dd{color:var(--txt1)}
+    .filter-bar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px}
+    .filter-chip{padding:5px 14px;border-radius:20px;font-size:12px;font-weight:600;border:1px solid var(--brd);background:var(--card-bg);color:var(--txt2);cursor:pointer;transition:all .15s}
+    .filter-chip:hover,.filter-chip.active{border-color:var(--cyan);color:var(--cyan);background:var(--cyan-dim)}
+  </style>
+</head>
+<body>
+<div class="docs-wrapper">
 
-    <div class="demo-disclaimer">
-      <span class="es"><strong>Nota:</strong> Esta documentación describe la interfaz de SAP Spektra con datos simulados. Las integraciones, conectividad SAP y operaciones de backend son funcionalidad planificada — actualmente el producto opera en modo demostración.</span>
-      <span class="en"><strong>Note:</strong> This documentation describes SAP Spektra's interface with simulated data. Integrations, SAP connectivity, and backend operations are planned functionality — the product currently operates in demo mode.</span>
-    </div>
-
-  <!-- ====== HEADER ====== -->
-  <section class="doc-section">
-    <h1><span class="es">Operaciones</span><span class="en">Operations</span></h1>
-    <p class="section-desc">
-      <span class="es">Operaciones programadas y ejecutadas</span>
-      <span class="en">Scheduled and executed operations</span>
-    </p>
-    <p>
-      <span class="es">La pantalla de <strong>Operaciones</strong> le permite planificar, programar y dar seguimiento a operaciones de mantenimiento sobre sus sistemas SAP. Aqui puede crear nuevas operaciones, revisar las programadas y consultar el historial de operaciones completadas o fallidas.</span>
-      <span class="en">The <strong>Operations</strong> screen lets you plan, schedule and track maintenance operations on your SAP systems. Here you can create new operations, review scheduled ones and check the history of completed or failed operations.</span>
-    </p>
-  </section>
-
-  <!-- ====== TABS + BUTTON ====== -->
-  <section class="doc-section">
-    <h2><span class="es">Pestanas y Boton Principal</span><span class="en">Tabs and Main Button</span></h2>
-    <p>
-      <span class="es">En la parte superior vera cuatro pestanas de filtro y un boton de accion:</span>
-      <span class="en">At the top you will see four filter tabs and an action button:</span>
-    </p>
-    <div style="display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin:16px 0;">
-      <span style="background:var(--bg-secondary);border:1px solid var(--border-color);padding:8px 16px;border-radius:6px;"><span class="es">Todas</span><span class="en">All</span></span>
-      <span style="background:var(--bg-secondary);border:1px solid var(--border-color);padding:8px 16px;border-radius:6px;"><span class="es">Programadas</span><span class="en">Scheduled</span></span>
-      <span style="background:var(--bg-secondary);border:1px solid var(--border-color);padding:8px 16px;border-radius:6px;"><span class="es">Completadas</span><span class="en">Completed</span></span>
-      <span style="background:var(--bg-secondary);border:1px solid var(--border-color);padding:8px 16px;border-radius:6px;"><span class="es">Fallidas</span><span class="en">Failed</span></span>
-      <span style="margin-left:auto;background:var(--accent-blue);color:#fff;padding:8px 20px;border-radius:6px;font-weight:600;cursor:pointer;">+ <span class="es">Nueva Operacion</span><span class="en">New Operation</span></span>
-    </div>
-    <ul>
-      <li><span class="es"><strong>Todas</strong> &mdash; Muestra todas las operaciones sin importar su estado.</span><span class="en"><strong>All</strong> &mdash; Shows all operations regardless of status.</span></li>
-      <li><span class="es"><strong>Programadas</strong> &mdash; Muestra solo las operaciones pendientes de ejecucion.</span><span class="en"><strong>Scheduled</strong> &mdash; Shows only operations pending execution.</span></li>
-      <li><span class="es"><strong>Completadas</strong> &mdash; Muestra las operaciones finalizadas con exito.</span><span class="en"><strong>Completed</strong> &mdash; Shows successfully finished operations.</span></li>
-      <li><span class="es"><strong>Fallidas</strong> &mdash; Muestra las operaciones que terminaron con error.</span><span class="en"><strong>Failed</strong> &mdash; Shows operations that ended with errors.</span></li>
-    </ul>
-  </section>
-
-  <!-- ====== TABLE COLUMNS ====== -->
-  <section class="doc-section">
-    <h2><span class="es">Tabla de Operaciones</span><span class="en">Operations Table</span></h2>
-    <table class="doc-table">
-      <thead>
-        <tr>
-          <th><span class="es">Columna</span><span class="en">Column</span></th>
-          <th><span class="es">Que muestra</span><span class="en">What it shows</span></th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td><strong>ID</strong></td>
-          <td><span class="es">Identificador unico de la operacion en formato monoespaciado (ej. <code>OP-0042</code>).</span><span class="en">Unique operation identifier in monospace format (e.g. <code>OP-0042</code>).</span></td>
-        </tr>
-        <tr>
-          <td><strong><span class="es">Sistema</span><span class="en">System</span></strong></td>
-          <td><span class="es">SID del sistema objetivo de la operacion (ej. <span style="background:var(--accent-blue);color:#fff;padding:1px 6px;border-radius:3px;font-size:0.85em;">PRD</span>).</span><span class="en">SID of the target system for the operation (e.g. <span style="background:var(--accent-blue);color:#fff;padding:1px 6px;border-radius:3px;font-size:0.85em;">PRD</span>).</span></td>
-        </tr>
-        <tr>
-          <td><strong><span class="es">Tipo</span><span class="en">Type</span></strong></td>
-          <td>
-            <span class="es">Categoria de la operacion, mostrada como badge de color:
-              <br>&#8226; <span style="background:#3b82f6;color:#fff;padding:2px 8px;border-radius:4px;font-size:0.85em;">BACKUP</span> &mdash; Copia de seguridad del sistema o base de datos.
-              <br>&#8226; <span style="background:#f59e0b;color:#000;padding:2px 8px;border-radius:4px;font-size:0.85em;">RESTART</span> &mdash; Reinicio de instancia o servicio.
-              <br>&#8226; <span style="background:#8b5cf6;color:#fff;padding:2px 8px;border-radius:4px;font-size:0.85em;">MAINTENANCE</span> &mdash; Ventana de mantenimiento planificada.
-              <br>&#8226; <span style="background:#ef4444;color:#fff;padding:2px 8px;border-radius:4px;font-size:0.85em;">DR_DRILL</span> &mdash; Simulacro de recuperacion ante desastres.
-              <br>&#8226; <span style="background:#22c55e;color:#fff;padding:2px 8px;border-radius:4px;font-size:0.85em;">PATCH</span> &mdash; Aplicacion de parches o actualizaciones.
-            </span>
-            <span class="en">Operation category, shown as a colored badge:
-              <br>&#8226; <span style="background:#3b82f6;color:#fff;padding:2px 8px;border-radius:4px;font-size:0.85em;">BACKUP</span> &mdash; System or database backup.
-              <br>&#8226; <span style="background:#f59e0b;color:#000;padding:2px 8px;border-radius:4px;font-size:0.85em;">RESTART</span> &mdash; Instance or service restart.
-              <br>&#8226; <span style="background:#8b5cf6;color:#fff;padding:2px 8px;border-radius:4px;font-size:0.85em;">MAINTENANCE</span> &mdash; Planned maintenance window.
-              <br>&#8226; <span style="background:#ef4444;color:#fff;padding:2px 8px;border-radius:4px;font-size:0.85em;">DR_DRILL</span> &mdash; Disaster recovery drill.
-              <br>&#8226; <span style="background:#22c55e;color:#fff;padding:2px 8px;border-radius:4px;font-size:0.85em;">PATCH</span> &mdash; Patch or update application.
-            </span>
-          </td>
-        </tr>
-        <tr>
-          <td><strong><span class="es">Descripcion</span><span class="en">Description</span></strong></td>
-          <td><span class="es">Texto libre que describe el objetivo y alcance de la operacion.</span><span class="en">Free text describing the objective and scope of the operation.</span></td>
-        </tr>
-        <tr>
-          <td><strong><span class="es">Programada</span><span class="en">Scheduled</span></strong></td>
-          <td><span class="es">Fecha y hora en que la operacion esta programada para ejecutarse.</span><span class="en">Date and time the operation is scheduled to execute.</span></td>
-        </tr>
-        <tr>
-          <td><strong><span class="es">Recurrencia</span><span class="en">Recurrence</span></strong></td>
-          <td><span class="es">Frecuencia de repeticion: <em>Unica</em>, <em>Diaria</em>, <em>Semanal</em>, <em>Mensual</em>, o <em>Personalizada</em>.</span><span class="en">Repetition frequency: <em>Once</em>, <em>Daily</em>, <em>Weekly</em>, <em>Monthly</em>, or <em>Custom</em>.</span></td>
-        </tr>
-        <tr>
-          <td><strong><span class="es">Proxima</span><span class="en">Next</span></strong></td>
-          <td><span class="es">Fecha y hora de la proxima ejecucion programada (solo para operaciones recurrentes).</span><span class="en">Date and time of the next scheduled execution (only for recurring operations).</span></td>
-        </tr>
-        <tr>
-          <td><strong><span class="es">Ultima</span><span class="en">Last</span></strong></td>
-          <td><span class="es">Resultado de la ultima ejecucion: <span style="color:#22c55e;">&#10003;</span> (exito) o <span style="color:#ef4444;">&#10007;</span> (fallo). En blanco si nunca se ha ejecutado.</span><span class="en">Result of the last execution: <span style="color:#22c55e;">&#10003;</span> (success) or <span style="color:#ef4444;">&#10007;</span> (failure). Blank if never executed.</span></td>
-        </tr>
-        <tr>
-          <td><strong><span class="es">Riesgo</span><span class="en">Risk</span></strong></td>
-          <td>
-            <span class="es">Nivel de riesgo asignado a la operacion:
-              <br>&#8226; <span style="background:#22c55e;color:#fff;padding:2px 8px;border-radius:4px;font-size:0.85em;">LOW</span>
-              <br>&#8226; <span style="background:#f59e0b;color:#000;padding:2px 8px;border-radius:4px;font-size:0.85em;">MEDIUM</span>
-              <br>&#8226; <span style="background:#ef4444;color:#fff;padding:2px 8px;border-radius:4px;font-size:0.85em;">HIGH</span>
-              <br>&#8226; <span style="background:#7f1d1d;color:#fff;padding:2px 8px;border-radius:4px;font-size:0.85em;">CRITICAL</span>
-            </span>
-            <span class="en">Risk level assigned to the operation:
-              <br>&#8226; <span style="background:#22c55e;color:#fff;padding:2px 8px;border-radius:4px;font-size:0.85em;">LOW</span>
-              <br>&#8226; <span style="background:#f59e0b;color:#000;padding:2px 8px;border-radius:4px;font-size:0.85em;">MEDIUM</span>
-              <br>&#8226; <span style="background:#ef4444;color:#fff;padding:2px 8px;border-radius:4px;font-size:0.85em;">HIGH</span>
-              <br>&#8226; <span style="background:#7f1d1d;color:#fff;padding:2px 8px;border-radius:4px;font-size:0.85em;">CRITICAL</span>
-            </span>
-          </td>
-        </tr>
-        <tr>
-          <td><strong><span class="es">Estado</span><span class="en">Status</span></strong></td>
-          <td><span class="es">Estado actual: <em>Programada</em>, <em>En ejecucion</em>, <em>Completada</em>, <em>Fallida</em> o <em>Cancelada</em>.</span><span class="en">Current status: <em>Scheduled</em>, <em>Running</em>, <em>Completed</em>, <em>Failed</em> or <em>Cancelled</em>.</span></td>
-        </tr>
-        <tr>
-          <td><strong><span class="es">Solicitado por</span><span class="en">Requested by</span></strong></td>
-          <td><span class="es">Nombre del usuario que creo o solicito la operacion.</span><span class="en">Name of the user who created or requested the operation.</span></td>
-        </tr>
-      </tbody>
-    </table>
-  </section>
-
-  <!-- ====== EXAMPLE TABLE ====== -->
-  <section class="doc-section">
-    <h3><span class="es">Ejemplo de Tabla</span><span class="en">Table Example</span></h3>
-    <div style="overflow-x:auto;">
-      <table class="doc-table" style="font-size:0.9em;">
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th><span class="es">Sistema</span><span class="en">System</span></th>
-            <th><span class="es">Tipo</span><span class="en">Type</span></th>
-            <th><span class="es">Descripcion</span><span class="en">Description</span></th>
-            <th><span class="es">Programada</span><span class="en">Scheduled</span></th>
-            <th><span class="es">Recurrencia</span><span class="en">Recurrence</span></th>
-            <th><span class="es">Ultima</span><span class="en">Last</span></th>
-            <th><span class="es">Riesgo</span><span class="en">Risk</span></th>
-            <th><span class="es">Estado</span><span class="en">Status</span></th>
-            <th><span class="es">Solicitado</span><span class="en">Requested</span></th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td><code>OP-0042</code></td>
-            <td><span style="background:var(--accent-blue);color:#fff;padding:1px 6px;border-radius:3px;font-size:0.85em;">PRD</span></td>
-            <td><span style="background:#3b82f6;color:#fff;padding:2px 8px;border-radius:4px;font-size:0.85em;">BACKUP</span></td>
-            <td><span class="es">Backup completo HANA PRD</span><span class="en">Full HANA PRD backup</span></td>
-            <td>2026-03-12 02:00</td>
-            <td><span class="es">Diaria</span><span class="en">Daily</span></td>
-            <td><span style="color:#22c55e;">&#10003;</span></td>
-            <td><span style="background:#22c55e;color:#fff;padding:2px 8px;border-radius:4px;font-size:0.85em;">LOW</span></td>
-            <td><span class="es">Programada</span><span class="en">Scheduled</span></td>
-            <td>admin</td>
-          </tr>
-          <tr>
-            <td><code>OP-0039</code></td>
-            <td><span style="background:#f59e0b;color:#000;padding:1px 6px;border-radius:3px;font-size:0.85em;">QAS</span></td>
-            <td><span style="background:#f59e0b;color:#000;padding:2px 8px;border-radius:4px;font-size:0.85em;">RESTART</span></td>
-            <td><span class="es">Reinicio de instancia ASCS</span><span class="en">ASCS instance restart</span></td>
-            <td>2026-03-11 22:00</td>
-            <td><span class="es">Unica</span><span class="en">Once</span></td>
-            <td>&mdash;</td>
-            <td><span style="background:#f59e0b;color:#000;padding:2px 8px;border-radius:4px;font-size:0.85em;">MEDIUM</span></td>
-            <td><span class="es">Programada</span><span class="en">Scheduled</span></td>
-            <td>j.martinez</td>
-          </tr>
-          <tr>
-            <td><code>OP-0035</code></td>
-            <td><span style="background:var(--accent-blue);color:#fff;padding:1px 6px;border-radius:3px;font-size:0.85em;">PRD</span></td>
-            <td><span style="background:#ef4444;color:#fff;padding:2px 8px;border-radius:4px;font-size:0.85em;">DR_DRILL</span></td>
-            <td><span class="es">Simulacro DR trimestral</span><span class="en">Quarterly DR drill</span></td>
-            <td>2026-03-15 06:00</td>
-            <td><span class="es">Mensual</span><span class="en">Monthly</span></td>
-            <td><span style="color:#ef4444;">&#10007;</span></td>
-            <td><span style="background:#ef4444;color:#fff;padding:2px 8px;border-radius:4px;font-size:0.85em;">HIGH</span></td>
-            <td><span class="es">Programada</span><span class="en">Scheduled</span></td>
-            <td>admin</td>
-          </tr>
-          <tr>
-            <td><code>OP-0031</code></td>
-            <td><span style="background:#22c55e;color:#fff;padding:1px 6px;border-radius:3px;font-size:0.85em;">DEV</span></td>
-            <td><span style="background:#22c55e;color:#fff;padding:2px 8px;border-radius:4px;font-size:0.85em;">PATCH</span></td>
-            <td><span class="es">Kernel patch SP05</span><span class="en">Kernel patch SP05</span></td>
-            <td>2026-03-10 20:00</td>
-            <td><span class="es">Unica</span><span class="en">Once</span></td>
-            <td><span style="color:#22c55e;">&#10003;</span></td>
-            <td><span style="background:#22c55e;color:#fff;padding:2px 8px;border-radius:4px;font-size:0.85em;">LOW</span></td>
-            <td><span class="es">Completada</span><span class="en">Completed</span></td>
-            <td>c.lopez</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-  </section>
-
-  <!-- ====== NEW OPERATION MODAL ====== -->
-  <section class="doc-section">
-    <h2><span class="es">Modal: Nueva Operacion</span><span class="en">Modal: New Operation</span></h2>
-    <p>
-      <span class="es">Al hacer clic en el boton <strong>+ Nueva Operacion</strong>, se abre un formulario modal con los siguientes campos:</span>
-      <span class="en">When you click the <strong>+ New Operation</strong> button, a modal form opens with the following fields:</span>
-    </p>
-
-    <div style="background:var(--bg-secondary);border:1px solid var(--border-color);border-radius:8px;padding:24px;margin:16px 0;">
-      <h3 style="margin-top:0;"><span class="es">Nueva Operacion</span><span class="en">New Operation</span></h3>
-      <table class="doc-table">
-        <thead>
-          <tr>
-            <th><span class="es">Campo</span><span class="en">Field</span></th>
-            <th><span class="es">Descripcion</span><span class="en">Description</span></th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td><strong><span class="es">Sistema</span><span class="en">System</span></strong></td>
-            <td><span class="es">Selector desplegable con todos los sistemas SAP conectados. Muestra el SID y el entorno (DEV/QAS/PRD). Debe seleccionar exactamente un sistema.</span><span class="en">Dropdown selector with all connected SAP systems. Shows the SID and environment (DEV/QAS/PRD). You must select exactly one system.</span></td>
-          </tr>
-          <tr>
-            <td><strong><span class="es">Tipo de Operacion</span><span class="en">Operation Type</span></strong></td>
-            <td><span class="es">Selector desplegable con las opciones: BACKUP, RESTART, MAINTENANCE, DR_DRILL, PATCH.</span><span class="en">Dropdown selector with options: BACKUP, RESTART, MAINTENANCE, DR_DRILL, PATCH.</span></td>
-          </tr>
-          <tr>
-            <td><strong><span class="es">Descripcion</span><span class="en">Description</span></strong></td>
-            <td><span class="es">Campo de texto libre donde describe el objetivo de la operacion. Maximo 500 caracteres.</span><span class="en">Free text field where you describe the operation objective. Maximum 500 characters.</span></td>
-          </tr>
-          <tr>
-            <td><strong><span class="es">Nivel de Riesgo</span><span class="en">Risk Level</span></strong></td>
-            <td><span class="es">Selector con las opciones LOW, MEDIUM, HIGH, CRITICAL. Las operaciones HIGH y CRITICAL pueden requerir aprobacion adicional segun la configuracion del sistema.</span><span class="en">Selector with options LOW, MEDIUM, HIGH, CRITICAL. HIGH and CRITICAL operations may require additional approval depending on system configuration.</span></td>
-          </tr>
-          <tr>
-            <td><strong><span class="es">Fecha y Hora</span><span class="en">Date and Time</span></strong></td>
-            <td><span class="es">Selector de fecha y hora para programar cuando se ejecutara la operacion. Debe ser una fecha futura.</span><span class="en">Date and time picker to schedule when the operation will execute. Must be a future date.</span></td>
-          </tr>
-        </tbody>
-      </table>
-      <div style="display:flex;gap:12px;margin-top:16px;justify-content:flex-end;">
-        <span style="background:var(--bg-tertiary);color:var(--text-secondary);padding:8px 20px;border-radius:6px;border:1px solid var(--border-color);cursor:pointer;"><span class="es">Cancelar</span><span class="en">Cancel</span></span>
-        <span style="background:var(--accent-blue);color:#fff;padding:8px 20px;border-radius:6px;font-weight:600;cursor:pointer;"><span class="es">Crear Operacion</span><span class="en">Create Operation</span></span>
+  <!-- ══════════ Sidebar ══════════ -->
+  <nav class="docs-sidebar" aria-label="Documentation navigation">
+    <div class="sidebar-brand">
+      <div class="logo">S</div>
+      <div class="brand-text">
+        <div class="brand-name">SAP Spektra</div>
+        <div class="brand-sub">Documentacion v2.0</div>
       </div>
     </div>
-  </section>
 
-  <!-- ====== TIPS ====== -->
-  <section class="doc-section">
-    <h2><span class="es">Consejos</span><span class="en">Tips</span></h2>
-    <ul>
-      <li><span class="es">Programe operaciones de alto riesgo (DR_DRILL, RESTART en PRD) fuera del horario de negocio para minimizar el impacto.</span><span class="en">Schedule high-risk operations (DR_DRILL, RESTART on PRD) outside business hours to minimize impact.</span></li>
-      <li><span class="es">Revise la columna <strong>Ultima</strong> para identificar operaciones recurrentes que han fallado recientemente y necesitan atencion.</span><span class="en">Check the <strong>Last</strong> column to identify recurring operations that have recently failed and need attention.</span></li>
-      <li><span class="es">Use la pestana <strong>Fallidas</strong> para revisar rapidamente que operaciones necesitan intervencion manual.</span><span class="en">Use the <strong>Failed</strong> tab to quickly review which operations need manual intervention.</span></li>
-    </ul>
-  </section>
+    <div class="sidebar-section">
+      <div class="sidebar-section-label"><span class="es">Inicio</span><span class="en">Home</span></div>
+      <a class="sidebar-link" href="index.html"><span class="es">Portal</span><span class="en">Portal</span></a>
+      <a class="sidebar-link" href="getting-started.html"><span class="es">Primeros Pasos</span><span class="en">Getting Started</span></a>
+    </div>
 
-</main></div></body></html>
+    <div class="sidebar-section">
+      <div class="sidebar-section-label">Command</div>
+      <a class="sidebar-link" href="dashboard.html">Dashboard</a>
+      <a class="sidebar-link" href="landscape.html">Landscape</a>
+      <a class="sidebar-link" href="alerts.html"><span class="es">Alertas</span><span class="en">Alerts</span></a>
+    </div>
+
+    <div class="sidebar-section">
+      <div class="sidebar-section-label">Monitor</div>
+      <a class="sidebar-link" href="systems.html"><span class="es">Sistemas</span><span class="en">Systems</span></a>
+      <a class="sidebar-link" href="connectors.html"><span class="es">Conectores</span><span class="en">Connectors</span></a>
+      <a class="sidebar-link" href="events.html"><span class="es">Eventos</span><span class="en">Events</span></a>
+    </div>
+
+    <div class="sidebar-section">
+      <div class="sidebar-section-label">Intelligence</div>
+      <a class="sidebar-link" href="ai-analysis.html"><span class="es">Analisis IA</span><span class="en">AI Analysis</span></a>
+      <a class="sidebar-link" href="analytics.html">Analytics</a>
+      <a class="sidebar-link" href="reports.html"><span class="es">Reportes</span><span class="en">Reports</span></a>
+      <a class="sidebar-link" href="comparison.html"><span class="es">Comparacion</span><span class="en">Comparison</span></a>
+    </div>
+
+    <div class="sidebar-section">
+      <div class="sidebar-section-label">Operations</div>
+      <a class="sidebar-link" href="runbooks.html">Runbooks</a>
+      <a class="sidebar-link" href="approvals.html"><span class="es">Aprobaciones</span><span class="en">Approvals</span></a>
+      <a class="sidebar-link active" href="operations.html"><span class="es">Operaciones</span><span class="en">Operations</span></a>
+      <a class="sidebar-link" href="jobs.html">Jobs SM37</a>
+      <a class="sidebar-link" href="transports.html"><span class="es">Transportes</span><span class="en">Transports</span></a>
+      <a class="sidebar-link" href="sla.html">SLA</a>
+      <a class="sidebar-link" href="ha-control.html">HA Control</a>
+      <a class="sidebar-link" href="certificates.html"><span class="es">Certificados</span><span class="en">Certificates</span></a>
+    </div>
+
+    <div class="sidebar-section">
+      <div class="sidebar-section-label">Admin</div>
+      <a class="sidebar-link" href="admin.html"><span class="es">Gestion</span><span class="en">Management</span></a>
+      <a class="sidebar-link" href="settings.html"><span class="es">Configuracion</span><span class="en">Settings</span></a>
+      <a class="sidebar-link" href="connect-system.html"><span class="es">Conectar Sistema</span><span class="en">Connect System</span></a>
+    </div>
+  </nav>
+
+  <!-- ══════════ Main Content ══════════ -->
+  <main class="docs-main">
+    <div class="breadcrumb">
+      <a href="index.html">Docs</a>
+      <span class="sep">/</span>
+      <span>Operations</span>
+      <span class="sep">/</span>
+      <span class="text-primary"><span class="es">Operaciones</span><span class="en">Operations</span></span>
+    </div>
+
+    <div class="page-header">
+      <h1>
+        <span class="es">Registro de Operaciones</span>
+        <span class="en">Operations Registry</span>
+      </h1>
+      <div class="subtitle">
+        <span class="es">Planificacion, seguimiento y auditoria de operaciones programadas en su landscape SAP. Gestione backups, reinicios, mantenimientos, simulacros DR y housekeeping.</span>
+        <span class="en">Planning, tracking, and auditing of scheduled operations across your SAP landscape. Manage backups, restarts, maintenance windows, DR drills, and housekeeping.</span>
+      </div>
+    </div>
+
+    <!-- KPI Grid -->
+    <div class="kpi-grid">
+      <div class="kpi-card">
+        <div class="card-icon cyan">&#128203;</div>
+        <div>
+          <div class="kpi-value">47</div>
+          <div class="kpi-label"><span class="es">Operaciones Totales</span><span class="en">Total Operations</span></div>
+        </div>
+      </div>
+      <div class="kpi-card">
+        <div class="card-icon warning">&#128337;</div>
+        <div>
+          <div class="kpi-value">8</div>
+          <div class="kpi-label"><span class="es">Programadas</span><span class="en">Scheduled</span></div>
+        </div>
+      </div>
+      <div class="kpi-card">
+        <div class="card-icon success">&#9989;</div>
+        <div>
+          <div class="kpi-value">34</div>
+          <div class="kpi-label"><span class="es">Completadas</span><span class="en">Completed</span></div>
+        </div>
+      </div>
+      <div class="kpi-card">
+        <div class="card-icon danger">&#9888;</div>
+        <div>
+          <div class="kpi-value">3</div>
+          <div class="kpi-label"><span class="es">Fallidas</span><span class="en">Failed</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Operation Types -->
+    <h2><span class="es">Tipos de Operacion</span><span class="en">Operation Types</span></h2>
+
+    <div class="grid-3">
+      <div class="card">
+        <div class="card-title"><div class="card-icon cyan">&#128190;</div> BACKUP</div>
+        <p class="text-sm text-muted mt-1">
+          <span class="es">Respaldos completos o incrementales de bases de datos y sistemas de archivos SAP.</span>
+          <span class="en">Full or incremental backups of databases and SAP file systems.</span>
+        </p>
+      </div>
+      <div class="card">
+        <div class="card-title"><div class="card-icon warning">&#128260;</div> RESTART</div>
+        <p class="text-sm text-muted mt-1">
+          <span class="es">Reinicio de instancias SAP, servicios o componentes individuales.</span>
+          <span class="en">Restart of SAP instances, services, or individual components.</span>
+        </p>
+      </div>
+      <div class="card">
+        <div class="card-title"><div class="card-icon violet">&#128295;</div> MAINTENANCE</div>
+        <p class="text-sm text-muted mt-1">
+          <span class="es">Ventanas de mantenimiento planificadas: patches, upgrades, configuracion.</span>
+          <span class="en">Planned maintenance windows: patches, upgrades, configuration changes.</span>
+        </p>
+      </div>
+      <div class="card">
+        <div class="card-title"><div class="card-icon danger">&#128165;</div> DR_DRILL</div>
+        <p class="text-sm text-muted mt-1">
+          <span class="es">Simulacros de recuperacion ante desastres y pruebas de failover.</span>
+          <span class="en">Disaster recovery drills and failover testing exercises.</span>
+        </p>
+      </div>
+      <div class="card">
+        <div class="card-title"><div class="card-icon success">&#128481;</div> HOUSEKEEPING</div>
+        <p class="text-sm text-muted mt-1">
+          <span class="es">Limpieza de logs, archivos temporales, reorganizacion de tablas, purge de datos.</span>
+          <span class="en">Log cleanup, temp files, table reorganization, data purge tasks.</span>
+        </p>
+      </div>
+    </div>
+
+    <!-- Status and Risk -->
+    <h2><span class="es">Estados y Nivel de Riesgo</span><span class="en">Statuses &amp; Risk Level</span></h2>
+
+    <div class="grid-2">
+      <div class="card">
+        <h4><span class="es">Estados</span><span class="en">Statuses</span></h4>
+        <ul class="feature-list">
+          <li><span class="badge warning">SCHEDULED</span> &mdash; <span class="es">Programada, pendiente de ejecucion</span><span class="en">Scheduled, pending execution</span></li>
+          <li><span class="badge cyan">RUNNING</span> &mdash; <span class="es">En ejecucion activa</span><span class="en">Actively running</span></li>
+          <li><span class="badge success">COMPLETED</span> &mdash; <span class="es">Finalizada exitosamente</span><span class="en">Completed successfully</span></li>
+          <li><span class="badge danger">FAILED</span> &mdash; <span class="es">Fallo durante la ejecucion</span><span class="en">Failed during execution</span></li>
+          <li><span class="badge neutral">CANCELLED</span> &mdash; <span class="es">Cancelada antes de ejecutarse</span><span class="en">Cancelled before execution</span></li>
+        </ul>
+      </div>
+      <div class="card">
+        <h4><span class="es">Niveles de Riesgo</span><span class="en">Risk Levels</span></h4>
+        <ul class="feature-list">
+          <li><div class="risk-bar"><span class="risk-dot low"></span> <strong>LOW</strong></div><span class="text-sm text-muted"><span class="es">Sin impacto en produccion (housekeeping, backups incrementales)</span><span class="en">No production impact (housekeeping, incremental backups)</span></span></li>
+          <li><div class="risk-bar"><span class="risk-dot medium"></span> <strong>MEDIUM</strong></div><span class="text-sm text-muted"><span class="es">Impacto menor posible (patches non-critical, config changes)</span><span class="en">Possible minor impact (non-critical patches, config changes)</span></span></li>
+          <li><div class="risk-bar"><span class="risk-dot high"></span> <strong>HIGH</strong></div><span class="text-sm text-muted"><span class="es">Downtime potencial (reinicios, upgrades de kernel)</span><span class="en">Potential downtime (restarts, kernel upgrades)</span></span></li>
+          <li><div class="risk-bar"><span class="risk-dot critical"></span> <strong>CRITICAL</strong></div><span class="text-sm text-muted"><span class="es">Downtime garantizado o riesgo de datos (DR drills, full system restart)</span><span class="en">Guaranteed downtime or data risk (DR drills, full system restart)</span></span></li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- New Operation Button -->
+    <div style="display:flex;justify-content:flex-end;margin:24px 0 16px">
+      <button class="btn btn-primary">
+        + <span class="es">Nueva Operacion</span><span class="en">New Operation</span>
+      </button>
+    </div>
+
+    <!-- Filter Bar -->
+    <div class="filter-bar">
+      <span class="filter-chip active"><span class="es">Todas</span><span class="en">All</span></span>
+      <span class="filter-chip">BACKUP</span>
+      <span class="filter-chip">RESTART</span>
+      <span class="filter-chip">MAINTENANCE</span>
+      <span class="filter-chip">DR_DRILL</span>
+      <span class="filter-chip">HOUSEKEEPING</span>
+    </div>
+
+    <!-- Operations Table -->
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th><span class="es">Tipo</span><span class="en">Type</span></th>
+            <th>SID</th>
+            <th><span class="es">Descripcion</span><span class="en">Description</span></th>
+            <th><span class="es">Riesgo</span><span class="en">Risk</span></th>
+            <th>Status</th>
+            <th>Schedule</th>
+            <th><span class="es">Solicitado por</span><span class="en">Requested by</span></th>
+            <th><span class="es">Fecha</span><span class="en">Date</span></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="type-icon"><span class="badge cyan">BACKUP</span></span></td>
+            <td><code>EP1</code></td>
+            <td><span class="es">Backup completo HANA + filesystem</span><span class="en">Full HANA + filesystem backup</span></td>
+            <td><div class="risk-bar"><span class="risk-dot low"></span> LOW</div></td>
+            <td><span class="badge warning">SCHEDULED</span></td>
+            <td><span class="cron-tag">0 2 * * *</span></td>
+            <td>system</td>
+            <td class="text-muted">2026-03-13 02:00</td>
+          </tr>
+          <tr>
+            <td><span class="badge warning">RESTART</span></td>
+            <td><code>QP1</code></td>
+            <td><span class="es">Reinicio instancia AAS 01 por memory leak</span><span class="en">Restart AAS 01 instance due to memory leak</span></td>
+            <td><div class="risk-bar"><span class="risk-dot high"></span> HIGH</div></td>
+            <td><span class="badge success">COMPLETED</span></td>
+            <td>&mdash;</td>
+            <td>ops@acme.com</td>
+            <td class="text-muted">2026-03-12 08:45</td>
+          </tr>
+          <tr>
+            <td><span class="badge violet">MAINTENANCE</span></td>
+            <td><code>EP1</code></td>
+            <td><span class="es">Aplicacion kernel patch 7.93 ex3</span><span class="en">Kernel patch 7.93 ex3 application</span></td>
+            <td><div class="risk-bar"><span class="risk-dot high"></span> HIGH</div></td>
+            <td><span class="badge warning">SCHEDULED</span></td>
+            <td>&mdash;</td>
+            <td>admin@acme.com</td>
+            <td class="text-muted">2026-03-15 22:00</td>
+          </tr>
+          <tr>
+            <td><span class="badge danger">DR_DRILL</span></td>
+            <td><code>HP1</code></td>
+            <td><span class="es">Simulacro failover HSR a nodo secundario</span><span class="en">HSR failover drill to secondary node</span></td>
+            <td><div class="risk-bar"><span class="risk-dot critical"></span> CRITICAL</div></td>
+            <td><span class="badge success">COMPLETED</span></td>
+            <td><span class="cron-tag">0 6 1 * *</span></td>
+            <td>admin@acme.com</td>
+            <td class="text-muted">2026-03-01 06:00</td>
+          </tr>
+          <tr>
+            <td><span class="badge success">HOUSEKEEPING</span></td>
+            <td><code>DP1</code></td>
+            <td><span class="es">Limpieza logs y traces > 30 dias</span><span class="en">Cleanup logs and traces > 30 days</span></td>
+            <td><div class="risk-bar"><span class="risk-dot low"></span> LOW</div></td>
+            <td><span class="badge success">COMPLETED</span></td>
+            <td><span class="cron-tag">0 4 * * 0</span></td>
+            <td>system</td>
+            <td class="text-muted">2026-03-10 04:00</td>
+          </tr>
+          <tr>
+            <td><span class="badge cyan">BACKUP</span></td>
+            <td><code>FP1</code></td>
+            <td><span class="es">Oracle RMAN incremental backup</span><span class="en">Oracle RMAN incremental backup</span></td>
+            <td><div class="risk-bar"><span class="risk-dot low"></span> LOW</div></td>
+            <td><span class="badge danger">FAILED</span></td>
+            <td><span class="cron-tag">0 3 * * *</span></td>
+            <td>system</td>
+            <td class="text-muted">2026-03-12 03:00</td>
+          </tr>
+          <tr>
+            <td><span class="badge warning">RESTART</span></td>
+            <td><code>EP1</code></td>
+            <td><span class="es">Reinicio programado Web Dispatcher</span><span class="en">Scheduled Web Dispatcher restart</span></td>
+            <td><div class="risk-bar"><span class="risk-dot medium"></span> MEDIUM</div></td>
+            <td><span class="badge cyan">RUNNING</span></td>
+            <td>&mdash;</td>
+            <td>ops@acme.com</td>
+            <td class="text-muted">2026-03-12 10:00</td>
+          </tr>
+          <tr>
+            <td><span class="badge violet">MAINTENANCE</span></td>
+            <td><code>QP1</code></td>
+            <td><span class="es">Actualizacion SAP Notes seguridad</span><span class="en">Security SAP Notes update</span></td>
+            <td><div class="risk-bar"><span class="risk-dot medium"></span> MEDIUM</div></td>
+            <td><span class="badge neutral">CANCELLED</span></td>
+            <td>&mdash;</td>
+            <td>admin@acme.com</td>
+            <td class="text-muted">2026-03-11 20:00</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Operation Detail -->
+    <h2><span class="es">Detalle de Operacion</span><span class="en">Operation Detail</span></h2>
+
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">
+          <div class="card-icon danger">&#128165;</div>
+          Oracle RMAN Incremental Backup &mdash; FP1
+        </div>
+        <span class="badge danger">FAILED</span>
+      </div>
+
+      <div class="detail-grid mt-2">
+        <dt><span class="es">Tipo</span><span class="en">Type</span></dt>
+        <dd><span class="badge cyan">BACKUP</span></dd>
+        <dt>SID</dt>
+        <dd><code>FP1</code> &mdash; ECC Production (Oracle 19c)</dd>
+        <dt><span class="es">Nivel de Riesgo</span><span class="en">Risk Level</span></dt>
+        <dd><div class="risk-bar"><span class="risk-dot low"></span> LOW</div></dd>
+        <dt>Schedule</dt>
+        <dd><span class="cron-tag">0 3 * * *</span> <span class="text-muted text-sm">(diario a las 03:00)</span></dd>
+        <dt><span class="es">Solicitado por</span><span class="en">Requested by</span></dt>
+        <dd>system (auto-scheduled)</dd>
+        <dt><span class="es">Inicio programado</span><span class="en">Scheduled time</span></dt>
+        <dd>2026-03-12 03:00:00</dd>
+        <dt><span class="es">Completado</span><span class="en">Completed at</span></dt>
+        <dd>2026-03-12 03:12:47</dd>
+        <dt><span class="es">Error</span><span class="en">Error</span></dt>
+        <dd class="text-danger">ORA-19809: limit exceeded for recovery files. RMAN-06059: expected archived log not found.</dd>
+      </div>
+
+      <div class="callout danger mt-2">
+        <div class="callout-icon">&#9888;</div>
+        <div>
+          <span class="es"><strong>Error:</strong> El area FRA (Fast Recovery Area) esta llena. Se recomienda ejecutar una operacion HOUSEKEEPING para limpiar backups obsoletos antes de re-intentar.</span>
+          <span class="en"><strong>Error:</strong> The FRA (Fast Recovery Area) is full. A HOUSEKEEPING operation to clean obsolete backups is recommended before retrying.</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Role Access -->
+    <h2><span class="es">Control de Acceso por Rol</span><span class="en">Role-Based Access Control</span></h2>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th><span class="es">Accion</span><span class="en">Action</span></th>
+            <th>viewer</th>
+            <th>operator</th>
+            <th>escalation</th>
+            <th>admin</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td><span class="es">Ver operaciones</span><span class="en">View operations</span></td><td><span class="badge success">&#10003;</span></td><td><span class="badge success">&#10003;</span></td><td><span class="badge success">&#10003;</span></td><td><span class="badge success">&#10003;</span></td></tr>
+          <tr><td><span class="es">Crear operacion</span><span class="en">Create operation</span></td><td><span class="badge danger">&#10007;</span></td><td><span class="badge success">&#10003;</span></td><td><span class="badge success">&#10003;</span></td><td><span class="badge success">&#10003;</span></td></tr>
+          <tr><td><span class="es">Cambiar estado</span><span class="en">Update status</span></td><td><span class="badge danger">&#10007;</span></td><td><span class="badge success">&#10003;</span></td><td><span class="badge success">&#10003;</span></td><td><span class="badge success">&#10003;</span></td></tr>
+          <tr><td><span class="es">Cancelar operacion</span><span class="en">Cancel operation</span></td><td><span class="badge danger">&#10007;</span></td><td><span class="badge danger">&#10007;</span></td><td><span class="badge success">&#10003;</span></td><td><span class="badge success">&#10003;</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Data Model -->
+    <h2><span class="es">Modelo de Datos</span><span class="en">Data Model</span></h2>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th><span class="es">Campo</span><span class="en">Field</span></th><th><span class="es">Tipo</span><span class="en">Type</span></th><th><span class="es">Descripcion</span><span class="en">Description</span></th></tr>
+        </thead>
+        <tbody>
+          <tr><td><code>id</code></td><td>UUID</td><td><span class="es">Identificador unico</span><span class="en">Unique identifier</span></td></tr>
+          <tr><td><code>organizationId</code></td><td>UUID</td><td><span class="es">Tenant multi-tenant</span><span class="en">Multi-tenant organization</span></td></tr>
+          <tr><td><code>systemId</code></td><td>UUID</td><td><span class="es">Sistema SAP asociado</span><span class="en">Associated SAP system</span></td></tr>
+          <tr><td><code>type</code></td><td>string</td><td>BACKUP | RESTART | MAINTENANCE | DR_DRILL | HOUSEKEEPING</td></tr>
+          <tr><td><code>status</code></td><td>string</td><td>SCHEDULED | RUNNING | COMPLETED | FAILED | CANCELLED</td></tr>
+          <tr><td><code>riskLevel</code></td><td>string</td><td>LOW | MEDIUM | HIGH | CRITICAL</td></tr>
+          <tr><td><code>description</code></td><td>string</td><td><span class="es">Descripcion de la operacion</span><span class="en">Operation description</span></td></tr>
+          <tr><td><code>scheduledTime</code></td><td>DateTime?</td><td><span class="es">Hora programada de ejecucion</span><span class="en">Scheduled execution time</span></td></tr>
+          <tr><td><code>schedule</code></td><td>string?</td><td><span class="es">Expresion cron o descripcion de recurrencia</span><span class="en">Cron expression or recurrence description</span></td></tr>
+          <tr><td><code>requestedBy</code></td><td>string</td><td><span class="es">Email del solicitante o "system"</span><span class="en">Requester email or "system"</span></td></tr>
+          <tr><td><code>completedAt</code></td><td>DateTime?</td><td><span class="es">Timestamp de finalizacion</span><span class="en">Completion timestamp</span></td></tr>
+          <tr><td><code>error</code></td><td>string?</td><td><span class="es">Mensaje de error (si fallo)</span><span class="en">Error message (if failed)</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- API Reference -->
+    <h2>API Reference</h2>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th><span class="es">Metodo</span><span class="en">Method</span></th><th>Endpoint</th><th><span class="es">Descripcion</span><span class="en">Description</span></th></tr>
+        </thead>
+        <tbody>
+          <tr><td><span class="badge cyan">GET</span></td><td><code>/api/operations</code></td><td><span class="es">Listar operaciones (filtros: status, type, systemId)</span><span class="en">List operations (filters: status, type, systemId)</span></td></tr>
+          <tr><td><span class="badge success">POST</span></td><td><code>/api/operations</code></td><td><span class="es">Crear nueva operacion</span><span class="en">Create new operation</span></td></tr>
+          <tr><td><span class="badge warning">PATCH</span></td><td><code>/api/operations/:id/status</code></td><td><span class="es">Actualizar estado</span><span class="en">Update status</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+  </main>
+</div>
+</body>
+</html>

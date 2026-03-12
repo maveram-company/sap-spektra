@@ -1,397 +1,542 @@
-<!DOCTYPE html><html lang="es" data-theme="dark" data-lang="es"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Runbooks — SAP Spektra Docs</title><link rel="stylesheet" href="theme.css"><script src="theme-toggle.js"></script><script src="lang-toggle.js"></script></head><body><div class="docs-wrapper">
-<nav class="docs-sidebar">
-  <div class="sidebar-brand"><div class="logo">&#9889;</div><div class="brand-text"><div class="brand-name">SAP Spektra</div><div class="brand-sub">Documentacion</div></div></div>
-  <div class="sidebar-section"><div class="sidebar-section-label">Inicio</div><a href="index.html" class="sidebar-link">Portal</a><a href="getting-started.html" class="sidebar-link">Primeros Pasos</a></div>
-  <div class="sidebar-section"><div class="sidebar-section-label">Command</div><a href="dashboard.html" class="sidebar-link">Dashboard</a><a href="landscape.html" class="sidebar-link">Landscape</a><a href="alerts.html" class="sidebar-link">Alertas</a></div>
-  <div class="sidebar-section"><div class="sidebar-section-label">Monitor</div><a href="systems.html" class="sidebar-link">Sistemas</a><a href="connectors.html" class="sidebar-link">Conectores</a><a href="events.html" class="sidebar-link">Eventos</a></div>
-  <div class="sidebar-section"><div class="sidebar-section-label">Intelligence</div><a href="ai-analysis.html" class="sidebar-link">Analisis IA</a><a href="analytics.html" class="sidebar-link">Analytics</a><a href="reports.html" class="sidebar-link">Reportes</a><a href="comparison.html" class="sidebar-link">Comparacion</a></div>
-  <div class="sidebar-section"><div class="sidebar-section-label">Operations</div><a href="runbooks.html" class="sidebar-link active">Runbooks</a><a href="approvals.html" class="sidebar-link">Aprobaciones</a><a href="operations.html" class="sidebar-link">Operaciones</a><a href="jobs.html" class="sidebar-link">Jobs (SM37)</a><a href="transports.html" class="sidebar-link">Transportes</a><a href="sla.html" class="sidebar-link">SLA</a><a href="ha-control.html" class="sidebar-link">HA Control</a><a href="certificates.html" class="sidebar-link">Certificados</a></div>
-  <div class="sidebar-section"><div class="sidebar-section-label">Admin</div><a href="admin.html" class="sidebar-link">Gestion</a><a href="settings.html" class="sidebar-link">Configuracion</a><a href="connect-system.html" class="sidebar-link">Conectar Sistema</a></div>
-</nav>
-<main class="docs-main">
+<!DOCTYPE html>
+<html lang="es" data-theme="dark" data-lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Runbooks - SAP Spektra Docs</title>
+  <link rel="stylesheet" href="theme.css">
+  <script src="theme-toggle.js"></script>
+  <script src="lang-toggle.js"></script>
+  <style>
+    .tabs{display:flex;gap:0;border-bottom:2px solid var(--brd);margin-bottom:24px}
+    .tab{padding:10px 20px;font-size:13px;font-weight:600;color:var(--txt3);cursor:pointer;
+      border-bottom:2px solid transparent;margin-bottom:-2px;transition:all .2s;background:none;border-top:none;border-left:none;border-right:none}
+    .tab:hover{color:var(--txt1)}
+    .tab.active{color:var(--cyan);border-bottom-color:var(--cyan)}
+    .tab-content{display:none}
+    .tab-content.active{display:block}
+    .flag-row{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0}
+    .flag{display:inline-flex;align-items:center;gap:4px;padding:3px 10px;border-radius:6px;font-size:11px;font-weight:600}
+    .flag.on{background:rgba(34,197,94,0.12);color:var(--success)}
+    .flag.off{background:rgba(239,68,68,0.08);color:var(--danger)}
+    .gate-badge{display:inline-flex;align-items:center;gap:5px;padding:4px 12px;border-radius:8px;font-size:12px;font-weight:700}
+    .gate-badge.safe{background:rgba(34,197,94,0.12);color:var(--success);border:1px solid rgba(34,197,94,0.25)}
+    .gate-badge.human{background:rgba(245,158,11,0.12);color:var(--warning);border:1px solid rgba(245,158,11,0.25)}
+    .btn{padding:8px 18px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;border:none;transition:all .2s}
+    .btn-primary{background:var(--gradient-brand);color:#fff}
+    .btn-primary:hover{opacity:.9;transform:translateY(-1px)}
+    .btn-outline{background:transparent;border:1px solid var(--brd);color:var(--txt2)}
+    .btn-outline:hover{border-color:var(--cyan);color:var(--cyan)}
+    .compat-list{list-style:none;padding:0;margin:8px 0}
+    .compat-list li{padding:4px 0 4px 20px;position:relative;font-size:13px}
+    .compat-list li::before{content:'';position:absolute;left:2px;top:10px;width:10px;height:10px;border-radius:50%}
+    .compat-list li.pass::before{background:var(--success)}
+    .compat-list li.fail::before{background:var(--danger)}
+    .json-block{background:var(--code-bg);border:1px solid var(--code-border);border-radius:var(--radius);padding:14px;margin:8px 0;font-family:'SF Mono',Monaco,Consolas,monospace;font-size:12px;color:var(--txt2);overflow-x:auto;white-space:pre}
+  </style>
+</head>
+<body>
+<div class="docs-wrapper">
 
-    <div class="demo-disclaimer">
-      <span class="es"><strong>Nota:</strong> Esta documentación describe la interfaz de SAP Spektra con datos simulados. Las integraciones, conectividad SAP y operaciones de backend son funcionalidad planificada — actualmente el producto opera en modo demostración.</span>
-      <span class="en"><strong>Note:</strong> This documentation describes SAP Spektra's interface with simulated data. Integrations, SAP connectivity, and backend operations are planned functionality — the product currently operates in demo mode.</span>
+  <!-- ══════════ Sidebar ══════════ -->
+  <nav class="docs-sidebar" aria-label="Documentation navigation">
+    <div class="sidebar-brand">
+      <div class="logo">S</div>
+      <div class="brand-text">
+        <div class="brand-name">SAP Spektra</div>
+        <div class="brand-sub">Documentacion v2.0</div>
+      </div>
     </div>
 
-  <!-- ====== HEADER ====== -->
-  <section class="doc-section">
-    <h1><span class="es">Runbooks</span><span class="en">Runbooks</span></h1>
-    <p class="section-desc">
-      <span class="es">18 runbooks integrados + ejecucion automatica</span>
-      <span class="en">18 built-in runbooks + automatic execution</span>
-    </p>
-    <p>
-      <span class="es">La pantalla de <strong>Runbooks</strong> le permite explorar y ejecutar procedimientos de automatizacion predefinidos sobre sus sistemas SAP. Cada runbook encapsula una serie de pasos operativos que SAP Spektra ejecuta de forma segura, registrando cada accion y su resultado. La vista se divide en dos pestanas principales: <strong>Catalogo</strong> y <strong>Ejecuciones</strong>.</span>
-      <span class="en">The <strong>Runbooks</strong> screen lets you explore and execute predefined automation procedures on your SAP systems. Each runbook encapsulates a series of operational steps that SAP Spektra executes safely, logging every action and its result. The view is divided into two main tabs: <strong>Catalog</strong> and <strong>Executions</strong>.</span>
-    </p>
-  </section>
-
-  <!-- ====== TABS ====== -->
-  <section class="doc-section">
-    <h2><span class="es">Pestanas Principales</span><span class="en">Main Tabs</span></h2>
-    <p>
-      <span class="es">En la parte superior de la pantalla vera dos pestanas:</span>
-      <span class="en">At the top of the screen you will see two tabs:</span>
-    </p>
-    <table class="doc-table">
-      <thead>
-        <tr>
-          <th><span class="es">Pestana</span><span class="en">Tab</span></th>
-          <th><span class="es">Descripcion</span><span class="en">Description</span></th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td><strong><span class="es">Catalogo</span><span class="en">Catalog</span></strong></td>
-          <td><span class="es">Lista completa de los 18 runbooks disponibles con sus propiedades, estadisticas de ejecucion y acciones.</span><span class="en">Full list of the 18 available runbooks with their properties, execution statistics and actions.</span></td>
-        </tr>
-        <tr>
-          <td><strong><span class="es">Ejecuciones</span><span class="en">Executions</span></strong></td>
-          <td><span class="es">Historial cronologico de todas las ejecuciones realizadas, con su resultado y duracion.</span><span class="en">Chronological history of all executions performed, with their result and duration.</span></td>
-        </tr>
-      </tbody>
-    </table>
-  </section>
-
-  <!-- ====== CATALOGO TAB ====== -->
-  <section class="doc-section">
-    <h2><span class="es">Pestana: Catalogo</span><span class="en">Tab: Catalog</span></h2>
-    <p>
-      <span class="es">Al abrir la pestana <strong>Catalogo</strong>, vera una tabla con todos los runbooks disponibles. Cada fila representa un runbook con la siguiente informacion:</span>
-      <span class="en">When you open the <strong>Catalog</strong> tab, you will see a table with all available runbooks. Each row represents a runbook with the following information:</span>
-    </p>
-
-    <table class="doc-table">
-      <thead>
-        <tr>
-          <th><span class="es">Columna</span><span class="en">Column</span></th>
-          <th><span class="es">Que muestra</span><span class="en">What it shows</span></th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td><strong>ID</strong></td>
-          <td><span class="es">Identificador unico del runbook en formato <code style="color:var(--accent-cyan);">RB-001</code>, <code style="color:var(--accent-cyan);">RB-002</code>, etc. Se muestra en fuente monoespaciada color cian.</span><span class="en">Unique runbook identifier in format <code style="color:var(--accent-cyan);">RB-001</code>, <code style="color:var(--accent-cyan);">RB-002</code>, etc. Displayed in cyan monospace font.</span></td>
-        </tr>
-        <tr>
-          <td><strong><span class="es">Nombre + Descripcion</span><span class="en">Name + Description</span></strong></td>
-          <td><span class="es">Nombre del runbook en negrita (ej. <em>Restart Application Server</em>) seguido de una breve descripcion de lo que hace el procedimiento.</span><span class="en">Runbook name in bold (e.g. <em>Restart Application Server</em>) followed by a brief description of what the procedure does.</span></td>
-        </tr>
-        <tr>
-          <td><strong>Cost-Safe</strong></td>
-          <td>
-            <span class="es">Indica si el runbook es seguro en terminos de coste e impacto:
-              <br>&#8226; <span style="background:#22c55e;color:#fff;padding:2px 8px;border-radius:4px;font-size:0.85em;">Si</span> &mdash; El runbook se considera seguro y puede ejecutarse de inmediato sin aprobacion.
-              <br>&#8226; <span style="background:#ef4444;color:#fff;padding:2px 8px;border-radius:4px;font-size:0.85em;">No</span> &mdash; El runbook puede tener impacto en coste o disponibilidad y requiere aprobacion antes de ejecutarse.
-            </span>
-            <span class="en">Indicates whether the runbook is safe in terms of cost and impact:
-              <br>&#8226; <span style="background:#22c55e;color:#fff;padding:2px 8px;border-radius:4px;font-size:0.85em;">Si</span> &mdash; The runbook is considered safe and can be executed immediately without approval.
-              <br>&#8226; <span style="background:#ef4444;color:#fff;padding:2px 8px;border-radius:4px;font-size:0.85em;">No</span> &mdash; The runbook may impact cost or availability and requires approval before execution.
-            </span>
-          </td>
-        </tr>
-        <tr>
-          <td><strong><span class="es">Modo</span><span class="en">Mode</span></strong></td>
-          <td>
-            <span class="es">Modo de ejecucion del runbook:
-              <br>&#8226; <strong>Auto</strong> &mdash; Se ejecuta automaticamente cuando una alerta dispara la condicion asociada.
-              <br>&#8226; <strong>Aprobacion</strong> &mdash; Requiere que un usuario con rol de escalamiento apruebe la ejecucion antes de que se inicie.
-            </span>
-            <span class="en">Runbook execution mode:
-              <br>&#8226; <strong>Auto</strong> &mdash; Executes automatically when an alert triggers the associated condition.
-              <br>&#8226; <strong>Aprobacion</strong> &mdash; Requires a user with escalation role to approve execution before it starts.
-            </span>
-          </td>
-        </tr>
-        <tr>
-          <td><strong>DB / <span class="es">Tipo</span><span class="en">Type</span></strong></td>
-          <td><span class="es">Base de datos o tipo de sistema al que aplica el runbook (ej. HANA, ASE, MaxDB, All).</span><span class="en">Database or system type the runbook applies to (e.g. HANA, ASE, MaxDB, All).</span></td>
-        </tr>
-        <tr>
-          <td><strong>Runs</strong></td>
-          <td><span class="es">Cantidad total de veces que se ha ejecutado este runbook en el entorno.</span><span class="en">Total number of times this runbook has been executed in the environment.</span></td>
-        </tr>
-        <tr>
-          <td><strong><span class="es">Exito %</span><span class="en">Success %</span></strong></td>
-          <td><span class="es">Porcentaje de ejecuciones exitosas sobre el total. Se muestra como barra de progreso o valor numerico (ej. <strong>94.5%</strong>).</span><span class="en">Percentage of successful executions out of total. Shown as a progress bar or numeric value (e.g. <strong>94.5%</strong>).</span></td>
-        </tr>
-        <tr>
-          <td><strong><span class="es">Duracion</span><span class="en">Duration</span></strong></td>
-          <td><span class="es">Duracion promedio de ejecucion del runbook (ej. <em>2m 30s</em>).</span><span class="en">Average runbook execution duration (e.g. <em>2m 30s</em>).</span></td>
-        </tr>
-        <tr>
-          <td><strong>TCode</strong></td>
-          <td><span class="es">Codigo de transaccion SAP relacionado, mostrado en fuente monoespaciada (ej. <code>SM21</code>, <code>ST22</code>, <code>DB02</code>).</span><span class="en">Related SAP transaction code, shown in monospace font (e.g. <code>SM21</code>, <code>ST22</code>, <code>DB02</code>).</span></td>
-        </tr>
-        <tr>
-          <td><strong><span class="es">Prerequisitos</span><span class="en">Prerequisites</span></strong></td>
-          <td><span class="es">Lista de condiciones o permisos necesarios antes de ejecutar el runbook (ej. <em>Acceso SSH</em>, <em>Usuario &lt;SID&gt;adm</em>).</span><span class="en">List of conditions or permissions required before executing the runbook (e.g. <em>SSH Access</em>, <em>User &lt;SID&gt;adm</em>).</span></td>
-        </tr>
-        <tr>
-          <td><strong><span class="es">Acciones</span><span class="en">Actions</span></strong></td>
-          <td>
-            <span class="es">Dos botones disponibles por cada runbook:
-              <br>&#8226; <span style="background:var(--accent-blue);color:#fff;padding:2px 10px;border-radius:4px;font-size:0.85em;">Ejecutar</span> &mdash; Lanza la ejecucion real del runbook sobre el sistema seleccionado. Si el runbook es <em>Cost-Safe = No</em>, se redirige al flujo de aprobacion.
-              <br>&#8226; <span style="background:var(--bg-tertiary);color:var(--text-secondary);padding:2px 10px;border-radius:4px;font-size:0.85em;border:1px solid var(--border-color);">Dry-run</span> &mdash; Simula la ejecucion sin aplicar cambios reales. Muestra los pasos que se ejecutarian y su resultado esperado.
-            </span>
-            <span class="en">Two buttons available per runbook:
-              <br>&#8226; <span style="background:var(--accent-blue);color:#fff;padding:2px 10px;border-radius:4px;font-size:0.85em;">Execute</span> &mdash; Launches the real runbook execution on the selected system. If the runbook has <em>Cost-Safe = No</em>, it redirects to the approval flow.
-              <br>&#8226; <span style="background:var(--bg-tertiary);color:var(--text-secondary);padding:2px 10px;border-radius:4px;font-size:0.85em;border:1px solid var(--border-color);">Dry-run</span> &mdash; Simulates execution without applying real changes. Shows the steps that would be executed and their expected result.
-            </span>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-
-    <div style="background:var(--bg-secondary);border-left:4px solid var(--accent-cyan);padding:16px 20px;border-radius:6px;margin-top:20px;">
-      <strong><span class="es">Regla de Seguridad</span><span class="en">Safety Rule</span></strong>
-      <p style="margin:8px 0 0;">
-        <span class="es">Los runbooks marcados como <strong>Cost-Safe = Si</strong> se ejecutan inmediatamente cuando se disparan por una alerta automatica o cuando usted pulsa <em>Ejecutar</em>. Los runbooks con <strong>Cost-Safe = No</strong> siempre pasan por el flujo de aprobacion — incluso en modo automatico, la ejecucion se detiene y genera una solicitud de aprobacion que debera gestionar desde la pantalla de <a href="approvals.html">Aprobaciones</a>.</span>
-        <span class="en">Runbooks marked as <strong>Cost-Safe = Yes</strong> execute immediately when triggered by an automatic alert or when you click <em>Execute</em>. Runbooks with <strong>Cost-Safe = No</strong> always go through the approval flow — even in automatic mode, execution stops and generates an approval request that must be managed from the <a href="approvals.html">Approvals</a> screen.</span>
-      </p>
+    <div class="sidebar-section">
+      <div class="sidebar-section-label"><span class="es">Inicio</span><span class="en">Home</span></div>
+      <a class="sidebar-link" href="index.html"><span class="es">Portal</span><span class="en">Portal</span></a>
+      <a class="sidebar-link" href="getting-started.html"><span class="es">Primeros Pasos</span><span class="en">Getting Started</span></a>
     </div>
-  </section>
 
-  <!-- ====== EJEMPLO CATALOGO ====== -->
-  <section class="doc-section">
-    <h3><span class="es">Ejemplo de tabla del Catalogo</span><span class="en">Catalog table example</span></h3>
-    <p><span class="es">A continuacion se muestra un ejemplo representativo de como luce la tabla de catalogo:</span><span class="en">Below is a representative example of how the catalog table looks:</span></p>
-    <div style="overflow-x:auto;">
-      <table class="doc-table" style="font-size:0.9em;">
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th><span class="es">Nombre</span><span class="en">Name</span></th>
-            <th>Cost-Safe</th>
-            <th><span class="es">Modo</span><span class="en">Mode</span></th>
-            <th>DB</th>
-            <th>Runs</th>
-            <th><span class="es">Exito</span><span class="en">Success</span></th>
-            <th><span class="es">Duracion</span><span class="en">Duration</span></th>
-            <th>TCode</th>
-            <th><span class="es">Acciones</span><span class="en">Actions</span></th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td><code style="color:var(--accent-cyan);">RB-001</code></td>
-            <td><strong>Restart App Server</strong><br><span style="color:var(--text-tertiary);font-size:0.85em;"><span class="es">Reinicia el servidor de aplicacion ABAP</span><span class="en">Restarts the ABAP application server</span></span></td>
-            <td><span style="background:#22c55e;color:#fff;padding:2px 8px;border-radius:4px;font-size:0.85em;">Si</span></td>
-            <td>Auto</td>
-            <td>All</td>
-            <td>47</td>
-            <td>97.8%</td>
-            <td>1m 45s</td>
-            <td><code>SM51</code></td>
-            <td>
-              <span style="background:var(--accent-blue);color:#fff;padding:2px 8px;border-radius:4px;font-size:0.8em;cursor:pointer;">Ejecutar</span>
-              <span style="background:var(--bg-tertiary);color:var(--text-secondary);padding:2px 8px;border-radius:4px;font-size:0.8em;border:1px solid var(--border-color);cursor:pointer;">Dry-run</span>
-            </td>
-          </tr>
-          <tr>
-            <td><code style="color:var(--accent-cyan);">RB-005</code></td>
-            <td><strong>HANA Memory Reclaim</strong><br><span style="color:var(--text-tertiary);font-size:0.85em;"><span class="es">Libera memoria no utilizada en HANA</span><span class="en">Reclaims unused HANA memory</span></span></td>
-            <td><span style="background:#22c55e;color:#fff;padding:2px 8px;border-radius:4px;font-size:0.85em;">Si</span></td>
-            <td>Auto</td>
-            <td>HANA</td>
-            <td>32</td>
-            <td>100%</td>
-            <td>3m 10s</td>
-            <td><code>DB02</code></td>
-            <td>
-              <span style="background:var(--accent-blue);color:#fff;padding:2px 8px;border-radius:4px;font-size:0.8em;cursor:pointer;">Ejecutar</span>
-              <span style="background:var(--bg-tertiary);color:var(--text-secondary);padding:2px 8px;border-radius:4px;font-size:0.8em;border:1px solid var(--border-color);cursor:pointer;">Dry-run</span>
-            </td>
-          </tr>
-          <tr>
-            <td><code style="color:var(--accent-cyan);">RB-012</code></td>
-            <td><strong>Scale-Out Instance</strong><br><span style="color:var(--text-tertiary);font-size:0.85em;"><span class="es">Agrega una instancia de aplicacion adicional</span><span class="en">Adds an additional application instance</span></span></td>
-            <td><span style="background:#ef4444;color:#fff;padding:2px 8px;border-radius:4px;font-size:0.85em;">No</span></td>
-            <td><span class="es">Aprobacion</span><span class="en">Approval</span></td>
-            <td>All</td>
-            <td>8</td>
-            <td>87.5%</td>
-            <td>8m 20s</td>
-            <td><code>SM51</code></td>
-            <td>
-              <span style="background:var(--accent-blue);color:#fff;padding:2px 8px;border-radius:4px;font-size:0.8em;cursor:pointer;">Ejecutar</span>
-              <span style="background:var(--bg-tertiary);color:var(--text-secondary);padding:2px 8px;border-radius:4px;font-size:0.8em;border:1px solid var(--border-color);cursor:pointer;">Dry-run</span>
-            </td>
-          </tr>
-          <tr>
-            <td><code style="color:var(--accent-cyan);">RB-016</code></td>
-            <td><strong>Full System Failover</strong><br><span style="color:var(--text-tertiary);font-size:0.85em;"><span class="es">Ejecuta failover completo a sistema standby</span><span class="en">Executes full failover to standby system</span></span></td>
-            <td><span style="background:#ef4444;color:#fff;padding:2px 8px;border-radius:4px;font-size:0.85em;">No</span></td>
-            <td><span class="es">Aprobacion</span><span class="en">Approval</span></td>
-            <td>HANA</td>
-            <td>3</td>
-            <td>66.7%</td>
-            <td>12m 05s</td>
-            <td><code>DB13</code></td>
-            <td>
-              <span style="background:var(--accent-blue);color:#fff;padding:2px 8px;border-radius:4px;font-size:0.8em;cursor:pointer;">Ejecutar</span>
-              <span style="background:var(--bg-tertiary);color:var(--text-secondary);padding:2px 8px;border-radius:4px;font-size:0.8em;border:1px solid var(--border-color);cursor:pointer;">Dry-run</span>
-            </td>
-          </tr>
-        </tbody>
-      </table>
+    <div class="sidebar-section">
+      <div class="sidebar-section-label">Command</div>
+      <a class="sidebar-link" href="dashboard.html">Dashboard</a>
+      <a class="sidebar-link" href="landscape.html">Landscape</a>
+      <a class="sidebar-link" href="alerts.html"><span class="es">Alertas</span><span class="en">Alerts</span></a>
     </div>
-  </section>
 
-  <!-- ====== EJECUCIONES TAB ====== -->
-  <section class="doc-section">
-    <h2><span class="es">Pestana: Ejecuciones</span><span class="en">Tab: Executions</span></h2>
-    <p>
-      <span class="es">La pestana <strong>Ejecuciones</strong> muestra el historial cronologico de todas las ejecuciones de runbooks. Cada fila representa una ejecucion individual con la siguiente informacion:</span>
-      <span class="en">The <strong>Executions</strong> tab shows the chronological history of all runbook executions. Each row represents an individual execution with the following information:</span>
-    </p>
-
-    <table class="doc-table">
-      <thead>
-        <tr>
-          <th><span class="es">Columna</span><span class="en">Column</span></th>
-          <th><span class="es">Que muestra</span><span class="en">What it shows</span></th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td><strong><span class="es">Hora</span><span class="en">Time</span></strong></td>
-          <td><span class="es">Fecha y hora de inicio de la ejecucion (ej. <em>2026-03-11 14:32:05</em>).</span><span class="en">Start date and time of execution (e.g. <em>2026-03-11 14:32:05</em>).</span></td>
-        </tr>
-        <tr>
-          <td><strong><span class="es">Sistema</span><span class="en">System</span></strong></td>
-          <td><span class="es">Identificador del sistema con su SID en formato badge (ej. <span style="background:var(--accent-blue);color:#fff;padding:1px 6px;border-radius:3px;font-size:0.85em;">PRD</span> <code>00</code>) y el identificador de instancia.</span><span class="en">System identifier with SID in badge format (e.g. <span style="background:var(--accent-blue);color:#fff;padding:1px 6px;border-radius:3px;font-size:0.85em;">PRD</span> <code>00</code>) and instance ID.</span></td>
-        </tr>
-        <tr>
-          <td><strong>Runbook ID</strong></td>
-          <td><span class="es">Codigo del runbook ejecutado (ej. <code style="color:var(--accent-cyan);">RB-001</code>).</span><span class="en">Executed runbook code (e.g. <code style="color:var(--accent-cyan);">RB-001</code>).</span></td>
-        </tr>
-        <tr>
-          <td><strong>Safety Gate</strong></td>
-          <td>
-            <span class="es">Indica el tipo de seguridad aplicada:
-              <br>&#8226; <span style="background:#22c55e;color:#fff;padding:2px 8px;border-radius:4px;font-size:0.85em;">SAFE</span> &mdash; Ejecucion automatica, sin intervencion humana.
-              <br>&#8226; <span style="background:#f59e0b;color:#000;padding:2px 8px;border-radius:4px;font-size:0.85em;">HUMAN</span> &mdash; Requirio aprobacion humana antes de ejecutarse.
-            </span>
-            <span class="en">Indicates the type of safety applied:
-              <br>&#8226; <span style="background:#22c55e;color:#fff;padding:2px 8px;border-radius:4px;font-size:0.85em;">SAFE</span> &mdash; Automatic execution, no human intervention.
-              <br>&#8226; <span style="background:#f59e0b;color:#000;padding:2px 8px;border-radius:4px;font-size:0.85em;">HUMAN</span> &mdash; Required human approval before execution.
-            </span>
-          </td>
-        </tr>
-        <tr>
-          <td><strong><span class="es">Resultado</span><span class="en">Result</span></strong></td>
-          <td>
-            <span class="es">Estado final de la ejecucion:
-              <br>&#8226; <span style="background:#22c55e;color:#fff;padding:2px 8px;border-radius:4px;font-size:0.85em;">SUCCESS</span> &mdash; Todos los pasos completados correctamente.
-              <br>&#8226; <span style="background:#f59e0b;color:#000;padding:2px 8px;border-radius:4px;font-size:0.85em;">PENDING</span> &mdash; Ejecucion en curso o esperando aprobacion.
-              <br>&#8226; <span style="background:#ef4444;color:#fff;padding:2px 8px;border-radius:4px;font-size:0.85em;">FAILED</span> &mdash; La ejecucion fallo en uno o mas pasos.
-            </span>
-            <span class="en">Final execution status:
-              <br>&#8226; <span style="background:#22c55e;color:#fff;padding:2px 8px;border-radius:4px;font-size:0.85em;">SUCCESS</span> &mdash; All steps completed successfully.
-              <br>&#8226; <span style="background:#f59e0b;color:#000;padding:2px 8px;border-radius:4px;font-size:0.85em;">PENDING</span> &mdash; Execution in progress or awaiting approval.
-              <br>&#8226; <span style="background:#ef4444;color:#fff;padding:2px 8px;border-radius:4px;font-size:0.85em;">FAILED</span> &mdash; Execution failed at one or more steps.
-            </span>
-          </td>
-        </tr>
-        <tr>
-          <td><strong><span class="es">Duracion</span><span class="en">Duration</span></strong></td>
-          <td><span class="es">Tiempo total que tardo la ejecucion (ej. <em>1m 42s</em>).</span><span class="en">Total time the execution took (e.g. <em>1m 42s</em>).</span></td>
-        </tr>
-        <tr>
-          <td><strong><span class="es">Detalle</span><span class="en">Detail</span></strong></td>
-          <td><span class="es">Enlace o boton para expandir y ver el log detallado paso a paso de la ejecucion, incluyendo la salida de cada comando ejecutado.</span><span class="en">Link or button to expand and view the detailed step-by-step execution log, including the output of each command executed.</span></td>
-        </tr>
-      </tbody>
-    </table>
-
-    <h3><span class="es">Ejemplo de tabla de Ejecuciones</span><span class="en">Executions table example</span></h3>
-    <div style="overflow-x:auto;">
-      <table class="doc-table" style="font-size:0.9em;">
-        <thead>
-          <tr>
-            <th><span class="es">Hora</span><span class="en">Time</span></th>
-            <th><span class="es">Sistema</span><span class="en">System</span></th>
-            <th>Runbook</th>
-            <th>Safety Gate</th>
-            <th><span class="es">Resultado</span><span class="en">Result</span></th>
-            <th><span class="es">Duracion</span><span class="en">Duration</span></th>
-            <th><span class="es">Detalle</span><span class="en">Detail</span></th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>2026-03-11 14:32</td>
-            <td><span style="background:var(--accent-blue);color:#fff;padding:1px 6px;border-radius:3px;font-size:0.85em;">PRD</span> <code>00</code></td>
-            <td><code style="color:var(--accent-cyan);">RB-001</code></td>
-            <td><span style="background:#22c55e;color:#fff;padding:2px 8px;border-radius:4px;font-size:0.85em;">SAFE</span></td>
-            <td><span style="background:#22c55e;color:#fff;padding:2px 8px;border-radius:4px;font-size:0.85em;">SUCCESS</span></td>
-            <td>1m 42s</td>
-            <td><span style="color:var(--accent-cyan);cursor:pointer;text-decoration:underline;">Ver log</span></td>
-          </tr>
-          <tr>
-            <td>2026-03-11 13:15</td>
-            <td><span style="background:#f59e0b;color:#000;padding:1px 6px;border-radius:3px;font-size:0.85em;">QAS</span> <code>01</code></td>
-            <td><code style="color:var(--accent-cyan);">RB-012</code></td>
-            <td><span style="background:#f59e0b;color:#000;padding:2px 8px;border-radius:4px;font-size:0.85em;">HUMAN</span></td>
-            <td><span style="background:#f59e0b;color:#000;padding:2px 8px;border-radius:4px;font-size:0.85em;">PENDING</span></td>
-            <td>&mdash;</td>
-            <td><span style="color:var(--accent-cyan);cursor:pointer;text-decoration:underline;">Ver log</span></td>
-          </tr>
-          <tr>
-            <td>2026-03-11 10:08</td>
-            <td><span style="background:var(--accent-blue);color:#fff;padding:1px 6px;border-radius:3px;font-size:0.85em;">PRD</span> <code>00</code></td>
-            <td><code style="color:var(--accent-cyan);">RB-016</code></td>
-            <td><span style="background:#f59e0b;color:#000;padding:2px 8px;border-radius:4px;font-size:0.85em;">HUMAN</span></td>
-            <td><span style="background:#ef4444;color:#fff;padding:2px 8px;border-radius:4px;font-size:0.85em;">FAILED</span></td>
-            <td>4m 11s</td>
-            <td><span style="color:var(--accent-cyan);cursor:pointer;text-decoration:underline;">Ver log</span></td>
-          </tr>
-        </tbody>
-      </table>
+    <div class="sidebar-section">
+      <div class="sidebar-section-label">Monitor</div>
+      <a class="sidebar-link" href="systems.html"><span class="es">Sistemas</span><span class="en">Systems</span></a>
+      <a class="sidebar-link" href="connectors.html"><span class="es">Conectores</span><span class="en">Connectors</span></a>
+      <a class="sidebar-link" href="events.html"><span class="es">Eventos</span><span class="en">Events</span></a>
     </div>
-  </section>
 
-  <!-- ====== FLUJO DE TRABAJO ====== -->
-  <section class="doc-section">
-    <h2><span class="es">Flujo de Trabajo</span><span class="en">Workflow</span></h2>
-    <p>
-      <span class="es">El siguiente diagrama resume el flujo de ejecucion de un runbook:</span>
-      <span class="en">The following diagram summarizes the runbook execution flow:</span>
-    </p>
-    <div style="background:var(--bg-secondary);padding:24px;border-radius:8px;text-align:center;font-size:0.95em;line-height:2.2;">
-      <span class="es">
-        <strong>Alerta detectada o usuario pulsa Ejecutar</strong><br>
-        &#8595;<br>
-        <em>&#191;Es Cost-Safe?</em><br>
-        &#8595; Si &rarr; <span style="background:#22c55e;color:#fff;padding:2px 10px;border-radius:4px;">Ejecucion inmediata</span><br>
-        &#8595; No &rarr; <span style="background:#f59e0b;color:#000;padding:2px 10px;border-radius:4px;">Solicitud de aprobacion</span> &rarr; Aprobada &rarr; <span style="background:#22c55e;color:#fff;padding:2px 10px;border-radius:4px;">Ejecucion</span><br>
-        &#8595;<br>
-        <strong>Resultado registrado en Ejecuciones</strong>
-      </span>
-      <span class="en">
-        <strong>Alert detected or user clicks Execute</strong><br>
-        &#8595;<br>
-        <em>Is it Cost-Safe?</em><br>
-        &#8595; Yes &rarr; <span style="background:#22c55e;color:#fff;padding:2px 10px;border-radius:4px;">Immediate execution</span><br>
-        &#8595; No &rarr; <span style="background:#f59e0b;color:#000;padding:2px 10px;border-radius:4px;">Approval request</span> &rarr; Approved &rarr; <span style="background:#22c55e;color:#fff;padding:2px 10px;border-radius:4px;">Execution</span><br>
-        &#8595;<br>
-        <strong>Result logged in Executions</strong>
-      </span>
+    <div class="sidebar-section">
+      <div class="sidebar-section-label">Intelligence</div>
+      <a class="sidebar-link" href="ai-analysis.html"><span class="es">Analisis IA</span><span class="en">AI Analysis</span></a>
+      <a class="sidebar-link" href="analytics.html">Analytics</a>
+      <a class="sidebar-link" href="reports.html"><span class="es">Reportes</span><span class="en">Reports</span></a>
+      <a class="sidebar-link" href="comparison.html"><span class="es">Comparacion</span><span class="en">Comparison</span></a>
     </div>
-  </section>
 
-  <!-- ====== TIPS ====== -->
-  <section class="doc-section">
-    <h2><span class="es">Consejos</span><span class="en">Tips</span></h2>
-    <ul>
-      <li><span class="es">Utilice <strong>Dry-run</strong> antes de ejecutar un runbook por primera vez en un sistema de produccion para verificar que los prerequisitos estan satisfechos.</span><span class="en">Use <strong>Dry-run</strong> before executing a runbook for the first time on a production system to verify that prerequisites are met.</span></li>
-      <li><span class="es">Los runbooks con bajo porcentaje de exito pueden indicar que faltan prerequisitos en ciertos sistemas &mdash; revise la columna <em>Prerequisitos</em> para mas detalles.</span><span class="en">Runbooks with a low success percentage may indicate missing prerequisites on certain systems &mdash; check the <em>Prerequisites</em> column for more details.</span></li>
-      <li><span class="es">Puede filtrar la tabla de ejecuciones por sistema, runbook o resultado usando los controles de busqueda en la parte superior de la tabla.</span><span class="en">You can filter the executions table by system, runbook or result using the search controls at the top of the table.</span></li>
-      <li><span class="es">Para revisar aprobaciones pendientes de runbooks no cost-safe, visite la pantalla <a href="approvals.html">Aprobaciones</a>.</span><span class="en">To review pending approvals for non-cost-safe runbooks, visit the <a href="approvals.html">Approvals</a> screen.</span></li>
-    </ul>
-  </section>
+    <div class="sidebar-section">
+      <div class="sidebar-section-label">Operations</div>
+      <a class="sidebar-link active" href="runbooks.html">Runbooks</a>
+      <a class="sidebar-link" href="approvals.html"><span class="es">Aprobaciones</span><span class="en">Approvals</span></a>
+      <a class="sidebar-link" href="operations.html"><span class="es">Operaciones</span><span class="en">Operations</span></a>
+      <a class="sidebar-link" href="jobs.html">Jobs SM37</a>
+      <a class="sidebar-link" href="transports.html"><span class="es">Transportes</span><span class="en">Transports</span></a>
+      <a class="sidebar-link" href="sla.html">SLA</a>
+      <a class="sidebar-link" href="ha-control.html">HA Control</a>
+      <a class="sidebar-link" href="certificates.html"><span class="es">Certificados</span><span class="en">Certificates</span></a>
+    </div>
 
-</main></div></body></html>
+    <div class="sidebar-section">
+      <div class="sidebar-section-label">Admin</div>
+      <a class="sidebar-link" href="admin.html"><span class="es">Gestion</span><span class="en">Management</span></a>
+      <a class="sidebar-link" href="settings.html"><span class="es">Configuracion</span><span class="en">Settings</span></a>
+      <a class="sidebar-link" href="connect-system.html"><span class="es">Conectar Sistema</span><span class="en">Connect System</span></a>
+    </div>
+  </nav>
+
+  <!-- ══════════ Main Content ══════════ -->
+  <main class="docs-main">
+    <div class="breadcrumb">
+      <a href="index.html">Docs</a>
+      <span class="sep">/</span>
+      <span>Operations</span>
+      <span class="sep">/</span>
+      <span class="text-primary">Runbooks</span>
+    </div>
+
+    <div class="page-header">
+      <h1>
+        <span class="es">Catalogo de Runbooks</span>
+        <span class="en">Runbook Catalog</span>
+      </h1>
+      <div class="subtitle">
+        <span class="es">Procedimientos operativos automatizados para sistemas SAP. Ejecute, simule y valide runbooks contra su landscape.</span>
+        <span class="en">Automated operational procedures for SAP systems. Execute, simulate, and validate runbooks against your landscape.</span>
+      </div>
+    </div>
+
+    <!-- KPI Grid -->
+    <div class="kpi-grid">
+      <div class="kpi-card">
+        <div class="card-icon cyan">&#9881;</div>
+        <div>
+          <div class="kpi-value">24</div>
+          <div class="kpi-label"><span class="es">Runbooks Totales</span><span class="en">Total Runbooks</span></div>
+        </div>
+      </div>
+      <div class="kpi-card">
+        <div class="card-icon success">&#9989;</div>
+        <div>
+          <div class="kpi-value">18</div>
+          <div class="kpi-label"><span class="es">Cost-Safe</span><span class="en">Cost-Safe</span></div>
+        </div>
+      </div>
+      <div class="kpi-card">
+        <div class="card-icon violet">&#9889;</div>
+        <div>
+          <div class="kpi-value">7</div>
+          <div class="kpi-label"><span class="es">Auto-Ejecutar</span><span class="en">Auto-Execute</span></div>
+        </div>
+      </div>
+      <div class="kpi-card">
+        <div class="card-icon warning">&#128337;</div>
+        <div>
+          <div class="kpi-value">156</div>
+          <div class="kpi-label"><span class="es">Ejecuciones (30d)</span><span class="en">Executions (30d)</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tabs -->
+    <div class="tabs">
+      <button class="tab active" onclick="switchTab('catalog')">
+        <span class="es">Catalogo</span><span class="en">Catalog</span>
+      </button>
+      <button class="tab" onclick="switchTab('executions')">
+        <span class="es">Ejecuciones</span><span class="en">Executions</span>
+      </button>
+    </div>
+
+    <!-- ── Tab: Catalog ── -->
+    <div id="tab-catalog" class="tab-content active">
+
+      <div class="callout info">
+        <div class="callout-icon">&#128712;</div>
+        <div>
+          <span class="es"><strong>Gate Types:</strong> Los runbooks con <code>costSafe=true</code> y <code>autoExecute=true</code> se ejecutan automaticamente (gate <strong>SAFE</strong>). Los runbooks no cost-safe requieren aprobacion humana (gate <strong>HUMAN</strong>).</span>
+          <span class="en"><strong>Gate Types:</strong> Runbooks with <code>costSafe=true</code> and <code>autoExecute=true</code> execute automatically (gate <strong>SAFE</strong>). Non cost-safe runbooks require human approval (gate <strong>HUMAN</strong>).</span>
+        </div>
+      </div>
+
+      <!-- Runbook Card 1 -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">
+            <div class="card-icon cyan">&#128214;</div>
+            HANA Memory Reclaim
+          </div>
+          <span class="gate-badge safe">&#9679; SAFE</span>
+        </div>
+        <p class="text-sm">
+          <span class="es">Libera memoria no utilizada en instancias SAP HANA ejecutando procedimientos de reclaim en los servicios indexserver y nameserver.</span>
+          <span class="en">Reclaims unused memory on SAP HANA instances by executing reclaim procedures on indexserver and nameserver services.</span>
+        </p>
+        <div class="flag-row">
+          <span class="flag on">costSafe: true</span>
+          <span class="flag on">autoExecute: true</span>
+          <span class="badge cyan">dbType: HANA</span>
+        </div>
+
+        <h4><span class="es">Pre-requisitos</span><span class="en">Prerequisites</span></h4>
+        <div class="json-block">["SAP HANA 2.0 SPS05+", "SYSTEM user or equivalent privileges", "FULL_STACK_AGENT monitoring"]</div>
+
+        <h4><span class="es">Parametros</span><span class="en">Parameters</span></h4>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th><span class="es">Parametro</span><span class="en">Parameter</span></th><th><span class="es">Tipo</span><span class="en">Type</span></th><th><span class="es">Descripcion</span><span class="en">Description</span></th></tr></thead>
+            <tbody>
+              <tr><td><code>targetService</code></td><td>string</td><td><span class="es">Servicio objetivo (indexserver, nameserver)</span><span class="en">Target service (indexserver, nameserver)</span></td></tr>
+              <tr><td><code>reclaimThresholdMB</code></td><td>number</td><td><span class="es">Umbral minimo de memoria a recuperar (MB)</span><span class="en">Minimum memory threshold to reclaim (MB)</span></td></tr>
+              <tr><td><code>forceGC</code></td><td>boolean</td><td><span class="es">Forzar garbage collection despues del reclaim</span><span class="en">Force garbage collection after reclaim</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h4><span class="es">Pasos de Ejecucion</span><span class="en">Execution Steps</span></h4>
+        <div class="steps">
+          <div class="step"><strong><span class="es">Verificar estado de HANA</span><span class="en">Verify HANA status</span></strong><br><span class="text-sm text-muted"><span class="es">Confirma que los servicios estan activos y el sistema responde.</span><span class="en">Confirms services are active and system is responsive.</span></span></div>
+          <div class="step"><strong><span class="es">Capturar metricas pre-reclaim</span><span class="en">Capture pre-reclaim metrics</span></strong><br><span class="text-sm text-muted"><span class="es">Registra uso actual de memoria de cada servicio.</span><span class="en">Records current memory usage for each service.</span></span></div>
+          <div class="step"><strong><span class="es">Ejecutar ALTER SYSTEM RECLAIM</span><span class="en">Execute ALTER SYSTEM RECLAIM</span></strong><br><span class="text-sm text-muted"><span class="es">Ejecuta el SQL de reclaim contra los servicios especificados.</span><span class="en">Runs the reclaim SQL against specified services.</span></span></div>
+          <div class="step"><strong><span class="es">Validar resultado y registrar evidencia</span><span class="en">Validate result and log evidence</span></strong><br><span class="text-sm text-muted"><span class="es">Compara metricas post-reclaim y guarda evidencia JSON.</span><span class="en">Compares post-reclaim metrics and saves JSON evidence.</span></span></div>
+        </div>
+
+        <div style="display:flex;gap:12px;margin-top:16px">
+          <button class="btn btn-primary"><span class="es">Ejecutar</span><span class="en">Execute</span></button>
+          <button class="btn btn-outline"><span class="es">Simulacion (Dry-Run)</span><span class="en">Dry-Run Simulation</span></button>
+        </div>
+      </div>
+
+      <!-- Runbook Card 2 -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">
+            <div class="card-icon warning">&#128214;</div>
+            SAP Instance Restart
+          </div>
+          <span class="gate-badge human">&#9679; HUMAN</span>
+        </div>
+        <p class="text-sm">
+          <span class="es">Reinicio controlado de una instancia SAP (Dialog, Batch, Gateway). Detiene procesos de trabajo, ejecuta el reinicio y valida la disponibilidad post-reinicio.</span>
+          <span class="en">Controlled restart of an SAP instance (Dialog, Batch, Gateway). Stops work processes, performs restart, and validates post-restart availability.</span>
+        </p>
+        <div class="flag-row">
+          <span class="flag off">costSafe: false</span>
+          <span class="flag off">autoExecute: false</span>
+          <span class="badge violet">dbType: ABAP</span>
+        </div>
+
+        <h4><span class="es">Pre-requisitos</span><span class="en">Prerequisites</span></h4>
+        <div class="json-block">["ABAP stack active", "sidadm OS user access", "No active batch jobs in instance"]</div>
+
+        <h4><span class="es">Parametros</span><span class="en">Parameters</span></h4>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th><span class="es">Parametro</span><span class="en">Parameter</span></th><th><span class="es">Tipo</span><span class="en">Type</span></th><th><span class="es">Descripcion</span><span class="en">Description</span></th></tr></thead>
+            <tbody>
+              <tr><td><code>instanceNr</code></td><td>string</td><td><span class="es">Numero de instancia (00, 01, etc.)</span><span class="en">Instance number (00, 01, etc.)</span></td></tr>
+              <tr><td><code>instanceType</code></td><td>string</td><td><span class="es">Tipo: PAS, AAS, ASCS</span><span class="en">Type: PAS, AAS, ASCS</span></td></tr>
+              <tr><td><code>gracefulTimeout</code></td><td>number</td><td><span class="es">Timeout en segundos para shutdown graceful</span><span class="en">Timeout in seconds for graceful shutdown</span></td></tr>
+              <tr><td><code>osType</code></td><td>string</td><td><span class="es">Sistema operativo requerido (LINUX)</span><span class="en">Required operating system (LINUX)</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h4><span class="es">Pasos de Ejecucion</span><span class="en">Execution Steps</span></h4>
+        <div class="steps">
+          <div class="step"><strong><span class="es">Verificar que no hay jobs activos</span><span class="en">Verify no active jobs</span></strong><br><span class="text-sm text-muted"><span class="es">Consulta SM37 para confirmar que no hay batch jobs en ejecucion.</span><span class="en">Queries SM37 to confirm no running batch jobs.</span></span></div>
+          <div class="step"><strong><span class="es">Detener work processes (soft shutdown)</span><span class="en">Stop work processes (soft shutdown)</span></strong><br><span class="text-sm text-muted"><span class="es">Ejecuta sapcontrol -function StopSoft con el timeout graceful.</span><span class="en">Runs sapcontrol -function StopSoft with graceful timeout.</span></span></div>
+          <div class="step"><strong><span class="es">Iniciar instancia</span><span class="en">Start instance</span></strong><br><span class="text-sm text-muted"><span class="es">Ejecuta sapcontrol -function Start y espera a que todos los procesos esten verdes.</span><span class="en">Runs sapcontrol -function Start and waits for all processes to go green.</span></span></div>
+          <div class="step"><strong><span class="es">Validar disponibilidad y registrar evidencia</span><span class="en">Validate availability and log evidence</span></strong><br><span class="text-sm text-muted"><span class="es">Confirma que los dispatcher y work processes responden correctamente.</span><span class="en">Confirms dispatcher and work processes are responding correctly.</span></span></div>
+        </div>
+
+        <div class="callout warning">
+          <div class="callout-icon">&#9888;</div>
+          <div>
+            <span class="es"><strong>Aprobacion requerida:</strong> Este runbook requiere gate HUMAN. Solo usuarios con rol <code>operator</code> o superior pueden solicitar la ejecucion, y un usuario <code>escalation</code> o superior debe aprobarla.</span>
+            <span class="en"><strong>Approval required:</strong> This runbook requires HUMAN gate. Only users with <code>operator</code> role or above can request execution, and an <code>escalation</code> or above user must approve it.</span>
+          </div>
+        </div>
+
+        <div style="display:flex;gap:12px;margin-top:16px">
+          <button class="btn btn-primary"><span class="es">Solicitar Ejecucion</span><span class="en">Request Execution</span></button>
+          <button class="btn btn-outline"><span class="es">Simulacion (Dry-Run)</span><span class="en">Dry-Run Simulation</span></button>
+        </div>
+      </div>
+
+      <!-- Runbook Card 3 -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">
+            <div class="card-icon success">&#128214;</div>
+            Log Cleanup &amp; Housekeeping
+          </div>
+          <span class="gate-badge safe">&#9679; SAFE</span>
+        </div>
+        <p class="text-sm">
+          <span class="es">Limpieza automatizada de logs antiguos, archivos temporales y trace files en sistemas SAP. Libera espacio en disco sin afectar la operacion.</span>
+          <span class="en">Automated cleanup of old logs, temporary files, and trace files on SAP systems. Frees disk space without affecting operations.</span>
+        </p>
+        <div class="flag-row">
+          <span class="flag on">costSafe: true</span>
+          <span class="flag on">autoExecute: true</span>
+          <span class="badge neutral">dbType: ALL</span>
+        </div>
+
+        <h4><span class="es">Pre-requisitos</span><span class="en">Prerequisites</span></h4>
+        <div class="json-block">["OS-level access via Spektra Agent", "FULL_STACK_AGENT monitoring"]</div>
+
+        <h4><span class="es">Pasos de Ejecucion</span><span class="en">Execution Steps</span></h4>
+        <div class="steps">
+          <div class="step"><strong><span class="es">Escanear directorios de logs</span><span class="en">Scan log directories</span></strong></div>
+          <div class="step"><strong><span class="es">Identificar archivos con mas de N dias</span><span class="en">Identify files older than N days</span></strong></div>
+          <div class="step"><strong><span class="es">Comprimir y archivar logs relevantes</span><span class="en">Compress and archive relevant logs</span></strong></div>
+          <div class="step"><strong><span class="es">Eliminar archivos temporales y traces</span><span class="en">Delete temporary files and traces</span></strong></div>
+          <div class="step"><strong><span class="es">Reportar espacio liberado</span><span class="en">Report freed space</span></strong></div>
+        </div>
+      </div>
+
+      <!-- Compatibility Validation Section -->
+      <h2><span class="es">Validacion de Compatibilidad</span><span class="en">Compatibility Validation</span></h2>
+
+      <div class="card">
+        <p class="text-sm">
+          <span class="es">Antes de ejecutar un runbook, Spektra valida automaticamente que el sistema objetivo cumple con todos los requisitos. La validacion verifica:</span>
+          <span class="en">Before executing a runbook, Spektra automatically validates that the target system meets all requirements. The validation checks:</span>
+        </p>
+
+        <ul class="feature-list">
+          <li><span class="es"><strong>Stack Type:</strong> ABAP, JAVA, DUAL_STACK, EDGE &mdash; el runbook debe ser compatible con el stack del sistema.</span><span class="en"><strong>Stack Type:</strong> ABAP, JAVA, DUAL_STACK, EDGE &mdash; the runbook must be compatible with the system's stack.</span></li>
+          <li><span class="es"><strong>Base de Datos:</strong> HANA, Oracle, MSSQL, DB2, ASE, MaxDB &mdash; se valida la categoria de BD.</span><span class="en"><strong>Database:</strong> HANA, Oracle, MSSQL, DB2, ASE, MaxDB &mdash; the DB category is validated.</span></li>
+          <li><span class="es"><strong>Sistema Operativo:</strong> LINUX (SLES, RHEL, Ubuntu), Windows, AIX, HP-UX, Solaris.</span><span class="en"><strong>Operating System:</strong> LINUX (SLES, RHEL, Ubuntu), Windows, AIX, HP-UX, Solaris.</span></li>
+          <li><span class="es"><strong>Pre-requisitos:</strong> HSR, Cluster/Pacemaker, HA configurado, perfil de monitoreo FULL_STACK.</span><span class="en"><strong>Prerequisites:</strong> HSR, Cluster/Pacemaker, HA configured, FULL_STACK monitoring profile.</span></li>
+          <li><span class="es"><strong>Capacidad de ejecucion:</strong> El sistema debe tener <code>supportsRunbookExecution = true</code>.</span><span class="en"><strong>Execution capability:</strong> The system must have <code>supportsRunbookExecution = true</code>.</span></li>
+        </ul>
+
+        <h4><span class="es">Ejemplo de Resultado de Validacion</span><span class="en">Example Validation Result</span></h4>
+        <div class="json-block">{
+  "compatible": false,
+  "failures": [
+    "BD incompatible: runbook requiere HANA, sistema tiene Oracle 19c",
+    "Pre-requisito no cumplido: \"SAP HANA 2.0 SPS05+\" - sistema no usa HANA"
+  ]
+}</div>
+      </div>
+
+      <!-- Dry-Run Section -->
+      <h2><span class="es">Simulacion Dry-Run</span><span class="en">Dry-Run Simulation</span></h2>
+
+      <div class="card">
+        <p class="text-sm">
+          <span class="es">La simulacion dry-run permite previsualizar el resultado de una ejecucion sin modificar ningun sistema. Retorna el gate asignado, los pasos, la validacion de compatibilidad y la accion que se crearia.</span>
+          <span class="en">Dry-run simulation lets you preview the result of an execution without modifying any system. Returns the assigned gate, steps, compatibility validation, and the action that would be created.</span>
+        </p>
+
+        <h4><span class="es">Respuesta Dry-Run</span><span class="en">Dry-Run Response</span></h4>
+        <div class="json-block">{
+  "dryRun": true,
+  "runbookName": "HANA Memory Reclaim",
+  "gate": "SAFE",
+  "costSafe": true,
+  "autoExecute": true,
+  "estimatedDuration": "~19s",
+  "wouldCreate": "AUTO_EXECUTE",
+  "compatible": true,
+  "validationFailures": [],
+  "steps": ["Verify HANA status", "Capture pre-reclaim metrics", "Execute ALTER SYSTEM RECLAIM", "Validate and log evidence"]
+}</div>
+
+        <div class="callout info">
+          <div class="callout-icon">&#128161;</div>
+          <div>
+            <span class="es"><strong>wouldCreate</strong> puede ser: <code>AUTO_EXECUTE</code> (SAFE + autoExecute), <code>PENDING_APPROVAL</code> (HUMAN gate), o <code>MANUAL_EXECUTE</code> (SAFE sin autoExecute).</span>
+            <span class="en"><strong>wouldCreate</strong> can be: <code>AUTO_EXECUTE</code> (SAFE + autoExecute), <code>PENDING_APPROVAL</code> (HUMAN gate), or <code>MANUAL_EXECUTE</code> (SAFE without autoExecute).</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Role Access -->
+      <h2><span class="es">Control de Acceso por Rol</span><span class="en">Role-Based Access Control</span></h2>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th><span class="es">Accion</span><span class="en">Action</span></th>
+              <th>viewer</th>
+              <th>operator</th>
+              <th>escalation</th>
+              <th>admin</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td><span class="es">Ver catalogo de runbooks</span><span class="en">View runbook catalog</span></td><td><span class="badge success">&#10003;</span></td><td><span class="badge success">&#10003;</span></td><td><span class="badge success">&#10003;</span></td><td><span class="badge success">&#10003;</span></td></tr>
+            <tr><td><span class="es">Ejecutar dry-run</span><span class="en">Run dry-run</span></td><td><span class="badge success">&#10003;</span></td><td><span class="badge success">&#10003;</span></td><td><span class="badge success">&#10003;</span></td><td><span class="badge success">&#10003;</span></td></tr>
+            <tr><td><span class="es">Ejecutar runbook (SAFE)</span><span class="en">Execute runbook (SAFE)</span></td><td><span class="badge danger">&#10007;</span></td><td><span class="badge success">&#10003;</span></td><td><span class="badge success">&#10003;</span></td><td><span class="badge success">&#10003;</span></td></tr>
+            <tr><td><span class="es">Solicitar ejecucion (HUMAN)</span><span class="en">Request execution (HUMAN)</span></td><td><span class="badge danger">&#10007;</span></td><td><span class="badge success">&#10003;</span></td><td><span class="badge success">&#10003;</span></td><td><span class="badge success">&#10003;</span></td></tr>
+            <tr><td><span class="es">Aprobar ejecucion (HUMAN)</span><span class="en">Approve execution (HUMAN)</span></td><td><span class="badge danger">&#10007;</span></td><td><span class="badge danger">&#10007;</span></td><td><span class="badge success">&#10003;</span></td><td><span class="badge success">&#10003;</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ── Tab: Executions ── -->
+    <div id="tab-executions" class="tab-content">
+
+      <h2><span class="es">Historial de Ejecuciones</span><span class="en">Execution History</span></h2>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Runbook</th>
+              <th>SID</th>
+              <th>Gate</th>
+              <th><span class="es">Resultado</span><span class="en">Result</span></th>
+              <th><span class="es">Duracion</span><span class="en">Duration</span></th>
+              <th><span class="es">Ejecutado por</span><span class="en">Executed by</span></th>
+              <th><span class="es">Inicio</span><span class="en">Started</span></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="font-semibold">HANA Memory Reclaim</td>
+              <td><code>EP1</code></td>
+              <td><span class="badge success">SAFE</span></td>
+              <td><span class="badge success">SUCCESS</span></td>
+              <td>19s</td>
+              <td>admin@acme.com</td>
+              <td class="text-muted">2026-03-12 09:15:33</td>
+            </tr>
+            <tr>
+              <td class="font-semibold">SAP Instance Restart</td>
+              <td><code>QP1</code></td>
+              <td><span class="badge warning">HUMAN</span></td>
+              <td><span class="badge success">SUCCESS</span></td>
+              <td>47s</td>
+              <td>ops@acme.com</td>
+              <td class="text-muted">2026-03-12 08:42:11</td>
+            </tr>
+            <tr>
+              <td class="font-semibold">Log Cleanup &amp; Housekeeping</td>
+              <td><code>DP1</code></td>
+              <td><span class="badge success">SAFE</span></td>
+              <td><span class="badge success">SUCCESS</span></td>
+              <td>23s</td>
+              <td>system</td>
+              <td class="text-muted">2026-03-12 06:00:00</td>
+            </tr>
+            <tr>
+              <td class="font-semibold">Oracle RMAN Backup Check</td>
+              <td><code>FP1</code></td>
+              <td><span class="badge success">SAFE</span></td>
+              <td><span class="badge danger">FAILED</span></td>
+              <td>8s</td>
+              <td>admin@acme.com</td>
+              <td class="text-muted">2026-03-11 22:30:01</td>
+            </tr>
+            <tr>
+              <td class="font-semibold">ABAP Dump Analysis</td>
+              <td><code>EP1</code></td>
+              <td><span class="badge success">SAFE</span></td>
+              <td><span class="badge success">SUCCESS</span></td>
+              <td>12s</td>
+              <td>ops@acme.com</td>
+              <td class="text-muted">2026-03-11 18:15:44</td>
+            </tr>
+            <tr>
+              <td class="font-semibold">HSR Takeover Drill</td>
+              <td><code>HP1</code></td>
+              <td><span class="badge warning">HUMAN</span></td>
+              <td><span class="badge violet">PENDING</span></td>
+              <td>&mdash;</td>
+              <td>ops@acme.com</td>
+              <td class="text-muted">2026-03-11 16:00:00</td>
+            </tr>
+            <tr>
+              <td class="font-semibold">Work Process Monitor</td>
+              <td><code>QP1</code></td>
+              <td><span class="badge success">SAFE</span></td>
+              <td><span class="badge cyan">RUNNING</span></td>
+              <td>&mdash;</td>
+              <td>system</td>
+              <td class="text-muted">2026-03-12 09:30:00</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Execution Detail Card -->
+      <h2><span class="es">Detalle de Ejecucion</span><span class="en">Execution Detail</span></h2>
+
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">HANA Memory Reclaim &mdash; EP1</div>
+          <span class="badge success">SUCCESS</span>
+        </div>
+        <div class="grid-2 mt-2">
+          <div>
+            <p class="text-xs text-muted">Gate</p>
+            <span class="gate-badge safe">SAFE</span>
+          </div>
+          <div>
+            <p class="text-xs text-muted"><span class="es">Duracion</span><span class="en">Duration</span></p>
+            <p class="font-bold">19s</p>
+          </div>
+          <div>
+            <p class="text-xs text-muted"><span class="es">Ejecutado por</span><span class="en">Executed by</span></p>
+            <p>admin@acme.com</p>
+          </div>
+          <div>
+            <p class="text-xs text-muted"><span class="es">Completado</span><span class="en">Completed</span></p>
+            <p>2026-03-12 09:15:52</p>
+          </div>
+        </div>
+
+        <h4><span class="es">Evidencia</span><span class="en">Evidence</span></h4>
+        <div class="json-block">{
+  "preReclaimMemoryGB": 248.3,
+  "postReclaimMemoryGB": 211.7,
+  "freedMemoryGB": 36.6,
+  "services": {
+    "indexserver": { "freed": "28.1 GB", "status": "ok" },
+    "nameserver": { "freed": "8.5 GB", "status": "ok" }
+  },
+  "gcExecuted": true,
+  "timestamp": "2026-03-12T09:15:52Z"
+}</div>
+      </div>
+
+      <div class="callout success">
+        <div class="callout-icon">&#9989;</div>
+        <div>
+          <span class="es"><strong>Resultados posibles:</strong> <code>SUCCESS</code> &mdash; ejecucion completada exitosamente. <code>FAILED</code> &mdash; error durante la ejecucion. <code>PENDING</code> &mdash; esperando aprobacion (gate HUMAN). <code>RUNNING</code> &mdash; ejecucion en progreso.</span>
+          <span class="en"><strong>Possible results:</strong> <code>SUCCESS</code> &mdash; execution completed successfully. <code>FAILED</code> &mdash; error during execution. <code>PENDING</code> &mdash; awaiting approval (HUMAN gate). <code>RUNNING</code> &mdash; execution in progress.</span>
+        </div>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<script>
+function switchTab(name){
+  document.querySelectorAll('.tab').forEach(function(t){t.classList.remove('active')});
+  document.querySelectorAll('.tab-content').forEach(function(c){c.classList.remove('active')});
+  document.getElementById('tab-'+name).classList.add('active');
+  event.currentTarget.classList.add('active');
+}
+</script>
+</body>
+</html>

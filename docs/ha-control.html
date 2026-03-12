@@ -1,1127 +1,595 @@
-<!DOCTYPE html><html lang="es" data-theme="dark" data-lang="es"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>HA Control Center — SAP Spektra Docs</title><link rel="stylesheet" href="theme.css"><script src="theme-toggle.js"></script><script src="lang-toggle.js"></script></head><body><div class="docs-wrapper">
-<nav class="docs-sidebar">
-  <div class="sidebar-brand"><div class="logo">&#9889;</div><div class="brand-text"><div class="brand-name">SAP Spektra</div><div class="brand-sub">Documentacion</div></div></div>
-  <div class="sidebar-section"><div class="sidebar-section-label">Inicio</div><a href="index.html" class="sidebar-link">Portal</a><a href="getting-started.html" class="sidebar-link">Primeros Pasos</a></div>
-  <div class="sidebar-section"><div class="sidebar-section-label">Command</div><a href="dashboard.html" class="sidebar-link">Dashboard</a><a href="landscape.html" class="sidebar-link">Landscape</a><a href="alerts.html" class="sidebar-link">Alertas</a></div>
-  <div class="sidebar-section"><div class="sidebar-section-label">Monitor</div><a href="systems.html" class="sidebar-link">Sistemas</a><a href="connectors.html" class="sidebar-link">Conectores</a><a href="events.html" class="sidebar-link">Eventos</a></div>
-  <div class="sidebar-section"><div class="sidebar-section-label">Intelligence</div><a href="ai-analysis.html" class="sidebar-link">Analisis IA</a><a href="analytics.html" class="sidebar-link">Analytics</a><a href="reports.html" class="sidebar-link">Reportes</a><a href="comparison.html" class="sidebar-link">Comparacion</a></div>
-  <div class="sidebar-section"><div class="sidebar-section-label">Operations</div><a href="runbooks.html" class="sidebar-link">Runbooks</a><a href="approvals.html" class="sidebar-link">Aprobaciones</a><a href="operations.html" class="sidebar-link">Operaciones</a><a href="jobs.html" class="sidebar-link">Jobs (SM37)</a><a href="transports.html" class="sidebar-link">Transportes</a><a href="sla.html" class="sidebar-link">SLA</a><a href="ha-control.html" class="sidebar-link active">HA Control</a><a href="certificates.html" class="sidebar-link">Certificados</a></div>
-  <div class="sidebar-section"><div class="sidebar-section-label">Admin</div><a href="admin.html" class="sidebar-link">Gestion</a><a href="settings.html" class="sidebar-link">Configuracion</a><a href="connect-system.html" class="sidebar-link">Conectar Sistema</a></div>
-</nav>
-<main class="docs-main">
+<!DOCTYPE html>
+<html lang="es" data-theme="dark" data-lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HA/DR Control — SAP Spektra Docs</title>
+  <link rel="stylesheet" href="theme.css">
+  <script src="theme-toggle.js"></script>
+  <script src="lang-toggle.js"></script>
+</head>
+<body>
+<div class="docs-wrapper">
+
+  <!-- ═══ Sidebar ═══ -->
+  <nav class="docs-sidebar">
+    <div class="sidebar-brand">
+      <div class="logo">S</div>
+      <div class="brand-text">
+        <div class="brand-name">SAP Spektra</div>
+        <div class="brand-sub">Documentacion v2.0</div>
+      </div>
+    </div>
+
+    <div class="sidebar-section">
+      <div class="sidebar-section-label">Inicio</div>
+      <a href="index.html" class="sidebar-link"><span class="es">Portal</span><span class="en">Portal</span></a>
+      <a href="getting-started.html" class="sidebar-link"><span class="es">Primeros Pasos</span><span class="en">Getting Started</span></a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-section-label">Command</div>
+      <a href="dashboard.html" class="sidebar-link">Dashboard</a>
+      <a href="landscape.html" class="sidebar-link">Landscape</a>
+      <a href="alerts.html" class="sidebar-link"><span class="es">Alertas</span><span class="en">Alerts</span></a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-section-label">Monitor</div>
+      <a href="systems.html" class="sidebar-link"><span class="es">Sistemas</span><span class="en">Systems</span></a>
+      <a href="connectors.html" class="sidebar-link"><span class="es">Conectores</span><span class="en">Connectors</span></a>
+      <a href="events.html" class="sidebar-link"><span class="es">Eventos</span><span class="en">Events</span></a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-section-label">Intelligence</div>
+      <a href="ai-analysis.html" class="sidebar-link"><span class="es">Analisis IA</span><span class="en">AI Analysis</span></a>
+      <a href="analytics.html" class="sidebar-link">Analytics</a>
+      <a href="reports.html" class="sidebar-link"><span class="es">Reportes</span><span class="en">Reports</span></a>
+      <a href="comparison.html" class="sidebar-link"><span class="es">Comparacion</span><span class="en">Comparison</span></a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-section-label">Operations</div>
+      <a href="runbooks.html" class="sidebar-link">Runbooks</a>
+      <a href="approvals.html" class="sidebar-link"><span class="es">Aprobaciones</span><span class="en">Approvals</span></a>
+      <a href="operations.html" class="sidebar-link"><span class="es">Operaciones</span><span class="en">Operations</span></a>
+      <a href="jobs.html" class="sidebar-link">Jobs SM37</a>
+      <a href="transports.html" class="sidebar-link"><span class="es">Transportes</span><span class="en">Transports</span></a>
+      <a href="sla.html" class="sidebar-link">SLA</a>
+      <a href="ha-control.html" class="sidebar-link active">HA Control</a>
+      <a href="certificates.html" class="sidebar-link"><span class="es">Certificados</span><span class="en">Certificates</span></a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-section-label">Admin</div>
+      <a href="admin.html" class="sidebar-link"><span class="es">Gestion</span><span class="en">Management</span></a>
+      <a href="settings.html" class="sidebar-link"><span class="es">Configuracion</span><span class="en">Settings</span></a>
+      <a href="connect-system.html" class="sidebar-link"><span class="es">Conectar Sistema</span><span class="en">Connect System</span></a>
+    </div>
+  </nav>
+
+  <!-- ═══ Main Content ═══ -->
+  <main class="docs-main">
+
+    <div class="breadcrumb">
+      <a href="index.html">Docs</a>
+      <span class="sep">/</span>
+      <span>Operations</span>
+      <span class="sep">/</span>
+      <span class="text-primary">HA Control</span>
+    </div>
+
+    <div class="page-header">
+      <h1><span class="es">Centro de Control HA/DR</span><span class="en">HA/DR Control Center</span></h1>
+      <div class="subtitle">
+        <span class="es">Gestion de alta disponibilidad y recuperacion ante desastres para sistemas SAP</span>
+        <span class="en">High availability and disaster recovery management for SAP systems</span>
+      </div>
+    </div>
 
     <div class="demo-disclaimer">
-      <span class="es"><strong>Nota:</strong> Esta documentación describe la interfaz de SAP Spektra con datos simulados. Las integraciones, conectividad SAP y operaciones de backend son funcionalidad planificada — actualmente el producto opera en modo demostración.</span>
-      <span class="en"><strong>Note:</strong> This documentation describes SAP Spektra's interface with simulated data. Integrations, SAP connectivity, and backend operations are planned functionality — the product currently operates in demo mode.</span>
+      <strong><span class="es">Panel Operativo:</span><span class="en">Operations Panel:</span></strong>
+      <span class="es">Este modulo requiere rol <code>admin</code> (nivel 40) para ejecutar failovers. Los roles <code>operator</code> y superiores pueden visualizar el estado.</span>
+      <span class="en">This module requires <code>admin</code> role (level 40) to trigger failovers. Roles <code>operator</code> and above can view status.</span>
     </div>
 
-  <!-- ====== HEADER ====== -->
-  <section class="doc-section">
-    <h1><span class="es">HA Control Center</span><span class="en">HA Control Center</span></h1>
-    <p class="section-desc">
-      <span class="es">Alta disponibilidad y recuperacion ante desastres</span>
-      <span class="en">High availability and disaster recovery</span>
-    </p>
-    <p>
-      <span class="es">El <strong>HA Control Center</strong> centraliza la gestion de alta disponibilidad (HA) y recuperacion ante desastres (DR) de todos sus sistemas SAP. Desde esta pantalla puede visualizar el estado de cada par de nodos, ejecutar operaciones de failover/takeover, verificar prerequisitos y consultar la evidencia auditoria de cada operacion. La vista se organiza en cuatro pestanas: <strong>Sistemas HA</strong>, <strong>Operaciones</strong>, <strong>Prerequisites</strong> y <strong>Evidence</strong>.</span>
-      <span class="en">The <strong>HA Control Center</strong> centralizes high availability (HA) and disaster recovery (DR) management for all your SAP systems. From this screen you can visualize the status of each node pair, execute failover/takeover operations, verify prerequisites and review the audit evidence of each operation. The view is organized into four tabs: <strong>HA Systems</strong>, <strong>Operations</strong>, <strong>Prerequisites</strong> and <strong>Evidence</strong>.</span>
-    </p>
-  </section>
-
-  <!-- ====== TABS OVERVIEW ====== -->
-  <section class="doc-section">
-    <h2><span class="es">Pestanas Principales</span><span class="en">Main Tabs</span></h2>
-    <div style="display:flex;gap:12px;flex-wrap:wrap;margin:16px 0;">
-      <span style="background:var(--cyan-dim);border:1px solid var(--cyan);color:var(--cyan);padding:8px 16px;border-radius:6px;font-weight:600;"><span class="es">Sistemas HA</span><span class="en">HA Systems</span></span>
-      <span style="background:var(--bg-secondary);border:1px solid var(--border-color);padding:8px 16px;border-radius:6px;"><span class="es">Operaciones</span><span class="en">Operations</span></span>
-      <span style="background:var(--bg-secondary);border:1px solid var(--border-color);padding:8px 16px;border-radius:6px;">Prerequisites</span>
-      <span style="background:var(--bg-secondary);border:1px solid var(--border-color);padding:8px 16px;border-radius:6px;">Evidence</span>
-    </div>
-    <table class="doc-table">
-      <thead>
-        <tr>
-          <th><span class="es">Pestana</span><span class="en">Tab</span></th>
-          <th><span class="es">Descripcion</span><span class="en">Description</span></th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td><strong><span class="es">Sistemas HA</span><span class="en">HA Systems</span></strong></td>
-          <td><span class="es">Vista principal con las estrategias de HA, tarjetas de sistema, pares de nodos primario/secundario, estado de replicacion y acciones operativas.</span><span class="en">Main view with HA strategies, system cards, primary/secondary node pairs, replication status and operational actions.</span></td>
-        </tr>
-        <tr>
-          <td><strong><span class="es">Operaciones</span><span class="en">Operations</span></strong></td>
-          <td><span class="es">Panel de ejecucion en tiempo real con progreso paso a paso, e historial completo de operaciones HA realizadas.</span><span class="en">Real-time execution panel with step-by-step progress, and complete history of HA operations performed.</span></td>
-        </tr>
-        <tr>
-          <td><strong>Prerequisites</strong></td>
-          <td><span class="es">Checklist de prerequisitos por sistema, verificando que cada componente cumple las condiciones necesarias para operar en HA.</span><span class="en">Prerequisites checklist per system, verifying that each component meets the conditions necessary to operate in HA.</span></td>
-        </tr>
-        <tr>
-          <td><strong>Evidence</strong></td>
-          <td><span class="es">Cadena de hashes SHA-256 para auditoria, con verificacion de integridad de cada operacion ejecutada.</span><span class="en">SHA-256 hash chain for audit trail, with integrity verification of each executed operation.</span></td>
-        </tr>
-      </tbody>
-    </table>
-  </section>
-
-  <!-- ══════════════════════════════════════════════════════════════ -->
-  <!-- TAB 1: SISTEMAS HA                                           -->
-  <!-- ══════════════════════════════════════════════════════════════ -->
-
-  <section class="doc-section">
-    <h2><span class="es">Pestana: Sistemas HA</span><span class="en">Tab: HA Systems</span></h2>
-    <p>
-      <span class="es">La pestana <strong>Sistemas HA</strong> es la vista principal del HA Control Center. Se divide en tres areas: las tarjetas de estrategia en la parte superior, la cuadricula de sistemas en el centro, y los detalles del sistema seleccionado debajo.</span>
-      <span class="en">The <strong>HA Systems</strong> tab is the main view of the HA Control Center. It is divided into three areas: the strategy cards at the top, the system grid in the center, and the selected system details below.</span>
-    </p>
-  </section>
-
-  <!-- ====== STRATEGY CARDS ====== -->
-  <section class="doc-section">
-    <h3><span class="es">Tarjetas de Estrategia</span><span class="en">Strategy Cards</span></h3>
-    <p>
-      <span class="es">En la parte superior vera cinco tarjetas, una por cada estrategia de HA/DR soportada. Cada tarjeta muestra el nombre de la estrategia, el RTO (Recovery Time Objective), el RPO (Recovery Point Objective) y la cantidad de sistemas que utilizan esa estrategia. Haga clic en una tarjeta para filtrar la cuadricula de sistemas y mostrar solo los que utilizan esa estrategia.</span>
-      <span class="en">At the top you will see five cards, one per supported HA/DR strategy. Each card shows the strategy name, the RTO (Recovery Time Objective), the RPO (Recovery Point Objective) and the number of systems using that strategy. Click a card to filter the system grid and show only those using that strategy.</span>
-    </p>
-
-    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;margin:20px 0;">
-      <!-- HOT_STANDBY -->
-      <div style="background:var(--bg-secondary);border:1px solid var(--border-color);border-radius:8px;padding:16px;border-top:3px solid #22c55e;cursor:pointer;">
-        <div style="font-weight:700;font-size:0.95em;color:#22c55e;">HOT_STANDBY</div>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:10px;font-size:0.85em;">
-          <div><span style="color:var(--text-tertiary);">RTO:</span> <strong>&lt; 2 min</strong></div>
-          <div><span style="color:var(--text-tertiary);">RPO:</span> <strong>0 s</strong></div>
-        </div>
-        <div style="margin-top:8px;font-size:0.8em;color:var(--text-tertiary);"><span class="es">3 sistemas</span><span class="en">3 systems</span></div>
-      </div>
-      <!-- WARM_STANDBY -->
-      <div style="background:var(--bg-secondary);border:1px solid var(--border-color);border-radius:8px;padding:16px;border-top:3px solid #f59e0b;cursor:pointer;">
-        <div style="font-weight:700;font-size:0.95em;color:#f59e0b;">WARM_STANDBY</div>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:10px;font-size:0.85em;">
-          <div><span style="color:var(--text-tertiary);">RTO:</span> <strong>&lt; 15 min</strong></div>
-          <div><span style="color:var(--text-tertiary);">RPO:</span> <strong>&lt; 30 s</strong></div>
-        </div>
-        <div style="margin-top:8px;font-size:0.8em;color:var(--text-tertiary);"><span class="es">2 sistemas</span><span class="en">2 systems</span></div>
-      </div>
-      <!-- PILOT_LIGHT -->
-      <div style="background:var(--bg-secondary);border:1px solid var(--border-color);border-radius:8px;padding:16px;border-top:3px solid #8b5cf6;cursor:pointer;">
-        <div style="font-weight:700;font-size:0.95em;color:#8b5cf6;">PILOT_LIGHT</div>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:10px;font-size:0.85em;">
-          <div><span style="color:var(--text-tertiary);">RTO:</span> <strong>&lt; 30 min</strong></div>
-          <div><span style="color:var(--text-tertiary);">RPO:</span> <strong>&lt; 5 min</strong></div>
-        </div>
-        <div style="margin-top:8px;font-size:0.8em;color:var(--text-tertiary);"><span class="es">1 sistema</span><span class="en">1 system</span></div>
-      </div>
-      <!-- BACKUP_RESTORE -->
-      <div style="background:var(--bg-secondary);border:1px solid var(--border-color);border-radius:8px;padding:16px;border-top:3px solid #3b82f6;cursor:pointer;">
-        <div style="font-weight:700;font-size:0.95em;color:#3b82f6;">BACKUP_RESTORE</div>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:10px;font-size:0.85em;">
-          <div><span style="color:var(--text-tertiary);">RTO:</span> <strong>&lt; 4 h</strong></div>
-          <div><span style="color:var(--text-tertiary);">RPO:</span> <strong>&lt; 15 min</strong></div>
-        </div>
-        <div style="margin-top:8px;font-size:0.8em;color:var(--text-tertiary);"><span class="es">1 sistema</span><span class="en">1 system</span></div>
-      </div>
-      <!-- CROSS_REGION_DR -->
-      <div style="background:var(--bg-secondary);border:1px solid var(--border-color);border-radius:8px;padding:16px;border-top:3px solid #ef4444;cursor:pointer;">
-        <div style="font-weight:700;font-size:0.95em;color:#ef4444;">CROSS_REGION_DR</div>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:10px;font-size:0.85em;">
-          <div><span style="color:var(--text-tertiary);">RTO:</span> <strong>&lt; 1 h</strong></div>
-          <div><span style="color:var(--text-tertiary);">RPO:</span> <strong>&lt; 1 min</strong></div>
-        </div>
-        <div style="margin-top:8px;font-size:0.8em;color:var(--text-tertiary);"><span class="es">1 sistema</span><span class="en">1 system</span></div>
+    <!-- ── Tab Navigation ── -->
+    <div class="card mb-2" style="padding:8px 12px;">
+      <div style="display:flex;gap:4px;flex-wrap:wrap;">
+        <button class="badge cyan" onclick="showTab('overview')" id="tab-overview" style="cursor:pointer;padding:6px 16px;font-size:12px;">
+          <span class="es">Vista General</span><span class="en">Overview</span>
+        </button>
+        <button class="badge neutral" onclick="showTab('strategies')" id="tab-strategies" style="cursor:pointer;padding:6px 16px;font-size:12px;">
+          <span class="es">Estrategias</span><span class="en">Strategies</span>
+        </button>
+        <button class="badge neutral" onclick="showTab('config')" id="tab-config" style="cursor:pointer;padding:6px 16px;font-size:12px;">
+          <span class="es">Configuracion</span><span class="en">Configuration</span>
+        </button>
+        <button class="badge neutral" onclick="showTab('failover')" id="tab-failover" style="cursor:pointer;padding:6px 16px;font-size:12px;">
+          Failover
+        </button>
+        <button class="badge neutral" onclick="showTab('history')" id="tab-history" style="cursor:pointer;padding:6px 16px;font-size:12px;">
+          <span class="es">Historial</span><span class="en">History</span>
+        </button>
       </div>
     </div>
 
-    <table class="doc-table">
-      <thead>
-        <tr>
-          <th><span class="es">Estrategia</span><span class="en">Strategy</span></th>
-          <th><span class="es">Descripcion</span><span class="en">Description</span></th>
-          <th>RTO</th>
-          <th>RPO</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td><strong style="color:#22c55e;">HOT_STANDBY</strong></td>
-          <td><span class="es">El nodo secundario esta en ejecucion permanente con replicacion sincrona. Failover casi instantaneo sin perdida de datos.</span><span class="en">The secondary node is running permanently with synchronous replication. Near-instant failover with zero data loss.</span></td>
-          <td>&lt; 2 min</td>
-          <td>0 s</td>
-        </tr>
-        <tr>
-          <td><strong style="color:#f59e0b;">WARM_STANDBY</strong></td>
-          <td><span class="es">El nodo secundario opera con recursos reducidos y requiere un escalado (scale-up) antes de asumir la carga completa. Reduce costes manteniendo la proteccion.</span><span class="en">The secondary node operates with reduced resources and requires a scale-up before assuming the full load. Reduces costs while maintaining protection.</span></td>
-          <td>&lt; 15 min</td>
-          <td>&lt; 30 s</td>
-        </tr>
-        <tr>
-          <td><strong style="color:#8b5cf6;">PILOT_LIGHT</strong></td>
-          <td><span class="es">Una instancia DR minima esta aprovisionada pero detenida. Al activarse, se inicia y restaura desde el ultimo backup sincronizado.</span><span class="en">A minimal DR instance is provisioned but stopped. When activated, it boots and restores from the last synchronized backup.</span></td>
-          <td>&lt; 30 min</td>
-          <td>&lt; 5 min</td>
-        </tr>
-        <tr>
-          <td><strong style="color:#3b82f6;">BACKUP_RESTORE</strong></td>
-          <td><span class="es">Recuperacion basada en backups completos y de log. No hay instancia secundaria permanente &mdash; el sistema se restaura bajo demanda.</span><span class="en">Recovery based on full and log backups. No permanent secondary instance &mdash; the system is restored on demand.</span></td>
-          <td>&lt; 4 h</td>
-          <td>&lt; 15 min</td>
-        </tr>
-        <tr>
-          <td><strong style="color:#ef4444;">CROSS_REGION_DR</strong></td>
-          <td><span class="es">Replicacion asincrona a una region geografica diferente. Protege contra desastres regionales completos.</span><span class="en">Asynchronous replication to a different geographic region. Protects against complete regional disasters.</span></td>
-          <td>&lt; 1 h</td>
-          <td>&lt; 1 min</td>
-        </tr>
-      </tbody>
-    </table>
-  </section>
+    <!-- ══ TAB: Overview ══ -->
+    <div id="panel-overview">
 
-  <!-- ====== SYSTEM CARDS ====== -->
-  <section class="doc-section">
-    <h3><span class="es">Cuadricula de Sistemas</span><span class="en">System Grid</span></h3>
-    <p>
-      <span class="es">Debajo de las estrategias se muestra una cuadricula con una tarjeta por cada sistema configurado con HA. Cada tarjeta muestra la informacion clave del sistema y su estado de alta disponibilidad.</span>
-      <span class="en">Below the strategies a grid is displayed with one card per HA-configured system. Each card shows key system information and its high availability status.</span>
-    </p>
-
-    <!-- Example system cards -->
-    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:16px;margin:20px 0;">
-      <div style="background:var(--bg-secondary);border:1px solid var(--border-color);border-radius:8px;padding:20px;">
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+      <!-- KPI Cards -->
+      <div class="kpi-grid">
+        <div class="kpi-card">
+          <div class="card-icon success">&#9889;</div>
           <div>
-            <span style="background:var(--accent-blue);color:#fff;padding:2px 8px;border-radius:4px;font-size:0.85em;font-weight:700;">PRD</span>
-            <span style="font-weight:600;margin-left:6px;">S4H Production</span>
+            <div class="kpi-value">5</div>
+            <div class="kpi-label"><span class="es">Sistemas Protegidos</span><span class="en">Protected Systems</span></div>
           </div>
-          <span style="background:rgba(34,197,94,0.12);color:#22c55e;padding:2px 10px;border-radius:100px;font-size:0.8em;font-weight:600;">HEALTHY</span>
         </div>
-        <div style="display:flex;gap:6px;margin-bottom:10px;">
-          <span style="background:#22c55e;color:#fff;padding:1px 8px;border-radius:4px;font-size:0.75em;">HOT_STANDBY</span>
-        </div>
-        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;font-size:0.85em;">
-          <div><span style="color:var(--text-tertiary);">Provider:</span><br><strong>AWS</strong></div>
-          <div><span style="color:var(--text-tertiary);">Region:</span><br><strong>eu-west-1</strong></div>
-          <div><span style="color:var(--text-tertiary);">DB:</span><br><strong>HANA</strong></div>
-        </div>
-        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;font-size:0.85em;margin-top:8px;">
-          <div><span style="color:var(--text-tertiary);"><span class="es">Replicacion:</span><span class="en">Replication:</span></span><br><strong>SYNC</strong></div>
-          <div><span style="color:var(--text-tertiary);">Status:</span><br><strong style="color:#22c55e;">SOK</strong></div>
-          <div><span style="color:var(--text-tertiary);">Lag:</span><br><strong>0.2 s</strong></div>
-        </div>
-      </div>
-
-      <div style="background:var(--bg-secondary);border:1px solid var(--border-color);border-radius:8px;padding:20px;">
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+        <div class="kpi-card">
+          <div class="card-icon cyan">&#128260;</div>
           <div>
-            <span style="background:#f59e0b;color:#000;padding:2px 8px;border-radius:4px;font-size:0.85em;font-weight:700;">QAS</span>
-            <span style="font-weight:600;margin-left:6px;">S4H Quality</span>
+            <div class="kpi-value">3</div>
+            <div class="kpi-label"><span class="es">En Standby</span><span class="en">On Standby</span></div>
           </div>
-          <span style="background:rgba(245,158,11,0.12);color:#f59e0b;padding:2px 10px;border-radius:100px;font-size:0.8em;font-weight:600;">DEGRADED</span>
         </div>
-        <div style="display:flex;gap:6px;margin-bottom:10px;">
-          <span style="background:#f59e0b;color:#000;padding:1px 8px;border-radius:4px;font-size:0.75em;">WARM_STANDBY</span>
+        <div class="kpi-card">
+          <div class="card-icon warning">&#9888;&#65039;</div>
+          <div>
+            <div class="kpi-value">1</div>
+            <div class="kpi-label"><span class="es">Failover en Curso</span><span class="en">Failover In Progress</span></div>
+          </div>
         </div>
-        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;font-size:0.85em;">
-          <div><span style="color:var(--text-tertiary);">Provider:</span><br><strong>Azure</strong></div>
-          <div><span style="color:var(--text-tertiary);">Region:</span><br><strong>westeurope</strong></div>
-          <div><span style="color:var(--text-tertiary);">DB:</span><br><strong>HANA</strong></div>
-        </div>
-        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;font-size:0.85em;margin-top:8px;">
-          <div><span style="color:var(--text-tertiary);"><span class="es">Replicacion:</span><span class="en">Replication:</span></span><br><strong>ASYNC</strong></div>
-          <div><span style="color:var(--text-tertiary);">Status:</span><br><strong style="color:#ef4444;">SFAIL</strong></div>
-          <div><span style="color:var(--text-tertiary);">Lag:</span><br><strong style="color:#ef4444;">45 s</strong></div>
+        <div class="kpi-card">
+          <div class="card-icon violet">&#128337;</div>
+          <div>
+            <div class="kpi-value">99.97%</div>
+            <div class="kpi-label"><span class="es">Disponibilidad (30d)</span><span class="en">Availability (30d)</span></div>
+          </div>
         </div>
       </div>
-    </div>
 
-    <table class="doc-table">
-      <thead>
-        <tr>
-          <th><span class="es">Elemento</span><span class="en">Element</span></th>
-          <th><span class="es">Que muestra</span><span class="en">What it shows</span></th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td><strong>SID</strong></td>
-          <td><span class="es">Identificador del sistema en badge de color (ej. <span style="background:var(--accent-blue);color:#fff;padding:1px 6px;border-radius:3px;font-size:0.85em;">PRD</span>), seguido del nombre descriptivo.</span><span class="en">System identifier in colored badge (e.g. <span style="background:var(--accent-blue);color:#fff;padding:1px 6px;border-radius:3px;font-size:0.85em;">PRD</span>), followed by the descriptive name.</span></td>
-        </tr>
-        <tr>
-          <td><strong><span class="es">Estado HA</span><span class="en">HA Status</span></strong></td>
-          <td>
-            <span class="es">Estado de alta disponibilidad del sistema:
-              <br>&#8226; <span style="background:rgba(34,197,94,0.12);color:#22c55e;padding:2px 8px;border-radius:100px;font-size:0.85em;">HEALTHY</span> &mdash; Todos los componentes operativos, replicacion activa.
-              <br>&#8226; <span style="background:rgba(245,158,11,0.12);color:#f59e0b;padding:2px 8px;border-radius:100px;font-size:0.85em;">DEGRADED</span> &mdash; Replicacion con problemas o lag excesivo.
-              <br>&#8226; <span style="background:rgba(59,130,246,0.12);color:#3b82f6;padding:2px 8px;border-radius:100px;font-size:0.85em;">STANDBY</span> &mdash; Nodo secundario listo pero no activo.
-              <br>&#8226; <span style="background:rgba(139,92,246,0.12);color:#8b5cf6;padding:2px 8px;border-radius:100px;font-size:0.85em;">PROTECTED</span> &mdash; DR configurado y verificado.
-              <br>&#8226; <span style="background:var(--bg3);color:var(--txt3);padding:2px 8px;border-radius:100px;font-size:0.85em;">NOT_CONFIGURED</span> &mdash; Sin configuracion de HA.
-            </span>
-            <span class="en">High availability status of the system:
-              <br>&#8226; <span style="background:rgba(34,197,94,0.12);color:#22c55e;padding:2px 8px;border-radius:100px;font-size:0.85em;">HEALTHY</span> &mdash; All components operational, replication active.
-              <br>&#8226; <span style="background:rgba(245,158,11,0.12);color:#f59e0b;padding:2px 8px;border-radius:100px;font-size:0.85em;">DEGRADED</span> &mdash; Replication issues or excessive lag.
-              <br>&#8226; <span style="background:rgba(59,130,246,0.12);color:#3b82f6;padding:2px 8px;border-radius:100px;font-size:0.85em;">STANDBY</span> &mdash; Secondary node ready but not active.
-              <br>&#8226; <span style="background:rgba(139,92,246,0.12);color:#8b5cf6;padding:2px 8px;border-radius:100px;font-size:0.85em;">PROTECTED</span> &mdash; DR configured and verified.
-              <br>&#8226; <span style="background:var(--bg3);color:var(--txt3);padding:2px 8px;border-radius:100px;font-size:0.85em;">NOT_CONFIGURED</span> &mdash; No HA configuration.
-            </span>
-          </td>
-        </tr>
-        <tr>
-          <td><strong><span class="es">Estrategia</span><span class="en">Strategy</span></strong></td>
-          <td><span class="es">Badge con el nombre de la estrategia HA asignada al sistema (ej. <span style="background:#22c55e;color:#fff;padding:1px 6px;border-radius:4px;font-size:0.85em;">HOT_STANDBY</span>).</span><span class="en">Badge with the HA strategy name assigned to the system (e.g. <span style="background:#22c55e;color:#fff;padding:1px 6px;border-radius:4px;font-size:0.85em;">HOT_STANDBY</span>).</span></td>
-        </tr>
-        <tr>
-          <td><strong>Provider / Region</strong></td>
-          <td><span class="es">Proveedor de nube (AWS, Azure, GCP) y region donde estan desplegados los nodos.</span><span class="en">Cloud provider (AWS, Azure, GCP) and region where the nodes are deployed.</span></td>
-        </tr>
-        <tr>
-          <td><strong>DB Type</strong></td>
-          <td><span class="es">Tipo de base de datos (HANA, ASE, MaxDB, etc.).</span><span class="en">Database type (HANA, ASE, MaxDB, etc.).</span></td>
-        </tr>
-        <tr>
-          <td><strong><span class="es">Modo Replicacion</span><span class="en">Replication Mode</span></strong></td>
-          <td><span class="es">Tipo de replicacion: <strong>SYNC</strong> (sincrona), <strong>ASYNC</strong> (asincrona) o <strong>SYNCMEM</strong> (sincrona en memoria).</span><span class="en">Replication type: <strong>SYNC</strong> (synchronous), <strong>ASYNC</strong> (asynchronous) or <strong>SYNCMEM</strong> (synchronous in memory).</span></td>
-        </tr>
-        <tr>
-          <td><strong><span class="es">Estado Replicacion</span><span class="en">Replication Status</span></strong></td>
-          <td>
-            <span class="es">Estado de la replicacion de datos:
-              <br>&#8226; <strong style="color:#22c55e;">SOK</strong> &mdash; Replicacion sincronizada correctamente.
-              <br>&#8226; <strong style="color:#ef4444;">SFAIL</strong> &mdash; Error en la replicacion &mdash; accion requerida.
-            </span>
-            <span class="en">Data replication status:
-              <br>&#8226; <strong style="color:#22c55e;">SOK</strong> &mdash; Replication synchronized correctly.
-              <br>&#8226; <strong style="color:#ef4444;">SFAIL</strong> &mdash; Replication error &mdash; action required.
-            </span>
-          </td>
-        </tr>
-        <tr>
-          <td><strong><span class="es">Lag de Replicacion</span><span class="en">Replication Lag</span></strong></td>
-          <td><span class="es">Retraso en la replicacion medido en segundos. Un valor cercano a 0 es ideal. Valores altos se destacan en rojo.</span><span class="en">Replication delay measured in seconds. A value near 0 is ideal. High values are highlighted in red.</span></td>
-        </tr>
-      </tbody>
-    </table>
-  </section>
-
-  <!-- ====== NODE PAIR VISUALIZATION ====== -->
-  <section class="doc-section">
-    <h3><span class="es">Visualizacion del Par de Nodos</span><span class="en">Node Pair Visualization</span></h3>
-    <p>
-      <span class="es">Al seleccionar un sistema, se muestra la visualizacion de sus nodos <strong>Primario</strong> y <strong>Secundario</strong> conectados por una flecha que representa la replicacion. Cada nodo muestra:</span>
-      <span class="en">When selecting a system, the visualization of its <strong>Primary</strong> and <strong>Secondary</strong> nodes is displayed, connected by an arrow representing replication. Each node shows:</span>
-    </p>
-
-    <div style="display:flex;align-items:center;justify-content:center;gap:0;margin:24px 0;flex-wrap:wrap;">
-      <!-- Primary Node -->
-      <div style="background:var(--bg-secondary);border:2px solid #22c55e;border-radius:8px;padding:16px 20px;min-width:200px;">
-        <div style="font-weight:700;color:#22c55e;margin-bottom:8px;">&#9654; Primary</div>
-        <div style="font-size:0.85em;color:var(--text-tertiary);">Host: <strong style="color:var(--txt1);">saphanaprd01</strong></div>
-        <div style="font-size:0.85em;color:var(--text-tertiary);">Instance: <strong style="color:var(--txt1);">00</strong></div>
-        <div style="font-size:0.85em;color:var(--text-tertiary);">IP: <strong style="color:var(--txt1);">10.0.1.10</strong></div>
-        <div style="font-size:0.85em;color:var(--text-tertiary);">Zone: <strong style="color:var(--txt1);">eu-west-1a</strong></div>
-        <div style="margin-top:8px;"><span style="background:rgba(34,197,94,0.12);color:#22c55e;padding:2px 8px;border-radius:4px;font-size:0.8em;">running</span></div>
-      </div>
-      <!-- Arrow -->
-      <div style="padding:0 20px;text-align:center;">
-        <div style="font-size:1.5em;color:var(--text-tertiary);">&#8644;</div>
-        <div style="font-size:0.75em;color:var(--text-tertiary);">SYNC</div>
-      </div>
-      <!-- Secondary Node -->
-      <div style="background:var(--bg-secondary);border:2px solid #3b82f6;border-radius:8px;padding:16px 20px;min-width:200px;">
-        <div style="font-weight:700;color:#3b82f6;margin-bottom:8px;">&#9632; Secondary</div>
-        <div style="font-size:0.85em;color:var(--text-tertiary);">Host: <strong style="color:var(--txt1);">saphanaprd02</strong></div>
-        <div style="font-size:0.85em;color:var(--text-tertiary);">Instance: <strong style="color:var(--txt1);">00</strong></div>
-        <div style="font-size:0.85em;color:var(--text-tertiary);">IP: <strong style="color:var(--txt1);">10.0.2.10</strong></div>
-        <div style="font-size:0.85em;color:var(--text-tertiary);">Zone: <strong style="color:var(--txt1);">eu-west-1b</strong></div>
-        <div style="margin-top:8px;"><span style="background:rgba(34,197,94,0.12);color:#22c55e;padding:2px 8px;border-radius:4px;font-size:0.8em;">running</span></div>
+      <!-- Systems HA Status Table -->
+      <h2><span class="es">Estado HA por Sistema</span><span class="en">HA Status per System</span></h2>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>SID</th>
+              <th><span class="es">Estrategia</span><span class="en">Strategy</span></th>
+              <th><span class="es">Nodo Primario</span><span class="en">Primary Node</span></th>
+              <th><span class="es">Nodo Secundario</span><span class="en">Secondary Node</span></th>
+              <th>RPO (min)</th>
+              <th>RTO (min)</th>
+              <th>Status</th>
+              <th><span class="es">Ultimo Failover</span><span class="en">Last Failover</span></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="font-mono font-bold text-primary">PRD</td>
+              <td><span class="badge cyan">HOT_STANDBY</span></td>
+              <td class="font-mono">sapapp01.prod.local</td>
+              <td class="font-mono">sapapp02.prod.local</td>
+              <td>0</td>
+              <td>5</td>
+              <td><span class="badge success">standby</span></td>
+              <td class="text-muted">2026-02-14 08:32</td>
+            </tr>
+            <tr>
+              <td class="font-mono font-bold text-primary">QAS</td>
+              <td><span class="badge violet">WARM_STANDBY</span></td>
+              <td class="font-mono">sapapp03.qa.local</td>
+              <td class="font-mono">sapapp04.qa.local</td>
+              <td>5</td>
+              <td>15</td>
+              <td><span class="badge success">standby</span></td>
+              <td class="text-muted">2026-01-20 14:10</td>
+            </tr>
+            <tr>
+              <td class="font-mono font-bold text-primary">DEV</td>
+              <td><span class="badge neutral">BACKUP_RESTORE</span></td>
+              <td class="font-mono">sapdev01.dev.local</td>
+              <td class="font-mono">sapdev02.dev.local</td>
+              <td>60</td>
+              <td>120</td>
+              <td><span class="badge success">standby</span></td>
+              <td class="text-muted">--</td>
+            </tr>
+            <tr>
+              <td class="font-mono font-bold text-primary">FIN</td>
+              <td><span class="badge cyan">HOT_STANDBY</span></td>
+              <td class="font-mono">sapfin01.prod.local</td>
+              <td class="font-mono">sapfin02.prod.local</td>
+              <td>0</td>
+              <td>5</td>
+              <td><span class="badge warning">failover_in_progress</span></td>
+              <td class="text-muted">2026-03-12 06:15</td>
+            </tr>
+            <tr>
+              <td class="font-mono font-bold text-primary">BW4</td>
+              <td><span class="badge warning">PILOT_LIGHT</span></td>
+              <td class="font-mono">sapbw01.prod.local</td>
+              <td class="font-mono">sapbw02.dr.local</td>
+              <td>15</td>
+              <td>30</td>
+              <td><span class="badge success">standby</span></td>
+              <td class="text-muted">2025-12-03 22:45</td>
+            </tr>
+          </tbody>
+        </table>
       </div>
     </div>
 
-    <table class="doc-table">
-      <thead>
-        <tr>
-          <th><span class="es">Campo del Nodo</span><span class="en">Node Field</span></th>
-          <th><span class="es">Que muestra</span><span class="en">What it shows</span></th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td><strong>Host</strong></td>
-          <td><span class="es">Nombre de host de la instancia (ej. <code>saphanaprd01</code>).</span><span class="en">Instance hostname (e.g. <code>saphanaprd01</code>).</span></td>
-        </tr>
-        <tr>
-          <td><strong>Instance</strong></td>
-          <td><span class="es">Numero de instancia SAP (ej. <code>00</code>, <code>01</code>).</span><span class="en">SAP instance number (e.g. <code>00</code>, <code>01</code>).</span></td>
-        </tr>
-        <tr>
-          <td><strong>IP</strong></td>
-          <td><span class="es">Direccion IP privada del nodo.</span><span class="en">Node private IP address.</span></td>
-        </tr>
-        <tr>
-          <td><strong>Zone</strong></td>
-          <td><span class="es">Zona de disponibilidad del proveedor de nube.</span><span class="en">Cloud provider availability zone.</span></td>
-        </tr>
-        <tr>
-          <td><strong>State</strong></td>
-          <td>
-            <span class="es">Estado de la instancia:
-              <br>&#8226; <span style="background:rgba(34,197,94,0.12);color:#22c55e;padding:2px 8px;border-radius:4px;font-size:0.85em;">running</span> &mdash; Instancia en ejecucion.
-              <br>&#8226; <span style="background:rgba(239,68,68,0.12);color:#ef4444;padding:2px 8px;border-radius:4px;font-size:0.85em;">stopped</span> &mdash; Instancia detenida (comun en Pilot Light).
-            </span>
-            <span class="en">Instance state:
-              <br>&#8226; <span style="background:rgba(34,197,94,0.12);color:#22c55e;padding:2px 8px;border-radius:4px;font-size:0.85em;">running</span> &mdash; Instance running.
-              <br>&#8226; <span style="background:rgba(239,68,68,0.12);color:#ef4444;padding:2px 8px;border-radius:4px;font-size:0.85em;">stopped</span> &mdash; Instance stopped (common in Pilot Light).
-            </span>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-  </section>
+    <!-- ══ TAB: Strategies ══ -->
+    <div id="panel-strategies" style="display:none;">
+      <h2><span class="es">Estrategias de Alta Disponibilidad</span><span class="en">High Availability Strategies</span></h2>
+      <p class="text-muted mb-2">
+        <span class="es">SAP Spektra soporta cinco estrategias de HA/DR, cada una con diferentes compromisos entre costo, RPO y RTO.</span>
+        <span class="en">SAP Spektra supports five HA/DR strategies, each with different trade-offs between cost, RPO, and RTO.</span>
+      </p>
 
-  <!-- ====== STRATEGY-SPECIFIC DETAILS ====== -->
-  <section class="doc-section">
-    <h3><span class="es">Detalles por Estrategia</span><span class="en">Strategy-Specific Details</span></h3>
-    <p>
-      <span class="es">Dependiendo de la estrategia del sistema seleccionado, se muestran paneles de informacion adicional especificos:</span>
-      <span class="en">Depending on the selected system's strategy, additional strategy-specific information panels are displayed:</span>
-    </p>
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title"><div class="card-icon cyan">&#128293;</div> HOT_STANDBY</div>
+            <span class="badge success">RPO: 0 min</span>
+          </div>
+          <p class="text-sm"><span class="es">Replica sincrona en tiempo real. El nodo secundario esta activo y recibe datos continuamente. Failover automatico en menos de 5 minutos.</span><span class="en">Synchronous real-time replication. Secondary node is active and receives data continuously. Automatic failover in under 5 minutes.</span></p>
+          <ul class="feature-list">
+            <li><span class="es">Replicacion sincrona de datos</span><span class="en">Synchronous data replication</span></li>
+            <li><span class="es">Failover automatico</span><span class="en">Automatic failover</span></li>
+            <li>RTO: ~5 <span class="es">minutos</span><span class="en">minutes</span></li>
+            <li><span class="es">Costo: Alto (infraestructura duplicada)</span><span class="en">Cost: High (duplicated infrastructure)</span></li>
+          </ul>
+        </div>
 
-    <!-- WARM_STANDBY details -->
-    <div style="background:var(--bg-secondary);border:1px solid var(--border-color);border-radius:8px;padding:20px;margin:16px 0;">
-      <h4 style="margin-top:0;color:#f59e0b;">WARM_STANDBY <span class="es">&mdash; Detalles adicionales</span><span class="en">&mdash; Additional details</span></h4>
-      <table class="doc-table" style="font-size:0.9em;">
-        <tbody>
-          <tr>
-            <td style="width:200px;"><strong><span class="es">Comparacion de Sizing</span><span class="en">Sizing Comparison</span></strong></td>
-            <td><span class="es">Barras visuales que comparan los recursos del nodo primario vs. el secundario reducido (CPU, RAM, almacenamiento). El secundario tiene menor capacidad hasta que se escale.</span><span class="en">Visual bars comparing primary node resources vs. the reduced secondary (CPU, RAM, storage). The secondary has lower capacity until scaled up.</span></td>
-          </tr>
-          <tr>
-            <td><strong><span class="es">Ahorro de Costes</span><span class="en">Cost Savings</span></strong></td>
-            <td><span class="es">Porcentaje de ahorro en costes respecto a un Hot Standby completo (ej. <strong style="color:#22c55e;">42% ahorro</strong>).</span><span class="en">Cost savings percentage compared to a full Hot Standby (e.g. <strong style="color:#22c55e;">42% savings</strong>).</span></td>
-          </tr>
-          <tr>
-            <td><strong>Scale-up Info</strong></td>
-            <td><span class="es">Tipo de instancia destino y tiempo estimado para completar el escalado del nodo secundario.</span><span class="en">Target instance type and estimated time to complete the secondary node scale-up.</span></td>
-          </tr>
-          <tr>
-            <td><strong>Catch-up Time</strong></td>
-            <td><span class="es">Tiempo estimado para que el nodo secundario alcance la sincronizacion completa tras el escalado.</span><span class="en">Estimated time for the secondary node to reach full synchronization after scale-up.</span></td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title"><div class="card-icon violet">&#128260;</div> WARM_STANDBY</div>
+            <span class="badge warning">RPO: 5 min</span>
+          </div>
+          <p class="text-sm"><span class="es">Replica asincrona con nodo secundario pre-configurado. Requiere arranque manual o semi-automatico del nodo secundario.</span><span class="en">Asynchronous replication with pre-configured secondary node. Requires manual or semi-automatic secondary node startup.</span></p>
+          <ul class="feature-list">
+            <li><span class="es">Replicacion asincrona</span><span class="en">Asynchronous replication</span></li>
+            <li><span class="es">Nodo secundario en espera tibia</span><span class="en">Secondary node in warm standby</span></li>
+            <li>RTO: ~15 <span class="es">minutos</span><span class="en">minutes</span></li>
+            <li><span class="es">Costo: Medio</span><span class="en">Cost: Medium</span></li>
+          </ul>
+        </div>
 
-    <!-- ASCS_ERS details -->
-    <div style="background:var(--bg-secondary);border:1px solid var(--border-color);border-radius:8px;padding:20px;margin:16px 0;">
-      <h4 style="margin-top:0;color:var(--cyan);">ASCS/ERS <span class="es">&mdash; Enqueue Replication</span><span class="en">&mdash; Enqueue Replication</span></h4>
-      <table class="doc-table" style="font-size:0.9em;">
-        <tbody>
-          <tr>
-            <td style="width:200px;"><strong><span class="es">Locks Replicados</span><span class="en">Locks Replicated</span></strong></td>
-            <td><span class="es">Numero de locks de enqueue replicados exitosamente del ASCS al ERS (ej. <strong>12,847 / 12,847</strong>).</span><span class="en">Number of enqueue locks successfully replicated from ASCS to ERS (e.g. <strong>12,847 / 12,847</strong>).</span></td>
-          </tr>
-          <tr>
-            <td><strong><span class="es">Estado Enqueue</span><span class="en">Enqueue Status</span></strong></td>
-            <td><span class="es">Indica si el Enqueue Replication Server esta sincronizado con el ASCS. Los colores siguen la misma logica: <span style="color:#22c55e;">verde</span> = sincronizado, <span style="color:#ef4444;">rojo</span> = fuera de sincronia.</span><span class="en">Indicates whether the Enqueue Replication Server is synchronized with ASCS. Colors follow the same logic: <span style="color:#22c55e;">green</span> = synchronized, <span style="color:#ef4444;">red</span> = out of sync.</span></td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title"><div class="card-icon warning">&#128161;</div> PILOT_LIGHT</div>
+            <span class="badge warning">RPO: 15 min</span>
+          </div>
+          <p class="text-sm"><span class="es">Infraestructura minima en el sitio DR. Solo los servicios criticos estan replicados. Se escala al activarse.</span><span class="en">Minimal infrastructure at the DR site. Only critical services are replicated. Scales up when activated.</span></p>
+          <ul class="feature-list">
+            <li><span class="es">Infraestructura minima activa</span><span class="en">Minimal active infrastructure</span></li>
+            <li><span class="es">Escalado bajo demanda</span><span class="en">On-demand scaling</span></li>
+            <li>RTO: ~30 <span class="es">minutos</span><span class="en">minutes</span></li>
+            <li><span class="es">Costo: Medio-bajo</span><span class="en">Cost: Medium-low</span></li>
+          </ul>
+        </div>
 
-    <!-- PILOT_LIGHT details -->
-    <div style="background:var(--bg-secondary);border:1px solid var(--border-color);border-radius:8px;padding:20px;margin:16px 0;">
-      <h4 style="margin-top:0;color:#8b5cf6;">PILOT_LIGHT <span class="es">&mdash; Detalles adicionales</span><span class="en">&mdash; Additional details</span></h4>
-      <table class="doc-table" style="font-size:0.9em;">
-        <tbody>
-          <tr>
-            <td style="width:200px;"><strong><span class="es">Tipo Instancia DR</span><span class="en">DR Instance Type</span></strong></td>
-            <td><span class="es">Tipo de instancia que se iniciara en caso de activacion DR (ej. <code>r5.4xlarge</code>).</span><span class="en">Instance type that will be started upon DR activation (e.g. <code>r5.4xlarge</code>).</span></td>
-          </tr>
-          <tr>
-            <td><strong>Boot Time</strong></td>
-            <td><span class="es">Tiempo estimado para iniciar la instancia DR (ej. <em>8 min</em>).</span><span class="en">Estimated time to boot the DR instance (e.g. <em>8 min</em>).</span></td>
-          </tr>
-          <tr>
-            <td><strong><span class="es">Ultimo Backup Sync</span><span class="en">Last Backup Sync</span></strong></td>
-            <td><span class="es">Fecha y hora de la ultima sincronizacion de backup con la instancia DR.</span><span class="en">Date and time of the last backup synchronization with the DR instance.</span></td>
-          </tr>
-          <tr>
-            <td><strong><span class="es">Metodo Backup</span><span class="en">Backup Method</span></strong></td>
-            <td><span class="es">Metodo utilizado para sincronizar (ej. <em>HANA Backint</em>, <em>Storage Snapshot</em>).</span><span class="en">Method used for synchronization (e.g. <em>HANA Backint</em>, <em>Storage Snapshot</em>).</span></td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-
-    <!-- BACKUP_RESTORE details -->
-    <div style="background:var(--bg-secondary);border:1px solid var(--border-color);border-radius:8px;padding:20px;margin:16px 0;">
-      <h4 style="margin-top:0;color:#3b82f6;">BACKUP_RESTORE <span class="es">&mdash; Detalles adicionales</span><span class="en">&mdash; Additional details</span></h4>
-      <table class="doc-table" style="font-size:0.9em;">
-        <tbody>
-          <tr>
-            <td style="width:200px;"><strong><span class="es">Ultimo Full Backup</span><span class="en">Last Full Backup</span></strong></td>
-            <td><span class="es">Fecha y hora del ultimo backup completo de la base de datos (ej. <em>2026-03-11 02:00</em>).</span><span class="en">Date and time of the last full database backup (e.g. <em>2026-03-11 02:00</em>).</span></td>
-          </tr>
-          <tr>
-            <td><strong><span class="es">Ultimo Log Backup</span><span class="en">Last Log Backup</span></strong></td>
-            <td><span class="es">Fecha y hora del ultimo backup de log (ej. <em>2026-03-11 14:45</em>).</span><span class="en">Date and time of the last log backup (e.g. <em>2026-03-11 14:45</em>).</span></td>
-          </tr>
-          <tr>
-            <td><strong><span class="es">Destino</span><span class="en">Destination</span></strong></td>
-            <td><span class="es">Ubicacion de almacenamiento de los backups (ej. <code>s3://sap-backups-prd/</code>).</span><span class="en">Backup storage location (e.g. <code>s3://sap-backups-prd/</code>).</span></td>
-          </tr>
-          <tr>
-            <td><strong><span class="es">Tiempo Estimado Restore</span><span class="en">Estimated Restore Time</span></strong></td>
-            <td><span class="es">Tiempo estimado para restaurar el sistema completo desde el ultimo backup (ej. <em>3h 20min</em>).</span><span class="en">Estimated time to restore the full system from the last backup (e.g. <em>3h 20min</em>).</span></td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-  </section>
-
-  <!-- ====== VIP/DNS + LAST OPERATION ====== -->
-  <section class="doc-section">
-    <h3><span class="es">Endpoint VIP/DNS y Ultima Operacion</span><span class="en">VIP/DNS Endpoint and Last Operation</span></h3>
-    <p>
-      <span class="es">Debajo de los detalles del par de nodos se muestra la direccion VIP o DNS asociada al cluster de HA, asi como la informacion de la ultima operacion ejecutada sobre el sistema.</span>
-      <span class="en">Below the node pair details, the VIP or DNS address associated with the HA cluster is shown, along with information about the last operation executed on the system.</span>
-    </p>
-
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:16px 0;">
-      <div style="background:var(--bg-secondary);border:1px solid var(--border-color);border-radius:8px;padding:16px;">
-        <div style="font-size:0.85em;color:var(--text-tertiary);margin-bottom:4px;">VIP / DNS Endpoint</div>
-        <code style="font-size:0.95em;">sap-prd-vip.empresa.internal:30015</code>
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title"><div class="card-icon neutral">&#128190;</div> BACKUP_RESTORE</div>
+            <span class="badge danger">RPO: 60 min</span>
+          </div>
+          <p class="text-sm"><span class="es">Restauracion desde backups periodicos. Sin infraestructura activa en el sitio DR. Proceso manual completo.</span><span class="en">Restoration from periodic backups. No active infrastructure at the DR site. Fully manual process.</span></p>
+          <ul class="feature-list">
+            <li><span class="es">Backups programados</span><span class="en">Scheduled backups</span></li>
+            <li><span class="es">Restauracion manual</span><span class="en">Manual restoration</span></li>
+            <li>RTO: ~120 <span class="es">minutos</span><span class="en">minutes</span></li>
+            <li><span class="es">Costo: Bajo</span><span class="en">Cost: Low</span></li>
+          </ul>
+        </div>
       </div>
-      <div style="background:var(--bg-secondary);border:1px solid var(--border-color);border-radius:8px;padding:16px;">
-        <div style="font-size:0.85em;color:var(--text-tertiary);margin-bottom:4px;"><span class="es">Ultima Operacion</span><span class="en">Last Operation</span></div>
-        <div><span style="background:#22c55e;color:#fff;padding:2px 8px;border-radius:4px;font-size:0.8em;">SUCCESS</span> <span style="font-size:0.9em;">TAKEOVER &mdash; 2026-03-10 18:32</span></div>
+
+      <div class="card mt-2">
+        <div class="card-header">
+          <div class="card-title"><div class="card-icon danger">&#127758;</div> CROSS_REGION_DR</div>
+          <span class="badge cyan">Enterprise</span>
+        </div>
+        <p class="text-sm"><span class="es">Despliegue multi-region con failover automatico entre centros de datos geograficamente distribuidos. Requiere plan Enterprise.</span><span class="en">Multi-region deployment with automatic failover between geographically distributed data centers. Requires Enterprise plan.</span></p>
+        <ul class="feature-list">
+          <li><span class="es">Multi-region activo/pasivo o activo/activo</span><span class="en">Multi-region active/passive or active/active</span></li>
+          <li><span class="es">DNS failover automatico</span><span class="en">Automatic DNS failover</span></li>
+          <li><span class="es">RPO configurable: 0-15 minutos</span><span class="en">Configurable RPO: 0-15 minutes</span></li>
+          <li><span class="es">Solo plan Enterprise</span><span class="en">Enterprise plan only</span></li>
+        </ul>
       </div>
     </div>
-  </section>
 
-  <!-- ====== ACTION BUTTONS PER STRATEGY ====== -->
-  <section class="doc-section">
-    <h3><span class="es">Acciones por Estrategia</span><span class="en">Actions per Strategy</span></h3>
-    <p>
-      <span class="es">Cada sistema muestra botones de accion especificos segun su estrategia de HA. Al pulsar un boton, se abre un dialogo de confirmacion antes de iniciar la operacion.</span>
-      <span class="en">Each system displays action buttons specific to its HA strategy. When clicking a button, a confirmation dialog opens before initiating the operation.</span>
-    </p>
+    <!-- ══ TAB: Configuration ══ -->
+    <div id="panel-config" style="display:none;">
+      <h2><span class="es">Configuracion HA por Sistema</span><span class="en">HA Configuration per System</span></h2>
 
-    <table class="doc-table">
-      <thead>
-        <tr>
-          <th><span class="es">Estrategia</span><span class="en">Strategy</span></th>
-          <th><span class="es">Acciones Disponibles</span><span class="en">Available Actions</span></th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td><strong style="color:#22c55e;">HOT_STANDBY</strong></td>
-          <td>
-            <span style="background:#ef4444;color:#fff;padding:2px 10px;border-radius:4px;font-size:0.85em;">Takeover</span>
-            <span style="background:#f59e0b;color:#000;padding:2px 10px;border-radius:4px;font-size:0.85em;margin-left:4px;">Failover</span>
-            <span style="background:var(--bg3);color:var(--txt2);padding:2px 10px;border-radius:4px;font-size:0.85em;margin-left:4px;border:1px solid var(--brd);">Check</span>
-            <br><br>
-            <span class="es"><strong>Takeover</strong>: Fuerza la toma de control por el secundario (operacion manual). <strong>Failover</strong>: Inicia failover automatico al nodo secundario. <strong>Check</strong>: Verifica el estado de replicacion y conectividad.</span>
-            <span class="en"><strong>Takeover</strong>: Forces takeover by the secondary (manual operation). <strong>Failover</strong>: Initiates automatic failover to the secondary node. <strong>Check</strong>: Verifies replication status and connectivity.</span>
-          </td>
-        </tr>
-        <tr>
-          <td><strong style="color:#f59e0b;">WARM_STANDBY</strong></td>
-          <td>
-            <span style="background:#f59e0b;color:#000;padding:2px 10px;border-radius:4px;font-size:0.85em;">Failover</span>
-            <span style="background:var(--bg3);color:var(--txt2);padding:2px 10px;border-radius:4px;font-size:0.85em;margin-left:4px;border:1px solid var(--brd);">Check</span>
-            <br><br>
-            <span class="es"><strong>Failover</strong>: Escala el nodo secundario y ejecuta el failover completo. <strong>Check</strong>: Verifica el estado de replicacion y la disponibilidad de recursos para el escalado.</span>
-            <span class="en"><strong>Failover</strong>: Scales up the secondary node and executes the full failover. <strong>Check</strong>: Verifies replication status and resource availability for scale-up.</span>
-          </td>
-        </tr>
-        <tr>
-          <td><strong style="color:#8b5cf6;">PILOT_LIGHT</strong></td>
-          <td>
-            <span style="background:#8b5cf6;color:#fff;padding:2px 10px;border-radius:4px;font-size:0.85em;"><span class="es">Activar DR</span><span class="en">Activate DR</span></span>
-            <span style="background:#3b82f6;color:#fff;padding:2px 10px;border-radius:4px;font-size:0.85em;margin-left:4px;">Test DR</span>
-            <span style="background:var(--bg3);color:var(--txt2);padding:2px 10px;border-radius:4px;font-size:0.85em;margin-left:4px;border:1px solid var(--brd);">Check</span>
-            <br><br>
-            <span class="es"><strong>Activar DR</strong>: Inicia la instancia DR, restaura desde el ultimo backup y activa el sistema. <strong>Test DR</strong>: Ejecuta un simulacro sin afectar produccion. <strong>Check</strong>: Verifica el ultimo backup sincronizado y la disponibilidad de la instancia.</span>
-            <span class="en"><strong>Activate DR</strong>: Starts the DR instance, restores from the last backup and activates the system. <strong>Test DR</strong>: Runs a drill without affecting production. <strong>Check</strong>: Verifies the last synchronized backup and instance availability.</span>
-          </td>
-        </tr>
-        <tr>
-          <td><strong style="color:#ef4444;">CROSS_REGION_DR</strong></td>
-          <td>
-            <span style="background:#ef4444;color:#fff;padding:2px 10px;border-radius:4px;font-size:0.85em;">DR Switchover</span>
-            <span style="background:#3b82f6;color:#fff;padding:2px 10px;border-radius:4px;font-size:0.85em;margin-left:4px;">Test DR</span>
-            <span style="background:var(--bg3);color:var(--txt2);padding:2px 10px;border-radius:4px;font-size:0.85em;margin-left:4px;border:1px solid var(--brd);">Check</span>
-            <br><br>
-            <span class="es"><strong>DR Switchover</strong>: Conmuta la operacion a la region DR. <strong>Test DR</strong>: Simulacro de switchover sin afectar produccion. <strong>Check</strong>: Verifica la replicacion cross-region y la latencia.</span>
-            <span class="en"><strong>DR Switchover</strong>: Switches operation to the DR region. <strong>Test DR</strong>: Switchover drill without affecting production. <strong>Check</strong>: Verifies cross-region replication and latency.</span>
-          </td>
-        </tr>
-        <tr>
-          <td><strong style="color:#3b82f6;">BACKUP_RESTORE</strong></td>
-          <td>
-            <span style="background:#3b82f6;color:#fff;padding:2px 10px;border-radius:4px;font-size:0.85em;">Restore</span>
-            <span style="background:var(--bg3);color:var(--txt2);padding:2px 10px;border-radius:4px;font-size:0.85em;margin-left:4px;border:1px solid var(--brd);">Test Restore</span>
-            <span style="background:var(--bg3);color:var(--txt2);padding:2px 10px;border-radius:4px;font-size:0.85em;margin-left:4px;border:1px solid var(--brd);">Check</span>
-            <br><br>
-            <span class="es"><strong>Restore</strong>: Restaura el sistema desde el ultimo backup completo + logs. <strong>Test Restore</strong>: Ejecuta un restore de prueba sin afectar el sistema activo. <strong>Check</strong>: Verifica la disponibilidad e integridad de los backups.</span>
-            <span class="en"><strong>Restore</strong>: Restores the system from the last full backup + logs. <strong>Test Restore</strong>: Executes a test restore without affecting the active system. <strong>Check</strong>: Verifies backup availability and integrity.</span>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-  </section>
-
-  <!-- ====== DRIVERS REGISTRADOS ====== -->
-  <section class="doc-section">
-    <h3><span class="es">Drivers Registrados</span><span class="en">Registered Drivers</span></h3>
-    <p>
-      <span class="es">En la parte inferior de la pestana Sistemas HA se muestra la seccion de <strong>Drivers Registrados</strong>, que lista los controladores de cluster y pacemaker configurados para cada sistema.</span>
-      <span class="en">At the bottom of the HA Systems tab, the <strong>Registered Drivers</strong> section is displayed, listing the cluster and pacemaker controllers configured for each system.</span>
-    </p>
-
-    <div style="overflow-x:auto;">
-      <table class="doc-table" style="font-size:0.9em;">
-        <thead>
-          <tr>
-            <th><span class="es">Nombre</span><span class="en">Name</span></th>
-            <th><span class="es">Tipo</span><span class="en">Type</span></th>
-            <th><span class="es">Version</span><span class="en">Version</span></th>
-            <th><span class="es">Estado</span><span class="en">Status</span></th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td><code>SAPHanaSR</code></td>
-            <td>Pacemaker Resource Agent</td>
-            <td>0.162.3</td>
-            <td><span style="background:rgba(34,197,94,0.12);color:#22c55e;padding:2px 8px;border-radius:100px;font-size:0.85em;">Active</span></td>
-          </tr>
-          <tr>
-            <td><code>aws-vpc-move-ip</code></td>
-            <td>Cluster VIP Driver</td>
-            <td>1.4.0</td>
-            <td><span style="background:rgba(34,197,94,0.12);color:#22c55e;padding:2px 8px;border-radius:100px;font-size:0.85em;">Active</span></td>
-          </tr>
-          <tr>
-            <td><code>fence_aws</code></td>
-            <td>Fencing Agent</td>
-            <td>4.10.0</td>
-            <td><span style="background:rgba(34,197,94,0.12);color:#22c55e;padding:2px 8px;border-radius:100px;font-size:0.85em;">Active</span></td>
-          </tr>
-          <tr>
-            <td><code>SAPInstance</code></td>
-            <td>Cluster Resource Agent</td>
-            <td>0.180.0</td>
-            <td><span style="background:rgba(245,158,11,0.12);color:#f59e0b;padding:2px 8px;border-radius:100px;font-size:0.85em;">Degraded</span></td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-  </section>
-
-  <!-- ══════════════════════════════════════════════════════════════ -->
-  <!-- TAB 2: OPERACIONES                                           -->
-  <!-- ══════════════════════════════════════════════════════════════ -->
-
-  <section class="doc-section">
-    <h2><span class="es">Pestana: Operaciones</span><span class="en">Tab: Operations</span></h2>
-    <p>
-      <span class="es">La pestana <strong>Operaciones</strong> muestra las operaciones HA en ejecucion y el historial completo de operaciones realizadas.</span>
-      <span class="en">The <strong>Operations</strong> tab shows running HA operations and the complete history of performed operations.</span>
-    </p>
-  </section>
-
-  <!-- ====== RUNNING OPERATION ====== -->
-  <section class="doc-section">
-    <h3><span class="es">Operacion en Progreso</span><span class="en">Running Operation</span></h3>
-    <p>
-      <span class="es">Cuando hay una operacion en ejecucion, se muestra un panel de progreso en tiempo real en la parte superior. El panel incluye:</span>
-      <span class="en">When an operation is running, a real-time progress panel is displayed at the top. The panel includes:</span>
-    </p>
-
-    <div style="background:var(--bg-secondary);border:2px solid var(--cyan);border-radius:8px;padding:20px;margin:16px 0;">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
+      <div class="callout info mb-2">
+        <div class="callout-icon">&#9432;</div>
         <div>
-          <strong style="font-size:1.05em;"><span class="es">Failover en curso</span><span class="en">Failover in progress</span></strong>
-          <span style="color:var(--text-tertiary);margin-left:8px;font-size:0.9em;">PRD &mdash; HOT_STANDBY</span>
-        </div>
-        <span style="background:rgba(6,182,212,0.15);color:var(--cyan);padding:4px 12px;border-radius:100px;font-size:0.85em;font-weight:600;">60%</span>
-      </div>
-      <!-- Progress bar -->
-      <div style="background:var(--bg3);border-radius:4px;height:8px;margin-bottom:16px;">
-        <div style="background:linear-gradient(90deg,var(--cyan),var(--violet));border-radius:4px;height:8px;width:60%;"></div>
-      </div>
-      <!-- Steps -->
-      <div style="display:flex;flex-direction:column;gap:8px;font-size:0.9em;">
-        <div style="display:flex;align-items:center;gap:10px;">
-          <span style="color:#22c55e;">&#10003;</span>
-          <span style="text-decoration:line-through;color:var(--txt3);"><span class="es">Validar prerequisitos</span><span class="en">Validate prerequisites</span></span>
-          <span style="background:rgba(34,197,94,0.12);color:#22c55e;padding:1px 6px;border-radius:4px;font-size:0.8em;margin-left:auto;">completed</span>
-        </div>
-        <div style="display:flex;align-items:center;gap:10px;">
-          <span style="color:#22c55e;">&#10003;</span>
-          <span style="text-decoration:line-through;color:var(--txt3);"><span class="es">Detener replicacion</span><span class="en">Stop replication</span></span>
-          <span style="background:rgba(34,197,94,0.12);color:#22c55e;padding:1px 6px;border-radius:4px;font-size:0.8em;margin-left:auto;">completed</span>
-        </div>
-        <div style="display:flex;align-items:center;gap:10px;">
-          <span style="color:var(--cyan);font-weight:700;">&#8594;</span>
-          <strong style="color:var(--cyan);"><span class="es">Promover nodo secundario</span><span class="en">Promote secondary node</span></strong>
-          <span style="background:rgba(6,182,212,0.15);color:var(--cyan);padding:1px 6px;border-radius:4px;font-size:0.8em;margin-left:auto;">running</span>
-        </div>
-        <div style="display:flex;align-items:center;gap:10px;">
-          <span style="color:var(--txt3);">&#9679;</span>
-          <span style="color:var(--txt3);"><span class="es">Mover VIP al nuevo primario</span><span class="en">Move VIP to new primary</span></span>
-          <span style="background:var(--bg3);color:var(--txt3);padding:1px 6px;border-radius:4px;font-size:0.8em;margin-left:auto;">pending</span>
-        </div>
-        <div style="display:flex;align-items:center;gap:10px;">
-          <span style="color:var(--txt3);">&#9679;</span>
-          <span style="color:var(--txt3);"><span class="es">Verificar servicios</span><span class="en">Verify services</span></span>
-          <span style="background:var(--bg3);color:var(--txt3);padding:1px 6px;border-radius:4px;font-size:0.8em;margin-left:auto;">pending</span>
+          <span class="es">La configuracion HA se define por sistema. Cada sistema puede tener una estrategia diferente segun sus requerimientos de negocio.</span>
+          <span class="en">HA configuration is defined per system. Each system can have a different strategy based on its business requirements.</span>
         </div>
       </div>
-    </div>
-  </section>
 
-  <!-- ====== OPERATIONS HISTORY TABLE ====== -->
-  <section class="doc-section">
-    <h3><span class="es">Historial de Operaciones</span><span class="en">Operations History</span></h3>
-    <p>
-      <span class="es">Debajo del panel de operacion activa se muestra una tabla con el historial completo de operaciones HA ejecutadas:</span>
-      <span class="en">Below the active operation panel a table with the full history of executed HA operations is displayed:</span>
-    </p>
+      <h3><span class="es">Estructura de Configuracion</span><span class="en">Configuration Structure</span></h3>
+      <pre><code>{
+  "systemId": "uuid",
+  "sid": "PRD",
+  "strategy": "HOT_STANDBY",
+  "primaryNode": {
+    "hostname": "sapapp01.prod.local",
+    "instanceNr": "00",
+    "region": "eu-central-1"
+  },
+  "secondaryNode": {
+    "hostname": "sapapp02.prod.local",
+    "instanceNr": "00",
+    "region": "eu-central-1"
+  },
+  "rpoMinutes": 0,
+  "rtoMinutes": 5,
+  "autoFailover": true,
+  "lastFailoverAt": "2026-02-14T08:32:00Z",
+  "status": "standby",
+  "healthCheckIntervalSec": 30,
+  "notifyOnFailover": true,
+  "notifyChannels": ["email", "slack"]
+}</code></pre>
 
-    <table class="doc-table">
-      <thead>
-        <tr>
-          <th><span class="es">Columna</span><span class="en">Column</span></th>
-          <th><span class="es">Que muestra</span><span class="en">What it shows</span></th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td><strong>ID</strong></td>
-          <td><span class="es">Identificador unico de la operacion HA (ej. <code>HA-0017</code>).</span><span class="en">Unique HA operation identifier (e.g. <code>HA-0017</code>).</span></td>
-        </tr>
-        <tr>
-          <td><strong><span class="es">Sistema</span><span class="en">System</span></strong></td>
-          <td><span class="es">SID del sistema en badge de color.</span><span class="en">System SID in colored badge.</span></td>
-        </tr>
-        <tr>
-          <td><strong><span class="es">Tipo</span><span class="en">Type</span></strong></td>
-          <td>
-            <span class="es">Tipo de operacion HA, mostrado como badge:
-              <br>&#8226; <span style="background:#ef4444;color:#fff;padding:2px 8px;border-radius:4px;font-size:0.85em;">TAKEOVER</span> &mdash; Toma de control manual por el secundario.
-              <br>&#8226; <span style="background:#f59e0b;color:#000;padding:2px 8px;border-radius:4px;font-size:0.85em;">FAILOVER</span> &mdash; Failover automatico al secundario.
-              <br>&#8226; <span style="background:#3b82f6;color:#fff;padding:2px 8px;border-radius:4px;font-size:0.85em;">FAILBACK</span> &mdash; Retorno al nodo primario original.
-              <br>&#8226; <span style="background:#8b5cf6;color:#fff;padding:2px 8px;border-radius:4px;font-size:0.85em;">DR_ACTIVATION</span> &mdash; Activacion de entorno DR.
-              <br>&#8226; <span style="background:var(--cyan);color:#fff;padding:2px 8px;border-radius:4px;font-size:0.85em;">DR_TEST</span> &mdash; Simulacro de DR sin afectar produccion.
-              <br>&#8226; <span style="background:#7f1d1d;color:#fff;padding:2px 8px;border-radius:4px;font-size:0.85em;">DR_SWITCHOVER</span> &mdash; Conmutacion a la region DR.
-              <br>&#8226; <span style="background:#22c55e;color:#fff;padding:2px 8px;border-radius:4px;font-size:0.85em;">RESTORE</span> &mdash; Restauracion desde backup.
-            </span>
-            <span class="en">HA operation type, shown as badge:
-              <br>&#8226; <span style="background:#ef4444;color:#fff;padding:2px 8px;border-radius:4px;font-size:0.85em;">TAKEOVER</span> &mdash; Manual takeover by the secondary.
-              <br>&#8226; <span style="background:#f59e0b;color:#000;padding:2px 8px;border-radius:4px;font-size:0.85em;">FAILOVER</span> &mdash; Automatic failover to secondary.
-              <br>&#8226; <span style="background:#3b82f6;color:#fff;padding:2px 8px;border-radius:4px;font-size:0.85em;">FAILBACK</span> &mdash; Return to original primary node.
-              <br>&#8226; <span style="background:#8b5cf6;color:#fff;padding:2px 8px;border-radius:4px;font-size:0.85em;">DR_ACTIVATION</span> &mdash; DR environment activation.
-              <br>&#8226; <span style="background:var(--cyan);color:#fff;padding:2px 8px;border-radius:4px;font-size:0.85em;">DR_TEST</span> &mdash; DR drill without affecting production.
-              <br>&#8226; <span style="background:#7f1d1d;color:#fff;padding:2px 8px;border-radius:4px;font-size:0.85em;">DR_SWITCHOVER</span> &mdash; Switchover to DR region.
-              <br>&#8226; <span style="background:#22c55e;color:#fff;padding:2px 8px;border-radius:4px;font-size:0.85em;">RESTORE</span> &mdash; Restore from backup.
-            </span>
-          </td>
-        </tr>
-        <tr>
-          <td><strong><span class="es">Estado</span><span class="en">Status</span></strong></td>
-          <td><span class="es">Estado de la operacion: <span style="color:#22c55e;">SUCCESS</span>, <span style="color:#f59e0b;">IN_PROGRESS</span>, <span style="color:#ef4444;">FAILED</span>.</span><span class="en">Operation status: <span style="color:#22c55e;">SUCCESS</span>, <span style="color:#f59e0b;">IN_PROGRESS</span>, <span style="color:#ef4444;">FAILED</span>.</span></td>
-        </tr>
-        <tr>
-          <td><strong><span class="es">Ejecutado por</span><span class="en">Executed by</span></strong></td>
-          <td><span class="es">Nombre del usuario que inicio la operacion.</span><span class="en">Name of the user who initiated the operation.</span></td>
-        </tr>
-        <tr>
-          <td><strong><span class="es">Razon</span><span class="en">Reason</span></strong></td>
-          <td><span class="es">Motivo proporcionado al iniciar la operacion (ej. <em>Fallo de disco en primario</em>).</span><span class="en">Reason provided when initiating the operation (e.g. <em>Primary disk failure</em>).</span></td>
-        </tr>
-        <tr>
-          <td><strong><span class="es">Inicio</span><span class="en">Start</span></strong></td>
-          <td><span class="es">Fecha y hora de inicio de la operacion.</span><span class="en">Operation start date and time.</span></td>
-        </tr>
-        <tr>
-          <td><strong><span class="es">Duracion</span><span class="en">Duration</span></strong></td>
-          <td><span class="es">Tiempo total de ejecucion de la operacion.</span><span class="en">Total operation execution time.</span></td>
-        </tr>
-        <tr>
-          <td><strong><span class="es">Pasos</span><span class="en">Steps</span></strong></td>
-          <td><span class="es">Progreso de los pasos completados sobre el total (ej. <strong>5 / 5</strong>).</span><span class="en">Progress of steps completed out of total (e.g. <strong>5 / 5</strong>).</span></td>
-        </tr>
-      </tbody>
-    </table>
-
-    <!-- Example operations history table -->
-    <h4><span class="es">Ejemplo de Historial</span><span class="en">History Example</span></h4>
-    <div style="overflow-x:auto;">
-      <table class="doc-table" style="font-size:0.9em;">
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th><span class="es">Sistema</span><span class="en">System</span></th>
-            <th><span class="es">Tipo</span><span class="en">Type</span></th>
-            <th><span class="es">Estado</span><span class="en">Status</span></th>
-            <th><span class="es">Ejecutado por</span><span class="en">Executed by</span></th>
-            <th><span class="es">Razon</span><span class="en">Reason</span></th>
-            <th><span class="es">Inicio</span><span class="en">Start</span></th>
-            <th><span class="es">Duracion</span><span class="en">Duration</span></th>
-            <th><span class="es">Pasos</span><span class="en">Steps</span></th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td><code>HA-0017</code></td>
-            <td><span style="background:var(--accent-blue);color:#fff;padding:1px 6px;border-radius:3px;font-size:0.85em;">PRD</span></td>
-            <td><span style="background:#ef4444;color:#fff;padding:2px 8px;border-radius:4px;font-size:0.85em;">TAKEOVER</span></td>
-            <td><span style="background:#22c55e;color:#fff;padding:2px 8px;border-radius:4px;font-size:0.85em;">SUCCESS</span></td>
-            <td>admin</td>
-            <td><span class="es">Fallo disco primario</span><span class="en">Primary disk failure</span></td>
-            <td>2026-03-10 18:32</td>
-            <td>1m 48s</td>
-            <td>5 / 5</td>
-          </tr>
-          <tr>
-            <td><code>HA-0016</code></td>
-            <td><span style="background:#f59e0b;color:#000;padding:1px 6px;border-radius:3px;font-size:0.85em;">QAS</span></td>
-            <td><span style="background:#f59e0b;color:#000;padding:2px 8px;border-radius:4px;font-size:0.85em;">FAILOVER</span></td>
-            <td><span style="background:#22c55e;color:#fff;padding:2px 8px;border-radius:4px;font-size:0.85em;">SUCCESS</span></td>
-            <td>j.martinez</td>
-            <td><span class="es">Prueba trimestral</span><span class="en">Quarterly test</span></td>
-            <td>2026-03-08 06:00</td>
-            <td>12m 35s</td>
-            <td>7 / 7</td>
-          </tr>
-          <tr>
-            <td><code>HA-0015</code></td>
-            <td><span style="background:var(--accent-blue);color:#fff;padding:1px 6px;border-radius:3px;font-size:0.85em;">PRD</span></td>
-            <td><span style="background:var(--cyan);color:#fff;padding:2px 8px;border-radius:4px;font-size:0.85em;">DR_TEST</span></td>
-            <td><span style="background:#ef4444;color:#fff;padding:2px 8px;border-radius:4px;font-size:0.85em;">FAILED</span></td>
-            <td>admin</td>
-            <td><span class="es">Simulacro DR mensual</span><span class="en">Monthly DR drill</span></td>
-            <td>2026-03-05 22:00</td>
-            <td>4m 12s</td>
-            <td>3 / 6</td>
-          </tr>
-          <tr>
-            <td><code>HA-0014</code></td>
-            <td><span style="background:#22c55e;color:#fff;padding:1px 6px;border-radius:3px;font-size:0.85em;">DEV</span></td>
-            <td><span style="background:#22c55e;color:#fff;padding:2px 8px;border-radius:4px;font-size:0.85em;">RESTORE</span></td>
-            <td><span style="background:#22c55e;color:#fff;padding:2px 8px;border-radius:4px;font-size:0.85em;">SUCCESS</span></td>
-            <td>c.lopez</td>
-            <td><span class="es">Restauracion para pruebas</span><span class="en">Restore for testing</span></td>
-            <td>2026-03-04 09:30</td>
-            <td>2h 45m</td>
-            <td>4 / 4</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-  </section>
-
-  <!-- ====== CONFIRMATION DIALOG ====== -->
-  <section class="doc-section">
-    <h3><span class="es">Dialogo de Confirmacion</span><span class="en">Confirmation Dialog</span></h3>
-    <p>
-      <span class="es">Al iniciar cualquier operacion HA, se abre un dialogo modal de confirmacion que muestra la informacion critica de la operacion a realizar. Debe revisar los datos y confirmar antes de que la operacion se ejecute.</span>
-      <span class="en">When initiating any HA operation, a confirmation modal dialog opens showing the critical information of the operation to be performed. You must review the data and confirm before the operation executes.</span>
-    </p>
-
-    <div style="background:var(--bg-secondary);border:1px solid var(--border-color);border-radius:8px;padding:24px;margin:16px 0;">
-      <h4 style="margin-top:0;"><span class="es">Confirmar Operacion HA</span><span class="en">Confirm HA Operation</span></h4>
-      <table class="doc-table" style="font-size:0.9em;">
-        <tbody>
-          <tr>
-            <td style="width:160px;"><strong><span class="es">Sistema</span><span class="en">System</span></strong></td>
-            <td><span style="background:var(--accent-blue);color:#fff;padding:1px 6px;border-radius:3px;font-size:0.85em;">PRD</span> S4H Production</td>
-          </tr>
-          <tr>
-            <td><strong><span class="es">Operacion</span><span class="en">Operation</span></strong></td>
-            <td><span style="background:#ef4444;color:#fff;padding:2px 8px;border-radius:4px;font-size:0.85em;">TAKEOVER</span></td>
-          </tr>
-          <tr>
-            <td><strong><span class="es">Estrategia</span><span class="en">Strategy</span></strong></td>
-            <td>HOT_STANDBY</td>
-          </tr>
-          <tr>
-            <td><strong><span class="es">Pasos a ejecutar</span><span class="en">Steps to execute</span></strong></td>
-            <td>
-              <span class="es">
-                1. Validar prerequisitos<br>
-                2. Detener replicacion<br>
-                3. Promover nodo secundario<br>
-                4. Mover VIP al nuevo primario<br>
-                5. Verificar servicios
-              </span>
-              <span class="en">
-                1. Validate prerequisites<br>
-                2. Stop replication<br>
-                3. Promote secondary node<br>
-                4. Move VIP to new primary<br>
-                5. Verify services
-              </span>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-      <div style="display:flex;gap:12px;margin-top:16px;justify-content:flex-end;">
-        <span style="background:var(--bg3);color:var(--txt2);padding:8px 20px;border-radius:6px;border:1px solid var(--brd);cursor:pointer;"><span class="es">Cancelar</span><span class="en">Cancel</span></span>
-        <span style="background:#ef4444;color:#fff;padding:8px 20px;border-radius:6px;font-weight:600;cursor:pointer;"><span class="es">Confirmar Operacion</span><span class="en">Confirm Operation</span></span>
-      </div>
-    </div>
-  </section>
-
-  <!-- ══════════════════════════════════════════════════════════════ -->
-  <!-- TAB 3: PREREQUISITES                                         -->
-  <!-- ══════════════════════════════════════════════════════════════ -->
-
-  <section class="doc-section">
-    <h2><span class="es">Pestana: Prerequisites</span><span class="en">Tab: Prerequisites</span></h2>
-    <p>
-      <span class="es">La pestana <strong>Prerequisites</strong> muestra un checklist de verificacion por cada sistema configurado con HA. Antes de ejecutar una operacion de failover o DR, el sistema evalua automaticamente una serie de condiciones previas necesarias para garantizar el exito de la operacion.</span>
-      <span class="en">The <strong>Prerequisites</strong> tab shows a verification checklist per HA-configured system. Before executing a failover or DR operation, the system automatically evaluates a series of preconditions necessary to guarantee operation success.</span>
-    </p>
-
-    <p>
-      <span class="es">Cada prerequisito muestra tres campos: <strong>nombre</strong>, <strong>descripcion</strong> y <strong>estado</strong>. Los estados posibles son:</span>
-      <span class="en">Each prerequisite shows three fields: <strong>name</strong>, <strong>description</strong> and <strong>status</strong>. The possible statuses are:</span>
-    </p>
-
-    <div style="display:flex;gap:16px;flex-wrap:wrap;margin:12px 0;">
-      <div style="display:flex;align-items:center;gap:6px;">
-        <span style="background:rgba(34,197,94,0.12);color:#22c55e;padding:2px 10px;border-radius:100px;font-size:0.85em;font-weight:600;">PASS</span>
-        <span style="font-size:0.9em;color:var(--txt3);"><span class="es">&mdash; Verificacion exitosa</span><span class="en">&mdash; Check passed</span></span>
-      </div>
-      <div style="display:flex;align-items:center;gap:6px;">
-        <span style="background:rgba(245,158,11,0.12);color:#f59e0b;padding:2px 10px;border-radius:100px;font-size:0.85em;font-weight:600;">WARN</span>
-        <span style="font-size:0.9em;color:var(--txt3);"><span class="es">&mdash; Advertencia, revise manualmente</span><span class="en">&mdash; Warning, review manually</span></span>
-      </div>
-      <div style="display:flex;align-items:center;gap:6px;">
-        <span style="background:rgba(239,68,68,0.12);color:#ef4444;padding:2px 10px;border-radius:100px;font-size:0.85em;font-weight:600;">FAIL</span>
-        <span style="font-size:0.9em;color:var(--txt3);"><span class="es">&mdash; Fallo, operacion bloqueada</span><span class="en">&mdash; Failed, operation blocked</span></span>
+      <h3><span class="es">Parametros Clave</span><span class="en">Key Parameters</span></h3>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th><span class="es">Parametro</span><span class="en">Parameter</span></th>
+              <th><span class="es">Tipo</span><span class="en">Type</span></th>
+              <th><span class="es">Descripcion</span><span class="en">Description</span></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="font-mono">strategy</td>
+              <td><code>enum</code></td>
+              <td><span class="es">Estrategia HA: HOT_STANDBY, WARM_STANDBY, PILOT_LIGHT, BACKUP_RESTORE, CROSS_REGION_DR</span><span class="en">HA strategy: HOT_STANDBY, WARM_STANDBY, PILOT_LIGHT, BACKUP_RESTORE, CROSS_REGION_DR</span></td>
+            </tr>
+            <tr>
+              <td class="font-mono">rpoMinutes</td>
+              <td><code>number</code></td>
+              <td><span class="es">Objetivo de punto de recuperacion en minutos</span><span class="en">Recovery Point Objective in minutes</span></td>
+            </tr>
+            <tr>
+              <td class="font-mono">rtoMinutes</td>
+              <td><code>number</code></td>
+              <td><span class="es">Objetivo de tiempo de recuperacion en minutos</span><span class="en">Recovery Time Objective in minutes</span></td>
+            </tr>
+            <tr>
+              <td class="font-mono">autoFailover</td>
+              <td><code>boolean</code></td>
+              <td><span class="es">Habilitar failover automatico (solo HOT_STANDBY y CROSS_REGION_DR)</span><span class="en">Enable automatic failover (only HOT_STANDBY and CROSS_REGION_DR)</span></td>
+            </tr>
+            <tr>
+              <td class="font-mono">status</td>
+              <td><code>enum</code></td>
+              <td><span class="es">Estado actual: standby, failover_in_progress, failed_over</span><span class="en">Current status: standby, failover_in_progress, failed_over</span></td>
+            </tr>
+            <tr>
+              <td class="font-mono">lastFailoverAt</td>
+              <td><code>ISO 8601</code></td>
+              <td><span class="es">Fecha/hora del ultimo failover ejecutado</span><span class="en">Date/time of the last executed failover</span></td>
+            </tr>
+            <tr>
+              <td class="font-mono">healthCheckIntervalSec</td>
+              <td><code>number</code></td>
+              <td><span class="es">Intervalo del health check en segundos (default: 30)</span><span class="en">Health check interval in seconds (default: 30)</span></td>
+            </tr>
+          </tbody>
+        </table>
       </div>
     </div>
 
-    <!-- Example Prerequisites -->
-    <div style="background:var(--bg-secondary);border:1px solid var(--border-color);border-radius:8px;padding:20px;margin:16px 0;">
-      <div style="display:flex;align-items:center;gap:8px;margin-bottom:16px;">
-        <span style="background:var(--accent-blue);color:#fff;padding:2px 8px;border-radius:4px;font-size:0.85em;font-weight:700;">PRD</span>
-        <strong>S4H Production</strong>
-        <span style="color:var(--txt3);font-size:0.85em;margin-left:auto;">HOT_STANDBY</span>
-      </div>
+    <!-- ══ TAB: Failover ══ -->
+    <div id="panel-failover" style="display:none;">
+      <h2><span class="es">Ejecutar Failover</span><span class="en">Trigger Failover</span></h2>
 
-      <!-- Check 1: PASS -->
-      <div style="display:flex;align-items:flex-start;gap:12px;padding:10px 0;border-bottom:1px solid var(--brd);">
-        <span style="color:#22c55e;font-size:1.1em;flex-shrink:0;">&#10003;</span>
-        <div style="flex:1;">
-          <div style="font-weight:600;"><span class="es">Replicacion HANA SR</span><span class="en">HANA SR Replication</span></div>
-          <div style="font-size:0.85em;color:var(--txt3);"><span class="es">La replicacion del sistema HANA esta activa y sincronizada.</span><span class="en">HANA system replication is active and synchronized.</span></div>
+      <div class="callout danger mb-2">
+        <div class="callout-icon">&#9888;&#65039;</div>
+        <div>
+          <strong><span class="es">Accion Critica:</span><span class="en">Critical Action:</span></strong>
+          <span class="es">Solo los usuarios con rol <code>admin</code> (nivel 40) pueden ejecutar un failover. Esta accion redirigira el trafico del nodo primario al secundario.</span>
+          <span class="en">Only users with <code>admin</code> role (level 40) can trigger a failover. This action will redirect traffic from the primary to the secondary node.</span>
         </div>
-        <span style="background:rgba(34,197,94,0.12);color:#22c55e;padding:2px 10px;border-radius:100px;font-size:0.8em;font-weight:600;">PASS</span>
       </div>
 
-      <!-- Check 2: PASS -->
-      <div style="display:flex;align-items:flex-start;gap:12px;padding:10px 0;border-bottom:1px solid var(--brd);">
-        <span style="color:#22c55e;font-size:1.1em;flex-shrink:0;">&#10003;</span>
-        <div style="flex:1;">
-          <div style="font-weight:600;"><span class="es">Cluster Pacemaker</span><span class="en">Pacemaker Cluster</span></div>
-          <div style="font-size:0.85em;color:var(--txt3);"><span class="es">El cluster esta online con todos los nodos activos.</span><span class="en">Cluster is online with all nodes active.</span></div>
-        </div>
-        <span style="background:rgba(34,197,94,0.12);color:#22c55e;padding:2px 10px;border-radius:100px;font-size:0.8em;font-weight:600;">PASS</span>
-      </div>
-
-      <!-- Check 3: WARN -->
-      <div style="display:flex;align-items:flex-start;gap:12px;padding:10px 0;border-bottom:1px solid var(--brd);">
-        <span style="color:#f59e0b;font-size:1.1em;flex-shrink:0;">&#9888;</span>
-        <div style="flex:1;">
-          <div style="font-weight:600;"><span class="es">Fencing Configurado</span><span class="en">Fencing Configured</span></div>
-          <div style="font-size:0.85em;color:var(--txt3);"><span class="es">El agente de fencing esta configurado pero no se ha probado en los ultimos 30 dias.</span><span class="en">Fencing agent is configured but has not been tested in the last 30 days.</span></div>
-        </div>
-        <span style="background:rgba(245,158,11,0.12);color:#f59e0b;padding:2px 10px;border-radius:100px;font-size:0.8em;font-weight:600;">WARN</span>
-      </div>
-
-      <!-- Check 4: PASS -->
-      <div style="display:flex;align-items:flex-start;gap:12px;padding:10px 0;border-bottom:1px solid var(--brd);">
-        <span style="color:#22c55e;font-size:1.1em;flex-shrink:0;">&#10003;</span>
-        <div style="flex:1;">
-          <div style="font-weight:600;">VIP / DNS</div>
-          <div style="font-size:0.85em;color:var(--txt3);"><span class="es">La direccion VIP esta configurada y es accesible desde ambos nodos.</span><span class="en">VIP address is configured and reachable from both nodes.</span></div>
-        </div>
-        <span style="background:rgba(34,197,94,0.12);color:#22c55e;padding:2px 10px;border-radius:100px;font-size:0.8em;font-weight:600;">PASS</span>
-      </div>
-
-      <!-- Check 5: FAIL -->
-      <div style="display:flex;align-items:flex-start;gap:12px;padding:10px 0;">
-        <span style="color:#ef4444;font-size:1.1em;flex-shrink:0;">&#10007;</span>
-        <div style="flex:1;">
-          <div style="font-weight:600;"><span class="es">Backup Reciente</span><span class="en">Recent Backup</span></div>
-          <div style="font-size:0.85em;color:var(--txt3);"><span class="es">No se encontro un backup completo en las ultimas 24 horas. Ultimo backup: hace 36 horas.</span><span class="en">No full backup found in the last 24 hours. Last backup: 36 hours ago.</span></div>
-        </div>
-        <span style="background:rgba(239,68,68,0.12);color:#ef4444;padding:2px 10px;border-radius:100px;font-size:0.8em;font-weight:600;">FAIL</span>
-      </div>
-    </div>
-
-    <div style="background:rgba(245,158,11,0.08);border-left:3px solid #f59e0b;border-radius:6px;padding:16px 20px;margin-top:16px;">
-      <strong><span class="es">Importante</span><span class="en">Important</span></strong>
-      <p style="margin:8px 0 0;">
-        <span class="es">Los prerequisitos con estado <strong>FAIL</strong> bloquean la ejecucion de operaciones HA sobre ese sistema. Debe resolver las condiciones fallidas antes de poder iniciar un failover o takeover. Los prerequisitos con estado <strong>WARN</strong> permiten la ejecucion pero generan una advertencia en el dialogo de confirmacion.</span>
-        <span class="en">Prerequisites with <strong>FAIL</strong> status block the execution of HA operations on that system. You must resolve the failed conditions before you can initiate a failover or takeover. Prerequisites with <strong>WARN</strong> status allow execution but generate a warning in the confirmation dialog.</span>
+      <h3><span class="es">Verificacion de Prerequisitos</span><span class="en">Prerequisites Check</span></h3>
+      <p class="text-muted mb-2">
+        <span class="es">Antes de ejecutar un failover, el sistema verifica automaticamente las siguientes condiciones:</span>
+        <span class="en">Before triggering a failover, the system automatically verifies the following conditions:</span>
       </p>
-    </div>
-  </section>
 
-  <!-- ══════════════════════════════════════════════════════════════ -->
-  <!-- TAB 4: EVIDENCE                                              -->
-  <!-- ══════════════════════════════════════════════════════════════ -->
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th><span class="es">Verificacion</span><span class="en">Check</span></th>
+              <th>Status</th>
+              <th><span class="es">Detalle</span><span class="en">Detail</span></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><span class="es">Nodo secundario accesible</span><span class="en">Secondary node reachable</span></td>
+              <td><span class="badge success">&#10003; OK</span></td>
+              <td class="font-mono text-sm">sapapp02.prod.local:3200 - 12ms</td>
+            </tr>
+            <tr>
+              <td><span class="es">Replicacion sincronizada</span><span class="en">Replication synchronized</span></td>
+              <td><span class="badge success">&#10003; OK</span></td>
+              <td><span class="es">Delta: 0 transacciones pendientes</span><span class="en">Delta: 0 pending transactions</span></td>
+            </tr>
+            <tr>
+              <td><span class="es">Espacio en disco suficiente</span><span class="en">Sufficient disk space</span></td>
+              <td><span class="badge success">&#10003; OK</span></td>
+              <td>342 GB <span class="es">disponibles</span><span class="en">available</span></td>
+            </tr>
+            <tr>
+              <td><span class="es">Usuarios activos notificados</span><span class="en">Active users notified</span></td>
+              <td><span class="badge warning">&#9888; Pending</span></td>
+              <td>12 <span class="es">usuarios activos en el sistema</span><span class="en">active users on the system</span></td>
+            </tr>
+            <tr>
+              <td><span class="es">Backup reciente disponible</span><span class="en">Recent backup available</span></td>
+              <td><span class="badge success">&#10003; OK</span></td>
+              <td><span class="es">Ultimo backup: hace 15 min</span><span class="en">Last backup: 15 min ago</span></td>
+            </tr>
+            <tr>
+              <td><span class="es">Sin jobs criticos en ejecucion</span><span class="en">No critical jobs running</span></td>
+              <td><span class="badge success">&#10003; OK</span></td>
+              <td><span class="es">0 jobs SM37 activos</span><span class="en">0 active SM37 jobs</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
 
-  <section class="doc-section">
-    <h2><span class="es">Pestana: Evidence</span><span class="en">Tab: Evidence</span></h2>
-    <p>
-      <span class="es">La pestana <strong>Evidence</strong> proporciona una cadena de hashes SHA-256 que garantiza la integridad y trazabilidad de cada operacion HA ejecutada. Este registro es inmutable y puede exportarse para auditorias externas.</span>
-      <span class="en">The <strong>Evidence</strong> tab provides a SHA-256 hash chain that guarantees the integrity and traceability of each executed HA operation. This record is immutable and can be exported for external audits.</span>
-    </p>
-
-    <p>
-      <span class="es">Cada entrada de evidencia muestra:</span>
-      <span class="en">Each evidence entry shows:</span>
-    </p>
-
-    <table class="doc-table">
-      <thead>
-        <tr>
-          <th><span class="es">Campo</span><span class="en">Field</span></th>
-          <th><span class="es">Que muestra</span><span class="en">What it shows</span></th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td><strong><span class="es">ID Operacion</span><span class="en">Operation ID</span></strong></td>
-          <td><span class="es">Referencia a la operacion HA (ej. <code>HA-0017</code>) que vincula la evidencia con el historial de operaciones.</span><span class="en">Reference to the HA operation (e.g. <code>HA-0017</code>) linking evidence to the operations history.</span></td>
-        </tr>
-        <tr>
-          <td><strong><span class="es">Sistema</span><span class="en">System</span></strong></td>
-          <td><span class="es">SID del sistema involucrado en la operacion.</span><span class="en">SID of the system involved in the operation.</span></td>
-        </tr>
-        <tr>
-          <td><strong>Hash SHA-256</strong></td>
-          <td><span class="es">Hash criptografico de la operacion, que encadena con el hash anterior formando una cadena inmutable. Formato: <code style="font-size:0.85em;">a3f8b2c1...d4e5f6</code>.</span><span class="en">Cryptographic hash of the operation, chaining with the previous hash forming an immutable chain. Format: <code style="font-size:0.85em;">a3f8b2c1...d4e5f6</code>.</span></td>
-        </tr>
-        <tr>
-          <td><strong>Timestamp</strong></td>
-          <td><span class="es">Fecha y hora exacta en que se genero el hash de evidencia.</span><span class="en">Exact date and time when the evidence hash was generated.</span></td>
-        </tr>
-      </tbody>
-    </table>
-
-    <!-- Example Evidence chain -->
-    <div style="background:var(--bg-secondary);border:1px solid var(--border-color);border-radius:8px;padding:20px;margin:16px 0;">
-      <h4 style="margin-top:0;"><span class="es">Cadena de Evidencia</span><span class="en">Evidence Chain</span></h4>
-
-      <div style="display:flex;flex-direction:column;gap:12px;font-size:0.9em;">
-        <!-- Entry 1 -->
-        <div style="background:var(--bg3);border-radius:6px;padding:12px 16px;">
-          <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;">
-            <div>
-              <code>HA-0017</code>
-              <span style="background:var(--accent-blue);color:#fff;padding:1px 6px;border-radius:3px;font-size:0.85em;margin-left:6px;">PRD</span>
-              <span style="background:#ef4444;color:#fff;padding:1px 6px;border-radius:4px;font-size:0.8em;margin-left:4px;">TAKEOVER</span>
-            </div>
-            <span style="font-size:0.85em;color:var(--txt3);">2026-03-10 18:32:15 UTC</span>
-          </div>
-          <div style="margin-top:8px;">
-            <span style="font-size:0.8em;color:var(--txt3);">SHA-256:</span>
-            <code style="font-size:0.8em;word-break:break-all;">a3f8b2c1e7d9f4a6b8c0d2e4f6a8b0c2d4e6f8a1b3c5d7e9f1a3b5c7d9e1f3a5</code>
-          </div>
-          <div style="display:flex;align-items:center;gap:6px;margin-top:6px;">
-            <span style="color:#22c55e;font-size:0.85em;">&#10003;</span>
-            <span style="font-size:0.8em;color:#22c55e;"><span class="es">Hash verificado</span><span class="en">Hash verified</span></span>
-          </div>
+      <h3 class="mt-3"><span class="es">Proceso de Failover</span><span class="en">Failover Process</span></h3>
+      <div class="steps">
+        <div class="step">
+          <strong><span class="es">Verificar prerequisitos</span><span class="en">Verify prerequisites</span></strong>
+          <p class="text-sm text-muted"><span class="es">Ejecutar todas las verificaciones de salud automaticamente.</span><span class="en">Run all health checks automatically.</span></p>
         </div>
-
-        <div style="text-align:center;color:var(--txt3);font-size:0.85em;">&#8595; <span class="es">encadena con</span><span class="en">chains to</span> &#8595;</div>
-
-        <!-- Entry 2 -->
-        <div style="background:var(--bg3);border-radius:6px;padding:12px 16px;">
-          <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;">
-            <div>
-              <code>HA-0016</code>
-              <span style="background:#f59e0b;color:#000;padding:1px 6px;border-radius:3px;font-size:0.85em;margin-left:6px;">QAS</span>
-              <span style="background:#f59e0b;color:#000;padding:1px 6px;border-radius:4px;font-size:0.8em;margin-left:4px;">FAILOVER</span>
-            </div>
-            <span style="font-size:0.85em;color:var(--txt3);">2026-03-08 06:00:42 UTC</span>
-          </div>
-          <div style="margin-top:8px;">
-            <span style="font-size:0.8em;color:var(--txt3);">SHA-256:</span>
-            <code style="font-size:0.8em;word-break:break-all;">7b2d4e6f8a0c1e3f5a7b9c0d2e4f6a8b0c2d4e6f8a1b3c5d7e9f1a3b5c7d9e1f3</code>
-          </div>
-          <div style="display:flex;align-items:center;gap:6px;margin-top:6px;">
-            <span style="color:#22c55e;font-size:0.85em;">&#10003;</span>
-            <span style="font-size:0.8em;color:#22c55e;"><span class="es">Hash verificado</span><span class="en">Hash verified</span></span>
-          </div>
+        <div class="step">
+          <strong><span class="es">Notificar usuarios activos</span><span class="en">Notify active users</span></strong>
+          <p class="text-sm text-muted"><span class="es">Enviar notificacion por email y Slack a todos los usuarios con sesion activa.</span><span class="en">Send notification via email and Slack to all users with active sessions.</span></p>
         </div>
+        <div class="step">
+          <strong><span class="es">Detener aplicaciones en nodo primario</span><span class="en">Stop applications on primary node</span></strong>
+          <p class="text-sm text-muted"><span class="es">Cerrar conexiones SAP y detener servicios de forma ordenada.</span><span class="en">Close SAP connections and stop services gracefully.</span></p>
+        </div>
+        <div class="step">
+          <strong><span class="es">Activar nodo secundario</span><span class="en">Activate secondary node</span></strong>
+          <p class="text-sm text-muted"><span class="es">Promover el nodo secundario a primario y redirigir el trafico.</span><span class="en">Promote secondary node to primary and redirect traffic.</span></p>
+        </div>
+        <div class="step">
+          <strong><span class="es">Validar operacion</span><span class="en">Validate operation</span></strong>
+          <p class="text-sm text-muted"><span class="es">Ejecutar pruebas de conectividad y confirmar que el sistema esta operativo.</span><span class="en">Run connectivity tests and confirm the system is operational.</span></p>
+        </div>
+      </div>
 
-        <div style="text-align:center;color:var(--txt3);font-size:0.85em;">&#8595; <span class="es">encadena con</span><span class="en">chains to</span> &#8595;</div>
-
-        <!-- Entry 3 -->
-        <div style="background:var(--bg3);border-radius:6px;padding:12px 16px;">
-          <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;">
-            <div>
-              <code>HA-0015</code>
-              <span style="background:var(--accent-blue);color:#fff;padding:1px 6px;border-radius:3px;font-size:0.85em;margin-left:6px;">PRD</span>
-              <span style="background:var(--cyan);color:#fff;padding:1px 6px;border-radius:4px;font-size:0.8em;margin-left:4px;">DR_TEST</span>
-            </div>
-            <span style="font-size:0.85em;color:var(--txt3);">2026-03-05 22:00:18 UTC</span>
-          </div>
-          <div style="margin-top:8px;">
-            <span style="font-size:0.8em;color:var(--txt3);">SHA-256:</span>
-            <code style="font-size:0.8em;word-break:break-all;">c5d7e9f1a3b5c7d9e1f3a5b7c9d1e3f5a7b9c1d3e5f7a9b1c3d5e7f9a1b3c5d7e9</code>
-          </div>
-          <div style="display:flex;align-items:center;gap:6px;margin-top:6px;">
-            <span style="color:#22c55e;font-size:0.85em;">&#10003;</span>
-            <span style="font-size:0.8em;color:#22c55e;"><span class="es">Hash verificado</span><span class="en">Hash verified</span></span>
-          </div>
+      <div class="card mt-2" style="border-color:var(--danger);background:rgba(239,68,68,0.04);">
+        <div class="card-header">
+          <div class="card-title text-danger"><span class="es">Iniciar Failover Manual</span><span class="en">Trigger Manual Failover</span></div>
+          <span class="badge danger">Admin Only</span>
+        </div>
+        <p class="text-sm text-muted mb-2">
+          <span class="es">Seleccione el sistema destino y confirme para iniciar el proceso de failover.</span>
+          <span class="en">Select the target system and confirm to start the failover process.</span>
+        </p>
+        <div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap;">
+          <select style="background:var(--bg3);border:1px solid var(--brd);color:var(--txt1);padding:8px 12px;border-radius:8px;font-size:13px;">
+            <option>PRD — sapapp01.prod.local</option>
+            <option>QAS — sapapp03.qa.local</option>
+            <option>BW4 — sapbw01.prod.local</option>
+          </select>
+          <button style="background:var(--danger);color:#fff;border:none;padding:8px 20px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;">
+            <span class="es">Ejecutar Failover</span><span class="en">Trigger Failover</span>
+          </button>
         </div>
       </div>
     </div>
 
-    <p>
-      <span class="es">En la parte inferior de la pestana encontrara los botones para exportar la evidencia:</span>
-      <span class="en">At the bottom of the tab you will find buttons to export the evidence:</span>
-    </p>
-    <div style="display:flex;gap:12px;margin:12px 0;">
-      <span style="background:var(--accent-blue);color:#fff;padding:8px 16px;border-radius:6px;font-size:0.9em;cursor:pointer;font-weight:600;"><span class="es">Descargar Evidencia</span><span class="en">Download Evidence</span></span>
-      <span style="background:var(--bg3);color:var(--txt2);padding:8px 16px;border-radius:6px;font-size:0.9em;cursor:pointer;border:1px solid var(--brd);"><span class="es">Exportar CSV</span><span class="en">Export CSV</span></span>
-    </div>
-
-    <div style="background:rgba(6,182,212,0.08);border-left:3px solid var(--cyan);border-radius:6px;padding:16px 20px;margin-top:16px;">
-      <strong><span class="es">Sobre la cadena de hashes</span><span class="en">About the hash chain</span></strong>
-      <p style="margin:8px 0 0;">
-        <span class="es">Cada hash SHA-256 se calcula incluyendo el hash de la operacion anterior, creando una cadena criptografica similar a una blockchain. Si alguna entrada se modifica, todos los hashes posteriores se invalidan, garantizando la integridad del registro de auditoria. Esta informacion es util para cumplir con requisitos de compliance y auditorias SOX/SOC2.</span>
-        <span class="en">Each SHA-256 hash is calculated including the previous operation's hash, creating a cryptographic chain similar to a blockchain. If any entry is modified, all subsequent hashes become invalid, guaranteeing the integrity of the audit record. This information is useful for meeting SOX/SOC2 compliance and audit requirements.</span>
+    <!-- ══ TAB: History ══ -->
+    <div id="panel-history" style="display:none;">
+      <h2><span class="es">Historial de Operaciones</span><span class="en">Operations History</span></h2>
+      <p class="text-muted mb-2">
+        <span class="es">Registro completo de todas las operaciones de failover y failback ejecutadas.</span>
+        <span class="en">Complete record of all failover and failback operations executed.</span>
       </p>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th><span class="es">Fecha</span><span class="en">Date</span></th>
+              <th>SID</th>
+              <th><span class="es">Tipo</span><span class="en">Type</span></th>
+              <th><span class="es">Iniciado por</span><span class="en">Initiated by</span></th>
+              <th><span class="es">Duracion</span><span class="en">Duration</span></th>
+              <th><span class="es">Resultado</span><span class="en">Result</span></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="font-mono text-sm">2026-03-12 06:15</td>
+              <td class="font-bold text-primary">FIN</td>
+              <td><span class="badge warning">Failover</span></td>
+              <td>System (auto)</td>
+              <td>--</td>
+              <td><span class="badge warning"><span class="es">En curso</span><span class="en">In progress</span></span></td>
+            </tr>
+            <tr>
+              <td class="font-mono text-sm">2026-02-14 08:32</td>
+              <td class="font-bold text-primary">PRD</td>
+              <td><span class="badge warning">Failover</span></td>
+              <td>admin@company.com</td>
+              <td>4m 22s</td>
+              <td><span class="badge success"><span class="es">Exitoso</span><span class="en">Success</span></span></td>
+            </tr>
+            <tr>
+              <td class="font-mono text-sm">2026-02-14 15:10</td>
+              <td class="font-bold text-primary">PRD</td>
+              <td><span class="badge cyan">Failback</span></td>
+              <td>admin@company.com</td>
+              <td>8m 45s</td>
+              <td><span class="badge success"><span class="es">Exitoso</span><span class="en">Success</span></span></td>
+            </tr>
+            <tr>
+              <td class="font-mono text-sm">2026-01-20 14:10</td>
+              <td class="font-bold text-primary">QAS</td>
+              <td><span class="badge warning">Failover</span></td>
+              <td>ops-team@company.com</td>
+              <td>12m 05s</td>
+              <td><span class="badge success"><span class="es">Exitoso</span><span class="en">Success</span></span></td>
+            </tr>
+            <tr>
+              <td class="font-mono text-sm">2025-12-03 22:45</td>
+              <td class="font-bold text-primary">BW4</td>
+              <td><span class="badge warning">Failover</span></td>
+              <td>System (auto)</td>
+              <td>28m 12s</td>
+              <td><span class="badge success"><span class="es">Exitoso</span><span class="en">Success</span></span></td>
+            </tr>
+            <tr>
+              <td class="font-mono text-sm">2025-12-04 10:30</td>
+              <td class="font-bold text-primary">BW4</td>
+              <td><span class="badge cyan">Failback</span></td>
+              <td>admin@company.com</td>
+              <td>35m 18s</td>
+              <td><span class="badge success"><span class="es">Exitoso</span><span class="en">Success</span></span></td>
+            </tr>
+            <tr>
+              <td class="font-mono text-sm">2025-11-15 03:12</td>
+              <td class="font-bold text-primary">PRD</td>
+              <td><span class="badge warning">Failover</span></td>
+              <td>System (auto)</td>
+              <td>5m 01s</td>
+              <td><span class="badge danger"><span class="es">Fallido</span><span class="en">Failed</span></span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </div>
-  </section>
 
-  <!-- ====== TIPS ====== -->
-  <section class="doc-section">
-    <h2><span class="es">Consejos</span><span class="en">Tips</span></h2>
-    <ul>
-      <li><span class="es">Ejecute un <strong>Check</strong> periodico en todos los sistemas HA para asegurarse de que la replicacion y los prerequisitos estan en orden antes de que ocurra una emergencia real.</span><span class="en">Run a periodic <strong>Check</strong> on all HA systems to ensure replication and prerequisites are in order before a real emergency occurs.</span></li>
-      <li><span class="es">Para sistemas con estrategia <strong>HOT_STANDBY</strong>, preste especial atencion al <strong>Lag de Replicacion</strong> &mdash; un lag superior a 5 segundos puede indicar problemas de red o rendimiento en el nodo secundario.</span><span class="en">For systems with <strong>HOT_STANDBY</strong> strategy, pay special attention to <strong>Replication Lag</strong> &mdash; lag above 5 seconds may indicate network or performance issues on the secondary node.</span></li>
-      <li><span class="es">La estrategia <strong>WARM_STANDBY</strong> ofrece un equilibrio entre coste y proteccion &mdash; ideal para sistemas donde un RTO de 15 minutos es aceptable.</span><span class="en"><strong>WARM_STANDBY</strong> strategy offers a balance between cost and protection &mdash; ideal for systems where a 15-minute RTO is acceptable.</span></li>
-      <li><span class="es">Programe simulacros de DR (<strong>Test DR</strong>) al menos trimestralmente para validar que los procedimientos de recuperacion funcionan correctamente.</span><span class="en">Schedule DR drills (<strong>Test DR</strong>) at least quarterly to validate that recovery procedures work correctly.</span></li>
-      <li><span class="es">Revise la pestana <strong>Prerequisites</strong> despues de cualquier cambio de infraestructura (nuevo parche, cambio de red, actualizacion de drivers) para verificar que el HA no se ha visto afectado.</span><span class="en">Review the <strong>Prerequisites</strong> tab after any infrastructure change (new patch, network change, driver update) to verify HA has not been affected.</span></li>
-      <li><span class="es">Exporte la evidencia regularmente desde la pestana <strong>Evidence</strong> para mantener registros de auditoria actualizados fuera del sistema.</span><span class="en">Export evidence regularly from the <strong>Evidence</strong> tab to keep up-to-date audit records outside the system.</span></li>
-      <li><span class="es">Si un prerequisito muestra estado <strong>FAIL</strong>, resuelva la condicion antes de intentar cualquier operacion HA &mdash; las operaciones con prerequisitos fallidos no pueden ejecutarse.</span><span class="en">If a prerequisite shows <strong>FAIL</strong> status, resolve the condition before attempting any HA operation &mdash; operations with failed prerequisites cannot be executed.</span></li>
-    </ul>
-  </section>
+  </main>
+</div>
 
-</main></div>
-<button class="theme-toggle" onclick="toggleTheme()"></button>
-<button class="lang-toggle" onclick="toggleLang()">ES</button>
-</body></html>
+<script>
+function showTab(name) {
+  var panels = ['overview','strategies','config','failover','history'];
+  panels.forEach(function(p) {
+    var el = document.getElementById('panel-' + p);
+    var tab = document.getElementById('tab-' + p);
+    if (el) el.style.display = (p === name) ? '' : 'none';
+    if (tab) { tab.className = (p === name) ? 'badge cyan' : 'badge neutral'; }
+  });
+}
+</script>
+</body>
+</html>
