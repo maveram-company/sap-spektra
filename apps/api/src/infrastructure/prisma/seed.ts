@@ -1,7 +1,11 @@
 import { PrismaClient } from '@prisma/client';
+import { PrismaPg } from '@prisma/adapter-pg';
+import pg from 'pg';
 import * as bcrypt from 'bcryptjs';
 
-const prisma = new PrismaClient();
+const pool = new pg.Pool({ connectionString: process.env.DATABASE_URL });
+const adapter = new PrismaPg(pool as any);
+const prisma = new PrismaClient({ adapter });
 
 // Helper: past date
 const ago = (hours: number) => new Date(Date.now() - hours * 3600000);
@@ -187,7 +191,8 @@ async function main() {
   const hostBw1App = await prisma.host.create({ data: { systemId: bw1.id, hostname: 'sap-bw1-app01', ip: '10.0.1.30', os: 'SLES', osVersion: '15 SP4', region: 'us-east-1', zone: 'us-east-1b', cpu: 32, memory: 256, disk: 1000, status: 'active' } });
   const hostPi1App = await prisma.host.create({ data: { systemId: pi1.id, hostname: 'sap-pi1-app01', ip: '10.0.2.10', os: 'RHEL', osVersion: '8.9', region: 'us-east-1', zone: 'us-east-1b', cpu: 16, memory: 64, disk: 250, status: 'active' } });
   const hostSm1App = await prisma.host.create({ data: { systemId: sm1.id, hostname: 'sap-sm1-app01', ip: '10.0.1.40', os: 'SLES', osVersion: '15 SP5', region: 'us-east-1', zone: 'us-east-1a', cpu: 16, memory: 64, disk: 300, status: 'active' } });
-  console.log('  ✓ 6 hosts');
+  const hostEd1App = await prisma.host.create({ data: { systemId: ed1.id, hostname: 'sap-ed1-app01', ip: '10.0.1.50', os: 'SLES', osVersion: '15 SP5', region: 'us-east-1', zone: 'us-east-1a', cpu: 8, memory: 32, disk: 200, status: 'active' } });
+  console.log('  ✓ 7 hosts');
 
   // ══════════════════════════════════════════════
   // COMPONENTS
@@ -198,7 +203,10 @@ async function main() {
   const compEq1Abap = await prisma.component.create({ data: { systemId: eq1.id, name: 'ABAP Application Server', type: 'ABAP', version: 'S/4HANA 2023', status: 'active' } });
   const compBw1Abap = await prisma.component.create({ data: { systemId: bw1.id, name: 'ABAP Application Server', type: 'ABAP', version: 'BW/4HANA 2021', status: 'active' } });
   const compPi1Java = await prisma.component.create({ data: { systemId: pi1.id, name: 'Java Application Server', type: 'JAVA', version: 'PO 7.5 SP25', status: 'warning' } });
-  console.log('  ✓ 6 components');
+  const compEd1Abap = await prisma.component.create({ data: { systemId: ed1.id, name: 'ABAP Application Server', type: 'ABAP', version: 'S/4HANA 2023', status: 'active' } });
+  const compSm1Abap = await prisma.component.create({ data: { systemId: sm1.id, name: 'ABAP Application Server', type: 'ABAP', version: 'SolMan 7.2 SP17', status: 'active' } });
+  const compSm1Java = await prisma.component.create({ data: { systemId: sm1.id, name: 'Java Application Server', type: 'JAVA', version: 'SolMan 7.2 SP17', status: 'active' } });
+  console.log('  ✓ 9 components');
 
   // ══════════════════════════════════════════════
   // INSTANCES
@@ -213,9 +221,13 @@ async function main() {
       { systemId: eq1.id, componentId: compEq1Abap.id, hostId: hostEq1App.id, instanceNr: '00', type: 'PAS', role: 'Dialog', status: 'active' },
       { systemId: bw1.id, componentId: compBw1Abap.id, hostId: hostBw1App.id, instanceNr: '00', type: 'PAS', role: 'Dialog', status: 'active' },
       { systemId: pi1.id, componentId: compPi1Java.id, hostId: hostPi1App.id, instanceNr: '00', type: 'J2EE', role: 'Java Server', status: 'warning' },
+      { systemId: ed1.id, componentId: compEd1Abap.id, hostId: hostEd1App.id, instanceNr: '00', type: 'PAS', role: 'Dialog', status: 'active' },
+      { systemId: sm1.id, componentId: compSm1Abap.id, hostId: hostSm1App.id, instanceNr: '00', type: 'ASCS', role: 'Central Services', status: 'active' },
+      { systemId: sm1.id, componentId: compSm1Abap.id, hostId: hostSm1App.id, instanceNr: '01', type: 'PAS', role: 'Dialog', status: 'active' },
+      { systemId: sm1.id, componentId: compSm1Java.id, hostId: hostSm1App.id, instanceNr: '10', type: 'J2EE', role: 'Java Server', status: 'active' },
     ],
   });
-  console.log('  ✓ 8 instances');
+  console.log('  ✓ 12 instances');
 
   // ══════════════════════════════════════════════
   // HOST METRICS (time-series for EP1 app + db)
@@ -226,6 +238,26 @@ async function main() {
       { hostId: hostEp1App.id, timestamp: ago(i), cpu: 45 + Math.random() * 40, memory: 60 + Math.random() * 25, disk: 42 + Math.random() * 3, iops: 1200 + Math.random() * 800, networkIn: 50 + Math.random() * 30, networkOut: 30 + Math.random() * 20 },
       { hostId: hostEp1Db.id, timestamp: ago(i), cpu: 30 + Math.random() * 35, memory: 70 + Math.random() * 20, disk: 55 + Math.random() * 5, iops: 5000 + Math.random() * 3000, networkIn: 100 + Math.random() * 50, networkOut: 80 + Math.random() * 40 },
     );
+  }
+  const otherHosts = [
+    { host: hostEq1App, cpuBase: 40, memBase: 55 },
+    { host: hostBw1App, cpuBase: 50, memBase: 65 },
+    { host: hostPi1App, cpuBase: 60, memBase: 70 },
+    { host: hostSm1App, cpuBase: 25, memBase: 40 },
+    { host: hostEd1App, cpuBase: 30, memBase: 45 },
+  ];
+  for (const { host, cpuBase, memBase } of otherHosts) {
+    for (let i = 24; i >= 0; i--) {
+      metricData.push({
+        hostId: host.id, timestamp: ago(i),
+        cpu: cpuBase + Math.random() * 25,
+        memory: memBase + Math.random() * 20,
+        disk: 35 + Math.random() * 15,
+        iops: 800 + Math.random() * 1200,
+        networkIn: 20 + Math.random() * 40,
+        networkOut: 15 + Math.random() * 30,
+      });
+    }
   }
   await prisma.hostMetric.createMany({ data: metricData });
   console.log(`  ✓ ${metricData.length} host metrics (24h of hourly data)`);
@@ -242,9 +274,16 @@ async function main() {
       { systemId: bw1.id, name: 'BW1 → EP1 (RFC)', type: 'RFC', target: 'EP1', status: 'ok', latencyMs: 7 },
       { systemId: pi1.id, name: 'PI1 → External ERP (HTTP)', type: 'HTTP', target: 'https://erp-partner.example.com/api', status: 'warning', latencyMs: 450, details: JSON.stringify({ note: 'High latency' }) },
       { systemId: pi1.id, name: 'PI1 → EP1 (IDoc)', type: 'IDoc', target: 'EP1', status: 'error', latencyMs: null },
+      { systemId: eq1.id, name: 'EQ1 → HANA DB', type: 'DB', target: 'sap-eq1-hana', status: 'ok', latencyMs: 3 },
+      { systemId: eq1.id, name: 'EQ1 → EP1 (RFC)', type: 'RFC', target: 'EP1', status: 'ok', latencyMs: 6 },
+      { systemId: bw1.id, name: 'BW1 → HANA DB', type: 'DB', target: 'sap-bw1-hana', status: 'ok', latencyMs: 2 },
+      { systemId: sm1.id, name: 'SM1 → EP1 (RFC)', type: 'RFC', target: 'EP1', status: 'ok', latencyMs: 4 },
+      { systemId: sm1.id, name: 'SM1 → HANA DB', type: 'DB', target: 'sap-sm1-hana', status: 'ok', latencyMs: 1 },
+      { systemId: ed1.id, name: 'ED1 → HANA DB', type: 'DB', target: 'sap-ed1-hana', status: 'ok', latencyMs: 2 },
+      { systemId: ed1.id, name: 'ED1 → EQ1 (RFC)', type: 'RFC', target: 'EQ1', status: 'ok', latencyMs: 5 },
     ],
   });
-  console.log('  ✓ 7 dependencies');
+  console.log('  ✓ 14 dependencies');
 
   // ══════════════════════════════════════════════
   // BREACHES
@@ -263,7 +302,7 @@ async function main() {
   // HEALTH SNAPSHOTS
   // ══════════════════════════════════════════════
   const snapshots = [];
-  for (const sys of [ep1, eq1, bw1, pi1]) {
+  for (const sys of [ep1, eq1, ed1, bw1, sm1, pi1, rs1]) {
     for (let i = 12; i >= 0; i--) {
       const base = sys.healthScore;
       snapshots.push({

@@ -130,13 +130,13 @@ export default function CertificatesPage() {
                     {cert.type}
                   </TableCell>
                   <TableCell className="text-xs font-mono text-text-secondary">
-                    {cert.cn}
+                    {cert.cn || cert.name || '—'}
                   </TableCell>
                   <TableCell className="text-xs text-text-secondary">
                     {cert.issuer}
                   </TableCell>
                   <TableCell className="text-xs text-text-secondary whitespace-nowrap">
-                    {new Date(cert.expiresAt).toLocaleDateString('es-CO')}
+                    {cert.expiresAt ? new Date(cert.expiresAt).toLocaleDateString('es-CO') : '—'}
                   </TableCell>
                   <TableCell>
                     <DaysLeftBadge days={cert.daysLeft} status={cert.status} />

@@ -21,7 +21,7 @@ export default function LoginPage() {
     setError('');
     setLoading(true);
     try {
-      await login(username);
+      await login(username, password);
       navigate(from, { replace: true });
     } catch (err) {
       setError(err.message || 'Error de autenticación');
@@ -37,7 +37,12 @@ export default function LoginPage() {
     { icon: Clock, label: 'Setup 25 min' },
   ];
 
-  const demoRoles = ['admin', 'operator', 'escalation', 'viewer'];
+  const demoAccounts = [
+    { label: 'admin', email: 'admin@acme-corp.com', password: 'admin123' },
+    { label: 'operator', email: 'operator@acme-corp.com', password: 'admin123' },
+    { label: 'escalation', email: 'escalation@acme-corp.com', password: 'admin123' },
+    { label: 'viewer', email: 'viewer@acme-corp.com', password: 'admin123' },
+  ];
 
   return (
     <div
@@ -185,7 +190,7 @@ export default function LoginPage() {
               type="text"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
-              placeholder="admin"
+              placeholder="admin@acme-corp.com"
               autoComplete="username"
               autoFocus
               className="w-full rounded-lg px-3 py-2.5 text-sm outline-none transition-all"
@@ -309,16 +314,16 @@ export default function LoginPage() {
           }}
         >
           <p className="text-xs font-semibold mb-1" style={{ color: 'rgba(226,232,240,1)' }}>
-            Modo Demo
+            Cuentas de prueba
           </p>
           <p className="text-xs mb-3" style={{ color: 'rgba(100,116,139,1)' }}>
-            Usa cualquier contraseña. El rol se asigna por nombre de usuario:
+            Haz clic en un rol para llenar las credenciales:
           </p>
           <div className="flex flex-wrap gap-1.5">
-            {demoRoles.map((role) => (
+            {demoAccounts.map((acc) => (
               <button
-                key={role}
-                onClick={() => { setUsername(role); setPassword('demo'); }}
+                key={acc.label}
+                onClick={() => { setUsername(acc.email); setPassword(acc.password); }}
                 className="px-2.5 py-1 text-[11px] font-mono rounded-lg transition-all"
                 style={{
                   backgroundColor: 'rgba(255,255,255,0.04)',
@@ -338,7 +343,7 @@ export default function LoginPage() {
                   e.currentTarget.style.boxShadow = 'none';
                 }}
               >
-                {role}
+                {acc.label}
               </button>
             ))}
           </div>

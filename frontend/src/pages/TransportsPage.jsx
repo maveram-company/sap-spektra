@@ -172,16 +172,16 @@ export default function TransportsPage() {
               {filtered.map(t => (
                 <TableRow key={t.id}>
                   <TableCell className="font-mono text-sm font-bold text-text-primary">
-                    {t.id}
+                    {t.transportId || t.id}
                   </TableCell>
                   <TableCell className="text-sm text-text-primary max-w-xs truncate">
                     {t.description}
                   </TableCell>
                   <TableCell>
-                    <Badge variant="primary" size="sm">{t.systemId.split('-')[1]}</Badge>
+                    <Badge variant="primary" size="sm">{t.sid || t.systemId?.split('-')[1] || '—'}</Badge>
                   </TableCell>
                   <TableCell className="text-sm text-text-secondary">
-                    {t.targetSystem}
+                    {t.targetSystem || t.target || '—'}
                   </TableCell>
                   <TableCell>
                     <TransportStatusBadge status={t.status} />
@@ -193,12 +193,17 @@ export default function TransportsPage() {
                     {t.owner}
                   </TableCell>
                   <TableCell className="text-xs text-text-secondary whitespace-nowrap">
-                    {new Date(t.createdAt).toLocaleDateString('es-CO')}
+                    {t.createdAt ? new Date(t.createdAt).toLocaleDateString('es-CO') : '—'}
                   </TableCell>
                 </TableRow>
               ))}
             </TableBody>
           </Table>
+          {filtered.length === 0 && (
+            <div className="py-12 text-center text-text-tertiary text-sm">
+              No se encontraron transportes con los filtros seleccionados.
+            </div>
+          )}
         </Card>
 
         {/* Error detail */}
@@ -214,7 +219,7 @@ export default function TransportsPage() {
               {transports.filter(t => t.status === 'error').map(t => (
                 <div key={t.id} className="border border-danger-200 dark:border-danger-800 rounded-lg p-3 bg-surface">
                   <div className="flex items-center gap-2 mb-1">
-                    <span className="font-mono text-sm font-bold text-text-primary">{t.id}</span>
+                    <span className="font-mono text-sm font-bold text-text-primary">{t.transportId || t.id}</span>
                     <RCBadge rc={t.rc} />
                   </div>
                   <p className="text-xs text-text-secondary">{t.description}</p>

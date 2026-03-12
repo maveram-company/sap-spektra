@@ -43,6 +43,7 @@ export class OperationsService {
   async getJobs(systemId?: string) {
     return this.prisma.jobRecord.findMany({
       where: systemId ? { systemId } : {},
+      include: { system: { select: { sid: true } } },
       orderBy: { startedAt: 'desc' },
     });
   }
@@ -50,6 +51,7 @@ export class OperationsService {
   async getTransports(systemId?: string) {
     return this.prisma.transportRecord.findMany({
       where: systemId ? { systemId } : {},
+      include: { system: { select: { sid: true } } },
       orderBy: { createdAt: 'desc' },
     });
   }
@@ -57,6 +59,7 @@ export class OperationsService {
   async getCertificates(systemId?: string) {
     return this.prisma.certificateRecord.findMany({
       where: systemId ? { systemId } : {},
+      include: { system: { select: { sid: true } } },
       orderBy: { daysLeft: 'asc' },
     });
   }

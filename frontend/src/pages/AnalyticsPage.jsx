@@ -122,7 +122,7 @@ export default function AnalyticsPage() {
                   </tr>
                 </TableHeader>
                 <TableBody>
-                  {data.topRunbooks.map(rb => (
+                  {(data.topRunbooks || []).map(rb => (
                     <TableRow key={rb.id}>
                       <TableCell><code className="text-xs bg-surface-tertiary px-1.5 py-0.5 rounded">{rb.id}</code></TableCell>
                       <TableCell className="font-medium">{rb.name}</TableCell>
@@ -130,9 +130,9 @@ export default function AnalyticsPage() {
                       <TableCell>
                         <div className="flex items-center gap-2">
                           <div className="w-24 h-2 bg-surface-tertiary rounded-full overflow-hidden">
-                            <div className="h-full rounded-full" style={{ width: `${rb.successRate}%`, backgroundColor: rb.successRate > 95 ? '#22c55e' : rb.successRate > 90 ? '#f59e0b' : '#ef4444' }} />
+                            <div className="h-full rounded-full" style={{ width: `${Math.min(rb.successRate, 100)}%`, backgroundColor: rb.successRate > 95 ? '#22c55e' : rb.successRate > 90 ? '#f59e0b' : '#ef4444' }} />
                           </div>
-                          <span className="text-xs font-medium">{rb.successRate}%</span>
+                          <span className="text-xs font-medium">{Math.min(rb.successRate, 100)}%</span>
                         </div>
                       </TableCell>
                     </TableRow>

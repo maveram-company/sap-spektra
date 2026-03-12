@@ -27,7 +27,10 @@ export class RunbooksService {
   async getExecutions(organizationId: string) {
     return this.prisma.runbookExecution.findMany({
       where: { runbook: { organizationId } },
-      include: { runbook: { select: { name: true } } },
+      include: {
+        runbook: { select: { name: true } },
+        system: { select: { sid: true } },
+      },
       orderBy: { startedAt: 'desc' },
     });
   }

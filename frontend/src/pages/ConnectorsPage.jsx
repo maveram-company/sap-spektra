@@ -64,7 +64,7 @@ export default function ConnectorsPage() {
   const total = connectors.length;
 
   const sorted = useMemo(() =>
-    [...connectors].sort((a, b) => STATUS_ORDER[a.status] - STATUS_ORDER[b.status]),
+    [...connectors].sort((a, b) => (STATUS_ORDER[a.status] ?? 1) - (STATUS_ORDER[b.status] ?? 1)),
   [connectors]);
 
   if (loading) return <PageLoading message="Cargando conectores..." />;
@@ -192,11 +192,11 @@ export default function ConnectorsPage() {
                   <TableCell>
                     <div>
                       <p className="text-sm font-medium text-text-primary">{conn.systemName}</p>
-                      <p className="text-xs text-text-tertiary">{conn.systemType} — {conn.environment}</p>
+                      <p className="text-xs text-text-tertiary">{conn.systemType || conn.system?.sapProduct || ''} — {conn.environment || conn.system?.environment || ''}</p>
                     </div>
                   </TableCell>
                   <TableCell>
-                    <ConnectionMethodBadge method={conn.connectionMethod} />
+                    <ConnectionMethodBadge method={conn.connectionMethod || conn.method} />
                   </TableCell>
                   <TableCell>
                     <LatencyCell ms={conn.latencyMs} />
@@ -205,10 +205,10 @@ export default function ConnectorsPage() {
                     {formatHeartbeat(conn.lastHeartbeat)}
                   </TableCell>
                   <TableCell className="text-sm font-mono">
-                    {conn.messagesCollected24h.toLocaleString()}
+                    {conn.messagesCollected24h != null ? conn.messagesCollected24h.toLocaleString() : '—'}
                   </TableCell>
                   <TableCell className="text-sm text-text-secondary">
-                    {conn.agentVersion || '—'}
+                    {conn.agentVersion || conn.version || '—'}
                   </TableCell>
                 </TableRow>
               ))}

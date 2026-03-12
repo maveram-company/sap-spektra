@@ -314,7 +314,7 @@ export default function ComparisonPage() {
                         <CardTitle>Consistencia de Landscape</CardTitle>
                         <p className="text-xs text-text-secondary mt-1">
                           Validacion cruzada de configuraciones entre entornos —
-                          Ultima verificacion: {new Date(landscapeData.lastValidated).toLocaleString('es-CO')}
+                          Ultima verificacion: {landscapeData.lastValidated ? new Date(landscapeData.lastValidated).toLocaleString('es-CO') : '—'}
                         </p>
                       </div>
                       <Badge

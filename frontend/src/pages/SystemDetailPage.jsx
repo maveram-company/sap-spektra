@@ -223,21 +223,21 @@ export default function SystemDetailPage() {
                 <div className="bg-surface-secondary rounded-lg p-3 border border-border">
                   <p className="text-[10px] text-text-tertiary uppercase tracking-wider mb-1">JVM Heap</p>
                   <p className="text-lg font-bold text-text-primary leading-tight">
-                    {sm.jvm.heapUsed} / {sm.jvm.heapMax} GB
+                    {sm.jvm?.heapUsed ?? 0} / {sm.jvm?.heapMax ?? 0} GB
                   </p>
                   <div className="h-1.5 bg-surface-tertiary rounded-full overflow-hidden mt-1">
                     <div
-                      className={`h-full rounded-full ${sm.jvm.heapUsed / sm.jvm.heapMax > 0.85 ? 'bg-danger-500' : sm.jvm.heapUsed / sm.jvm.heapMax > 0.7 ? 'bg-warning-500' : 'bg-success-500'}`}
-                      style={{ width: `${(sm.jvm.heapUsed / sm.jvm.heapMax * 100)}%` }}
+                      className={`h-full rounded-full ${(sm.jvm?.heapMax ?? 0) > 0 && (sm.jvm?.heapUsed ?? 0) / sm.jvm.heapMax > 0.85 ? 'bg-danger-500' : (sm.jvm?.heapMax ?? 0) > 0 && (sm.jvm?.heapUsed ?? 0) / sm.jvm.heapMax > 0.7 ? 'bg-warning-500' : 'bg-success-500'}`}
+                      style={{ width: `${(sm.jvm?.heapMax ?? 0) > 0 ? ((sm.jvm?.heapUsed ?? 0) / sm.jvm.heapMax * 100) : 0}%` }}
                     />
                   </div>
                 </div>
                 <div className="bg-surface-secondary rounded-lg p-3 border border-border">
                   <p className="text-[10px] text-text-tertiary uppercase tracking-wider mb-1">Threads</p>
-                  <p className="text-lg font-bold text-text-primary leading-tight">{sm.jvm.threads}</p>
+                  <p className="text-lg font-bold text-text-primary leading-tight">{sm.jvm?.threads ?? 0}</p>
                   <div className="flex gap-2 mt-1 text-[10px]">
-                    <span className="text-text-tertiary">max {sm.jvm.threadsMax}</span>
-                    <span className={sm.jvm.gcPausePct > 5 ? 'text-danger-600' : 'text-text-tertiary'}>GC {sm.jvm.gcPausePct}%</span>
+                    <span className="text-text-tertiary">max {sm.jvm?.threadsMax ?? 0}</span>
+                    <span className={(sm.jvm?.gcPausePct ?? 0) > 5 ? 'text-danger-600' : 'text-text-tertiary'}>GC {sm.jvm?.gcPausePct ?? 0}%</span>
                   </div>
                 </div>
                 <MetricCard label="ICM Connections" value={sm.icm.connections} sub={`max ${sm.icm.connectionsMax}`} />
@@ -247,14 +247,14 @@ export default function SystemDetailPage() {
               <>
                 <div className="bg-surface-secondary rounded-lg p-3 border border-border">
                   <p className="text-[10px] text-text-tertiary uppercase tracking-wider mb-1">Dialog WPs</p>
-                  <p className="text-lg font-bold text-text-primary leading-tight">{sm.dialogWP.total}</p>
+                  <p className="text-lg font-bold text-text-primary leading-tight">{sm.dialogWP?.total ?? 0}</p>
                   <div className="flex gap-2 mt-1 text-[10px]">
-                    <span className="text-success-600">{sm.dialogWP.active} act</span>
-                    <span className="text-text-tertiary">{sm.dialogWP.free} free</span>
-                    <span className={sm.dialogWP.hold > 0 ? 'text-warning-600' : 'text-text-tertiary'}>{sm.dialogWP.hold} hold</span>
+                    <span className="text-success-600">{sm.dialogWP?.active ?? 0} act</span>
+                    <span className="text-text-tertiary">{sm.dialogWP?.free ?? 0} free</span>
+                    <span className={(sm.dialogWP?.hold ?? 0) > 0 ? 'text-warning-600' : 'text-text-tertiary'}>{sm.dialogWP?.hold ?? 0} hold</span>
                   </div>
                 </div>
-                <MetricCard label="Last Min Load" value={sm.lastMinLoad.toLocaleString()} sub="dialog steps/min" />
+                <MetricCard label="Last Min Load" value={(sm.lastMinLoad ?? 0).toLocaleString()} sub="dialog steps/min" />
               </>
             )}
             <MetricCard label="Avg DB Time" value={`${sm.avgDbTime} ms`} {...pctColor(sm.avgDbTime, 15, 25)} />
@@ -268,12 +268,12 @@ export default function SystemDetailPage() {
             <Card>
               <CardHeader>
                 <CardTitle>Message Queue</CardTitle>
-                <span className="text-xs text-text-tertiary">{sm.msgQueue.processed24h.toLocaleString()} processed (24h)</span>
+                <span className="text-xs text-text-tertiary">{(sm.msgQueue?.processed24h ?? 0).toLocaleString()} processed (24h)</span>
               </CardHeader>
               <div className="space-y-3">
                 {[
-                  { label: 'Pending', value: sm.msgQueue.pending, color: 'bg-warning-500', max: 100 },
-                  { label: 'Failed', value: sm.msgQueue.failed, color: 'bg-danger-500', max: 50 },
+                  { label: 'Pending', value: sm.msgQueue?.pending ?? 0, color: 'bg-warning-500', max: 100 },
+                  { label: 'Failed', value: sm.msgQueue?.failed ?? 0, color: 'bg-danger-500', max: 50 },
                 ].map(({ label, value, color, max }) => (
                   <div key={label}>
                     <div className="flex justify-between text-xs mb-1">
@@ -293,15 +293,15 @@ export default function SystemDetailPage() {
             <Card>
               <CardHeader>
                 <CardTitle>Channels</CardTitle>
-                <span className="text-xs text-text-tertiary">{sm.channels.active + sm.channels.inactive + sm.channels.error} total</span>
+                <span className="text-xs text-text-tertiary">{(sm.channels?.active ?? 0) + (sm.channels?.inactive ?? 0) + (sm.channels?.error ?? 0)} total</span>
               </CardHeader>
               <div className="space-y-3">
                 {[
-                  { label: 'Active', value: sm.channels.active, color: 'bg-success-500' },
-                  { label: 'Inactive', value: sm.channels.inactive, color: 'bg-warning-500' },
-                  { label: 'Error', value: sm.channels.error, color: 'bg-danger-500' },
+                  { label: 'Active', value: sm.channels?.active ?? 0, color: 'bg-success-500' },
+                  { label: 'Inactive', value: sm.channels?.inactive ?? 0, color: 'bg-warning-500' },
+                  { label: 'Error', value: sm.channels?.error ?? 0, color: 'bg-danger-500' },
                 ].map(({ label, value, color }) => {
-                  const total = sm.channels.active + sm.channels.inactive + sm.channels.error;
+                  const total = (sm.channels?.active ?? 0) + (sm.channels?.inactive ?? 0) + (sm.channels?.error ?? 0);
                   return (
                     <div key={label}>
                       <div className="flex justify-between text-xs mb-1">
@@ -309,10 +309,10 @@ export default function SystemDetailPage() {
                           <span className={`inline-block w-2.5 h-2.5 rounded-full ${color}`} />
                           {label}
                         </span>
-                        <span className="text-text-tertiary">{value} ({((value / total) * 100).toFixed(0)}%)</span>
+                        <span className="text-text-tertiary">{value} ({total > 0 ? ((value / total) * 100).toFixed(0) : 0}%)</span>
                       </div>
                       <div className="h-2.5 bg-surface-tertiary rounded-full overflow-hidden">
-                        <div className={`h-full rounded-full ${color}`} style={{ width: `${(value / total) * 100}%` }} />
+                        <div className={`h-full rounded-full ${color}`} style={{ width: `${total > 0 ? (value / total) * 100 : 0}%` }} />
                       </div>
                     </div>
                   );
@@ -324,12 +324,12 @@ export default function SystemDetailPage() {
           <Card>
             <CardHeader>
               <CardTitle>Response Distribution</CardTitle>
-              <span className="text-xs text-text-tertiary">{(sm.respDist.Dialog + sm.respDist.Update + sm.respDist.Background + sm.respDist.RFC).toLocaleString()} dialog steps</span>
+              <span className="text-xs text-text-tertiary">{((sm.respDist?.Dialog ?? 0) + (sm.respDist?.Update ?? 0) + (sm.respDist?.Background ?? 0) + (sm.respDist?.RFC ?? 0)).toLocaleString()} dialog steps</span>
             </CardHeader>
             <div className="space-y-3">
-              {Object.entries(sm.respDist).map(([key, val]) => {
-                const rdTotal = sm.respDist.Dialog + sm.respDist.Update + sm.respDist.Background + sm.respDist.RFC;
-                const pct = ((val / rdTotal) * 100).toFixed(1);
+              {Object.entries(sm.respDist ?? {}).map(([key, val]) => {
+                const rdTotal = (sm.respDist?.Dialog ?? 0) + (sm.respDist?.Update ?? 0) + (sm.respDist?.Background ?? 0) + (sm.respDist?.RFC ?? 0);
+                const pct = rdTotal > 0 ? ((val / rdTotal) * 100).toFixed(1) : '0.0';
                 const colors = {
                   Dialog: 'bg-primary-500',
                   Update: 'bg-accent-500',
@@ -610,7 +610,7 @@ export default function SystemDetailPage() {
                     Instances on this host
                   </p>
                   <div className="space-y-1.5">
-                    {host.instances.map((inst, idx) => (
+                    {(host.instances || []).map((inst, idx) => (
                       <div
                         key={idx}
                         className="flex items-center justify-between rounded-md px-3 py-2 bg-surface-secondary border border-border"
@@ -837,7 +837,7 @@ export default function SystemDetailPage() {
   }
 
   function renderHanaPanel() {
-    const a = db.alerts;
+    const a = db?.alerts || { errors: 0, high: 0, medium: 0 };
     return (
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
         <MetricCard label="Version" value={db.version} />
@@ -1038,7 +1038,7 @@ export default function SystemDetailPage() {
 
     // Java stack (PI/PO) — NWA-style monitors instead of ABAP transactions
     if (sapMon.javaStack) {
-      const { messageMonitor: mm, channelMonitor: cm, alertInbox: ai, cacheStats: cs } = sapMon;
+      const { messageMonitor: mm = {}, channelMonitor: cm = {}, alertInbox: ai = {}, cacheStats: cs = {} } = sapMon || {};
       return (
         <div className="space-y-6">
           {/* Message Monitor */}
@@ -1048,11 +1048,11 @@ export default function SystemDetailPage() {
                 <Mail size={18} />
                 Message Monitor (24h)
               </CardTitle>
-              <span className="text-xs text-text-tertiary">{mm.total24h.toLocaleString()} messages processed</span>
+              <span className="text-xs text-text-tertiary">{(mm?.total24h ?? 0).toLocaleString()} messages processed</span>
             </CardHeader>
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-3 mb-4">
-              <MetricCard label="Total (24h)" value={mm.total24h.toLocaleString()} />
-              <MetricCard label="Success" value={mm.success.toLocaleString()} />
+              <MetricCard label="Total (24h)" value={(mm?.total24h ?? 0).toLocaleString()} />
+              <MetricCard label="Success" value={(mm?.success ?? 0).toLocaleString()} />
               <MetricCard label="Error" value={mm.error} warn={mm.error > 10} danger={mm.error > 50} />
               <MetricCard label="Waiting" value={mm.waiting} warn={mm.waiting > 50} danger={mm.waiting > 200} />
               <MetricCard label="In Process" value={mm.inProcess} />
@@ -1071,11 +1071,11 @@ export default function SystemDetailPage() {
                   </tr>
                 </TableHeader>
                 <TableBody>
-                  {mm.topInterfaces.map((iface, i) => (
+                  {(mm.topInterfaces || []).map((iface, i) => (
                     <TableRow key={i}>
                       <TableCell className="font-mono text-sm">{iface.name}</TableCell>
                       <TableCell className="text-xs text-text-tertiary truncate max-w-[200px]">{iface.namespace}</TableCell>
-                      <TableCell className="text-sm">{iface.messages24h.toLocaleString()}</TableCell>
+                      <TableCell className="text-sm">{(iface.messages24h ?? 0).toLocaleString()}</TableCell>
                       <TableCell>
                         <span className={iface.errors > 0 ? 'text-danger-600 font-semibold' : 'text-text-secondary'}>{iface.errors}</span>
                       </TableCell>
@@ -1085,7 +1085,7 @@ export default function SystemDetailPage() {
               </Table>
             </div>
             {/* Top Errors */}
-            {mm.topErrors.length > 0 && (
+            {(mm.topErrors || []).length > 0 && (
               <div>
                 <p className="text-xs text-text-tertiary uppercase tracking-wider mb-2">Recent Errors</p>
                 <Table>
@@ -1098,7 +1098,7 @@ export default function SystemDetailPage() {
                     </tr>
                   </TableHeader>
                   <TableBody>
-                    {mm.topErrors.map((err, i) => (
+                    {(mm.topErrors || []).map((err, i) => (
                       <TableRow key={i}>
                         <TableCell className="font-mono text-sm">{err.interface}</TableCell>
                         <TableCell className="text-sm text-danger-600 max-w-[300px] truncate">{err.error}</TableCell>
@@ -1139,7 +1139,7 @@ export default function SystemDetailPage() {
                 </tr>
               </TableHeader>
               <TableBody>
-                {cm.channels.map((ch, i) => (
+                {(cm.channels || []).map((ch, i) => (
                   <TableRow key={i}>
                     <TableCell className="font-mono text-sm">{ch.name}</TableCell>
                     <TableCell><Badge variant="outline" size="sm">{ch.adapter}</Badge></TableCell>
@@ -1173,7 +1173,7 @@ export default function SystemDetailPage() {
               <MetricCard label="Info" value={ai.info} />
             </div>
             <div className="space-y-2">
-              {ai.alerts.map((alert, i) => (
+              {(ai.alerts || []).map((alert, i) => (
                 <div key={i} className={`flex items-start gap-3 p-3 rounded-lg border ${
                   alert.severity === 'critical' ? 'border-danger-300 bg-danger-50' :
                   alert.severity === 'warning' ? 'border-warning-300 bg-warning-50' :
@@ -1207,18 +1207,18 @@ export default function SystemDetailPage() {
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
               <div className="bg-surface-secondary rounded-lg p-4 border border-border">
                 <p className="text-xs text-text-tertiary uppercase tracking-wider mb-2">ICM Cache</p>
-                <MetricCard label="Hit Rate" value={`${cs.icmCache.hitRate}%`} warn={cs.icmCache.hitRate < 90} danger={cs.icmCache.hitRate < 80} />
-                <p className="text-xs text-text-tertiary mt-2">{cs.icmCache.size} / {cs.icmCache.maxSize}</p>
+                <MetricCard label="Hit Rate" value={`${cs.icmCache?.hitRate ?? 0}%`} warn={(cs.icmCache?.hitRate ?? 100) < 90} danger={(cs.icmCache?.hitRate ?? 100) < 80} />
+                <p className="text-xs text-text-tertiary mt-2">{cs.icmCache?.size ?? '—'} / {cs.icmCache?.maxSize ?? '—'}</p>
               </div>
               <div className="bg-surface-secondary rounded-lg p-4 border border-border">
                 <p className="text-xs text-text-tertiary uppercase tracking-wider mb-2">Metadata Cache</p>
-                <MetricCard label="Hit Rate" value={`${cs.metadataCache.hitRate}%`} warn={cs.metadataCache.hitRate < 95} />
-                <p className="text-xs text-text-tertiary mt-2">{cs.metadataCache.entries} entries ({cs.metadataCache.staleEntries} stale)</p>
+                <MetricCard label="Hit Rate" value={`${cs.metadataCache?.hitRate ?? 0}%`} warn={(cs.metadataCache?.hitRate ?? 100) < 95} />
+                <p className="text-xs text-text-tertiary mt-2">{cs.metadataCache?.entries ?? 0} entries ({cs.metadataCache?.staleEntries ?? 0} stale)</p>
               </div>
               <div className="bg-surface-secondary rounded-lg p-4 border border-border">
                 <p className="text-xs text-text-tertiary uppercase tracking-wider mb-2">Mapping Cache</p>
-                <MetricCard label="Hit Rate" value={`${cs.mappingCache.hitRate}%`} warn={cs.mappingCache.hitRate < 90} />
-                <p className="text-xs text-text-tertiary mt-2">{cs.mappingCache.compiledMappings} mappings — {cs.mappingCache.cacheSize}</p>
+                <MetricCard label="Hit Rate" value={`${cs.mappingCache?.hitRate ?? 0}%`} warn={(cs.mappingCache?.hitRate ?? 100) < 90} />
+                <p className="text-xs text-text-tertiary mt-2">{cs.mappingCache?.compiledMappings ?? 0} mappings — {cs.mappingCache?.cacheSize ?? '—'}</p>
               </div>
             </div>
           </Card>
@@ -1227,7 +1227,7 @@ export default function SystemDetailPage() {
     }
 
     // ABAP stack — standard transactions
-    const { sm12, sm13, sm37, sm21, st22TopPrograms } = sapMon;
+    const { sm12 = {}, sm13 = {}, sm37 = {}, sm21 = {}, st22TopPrograms = [] } = sapMon;
 
     return (
       <div className="space-y-6">
@@ -1248,7 +1248,7 @@ export default function SystemDetailPage() {
             <div>
               <p className="text-xs text-text-tertiary uppercase tracking-wider mb-2">Top Users</p>
               <ul className="space-y-1">
-                {sm12.topUsers.map((user, i) => (
+                {(sm12.topUsers || []).map((user, i) => (
                   <li key={i} className="text-sm text-text-secondary flex items-center gap-2">
                     <Users size={12} className="text-text-tertiary" />
                     <span className="font-mono">{user}</span>
@@ -1259,7 +1259,7 @@ export default function SystemDetailPage() {
             <div>
               <p className="text-xs text-text-tertiary uppercase tracking-wider mb-2">Top Tables</p>
               <ul className="space-y-1">
-                {sm12.topTables.map((table, i) => (
+                {(sm12.topTables || []).map((table, i) => (
                   <li key={i} className="text-sm text-text-secondary flex items-center gap-2">
                     <Database size={12} className="text-text-tertiary" />
                     <span className="font-mono">{table}</span>
@@ -1286,13 +1286,13 @@ export default function SystemDetailPage() {
             <MetricCard
               label="Last Failed"
               value={
-                sm13.lastFailed
+                sm13?.lastFailed
                   ? new Date(sm13.lastFailed).toLocaleString('es-CO', {
                       month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit',
                     })
-                  : 'None'
+                  : '—'
               }
-              sub={sm13.lastFailed ? 'last failure time' : 'no recent failures'}
+              sub={sm13?.lastFailed ? 'last failure time' : 'no recent failures'}
             />
           </div>
         </Card>
@@ -1312,7 +1312,7 @@ export default function SystemDetailPage() {
             <MetricCard label="Failed"    value={sm37.failed}   warn={sm37.failed > 0}   danger={sm37.failed > 5} />
             <MetricCard label="Canceled"  value={sm37.canceled} warn={sm37.canceled > 0} />
           </div>
-          {sm37.longRunning.length > 0 && (
+          {(sm37.longRunning || []).length > 0 && (
             <div>
               <p className="text-xs text-text-tertiary uppercase tracking-wider mb-2">Long-Running Jobs</p>
               <Table>
@@ -1324,7 +1324,7 @@ export default function SystemDetailPage() {
                   </tr>
                 </TableHeader>
                 <TableBody>
-                  {sm37.longRunning.map((job, i) => (
+                  {(sm37.longRunning || []).map((job, i) => (
                     <TableRow key={i}>
                       <TableCell className="font-mono text-sm">{job.name}</TableCell>
                       <TableCell className="text-sm">{job.runtime}</TableCell>

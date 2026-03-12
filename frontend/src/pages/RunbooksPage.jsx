@@ -171,7 +171,7 @@ export default function RunbooksPage() {
 
                   {/* Prerequisites (P2.2) */}
                   <TableCell>
-                    {rb.prereqs ? (
+                    {Array.isArray(rb.prereqs) && rb.prereqs.length > 0 ? (
                       <div className="max-w-[180px]">
                         {rb.prereqs.map((p, pi) => (
                           <span key={pi} className="inline-flex items-center gap-0.5 text-[10px] text-text-secondary mr-1">

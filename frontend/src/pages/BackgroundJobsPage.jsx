@@ -135,7 +135,7 @@ export default function BackgroundJobsPage() {
           >
             <option value="all">Todos los sistemas</option>
             {systems.map(s => (
-              <option key={s.id} value={s.id}>{s.sid} — {s.id}</option>
+              <option key={s.id} value={s.id}>{s.sid} — {s.description || s.type}</option>
             ))}
           </select>
           <span className="text-sm text-text-secondary ml-auto">

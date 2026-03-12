@@ -3,7 +3,8 @@
 // ══════════════════════════════════════════════════════════
 
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
+  previewFeatures = ["driverAdapters"]
 }
 
 datasource db {
@@ -115,19 +116,23 @@ model System {
 
   organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
 
-  components    Component[]
-  instances     Instance[]
-  hosts         Host[]
-  dependencies  Dependency[]
-  breaches      Breach[]
-  healthSnaps   HealthSnapshot[]
-  alerts        Alert[]
-  events        Event[]
-  approvals     ApprovalRequest[]
-  operations    OperationRecord[]
-  connectors    Connector[]
-  haConfig      HAConfig?
-  systemMeta    SystemMeta?
+  components         Component[]
+  instances          Instance[]
+  hosts              Host[]
+  dependencies       Dependency[]
+  breaches           Breach[]
+  healthSnaps        HealthSnapshot[]
+  alerts             Alert[]
+  events             Event[]
+  approvals          ApprovalRequest[]
+  operations         OperationRecord[]
+  connectors         Connector[]
+  haConfig           HAConfig?
+  systemMeta         SystemMeta?
+  jobs               JobRecord[]
+  transports         TransportRecord[]
+  certificates       CertificateRecord[]
+  runbookExecutions  RunbookExecution[]
 
   @@unique([organizationId, sid])
   @@map("systems")
@@ -399,6 +404,7 @@ model RunbookExecution {
   completedAt DateTime?
 
   runbook Runbook @relation(fields: [runbookId], references: [id], onDelete: Cascade)
+  system  System  @relation(fields: [systemId], references: [id], onDelete: Cascade)
 
   @@index([runbookId, startedAt])
   @@map("runbook_executions")
@@ -441,6 +447,8 @@ model JobRecord {
   user      String?
   details   Json?
 
+  system System @relation(fields: [systemId], references: [id], onDelete: Cascade)
+
   @@map("job_records")
 }
 
@@ -456,6 +464,8 @@ model TransportRecord {
   importedAt  DateTime?
   createdAt   DateTime @default(now())
 
+  system System @relation(fields: [systemId], references: [id], onDelete: Cascade)
+
   @@map("transport_records")
 }
 
@@ -468,6 +478,8 @@ model CertificateRecord {
   daysLeft  Int
   status    String   // ok | warning | critical
   type      String   // SSL | SAML | SNC | etc.
+
+  system System @relation(fields: [systemId], references: [id], onDelete: Cascade)
 
   @@map("certificate_records")
 }

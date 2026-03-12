@@ -1,4 +1,6 @@
 import { createContext, useContext, useState, useCallback } from 'react';
+import config from '../config';
+import { api } from '../hooks/useApi';
 
 const AuthContext = createContext(null);
 
@@ -15,6 +17,15 @@ function getRoleFromUsername(username) {
   if (u.includes('oper')) return 'operator';
   if (u.includes('escal')) return 'escalation';
   return 'viewer';
+}
+
+function parseJwt(token) {
+  try {
+    const base64 = token.split('.')[1].replace(/-/g, '+').replace(/_/g, '/');
+    return JSON.parse(atob(base64));
+  } catch {
+    return null;
+  }
 }
 
 function getInitialUser() {
@@ -41,7 +52,28 @@ export function useAuth() {
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(getInitialUser);
 
-  const login = useCallback(async (username) => {
+  const login = useCallback(async (username, password) => {
+    // Modo API real
+    if (!config.features.demoMode) {
+      const result = await api.login(username, password);
+      const payload = parseJwt(result.accessToken);
+      const authUser = {
+        id: result.user.id,
+        username: result.user.email,
+        email: result.user.email,
+        name: result.user.name,
+        role: result.user.role,
+        token: result.accessToken,
+        organizationId: result.user.organizationId,
+        organization: { id: result.user.organizationId, name: result.user.organizationName || 'Organization' },
+        exp: payload?.exp || Math.floor(Date.now() / 1000) + 86400,
+      };
+      setUser(authUser);
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(authUser));
+      return authUser;
+    }
+
+    // Modo demo
     const role = getRoleFromUsername(username);
     const demoUser = {
       id: `demo-${Date.now()}`,

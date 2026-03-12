@@ -1,5 +1,5 @@
 const config = {
-  apiUrl: import.meta.env.VITE_API_URL || '',
+  apiUrl: import.meta.env.VITE_API_URL || 'http://localhost:3001/api',
   appName: 'SAP Spektra',
   appVersion: '1.5.0',
   company: 'Maveram',
@@ -10,7 +10,7 @@ const config = {
     clientId: import.meta.env.VITE_COGNITO_CLIENT_ID || '',
   },
   features: {
-    demoMode: true,
+    demoMode: false,
     chatWidget: true,
     darkMode: true,
   },

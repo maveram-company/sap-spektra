@@ -133,7 +133,7 @@ export default function HAControlCenterPage() {
         reason: `${op.type} manual`,
         startedAt: op.startedAt,
         completedAt: endTime,
-        duration: `${((Date.now() - new Date(op.startedAt).getTime()) / 1000).toFixed(0)}s`,
+        duration: op.startedAt ? `${((Date.now() - new Date(op.startedAt).getTime()) / 1000).toFixed(0)}s` : '—',
         steps: op.totalSteps,
         stepsOk: op.totalSteps,
       };
@@ -510,11 +510,11 @@ export default function HAControlCenterPage() {
             </div>
             <div className="flex justify-between">
               <span>Último sync backup:</span>
-              <span className="font-medium">{new Date(sys.pilotLightDetails.lastBackupSync).toLocaleString('es-CO', { hour12: false })}</span>
+              <span className="font-medium">{sys.pilotLightDetails?.lastBackupSync ? new Date(sys.pilotLightDetails.lastBackupSync).toLocaleString('es-CO', { hour12: false }) : '—'}</span>
             </div>
             <div className="flex justify-between">
               <span>Método:</span>
-              <span className="font-medium">{sys.pilotLightDetails.backupType.replace(/_/g, ' ')}</span>
+              <span className="font-medium">{sys.pilotLightDetails?.backupType?.replace(/_/g, ' ') ?? '—'}</span>
             </div>
           </div>
         )}
@@ -524,11 +524,11 @@ export default function HAControlCenterPage() {
           <div className="mt-2 pt-2 border-t border-border space-y-1 text-xs text-text-secondary">
             <div className="flex justify-between">
               <span>Último backup completo:</span>
-              <span className="font-medium">{new Date(sys.backupDetails.lastFull).toLocaleString('es-CO', { hour12: false })}</span>
+              <span className="font-medium">{sys.backupDetails?.lastFull ? new Date(sys.backupDetails.lastFull).toLocaleString('es-CO', { hour12: false }) : '—'}</span>
             </div>
             <div className="flex justify-between">
               <span>Último log backup:</span>
-              <span className="font-medium">{new Date(sys.backupDetails.lastLog).toLocaleString('es-CO', { hour12: false })}</span>
+              <span className="font-medium">{sys.backupDetails?.lastLog ? new Date(sys.backupDetails.lastLog).toLocaleString('es-CO', { hour12: false }) : '—'}</span>
             </div>
             <div className="flex justify-between">
               <span>Destino:</span>
@@ -668,7 +668,7 @@ export default function HAControlCenterPage() {
                       <span className={sys.lastOp.status === 'FAILED' ? 'text-danger-600 dark:text-danger-400 font-medium' : 'text-success-600 dark:text-success-400 font-medium'}>
                         {sys.lastOp.status}
                       </span>{' '}
-                      ({new Date(sys.lastOp.at).toLocaleDateString('es-CO')})
+                      ({sys.lastOp?.at ? new Date(sys.lastOp.at).toLocaleDateString('es-CO') : '—'})
                     </span>
                   </div>
                 )}
@@ -775,7 +775,7 @@ export default function HAControlCenterPage() {
           <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
             <div
               className="bg-primary-600 h-2 rounded-full transition-all duration-500"
-              style={{ width: `${(runningOp.currentStep / runningOp.totalSteps) * 100}%` }}
+              style={{ width: `${Math.min((runningOp.currentStep / (runningOp.totalSteps || 1)) * 100, 100)}%` }}
             />
           </div>
 
@@ -866,7 +866,7 @@ export default function HAControlCenterPage() {
                     </span>
                   </td>
                   <td className="px-4 py-3 text-xs text-text-tertiary">
-                    {new Date(op.startedAt).toLocaleString('es-CO', { hour12: false })}
+                    {op.startedAt ? new Date(op.startedAt).toLocaleString('es-CO', { hour12: false }) : '—'}
                   </td>
                 </tr>
               ))}
@@ -983,7 +983,7 @@ export default function HAControlCenterPage() {
                 {opStatusBadge(op.status)}
               </div>
               <p className="text-xs text-text-tertiary mt-1">
-                {op.systemId} &mdash; {new Date(op.startedAt).toLocaleString('es-CO', { hour12: false })} &mdash; {op.triggeredBy}
+                {op.systemId} &mdash; {op.startedAt ? new Date(op.startedAt).toLocaleString('es-CO', { hour12: false }) : '—'} &mdash; {op.triggeredBy}
               </p>
             </div>
             <button
