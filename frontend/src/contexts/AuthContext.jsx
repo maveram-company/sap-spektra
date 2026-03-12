@@ -45,7 +45,7 @@ export function AuthProvider({ children }) {
   const [user, setUser] = useState(getInitialUser);
 
   const login = useCallback(async (username, password) => {
-    // Modo API real
+    // ── Primary path: real backend auth (POST /api/auth/login) ──
     if (!config.features.demoMode) {
       const result = await api.login(username, password);
       const payload = parseJwt(result.accessToken);
@@ -65,7 +65,7 @@ export function AuthProvider({ children }) {
       return authUser;
     }
 
-    // Modo demo — rol fijo 'admin' para acceso completo en demostraciones
+    // ── Demo path: config.features.demoMode=true — no backend needed ──
     const demoUser = {
       id: `demo-${Date.now()}`,
       username,
