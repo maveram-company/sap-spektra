@@ -20,10 +20,7 @@ describe('MetricsService', () => {
     };
 
     const module: TestingModule = await Test.createTestingModule({
-      providers: [
-        MetricsService,
-        { provide: PrismaService, useValue: prisma },
-      ],
+      providers: [MetricsService, { provide: PrismaService, useValue: prisma }],
     }).compile();
 
     service = module.get<MetricsService>(MetricsService);
@@ -34,7 +31,9 @@ describe('MetricsService', () => {
 
   describe('getHostMetrics', () => {
     it('returns metrics for a given host', async () => {
-      const metrics = [{ id: 'm1', hostId: 'h1', cpuPct: 45, timestamp: new Date() }];
+      const metrics = [
+        { id: 'm1', hostId: 'h1', cpuPct: 45, timestamp: new Date() },
+      ];
       prisma.hostMetric.findMany.mockResolvedValue(metrics);
 
       const result = await service.getHostMetrics('h1');
@@ -148,7 +147,9 @@ describe('MetricsService', () => {
 
   describe('getBreaches', () => {
     it('returns breaches for an organization', async () => {
-      const breaches = [{ id: 'b1', systemId: 'sys-1', system: { sid: 'EP1' } }];
+      const breaches = [
+        { id: 'b1', systemId: 'sys-1', system: { sid: 'EP1' } },
+      ];
       prisma.breach.findMany.mockResolvedValue(breaches);
 
       const result = await service.getBreaches(ORG_ID);
@@ -156,7 +157,9 @@ describe('MetricsService', () => {
       expect(result).toHaveLength(1);
       expect(prisma.breach.findMany).toHaveBeenCalledWith(
         expect.objectContaining({
-          where: expect.objectContaining({ system: { organizationId: ORG_ID } }),
+          where: expect.objectContaining({
+            system: { organizationId: ORG_ID },
+          }),
           orderBy: { timestamp: 'desc' },
         }),
       );
@@ -191,7 +194,9 @@ describe('MetricsService', () => {
 
   describe('getDependencies', () => {
     it('returns dependencies for a system', async () => {
-      const deps = [{ id: 'd1', systemId: 'sys-1', targetSid: 'EQ1', status: 'ok' }];
+      const deps = [
+        { id: 'd1', systemId: 'sys-1', targetSid: 'EQ1', status: 'ok' },
+      ];
       prisma.dependency.findMany.mockResolvedValue(deps);
 
       const result = await service.getDependencies(ORG_ID, 'sys-1');

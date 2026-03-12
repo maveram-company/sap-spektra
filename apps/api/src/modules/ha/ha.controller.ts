@@ -6,6 +6,7 @@ import { TenantGuard } from '../../common/guards/tenant.guard';
 import { RolesGuard } from '../../common/guards/roles.guard';
 import { Roles } from '../../common/decorators/roles.decorator';
 import { TenantId } from '../../common/decorators/tenant.decorator';
+import { UpdateHAStatusDto } from './dto/ha.dto';
 
 @ApiTags('HA/DR')
 @ApiBearerAuth()
@@ -31,14 +32,21 @@ export class HAController {
   @Patch(':systemId/failover')
   @Roles('admin')
   @ApiOperation({ summary: 'Trigger failover for a system' })
-  triggerFailover(@TenantId() orgId: string, @Param('systemId') systemId: string) {
+  triggerFailover(
+    @TenantId() orgId: string,
+    @Param('systemId') systemId: string,
+  ) {
     return this.haService.triggerFailover(orgId, systemId);
   }
 
   @Patch(':systemId/status')
   @Roles('operator')
   @ApiOperation({ summary: 'Update HA status' })
-  updateStatus(@TenantId() orgId: string, @Param('systemId') systemId: string, @Body() data: { status: string }) {
+  updateStatus(
+    @TenantId() orgId: string,
+    @Param('systemId') systemId: string,
+    @Body() data: UpdateHAStatusDto,
+  ) {
     return this.haService.updateStatus(orgId, systemId, data.status);
   }
 
@@ -52,7 +60,10 @@ export class HAController {
   @Get(':systemId/ops-history')
   @Roles('viewer')
   @ApiOperation({ summary: 'Get HA operations history for a system' })
-  getOpsHistory(@TenantId() orgId: string, @Param('systemId') systemId: string) {
+  getOpsHistory(
+    @TenantId() orgId: string,
+    @Param('systemId') systemId: string,
+  ) {
     return this.haService.getOpsHistory(orgId, systemId);
   }
 

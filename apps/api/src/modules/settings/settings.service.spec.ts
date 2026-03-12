@@ -9,7 +9,9 @@ jest.mock('bcryptjs', () => ({
 
 jest.mock('crypto', () => ({
   randomBytes: jest.fn().mockReturnValue({
-    toString: jest.fn().mockReturnValue('abcdef1234567890abcdef1234567890abcdef1234567890'),
+    toString: jest
+      .fn()
+      .mockReturnValue('abcdef1234567890abcdef1234567890abcdef1234567890'),
   }),
 }));
 
@@ -62,14 +64,22 @@ describe('SettingsService', () => {
       expect(result).toEqual(orgData);
       expect(prisma.organization.findUnique).toHaveBeenCalledWith({
         where: { id: ORG_ID },
-        select: { settings: true, limits: true, plan: true, timezone: true, language: true },
+        select: {
+          settings: true,
+          limits: true,
+          plan: true,
+          timezone: true,
+          language: true,
+        },
       });
     });
 
     it('throws NotFoundException when organization not found', async () => {
       prisma.organization.findUnique.mockResolvedValue(null);
 
-      await expect(service.getSettings(ORG_ID)).rejects.toThrow(NotFoundException);
+      await expect(service.getSettings(ORG_ID)).rejects.toThrow(
+        NotFoundException,
+      );
     });
   });
 
@@ -96,8 +106,22 @@ describe('SettingsService', () => {
   describe('getApiKeys', () => {
     it('returns API keys for organization', async () => {
       const keys = [
-        { id: 'key-1', name: 'Production', prefix: 'sk-spektra-', status: 'active', createdAt: new Date(), lastUsedAt: null },
-        { id: 'key-2', name: 'Staging', prefix: 'sk-spektra-', status: 'active', createdAt: new Date(), lastUsedAt: null },
+        {
+          id: 'key-1',
+          name: 'Production',
+          prefix: 'sk-spektra-',
+          status: 'active',
+          createdAt: new Date(),
+          lastUsedAt: null,
+        },
+        {
+          id: 'key-2',
+          name: 'Staging',
+          prefix: 'sk-spektra-',
+          status: 'active',
+          createdAt: new Date(),
+          lastUsedAt: null,
+        },
       ];
       prisma.apiKey.findMany.mockResolvedValue(keys);
 
@@ -106,7 +130,14 @@ describe('SettingsService', () => {
       expect(result).toHaveLength(2);
       expect(prisma.apiKey.findMany).toHaveBeenCalledWith({
         where: { organizationId: ORG_ID },
-        select: { id: true, name: true, prefix: true, status: true, createdAt: true, lastUsedAt: true },
+        select: {
+          id: true,
+          name: true,
+          prefix: true,
+          status: true,
+          createdAt: true,
+          lastUsedAt: true,
+        },
         orderBy: { createdAt: 'desc' },
       });
     });
@@ -148,8 +179,14 @@ describe('SettingsService', () => {
 
   describe('revokeApiKey', () => {
     it('revokes an existing API key', async () => {
-      prisma.apiKey.findFirst.mockResolvedValue({ id: 'key-1', organizationId: ORG_ID });
-      prisma.apiKey.update.mockResolvedValue({ id: 'key-1', status: 'inactive' });
+      prisma.apiKey.findFirst.mockResolvedValue({
+        id: 'key-1',
+        organizationId: ORG_ID,
+      });
+      prisma.apiKey.update.mockResolvedValue({
+        id: 'key-1',
+        status: 'inactive',
+      });
 
       const result = await service.revokeApiKey(ORG_ID, 'key-1');
 
@@ -163,7 +200,9 @@ describe('SettingsService', () => {
     it('throws NotFoundException when key not found', async () => {
       prisma.apiKey.findFirst.mockResolvedValue(null);
 
-      await expect(service.revokeApiKey(ORG_ID, 'nonexistent')).rejects.toThrow(NotFoundException);
+      await expect(service.revokeApiKey(ORG_ID, 'nonexistent')).rejects.toThrow(
+        NotFoundException,
+      );
     });
   });
 });

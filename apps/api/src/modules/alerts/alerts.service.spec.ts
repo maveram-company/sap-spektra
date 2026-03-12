@@ -35,10 +35,7 @@ describe('AlertsService', () => {
     };
 
     const module: TestingModule = await Test.createTestingModule({
-      providers: [
-        AlertsService,
-        { provide: PrismaService, useValue: prisma },
-      ],
+      providers: [AlertsService, { provide: PrismaService, useValue: prisma }],
     }).compile();
 
     service = module.get<AlertsService>(AlertsService);
@@ -55,7 +52,11 @@ describe('AlertsService', () => {
 
     it('applies filters when provided', async () => {
       prisma.alert.findMany.mockResolvedValue([]);
-      await service.findAll(ORG_ID, { status: 'active', level: 'critical', systemId: 'sys-1' });
+      await service.findAll(ORG_ID, {
+        status: 'active',
+        level: 'critical',
+        systemId: 'sys-1',
+      });
 
       expect(prisma.alert.findMany).toHaveBeenCalledWith(
         expect.objectContaining({
@@ -74,7 +75,9 @@ describe('AlertsService', () => {
       await service.findAll('org-other');
 
       expect(prisma.alert.findMany).toHaveBeenCalledWith(
-        expect.objectContaining({ where: expect.objectContaining({ organizationId: 'org-other' }) }),
+        expect.objectContaining({
+          where: expect.objectContaining({ organizationId: 'org-other' }),
+        }),
       );
     });
   });
@@ -84,9 +87,15 @@ describe('AlertsService', () => {
   describe('acknowledge', () => {
     it('acknowledges an existing alert', async () => {
       prisma.alert.findFirst.mockResolvedValue(mockAlert());
-      prisma.alert.update.mockResolvedValue(mockAlert({ status: 'acknowledged', acknowledged: true }));
+      prisma.alert.update.mockResolvedValue(
+        mockAlert({ status: 'acknowledged', acknowledged: true }),
+      );
 
-      const result = await service.acknowledge(ORG_ID, 'alert-1', 'user@test.com');
+      const result = await service.acknowledge(
+        ORG_ID,
+        'alert-1',
+        'user@test.com',
+      );
       expect(result.status).toBe('acknowledged');
       expect(result.acknowledged).toBe(true);
     });
@@ -118,7 +127,9 @@ describe('AlertsService', () => {
   describe('resolve', () => {
     it('resolves an existing alert with category and note', async () => {
       prisma.alert.findFirst.mockResolvedValue(mockAlert());
-      prisma.alert.update.mockResolvedValue(mockAlert({ status: 'resolved', resolved: true }));
+      prisma.alert.update.mockResolvedValue(
+        mockAlert({ status: 'resolved', resolved: true }),
+      );
 
       const result = await service.resolve(ORG_ID, 'alert-1', 'user@test.com', {
         category: 'false_positive',
@@ -143,10 +154,10 @@ describe('AlertsService', () => {
     it('returns aggregated alert stats', async () => {
       prisma.alert.count
         .mockResolvedValueOnce(100) // total
-        .mockResolvedValueOnce(60)  // active
-        .mockResolvedValueOnce(15)  // acknowledged
-        .mockResolvedValueOnce(25)  // resolved
-        .mockResolvedValueOnce(5)   // critical
+        .mockResolvedValueOnce(60) // active
+        .mockResolvedValueOnce(15) // acknowledged
+        .mockResolvedValueOnce(25) // resolved
+        .mockResolvedValueOnce(5) // critical
         .mockResolvedValueOnce(20); // warning
 
       const stats = await service.getStats(ORG_ID);

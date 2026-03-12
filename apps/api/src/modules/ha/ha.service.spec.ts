@@ -11,7 +11,13 @@ function mockHAConfig(overrides = {}) {
     systemId: 'sys-1',
     status: 'active',
     lastFailoverAt: null,
-    system: { sid: 'EP1', description: 'ERP Production', environment: 'PRD', status: 'healthy', healthScore: 92 },
+    system: {
+      sid: 'EP1',
+      description: 'ERP Production',
+      environment: 'PRD',
+      status: 'healthy',
+      healthScore: 92,
+    },
     ...overrides,
   };
 }
@@ -30,10 +36,7 @@ describe('HAService', () => {
     };
 
     const module: TestingModule = await Test.createTestingModule({
-      providers: [
-        HAService,
-        { provide: PrismaService, useValue: prisma },
-      ],
+      providers: [HAService, { provide: PrismaService, useValue: prisma }],
     }).compile();
 
     service = module.get<HAService>(HAService);
@@ -44,7 +47,10 @@ describe('HAService', () => {
 
   describe('findAll', () => {
     it('returns all HA configs for the organization', async () => {
-      const configs = [mockHAConfig(), mockHAConfig({ id: 'ha-2', systemId: 'sys-2' })];
+      const configs = [
+        mockHAConfig(),
+        mockHAConfig({ id: 'ha-2', systemId: 'sys-2' }),
+      ];
       prisma.hAConfig.findMany.mockResolvedValue(configs);
 
       const result = await service.findAll(ORG_ID);
@@ -89,7 +95,10 @@ describe('HAService', () => {
     it('updates status to failover_in_progress and sets lastFailoverAt', async () => {
       prisma.hAConfig.findFirst.mockResolvedValue(mockHAConfig());
       prisma.hAConfig.update.mockResolvedValue(
-        mockHAConfig({ status: 'failover_in_progress', lastFailoverAt: new Date() }),
+        mockHAConfig({
+          status: 'failover_in_progress',
+          lastFailoverAt: new Date(),
+        }),
       );
 
       const result = await service.triggerFailover(ORG_ID, 'sys-1');
@@ -110,9 +119,9 @@ describe('HAService', () => {
     it('throws NotFoundException when config not found', async () => {
       prisma.hAConfig.findFirst.mockResolvedValue(null);
 
-      await expect(service.triggerFailover(ORG_ID, 'sys-missing')).rejects.toThrow(
-        NotFoundException,
-      );
+      await expect(
+        service.triggerFailover(ORG_ID, 'sys-missing'),
+      ).rejects.toThrow(NotFoundException);
     });
   });
 
@@ -121,7 +130,9 @@ describe('HAService', () => {
   describe('updateStatus', () => {
     it('updates the status of an existing config', async () => {
       prisma.hAConfig.findFirst.mockResolvedValue(mockHAConfig());
-      prisma.hAConfig.update.mockResolvedValue(mockHAConfig({ status: 'standby' }));
+      prisma.hAConfig.update.mockResolvedValue(
+        mockHAConfig({ status: 'standby' }),
+      );
 
       const result = await service.updateStatus(ORG_ID, 'sys-1', 'standby');
 
@@ -137,9 +148,9 @@ describe('HAService', () => {
     it('throws NotFoundException when config not found', async () => {
       prisma.hAConfig.findFirst.mockResolvedValue(null);
 
-      await expect(service.updateStatus(ORG_ID, 'sys-missing', 'standby')).rejects.toThrow(
-        NotFoundException,
-      );
+      await expect(
+        service.updateStatus(ORG_ID, 'sys-missing', 'standby'),
+      ).rejects.toThrow(NotFoundException);
     });
   });
 });

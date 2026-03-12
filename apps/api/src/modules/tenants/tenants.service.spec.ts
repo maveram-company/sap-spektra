@@ -38,10 +38,7 @@ describe('TenantsService', () => {
     };
 
     const module: TestingModule = await Test.createTestingModule({
-      providers: [
-        TenantsService,
-        { provide: PrismaService, useValue: prisma },
-      ],
+      providers: [TenantsService, { provide: PrismaService, useValue: prisma }],
     }).compile();
 
     service = module.get<TenantsService>(TenantsService);
@@ -91,9 +88,9 @@ describe('TenantsService', () => {
     it('throws NotFoundException when organization not found', async () => {
       prisma.organization.findUnique.mockResolvedValue(null);
 
-      await expect(
-        service.update(ORG_ID, { name: 'Nope' }),
-      ).rejects.toThrow(NotFoundException);
+      await expect(service.update(ORG_ID, { name: 'Nope' })).rejects.toThrow(
+        NotFoundException,
+      );
     });
   });
 
@@ -104,8 +101,8 @@ describe('TenantsService', () => {
       prisma.system.count.mockResolvedValue(5);
       prisma.membership.count.mockResolvedValue(12);
       prisma.alert.count
-        .mockResolvedValueOnce(30)  // total alerts
-        .mockResolvedValueOnce(8);  // active alerts
+        .mockResolvedValueOnce(30) // total alerts
+        .mockResolvedValueOnce(8); // active alerts
 
       const stats = await service.getStats(ORG_ID);
 

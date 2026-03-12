@@ -1,4 +1,9 @@
-import { Injectable, NotFoundException, BadRequestException, Logger } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  BadRequestException,
+  Logger,
+} from '@nestjs/common';
 import { PrismaService } from '../../infrastructure/prisma/prisma.service';
 
 @Injectable()
@@ -56,7 +61,9 @@ export class RunbooksService {
 
     // 1. RISE_RESTRICTED no soporta ejecución de runbooks
     if (!system.supportsRunbookExecution) {
-      failures.push(`Sistema ${system.sid} no soporta ejecución de runbooks (${system.monitoringCapabilityProfile})`);
+      failures.push(
+        `Sistema ${system.sid} no soporta ejecución de runbooks (${system.monitoringCapabilityProfile})`,
+      );
     }
 
     // 2. Validar compatibilidad de tipo de BD
@@ -68,7 +75,12 @@ export class RunbooksService {
       const dbCategory = (dt: string) => {
         if (dt.includes('HANA')) return 'HANA';
         if (dt.includes('ORACLE')) return 'ORACLE';
-        if (dt.includes('MSSQL') || dt.includes('SQL SERVER') || dt.includes('MICROSOFT')) return 'MSSQL';
+        if (
+          dt.includes('MSSQL') ||
+          dt.includes('SQL SERVER') ||
+          dt.includes('MICROSOFT')
+        )
+          return 'MSSQL';
         if (dt.includes('DB2') || dt.includes('IBM')) return 'DB2';
         if (dt.includes('ASE') || dt.includes('SYBASE')) return 'ASE';
         if (dt.includes('MAXDB') || dt.includes('SAP DB')) return 'MAXDB';
@@ -79,76 +91,130 @@ export class RunbooksService {
       const sysCategory = dbCategory(sysDbType);
 
       // Tipos de stack que no son BD
-      const isStackType = ['ABAP', 'JAVA', 'PO', 'DUAL_STACK'].includes(rbCategory);
+      const isStackType = ['ABAP', 'JAVA', 'PO', 'DUAL_STACK'].includes(
+        rbCategory,
+      );
 
       if (!isStackType && rbCategory !== sysCategory) {
-        failures.push(`BD incompatible: runbook requiere ${runbook.dbType}, sistema tiene ${system.dbType}`);
+        failures.push(
+          `BD incompatible: runbook requiere ${runbook.dbType}, sistema tiene ${system.dbType}`,
+        );
       }
     }
 
     // 3. Validar compatibilidad de stack SAP (ABAP, JAVA, PO)
-    if (rbDbType === 'ABAP' && system.sapStackType !== 'ABAP' && system.sapStackType !== 'DUAL_STACK') {
-      failures.push(`Stack incompatible: runbook requiere ABAP, sistema es ${system.sapStackType}`);
+    if (
+      rbDbType === 'ABAP' &&
+      system.sapStackType !== 'ABAP' &&
+      system.sapStackType !== 'DUAL_STACK'
+    ) {
+      failures.push(
+        `Stack incompatible: runbook requiere ABAP, sistema es ${system.sapStackType}`,
+      );
     }
-    if (rbDbType === 'JAVA' && system.sapStackType !== 'JAVA' && system.sapStackType !== 'DUAL_STACK') {
-      failures.push(`Stack incompatible: runbook requiere JAVA, sistema es ${system.sapStackType}`);
+    if (
+      rbDbType === 'JAVA' &&
+      system.sapStackType !== 'JAVA' &&
+      system.sapStackType !== 'DUAL_STACK'
+    ) {
+      failures.push(
+        `Stack incompatible: runbook requiere JAVA, sistema es ${system.sapStackType}`,
+      );
     }
     if (rbDbType === 'PO' && !system.sapProduct?.includes('PO')) {
-      failures.push(`Producto incompatible: runbook es para SAP PO, sistema es ${system.sapProduct}`);
+      failures.push(
+        `Producto incompatible: runbook es para SAP PO, sistema es ${system.sapProduct}`,
+      );
     }
 
     // 4. Validar compatibilidad de OS (si el runbook tiene osType en parameters)
     let params = runbook.parameters;
     if (typeof params === 'string') {
-      try { params = JSON.parse(params); } catch { params = null; }
+      try {
+        params = JSON.parse(params);
+      } catch {
+        params = null;
+      }
     }
     if (params?.osType) {
       const osType = params.osType.toUpperCase();
       const sysOs = system.systemMeta?.osVersion?.toUpperCase() || '';
 
       const osMatch = (required: string, actual: string) => {
-        if (required === 'LINUX') return actual.includes('SLES') || actual.includes('RHEL') || actual.includes('UBUNTU') || actual.includes('LINUX');
-        if (required === 'SLES') return actual.includes('SLES') || actual.includes('SUSE');
-        if (required === 'RHEL') return actual.includes('RHEL') || actual.includes('RED HAT');
-        if (required === 'WINDOWS') return actual.includes('WINDOWS') || actual.includes('WIN');
+        if (required === 'LINUX')
+          return (
+            actual.includes('SLES') ||
+            actual.includes('RHEL') ||
+            actual.includes('UBUNTU') ||
+            actual.includes('LINUX')
+          );
+        if (required === 'SLES')
+          return actual.includes('SLES') || actual.includes('SUSE');
+        if (required === 'RHEL')
+          return actual.includes('RHEL') || actual.includes('RED HAT');
+        if (required === 'WINDOWS')
+          return actual.includes('WINDOWS') || actual.includes('WIN');
         if (required === 'AIX') return actual.includes('AIX');
-        if (required === 'HPUX' || required === 'HP-UX') return actual.includes('HP-UX') || actual.includes('HPUX');
-        if (required === 'SOLARIS') return actual.includes('SOLARIS') || actual.includes('SUNOS');
+        if (required === 'HPUX' || required === 'HP-UX')
+          return actual.includes('HP-UX') || actual.includes('HPUX');
+        if (required === 'SOLARIS')
+          return actual.includes('SOLARIS') || actual.includes('SUNOS');
         return actual.includes(required);
       };
 
       if (!osMatch(osType, sysOs)) {
-        failures.push(`OS incompatible: runbook requiere ${params.osType}, sistema tiene ${system.systemMeta?.osVersion || 'desconocido'}`);
+        failures.push(
+          `OS incompatible: runbook requiere ${params.osType}, sistema tiene ${system.systemMeta?.osVersion || 'desconocido'}`,
+        );
       }
     }
 
     // 5. Validar pre-requisitos específicos del runbook
     let prereqs = runbook.prereqs;
     if (typeof prereqs === 'string') {
-      try { prereqs = JSON.parse(prereqs); } catch { prereqs = null; }
+      try {
+        prereqs = JSON.parse(prereqs);
+      } catch {
+        prereqs = null;
+      }
     }
     if (Array.isArray(prereqs)) {
       for (const prereq of prereqs) {
         const p = prereq.toUpperCase();
         // Verificar prerequisitos que podemos validar automáticamente
         if (p.includes('HANA') && !sysDbType.includes('HANA')) {
-          failures.push(`Pre-requisito no cumplido: "${prereq}" — sistema no usa HANA`);
+          failures.push(
+            `Pre-requisito no cumplido: "${prereq}" — sistema no usa HANA`,
+          );
         }
         if (p.includes('HSR') && !sysDbType.includes('HANA')) {
-          failures.push(`Pre-requisito no cumplido: "${prereq}" — HSR solo disponible en HANA`);
+          failures.push(
+            `Pre-requisito no cumplido: "${prereq}" — HSR solo disponible en HANA`,
+          );
         }
         if (p.includes('ORACLE') && !sysDbType.includes('ORACLE')) {
-          failures.push(`Pre-requisito no cumplido: "${prereq}" — sistema no usa Oracle`);
+          failures.push(
+            `Pre-requisito no cumplido: "${prereq}" — sistema no usa Oracle`,
+          );
         }
         if (p.includes('CLUSTER') || p.includes('PACEMAKER')) {
           // Verificar que el sistema tiene HA configurado
-          const haConfig = await this.prisma.hAConfig.findUnique({ where: { systemId } });
+          const haConfig = await this.prisma.hAConfig.findUnique({
+            where: { systemId },
+          });
           if (!haConfig?.haEnabled) {
-            failures.push(`Pre-requisito no cumplido: "${prereq}" — sistema no tiene HA configurado`);
+            failures.push(
+              `Pre-requisito no cumplido: "${prereq}" — sistema no tiene HA configurado`,
+            );
           }
         }
-        if (p.includes('FULL_STACK') && system.monitoringCapabilityProfile !== 'FULL_STACK_AGENT') {
-          failures.push(`Pre-requisito no cumplido: "${prereq}" — sistema no tiene monitoreo full-stack`);
+        if (
+          p.includes('FULL_STACK') &&
+          system.monitoringCapabilityProfile !== 'FULL_STACK_AGENT'
+        ) {
+          failures.push(
+            `Pre-requisito no cumplido: "${prereq}" — sistema no tiene monitoreo full-stack`,
+          );
         }
       }
     }
@@ -156,7 +222,13 @@ export class RunbooksService {
     return { compatible: failures.length === 0, failures };
   }
 
-  async execute(organizationId: string, runbookId: string, systemId: string, executedBy: string, dryRun = false) {
+  async execute(
+    organizationId: string,
+    runbookId: string,
+    systemId: string,
+    executedBy: string,
+    dryRun = false,
+  ) {
     const runbook = await this.prisma.runbook.findFirst({
       where: { id: runbookId, organizationId },
     });
@@ -170,11 +242,19 @@ export class RunbooksService {
     // Parsear steps y prereqs
     let steps = runbook.steps;
     if (typeof steps === 'string') {
-      try { steps = JSON.parse(steps); } catch { steps = []; }
+      try {
+        steps = JSON.parse(steps);
+      } catch {
+        steps = [];
+      }
     }
     let prereqs = runbook.prereqs;
     if (typeof prereqs === 'string') {
-      try { prereqs = JSON.parse(prereqs); } catch { prereqs = null; }
+      try {
+        prereqs = JSON.parse(prereqs);
+      } catch {
+        prereqs = null;
+      }
     }
 
     const stepCount = Array.isArray(steps) ? steps.length : 3;
@@ -192,7 +272,12 @@ export class RunbooksService {
         steps,
         prereqs,
         estimatedDuration: `~${3 + stepCount * 4}s`,
-        wouldCreate: gate === 'SAFE' && runbook.autoExecute ? 'AUTO_EXECUTE' : gate === 'HUMAN' ? 'PENDING_APPROVAL' : 'MANUAL_EXECUTE',
+        wouldCreate:
+          gate === 'SAFE' && runbook.autoExecute
+            ? 'AUTO_EXECUTE'
+            : gate === 'HUMAN'
+              ? 'PENDING_APPROVAL'
+              : 'MANUAL_EXECUTE',
         compatible: validation.compatible,
         validationFailures: validation.failures,
       };

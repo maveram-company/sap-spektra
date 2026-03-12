@@ -5,7 +5,10 @@ import { PrismaService } from '../../infrastructure/prisma/prisma.service';
 export class AuditService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async findAll(organizationId: string, filters?: { severity?: string; action?: string; limit?: number }) {
+  async findAll(
+    organizationId: string,
+    filters?: { severity?: string; action?: string; limit?: number },
+  ) {
     return this.prisma.auditEntry.findMany({
       where: {
         organizationId,
@@ -17,10 +20,17 @@ export class AuditService {
     });
   }
 
-  async log(organizationId: string, data: {
-    userId?: string; userEmail: string; action: string;
-    resource: string; details?: string; severity?: string;
-  }) {
+  async log(
+    organizationId: string,
+    data: {
+      userId?: string;
+      userEmail: string;
+      action: string;
+      resource: string;
+      details?: string;
+      severity?: string;
+    },
+  ) {
     return this.prisma.auditEntry.create({
       data: { organizationId, ...data, severity: data.severity || 'info' },
     });

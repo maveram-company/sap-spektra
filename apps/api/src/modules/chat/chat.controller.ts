@@ -4,6 +4,7 @@ import { ChatService } from './chat.service';
 import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
 import { TenantGuard } from '../../common/guards/tenant.guard';
 import { TenantId } from '../../common/decorators/tenant.decorator';
+import { ChatMessageDto } from './dto/chat.dto';
 
 @ApiTags('Chat')
 @ApiBearerAuth()
@@ -14,10 +15,7 @@ export class ChatController {
 
   @Post()
   @ApiOperation({ summary: 'Send a message to the AI assistant' })
-  chat(
-    @TenantId() orgId: string,
-    @Body() data: { message: string; context?: Record<string, unknown> },
-  ) {
+  chat(@TenantId() orgId: string, @Body() data: ChatMessageDto) {
     return this.chatService.processMessage(orgId, data.message, data.context);
   }
 }

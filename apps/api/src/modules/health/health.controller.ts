@@ -1,28 +1,36 @@
 import { Controller, Get } from '@nestjs/common';
-import { ApiTags, ApiOperation } from '@nestjs/swagger';
-import { PrismaService } from '../../infrastructure/prisma/prisma.service';
+import {
+  HealthCheck,
+  HealthCheckService,
+  MemoryHealthIndicator,
+  DiskHealthIndicator,
+} from '@nestjs/terminus';
+import { ApiTags } from '@nestjs/swagger';
+import { PrismaHealthIndicator } from './prisma-health.indicator';
 
 @ApiTags('Health')
 @Controller('health')
 export class HealthController {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private health: HealthCheckService,
+    private db: PrismaHealthIndicator,
+    private memory: MemoryHealthIndicator,
+    private disk: DiskHealthIndicator,
+  ) {}
 
   @Get()
-  @ApiOperation({ summary: 'Health check' })
-  async check() {
-    let dbStatus = 'up';
-    try {
-      await this.prisma.$queryRaw`SELECT 1`;
-    } catch {
-      dbStatus = 'down';
-    }
+  @HealthCheck()
+  check() {
+    return this.health.check([
+      () => this.db.isHealthy('database'),
+      () => this.memory.checkHeap('memory_heap', 200 * 1024 * 1024),
+      () =>
+        this.disk.checkStorage('disk', { path: '/', thresholdPercent: 0.9 }),
+    ]);
+  }
 
-    return {
-      status: dbStatus === 'up' ? 'ok' : 'degraded',
-      timestamp: new Date().toISOString(),
-      services: {
-        database: dbStatus,
-      },
-    };
+  @Get('liveness')
+  liveness() {
+    return { status: 'ok', timestamp: new Date().toISOString() };
   }
 }

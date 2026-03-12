@@ -6,6 +6,7 @@ import { TenantGuard } from '../../common/guards/tenant.guard';
 import { RolesGuard } from '../../common/guards/roles.guard';
 import { Roles } from '../../common/decorators/roles.decorator';
 import { TenantId } from '../../common/decorators/tenant.decorator';
+import { EventFiltersDto } from './dto/event.dto';
 
 @ApiTags('Events')
 @ApiBearerAuth()
@@ -17,16 +18,12 @@ export class EventsController {
   @Get()
   @Roles('viewer')
   @ApiOperation({ summary: 'List events with optional filters' })
-  findAll(
-    @TenantId() orgId: string,
-    @Query('level') level?: string,
-    @Query('source') source?: string,
-    @Query('systemId') systemId?: string,
-    @Query('limit') limit?: string,
-  ) {
+  findAll(@TenantId() orgId: string, @Query() filters: EventFiltersDto) {
     return this.eventsService.findAll(orgId, {
-      level, source, systemId,
-      limit: limit ? parseInt(limit, 10) : undefined,
+      level: filters.level,
+      source: filters.source,
+      systemId: filters.systemId,
+      limit: filters.limit,
     });
   }
 }

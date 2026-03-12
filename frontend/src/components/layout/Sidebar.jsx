@@ -131,7 +131,8 @@ export default function Sidebar() {
         </div>
 
         {/* ── Navigation ────────────────────────────────────────── */}
-        <nav className="flex-1 overflow-y-auto py-3 px-2" style={{ scrollbarWidth: 'none' }}>
+        <nav aria-label="Main navigation" className="flex-1 overflow-y-auto py-3 px-2" style={{ scrollbarWidth: 'none' }}>
+          <ul className="list-none m-0 p-0">
           {navigation.map((item, i) => {
             /* ── Section header ── */
             if (item.section) {
@@ -139,8 +140,8 @@ export default function Sidebar() {
 
               if (collapsed) {
                 return (
+                  <li key={i} role="presentation">
                   <div
-                    key={i}
                     className="mx-auto mt-4 mb-2"
                     style={{
                       width: '28px',
@@ -148,18 +149,19 @@ export default function Sidebar() {
                       background: 'linear-gradient(90deg, transparent, rgba(6,182,212,0.25), transparent)',
                     }}
                   />
+                  </li>
                 );
               }
 
               return (
-                <div key={i} className="mt-5 mb-1 first:mt-2">
+                <li key={i} role="presentation" className="mt-5 mb-1 first:mt-2">
                   <span
                     className="px-2 text-[9px] font-bold uppercase tracking-[0.18em]"
                     style={{ color: 'rgba(6,182,212,0.55)' }}
                   >
                     {item.section}
                   </span>
-                </div>
+                </li>
               );
             }
 
@@ -171,8 +173,8 @@ export default function Sidebar() {
               (item.href !== '/' && location.pathname.startsWith(item.href));
 
             return (
+              <li key={item.href}>
               <NavLink
-                key={item.href}
                 to={item.href}
                 title={collapsed ? item.name : undefined}
                 className="flex items-center gap-3 mb-0.5 text-sm font-medium transition-all duration-200 group relative"
@@ -287,8 +289,10 @@ export default function Sidebar() {
                   />
                 )}
               </NavLink>
+              </li>
             );
           })}
+          </ul>
         </nav>
 
         {/* ── Plan badge (expanded only) ─────────────────────────── */}
@@ -356,6 +360,7 @@ export default function Sidebar() {
               e.currentTarget.style.color = 'rgba(148,163,184,0.5)';
               e.currentTarget.style.borderColor = 'rgba(6,182,212,0.08)';
             }}
+            aria-label={collapsed ? 'Expandir barra lateral' : 'Colapsar barra lateral'}
             title={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
           >
             {collapsed

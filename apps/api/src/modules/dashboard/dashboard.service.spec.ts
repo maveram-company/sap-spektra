@@ -127,9 +127,27 @@ describe('DashboardService', () => {
       prisma.approvalRequest.count.mockResolvedValue(0);
       prisma.event.findMany.mockResolvedValue([]);
       prisma.connector.findMany.mockResolvedValue([
-        { id: 'c1', systemId: 'sys-1', method: 'RFC', status: 'connected', latencyMs: 12 },
-        { id: 'c2', systemId: 'sys-2', method: 'REST', status: 'connected', latencyMs: 45 },
-        { id: 'c3', systemId: 'sys-3', method: 'RFC', status: 'disconnected', latencyMs: null },
+        {
+          id: 'c1',
+          systemId: 'sys-1',
+          method: 'RFC',
+          status: 'connected',
+          latencyMs: 12,
+        },
+        {
+          id: 'c2',
+          systemId: 'sys-2',
+          method: 'REST',
+          status: 'connected',
+          latencyMs: 45,
+        },
+        {
+          id: 'c3',
+          systemId: 'sys-3',
+          method: 'RFC',
+          status: 'disconnected',
+          latencyMs: null,
+        },
       ]);
 
       const result = await service.getSummary(ORG_ID);
@@ -142,8 +160,8 @@ describe('DashboardService', () => {
     it('passes alert counts from Prisma', async () => {
       prisma.system.findMany.mockResolvedValue([]);
       prisma.alert.count
-        .mockResolvedValueOnce(15)   // activeAlerts
-        .mockResolvedValueOnce(3);   // criticalAlerts
+        .mockResolvedValueOnce(15) // activeAlerts
+        .mockResolvedValueOnce(3); // criticalAlerts
       prisma.approvalRequest.count.mockResolvedValue(7);
       prisma.event.findMany.mockResolvedValue([]);
       prisma.connector.findMany.mockResolvedValue([]);

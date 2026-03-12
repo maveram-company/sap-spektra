@@ -5,7 +5,15 @@ import { PrismaService } from '../../infrastructure/prisma/prisma.service';
 export class EventsService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async findAll(organizationId: string, filters?: { level?: string; source?: string; systemId?: string; limit?: number }) {
+  async findAll(
+    organizationId: string,
+    filters?: {
+      level?: string;
+      source?: string;
+      systemId?: string;
+      limit?: number;
+    },
+  ) {
     return this.prisma.event.findMany({
       where: {
         organizationId,

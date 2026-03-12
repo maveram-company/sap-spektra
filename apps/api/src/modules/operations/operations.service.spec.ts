@@ -75,7 +75,10 @@ describe('OperationsService', () => {
 
       expect(prisma.operationRecord.findMany).toHaveBeenCalledWith(
         expect.objectContaining({
-          where: expect.objectContaining({ organizationId: ORG_ID, status: 'COMPLETED' }),
+          where: expect.objectContaining({
+            organizationId: ORG_ID,
+            status: 'COMPLETED',
+          }),
         }),
       );
     });
@@ -87,7 +90,10 @@ describe('OperationsService', () => {
 
       expect(prisma.operationRecord.findMany).toHaveBeenCalledWith(
         expect.objectContaining({
-          where: expect.objectContaining({ organizationId: ORG_ID, type: 'PATCH' }),
+          where: expect.objectContaining({
+            organizationId: ORG_ID,
+            type: 'PATCH',
+          }),
         }),
       );
     });
@@ -99,7 +105,10 @@ describe('OperationsService', () => {
 
       expect(prisma.operationRecord.findMany).toHaveBeenCalledWith(
         expect.objectContaining({
-          where: expect.objectContaining({ organizationId: ORG_ID, systemId: 'sys-3' }),
+          where: expect.objectContaining({
+            organizationId: ORG_ID,
+            systemId: 'sys-3',
+          }),
         }),
       );
     });
@@ -132,7 +141,9 @@ describe('OperationsService', () => {
     });
 
     it('uses provided riskLevel when given', async () => {
-      prisma.operationRecord.create.mockResolvedValue(mockOperation({ riskLevel: 'HIGH' }));
+      prisma.operationRecord.create.mockResolvedValue(
+        mockOperation({ riskLevel: 'HIGH' }),
+      );
 
       await service.create(ORG_ID, { ...dto, riskLevel: 'HIGH' });
 
@@ -149,7 +160,9 @@ describe('OperationsService', () => {
   describe('updateStatus', () => {
     it('updates the status of an existing operation', async () => {
       prisma.operationRecord.findFirst.mockResolvedValue(mockOperation());
-      prisma.operationRecord.update.mockResolvedValue(mockOperation({ status: 'IN_PROGRESS' }));
+      prisma.operationRecord.update.mockResolvedValue(
+        mockOperation({ status: 'IN_PROGRESS' }),
+      );
 
       const result = await service.updateStatus(ORG_ID, 'op-1', 'IN_PROGRESS');
 
@@ -224,7 +237,9 @@ describe('OperationsService', () => {
 
   describe('getTransports', () => {
     it('returns all transports when no systemId is provided', async () => {
-      const transports = [{ id: 't1', trkorr: 'DEVK900001', system: { sid: 'EP1' } }];
+      const transports = [
+        { id: 't1', trkorr: 'DEVK900001', system: { sid: 'EP1' } },
+      ];
       prisma.transportRecord.findMany.mockResolvedValue(transports);
 
       const result = await service.getTransports();
@@ -255,7 +270,9 @@ describe('OperationsService', () => {
 
   describe('getCertificates', () => {
     it('returns all certificates when no systemId is provided', async () => {
-      const certs = [{ id: 'cert-1', subject: 'CN=sapserver', system: { sid: 'EP1' } }];
+      const certs = [
+        { id: 'cert-1', subject: 'CN=sapserver', system: { sid: 'EP1' } },
+      ];
       prisma.certificateRecord.findMany.mockResolvedValue(certs);
 
       const result = await service.getCertificates();

@@ -46,7 +46,11 @@ describe('AuthService', () => {
         name: 'Admin',
         passwordHash: 'hashed',
         memberships: [
-          { organizationId: 'org-1', role: 'admin', organization: { name: 'Test Org', slug: 'test-org' } },
+          {
+            organizationId: 'org-1',
+            role: 'admin',
+            organization: { name: 'Test Org', slug: 'test-org' },
+          },
         ],
       });
       (bcrypt.compare as jest.Mock).mockResolvedValue(true);
@@ -62,7 +66,9 @@ describe('AuthService', () => {
 
     it('throws UnauthorizedException for unknown email', async () => {
       prisma.user.findUnique.mockResolvedValue(null);
-      await expect(service.login(loginDto)).rejects.toThrow(UnauthorizedException);
+      await expect(service.login(loginDto)).rejects.toThrow(
+        UnauthorizedException,
+      );
     });
 
     it('throws UnauthorizedException for wrong password', async () => {
@@ -70,11 +76,19 @@ describe('AuthService', () => {
         id: 'u-1',
         email: 'admin@test.com',
         passwordHash: 'hashed',
-        memberships: [{ organizationId: 'org-1', role: 'admin', organization: { name: 'Test' } }],
+        memberships: [
+          {
+            organizationId: 'org-1',
+            role: 'admin',
+            organization: { name: 'Test' },
+          },
+        ],
       });
       (bcrypt.compare as jest.Mock).mockResolvedValue(false);
 
-      await expect(service.login(loginDto)).rejects.toThrow(UnauthorizedException);
+      await expect(service.login(loginDto)).rejects.toThrow(
+        UnauthorizedException,
+      );
     });
 
     it('throws UnauthorizedException when user has no organization', async () => {
@@ -86,7 +100,9 @@ describe('AuthService', () => {
       });
       (bcrypt.compare as jest.Mock).mockResolvedValue(true);
 
-      await expect(service.login(loginDto)).rejects.toThrow(UnauthorizedException);
+      await expect(service.login(loginDto)).rejects.toThrow(
+        UnauthorizedException,
+      );
     });
 
     it('updates lastLoginAt on successful login', async () => {
@@ -95,7 +111,11 @@ describe('AuthService', () => {
         email: 'admin@test.com',
         passwordHash: 'hashed',
         memberships: [
-          { organizationId: 'org-1', role: 'viewer', organization: { name: 'Org', slug: 'org' } },
+          {
+            organizationId: 'org-1',
+            role: 'viewer',
+            organization: { name: 'Org', slug: 'org' },
+          },
         ],
       });
       (bcrypt.compare as jest.Mock).mockResolvedValue(true);
@@ -115,7 +135,11 @@ describe('AuthService', () => {
         email: 'admin@test.com',
         passwordHash: 'hashed',
         memberships: [
-          { organizationId: 'org-42', role: 'operator', organization: { name: 'Org', slug: 'org' } },
+          {
+            organizationId: 'org-42',
+            role: 'operator',
+            organization: { name: 'Org', slug: 'org' },
+          },
         ],
       });
       (bcrypt.compare as jest.Mock).mockResolvedValue(true);
@@ -139,7 +163,9 @@ describe('AuthService', () => {
 
     it('throws ConflictException for existing email', async () => {
       prisma.user.findUnique.mockResolvedValue({ id: 'existing' });
-      await expect(service.register(registerDto)).rejects.toThrow(ConflictException);
+      await expect(service.register(registerDto)).rejects.toThrow(
+        ConflictException,
+      );
     });
 
     it('creates org with slug derived from name', async () => {
@@ -148,10 +174,18 @@ describe('AuthService', () => {
       prisma.$transaction.mockImplementation(async (fn: Function) => {
         const tx = {
           organization: {
-            create: jest.fn().mockResolvedValue({ id: 'org-new', name: 'New Org', slug: 'new-org' }),
+            create: jest.fn().mockResolvedValue({
+              id: 'org-new',
+              name: 'New Org',
+              slug: 'new-org',
+            }),
           },
           user: {
-            create: jest.fn().mockResolvedValue({ id: 'u-new', email: 'new@test.com', name: 'New User' }),
+            create: jest.fn().mockResolvedValue({
+              id: 'u-new',
+              email: 'new@test.com',
+              name: 'New User',
+            }),
           },
           membership: { create: jest.fn() },
         };
@@ -167,7 +201,12 @@ describe('AuthService', () => {
 
   describe('validateUser', () => {
     it('returns payload for active user', async () => {
-      const payload = { sub: 'u-1', email: 'a@b.com', organizationId: 'org-1', role: 'admin' };
+      const payload = {
+        sub: 'u-1',
+        email: 'a@b.com',
+        organizationId: 'org-1',
+        role: 'admin',
+      };
       prisma.user.findUnique.mockResolvedValue({ id: 'u-1', status: 'active' });
 
       const result = await service.validateUser(payload);
@@ -175,16 +214,29 @@ describe('AuthService', () => {
     });
 
     it('throws for disabled user', async () => {
-      prisma.user.findUnique.mockResolvedValue({ id: 'u-1', status: 'disabled' });
+      prisma.user.findUnique.mockResolvedValue({
+        id: 'u-1',
+        status: 'disabled',
+      });
       await expect(
-        service.validateUser({ sub: 'u-1', email: 'a@b.com', organizationId: 'org-1', role: 'admin' }),
+        service.validateUser({
+          sub: 'u-1',
+          email: 'a@b.com',
+          organizationId: 'org-1',
+          role: 'admin',
+        }),
       ).rejects.toThrow(UnauthorizedException);
     });
 
     it('throws for non-existent user', async () => {
       prisma.user.findUnique.mockResolvedValue(null);
       await expect(
-        service.validateUser({ sub: 'gone', email: 'a@b.com', organizationId: 'org-1', role: 'admin' }),
+        service.validateUser({
+          sub: 'gone',
+          email: 'a@b.com',
+          organizationId: 'org-1',
+          role: 'admin',
+        }),
       ).rejects.toThrow(UnauthorizedException);
     });
   });

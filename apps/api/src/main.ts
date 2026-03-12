@@ -2,6 +2,7 @@ import { NestFactory } from '@nestjs/core';
 import { ValidationPipe, Logger } from '@nestjs/common';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { ConfigService } from '@nestjs/config';
+import helmet from 'helmet';
 import { AppModule } from './app.module';
 import { GlobalExceptionFilter } from './common/filters/http-exception.filter';
 import { LoggingInterceptor } from './common/interceptors/logging.interceptor';
@@ -12,11 +13,16 @@ async function bootstrap() {
 
   const config = app.get(ConfigService);
   const port = config.get<number>('port', 3001);
-  const corsOrigin = config.get<string[]>('cors.origin', ['http://localhost:5173']);
+  const corsOrigin = config.get<string[]>('cors.origin', [
+    'http://localhost:5173',
+  ]);
   const runtime = config.get<string>('runtime', 'LOCAL_SIMULATED');
 
   // Global prefix
   app.setGlobalPrefix('api');
+
+  // Security headers
+  app.use(helmet());
 
   // CORS
   app.enableCors({

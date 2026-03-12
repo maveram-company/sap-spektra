@@ -5,7 +5,10 @@ import { PrismaService } from '../../infrastructure/prisma/prisma.service';
 export class OperationsService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async findAll(organizationId: string, filters?: { status?: string; type?: string; systemId?: string }) {
+  async findAll(
+    organizationId: string,
+    filters?: { status?: string; type?: string; systemId?: string },
+  ) {
     return this.prisma.operationRecord.findMany({
       where: {
         organizationId,
@@ -18,17 +21,32 @@ export class OperationsService {
     });
   }
 
-  async create(organizationId: string, data: {
-    systemId: string; type: string; description: string;
-    requestedBy: string; riskLevel?: string; scheduledTime?: Date; schedule?: string;
-  }) {
+  async create(
+    organizationId: string,
+    data: {
+      systemId: string;
+      type: string;
+      description: string;
+      requestedBy: string;
+      riskLevel?: string;
+      scheduledTime?: Date;
+      schedule?: string;
+    },
+  ) {
     return this.prisma.operationRecord.create({
-      data: { organizationId, ...data, status: 'SCHEDULED', riskLevel: data.riskLevel || 'LOW' },
+      data: {
+        organizationId,
+        ...data,
+        status: 'SCHEDULED',
+        riskLevel: data.riskLevel || 'LOW',
+      },
     });
   }
 
   async updateStatus(organizationId: string, id: string, status: string) {
-    const op = await this.prisma.operationRecord.findFirst({ where: { id, organizationId } });
+    const op = await this.prisma.operationRecord.findFirst({
+      where: { id, organizationId },
+    });
     if (!op) throw new NotFoundException('Operation not found');
 
     return this.prisma.operationRecord.update({

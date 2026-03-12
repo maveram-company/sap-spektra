@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { BarChart3, TrendingUp, AlertTriangle, CheckCircle, Activity } from 'lucide-react';
+import { BarChart3, TrendingUp, AlertTriangle, CheckCircle, Activity, AlertCircle } from 'lucide-react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, Legend } from 'recharts';
 import Header from '../components/layout/Header';
 import PageHeader from '../components/layout/PageHeader';
@@ -8,6 +8,7 @@ import Select from '../components/ui/Select';
 import Table, { TableHeader, TableBody, TableRow, TableHead, TableCell } from '../components/ui/Table';
 import Badge from '../components/ui/Badge';
 import FeatureGate, { UpgradeBanner } from '../components/ui/FeatureGate';
+import EmptyState from '../components/ui/EmptyState';
 import PageLoading from '../components/ui/PageLoading';
 import { dataService } from '../services/dataService';
 
@@ -16,16 +17,29 @@ export default function AnalyticsPage() {
   const [data, setData] = useState(null);
   const [systems, setSystems] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
-    Promise.all([dataService.getAnalytics(), dataService.getSystems()]).then(([anl, sys]) => {
-      setData(anl);
-      setSystems(sys);
-      setLoading(false);
-    });
+    let mounted = true;
+    Promise.all([dataService.getAnalytics(), dataService.getSystems()])
+      .then(([anl, sys]) => {
+        if (mounted) { setData(anl); setSystems(sys); }
+      })
+      .catch(err => { if (mounted) setError(err.message); })
+      .finally(() => { if (mounted) setLoading(false); });
+    return () => { mounted = false; };
   }, []);
 
-  if (loading || !data) return <PageLoading message="Cargando analytics..." />;
+  if (loading || (!data && !error)) return <PageLoading message="Cargando analytics..." />;
+
+  if (error) return (
+    <div>
+      <Header title="Analytics" subtitle="Error al cargar" />
+      <div className="p-6">
+        <EmptyState icon={AlertTriangle} title="Error al cargar analytics" description={error} />
+      </div>
+    </div>
+  );
 
   const pieData = [
     { name: 'Exitosos', value: data.totalExecutions - data.failedCount, color: '#22c55e' },

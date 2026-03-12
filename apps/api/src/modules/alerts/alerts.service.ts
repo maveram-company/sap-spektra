@@ -7,7 +7,10 @@ export class AlertsService {
 
   constructor(private readonly prisma: PrismaService) {}
 
-  async findAll(organizationId: string, filters?: { status?: string; level?: string; systemId?: string }) {
+  async findAll(
+    organizationId: string,
+    filters?: { status?: string; level?: string; systemId?: string },
+  ) {
     return this.prisma.alert.findMany({
       where: {
         organizationId,
@@ -20,7 +23,11 @@ export class AlertsService {
     });
   }
 
-  async acknowledge(organizationId: string, alertId: string, userEmail: string) {
+  async acknowledge(
+    organizationId: string,
+    alertId: string,
+    userEmail: string,
+  ) {
     const alert = await this.prisma.alert.findFirst({
       where: { id: alertId, organizationId },
     });
@@ -28,11 +35,21 @@ export class AlertsService {
 
     return this.prisma.alert.update({
       where: { id: alertId },
-      data: { status: 'acknowledged', acknowledged: true, ackBy: userEmail, ackAt: new Date() },
+      data: {
+        status: 'acknowledged',
+        acknowledged: true,
+        ackBy: userEmail,
+        ackAt: new Date(),
+      },
     });
   }
 
-  async resolve(organizationId: string, alertId: string, userEmail: string, data: { category?: string; note?: string }) {
+  async resolve(
+    organizationId: string,
+    alertId: string,
+    userEmail: string,
+    data: { category?: string; note?: string },
+  ) {
     const alert = await this.prisma.alert.findFirst({
       where: { id: alertId, organizationId },
     });
@@ -52,14 +69,25 @@ export class AlertsService {
   }
 
   async getStats(organizationId: string) {
-    const [total, active, acknowledged, resolved, critical, warning] = await Promise.all([
-      this.prisma.alert.count({ where: { organizationId } }),
-      this.prisma.alert.count({ where: { organizationId, status: 'active' } }),
-      this.prisma.alert.count({ where: { organizationId, status: 'acknowledged' } }),
-      this.prisma.alert.count({ where: { organizationId, status: 'resolved' } }),
-      this.prisma.alert.count({ where: { organizationId, level: 'critical', status: 'active' } }),
-      this.prisma.alert.count({ where: { organizationId, level: 'warning', status: 'active' } }),
-    ]);
+    const [total, active, acknowledged, resolved, critical, warning] =
+      await Promise.all([
+        this.prisma.alert.count({ where: { organizationId } }),
+        this.prisma.alert.count({
+          where: { organizationId, status: 'active' },
+        }),
+        this.prisma.alert.count({
+          where: { organizationId, status: 'acknowledged' },
+        }),
+        this.prisma.alert.count({
+          where: { organizationId, status: 'resolved' },
+        }),
+        this.prisma.alert.count({
+          where: { organizationId, level: 'critical', status: 'active' },
+        }),
+        this.prisma.alert.count({
+          where: { organizationId, level: 'warning', status: 'active' },
+        }),
+      ]);
 
     return { total, active, acknowledged, resolved, critical, warning };
   }

@@ -6,6 +6,7 @@ import { TenantGuard } from '../../common/guards/tenant.guard';
 import { RolesGuard } from '../../common/guards/roles.guard';
 import { Roles } from '../../common/decorators/roles.decorator';
 import { TenantId } from '../../common/decorators/tenant.decorator';
+import { SystemTrendsQueryDto } from './dto/analytics.dto';
 
 @ApiTags('Analytics')
 @ApiBearerAuth()
@@ -34,8 +35,12 @@ export class AnalyticsController {
   systemTrends(
     @TenantId() orgId: string,
     @Param('systemId') systemId: string,
-    @Query('days') days?: string,
+    @Query() query: SystemTrendsQueryDto,
   ) {
-    return this.analyticsService.getSystemTrends(orgId, systemId, days ? parseInt(days, 10) : 7);
+    return this.analyticsService.getSystemTrends(
+      orgId,
+      systemId,
+      query.days ? parseInt(query.days, 10) : 7,
+    );
   }
 }

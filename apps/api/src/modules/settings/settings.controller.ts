@@ -1,4 +1,12 @@
-import { Controller, Get, Post, Patch, Param, Body, UseGuards } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Patch,
+  Param,
+  Body,
+  UseGuards,
+} from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiBearerAuth } from '@nestjs/swagger';
 import { SettingsService } from './settings.service';
 import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
@@ -6,6 +14,7 @@ import { TenantGuard } from '../../common/guards/tenant.guard';
 import { RolesGuard } from '../../common/guards/roles.guard';
 import { Roles } from '../../common/decorators/roles.decorator';
 import { TenantId } from '../../common/decorators/tenant.decorator';
+import { UpdateSettingsDto, CreateApiKeyDto } from './dto/settings.dto';
 
 @ApiTags('Settings')
 @ApiBearerAuth()
@@ -24,7 +33,10 @@ export class SettingsController {
   @Patch()
   @Roles('admin')
   @ApiOperation({ summary: 'Update organization settings' })
-  updateSettings(@TenantId() orgId: string, @Body() settings: Record<string, unknown>) {
+  updateSettings(
+    @TenantId() orgId: string,
+    @Body() settings: UpdateSettingsDto,
+  ) {
     return this.settingsService.updateSettings(orgId, settings);
   }
 
@@ -38,7 +50,7 @@ export class SettingsController {
   @Post('api-keys')
   @Roles('admin')
   @ApiOperation({ summary: 'Create a new API key' })
-  createApiKey(@TenantId() orgId: string, @Body() data: { name: string }) {
+  createApiKey(@TenantId() orgId: string, @Body() data: CreateApiKeyDto) {
     return this.settingsService.createApiKey(orgId, data.name);
   }
 

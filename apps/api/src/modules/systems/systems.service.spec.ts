@@ -43,10 +43,7 @@ describe('SystemsService', () => {
     };
 
     const module: TestingModule = await Test.createTestingModule({
-      providers: [
-        SystemsService,
-        { provide: PrismaService, useValue: prisma },
-      ],
+      providers: [SystemsService, { provide: PrismaService, useValue: prisma }],
     }).compile();
 
     service = module.get<SystemsService>(SystemsService);
@@ -142,9 +139,13 @@ describe('SystemsService', () => {
   describe('update', () => {
     it('updates an existing system', async () => {
       prisma.system.findFirst.mockResolvedValue(mockSystem());
-      prisma.system.update.mockResolvedValue(mockSystem({ description: 'Updated' }));
+      prisma.system.update.mockResolvedValue(
+        mockSystem({ description: 'Updated' }),
+      );
 
-      const result = await service.update(ORG_ID, 'sys-1', { description: 'Updated' } as any);
+      const result = await service.update(ORG_ID, 'sys-1', {
+        description: 'Updated',
+      } as any);
       expect(result.description).toBe('Updated');
     });
 
@@ -181,9 +182,27 @@ describe('SystemsService', () => {
   describe('getHealthSummary', () => {
     it('computes summary stats correctly', async () => {
       prisma.system.findMany.mockResolvedValue([
-        { id: '1', sid: 'EP1', status: 'healthy', healthScore: 95, environment: 'PRD' },
-        { id: '2', sid: 'EQ1', status: 'warning', healthScore: 72, environment: 'QAS' },
-        { id: '3', sid: 'ED1', status: 'critical', healthScore: 35, environment: 'DEV' },
+        {
+          id: '1',
+          sid: 'EP1',
+          status: 'healthy',
+          healthScore: 95,
+          environment: 'PRD',
+        },
+        {
+          id: '2',
+          sid: 'EQ1',
+          status: 'warning',
+          healthScore: 72,
+          environment: 'QAS',
+        },
+        {
+          id: '3',
+          sid: 'ED1',
+          status: 'critical',
+          healthScore: 35,
+          environment: 'DEV',
+        },
       ]);
 
       const summary = await service.getHealthSummary(ORG_ID);

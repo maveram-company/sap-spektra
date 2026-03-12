@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import Header from '../components/layout/Header';
 import PageLoading from '../components/ui/PageLoading';
+import EmptyState from '../components/ui/EmptyState';
 import { alertResolutionCategories } from '../lib/constants';
 import { dataService } from '../services/dataService';
 import { useAuth } from '../contexts/AuthContext';
@@ -23,6 +24,7 @@ import {
 function AlertsPage() {
   const { user, hasRole } = useAuth();
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const [alerts, setAlerts] = useState([]);
   const [systems, setSystems] = useState([]);
   const [statusFilter, setStatusFilter] = useState('active');
@@ -32,11 +34,14 @@ function AlertsPage() {
   const [resolutionNote, setResolutionNote] = useState('');
 
   useEffect(() => {
-    Promise.all([dataService.getAlerts(), dataService.getSystems()]).then(([alts, sys]) => {
-      setAlerts(alts);
-      setSystems(sys);
-      setLoading(false);
-    });
+    let mounted = true;
+    Promise.all([dataService.getAlerts(), dataService.getSystems()])
+      .then(([alts, sys]) => {
+        if (mounted) { setAlerts(alts); setSystems(sys); }
+      })
+      .catch(err => { if (mounted) setError(err.message); })
+      .finally(() => { if (mounted) setLoading(false); });
+    return () => { mounted = false; };
   }, []);
 
   // Filtrado de alertas
@@ -171,6 +176,15 @@ function AlertsPage() {
   ];
 
   if (loading) return <PageLoading message="Cargando alertas..." />;
+
+  if (error) return (
+    <div>
+      <Header title="Alertas" subtitle="Error al cargar" />
+      <div className="p-6">
+        <EmptyState icon={AlertTriangle} title="Error al cargar alertas" description={error} />
+      </div>
+    </div>
+  );
 
   return (
     <div className="min-h-screen">

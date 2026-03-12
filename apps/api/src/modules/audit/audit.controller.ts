@@ -6,6 +6,7 @@ import { TenantGuard } from '../../common/guards/tenant.guard';
 import { RolesGuard } from '../../common/guards/roles.guard';
 import { Roles } from '../../common/decorators/roles.decorator';
 import { TenantId } from '../../common/decorators/tenant.decorator';
+import { AuditFiltersDto } from './dto/audit.dto';
 
 @ApiTags('Audit')
 @ApiBearerAuth()
@@ -17,7 +18,11 @@ export class AuditController {
   @Get()
   @Roles('admin')
   @ApiOperation({ summary: 'List audit log entries' })
-  findAll(@TenantId() orgId: string, @Query('severity') severity?: string, @Query('action') action?: string, @Query('limit') limit?: string) {
-    return this.auditService.findAll(orgId, { severity, action, limit: limit ? parseInt(limit, 10) : undefined });
+  findAll(@TenantId() orgId: string, @Query() filters: AuditFiltersDto) {
+    return this.auditService.findAll(orgId, {
+      severity: filters.severity,
+      action: filters.action,
+      limit: filters.limit ? parseInt(filters.limit, 10) : undefined,
+    });
   }
 }

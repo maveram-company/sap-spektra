@@ -14,21 +14,31 @@ describe('ChatService', () => {
       system: {
         count: jest.fn().mockResolvedValue(5),
         findMany: jest.fn().mockResolvedValue([
-          { sid: 'EP1', status: 'healthy', healthScore: 95, environment: 'production' },
+          {
+            sid: 'EP1',
+            status: 'healthy',
+            healthScore: 95,
+            environment: 'production',
+          },
         ]),
       },
       alert: {
         count: jest.fn(),
         findMany: jest.fn().mockResolvedValue([
-          { id: 'a-1', title: 'CPU high', level: 'critical', system: { sid: 'EP1' } },
+          {
+            id: 'a-1',
+            title: 'CPU high',
+            level: 'critical',
+            system: { sid: 'EP1' },
+          },
         ]),
       },
     };
 
     // Default: active alerts = 3, critical = 1
     prisma.alert.count
-      .mockResolvedValueOnce(3)   // activeAlerts
-      .mockResolvedValueOnce(1);  // criticalCount
+      .mockResolvedValueOnce(3) // activeAlerts
+      .mockResolvedValueOnce(1); // criticalCount
 
     const module: TestingModule = await Test.createTestingModule({
       providers: [
@@ -51,7 +61,8 @@ describe('ChatService', () => {
       'responds to "%s" with status_summary',
       async (keyword) => {
         // Re-mock alert.count for each call (consumed by mockResolvedValueOnce)
-        prisma.alert.count = jest.fn()
+        prisma.alert.count = jest
+          .fn()
           .mockResolvedValueOnce(3)
           .mockResolvedValueOnce(1);
 
@@ -59,7 +70,11 @@ describe('ChatService', () => {
 
         expect(result.type).toBe('status_summary');
         expect(result.data).toEqual(
-          expect.objectContaining({ systemCount: 5, activeAlerts: 3, criticalCount: 1 }),
+          expect.objectContaining({
+            systemCount: 5,
+            activeAlerts: 3,
+            criticalCount: 1,
+          }),
         );
         expect(result.suggestions).toBeDefined();
       },
@@ -70,11 +85,15 @@ describe('ChatService', () => {
 
   describe('processMessage — alert keywords', () => {
     it('responds to "alerta" with alert_list', async () => {
-      prisma.alert.count = jest.fn()
+      prisma.alert.count = jest
+        .fn()
         .mockResolvedValueOnce(3)
         .mockResolvedValueOnce(1);
 
-      const result = await service.processMessage(ORG_ID, 'Ver mis alertas activas');
+      const result = await service.processMessage(
+        ORG_ID,
+        'Ver mis alertas activas',
+      );
 
       expect(result.type).toBe('alert_list');
       expect(result.data).toHaveLength(1);
@@ -88,7 +107,8 @@ describe('ChatService', () => {
 
   describe('processMessage — system keywords', () => {
     it('responds to "sistema" with system_list', async () => {
-      prisma.alert.count = jest.fn()
+      prisma.alert.count = jest
+        .fn()
         .mockResolvedValueOnce(3)
         .mockResolvedValueOnce(1);
 
@@ -106,7 +126,8 @@ describe('ChatService', () => {
 
   describe('processMessage — generic message', () => {
     it('returns general type for unknown input', async () => {
-      prisma.alert.count = jest.fn()
+      prisma.alert.count = jest
+        .fn()
         .mockResolvedValueOnce(3)
         .mockResolvedValueOnce(1);
 

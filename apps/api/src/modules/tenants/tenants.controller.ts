@@ -6,6 +6,7 @@ import { TenantGuard } from '../../common/guards/tenant.guard';
 import { RolesGuard } from '../../common/guards/roles.guard';
 import { Roles } from '../../common/decorators/roles.decorator';
 import { TenantId } from '../../common/decorators/tenant.decorator';
+import { UpdateTenantDto } from './dto/tenant.dto';
 
 @ApiTags('Tenant')
 @ApiBearerAuth()
@@ -24,10 +25,7 @@ export class TenantsController {
   @Patch()
   @Roles('admin')
   @ApiOperation({ summary: 'Update organization settings' })
-  update(
-    @TenantId() orgId: string,
-    @Body() data: { name?: string; timezone?: string; language?: string },
-  ) {
+  update(@TenantId() orgId: string, @Body() data: UpdateTenantDto) {
     return this.tenantsService.update(orgId, data);
   }
 

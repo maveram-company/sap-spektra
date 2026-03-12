@@ -19,7 +19,10 @@ export class TenantsService {
     return org;
   }
 
-  async update(organizationId: string, data: { name?: string; timezone?: string; language?: string }) {
+  async update(
+    organizationId: string,
+    data: { name?: string; timezone?: string; language?: string },
+  ) {
     const org = await this.prisma.organization.findUnique({
       where: { id: organizationId },
     });
@@ -35,12 +38,15 @@ export class TenantsService {
   }
 
   async getStats(organizationId: string) {
-    const [systemCount, userCount, alertCount, activeAlerts] = await Promise.all([
-      this.prisma.system.count({ where: { organizationId } }),
-      this.prisma.membership.count({ where: { organizationId } }),
-      this.prisma.alert.count({ where: { organizationId } }),
-      this.prisma.alert.count({ where: { organizationId, status: 'active' } }),
-    ]);
+    const [systemCount, userCount, alertCount, activeAlerts] =
+      await Promise.all([
+        this.prisma.system.count({ where: { organizationId } }),
+        this.prisma.membership.count({ where: { organizationId } }),
+        this.prisma.alert.count({ where: { organizationId } }),
+        this.prisma.alert.count({
+          where: { organizationId, status: 'active' },
+        }),
+      ]);
 
     return { systemCount, userCount, alertCount, activeAlerts };
   }

@@ -20,5 +20,9 @@ const statusConfig = {
 
 export default function StatusBadge({ status, size = 'md', className = '' }) {
   const config = statusConfig[status?.toLowerCase()] || { label: status, variant: 'default' };
-  return <Badge variant={config.variant} size={size} dot={config.dot} className={className}>{config.label}</Badge>;
+  return (
+    <span role="status" aria-label={`Estado: ${config.label}`}>
+      <Badge variant={config.variant} size={size} dot={config.dot} className={className}>{config.label}</Badge>
+    </span>
+  );
 }

@@ -11,9 +11,18 @@ export default function AppLayout() {
 
   return (
     <div className="min-h-screen bg-surface-secondary bg-grid">
+      {/* Skip to main content link — visible solo al hacer focus */}
+      <a
+        href="#main-content"
+        className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-[70] focus:px-4 focus:py-2 focus:bg-primary-500 focus:text-white focus:rounded-lg"
+      >
+        Ir al contenido principal
+      </a>
+
       {/* Banner de modo demo */}
       {showDemo && (
         <div
+          role="banner"
           style={{
             position: 'fixed',
             top: 0,
@@ -39,10 +48,12 @@ export default function AppLayout() {
         </div>
       )}
 
-      <TopNav topOffset={topOffset} />
-      <div style={{ paddingTop: `${NAV_HEIGHT + topOffset}px` }}>
+      <header>
+        <TopNav topOffset={topOffset} />
+      </header>
+      <main id="main-content" style={{ paddingTop: `${NAV_HEIGHT + topOffset}px` }}>
         <Outlet />
-      </div>
+      </main>
       <ChatWidget />
     </div>
   );

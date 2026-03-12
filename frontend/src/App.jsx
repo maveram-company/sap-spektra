@@ -1,45 +1,49 @@
+import { lazy, Suspense } from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider } from './contexts/AuthContext';
 import { ThemeProvider } from './contexts/ThemeContext';
 import { TenantProvider } from './contexts/TenantContext';
 import { PlanProvider } from './hooks/usePlan';
 import ErrorBoundary from './components/ui/ErrorBoundary';
+import PageLoading from './components/ui/PageLoading';
 
 import AppLayout from './components/layout/AppLayout';
 import ProtectedRoute from './components/layout/ProtectedRoute';
 
-import LoginPage from './pages/LoginPage';
-import DashboardPage from './pages/DashboardPage';
-import SystemsListPage from './pages/SystemsListPage';
-import SystemDetailPage from './pages/SystemDetailPage';
-import LandscapePage from './pages/LandscapePage';
-import AlertsPage from './pages/AlertsPage';
-import EventsPage from './pages/EventsPage';
-import AIAnalysisPage from './pages/AIAnalysisPage';
-import ReportsPage from './pages/ReportsPage';
-import RunbooksPage from './pages/RunbooksPage';
-import ApprovalsPage from './pages/ApprovalsPage';
-import OperationsPage from './pages/OperationsPage';
-import AnalyticsPage from './pages/AnalyticsPage';
-import ComparisonPage from './pages/ComparisonPage';
-import SLAPage from './pages/SLAPage';
-import HAControlCenterPage from './pages/HAControlCenterPage';
-import AdminPage from './pages/AdminPage';
-import BackgroundJobsPage from './pages/BackgroundJobsPage';
-import TransportsPage from './pages/TransportsPage';
-import CertificatesPage from './pages/CertificatesPage';
-import ConnectSystemPage from './pages/ConnectSystemPage';
-import ConnectorsPage from './pages/ConnectorsPage';
-import ProfilePage from './pages/settings/ProfilePage';
+// Lazy-loaded pages
+const LoginPage = lazy(() => import('./pages/LoginPage'));
+const DashboardPage = lazy(() => import('./pages/DashboardPage'));
+const SystemsListPage = lazy(() => import('./pages/SystemsListPage'));
+const SystemDetailPage = lazy(() => import('./pages/SystemDetailPage'));
+const LandscapePage = lazy(() => import('./pages/LandscapePage'));
+const AlertsPage = lazy(() => import('./pages/AlertsPage'));
+const EventsPage = lazy(() => import('./pages/EventsPage'));
+const AIAnalysisPage = lazy(() => import('./pages/AIAnalysisPage'));
+const ReportsPage = lazy(() => import('./pages/ReportsPage'));
+const RunbooksPage = lazy(() => import('./pages/RunbooksPage'));
+const ApprovalsPage = lazy(() => import('./pages/ApprovalsPage'));
+const OperationsPage = lazy(() => import('./pages/OperationsPage'));
+const AnalyticsPage = lazy(() => import('./pages/AnalyticsPage'));
+const ComparisonPage = lazy(() => import('./pages/ComparisonPage'));
+const SLAPage = lazy(() => import('./pages/SLAPage'));
+const HAControlCenterPage = lazy(() => import('./pages/HAControlCenterPage'));
+const AdminPage = lazy(() => import('./pages/AdminPage'));
+const BackgroundJobsPage = lazy(() => import('./pages/BackgroundJobsPage'));
+const TransportsPage = lazy(() => import('./pages/TransportsPage'));
+const CertificatesPage = lazy(() => import('./pages/CertificatesPage'));
+const ConnectSystemPage = lazy(() => import('./pages/ConnectSystemPage'));
+const ConnectorsPage = lazy(() => import('./pages/ConnectorsPage'));
+const ProfilePage = lazy(() => import('./pages/settings/ProfilePage'));
 
-import SettingsLayout from './pages/settings/SettingsLayout';
-import GeneralSettings from './pages/settings/GeneralSettings';
-import UsersPage from './pages/settings/UsersPage';
-import RolesPage from './pages/settings/RolesPage';
-import IntegrationsPage from './pages/settings/IntegrationsPage';
-import NotificationsPage from './pages/settings/NotificationsPage';
-import BillingPage from './pages/settings/BillingPage';
-import AuditLogPage from './pages/settings/AuditLogPage';
+// Lazy-loaded settings pages
+const SettingsLayout = lazy(() => import('./pages/settings/SettingsLayout'));
+const GeneralSettings = lazy(() => import('./pages/settings/GeneralSettings'));
+const UsersPage = lazy(() => import('./pages/settings/UsersPage'));
+const RolesPage = lazy(() => import('./pages/settings/RolesPage'));
+const IntegrationsPage = lazy(() => import('./pages/settings/IntegrationsPage'));
+const NotificationsPage = lazy(() => import('./pages/settings/NotificationsPage'));
+const BillingPage = lazy(() => import('./pages/settings/BillingPage'));
+const AuditLogPage = lazy(() => import('./pages/settings/AuditLogPage'));
 
 export default function App() {
   return (
@@ -49,6 +53,7 @@ export default function App() {
         <AuthProvider>
           <TenantProvider>
             <PlanProvider>
+              <Suspense fallback={<PageLoading message="Cargando..." />}>
               <Routes>
                 <Route path="/login" element={<LoginPage />} />
 
@@ -103,6 +108,7 @@ export default function App() {
 
                 <Route path="*" element={<Navigate to="/" replace />} />
               </Routes>
+              </Suspense>
             </PlanProvider>
           </TenantProvider>
         </AuthProvider>

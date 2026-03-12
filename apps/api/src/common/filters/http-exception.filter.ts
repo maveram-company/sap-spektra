@@ -16,6 +16,7 @@ export class GlobalExceptionFilter implements ExceptionFilter {
     const ctx = host.switchToHttp();
     const response = ctx.getResponse<Response>();
     const request = ctx.getRequest<Request>();
+    const correlationId = (request as any).correlationId || 'unknown';
 
     const status =
       exception instanceof HttpException
@@ -29,16 +30,31 @@ export class GlobalExceptionFilter implements ExceptionFilter {
 
     if (status >= 500) {
       this.logger.error(
-        `${request.method} ${request.url} → ${status}`,
+        JSON.stringify({
+          correlationId,
+          method: request.method,
+          url: request.url,
+          statusCode: status,
+          error: message,
+        }),
         exception instanceof Error ? exception.stack : undefined,
       );
     } else {
-      this.logger.warn(`${request.method} ${request.url} → ${status}: ${message}`);
+      this.logger.warn(
+        JSON.stringify({
+          correlationId,
+          method: request.method,
+          url: request.url,
+          statusCode: status,
+          error: message,
+        }),
+      );
     }
 
     response.status(status).json({
       statusCode: status,
       message,
+      correlationId,
       timestamp: new Date().toISOString(),
       path: request.url,
     });

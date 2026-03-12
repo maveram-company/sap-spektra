@@ -28,10 +28,7 @@ describe('EventsService', () => {
     };
 
     const module: TestingModule = await Test.createTestingModule({
-      providers: [
-        EventsService,
-        { provide: PrismaService, useValue: prisma },
-      ],
+      providers: [EventsService, { provide: PrismaService, useValue: prisma }],
     }).compile();
 
     service = module.get<EventsService>(EventsService);
@@ -62,7 +59,10 @@ describe('EventsService', () => {
 
       expect(prisma.event.findMany).toHaveBeenCalledWith(
         expect.objectContaining({
-          where: expect.objectContaining({ organizationId: ORG_ID, level: 'error' }),
+          where: expect.objectContaining({
+            organizationId: ORG_ID,
+            level: 'error',
+          }),
         }),
       );
     });
@@ -74,7 +74,10 @@ describe('EventsService', () => {
 
       expect(prisma.event.findMany).toHaveBeenCalledWith(
         expect.objectContaining({
-          where: expect.objectContaining({ organizationId: ORG_ID, source: 'sap_router' }),
+          where: expect.objectContaining({
+            organizationId: ORG_ID,
+            source: 'sap_router',
+          }),
         }),
       );
     });
@@ -86,7 +89,10 @@ describe('EventsService', () => {
 
       expect(prisma.event.findMany).toHaveBeenCalledWith(
         expect.objectContaining({
-          where: expect.objectContaining({ organizationId: ORG_ID, systemId: 'sys-5' }),
+          where: expect.objectContaining({
+            organizationId: ORG_ID,
+            systemId: 'sys-5',
+          }),
         }),
       );
     });

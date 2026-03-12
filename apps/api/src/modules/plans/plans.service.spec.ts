@@ -27,10 +27,7 @@ describe('PlansService', () => {
     };
 
     const module: TestingModule = await Test.createTestingModule({
-      providers: [
-        PlansService,
-        { provide: PrismaService, useValue: prisma },
-      ],
+      providers: [PlansService, { provide: PrismaService, useValue: prisma }],
     }).compile();
 
     service = module.get<PlansService>(PlansService);
@@ -51,7 +48,9 @@ describe('PlansService', () => {
       const result = await service.findAll();
 
       expect(result).toHaveLength(3);
-      expect(prisma.plan.findMany).toHaveBeenCalledWith({ orderBy: { price: 'asc' } });
+      expect(prisma.plan.findMany).toHaveBeenCalledWith({
+        orderBy: { price: 'asc' },
+      });
     });
   });
 

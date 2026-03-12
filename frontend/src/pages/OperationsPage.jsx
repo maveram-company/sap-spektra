@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Calendar, Clock, AlertTriangle, CheckCircle, XCircle, Play, Plus, Save } from 'lucide-react';
+import { Calendar, Clock, AlertTriangle, CheckCircle, XCircle, Play, Plus, Save, AlertCircle } from 'lucide-react';
 import Header from '../components/layout/Header';
 import PageHeader from '../components/layout/PageHeader';
 import Card from '../components/ui/Card';
@@ -19,20 +19,33 @@ export default function OperationsPage() {
   const [operations, setOperations] = useState([]);
   const [systems, setSystems] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const [activeTab, setActiveTab] = useState('all');
   const [showNewModal, setShowNewModal] = useState(false);
   const [saving, setSaving] = useState(false);
   const [newOp, setNewOp] = useState({ systemId: '', type: 'BACKUP', description: '', riskLevel: 'LOW', scheduledTime: '' });
 
   useEffect(() => {
-    Promise.all([dataService.getOperations(), dataService.getSystems()]).then(([ops, sys]) => {
-      setOperations(ops);
-      setSystems(sys);
-      setLoading(false);
-    });
+    let mounted = true;
+    Promise.all([dataService.getOperations(), dataService.getSystems()])
+      .then(([ops, sys]) => {
+        if (mounted) { setOperations(ops); setSystems(sys); }
+      })
+      .catch(err => { if (mounted) setError(err.message); })
+      .finally(() => { if (mounted) setLoading(false); });
+    return () => { mounted = false; };
   }, []);
 
   if (loading) return <PageLoading />;
+
+  if (error) return (
+    <div>
+      <Header title="Operaciones" subtitle="Error al cargar" />
+      <div className="p-6">
+        <EmptyState icon={AlertTriangle} title="Error al cargar operaciones" description={error} />
+      </div>
+    </div>
+  );
 
   const handleCreateOperation = async () => {
     setSaving(true);

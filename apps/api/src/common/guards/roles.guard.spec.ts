@@ -7,7 +7,9 @@ function mockContext(role?: string): ExecutionContext {
     getHandler: () => ({}),
     getClass: () => ({}),
     switchToHttp: () => ({
-      getRequest: () => ({ user: role ? { role, organizationId: 'org-1' } : {} }),
+      getRequest: () => ({
+        user: role ? { role, organizationId: 'org-1' } : {},
+      }),
     }),
   } as unknown as ExecutionContext;
 }
@@ -38,17 +40,23 @@ describe('RolesGuard', () => {
 
   it('denies viewer access to admin-level endpoints', () => {
     jest.spyOn(reflector, 'getAllAndOverride').mockReturnValue(['admin']);
-    expect(() => guard.canActivate(mockContext('viewer'))).toThrow(ForbiddenException);
+    expect(() => guard.canActivate(mockContext('viewer'))).toThrow(
+      ForbiddenException,
+    );
   });
 
   it('denies viewer access to operator-level endpoints', () => {
     jest.spyOn(reflector, 'getAllAndOverride').mockReturnValue(['operator']);
-    expect(() => guard.canActivate(mockContext('viewer'))).toThrow(ForbiddenException);
+    expect(() => guard.canActivate(mockContext('viewer'))).toThrow(
+      ForbiddenException,
+    );
   });
 
   it('denies operator access to escalation-level endpoints', () => {
     jest.spyOn(reflector, 'getAllAndOverride').mockReturnValue(['escalation']);
-    expect(() => guard.canActivate(mockContext('operator'))).toThrow(ForbiddenException);
+    expect(() => guard.canActivate(mockContext('operator'))).toThrow(
+      ForbiddenException,
+    );
   });
 
   it('allows escalation to access operator-level endpoints', () => {

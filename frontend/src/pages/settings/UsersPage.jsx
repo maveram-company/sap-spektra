@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { UserPlus, Mail, Trash2, Edit, Save } from 'lucide-react';
+import { UserPlus, Mail, Trash2, Edit, Save, AlertTriangle } from 'lucide-react';
 import Card, { CardHeader, CardTitle } from '../../components/ui/Card';
 import Button from '../../components/ui/Button';
 import Badge from '../../components/ui/Badge';
@@ -8,14 +8,23 @@ import Modal from '../../components/ui/Modal';
 import Input from '../../components/ui/Input';
 import Select from '../../components/ui/Select';
 import Table, { TableHeader, TableBody, TableRow, TableHead, TableCell } from '../../components/ui/Table';
+import EmptyState from '../../components/ui/EmptyState';
+import PageLoading from '../../components/ui/PageLoading';
 import { dataService } from '../../services/dataService';
 import { useTenant } from '../../contexts/TenantContext';
 
 export default function UsersPage() {
   const [users, setUsers] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
-    dataService.getUsers().then(data => setUsers(data));
+    let mounted = true;
+    dataService.getUsers()
+      .then(data => { if (mounted) setUsers(data); })
+      .catch(err => { if (mounted) setError(err.message); })
+      .finally(() => { if (mounted) setLoading(false); });
+    return () => { mounted = false; };
   }, []);
   const [showInviteModal, setShowInviteModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
@@ -70,6 +79,14 @@ export default function UsersPage() {
     const map = { admin: 'danger', operator: 'primary', escalation: 'warning', viewer: 'default' };
     return map[role] || 'default';
   };
+
+  if (loading) return <PageLoading message="Cargando usuarios..." />;
+
+  if (error) return (
+    <div className="max-w-4xl">
+      <EmptyState icon={AlertTriangle} title="Error al cargar usuarios" description={error} />
+    </div>
+  );
 
   return (
     <div className="max-w-4xl">

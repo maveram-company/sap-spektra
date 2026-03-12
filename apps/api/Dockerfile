@@ -31,4 +31,6 @@ COPY prisma ./prisma
 
 EXPOSE 3001
 
+USER node
+
 CMD ["node", "dist/main.js"]

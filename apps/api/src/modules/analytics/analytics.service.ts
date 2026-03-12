@@ -40,45 +40,89 @@ export class AnalyticsService {
 
     return {
       systemCount,
-      alertsByLevel: Object.fromEntries(alertsByLevel.map(a => [a.level, a._count])),
-      operationsByStatus: Object.fromEntries(operationsByStatus.map(o => [o.status, o._count])),
+      alertsByLevel: Object.fromEntries(
+        alertsByLevel.map((a) => [a.level, a._count]),
+      ),
+      operationsByStatus: Object.fromEntries(
+        operationsByStatus.map((o) => [o.status, o._count]),
+      ),
       recentBreaches,
       healthTrend,
     };
   }
 
   async getRunbookAnalytics(organizationId: string) {
-    const executions = await this.prisma.runbookExecution.findMany({
-      where: { runbook: { organizationId } },
-      include: { runbook: { select: { name: true } } },
-      orderBy: { startedAt: 'desc' },
-    });
+    // Use groupBy to aggregate at the DB level instead of loading all rows
+    const [byResultRows, byRunbookRows] = await Promise.all([
+      this.prisma.runbookExecution.groupBy({
+        by: ['result'],
+        _count: true,
+        where: { runbook: { organizationId } },
+      }),
+      this.prisma.runbookExecution.groupBy({
+        by: ['runbookId', 'result'],
+        _count: true,
+        where: { runbook: { organizationId } },
+      }),
+    ]);
 
+    // Build byResult map
     const byResult = { SUCCESS: 0, FAILED: 0, PENDING: 0, RUNNING: 0 };
-    const byRunbook: Record<string, { total: number; success: number; failed: number }> = {};
-
-    for (const exec of executions) {
-      byResult[exec.result as keyof typeof byResult] = (byResult[exec.result as keyof typeof byResult] || 0) + 1;
-      const name = exec.runbook.name;
-      if (!byRunbook[name]) byRunbook[name] = { total: 0, success: 0, failed: 0 };
-      byRunbook[name].total++;
-      if (exec.result === 'SUCCESS') byRunbook[name].success++;
-      if (exec.result === 'FAILED') byRunbook[name].failed++;
+    let totalExecutions = 0;
+    for (const row of byResultRows) {
+      byResult[row.result as keyof typeof byResult] = row._count;
+      totalExecutions += row._count;
     }
 
-    return { totalExecutions: executions.length, byResult, byRunbook };
+    // Collect unique runbook IDs and fetch their names in a single query
+    const runbookIds = [...new Set(byRunbookRows.map((r) => r.runbookId))];
+    const runbooks = runbookIds.length
+      ? await this.prisma.runbook.findMany({
+          where: { id: { in: runbookIds } },
+          select: { id: true, name: true },
+        })
+      : [];
+    const nameMap = Object.fromEntries(runbooks.map((r) => [r.id, r.name]));
+
+    // Build byRunbook map
+    const byRunbook: Record<
+      string,
+      { total: number; success: number; failed: number }
+    > = {};
+    for (const row of byRunbookRows) {
+      const name = nameMap[row.runbookId] || row.runbookId;
+      if (!byRunbook[name])
+        byRunbook[name] = { total: 0, success: 0, failed: 0 };
+      byRunbook[name].total += row._count;
+      if (row.result === 'SUCCESS') byRunbook[name].success += row._count;
+      if (row.result === 'FAILED') byRunbook[name].failed += row._count;
+    }
+
+    return { totalExecutions, byResult, byRunbook };
   }
 
-  async getSystemTrends(organizationId: string, systemId: string, days: number = 7) {
+  async getSystemTrends(
+    organizationId: string,
+    systemId: string,
+    days: number = 7,
+  ) {
     const since = new Date(Date.now() - days * 86400000);
 
     const [snapshots, breaches, alerts] = await Promise.all([
       this.prisma.healthSnapshot.findMany({
-        where: { systemId, system: { organizationId }, timestamp: { gte: since } },
+        where: {
+          systemId,
+          system: { organizationId },
+          timestamp: { gte: since },
+        },
         orderBy: { timestamp: 'asc' },
       }),
       this.prisma.breach.findMany({
-        where: { systemId, system: { organizationId }, timestamp: { gte: since } },
+        where: {
+          systemId,
+          system: { organizationId },
+          timestamp: { gte: since },
+        },
         orderBy: { timestamp: 'asc' },
       }),
       this.prisma.alert.findMany({

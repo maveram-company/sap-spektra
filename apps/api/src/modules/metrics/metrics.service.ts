@@ -13,7 +13,11 @@ export class MetricsService {
     });
   }
 
-  async getHostMetricsBySystem(organizationId: string, systemId: string, hours: number = 24) {
+  async getHostMetricsBySystem(
+    organizationId: string,
+    systemId: string,
+    hours: number = 24,
+  ) {
     const since = new Date(Date.now() - hours * 3600000);
     return this.prisma.hostMetric.findMany({
       where: {
@@ -25,15 +29,27 @@ export class MetricsService {
     });
   }
 
-  async getHealthSnapshots(organizationId: string, systemId: string, hours: number = 24) {
+  async getHealthSnapshots(
+    organizationId: string,
+    systemId: string,
+    hours: number = 24,
+  ) {
     const since = new Date(Date.now() - hours * 3600000);
     return this.prisma.healthSnapshot.findMany({
-      where: { systemId, system: { organizationId }, timestamp: { gte: since } },
+      where: {
+        systemId,
+        system: { organizationId },
+        timestamp: { gte: since },
+      },
       orderBy: { timestamp: 'asc' },
     });
   }
 
-  async getBreaches(organizationId: string, systemId?: string, resolved?: boolean) {
+  async getBreaches(
+    organizationId: string,
+    systemId?: string,
+    resolved?: boolean,
+  ) {
     return this.prisma.breach.findMany({
       where: {
         system: { organizationId },

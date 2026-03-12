@@ -10,13 +10,22 @@ export class SettingsService {
   async getSettings(organizationId: string) {
     const org = await this.prisma.organization.findUnique({
       where: { id: organizationId },
-      select: { settings: true, limits: true, plan: true, timezone: true, language: true },
+      select: {
+        settings: true,
+        limits: true,
+        plan: true,
+        timezone: true,
+        language: true,
+      },
     });
     if (!org) throw new NotFoundException('Organization not found');
     return org;
   }
 
-  async updateSettings(organizationId: string, settings: Record<string, unknown>) {
+  async updateSettings(
+    organizationId: string,
+    settings: Record<string, unknown>,
+  ) {
     return this.prisma.organization.update({
       where: { id: organizationId },
       data: { settings: settings as object },
@@ -26,7 +35,14 @@ export class SettingsService {
   async getApiKeys(organizationId: string) {
     return this.prisma.apiKey.findMany({
       where: { organizationId },
-      select: { id: true, name: true, prefix: true, status: true, createdAt: true, lastUsedAt: true },
+      select: {
+        id: true,
+        name: true,
+        prefix: true,
+        status: true,
+        createdAt: true,
+        lastUsedAt: true,
+      },
       orderBy: { createdAt: 'desc' },
     });
   }
@@ -41,7 +57,13 @@ export class SettingsService {
     });
 
     // Return raw key only once — it won't be retrievable after
-    return { id: key.id, name: key.name, prefix, key: rawKey, createdAt: key.createdAt };
+    return {
+      id: key.id,
+      name: key.name,
+      prefix,
+      key: rawKey,
+      createdAt: key.createdAt,
+    };
   }
 
   async revokeApiKey(organizationId: string, keyId: string) {

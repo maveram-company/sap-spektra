@@ -70,7 +70,9 @@ describe('ConnectorsService', () => {
 
     it('throws NotFoundException for missing connector', async () => {
       prisma.connector.findFirst.mockResolvedValue(null);
-      await expect(service.findOne(ORG_ID, 'missing')).rejects.toThrow(NotFoundException);
+      await expect(service.findOne(ORG_ID, 'missing')).rejects.toThrow(
+        NotFoundException,
+      );
     });
   });
 
@@ -78,8 +80,12 @@ describe('ConnectorsService', () => {
 
   describe('heartbeat', () => {
     it('updates last heartbeat and sets status to connected', async () => {
-      prisma.connector.findFirst.mockResolvedValue(mockConnector({ status: 'disconnected' }));
-      prisma.connector.update.mockResolvedValue(mockConnector({ status: 'connected' }));
+      prisma.connector.findFirst.mockResolvedValue(
+        mockConnector({ status: 'disconnected' }),
+      );
+      prisma.connector.update.mockResolvedValue(
+        mockConnector({ status: 'connected' }),
+      );
 
       const result = await service.heartbeat(ORG_ID, 'conn-1');
       expect(result.status).toBe('connected');
@@ -93,7 +99,9 @@ describe('ConnectorsService', () => {
 
     it('throws NotFoundException for missing connector', async () => {
       prisma.connector.findFirst.mockResolvedValue(null);
-      await expect(service.heartbeat(ORG_ID, 'missing')).rejects.toThrow(NotFoundException);
+      await expect(service.heartbeat(ORG_ID, 'missing')).rejects.toThrow(
+        NotFoundException,
+      );
     });
 
     it('enforces tenant isolation on heartbeat', async () => {
@@ -101,7 +109,9 @@ describe('ConnectorsService', () => {
       await service.heartbeat('org-other', 'conn-1').catch(() => {});
 
       expect(prisma.connector.findFirst).toHaveBeenCalledWith(
-        expect.objectContaining({ where: { id: 'conn-1', organizationId: 'org-other' } }),
+        expect.objectContaining({
+          where: { id: 'conn-1', organizationId: 'org-other' },
+        }),
       );
     });
   });

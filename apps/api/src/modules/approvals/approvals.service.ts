@@ -1,4 +1,9 @@
-import { Injectable, NotFoundException, BadRequestException, Logger } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  BadRequestException,
+  Logger,
+} from '@nestjs/common';
 import { PrismaService } from '../../infrastructure/prisma/prisma.service';
 
 @Injectable()
@@ -7,7 +12,10 @@ export class ApprovalsService {
 
   constructor(private readonly prisma: PrismaService) {}
 
-  async findAll(organizationId: string, filters?: { status?: string; systemId?: string }) {
+  async findAll(
+    organizationId: string,
+    filters?: { status?: string; systemId?: string },
+  ) {
     return this.prisma.approvalRequest.findMany({
       where: {
         organizationId,
@@ -28,22 +36,37 @@ export class ApprovalsService {
     return approval;
   }
 
-  async create(organizationId: string, data: {
-    systemId: string; description: string; severity: string;
-    requestedBy: string; runbookId?: string; metric?: string; value?: number;
-  }) {
+  async create(
+    organizationId: string,
+    data: {
+      systemId: string;
+      description: string;
+      severity: string;
+      requestedBy: string;
+      runbookId?: string;
+      metric?: string;
+      value?: number;
+    },
+  ) {
     return this.prisma.approvalRequest.create({
       data: { organizationId, ...data, status: 'PENDING' },
     });
   }
 
-  async process(organizationId: string, id: string, action: 'APPROVED' | 'REJECTED', processedBy: string) {
+  async process(
+    organizationId: string,
+    id: string,
+    action: 'APPROVED' | 'REJECTED',
+    processedBy: string,
+  ) {
     const approval = await this.prisma.approvalRequest.findFirst({
       where: { id, organizationId },
     });
     if (!approval) throw new NotFoundException('Approval request not found');
     if (approval.status !== 'PENDING') {
-      throw new BadRequestException(`Cannot process — status is ${approval.status}`);
+      throw new BadRequestException(
+        `Cannot process — status is ${approval.status}`,
+      );
     }
 
     return this.prisma.approvalRequest.update({

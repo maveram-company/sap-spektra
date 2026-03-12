@@ -1,0 +1,38 @@
+{
+  "name": "sap-spektra",
+  "version": "1.0.0",
+  "description": "Mission Control for SAP Operations — monitoring, runbook automation, and intelligent remediation for SAP landscapes.",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs",
+    "test": "tests"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "prepare": "husky"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/maveram-company/sap-spektra.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/maveram-company/sap-spektra/issues"
+  },
+  "homepage": "https://github.com/maveram-company/sap-spektra#readme",
+  "devDependencies": {
+    "eslint": "^10.0.3",
+    "husky": "^9.1.7",
+    "lint-staged": "^16.3.3"
+  },
+  "lint-staged": {
+    "apps/api/src/**/*.ts": [
+      "eslint --config apps/api/eslint.config.mjs --fix"
+    ],
+    "frontend/src/**/*.{js,jsx}": [
+      "eslint --config frontend/eslint.config.js --fix"
+    ]
+  }
+}

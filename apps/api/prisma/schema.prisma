@@ -134,6 +134,7 @@ model System {
   runbookExecutions  RunbookExecution[]
 
   @@unique([organizationId, sid])
+  @@index([organizationId])
   @@map("systems")
 }
 
@@ -165,6 +166,7 @@ model Component {
   system    System     @relation(fields: [systemId], references: [id], onDelete: Cascade)
   instances Instance[]
 
+  @@index([systemId])
   @@map("components")
 }
 
@@ -183,6 +185,8 @@ model Instance {
   component Component? @relation(fields: [componentId], references: [id])
   host      Host?      @relation(fields: [hostId], references: [id])
 
+  @@index([systemId])
+  @@index([componentId])
   @@map("instances")
 }
 
@@ -204,6 +208,7 @@ model Host {
   instances Instance[]
   metrics   HostMetric[]
 
+  @@index([systemId])
   @@map("hosts")
 }
 
@@ -406,6 +411,7 @@ model RunbookExecution {
   system  System  @relation(fields: [systemId], references: [id], onDelete: Cascade)
 
   @@index([runbookId, startedAt])
+  @@index([systemId])
   @@map("runbook_executions")
 }
 
@@ -448,6 +454,7 @@ model JobRecord {
 
   system System @relation(fields: [systemId], references: [id], onDelete: Cascade)
 
+  @@index([systemId])
   @@map("job_records")
 }
 
@@ -465,6 +472,7 @@ model TransportRecord {
 
   system System @relation(fields: [systemId], references: [id], onDelete: Cascade)
 
+  @@index([systemId])
   @@map("transport_records")
 }
 
@@ -480,6 +488,7 @@ model CertificateRecord {
 
   system System @relation(fields: [systemId], references: [id], onDelete: Cascade)
 
+  @@index([systemId])
   @@map("certificate_records")
 }
 
@@ -501,6 +510,8 @@ model Connector {
   organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
   system       System       @relation(fields: [systemId], references: [id], onDelete: Cascade)
 
+  @@index([organizationId])
+  @@index([systemId])
   @@map("connectors")
 }
 

@@ -8,7 +8,17 @@ export class HAService {
   async findAll(organizationId: string) {
     return this.prisma.hAConfig.findMany({
       where: { system: { organizationId } },
-      include: { system: { select: { sid: true, description: true, environment: true, status: true, healthScore: true } } },
+      include: {
+        system: {
+          select: {
+            sid: true,
+            description: true,
+            environment: true,
+            status: true,
+            healthScore: true,
+          },
+        },
+      },
     });
   }
 
@@ -17,7 +27,8 @@ export class HAService {
       where: { systemId, system: { organizationId } },
       include: { system: true },
     });
-    if (!config) throw new NotFoundException('HA config not found for this system');
+    if (!config)
+      throw new NotFoundException('HA config not found for this system');
     return config;
   }
 
@@ -63,14 +74,31 @@ export class HAService {
       dbType: system.dbType,
       haEnabled: config?.haEnabled ?? false,
       prerequisites: [
-        { key: 'db_replication', label: 'Database Replication Configured', met: !!config?.haEnabled },
-        { key: 'secondary_node', label: 'Secondary Node Available', met: !!config?.secondaryNode },
+        {
+          key: 'db_replication',
+          label: 'Database Replication Configured',
+          met: !!config?.haEnabled,
+        },
+        {
+          key: 'secondary_node',
+          label: 'Secondary Node Available',
+          met: !!config?.secondaryNode,
+        },
         { key: 'network_redundancy', label: 'Network Redundancy', met: true },
-        { key: 'storage_replication', label: 'Storage Replication', met: !!config?.haEnabled },
-        { key: 'monitoring_agent', label: 'Monitoring Agent Active', met: system.supportsHostMetrics },
+        {
+          key: 'storage_replication',
+          label: 'Storage Replication',
+          met: !!config?.haEnabled,
+        },
+        {
+          key: 'monitoring_agent',
+          label: 'Monitoring Agent Active',
+          met: system.supportsHostMetrics,
+        },
         { key: 'backup_verified', label: 'Recent Backup Verified', met: true },
       ],
-      readiness: config?.haEnabled && config?.secondaryNode ? 'ready' : 'not_ready',
+      readiness:
+        config?.haEnabled && config?.secondaryNode ? 'ready' : 'not_ready',
     };
   }
 
@@ -132,28 +160,91 @@ export class HAService {
 
     const config = system.haConfig;
 
-    const driverMap: Record<string, Array<{ name: string; type: string; supported: boolean; active: boolean }>> = {
+    const driverMap: Record<
+      string,
+      Array<{ name: string; type: string; supported: boolean; active: boolean }>
+    > = {
       'SAP HANA 2.0': [
-        { name: 'HANA System Replication', type: 'database', supported: true, active: config?.haStrategy === 'HOT_STANDBY' },
-        { name: 'HANA Storage Replication', type: 'storage', supported: true, active: false },
-        { name: 'Pacemaker/Corosync', type: 'cluster', supported: true, active: config?.haEnabled ?? false },
+        {
+          name: 'HANA System Replication',
+          type: 'database',
+          supported: true,
+          active: config?.haStrategy === 'HOT_STANDBY',
+        },
+        {
+          name: 'HANA Storage Replication',
+          type: 'storage',
+          supported: true,
+          active: false,
+        },
+        {
+          name: 'Pacemaker/Corosync',
+          type: 'cluster',
+          supported: true,
+          active: config?.haEnabled ?? false,
+        },
       ],
       'Oracle 19c': [
-        { name: 'Oracle Data Guard', type: 'database', supported: true, active: config?.haStrategy === 'HOT_STANDBY' },
-        { name: 'Oracle ASM Mirroring', type: 'storage', supported: true, active: false },
-        { name: 'Pacemaker/Corosync', type: 'cluster', supported: true, active: config?.haEnabled ?? false },
+        {
+          name: 'Oracle Data Guard',
+          type: 'database',
+          supported: true,
+          active: config?.haStrategy === 'HOT_STANDBY',
+        },
+        {
+          name: 'Oracle ASM Mirroring',
+          type: 'storage',
+          supported: true,
+          active: false,
+        },
+        {
+          name: 'Pacemaker/Corosync',
+          type: 'cluster',
+          supported: true,
+          active: config?.haEnabled ?? false,
+        },
       ],
       'IBM Db2 11.5': [
-        { name: 'Db2 HADR', type: 'database', supported: true, active: config?.haStrategy === 'HOT_STANDBY' },
-        { name: 'Db2 Log Shipping', type: 'storage', supported: true, active: false },
-        { name: 'Pacemaker/Corosync', type: 'cluster', supported: true, active: config?.haEnabled ?? false },
+        {
+          name: 'Db2 HADR',
+          type: 'database',
+          supported: true,
+          active: config?.haStrategy === 'HOT_STANDBY',
+        },
+        {
+          name: 'Db2 Log Shipping',
+          type: 'storage',
+          supported: true,
+          active: false,
+        },
+        {
+          name: 'Pacemaker/Corosync',
+          type: 'cluster',
+          supported: true,
+          active: config?.haEnabled ?? false,
+        },
       ],
     };
 
     const defaultDrivers = [
-      { name: 'Database Replication', type: 'database', supported: true, active: config?.haStrategy === 'HOT_STANDBY' },
-      { name: 'Storage Replication', type: 'storage', supported: true, active: false },
-      { name: 'Pacemaker/Corosync', type: 'cluster', supported: true, active: config?.haEnabled ?? false },
+      {
+        name: 'Database Replication',
+        type: 'database',
+        supported: true,
+        active: config?.haStrategy === 'HOT_STANDBY',
+      },
+      {
+        name: 'Storage Replication',
+        type: 'storage',
+        supported: true,
+        active: false,
+      },
+      {
+        name: 'Pacemaker/Corosync',
+        type: 'cluster',
+        supported: true,
+        active: config?.haEnabled ?? false,
+      },
     ];
 
     return {

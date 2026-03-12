@@ -89,7 +89,9 @@ describe('RunbooksService', () => {
 
     it('throws NotFoundException for missing runbook', async () => {
       prisma.runbook.findFirst.mockResolvedValue(null);
-      await expect(service.findOne(ORG_ID, 'missing')).rejects.toThrow(NotFoundException);
+      await expect(service.findOne(ORG_ID, 'missing')).rejects.toThrow(
+        NotFoundException,
+      );
     });
   });
 
@@ -100,7 +102,13 @@ describe('RunbooksService', () => {
       prisma.runbook.findFirst.mockResolvedValue(mockRunbook());
       prisma.system.findUnique.mockResolvedValue(mockSystem());
 
-      const result = await service.execute(ORG_ID, 'rb-1', 'sys-1', 'user@test.com', true) as any;
+      const result = (await service.execute(
+        ORG_ID,
+        'rb-1',
+        'sys-1',
+        'user@test.com',
+        true,
+      )) as any;
 
       expect(result.dryRun).toBe(true);
       expect(result.compatible).toBe(true);
@@ -117,22 +125,44 @@ describe('RunbooksService', () => {
         }),
       );
 
-      const result = await service.execute(ORG_ID, 'rb-1', 'sys-1', 'user@test.com', true) as any;
+      const result = (await service.execute(
+        ORG_ID,
+        'rb-1',
+        'sys-1',
+        'user@test.com',
+        true,
+      )) as any;
 
       expect(result.dryRun).toBe(true);
       expect(result.compatible).toBe(false);
       expect(result.validationFailures.length).toBeGreaterThan(0);
-      expect(result.validationFailures[0]).toContain('no soporta ejecución de runbooks');
+      expect(result.validationFailures[0]).toContain(
+        'no soporta ejecución de runbooks',
+      );
     });
 
     it('reports DB incompatibility', async () => {
-      prisma.runbook.findFirst.mockResolvedValue(mockRunbook({ dbType: 'Oracle' }));
-      prisma.system.findUnique.mockResolvedValue(mockSystem({ dbType: 'SAP HANA 2.0' }));
+      prisma.runbook.findFirst.mockResolvedValue(
+        mockRunbook({ dbType: 'Oracle' }),
+      );
+      prisma.system.findUnique.mockResolvedValue(
+        mockSystem({ dbType: 'SAP HANA 2.0' }),
+      );
 
-      const result = await service.execute(ORG_ID, 'rb-1', 'sys-1', 'user@test.com', true) as any;
+      const result = (await service.execute(
+        ORG_ID,
+        'rb-1',
+        'sys-1',
+        'user@test.com',
+        true,
+      )) as any;
 
       expect(result.compatible).toBe(false);
-      expect(result.validationFailures.some((f: string) => f.includes('BD incompatible'))).toBe(true);
+      expect(
+        result.validationFailures.some((f: string) =>
+          f.includes('BD incompatible'),
+        ),
+      ).toBe(true);
     });
   });
 
@@ -150,7 +180,10 @@ describe('RunbooksService', () => {
     it('blocks execution for incompatible systems', async () => {
       prisma.runbook.findFirst.mockResolvedValue(mockRunbook());
       prisma.system.findUnique.mockResolvedValue(
-        mockSystem({ supportsRunbookExecution: false, monitoringCapabilityProfile: 'RISE_RESTRICTED' }),
+        mockSystem({
+          supportsRunbookExecution: false,
+          monitoringCapabilityProfile: 'RISE_RESTRICTED',
+        }),
       );
 
       await expect(
@@ -163,19 +196,34 @@ describe('RunbooksService', () => {
       prisma.system.findUnique.mockResolvedValue(mockSystem());
       const createdExec = { id: 'exec-1', result: 'RUNNING' };
       prisma.runbookExecution.create.mockResolvedValue(createdExec);
-      prisma.runbookExecution.update.mockResolvedValue({ ...createdExec, result: 'SUCCESS' });
+      prisma.runbookExecution.update.mockResolvedValue({
+        ...createdExec,
+        result: 'SUCCESS',
+      });
 
-      const result = await service.execute(ORG_ID, 'rb-1', 'sys-1', 'user@test.com') as any;
+      const result = (await service.execute(
+        ORG_ID,
+        'rb-1',
+        'sys-1',
+        'user@test.com',
+      )) as any;
       expect(result.result).toBe('SUCCESS');
     });
 
     it('creates PENDING execution for non-cost-safe runbooks', async () => {
-      prisma.runbook.findFirst.mockResolvedValue(mockRunbook({ costSafe: false }));
+      prisma.runbook.findFirst.mockResolvedValue(
+        mockRunbook({ costSafe: false }),
+      );
       prisma.system.findUnique.mockResolvedValue(mockSystem());
       const createdExec = { id: 'exec-1', result: 'PENDING', gate: 'HUMAN' };
       prisma.runbookExecution.create.mockResolvedValue(createdExec);
 
-      const result = await service.execute(ORG_ID, 'rb-1', 'sys-1', 'user@test.com') as any;
+      const result = (await service.execute(
+        ORG_ID,
+        'rb-1',
+        'sys-1',
+        'user@test.com',
+      )) as any;
       expect(result.result).toBe('PENDING');
     });
   });
@@ -184,13 +232,27 @@ describe('RunbooksService', () => {
 
   describe('RISE_RESTRICTED behavior', () => {
     it('validates stack incompatibility for ABAP-only runbooks on JAVA systems', async () => {
-      prisma.runbook.findFirst.mockResolvedValue(mockRunbook({ dbType: 'ABAP' }));
-      prisma.system.findUnique.mockResolvedValue(mockSystem({ sapStackType: 'JAVA' }));
+      prisma.runbook.findFirst.mockResolvedValue(
+        mockRunbook({ dbType: 'ABAP' }),
+      );
+      prisma.system.findUnique.mockResolvedValue(
+        mockSystem({ sapStackType: 'JAVA' }),
+      );
 
-      const result = await service.execute(ORG_ID, 'rb-1', 'sys-1', 'user@test.com', true) as any;
+      const result = (await service.execute(
+        ORG_ID,
+        'rb-1',
+        'sys-1',
+        'user@test.com',
+        true,
+      )) as any;
 
       expect(result.compatible).toBe(false);
-      expect(result.validationFailures.some((f: string) => f.includes('Stack incompatible'))).toBe(true);
+      expect(
+        result.validationFailures.some((f: string) =>
+          f.includes('Stack incompatible'),
+        ),
+      ).toBe(true);
     });
 
     it('validates OS compatibility', async () => {
@@ -201,10 +263,20 @@ describe('RunbooksService', () => {
         mockSystem({ systemMeta: { osVersion: 'SLES 15 SP5' } }),
       );
 
-      const result = await service.execute(ORG_ID, 'rb-1', 'sys-1', 'user@test.com', true) as any;
+      const result = (await service.execute(
+        ORG_ID,
+        'rb-1',
+        'sys-1',
+        'user@test.com',
+        true,
+      )) as any;
 
       expect(result.compatible).toBe(false);
-      expect(result.validationFailures.some((f: string) => f.includes('OS incompatible'))).toBe(true);
+      expect(
+        result.validationFailures.some((f: string) =>
+          f.includes('OS incompatible'),
+        ),
+      ).toBe(true);
     });
   });
 });

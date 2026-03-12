@@ -1,19 +1,36 @@
 import { useState, useEffect } from 'react';
-import { ScrollText, Search, Download, Filter } from 'lucide-react';
+import { ScrollText, Search, Download, Filter, AlertTriangle } from 'lucide-react';
 import Card from '../../components/ui/Card';
 import Input from '../../components/ui/Input';
 import Button from '../../components/ui/Button';
 import Badge from '../../components/ui/Badge';
 import Table, { TableHeader, TableBody, TableRow, TableHead, TableCell } from '../../components/ui/Table';
+import EmptyState from '../../components/ui/EmptyState';
+import PageLoading from '../../components/ui/PageLoading';
 import { dataService } from '../../services/dataService';
 
 export default function AuditLogPage() {
   const [search, setSearch] = useState('');
   const [events, setEvents] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
-    dataService.getAuditLog().then(data => setEvents(data));
+    let mounted = true;
+    dataService.getAuditLog()
+      .then(data => { if (mounted) setEvents(data); })
+      .catch(err => { if (mounted) setError(err.message); })
+      .finally(() => { if (mounted) setLoading(false); });
+    return () => { mounted = false; };
   }, []);
+
+  if (loading) return <PageLoading message="Cargando log de auditoría..." />;
+
+  if (error) return (
+    <div className="max-w-5xl">
+      <EmptyState icon={AlertTriangle} title="Error al cargar auditoría" description={error} />
+    </div>
+  );
 
   const filtered = events.filter(e =>
     e.action.toLowerCase().includes(search.toLowerCase()) ||

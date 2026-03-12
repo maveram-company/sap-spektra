@@ -79,7 +79,9 @@ describe('ApprovalsService', () => {
 
     it('throws NotFoundException for missing approval', async () => {
       prisma.approvalRequest.findFirst.mockResolvedValue(null);
-      await expect(service.findOne(ORG_ID, 'missing')).rejects.toThrow(NotFoundException);
+      await expect(service.findOne(ORG_ID, 'missing')).rejects.toThrow(
+        NotFoundException,
+      );
     });
   });
 
@@ -117,7 +119,12 @@ describe('ApprovalsService', () => {
         mockApproval({ status: 'APPROVED', processedBy: 'admin@acme.com' }),
       );
 
-      const result = await service.process(ORG_ID, 'apr-1', 'APPROVED', 'admin@acme.com');
+      const result = await service.process(
+        ORG_ID,
+        'apr-1',
+        'APPROVED',
+        'admin@acme.com',
+      );
       expect(result.status).toBe('APPROVED');
     });
 
@@ -127,7 +134,12 @@ describe('ApprovalsService', () => {
         mockApproval({ status: 'REJECTED', processedBy: 'admin@acme.com' }),
       );
 
-      const result = await service.process(ORG_ID, 'apr-1', 'REJECTED', 'admin@acme.com');
+      const result = await service.process(
+        ORG_ID,
+        'apr-1',
+        'REJECTED',
+        'admin@acme.com',
+      );
       expect(result.status).toBe('REJECTED');
     });
 

@@ -58,7 +58,9 @@ export class AuthService {
 
     const accessToken = this.jwtService.sign(payload);
 
-    this.logger.log(`User ${user.email} logged in → org ${membership.organization.slug}`);
+    this.logger.log(
+      `User ${user.email} logged in → org ${membership.organization.slug}`,
+    );
 
     return {
       accessToken,

@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Monitor, Search, Filter, Plus } from 'lucide-react';
+import { Monitor, Search, Filter, Plus, AlertTriangle } from 'lucide-react';
 import Header from '../components/layout/Header';
 import PageHeader from '../components/layout/PageHeader';
 import Card from '../components/ui/Card';
@@ -16,16 +16,31 @@ import { dataService } from '../services/dataService';
 export default function SystemsListPage() {
   const [systems, setSystems] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const [search, setSearch] = useState('');
   const [envFilter, setEnvFilter] = useState('ALL');
   const [statusFilter, setStatusFilter] = useState('ALL');
   const navigate = useNavigate();
 
   useEffect(() => {
-    dataService.getSystems().then(data => { setSystems(data); setLoading(false); });
+    let mounted = true;
+    dataService.getSystems()
+      .then(data => { if (mounted) setSystems(data); })
+      .catch(err => { if (mounted) setError(err.message); })
+      .finally(() => { if (mounted) setLoading(false); });
+    return () => { mounted = false; };
   }, []);
 
   if (loading) return <PageLoading message="Cargando sistemas..." />;
+
+  if (error) return (
+    <div>
+      <Header title="Sistemas SAP" subtitle="Error al cargar" />
+      <div className="p-6">
+        <EmptyState icon={AlertTriangle} title="Error al cargar sistemas" description={error} />
+      </div>
+    </div>
+  );
 
   const filtered = systems.filter(s => {
     const matchesSearch = !search || s.sid.toLowerCase().includes(search.toLowerCase()) || s.id.toLowerCase().includes(search.toLowerCase()) || s.description.toLowerCase().includes(search.toLowerCase());

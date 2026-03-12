@@ -5,7 +5,9 @@ function mockContext(organizationId?: string): ExecutionContext {
   return {
     switchToHttp: () => ({
       getRequest: () => ({
-        user: organizationId ? { organizationId, sub: 'u-1', role: 'admin' } : {},
+        user: organizationId
+          ? { organizationId, sub: 'u-1', role: 'admin' }
+          : {},
       }),
     }),
   } as unknown as ExecutionContext;

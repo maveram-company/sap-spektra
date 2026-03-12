@@ -1,4 +1,12 @@
-import { Controller, Get, Patch, Param, Query, Body, UseGuards } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Patch,
+  Param,
+  Query,
+  Body,
+  UseGuards,
+} from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiBearerAuth } from '@nestjs/swagger';
 import { AlertsService } from './alerts.service';
 import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
@@ -6,7 +14,11 @@ import { TenantGuard } from '../../common/guards/tenant.guard';
 import { RolesGuard } from '../../common/guards/roles.guard';
 import { Roles } from '../../common/decorators/roles.decorator';
 import { TenantId } from '../../common/decorators/tenant.decorator';
-import { CurrentUser, JwtPayload } from '../../common/decorators/current-user.decorator';
+import {
+  CurrentUser,
+  JwtPayload,
+} from '../../common/decorators/current-user.decorator';
+import { ResolveAlertDto, AlertFiltersDto } from './dto/alert.dto';
 
 @ApiTags('Alerts')
 @ApiBearerAuth()
@@ -18,13 +30,8 @@ export class AlertsController {
   @Get()
   @Roles('viewer')
   @ApiOperation({ summary: 'List alerts with optional filters' })
-  findAll(
-    @TenantId() orgId: string,
-    @Query('status') status?: string,
-    @Query('level') level?: string,
-    @Query('systemId') systemId?: string,
-  ) {
-    return this.alertsService.findAll(orgId, { status, level, systemId });
+  findAll(@TenantId() orgId: string, @Query() filters: AlertFiltersDto) {
+    return this.alertsService.findAll(orgId, filters);
   }
 
   @Get('stats')
@@ -37,7 +44,11 @@ export class AlertsController {
   @Patch(':id/acknowledge')
   @Roles('operator')
   @ApiOperation({ summary: 'Acknowledge an alert' })
-  acknowledge(@TenantId() orgId: string, @Param('id') id: string, @CurrentUser() user: JwtPayload) {
+  acknowledge(
+    @TenantId() orgId: string,
+    @Param('id') id: string,
+    @CurrentUser() user: JwtPayload,
+  ) {
     return this.alertsService.acknowledge(orgId, id, user.email);
   }
 
@@ -48,7 +59,7 @@ export class AlertsController {
     @TenantId() orgId: string,
     @Param('id') id: string,
     @CurrentUser() user: JwtPayload,
-    @Body() data: { category?: string; note?: string },
+    @Body() data: ResolveAlertDto,
   ) {
     return this.alertsService.resolve(orgId, id, user.email, data);
   }

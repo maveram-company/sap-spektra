@@ -10,14 +10,24 @@ import {
 describe('Domain Enums', () => {
   describe('ROLE_HIERARCHY', () => {
     it('admin has highest privilege level', () => {
-      expect(ROLE_HIERARCHY[UserRole.ADMIN]).toBeGreaterThan(ROLE_HIERARCHY[UserRole.ESCALATION]);
-      expect(ROLE_HIERARCHY[UserRole.ADMIN]).toBeGreaterThan(ROLE_HIERARCHY[UserRole.OPERATOR]);
-      expect(ROLE_HIERARCHY[UserRole.ADMIN]).toBeGreaterThan(ROLE_HIERARCHY[UserRole.VIEWER]);
+      expect(ROLE_HIERARCHY[UserRole.ADMIN]).toBeGreaterThan(
+        ROLE_HIERARCHY[UserRole.ESCALATION],
+      );
+      expect(ROLE_HIERARCHY[UserRole.ADMIN]).toBeGreaterThan(
+        ROLE_HIERARCHY[UserRole.OPERATOR],
+      );
+      expect(ROLE_HIERARCHY[UserRole.ADMIN]).toBeGreaterThan(
+        ROLE_HIERARCHY[UserRole.VIEWER],
+      );
     });
 
     it('escalation > operator > viewer', () => {
-      expect(ROLE_HIERARCHY[UserRole.ESCALATION]).toBeGreaterThan(ROLE_HIERARCHY[UserRole.OPERATOR]);
-      expect(ROLE_HIERARCHY[UserRole.OPERATOR]).toBeGreaterThan(ROLE_HIERARCHY[UserRole.VIEWER]);
+      expect(ROLE_HIERARCHY[UserRole.ESCALATION]).toBeGreaterThan(
+        ROLE_HIERARCHY[UserRole.OPERATOR],
+      );
+      expect(ROLE_HIERARCHY[UserRole.OPERATOR]).toBeGreaterThan(
+        ROLE_HIERARCHY[UserRole.VIEWER],
+      );
     });
 
     it('covers all UserRole values', () => {
@@ -30,17 +40,23 @@ describe('Domain Enums', () => {
 
   describe('MonitoringCapabilityProfile', () => {
     it('includes RISE_RESTRICTED for managed cloud systems', () => {
-      expect(MonitoringCapabilityProfile.RISE_RESTRICTED).toBe('RISE_RESTRICTED');
+      expect(MonitoringCapabilityProfile.RISE_RESTRICTED).toBe(
+        'RISE_RESTRICTED',
+      );
     });
 
     it('includes FULL_STACK_AGENT for full monitoring', () => {
-      expect(MonitoringCapabilityProfile.FULL_STACK_AGENT).toBe('FULL_STACK_AGENT');
+      expect(MonitoringCapabilityProfile.FULL_STACK_AGENT).toBe(
+        'FULL_STACK_AGENT',
+      );
     });
   });
 
   describe('SapStackType', () => {
     it('includes MANAGED_CLOUD_RESTRICTED for RISE systems', () => {
-      expect(SapStackType.MANAGED_CLOUD_RESTRICTED).toBe('MANAGED_CLOUD_RESTRICTED');
+      expect(SapStackType.MANAGED_CLOUD_RESTRICTED).toBe(
+        'MANAGED_CLOUD_RESTRICTED',
+      );
     });
 
     it('covers standard SAP stacks', () => {
@@ -52,8 +68,14 @@ describe('Domain Enums', () => {
 
   describe('DeploymentModel', () => {
     it('distinguishes RISE_MANAGED from self-hosted', () => {
-      const managed = [DeploymentModel.RISE_MANAGED, DeploymentModel.PCE_MANAGED];
-      const selfHosted = [DeploymentModel.ON_PREMISE, DeploymentModel.AWS_HOSTED];
+      const managed = [
+        DeploymentModel.RISE_MANAGED,
+        DeploymentModel.PCE_MANAGED,
+      ];
+      const selfHosted = [
+        DeploymentModel.ON_PREMISE,
+        DeploymentModel.AWS_HOSTED,
+      ];
       managed.forEach((m) => expect(selfHosted).not.toContain(m));
     });
   });

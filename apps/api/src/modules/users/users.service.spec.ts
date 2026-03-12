@@ -58,10 +58,7 @@ describe('UsersService', () => {
     };
 
     const module: TestingModule = await Test.createTestingModule({
-      providers: [
-        UsersService,
-        { provide: PrismaService, useValue: prisma },
-      ],
+      providers: [UsersService, { provide: PrismaService, useValue: prisma }],
     }).compile();
 
     service = module.get<UsersService>(UsersService);
@@ -112,7 +109,9 @@ describe('UsersService', () => {
     it('throws NotFoundException when user not in org', async () => {
       prisma.membership.findFirst.mockResolvedValue(null);
 
-      await expect(service.findOne(ORG_ID, 'nonexistent')).rejects.toThrow(NotFoundException);
+      await expect(service.findOne(ORG_ID, 'nonexistent')).rejects.toThrow(
+        NotFoundException,
+      );
     });
   });
 
@@ -139,7 +138,12 @@ describe('UsersService', () => {
         mockMembership({ userId: 'user-new', user: newUser }),
       );
 
-      const dto = { email: 'new@acme.com', name: 'New User', password: 'pass123', role: 'viewer' as const };
+      const dto = {
+        email: 'new@acme.com',
+        name: 'New User',
+        password: 'pass123',
+        role: 'viewer' as const,
+      };
       const result = await service.create(ORG_ID, dto as any);
 
       expect(result.email).toBe('john@acme.com'); // from the mockMembership
@@ -160,7 +164,11 @@ describe('UsersService', () => {
         mockMembership({ userId: 'user-existing', user: existingUser }),
       );
 
-      const dto = { email: 'john@acme.com', name: 'John Doe', password: 'pass123' };
+      const dto = {
+        email: 'john@acme.com',
+        name: 'John Doe',
+        password: 'pass123',
+      };
       const result = await service.create(ORG_ID, dto as any);
 
       expect(prisma.membership.create).toHaveBeenCalledWith({
@@ -178,9 +186,15 @@ describe('UsersService', () => {
       prisma.user.findUnique.mockResolvedValue(existingUser);
       prisma.membership.findUnique.mockResolvedValue(mockMembership());
 
-      const dto = { email: 'john@acme.com', name: 'John Doe', password: 'pass123' };
+      const dto = {
+        email: 'john@acme.com',
+        name: 'John Doe',
+        password: 'pass123',
+      };
 
-      await expect(service.create(ORG_ID, dto as any)).rejects.toThrow(ConflictException);
+      await expect(service.create(ORG_ID, dto as any)).rejects.toThrow(
+        ConflictException,
+      );
     });
   });
 
@@ -190,7 +204,9 @@ describe('UsersService', () => {
     it('updates user name and role', async () => {
       prisma.membership.findFirst
         .mockResolvedValueOnce(mockMembership()) // first call: find membership
-        .mockResolvedValueOnce(mockMembership({ role: 'admin', user: mockUser({ name: 'Jane' }) })); // second call: findOne at the end
+        .mockResolvedValueOnce(
+          mockMembership({ role: 'admin', user: mockUser({ name: 'Jane' }) }),
+        ); // second call: findOne at the end
 
       prisma.$transaction.mockImplementation(async (cb: Function) => {
         const tx = {
@@ -200,7 +216,10 @@ describe('UsersService', () => {
         return cb(tx);
       });
 
-      const result = await service.update(ORG_ID, USER_ID, { name: 'Jane', role: 'admin' } as any);
+      const result = await service.update(ORG_ID, USER_ID, {
+        name: 'Jane',
+        role: 'admin',
+      } as any);
 
       expect(result).toBeDefined();
       expect(prisma.$transaction).toHaveBeenCalled();
@@ -233,7 +252,9 @@ describe('UsersService', () => {
     it('throws NotFoundException when user not in org', async () => {
       prisma.membership.findFirst.mockResolvedValue(null);
 
-      await expect(service.remove(ORG_ID, 'nonexistent')).rejects.toThrow(NotFoundException);
+      await expect(service.remove(ORG_ID, 'nonexistent')).rejects.toThrow(
+        NotFoundException,
+      );
     });
   });
 });

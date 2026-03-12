@@ -119,7 +119,13 @@ export class SystemsService {
   async getHealthSummary(organizationId: string) {
     const systems = await this.prisma.system.findMany({
       where: { organizationId },
-      select: { id: true, sid: true, status: true, healthScore: true, environment: true },
+      select: {
+        id: true,
+        sid: true,
+        status: true,
+        healthScore: true,
+        environment: true,
+      },
     });
 
     const summary = {
@@ -130,7 +136,10 @@ export class SystemsService {
       unreachable: systems.filter((s) => s.status === 'unreachable').length,
       avgHealthScore:
         systems.length > 0
-          ? Math.round(systems.reduce((sum, s) => sum + s.healthScore, 0) / systems.length)
+          ? Math.round(
+              systems.reduce((sum, s) => sum + s.healthScore, 0) /
+                systems.length,
+            )
           : 0,
       systems,
     };

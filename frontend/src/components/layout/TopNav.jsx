@@ -200,6 +200,7 @@ export default function TopNav({ topOffset = 0 }) {
     <>
       <nav
         ref={navRef}
+        aria-label="Main navigation"
         className="fixed left-0 right-0 z-50 transition-transform duration-300"
         style={{
           top: `${topOffset}px`,
@@ -399,6 +400,8 @@ export default function TopNav({ topOffset = 0 }) {
             className="lg:hidden p-2 rounded-lg transition-colors"
             style={{ color: 'rgba(148,163,184,0.8)' }}
             onClick={() => { setMobileOpen(!mobileOpen); setOpenPanel(null); }}
+            aria-label={mobileOpen ? 'Cerrar menú de navegación' : 'Abrir menú de navegación'}
+            aria-expanded={mobileOpen}
           >
             {mobileOpen ? <X size={18} /> : <Menu size={18} />}
           </button>
@@ -445,6 +448,7 @@ export default function TopNav({ topOffset = 0 }) {
               style={{ color: 'rgba(148,163,184,0.55)' }}
               onMouseEnter={(e) => { e.currentTarget.style.color = '#06b6d4'; e.currentTarget.style.background = 'rgba(6,182,212,0.1)'; }}
               onMouseLeave={(e) => { e.currentTarget.style.color = 'rgba(148,163,184,0.55)'; e.currentTarget.style.background = 'transparent'; }}
+              aria-label={theme === 'dark' ? 'Cambiar a modo claro' : 'Cambiar a modo oscuro'}
               title={theme === 'dark' ? 'Modo claro' : 'Modo oscuro'}
             >
               {theme === 'dark' ? <Sun size={15} /> : <Moon size={15} />}
@@ -458,6 +462,8 @@ export default function TopNav({ topOffset = 0 }) {
                 style={{ color: 'rgba(148,163,184,0.55)' }}
                 onMouseEnter={(e) => { e.currentTarget.style.color = '#06b6d4'; e.currentTarget.style.background = 'rgba(6,182,212,0.1)'; }}
                 onMouseLeave={(e) => { e.currentTarget.style.color = 'rgba(148,163,184,0.55)'; e.currentTarget.style.background = 'transparent'; }}
+                aria-label="Notificaciones"
+                aria-expanded={openPanel === 'notifications'}
               >
                 <Bell size={15} />
                 <span
@@ -531,6 +537,8 @@ export default function TopNav({ topOffset = 0 }) {
             <div className="relative">
               <button
                 onClick={() => setOpenPanel(prev => prev === 'user' ? null : 'user')}
+                aria-label="Menú de usuario"
+                aria-expanded={openPanel === 'user'}
                 className="flex items-center gap-2 py-1 px-1.5 rounded-lg transition-all duration-200"
                 style={{
                   background: openPanel === 'user' ? 'rgba(6,182,212,0.1)' : 'transparent',

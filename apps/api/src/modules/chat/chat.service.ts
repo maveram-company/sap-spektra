@@ -11,7 +11,11 @@ export class ChatService {
     private readonly configService: ConfigService,
   ) {}
 
-  async processMessage(organizationId: string, message: string, context?: Record<string, unknown>) {
+  async processMessage(
+    organizationId: string,
+    message: string,
+    _context?: Record<string, unknown>,
+  ) {
     const runtime = this.configService.get<string>('runtime');
 
     if (runtime === 'LOCAL_SIMULATED') {
@@ -29,10 +33,16 @@ export class ChatService {
     const [systemCount, activeAlerts, criticalCount] = await Promise.all([
       this.prisma.system.count({ where: { organizationId } }),
       this.prisma.alert.count({ where: { organizationId, status: 'active' } }),
-      this.prisma.alert.count({ where: { organizationId, level: 'critical', status: 'active' } }),
+      this.prisma.alert.count({
+        where: { organizationId, level: 'critical', status: 'active' },
+      }),
     ]);
 
-    if (lower.includes('estado') || lower.includes('status') || lower.includes('resumen')) {
+    if (
+      lower.includes('estado') ||
+      lower.includes('status') ||
+      lower.includes('resumen')
+    ) {
       return {
         type: 'status_summary',
         message: `Tienes ${systemCount} sistemas registrados. Hay ${activeAlerts} alertas activas, de las cuales ${criticalCount} son críticas.`,
@@ -56,7 +66,7 @@ export class ChatService {
       return {
         type: 'alert_list',
         message: `Hay ${activeAlerts} alertas activas:`,
-        data: alerts.map(a => ({
+        data: alerts.map((a) => ({
           id: a.id,
           system: a.system.sid,
           title: a.title,
@@ -69,7 +79,12 @@ export class ChatService {
     if (lower.includes('sistema') || lower.includes('system')) {
       const systems = await this.prisma.system.findMany({
         where: { organizationId },
-        select: { sid: true, status: true, healthScore: true, environment: true },
+        select: {
+          sid: true,
+          status: true,
+          healthScore: true,
+          environment: true,
+        },
       });
 
       return {
