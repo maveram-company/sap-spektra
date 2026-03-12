@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import Header from '../components/layout/Header';
 import PageLoading from '../components/ui/PageLoading';
-import { alertResolutionCategories } from '../lib/mockData';
+import { alertResolutionCategories } from '../lib/constants';
 import { dataService } from '../services/dataService';
 import { useAuth } from '../contexts/AuthContext';
 import {

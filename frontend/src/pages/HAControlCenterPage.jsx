@@ -6,7 +6,7 @@ import {
   HANA_TAKEOVER_STEPS, HANA_FAILOVER_STEPS, WARM_STANDBY_FAILOVER_STEPS,
   ASCS_FAILOVER_STEPS,
   PILOT_LIGHT_ACTIVATION_STEPS, CROSS_REGION_DR_STEPS, BACKUP_RESTORE_STEPS,
-} from '../lib/mockData';
+} from '../lib/constants';
 import { dataService } from '../services/dataService';
 import { useAuth } from '../contexts/AuthContext';
 import {
