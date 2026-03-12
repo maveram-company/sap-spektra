@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
-# SAP Spektra v1.5 — CI Gate Script
+# [LEGACY] SAP Spektra v1.5 — CI Gate Script (Lambda stack)
+# STATUS: DEPRECATED — This validates the old Lambda/CFN stack.
+# The active backend is apps/api/ (NestJS). Tests: cd apps/api && npm test
 # Exit on first failure
 set -euo pipefail
 
