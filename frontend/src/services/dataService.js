@@ -845,6 +845,16 @@ export const dataService = {
     return execs.map(transformRunbookExecution);
   },
 
+  executeRunbook: async (runbookId, systemId, dryRun = false) => {
+    if (isDemoMode()) {
+      await delay(1500);
+      return dryRun
+        ? { dryRun: true, runbookId, systemId, wouldCreate: 'AUTO_EXECUTE', estimatedDuration: '~12s', steps: [], prereqs: [] }
+        : { id: `exec-${Date.now()}`, runbookId, systemId, result: 'SUCCESS', duration: '12s', detail: 'Ejecución simulada completada exitosamente.', gate: 'SAFE' };
+    }
+    return api.executeRunbook(runbookId, systemId, dryRun);
+  },
+
   // ── Discovery / Landscape ──
   getDiscovery: async () => {
     if (isDemoMode()) { await delay(); return mockDiscovery; }

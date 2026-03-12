@@ -43,8 +43,8 @@ export class RunbooksController {
     @TenantId() orgId: string,
     @Param('id') id: string,
     @CurrentUser() user: JwtPayload,
-    @Body() data: { systemId: string },
+    @Body() data: { systemId: string; dryRun?: boolean },
   ) {
-    return this.runbooksService.execute(orgId, id, data.systemId, user.email);
+    return this.runbooksService.execute(orgId, id, data.systemId, user.email, data.dryRun);
   }
 }
