@@ -12,6 +12,9 @@ import EmptyState from '../components/ui/EmptyState';
 import { useAuth } from '../contexts/AuthContext';
 import PageLoading from '../components/ui/PageLoading';
 import { dataService } from '../services/dataService';
+import { createLogger } from '../lib/logger';
+
+const log = createLogger('RunbooksPage');
 
 export default function RunbooksPage() {
   const [runbooks, setRunbooks] = useState([]);
@@ -46,7 +49,7 @@ export default function RunbooksPage() {
         setExecutions(ex);
         setSystems(sys);
       })
-      .catch((err) => { if (mounted) console.error('Error loading runbooks:', err); })
+      .catch((err) => { if (mounted) log.error('Failed to load runbooks data', { error: err.message }); })
       .finally(() => { if (mounted) setLoading(false); });
     return () => { mounted = false; clearTimeout(toastTimerRef.current); };
   }, []);

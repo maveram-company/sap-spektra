@@ -28,6 +28,9 @@ export function ThemeProvider({ children }) {
   );
 }
 
+// Exporting both ThemeProvider (component) and useTheme (hook) from the same file
+// triggers react-refresh/only-export-components. The disable is necessary because
+// the hook must live alongside its context provider for encapsulation.
 // eslint-disable-next-line react-refresh/only-export-components
 export function useTheme() {
   const ctx = useContext(ThemeContext);

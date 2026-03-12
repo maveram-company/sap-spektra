@@ -3,6 +3,9 @@ import { createContext, useContext, useState, useCallback, useMemo } from 'react
 const SidebarContext = createContext(null);
 const STORAGE_KEY = 'sap-spektra-sidebar-collapsed';
 
+// Exporting both SidebarProvider (component) and useSidebar (hook) from the same file
+// triggers react-refresh/only-export-components. The disable is necessary because
+// the hook must live alongside its context provider for encapsulation.
 // eslint-disable-next-line react-refresh/only-export-components
 export function useSidebar() {
   const ctx = useContext(SidebarContext);

@@ -5386,7 +5386,8 @@ async function main() {
   // ══════════════════════════════════════════════
   // API KEYS
   // ══════════════════════════════════════════════
-  const keyHash = await bcrypt.hash('sk-spektra-demo-key-12345678', 12);
+  const demoApiKey = process.env.DEMO_API_KEY || 'sk-spektra-demo-key-12345678';
+  const keyHash = await bcrypt.hash(demoApiKey, 12);
   await prisma.apiKey.create({
     data: {
       organizationId: org.id,

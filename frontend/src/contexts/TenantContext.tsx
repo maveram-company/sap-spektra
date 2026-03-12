@@ -32,6 +32,9 @@ const defaultOrg = {
   owner: 'admin@demo.spektra.com',
 };
 
+// Exporting both TenantProvider (component) and useTenant (hook) from the same file
+// triggers react-refresh/only-export-components. The disable is necessary because
+// the hook must live alongside its context provider for encapsulation.
 // eslint-disable-next-line react-refresh/only-export-components
 export function useTenant() {
   const ctx = useContext(TenantContext);

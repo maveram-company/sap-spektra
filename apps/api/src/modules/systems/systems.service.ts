@@ -138,6 +138,8 @@ export class SystemsService {
       },
     });
 
+    this.logger.log(`System updated: ${system.sid} (${systemId})`);
+
     // Invalidate systems cache for this organization
     await this.invalidateCache(organizationId);
 

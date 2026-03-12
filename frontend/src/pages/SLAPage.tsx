@@ -33,6 +33,8 @@ function MetricItem({ label, value, unit, color }) {
   );
 }
 
+// Icon is used as a JSX component (<Icon />) below; ESLint's no-unused-vars
+// does not detect JSX usage of destructured-and-renamed props.
 // eslint-disable-next-line no-unused-vars
 function SimpleTable({ title, icon: Icon, rows }) {
   return (

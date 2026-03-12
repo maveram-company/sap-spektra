@@ -34,6 +34,9 @@ function getInitialUser() {
   return null;
 }
 
+// Exporting both AuthProvider (component) and useAuth (hook) from the same file
+// triggers react-refresh/only-export-components. The disable is necessary because
+// the hook must live alongside its context provider for encapsulation.
 // eslint-disable-next-line react-refresh/only-export-components
 export function useAuth() {
   const ctx = useContext(AuthContext);

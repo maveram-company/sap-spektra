@@ -1,8 +1,10 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException, Logger } from '@nestjs/common';
 import { PrismaService } from '../../infrastructure/prisma/prisma.service';
 
 @Injectable()
 export class ConnectorsService {
+  private readonly logger = new Logger(ConnectorsService.name);
+
   constructor(private readonly prisma: PrismaService) {}
 
   async findAll(organizationId: string) {
@@ -28,8 +30,14 @@ export class ConnectorsService {
     const connector = await this.prisma.connector.findFirst({
       where: { id, organizationId },
     });
-    if (!connector) throw new NotFoundException('Connector not found');
+    if (!connector) {
+      this.logger.warn(`Heartbeat for unknown connector ${id}`);
+      throw new NotFoundException('Connector not found');
+    }
 
+    this.logger.debug(
+      `Heartbeat received for connector ${connector.method}:${id}`,
+    );
     return this.prisma.connector.update({
       where: { id },
       data: { lastHeartbeat: new Date(), status: 'connected' },

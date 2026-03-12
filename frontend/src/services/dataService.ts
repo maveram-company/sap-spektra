@@ -31,6 +31,9 @@
 
 import config from '../config';
 import { api } from '../hooks/useApi';
+import { createLogger } from '../lib/logger';
+
+const log = createLogger('DataService');
 import {
   mockSystems,
   mockUsers,
@@ -559,7 +562,8 @@ export const dataService = {
         ping: true,
         dbInfo,
       };
-    } catch {
+    } catch (err) {
+      log.error('Failed to fetch server metrics', { systemId: id, error: (err as Error).message });
       return null;
     }
   },
@@ -573,7 +577,8 @@ export const dataService = {
         status: d.status,
         detail: d.details ? (typeof d.details === 'string' ? d.details : JSON.stringify(d.details)) : `Latency: ${d.latencyMs ?? '—'}ms`,
       }));
-    } catch {
+    } catch (err) {
+      log.error('Failed to fetch server dependencies', { systemId: id, error: (err as Error).message });
       return [];
     }
   },
@@ -626,7 +631,8 @@ export const dataService = {
         }
       }
       return flat;
-    } catch {
+    } catch (err) {
+      log.error('Failed to fetch system instances', { systemId: id, error: (err as Error).message });
       return [];
     }
   },
@@ -685,7 +691,8 @@ export const dataService = {
           })),
         };
       });
-    } catch {
+    } catch (err) {
+      log.error('Failed to fetch system hosts', { systemId: id, error: (err as Error).message });
       return [];
     }
   },
@@ -701,7 +708,8 @@ export const dataService = {
         map[m.systemId] = m;
       }
       return map;
-    } catch {
+    } catch (err) {
+      log.error('Failed to fetch system meta', { error: (err as Error).message });
       return {};
     }
   },
@@ -803,7 +811,8 @@ export const dataService = {
           ? ['ZREP_MATERIAL_REVAL', 'SAPLSDTX', 'CL_GUI_ALV_GRID'].slice(0, Math.round(1 + seed * 2))
           : [],
       };
-    } catch {
+    } catch (err) {
+      log.error('Failed to fetch SAP monitoring data', { systemId: id, error: (err as Error).message });
       return null;
     }
   },
@@ -924,25 +933,26 @@ export const dataService = {
         description: data.desc,
         systems: data.ids,
       }));
-    } catch {
+    } catch (err) {
+      log.error('Failed to fetch SID lines, using mock data', { error: (err as Error).message });
       return mockSIDLines;
     }
   },
 
   getLandscapeValidation: async () => {
     if (isDemoMode()) { await delay(300); return mockLandscapeValidation; }
-    try { return await api.getLandscapeValidation(); } catch { return mockLandscapeValidation; }
+    try { return await api.getLandscapeValidation(); } catch (err) { log.error('Failed to fetch landscape validation', { error: (err as Error).message }); return mockLandscapeValidation; }
   },
 
   // ── AI / Chat ──
   getAIUseCases: async () => {
     if (isDemoMode()) { await delay(300); return mockAIUseCases; }
-    try { return await api.getAIUseCases(); } catch { return mockAIUseCases; }
+    try { return await api.getAIUseCases(); } catch (err) { log.error('Failed to fetch AI use cases', { error: (err as Error).message }); return mockAIUseCases; }
   },
 
   getAIResponses: async () => {
     if (isDemoMode()) { await delay(300); return mockAIResponses; }
-    try { return await api.getAIResponses(); } catch { return mockAIResponses; }
+    try { return await api.getAIResponses(); } catch (err) { log.error('Failed to fetch AI responses', { error: (err as Error).message }); return mockAIResponses; }
   },
 
   chat: async (message, context) => {
@@ -966,17 +976,17 @@ export const dataService = {
 
   getHAPrereqs: async (systemId) => {
     if (isDemoMode()) { await delay(300); return mockHAPrereqs; }
-    try { return await api.getHAPrereqs(systemId); } catch { return mockHAPrereqs; }
+    try { return await api.getHAPrereqs(systemId); } catch (err) { log.error('Failed to fetch HA prereqs', { systemId, error: (err as Error).message }); return mockHAPrereqs; }
   },
 
   getHAOpsHistory: async (systemId) => {
     if (isDemoMode()) { await delay(300); return mockHAOpsHistory; }
-    try { return await api.getHAOpsHistory(systemId); } catch { return mockHAOpsHistory; }
+    try { return await api.getHAOpsHistory(systemId); } catch (err) { log.error('Failed to fetch HA ops history', { systemId, error: (err as Error).message }); return mockHAOpsHistory; }
   },
 
   getHADrivers: async (systemId) => {
     if (isDemoMode()) { await delay(300); return mockHADrivers; }
-    try { return await api.getHADrivers(systemId); } catch { return mockHADrivers; }
+    try { return await api.getHADrivers(systemId); } catch (err) { log.error('Failed to fetch HA drivers', { systemId, error: (err as Error).message }); return mockHADrivers; }
   },
 
   // ── Analytics ──
@@ -1026,7 +1036,8 @@ export const dataService = {
         avgDuration: '—',
         mostExecuted: topRunbooks.length > 0 ? `${topRunbooks[0].name} (${topRunbooks[0].executions}x)` : '—',
       });
-    } catch {
+    } catch (err) {
+      log.error('Failed to fetch analytics, using mock data', { error: (err as Error).message });
       return mockAnalytics;
     }
   },
@@ -1059,7 +1070,7 @@ export const dataService = {
 
   getLicenses: async () => {
     if (isDemoMode()) { await delay(300); return mockLicenses; }
-    try { return await api.getLicenses(); } catch { return mockLicenses; }
+    try { return await api.getLicenses(); } catch (err) { log.error('Failed to fetch licenses', { error: (err as Error).message }); return mockLicenses; }
   },
 
   // ── Plans ──
@@ -1074,7 +1085,8 @@ export const dataService = {
     try {
       const settings = await api.getSettings();
       return settings?.settings?.thresholds || mockThresholds;
-    } catch {
+    } catch (err) {
+      log.error('Failed to fetch thresholds', { error: (err as Error).message });
       return mockThresholds;
     }
   },
@@ -1084,7 +1096,8 @@ export const dataService = {
     try {
       const settings = await api.getSettings();
       return settings?.settings?.escalation || mockEscalationPolicy;
-    } catch {
+    } catch (err) {
+      log.error('Failed to fetch escalation policy', { error: (err as Error).message });
       return mockEscalationPolicy;
     }
   },
@@ -1094,7 +1107,8 @@ export const dataService = {
     try {
       const settings = await api.getSettings();
       return settings?.settings?.maintenanceWindows || mockMaintenanceWindows;
-    } catch {
+    } catch (err) {
+      log.error('Failed to fetch maintenance windows', { error: (err as Error).message });
       return mockMaintenanceWindows;
     }
   },

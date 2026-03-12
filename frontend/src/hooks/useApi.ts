@@ -1,4 +1,7 @@
 import { useState, useCallback } from 'react';
+import { createLogger } from '../lib/logger';
+
+const log = createLogger('API');
 
 const getApiUrl = () => import.meta.env.VITE_API_URL || 'http://localhost:3001/api';
 
@@ -191,12 +194,15 @@ async function fetchApi(endpoint, options = {}) {
 
   if (!res.ok) {
     if (res.status === 401) {
+      log.warn('Session expired, redirecting to login', { endpoint, status: 401 });
       localStorage.removeItem('sap-spektra-auth');
       window.location.href = '/login';
       throw new Error('Sesión expirada');
     }
     const errBody = await res.json().catch(() => ({}));
-    throw new Error(errBody.message || errBody.error || `Error ${res.status}`);
+    const errorMessage = errBody.message || errBody.error || `Error ${res.status}`;
+    log.error('API request failed', { endpoint, status: res.status, error: errorMessage });
+    throw new Error(errorMessage);
   }
 
   return res.json();

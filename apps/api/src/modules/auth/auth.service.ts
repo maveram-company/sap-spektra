@@ -31,16 +31,19 @@ export class AuthService {
     });
 
     if (!user) {
+      this.logger.warn(`Login attempt with unknown email: ${dto.email}`);
       throw new UnauthorizedException('Invalid credentials');
     }
 
     const isValid = await bcrypt.compare(dto.password, user.passwordHash);
     if (!isValid) {
+      this.logger.warn(`Failed login attempt for user: ${dto.email}`);
       throw new UnauthorizedException('Invalid credentials');
     }
 
     const membership = user.memberships[0];
     if (!membership) {
+      this.logger.warn(`User ${dto.email} has no organization membership`);
       throw new UnauthorizedException('No organization membership');
     }
 
@@ -149,6 +152,9 @@ export class AuthService {
     });
 
     if (!user || user.status !== 'active') {
+      this.logger.warn(
+        `Token validation failed for user ${payload.sub}: ${!user ? 'not found' : 'disabled'}`,
+      );
       throw new UnauthorizedException('User not found or disabled');
     }
 

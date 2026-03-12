@@ -54,6 +54,9 @@ export function PlanProvider({ children }) {
   );
 }
 
+// Exporting both PlanProvider (component) and usePlan (hook) from the same file
+// triggers react-refresh/only-export-components. The disable is necessary because
+// the hook must live alongside its context provider for encapsulation.
 // eslint-disable-next-line react-refresh/only-export-components
 export function usePlan() {
   const ctx = useContext(PlanContext);

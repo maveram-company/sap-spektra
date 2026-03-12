@@ -146,7 +146,9 @@ export default function SystemDetailPage() {
     if (!effectiveHost) return [];
     const history = metricHistoryData[effectiveHost] || [];
     if (!history.length) return [];
-    // eslint-disable-next-line react-hooks/purity -- timestamp para labels de chart, recalculado solo cuando cambian deps
+    // Date.now() inside useMemo is intentional: it generates relative time labels for chart
+    // x-axis. The memo recomputes only when effectiveHost, chartRange, or metricHistoryData change.
+    // eslint-disable-next-line react-hooks/purity
     const now = Date.now();
     const rangeMinutes = chartRange === '1h' ? 60 : chartRange === '3h' ? 180 : 360;
     const pointsToShow = Math.min(history.length, Math.ceil(rangeMinutes / 5));

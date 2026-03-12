@@ -29,11 +29,14 @@ import { redisStore } from 'cache-manager-ioredis-yet';
 
         logger.log(`Initializing Redis cache at ${host}:${port}`);
 
+        const ttl = config.get<number>('cacheTtl', 30000);
+        logger.log(`Cache TTL set to ${ttl}ms`);
+
         return {
           store: await redisStore({
             host,
             port,
-            ttl: 30000, // 30 seconds default TTL
+            ttl,
           }),
         };
       },

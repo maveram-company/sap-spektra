@@ -8,6 +8,10 @@ import {
 } from '@nestjs/common';
 import { Request, Response } from 'express';
 
+interface RequestWithCorrelation extends Request {
+  correlationId?: string;
+}
+
 @Catch()
 export class GlobalExceptionFilter implements ExceptionFilter {
   private readonly logger = new Logger(GlobalExceptionFilter.name);
@@ -15,8 +19,8 @@ export class GlobalExceptionFilter implements ExceptionFilter {
   catch(exception: unknown, host: ArgumentsHost): void {
     const ctx = host.switchToHttp();
     const response = ctx.getResponse<Response>();
-    const request = ctx.getRequest<Request>();
-    const correlationId = (request as any).correlationId || 'unknown';
+    const request = ctx.getRequest<RequestWithCorrelation>();
+    const correlationId = request.correlationId || 'unknown';
 
     const status =
       exception instanceof HttpException

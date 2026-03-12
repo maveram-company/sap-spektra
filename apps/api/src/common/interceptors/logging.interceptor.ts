@@ -13,7 +13,7 @@ import { randomUUID } from 'crypto';
 export class LoggingInterceptor implements NestInterceptor {
   private readonly logger = new Logger('HTTP');
 
-  intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
+  intercept(context: ExecutionContext, next: CallHandler): Observable<unknown> {
     const req = context.switchToHttp().getRequest();
     const { method, url, headers } = req;
     const correlationId = headers['x-correlation-id'] || randomUUID();
@@ -37,7 +37,7 @@ export class LoggingInterceptor implements NestInterceptor {
             }),
           );
         },
-        error: (err) => {
+        error: (err: { status?: number; message?: string }) => {
           this.logger.error(
             JSON.stringify({
               correlationId,

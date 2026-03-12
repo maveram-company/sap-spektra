@@ -4,6 +4,7 @@ import {
   BadRequestException,
   Logger,
 } from '@nestjs/common';
+import { Runbook } from '@prisma/client';
 import { PrismaService } from '../../infrastructure/prisma/prisma.service';
 
 @Injectable()
@@ -45,7 +46,7 @@ export class RunbooksService {
    * Retorna { compatible: boolean, failures: string[] }
    */
   private async validateCompatibility(
-    runbook: any,
+    runbook: Runbook,
     systemId: string,
   ): Promise<{ compatible: boolean; failures: string[] }> {
     const system = await this.prisma.system.findUnique({
@@ -128,15 +129,21 @@ export class RunbooksService {
     }
 
     // 4. Validar compatibilidad de OS (si el runbook tiene osType en parameters)
-    let params = runbook.parameters;
-    if (typeof params === 'string') {
+    let params: Record<string, unknown> | null = null;
+    if (typeof runbook.parameters === 'string') {
       try {
-        params = JSON.parse(params);
+        params = JSON.parse(runbook.parameters) as Record<string, unknown>;
       } catch {
         params = null;
       }
+    } else if (
+      runbook.parameters &&
+      typeof runbook.parameters === 'object' &&
+      !Array.isArray(runbook.parameters)
+    ) {
+      params = runbook.parameters as Record<string, unknown>;
     }
-    if (params?.osType) {
+    if (params?.osType && typeof params.osType === 'string') {
       const osType = params.osType.toUpperCase();
       const sysOs = system.systemMeta?.osVersion?.toUpperCase() || '';
 
@@ -170,7 +177,7 @@ export class RunbooksService {
     }
 
     // 5. Validar pre-requisitos específicos del runbook
-    let prereqs = runbook.prereqs;
+    let prereqs: unknown = runbook.prereqs;
     if (typeof prereqs === 'string') {
       try {
         prereqs = JSON.parse(prereqs);
@@ -180,6 +187,7 @@ export class RunbooksService {
     }
     if (Array.isArray(prereqs)) {
       for (const prereq of prereqs) {
+        if (typeof prereq !== 'string') continue;
         const p = prereq.toUpperCase();
         // Verificar prerequisitos que podemos validar automáticamente
         if (p.includes('HANA') && !sysDbType.includes('HANA')) {
@@ -234,8 +242,17 @@ export class RunbooksService {
     });
     if (!runbook) throw new NotFoundException('Runbook not found');
 
+    this.logger.log(
+      `Execute request: runbook="${runbook.name}" system=${systemId} dryRun=${dryRun} by=${executedBy}`,
+    );
+
     // Validar compatibilidad sistema-runbook
     const validation = await this.validateCompatibility(runbook, systemId);
+    if (!validation.compatible) {
+      this.logger.warn(
+        `Runbook "${runbook.name}" incompatible with system ${systemId}: ${validation.failures.join('; ')}`,
+      );
+    }
 
     const gate = runbook.costSafe ? 'SAFE' : 'HUMAN';
 
@@ -306,6 +323,10 @@ export class RunbooksService {
         system: { select: { sid: true } },
       },
     });
+
+    this.logger.log(
+      `Execution created: id=${execution.id} gate=${gate} result=${execution.result}`,
+    );
 
     // Simular completado para gate SAFE
     if (gate === 'SAFE') {
