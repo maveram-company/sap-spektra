@@ -1,9 +1,0 @@
-{
-  "name": "sap-spektra-slack-agent",
-  "version": "1.0.0",
-  "description": "SAP Spektra - Slack Notification Agent",
-  "main": "index.js",
-  "dependencies": {
-    "@aws-sdk/client-secrets-manager": "^3.400.0"
-  }
-}

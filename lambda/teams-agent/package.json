@@ -1,7 +1,0 @@
-{
-  "name": "sap-spektra-teams-agent",
-  "version": "1.0.0",
-  "description": "SAP Spektra - Agente de notificaciones para Microsoft Teams via webhooks",
-  "main": "index.js",
-  "dependencies": {}
-}
