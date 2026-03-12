@@ -29,7 +29,7 @@ const defaultOrg = {
     aiCallsToday: 12,
   },
   createdAt: '2025-12-01T00:00:00Z',
-  owner: 'admin@demo.maveram.com',
+  owner: 'admin@demo.spektra.com',
 };
 
 // eslint-disable-next-line react-refresh/only-export-components
