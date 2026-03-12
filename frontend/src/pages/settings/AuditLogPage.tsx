@@ -7,6 +7,8 @@ import Badge from '../../components/ui/Badge';
 import Table, { TableHeader, TableBody, TableRow, TableHead, TableCell } from '../../components/ui/Table';
 import EmptyState from '../../components/ui/EmptyState';
 import PageLoading from '../../components/ui/PageLoading';
+import Pagination from '../../components/ui/Pagination';
+import usePagination from '../../hooks/usePagination';
 import { dataService } from '../../services/dataService';
 
 export default function AuditLogPage() {
@@ -37,6 +39,8 @@ export default function AuditLogPage() {
     e.user.toLowerCase().includes(search.toLowerCase()) ||
     e.details.toLowerCase().includes(search.toLowerCase())
   );
+
+  const { items: paginatedAudit, page: auditPage, totalPages: auditTotalPages, total: auditTotal, setPage: setAuditPage } = usePagination(filtered, 25);
 
   const severityVariant = (s) => ({ critical: 'danger', warning: 'warning', info: 'default' }[s] || 'default');
 
@@ -82,7 +86,7 @@ export default function AuditLogPage() {
           </tr>
         </TableHeader>
         <TableBody>
-          {filtered.map(event => (
+          {paginatedAudit.map(event => (
             <TableRow key={event.id}>
               <TableCell className="text-xs text-text-secondary whitespace-nowrap">
                 {new Date(event.timestamp).toLocaleString('es-CO', { hour12: false })}
@@ -104,6 +108,8 @@ export default function AuditLogPage() {
           ))}
         </TableBody>
       </Table>
+
+      <Pagination page={auditPage} totalPages={auditTotalPages} total={auditTotal} onPageChange={setAuditPage} />
     </div>
   );
 }

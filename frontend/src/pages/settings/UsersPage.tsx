@@ -32,21 +32,57 @@ export default function UsersPage() {
   const [inviteForm, setInviteForm] = useState({ email: '', role: 'viewer', name: '' });
   const [sending, setSending] = useState(false);
   const [deleteConfirm, setDeleteConfirm] = useState(null);
+  const [fieldErrors, setFieldErrors] = useState({});
   const { organization } = useTenant();
 
+  const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  const VALID_ROLES = ['admin', 'operator', 'escalation', 'viewer'];
+
+  const validateField = (name, value) => {
+    switch (name) {
+      case 'email':
+        if (!value.trim()) return 'Email es requerido';
+        if (!EMAIL_REGEX.test(value.trim())) return 'Formato de email inválido';
+        return null;
+      case 'name':
+        if (!value.trim()) return 'Nombre es requerido';
+        if (value.trim().length < 2) return 'Mínimo 2 caracteres';
+        return null;
+      case 'role':
+        if (!VALID_ROLES.includes(value)) return 'Selecciona un rol válido';
+        return null;
+      default:
+        return null;
+    }
+  };
+
+  const validateForm = (form) => {
+    const errors = {};
+    const emailErr = validateField('email', form.email);
+    if (emailErr) errors.email = emailErr;
+    const nameErr = validateField('name', form.name);
+    if (nameErr) errors.name = nameErr;
+    const roleErr = validateField('role', form.role);
+    if (roleErr) errors.role = roleErr;
+    setFieldErrors(errors);
+    return Object.keys(errors).length === 0;
+  };
+
   const handleInvite = async () => {
+    if (!validateForm(inviteForm)) return;
     setSending(true);
     await new Promise(r => setTimeout(r, 800));
     setUsers(prev => [...prev, {
       id: `usr-${Date.now()}`,
-      name: inviteForm.name || inviteForm.email.split('@')[0],
-      email: inviteForm.email,
+      name: inviteForm.name.trim() || inviteForm.email.trim().split('@')[0],
+      email: inviteForm.email.trim(),
       role: inviteForm.role,
       status: 'invited',
       lastLogin: null,
     }]);
     setShowInviteModal(false);
     setInviteForm({ email: '', role: 'viewer', name: '' });
+    setFieldErrors({});
     setSending(false);
   };
 
@@ -56,11 +92,13 @@ export default function UsersPage() {
   };
 
   const handleSaveEdit = async () => {
+    if (!validateForm(editingUser)) return;
     setSending(true);
     await new Promise(r => setTimeout(r, 600));
     setUsers(prev => prev.map(u => u.id === editingUser.id ? editingUser : u));
     setShowEditModal(false);
     setEditingUser(null);
+    setFieldErrors({});
     setSending(false);
   };
 
@@ -151,13 +189,13 @@ export default function UsersPage() {
       {/* Invite Modal */}
       <Modal
         isOpen={showInviteModal}
-        onClose={() => setShowInviteModal(false)}
+        onClose={() => { setShowInviteModal(false); setFieldErrors({}); }}
         title="Invitar Usuario"
         description="El usuario recibirá un email con instrucciones para unirse"
         footer={
           <>
-            <Button variant="outline" onClick={() => setShowInviteModal(false)}>Cancelar</Button>
-            <Button icon={Mail} loading={sending} onClick={handleInvite} disabled={!inviteForm.email}>
+            <Button variant="outline" onClick={() => { setShowInviteModal(false); setFieldErrors({}); }}>Cancelar</Button>
+            <Button icon={Mail} loading={sending} onClick={handleInvite}>
               Enviar Invitación
             </Button>
           </>
@@ -169,6 +207,7 @@ export default function UsersPage() {
             value={inviteForm.name}
             onChange={(e) => setInviteForm({ ...inviteForm, name: e.target.value })}
             placeholder="Juan Pérez"
+            error={fieldErrors.name}
           />
           <Input
             label="Email"
@@ -177,6 +216,7 @@ export default function UsersPage() {
             onChange={(e) => setInviteForm({ ...inviteForm, email: e.target.value })}
             placeholder="usuario@empresa.com"
             icon={Mail}
+            error={fieldErrors.email}
           />
           <Select
             label="Rol"
@@ -188,18 +228,19 @@ export default function UsersPage() {
               { value: 'escalation', label: 'Escalación — Operador avanzado' },
               { value: 'viewer', label: 'Viewer — Solo lectura' },
             ]}
+            error={fieldErrors.role}
           />
         </div>
       </Modal>
       {/* Edit Modal */}
       <Modal
         isOpen={showEditModal}
-        onClose={() => { setShowEditModal(false); setEditingUser(null); }}
+        onClose={() => { setShowEditModal(false); setEditingUser(null); setFieldErrors({}); }}
         title="Editar Usuario"
         description="Modifica la información del usuario"
         footer={
           <>
-            <Button variant="outline" onClick={() => { setShowEditModal(false); setEditingUser(null); }}>Cancelar</Button>
+            <Button variant="outline" onClick={() => { setShowEditModal(false); setEditingUser(null); setFieldErrors({}); }}>Cancelar</Button>
             <Button icon={Save} loading={sending} onClick={handleSaveEdit}>Guardar Cambios</Button>
           </>
         }
@@ -210,12 +251,14 @@ export default function UsersPage() {
               label="Nombre completo"
               value={editingUser.name}
               onChange={(e) => setEditingUser({ ...editingUser, name: e.target.value })}
+              error={fieldErrors.name}
             />
             <Input
               label="Email"
               type="email"
               value={editingUser.email}
               onChange={(e) => setEditingUser({ ...editingUser, email: e.target.value })}
+              error={fieldErrors.email}
             />
             <Select
               label="Rol"
@@ -227,6 +270,7 @@ export default function UsersPage() {
                 { value: 'escalation', label: 'Escalación — Operador avanzado' },
                 { value: 'viewer', label: 'Viewer — Solo lectura' },
               ]}
+              error={fieldErrors.role}
             />
           </div>
         )}

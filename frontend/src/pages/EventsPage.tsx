@@ -1,10 +1,10 @@
 import { useState, useEffect, useMemo } from 'react';
 import Header from '../components/layout/Header';
 import PageLoading from '../components/ui/PageLoading';
+import Pagination from '../components/ui/Pagination';
+import usePagination from '../hooks/usePagination';
 import { dataService } from '../services/dataService';
 import { Search, Filter, ChevronDown, AlertCircle, AlertTriangle, Info, CheckCircle } from 'lucide-react';
-
-const PAGE_SIZE = 50;
 
 const levelConfig = {
   critical: {
@@ -71,7 +71,6 @@ export default function EventsPage() {
   const [levelFilter, setLevelFilter] = useState('all');
   const [systemFilter, setSystemFilter] = useState('all');
   const [sourceFilter, setSourceFilter] = useState('all'); // P2.4: SAP vs Platform
-  const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
 
   useEffect(() => {
     Promise.all([dataService.getEvents(), dataService.getSystems()]).then(([evts, sys]) => {
@@ -99,11 +98,7 @@ export default function EventsPage() {
     });
   }, [search, levelFilter, systemFilter, sourceFilter, events]);
 
-  const visible = useMemo(() => {
-    return filtered.slice(0, visibleCount);
-  }, [filtered, visibleCount]);
-
-  const hasMore = visibleCount < filtered.length;
+  const { items: paginatedEvents, page, totalPages, total, setPage } = usePagination(filtered, 25);
 
   if (loading) return <PageLoading message="Cargando eventos..." />;
 
@@ -124,7 +119,7 @@ export default function EventsPage() {
                 value={search}
                 onChange={(e) => {
                   setSearch(e.target.value);
-                  setVisibleCount(PAGE_SIZE);
+                  setPage(1);
                 }}
                 className="w-full bg-surface border border-border rounded-lg pl-9 pr-3 py-2 text-sm text-text-primary placeholder:text-text-tertiary focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
               />
@@ -137,7 +132,7 @@ export default function EventsPage() {
                 value={levelFilter}
                 onChange={(e) => {
                   setLevelFilter(e.target.value);
-                  setVisibleCount(PAGE_SIZE);
+                  setPage(1);
                 }}
                 className="appearance-none bg-surface border border-border rounded-lg pl-8 pr-8 py-2 text-sm text-text-primary focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 cursor-pointer"
               >
@@ -156,7 +151,7 @@ export default function EventsPage() {
                 value={sourceFilter}
                 onChange={(e) => {
                   setSourceFilter(e.target.value);
-                  setVisibleCount(PAGE_SIZE);
+                  setPage(1);
                 }}
                 className="appearance-none bg-surface border border-border rounded-lg px-3 pr-8 py-2 text-sm text-text-primary focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 cursor-pointer"
               >
@@ -173,7 +168,7 @@ export default function EventsPage() {
                 value={systemFilter}
                 onChange={(e) => {
                   setSystemFilter(e.target.value);
-                  setVisibleCount(PAGE_SIZE);
+                  setPage(1);
                 }}
                 className="appearance-none bg-surface border border-border rounded-lg px-3 pr-8 py-2 text-sm text-text-primary focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 cursor-pointer"
               >
@@ -223,7 +218,7 @@ export default function EventsPage() {
                 </tr>
               </thead>
               <tbody>
-                {visible.map((evt) => (
+                {paginatedEvents.map((evt) => (
                   <tr
                     key={evt.id}
                     className="border-b border-border last:border-0 hover:bg-surface-secondary dark:hover:bg-surface-secondary transition-colors"
@@ -254,7 +249,7 @@ export default function EventsPage() {
                     </td>
                   </tr>
                 ))}
-                {visible.length === 0 && (
+                {paginatedEvents.length === 0 && (
                   <tr>
                     <td colSpan={6} className="px-4 py-12 text-center text-text-tertiary">
                       No se encontraron eventos con los filtros seleccionados.
@@ -265,20 +260,10 @@ export default function EventsPage() {
             </table>
           </div>
 
-          {/* Load more */}
-          {hasMore && (
-            <div className="border-t border-border px-4 py-4 text-center">
-              <button
-                onClick={() => setVisibleCount((prev) => prev + PAGE_SIZE)}
-                className="inline-flex items-center gap-2 px-4 py-2 bg-surface border border-border rounded-lg text-sm font-medium text-text-primary hover:bg-surface-secondary dark:hover:bg-surface-secondary transition-colors"
-              >
-                Cargar mas
-                <span className="text-text-tertiary">
-                  ({Math.min(PAGE_SIZE, filtered.length - visibleCount)} restantes de {filtered.length - visibleCount})
-                </span>
-              </button>
-            </div>
-          )}
+          {/* Pagination */}
+          <div className="border-t border-border px-4">
+            <Pagination page={page} totalPages={totalPages} total={total} onPageChange={setPage} />
+          </div>
         </div>
       </div>
     </div>

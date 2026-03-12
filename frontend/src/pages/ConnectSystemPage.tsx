@@ -216,6 +216,7 @@ export default function ConnectSystemPage() {
   const [submitting, setSubmitting] = useState(false);
   const [success, setSuccess] = useState(false);
   const [connectionTest, setConnectionTest] = useState({ testing: false, result: null });
+  const [fieldErrors, setFieldErrors] = useState({});
 
   // Campos Agent
   const [agentForm, setAgentForm] = useState({
@@ -247,6 +248,40 @@ export default function ConnectSystemPage() {
     setAgentForm(prev => ({ ...prev, [field]: value })), []);
   const updateScc = useCallback((field, value) =>
     setSccForm(prev => ({ ...prev, [field]: value })), []);
+
+  // Validación de paso actual antes de avanzar
+  const validateAgentStep = useCallback((currentStep) => {
+    const errors = {};
+    if (currentStep === 3) {
+      if (!agentForm.sid.trim()) errors.sid = 'SID es requerido';
+      else if (!SID_PATTERN.test(agentForm.sid)) errors.sid = 'SID: 3 caracteres, primera letra A-Z';
+      if (!agentForm.environment) errors.environment = 'Selecciona un ambiente';
+      if (agentForm.description.trim().length > 0 && agentForm.description.trim().length < 3) {
+        errors.description = 'Mínimo 3 caracteres';
+      }
+    }
+    setFieldErrors(errors);
+    return Object.keys(errors).length === 0;
+  }, [agentForm]);
+
+  const validateSccStep = useCallback((currentStep) => {
+    const errors = {};
+    if (currentStep === 1) {
+      if (!sccForm.locationId.trim()) errors.locationId = 'Location ID es requerido';
+      if (!sccForm.subaccount.trim()) errors.subaccount = 'Subaccount es requerido';
+      if (!sccForm.virtualHost.trim()) errors.virtualHost = 'Virtual Host es requerido';
+    }
+    if (currentStep === 2) {
+      if (!sccForm.sid.trim()) errors.sid = 'SID es requerido';
+      else if (!SID_PATTERN.test(sccForm.sid)) errors.sid = 'SID: 3 caracteres, primera letra A-Z';
+      if (!sccForm.environment) errors.environment = 'Selecciona un ambiente';
+      if (sccForm.description.trim().length > 0 && sccForm.description.trim().length < 3) {
+        errors.description = 'Mínimo 3 caracteres';
+      }
+    }
+    setFieldErrors(errors);
+    return Object.keys(errors).length === 0;
+  }, [sccForm]);
 
   // Test de conexión simulado
   const handleTestConnection = useCallback(async () => {
@@ -542,6 +577,7 @@ export default function ConnectSystemPage() {
                     value={agentForm.environment}
                     onChange={(e) => updateAgent('environment', e.target.value)}
                     options={ENV_OPTIONS}
+                    error={fieldErrors.environment}
                   />
                   <Select
                     label="Base de Datos"
@@ -563,6 +599,7 @@ export default function ConnectSystemPage() {
                   value={agentForm.description}
                   onChange={(e) => updateAgent('description', e.target.value)}
                   placeholder="Sistema ERP principal de producción"
+                  error={fieldErrors.description}
                 />
               </div>
             )}
@@ -657,7 +694,12 @@ export default function ConnectSystemPage() {
                 {step === 1 ? 'Cambiar método' : 'Anterior'}
               </Button>
               {step < 4 ? (
-                <Button icon={ArrowRight} onClick={() => setStep(step + 1)}>Siguiente</Button>
+                <Button icon={ArrowRight} onClick={() => {
+                  if (validateAgentStep(step)) {
+                    setFieldErrors({});
+                    setStep(step + 1);
+                  }
+                }}>Siguiente</Button>
               ) : (
                 <Button
                   icon={CheckCircle}
@@ -715,6 +757,7 @@ export default function ConnectSystemPage() {
                     onChange={(e) => updateScc('locationId', e.target.value)}
                     placeholder="LOC_DC1"
                     hint="Identificador de ubicación en el Cloud Connector"
+                    error={fieldErrors.locationId}
                   />
                   <Input
                     label="Subaccount BTP"
@@ -722,6 +765,7 @@ export default function ConnectSystemPage() {
                     onChange={(e) => updateScc('subaccount', e.target.value)}
                     placeholder="maveram-prod"
                     hint="Subcuenta de SAP BTP vinculada"
+                    error={fieldErrors.subaccount}
                   />
                 </div>
 
@@ -732,6 +776,7 @@ export default function ConnectSystemPage() {
                     onChange={(e) => updateScc('virtualHost', e.target.value)}
                     placeholder="sap-erp-prod:443"
                     hint="Host virtual configurado en el SCC"
+                    error={fieldErrors.virtualHost}
                   />
                   <Input
                     label="Virtual Port"
@@ -805,6 +850,7 @@ export default function ConnectSystemPage() {
                     value={sccForm.environment}
                     onChange={(e) => updateScc('environment', e.target.value)}
                     options={ENV_OPTIONS}
+                    error={fieldErrors.environment}
                   />
                   <Select
                     label="Base de Datos"
@@ -819,6 +865,7 @@ export default function ConnectSystemPage() {
                   value={sccForm.description}
                   onChange={(e) => updateScc('description', e.target.value)}
                   placeholder="Sistema ERP RISE producción"
+                  error={fieldErrors.description}
                 />
 
                 <div className="flex items-start gap-3 p-3 rounded-lg bg-warning-50 dark:bg-warning-900/20 border border-warning-200 dark:border-warning-800">
@@ -910,7 +957,12 @@ export default function ConnectSystemPage() {
                 {step === 1 ? 'Cambiar método' : 'Anterior'}
               </Button>
               {step < 3 ? (
-                <Button icon={ArrowRight} onClick={() => setStep(step + 1)}>Siguiente</Button>
+                <Button icon={ArrowRight} onClick={() => {
+                  if (validateSccStep(step)) {
+                    setFieldErrors({});
+                    setStep(step + 1);
+                  }
+                }}>Siguiente</Button>
               ) : (
                 <Button
                   icon={CheckCircle}

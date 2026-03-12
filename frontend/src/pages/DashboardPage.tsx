@@ -19,13 +19,13 @@ const variantValueColors = {
   warning:  'text-warning-500',
 };
 
-// Glow suave en el número según variante
-const variantGlowStyle = {
-  default:  {},
-  primary:  { textShadow: '0 0 12px rgba(6,182,212,0.5)' },
-  danger:   { textShadow: '0 0 12px rgba(244,63,94,0.5)' },
-  success:  { textShadow: '0 0 12px rgba(16,185,129,0.5)' },
-  warning:  { textShadow: '0 0 12px rgba(245,158,11,0.5)' },
+// Glow suave en el número según variante (CSS classes in global.css)
+const variantGlowClass = {
+  default:  '',
+  primary:  'glow-text-cyan',
+  danger:   'glow-text-danger',
+  success:  'glow-text-success',
+  warning:  'glow-text-warning',
 };
 
 // Gradiente del círculo de icono por variante
@@ -40,7 +40,7 @@ const variantIconGradient = {
 // eslint-disable-next-line no-unused-vars -- Icon es componente JSX
 function KPICard({ icon: Icon, label, value, change, variant = 'default' }) {
   const valueColor   = variantValueColors[variant];
-  const glowStyle    = variantGlowStyle[variant];
+  const glowClass    = variantGlowClass[variant];
   const [gradFrom, gradTo] = variantIconGradient[variant];
 
   return (
@@ -72,10 +72,7 @@ function KPICard({ icon: Icon, label, value, change, variant = 'default' }) {
       </div>
 
       {/* Número grande con glow */}
-      <p
-        className={`text-3xl font-bold tracking-tight ${valueColor}`}
-        style={glowStyle}
-      >
+      <p className={`text-3xl font-bold tracking-tight ${valueColor} ${glowClass}`}>
         {value}
       </p>
 
@@ -263,10 +260,7 @@ export default function DashboardPage() {
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">
                 {/* Icono con glow amber */}
-                <div
-                  className="w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0"
-                  style={{ boxShadow: '0 0 14px rgba(245,158,11,0.3)', background: 'rgba(245,158,11,0.12)' }}
-                >
+                <div className="w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0 warning-icon-glow">
                   <ShieldAlert size={20} className="text-warning-500" />
                 </div>
                 <div>

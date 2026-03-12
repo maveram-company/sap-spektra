@@ -1,8 +1,17 @@
 import { Test, TestingModule } from '@nestjs/testing';
+import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import { DashboardService } from './dashboard.service';
 import { PrismaService } from '../../infrastructure/prisma/prisma.service';
 
 const ORG_ID = 'org-test-1';
+
+function mockCacheManager() {
+  return {
+    get: jest.fn().mockResolvedValue(null),
+    set: jest.fn().mockResolvedValue(undefined),
+    del: jest.fn().mockResolvedValue(undefined),
+  };
+}
 
 function mockSystem(overrides = {}) {
   return {
@@ -33,6 +42,7 @@ describe('DashboardService', () => {
       providers: [
         DashboardService,
         { provide: PrismaService, useValue: prisma },
+        { provide: CACHE_MANAGER, useValue: mockCacheManager() },
       ],
     }).compile();
 
@@ -73,7 +83,7 @@ describe('DashboardService', () => {
       prisma.event.findMany.mockResolvedValue([]);
       prisma.connector.findMany.mockResolvedValue([]);
 
-      const result = await service.getSummary(ORG_ID);
+      const result = (await service.getSummary(ORG_ID)) as any;
 
       expect(result.systems.total).toBe(5);
       expect(result.systems.healthy).toBe(2);
@@ -94,7 +104,7 @@ describe('DashboardService', () => {
       prisma.event.findMany.mockResolvedValue([]);
       prisma.connector.findMany.mockResolvedValue([]);
 
-      const result = await service.getSummary(ORG_ID);
+      const result = (await service.getSummary(ORG_ID)) as any;
 
       // (90+60+30)/3 = 60
       expect(result.systems.avgHealthScore).toBe(60);
@@ -107,7 +117,7 @@ describe('DashboardService', () => {
       prisma.event.findMany.mockResolvedValue([]);
       prisma.connector.findMany.mockResolvedValue([]);
 
-      const result = await service.getSummary(ORG_ID);
+      const result = (await service.getSummary(ORG_ID)) as any;
 
       expect(result.systems.total).toBe(0);
       expect(result.systems.healthy).toBe(0);
@@ -150,7 +160,7 @@ describe('DashboardService', () => {
         },
       ]);
 
-      const result = await service.getSummary(ORG_ID);
+      const result = (await service.getSummary(ORG_ID)) as any;
 
       expect(result.connectors.total).toBe(3);
       expect(result.connectors.connected).toBe(2);
@@ -166,7 +176,7 @@ describe('DashboardService', () => {
       prisma.event.findMany.mockResolvedValue([]);
       prisma.connector.findMany.mockResolvedValue([]);
 
-      const result = await service.getSummary(ORG_ID);
+      const result = (await service.getSummary(ORG_ID)) as any;
 
       expect(result.alerts.active).toBe(15);
       expect(result.alerts.critical).toBe(3);

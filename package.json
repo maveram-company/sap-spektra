@@ -9,6 +9,8 @@
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
+    "test:e2e": "npx playwright test",
+    "test:e2e:ui": "npx playwright test --ui",
     "prepare": "husky"
   },
   "repository": {
@@ -23,6 +25,7 @@
   },
   "homepage": "https://github.com/maveram-company/sap-spektra#readme",
   "devDependencies": {
+    "@playwright/test": "^1.58.2",
     "eslint": "^10.0.3",
     "husky": "^9.1.7",
     "lint-staged": "^16.3.3"

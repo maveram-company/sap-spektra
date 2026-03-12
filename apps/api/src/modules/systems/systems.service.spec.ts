@@ -1,9 +1,18 @@
 import { NotFoundException, ConflictException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
+import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import { SystemsService } from './systems.service';
 import { PrismaService } from '../../infrastructure/prisma/prisma.service';
 
 const ORG_ID = 'org-test-1';
+
+function mockCacheManager() {
+  return {
+    get: jest.fn().mockResolvedValue(null),
+    set: jest.fn().mockResolvedValue(undefined),
+    del: jest.fn().mockResolvedValue(undefined),
+  };
+}
 
 function mockSystem(overrides = {}) {
   return {
@@ -43,7 +52,11 @@ describe('SystemsService', () => {
     };
 
     const module: TestingModule = await Test.createTestingModule({
-      providers: [SystemsService, { provide: PrismaService, useValue: prisma }],
+      providers: [
+        SystemsService,
+        { provide: PrismaService, useValue: prisma },
+        { provide: CACHE_MANAGER, useValue: mockCacheManager() },
+      ],
     }).compile();
 
     service = module.get<SystemsService>(SystemsService);

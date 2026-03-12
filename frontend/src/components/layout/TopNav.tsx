@@ -8,6 +8,7 @@ import {
   Activity, Play, Package, Key, Heart, Plug,
   ChevronDown, LogOut, User, Menu, X
 } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import { useAuth } from '../../contexts/AuthContext';
 import { usePlan } from '../../hooks/usePlan';
 import { useTenant } from '../../contexts/TenantContext';
@@ -92,10 +93,17 @@ export default function TopNav({ topOffset = 0 }) {
 
   const location = useLocation();
   const navigate = useNavigate();
+  const { t, i18n } = useTranslation();
   const { user, hasRole, logout } = useAuth();
   const { theme, toggleTheme } = useTheme();
   const { currentPlan } = usePlan();
   const { organization } = useTenant();
+
+  const toggleLanguage = useCallback(() => {
+    const newLang = i18n.language === 'es' ? 'en' : 'es';
+    i18n.changeLanguage(newLang);
+    localStorage.setItem('spektra-language', newLang);
+  }, [i18n]);
 
   // Reloj — actualiza cada segundo
   useEffect(() => {
@@ -448,10 +456,23 @@ export default function TopNav({ topOffset = 0 }) {
               style={{ color: 'rgba(148,163,184,0.55)' }}
               onMouseEnter={(e) => { e.currentTarget.style.color = '#06b6d4'; e.currentTarget.style.background = 'rgba(6,182,212,0.1)'; }}
               onMouseLeave={(e) => { e.currentTarget.style.color = 'rgba(148,163,184,0.55)'; e.currentTarget.style.background = 'transparent'; }}
-              aria-label={theme === 'dark' ? 'Cambiar a modo claro' : 'Cambiar a modo oscuro'}
-              title={theme === 'dark' ? 'Modo claro' : 'Modo oscuro'}
+              aria-label={theme === 'dark' ? t('topnav.lightMode') : t('topnav.darkMode')}
+              title={theme === 'dark' ? t('topnav.lightMode') : t('topnav.darkMode')}
             >
               {theme === 'dark' ? <Sun size={15} /> : <Moon size={15} />}
+            </button>
+
+            {/* Language toggle */}
+            <button
+              onClick={toggleLanguage}
+              className="px-1.5 py-1 rounded-lg transition-all duration-200 text-[11px] font-semibold"
+              style={{ color: 'rgba(148,163,184,0.55)' }}
+              onMouseEnter={(e) => { e.currentTarget.style.color = '#06b6d4'; e.currentTarget.style.background = 'rgba(6,182,212,0.1)'; }}
+              onMouseLeave={(e) => { e.currentTarget.style.color = 'rgba(148,163,184,0.55)'; e.currentTarget.style.background = 'transparent'; }}
+              aria-label={t('topnav.language')}
+              title={i18n.language === 'es' ? t('topnav.switchToEnglish') : t('topnav.switchToSpanish')}
+            >
+              {i18n.language === 'es' ? 'EN' : 'ES'}
             </button>
 
             {/* Notificaciones */}

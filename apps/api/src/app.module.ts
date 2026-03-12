@@ -4,6 +4,7 @@ import { ThrottlerModule, ThrottlerGuard } from '@nestjs/throttler';
 import { APP_GUARD } from '@nestjs/core';
 import configuration from './config/configuration';
 import { PrismaModule } from './infrastructure/prisma/prisma.module';
+import { CacheModule } from './infrastructure/cache/cache.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { HealthModule } from './modules/health/health.module';
 import { DashboardModule } from './modules/dashboard/dashboard.module';
@@ -35,6 +36,7 @@ import { LicensesModule } from './modules/licenses/licenses.module';
     }),
     ThrottlerModule.forRoot([{ ttl: 60000, limit: 100 }]),
     PrismaModule,
+    CacheModule,
     AuthModule,
     HealthModule,
     DashboardModule,

@@ -2,6 +2,8 @@ import { useState, useEffect } from 'react';
 import Header from '../components/layout/Header';
 import PageLoading from '../components/ui/PageLoading';
 import EmptyState from '../components/ui/EmptyState';
+import Pagination from '../components/ui/Pagination';
+import usePagination from '../hooks/usePagination';
 import { alertResolutionCategories } from '../lib/constants';
 import { dataService } from '../services/dataService';
 import { useAuth } from '../contexts/AuthContext';
@@ -57,6 +59,8 @@ function AlertsPage() {
 
     return true;
   });
+
+  const { items: paginatedAlerts, page: alertPage, totalPages: alertTotalPages, total: alertTotal, setPage: setAlertPage } = usePagination(filteredAlerts, 20);
 
   // Tomar en gestión
   const handleAcknowledge = (alertId) => {
@@ -277,7 +281,7 @@ function AlertsPage() {
             </div>
           )}
 
-          {filteredAlerts.map((alert) => (
+          {paginatedAlerts.map((alert) => (
             <div
               key={alert.id}
               className="bg-surface dark:bg-surface border border-border dark:border-border rounded-xl p-5 space-y-3"
@@ -386,6 +390,7 @@ function AlertsPage() {
               )}
             </div>
           ))}
+          <Pagination page={alertPage} totalPages={alertTotalPages} total={alertTotal} onPageChange={setAlertPage} />
         </div>
       </div>
 

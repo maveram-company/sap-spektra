@@ -1,11 +1,33 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Inject, Logger } from '@nestjs/common';
+import { CACHE_MANAGER } from '@nestjs/cache-manager';
+import { Cache } from 'cache-manager';
 import { PrismaService } from '../../infrastructure/prisma/prisma.service';
 
 @Injectable()
 export class DashboardService {
-  constructor(private readonly prisma: PrismaService) {}
+  private readonly logger = new Logger(DashboardService.name);
+
+  constructor(
+    private readonly prisma: PrismaService,
+    @Inject(CACHE_MANAGER) private readonly cache: Cache,
+  ) {}
 
   async getSummary(organizationId: string) {
+    const cacheKey = `dashboard:${organizationId}`;
+
+    // Try to return cached result
+    try {
+      const cached = await this.cache.get(cacheKey);
+      if (cached) {
+        this.logger.debug(`Cache HIT for ${cacheKey}`);
+        return cached;
+      }
+    } catch (error) {
+      this.logger.warn(
+        `Cache GET failed for ${cacheKey}: ${(error as Error).message}`,
+      );
+    }
+
     const [
       systems,
       activeAlerts,
@@ -64,7 +86,7 @@ export class DashboardService {
           )
         : 0;
 
-    return {
+    const result = {
       systems: {
         total: systems.length,
         ...statusCounts,
@@ -81,5 +103,17 @@ export class DashboardService {
       },
       recentEvents,
     };
+
+    // Store in cache (30s TTL)
+    try {
+      await this.cache.set(cacheKey, result, 30000);
+      this.logger.debug(`Cache SET for ${cacheKey}`);
+    } catch (error) {
+      this.logger.warn(
+        `Cache SET failed for ${cacheKey}: ${(error as Error).message}`,
+      );
+    }
+
+    return result;
   }
 }

@@ -6,6 +6,7 @@ import {
   Brain, FileText, BookOpen, Network, Star,
   Activity, Play, Package, Key
 } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import { useAuth } from '../../contexts/AuthContext';
 import { usePlan } from '../../hooks/usePlan';
 import { useTenant } from '../../contexts/TenantContext';
@@ -13,39 +14,40 @@ import { useSidebar } from '../../contexts/SidebarContext';
 
 const navigation = [
   { section: 'Command Center' },
-  { name: 'Dashboard', href: '/', icon: LayoutDashboard },
-  { name: 'Landscape', href: '/landscape', icon: Network },
-  { name: 'Alertas', href: '/alerts', icon: AlertTriangle, alertBadge: true },
+  { nameKey: 'nav.dashboard', href: '/', icon: LayoutDashboard },
+  { nameKey: 'nav.landscape', href: '/landscape', icon: Network },
+  { nameKey: 'nav.alerts', href: '/alerts', icon: AlertTriangle, alertBadge: true },
 
   { section: 'Monitor' },
-  { name: 'Sistemas', href: '/systems', icon: Monitor },
-  { name: 'Eventos', href: '/events', icon: List },
+  { nameKey: 'nav.systems', href: '/systems', icon: Monitor },
+  { nameKey: 'nav.events', href: '/events', icon: List },
 
   { section: 'Intelligence' },
-  { name: 'Análisis IA', href: '/ai', icon: Brain },
-  { name: 'Analytics', href: '/analytics', icon: BarChart3 },
-  { name: 'Reportes', href: '/reports', icon: FileText },
-  { name: 'Comparación', href: '/comparison', icon: GitCompare },
+  { nameKey: 'nav.ai', href: '/ai', icon: Brain },
+  { nameKey: 'nav.analytics', href: '/analytics', icon: BarChart3 },
+  { nameKey: 'nav.reports', href: '/reports', icon: FileText },
+  { nameKey: 'nav.comparison', href: '/comparison', icon: GitCompare },
 
   { section: 'Operations' },
-  { name: 'Runbooks', href: '/runbooks', icon: BookOpen },
-  { name: 'Aprobaciones', href: '/approvals', icon: CheckCircle, badge: true },
-  { name: 'Operaciones', href: '/operations', icon: Calendar },
-  { name: 'Jobs (SM37)', href: '/jobs', icon: Play },
-  { name: 'Transportes', href: '/transports', icon: Package },
-  { name: 'SLA', href: '/sla', icon: Star },
+  { nameKey: 'nav.runbooks', href: '/runbooks', icon: BookOpen },
+  { nameKey: 'nav.approvals', href: '/approvals', icon: CheckCircle, badge: true },
+  { nameKey: 'nav.operations', href: '/operations', icon: Calendar },
+  { nameKey: 'nav.jobs', href: '/jobs', icon: Play },
+  { nameKey: 'nav.transports', href: '/transports', icon: Package },
+  { nameKey: 'nav.sla', href: '/sla', icon: Star },
 
   { section: 'Infrastructure' },
-  { name: 'HA Control', href: '/ha', icon: Activity },
-  { name: 'Certificados', href: '/certificates', icon: Key },
+  { nameKey: 'nav.haControl', href: '/ha', icon: Activity },
+  { nameKey: 'nav.certificates', href: '/certificates', icon: Key },
 
   { section: 'Admin', adminOnly: true },
-  { name: 'Gestión', href: '/admin', icon: Shield, roles: ['admin'] },
-  { name: 'Usuarios', href: '/settings/users', icon: Users, roles: ['admin'] },
-  { name: 'Configuración', href: '/settings', icon: Settings, roles: ['admin', 'escalation'] },
+  { nameKey: 'nav.admin', href: '/admin', icon: Shield, roles: ['admin'] },
+  { nameKey: 'nav.users', href: '/settings/users', icon: Users, roles: ['admin'] },
+  { nameKey: 'nav.settings', href: '/settings', icon: Settings, roles: ['admin', 'escalation'] },
 ];
 
 export default function Sidebar() {
+  const { t } = useTranslation();
   const { collapsed, toggle } = useSidebar();
   const { hasRole } = useAuth();
   const { currentPlan } = usePlan();
@@ -176,7 +178,7 @@ export default function Sidebar() {
               <li key={item.href}>
               <NavLink
                 to={item.href}
-                title={collapsed ? item.name : undefined}
+                title={collapsed ? t(item.nameKey) : undefined}
                 className="flex items-center gap-3 mb-0.5 text-sm font-medium transition-all duration-200 group relative"
                 style={({ isActive: routerActive }) => {
                   const active = routerActive || isActive;
@@ -208,7 +210,7 @@ export default function Sidebar() {
                 {/* Label + badges (expanded only) */}
                 {!collapsed && (
                   <>
-                    <span className="truncate flex-1">{item.name}</span>
+                    <span className="truncate flex-1">{t(item.nameKey)}</span>
 
                     {/* Approval badge — danger glow */}
                     {item.badge && pendingApprovals > 0 && (
@@ -315,11 +317,11 @@ export default function Sidebar() {
                   border: '1px solid rgba(6,182,212,0.2)',
                 }}
               >
-                Plan actual
+                {t('sidebar.currentPlan')}
               </span>
             </div>
             <p className="text-[10px] mb-2" style={{ color: 'rgba(148,163,184,0.6)' }}>
-              {organization?.usage?.systems || 0} de {organization?.limits?.maxSystems || 25} sistemas
+              {t('sidebar.systemsUsage', { used: organization?.usage?.systems || 0, total: organization?.limits?.maxSystems || 25 })}
             </p>
             <div
               className="h-1 rounded-full overflow-hidden"
@@ -360,7 +362,7 @@ export default function Sidebar() {
               e.currentTarget.style.color = 'rgba(148,163,184,0.5)';
               e.currentTarget.style.borderColor = 'rgba(6,182,212,0.08)';
             }}
-            aria-label={collapsed ? 'Expandir barra lateral' : 'Colapsar barra lateral'}
+            aria-label={collapsed ? t('sidebar.expandSidebar') : t('sidebar.collapseSidebar')}
             title={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
           >
             {collapsed
@@ -368,7 +370,7 @@ export default function Sidebar() {
               : (
                 <span className="flex items-center gap-2 text-xs font-medium">
                   <ChevronLeft size={15} />
-                  Colapsar
+                  {t('sidebar.collapse')}
                 </span>
               )
             }

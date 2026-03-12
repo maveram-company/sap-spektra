@@ -2,8 +2,11 @@ import {
   Injectable,
   NotFoundException,
   ConflictException,
+  Inject,
   Logger,
 } from '@nestjs/common';
+import { CACHE_MANAGER } from '@nestjs/cache-manager';
+import { Cache } from 'cache-manager';
 import { PrismaService } from '../../infrastructure/prisma/prisma.service';
 import { CreateSystemDto, UpdateSystemDto } from './dto/system.dto';
 
@@ -11,10 +14,28 @@ import { CreateSystemDto, UpdateSystemDto } from './dto/system.dto';
 export class SystemsService {
   private readonly logger = new Logger(SystemsService.name);
 
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    @Inject(CACHE_MANAGER) private readonly cache: Cache,
+  ) {}
 
   async findAll(organizationId: string) {
-    return this.prisma.system.findMany({
+    const cacheKey = `systems:${organizationId}`;
+
+    // Try to return cached result
+    try {
+      const cached = await this.cache.get(cacheKey);
+      if (cached) {
+        this.logger.debug(`Cache HIT for ${cacheKey}`);
+        return cached;
+      }
+    } catch (error) {
+      this.logger.warn(
+        `Cache GET failed for ${cacheKey}: ${(error as Error).message}`,
+      );
+    }
+
+    const result = await this.prisma.system.findMany({
       where: { organizationId },
       include: {
         components: true,
@@ -26,6 +47,18 @@ export class SystemsService {
       },
       orderBy: { sid: 'asc' },
     });
+
+    // Store in cache (60s TTL)
+    try {
+      await this.cache.set(cacheKey, result, 60000);
+      this.logger.debug(`Cache SET for ${cacheKey}`);
+    } catch (error) {
+      this.logger.warn(
+        `Cache SET failed for ${cacheKey}: ${(error as Error).message}`,
+      );
+    }
+
+    return result;
   }
 
   async findOne(organizationId: string, systemId: string) {
@@ -78,7 +111,11 @@ export class SystemsService {
       },
     });
 
-    this.logger.log(`System created: ${dto.sid} → org ${organizationId}`);
+    this.logger.log(`System created: ${dto.sid} -> org ${organizationId}`);
+
+    // Invalidate systems cache for this organization
+    await this.invalidateCache(organizationId);
+
     return system;
   }
 
@@ -91,7 +128,7 @@ export class SystemsService {
       throw new NotFoundException('System not found');
     }
 
-    return this.prisma.system.update({
+    const updated = await this.prisma.system.update({
       where: { id: systemId },
       data: {
         ...(dto.description && { description: dto.description }),
@@ -100,6 +137,11 @@ export class SystemsService {
         ...(dto.connectionMode && { connectionMode: dto.connectionMode }),
       },
     });
+
+    // Invalidate systems cache for this organization
+    await this.invalidateCache(organizationId);
+
+    return updated;
   }
 
   async remove(organizationId: string, systemId: string) {
@@ -112,7 +154,11 @@ export class SystemsService {
     }
 
     await this.prisma.system.delete({ where: { id: systemId } });
-    this.logger.log(`System deleted: ${system.sid} → org ${organizationId}`);
+    this.logger.log(`System deleted: ${system.sid} -> org ${organizationId}`);
+
+    // Invalidate systems cache for this organization
+    await this.invalidateCache(organizationId);
+
     return { deleted: true };
   }
 
@@ -145,5 +191,25 @@ export class SystemsService {
     };
 
     return summary;
+  }
+
+  /**
+   * Invalidate all caches related to a given organization.
+   * Includes both systems and dashboard caches since dashboard
+   * displays system data.
+   */
+  private async invalidateCache(organizationId: string): Promise<void> {
+    const keys = [`systems:${organizationId}`, `dashboard:${organizationId}`];
+
+    for (const key of keys) {
+      try {
+        await this.cache.del(key);
+        this.logger.debug(`Cache DEL for ${key}`);
+      } catch (error) {
+        this.logger.warn(
+          `Cache DEL failed for ${key}: ${(error as Error).message}`,
+        );
+      }
+    }
   }
 }

@@ -434,7 +434,7 @@ export default function HAControlCenterPage() {
                 </span>
               </div>
               <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-1.5">
-                <div className="bg-success-500 h-1.5 rounded-full" style={{ width: '100%' }} />
+                <div className="bg-success-500 h-1.5 rounded-full w-full" />
               </div>
 
               <div className="flex items-center justify-between text-[10px]">

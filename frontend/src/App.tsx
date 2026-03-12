@@ -5,6 +5,7 @@ import { ThemeProvider } from './contexts/ThemeContext';
 import { TenantProvider } from './contexts/TenantContext';
 import { PlanProvider } from './hooks/usePlan';
 import ErrorBoundary from './components/ui/ErrorBoundary';
+import RouteErrorBoundary from './components/ui/RouteErrorBoundary';
 import PageLoading from './components/ui/PageLoading';
 
 import AppLayout from './components/layout/AppLayout';
@@ -59,50 +60,50 @@ export default function App() {
 
                 <Route element={<ProtectedRoute><AppLayout /></ProtectedRoute>}>
                   {/* Principal */}
-                  <Route index element={<DashboardPage />} />
-                  <Route path="systems" element={<SystemsListPage />} />
-                  <Route path="systems/:systemId" element={<SystemDetailPage />} />
-                  <Route path="landscape" element={<LandscapePage />} />
-                  <Route path="alerts" element={<AlertsPage />} />
-                  <Route path="events" element={<EventsPage />} />
+                  <Route index element={<RouteErrorBoundary><DashboardPage /></RouteErrorBoundary>} />
+                  <Route path="systems" element={<RouteErrorBoundary><SystemsListPage /></RouteErrorBoundary>} />
+                  <Route path="systems/:systemId" element={<RouteErrorBoundary><SystemDetailPage /></RouteErrorBoundary>} />
+                  <Route path="landscape" element={<RouteErrorBoundary><LandscapePage /></RouteErrorBoundary>} />
+                  <Route path="alerts" element={<RouteErrorBoundary><AlertsPage /></RouteErrorBoundary>} />
+                  <Route path="events" element={<RouteErrorBoundary><EventsPage /></RouteErrorBoundary>} />
 
                   {/* Inteligencia */}
-                  <Route path="ai" element={<AIAnalysisPage />} />
-                  <Route path="reports" element={<ReportsPage />} />
-                  <Route path="analytics" element={<AnalyticsPage />} />
-                  <Route path="comparison" element={<ComparisonPage />} />
+                  <Route path="ai" element={<RouteErrorBoundary><AIAnalysisPage /></RouteErrorBoundary>} />
+                  <Route path="reports" element={<RouteErrorBoundary><ReportsPage /></RouteErrorBoundary>} />
+                  <Route path="analytics" element={<RouteErrorBoundary><AnalyticsPage /></RouteErrorBoundary>} />
+                  <Route path="comparison" element={<RouteErrorBoundary><ComparisonPage /></RouteErrorBoundary>} />
 
                   {/* Operaciones */}
-                  <Route path="runbooks" element={<RunbooksPage />} />
-                  <Route path="approvals" element={<ApprovalsPage />} />
-                  <Route path="operations" element={<OperationsPage />} />
-                  <Route path="sla" element={<SLAPage />} />
-                  <Route path="jobs" element={<BackgroundJobsPage />} />
-                  <Route path="transports" element={<TransportsPage />} />
-                  <Route path="certificates" element={<CertificatesPage />} />
+                  <Route path="runbooks" element={<RouteErrorBoundary><RunbooksPage /></RouteErrorBoundary>} />
+                  <Route path="approvals" element={<RouteErrorBoundary><ApprovalsPage /></RouteErrorBoundary>} />
+                  <Route path="operations" element={<RouteErrorBoundary><OperationsPage /></RouteErrorBoundary>} />
+                  <Route path="sla" element={<RouteErrorBoundary><SLAPage /></RouteErrorBoundary>} />
+                  <Route path="jobs" element={<RouteErrorBoundary><BackgroundJobsPage /></RouteErrorBoundary>} />
+                  <Route path="transports" element={<RouteErrorBoundary><TransportsPage /></RouteErrorBoundary>} />
+                  <Route path="certificates" element={<RouteErrorBoundary><CertificatesPage /></RouteErrorBoundary>} />
 
                   {/* HA */}
-                  <Route path="ha" element={<HAControlCenterPage />} />
+                  <Route path="ha" element={<RouteErrorBoundary><HAControlCenterPage /></RouteErrorBoundary>} />
 
                   {/* Conectores y registro */}
-                  <Route path="connectors" element={<ConnectorsPage />} />
-                  <Route path="connect" element={<ConnectSystemPage />} />
+                  <Route path="connectors" element={<RouteErrorBoundary><ConnectorsPage /></RouteErrorBoundary>} />
+                  <Route path="connect" element={<RouteErrorBoundary><ConnectSystemPage /></RouteErrorBoundary>} />
 
                   {/* Perfil (accesible a todos) */}
-                  <Route path="profile" element={<ProfilePage />} />
+                  <Route path="profile" element={<RouteErrorBoundary><ProfilePage /></RouteErrorBoundary>} />
 
                   {/* Admin */}
-                  <Route path="admin" element={<ProtectedRoute requiredRole="admin"><AdminPage /></ProtectedRoute>} />
+                  <Route path="admin" element={<ProtectedRoute requiredRole="admin"><RouteErrorBoundary><AdminPage /></RouteErrorBoundary></ProtectedRoute>} />
 
                   {/* Settings */}
                   <Route path="settings" element={<ProtectedRoute requiredRole="escalation"><SettingsLayout /></ProtectedRoute>}>
-                    <Route index element={<GeneralSettings />} />
-                    <Route path="users" element={<ProtectedRoute requiredRole="admin"><UsersPage /></ProtectedRoute>} />
-                    <Route path="roles" element={<RolesPage />} />
-                    <Route path="integrations" element={<IntegrationsPage />} />
-                    <Route path="notifications" element={<NotificationsPage />} />
-                    <Route path="billing" element={<ProtectedRoute requiredRole="admin"><BillingPage /></ProtectedRoute>} />
-                    <Route path="audit" element={<AuditLogPage />} />
+                    <Route index element={<RouteErrorBoundary><GeneralSettings /></RouteErrorBoundary>} />
+                    <Route path="users" element={<ProtectedRoute requiredRole="admin"><RouteErrorBoundary><UsersPage /></RouteErrorBoundary></ProtectedRoute>} />
+                    <Route path="roles" element={<RouteErrorBoundary><RolesPage /></RouteErrorBoundary>} />
+                    <Route path="integrations" element={<RouteErrorBoundary><IntegrationsPage /></RouteErrorBoundary>} />
+                    <Route path="notifications" element={<RouteErrorBoundary><NotificationsPage /></RouteErrorBoundary>} />
+                    <Route path="billing" element={<ProtectedRoute requiredRole="admin"><RouteErrorBoundary><BillingPage /></RouteErrorBoundary></ProtectedRoute>} />
+                    <Route path="audit" element={<RouteErrorBoundary><AuditLogPage /></RouteErrorBoundary>} />
                   </Route>
                 </Route>
 

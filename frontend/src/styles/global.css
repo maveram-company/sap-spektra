@@ -201,3 +201,111 @@ body {
     linear-gradient(90deg, rgba(6, 182, 212, 0.03) 1px, transparent 1px);
   background-size: 40px 40px;
 }
+
+.bg-grid-login {
+  background-image:
+    linear-gradient(rgba(6, 182, 212, 0.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(6, 182, 212, 0.06) 1px, transparent 1px);
+  background-size: 48px 48px;
+}
+
+/* ══════════════════════════════════════════
+   LOGIN PAGE
+══════════════════════════════════════════ */
+
+/* Decorative radial gradient orbs */
+.login-orb {
+  border-radius: 50%;
+  filter: blur(60px);
+  pointer-events: none;
+}
+
+.login-orb-cyan {
+  background: radial-gradient(circle, rgba(6, 182, 212, 0.18) 0%, transparent 70%);
+}
+
+.login-orb-violet {
+  background: radial-gradient(circle, rgba(139, 92, 246, 0.18) 0%, transparent 70%);
+  filter: blur(70px);
+}
+
+.login-orb-cyan-sm {
+  background: radial-gradient(circle, rgba(6, 182, 212, 0.08) 0%, transparent 70%);
+  filter: blur(50px);
+}
+
+/* Login card glassmorphism */
+.login-card {
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid rgba(255, 255, 255, 0.10);
+}
+
+/* Logo icon gradient with glow */
+.login-logo-icon {
+  background: linear-gradient(135deg, #06b6d4, #8b5cf6);
+  box-shadow: 0 0 24px rgba(6, 182, 212, 0.35);
+}
+
+/* Form input — dark transparent style with cyan focus ring */
+.login-input {
+  background-color: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.10);
+  color: #e2e8f0;
+}
+.login-input:focus {
+  border-color: rgba(6, 182, 212, 0.50);
+  box-shadow: 0 0 0 3px rgba(6, 182, 212, 0.10);
+}
+
+/* Submit button gradient */
+.login-submit {
+  background: linear-gradient(90deg, #0891b2, #7c3aed);
+  box-shadow: 0 0 20px rgba(6, 182, 212, 0.25);
+}
+.login-submit:hover:not(:disabled) {
+  background: linear-gradient(90deg, #06b6d4, #8b5cf6);
+  box-shadow: 0 0 28px rgba(6, 182, 212, 0.40);
+}
+.login-submit:disabled {
+  background: rgba(255, 255, 255, 0.08);
+  box-shadow: none;
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+/* Demo account pill buttons */
+.login-demo-btn {
+  background-color: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.10);
+  color: #94a3b8;
+}
+.login-demo-btn:hover {
+  background-color: rgba(6, 182, 212, 0.08);
+  border-color: rgba(6, 182, 212, 0.35);
+  color: #06b6d4;
+  box-shadow: 0 0 10px rgba(6, 182, 212, 0.12);
+}
+
+/* Password toggle button */
+.login-eye-btn {
+  color: #64748b;
+}
+.login-eye-btn:hover {
+  color: #e2e8f0;
+}
+
+/* ══════════════════════════════════════════
+   DASHBOARD — KPI glow + warning icon
+══════════════════════════════════════════ */
+
+.glow-text-cyan    { text-shadow: 0 0 12px rgba(6, 182, 212, 0.5); }
+.glow-text-danger  { text-shadow: 0 0 12px rgba(244, 63, 94, 0.5); }
+.glow-text-success { text-shadow: 0 0 12px rgba(16, 185, 129, 0.5); }
+.glow-text-warning { text-shadow: 0 0 12px rgba(245, 158, 11, 0.5); }
+
+.warning-icon-glow {
+  box-shadow: 0 0 14px rgba(245, 158, 11, 0.3);
+  background: rgba(245, 158, 11, 0.12);
+}
