@@ -3,6 +3,34 @@
 // Capa intermedia entre páginas y fuente de datos.
 // En demoMode: retorna mocks con delay simulado.
 // En producción: llama a la API real y transforma al formato del frontend.
+//
+// DATA SOURCE STATUS (updated 2026-03-12):
+//
+// BACKEND-DRIVEN (API real en modo producción):
+//   getSystems, getSystemById, getSystemMetrics, getSystemBreaches,
+//   getSystemSla, getServerDeps, getSystemMeta, getUsers, getApprovals,
+//   approveAction, rejectAction, getOperations, getAuditLog, getAlerts,
+//   getEvents, getRunbooks, getRunbookExecutions, executeRunbook,
+//   getDiscovery, getSIDLines, getConnectors, getHASystems, getAnalytics,
+//   getRunbookAnalytics, getBackgroundJobs, getTransports, getCertificates,
+//   getPlans, getApiKeys, chat
+//
+// SYNTHETIC (API real pero genera valores derivados en cliente):
+//   getServerMetrics — DB-specific metrics (dbInfo) are synthesized
+//   getSystemInstances — CPU/mem/disk/availability are synthesized
+//   getSystemHosts — CPU/mem/disk/availability are synthesized
+//   getSAPMonitoring — Full SAP monitoring (sm12/sm13/sm37/sm21) is synthesized
+//   getMetricHistory — Time-series points are synthesized
+//   transformSystem — CPU/mem/disk/MTTR/MTBF/availability are synthesized
+//
+// STUB (no backend endpoint — always returns mock data):
+//   getLandscapeValidation — needs backend validation endpoint
+//   getAIUseCases — needs AI use-case registry endpoint
+//   getAIResponses — needs AI response cache endpoint
+//   getHAPrereqs — needs HA prerequisites endpoint
+//   getHAOpsHistory — needs HA operations history endpoint
+//   getHADrivers — needs HA driver registry endpoint
+//   getLicenses — needs SAP license management endpoint
 // ══════════════════════════════════════════════════════════════
 
 import config from '../config';
@@ -604,6 +632,8 @@ export const dataService = {
     }
   },
 
+  /* SYNTHETIC: Generates time-series points from hash seed.
+     To migrate: need hostname→hostId lookup, then call api.getHostMetrics(hostId, hours) */
   getMetricHistory: async (hostname) => {
     if (isDemoMode()) { await delay(300); return mockMetricHistory[hostname] || []; }
     // Generar serie temporal sintética para el host
@@ -672,6 +702,8 @@ export const dataService = {
     }
   },
 
+  /* SYNTHETIC: Generates full SAP monitoring data (sm12/sm13/sm37/sm21/PO channels).
+     No backend endpoint exists. Needs GET /api/metrics/systems/:id/sap-monitoring */
   getSAPMonitoring: async (id) => {
     if (isDemoMode()) { await delay(300); return mockSAPMonitoring[id] || null; }
     // Generar datos de monitoreo SAP sintéticos realistas para sistemas reales
@@ -893,17 +925,20 @@ export const dataService = {
     }
   },
 
+  /* STUB: No backend endpoint. Needs GET /api/landscape/validation */
   getLandscapeValidation: async () => {
     if (isDemoMode()) { await delay(300); return mockLandscapeValidation; }
     return mockLandscapeValidation;
   },
 
   // ── AI / Chat ──
+  /* STUB: No backend endpoint. Needs GET /api/ai/use-cases */
   getAIUseCases: async () => {
     if (isDemoMode()) { await delay(300); return mockAIUseCases; }
     return mockAIUseCases;
   },
 
+  /* STUB: No backend endpoint. Needs GET /api/ai/responses */
   getAIResponses: async () => {
     if (isDemoMode()) { await delay(300); return mockAIResponses; }
     return mockAIResponses;
@@ -928,16 +963,19 @@ export const dataService = {
     return configs.map(transformHAConfig);
   },
 
+  /* STUB: No backend endpoint. Needs GET /api/ha/prereqs?strategy=X */
   getHAPrereqs: async (strategy) => {
     if (isDemoMode()) { await delay(300); return strategy ? mockHAPrereqs[strategy] : mockHAPrereqs; }
     return mockHAPrereqs;
   },
 
+  /* STUB: No backend endpoint. Needs GET /api/ha/history */
   getHAOpsHistory: async () => {
     if (isDemoMode()) { await delay(300); return mockHAOpsHistory; }
     return mockHAOpsHistory;
   },
 
+  /* STUB: No backend endpoint. Needs GET /api/ha/drivers */
   getHADrivers: async () => {
     if (isDemoMode()) { await delay(300); return mockHADrivers; }
     return mockHADrivers;
@@ -1021,6 +1059,7 @@ export const dataService = {
     return certs.map(transformCertificate);
   },
 
+  /* STUB: No backend endpoint. Needs GET /api/operations/licenses */
   getLicenses: async () => {
     if (isDemoMode()) { await delay(300); return mockLicenses; }
     return mockLicenses;
