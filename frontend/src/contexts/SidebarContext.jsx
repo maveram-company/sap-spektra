@@ -1,7 +1,7 @@
 import { createContext, useContext, useState, useCallback, useMemo } from 'react';
 
 const SidebarContext = createContext(null);
-const STORAGE_KEY = 'sap-maveram-sidebar-collapsed';
+const STORAGE_KEY = 'sap-spektra-sidebar-collapsed';
 
 // eslint-disable-next-line react-refresh/only-export-components
 export function useSidebar() {

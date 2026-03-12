@@ -4,7 +4,7 @@ const ThemeContext = createContext(null);
 
 export function ThemeProvider({ children }) {
   const [theme, setTheme] = useState(() => {
-    const stored = localStorage.getItem('sap-maveram-theme');
+    const stored = localStorage.getItem('sap-spektra-theme');
     if (stored) return stored;
     return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
   });
@@ -12,7 +12,7 @@ export function ThemeProvider({ children }) {
   useEffect(() => {
     // New CSS uses root = dark, `.light` class = light mode override
     document.documentElement.classList.toggle('light', theme === 'light');
-    localStorage.setItem('sap-maveram-theme', theme);
+    localStorage.setItem('sap-spektra-theme', theme);
   }, [theme]);
 
   const toggleTheme = useCallback(() => setTheme(prev => prev === 'dark' ? 'light' : 'dark'), []);
