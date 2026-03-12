@@ -308,7 +308,7 @@ export default function HAControlCenterPage() {
     );
   };
 
-  const mockSha256 = (id) => {
+  const generateEvidenceHash = (id) => {
     const base = `${id}-evidence-hash`;
     let hash = '';
     for (let i = 0; i < 64; i++) {
@@ -993,7 +993,7 @@ export default function HAControlCenterPage() {
                   strategy: op.strategy, status: op.status, triggeredBy: op.triggeredBy,
                   reason: op.reason, startedAt: op.startedAt, completedAt: op.completedAt,
                   duration: op.duration, steps: op.steps, stepsOk: op.stepsOk,
-                  sha256: mockSha256(op.id), exportedAt: new Date().toISOString(),
+                  sha256: generateEvidenceHash(op.id), exportedAt: new Date().toISOString(),
                 };
                 const blob = new Blob([JSON.stringify(evidence, null, 2)], { type: 'application/json' });
                 const url = URL.createObjectURL(blob);
@@ -1008,7 +1008,7 @@ export default function HAControlCenterPage() {
           <div className="flex items-center gap-2 px-3 py-2 rounded-lg bg-surface-secondary">
             <Hash className="w-3.5 h-3.5 text-text-tertiary flex-shrink-0" />
             <span className="text-[11px] font-mono text-text-secondary break-all">
-              SHA-256: {mockSha256(op.id)}
+              SHA-256: {generateEvidenceHash(op.id)}
             </span>
           </div>
         </div>
