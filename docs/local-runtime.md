@@ -5,7 +5,7 @@
 ```
 ┌──────────────┐     ┌──────────────┐     ┌──────────────┐
 │   Frontend   │────▶│   NestJS API │────▶│  PostgreSQL  │
-│  (Vite/React)│     │  port 3001   │     │  port 5432   │
+│  (Vite/React)│     │  port 3001   │     │  port 5433   │
 │  port 5173   │     │              │────▶│              │
 └──────────────┘     │  /api/docs   │     └──────────────┘
                      │              │     ┌──────────────┐
@@ -66,11 +66,18 @@ npm run dev
 
 Open: `http://localhost:5173`
 
+### Alternative: One-Command Setup
+```bash
+./scripts/dev-setup.sh   # Steps 1-3 automated
+./scripts/dev-start.sh   # Starts API + Frontend together
+```
+
 ### 4. Login
-Use any of the seeded accounts:
-- **admin@acme-corp.com** / admin123 (full access)
-- **operator@acme-corp.com** / admin123 (operations)
-- **viewer@acme-corp.com** / admin123 (read-only)
+Use any of the seeded accounts (all passwords: `admin123`):
+- **admin@acme-corp.com** — full access
+- **escalation@acme-corp.com** — escalation (L2)
+- **operator@acme-corp.com** — operations
+- **viewer@acme-corp.com** — read-only
 
 ## Demo Mode vs API Mode
 
@@ -78,12 +85,12 @@ The frontend has a `demoMode` flag in `frontend/src/config.js`:
 
 ```javascript
 features: {
-  demoMode: true,   // Uses mock data (no backend needed)
-  // demoMode: false, // Uses real API calls to NestJS backend
+  demoMode: false,  // Default: uses real API calls to NestJS backend
+  // demoMode: true, // Uses mock data (no backend needed)
 }
 ```
 
-Set `demoMode: false` to connect to the real backend.
+Set `demoMode: true` if you want to run the frontend without a backend (mock data only).
 
 ## Useful Commands
 
@@ -110,6 +117,6 @@ Key variables:
 |----------|---------|-------------|
 | `RUNTIME_MODE` | `LOCAL_SIMULATED` | Runtime mode |
 | `PORT` | `3001` | API port |
-| `DATABASE_URL` | `postgresql://spektra:spektra_dev@localhost:5432/spektra_dev` | PostgreSQL connection |
+| `DATABASE_URL` | `postgresql://spektra:spektra_dev@localhost:5433/spektra_dev` | PostgreSQL connection |
 | `JWT_SECRET` | `spektra-local-dev-secret...` | JWT signing secret |
 | `CORS_ORIGIN` | `http://localhost:5173` | Allowed origins |
