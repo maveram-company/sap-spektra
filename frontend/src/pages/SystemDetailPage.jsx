@@ -1504,8 +1504,11 @@ export default function SystemDetailPage() {
                         </div>
                       </TableCell>
 
-                      {/* CPU% */}
+                      {/* CPU% — hidden for RISE_RESTRICTED */}
                       <TableCell>
+                        {system.isRiseRestricted ? (
+                          <span className="text-sm text-text-tertiary">—</span>
+                        ) : (
                         <span className={`text-sm font-medium ${
                           (inst.cpu ?? 0) >= 85 ? 'text-danger-600' :
                           (inst.cpu ?? 0) >= 70 ? 'text-warning-600' :
@@ -1513,10 +1516,14 @@ export default function SystemDetailPage() {
                         }`}>
                           {inst.cpu ?? 0}%
                         </span>
+                        )}
                       </TableCell>
 
-                      {/* Mem% */}
+                      {/* Mem% — hidden for RISE_RESTRICTED */}
                       <TableCell>
+                        {system.isRiseRestricted ? (
+                          <span className="text-sm text-text-tertiary">—</span>
+                        ) : (
                         <span className={`text-sm font-medium ${
                           (inst.mem ?? 0) >= 85 ? 'text-danger-600' :
                           (inst.mem ?? 0) >= 70 ? 'text-warning-600' :
@@ -1524,10 +1531,14 @@ export default function SystemDetailPage() {
                         }`}>
                           {inst.mem ?? 0}%
                         </span>
+                        )}
                       </TableCell>
 
-                      {/* Disk% */}
+                      {/* Disk% — hidden for RISE_RESTRICTED */}
                       <TableCell>
+                        {system.isRiseRestricted ? (
+                          <span className="text-sm text-text-tertiary">—</span>
+                        ) : (
                         <span className={`text-sm font-medium ${
                           (inst.disk ?? 0) >= 85 ? 'text-danger-600' :
                           (inst.disk ?? 0) >= 70 ? 'text-warning-600' :
@@ -1535,6 +1546,7 @@ export default function SystemDetailPage() {
                         }`}>
                           {inst.disk ?? 0}%
                         </span>
+                        )}
                       </TableCell>
 
                       {/* Availability% */}
@@ -1810,6 +1822,13 @@ export default function SystemDetailPage() {
                 <p className="text-xs text-text-tertiary uppercase tracking-wider mb-1">Mode</p>
                 <StatusBadge status={system.mode === 'TRIAL' ? 'trial' : 'production'} />
               </div>
+              {system.isRiseRestricted && (
+              <div>
+                <p className="text-xs text-text-tertiary uppercase tracking-wider mb-1">Monitoring</p>
+                <Badge variant="warning" size="sm">RISE Managed</Badge>
+                <p className="text-[10px] text-text-tertiary mt-1">Infraestructura gestionada por SAP</p>
+              </div>
+              )}
               <div>
                 <p className="text-xs text-text-tertiary uppercase tracking-wider mb-1">Instances</p>
                 <p className="text-sm font-medium text-text-primary">

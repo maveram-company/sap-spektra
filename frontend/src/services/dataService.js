@@ -557,10 +557,13 @@ export const dataService = {
   getSystemInstances: async (id) => {
     if (isDemoMode()) { await delay(300); return mockSystemInstances[id] || []; }
     try {
-      const [components, hosts] = await Promise.all([
+      const [components, hosts, sys] = await Promise.all([
         api.getComponents(id),
         api.getHosts(id),
+        api.getSystemById(id),
       ]);
+      // RISE_RESTRICTED systems have no OS-level metrics
+      const isRise = sys?.monitoringCapabilityProfile === 'RISE_RESTRICTED' || sys?.supportsOsMetrics === false;
       // Construir mapa hostId → host para enriquecer instancias
       const hostMap = {};
       for (const h of (hosts || [])) {
@@ -572,9 +575,9 @@ export const dataService = {
         for (const inst of (comp.instances || [])) {
           const host = hostMap[inst.hostId] || {};
           const seed = hashSeed(`${id}-${inst.instanceNr}`);
-          const cpuBase = 20 + seed * 50;
-          const memBase = 30 + seed * 45;
-          const diskBase = 30 + seed * 35;
+          const cpuBase = isRise ? null : 20 + seed * 50;
+          const memBase = isRise ? null : 30 + seed * 45;
+          const diskBase = isRise ? null : 30 + seed * 35;
           flat.push({
             nr: inst.instanceNr || '00',
             role: inst.type || comp.type || '',   // ASCS, PAS, AAS, HANA, J2EE, WEBDISP
@@ -585,9 +588,9 @@ export const dataService = {
             ec2Type: host.ec2Type || null,
             zone: host.zone || null,
             status: inst.status === 'active' ? 'running' : inst.status === 'warning' ? 'running' : 'stopped',
-            cpu: Math.round(Math.min(95, cpuBase)),
-            mem: Math.round(Math.min(95, memBase)),
-            disk: Math.round(Math.min(90, diskBase)),
+            cpu: cpuBase != null ? Math.round(Math.min(95, cpuBase)) : null,
+            mem: memBase != null ? Math.round(Math.min(95, memBase)) : null,
+            disk: diskBase != null ? Math.round(Math.min(90, diskBase)) : null,
             availability: +(99 + seed * 0.95).toFixed(2),
             connections: Math.round(5 + seed * 150),
             monStatus: inst.status === 'active' ? 'green' : inst.status === 'warning' ? 'yellow' : 'red',
@@ -626,19 +629,24 @@ export const dataService = {
   getSystemHosts: async (id) => {
     if (isDemoMode()) { await delay(200); return getSystemHosts(id); }
     try {
-      const hosts = await api.getHosts(id);
+      const [hosts, sys] = await Promise.all([
+        api.getHosts(id),
+        api.getSystemById(id),
+      ]);
+      // RISE_RESTRICTED systems have no OS-level metrics
+      const isRise = sys?.monitoringCapabilityProfile === 'RISE_RESTRICTED' || sys?.supportsOsMetrics === false;
       return (hosts || []).map(h => {
         const seed = hashSeed(h.hostname || h.id || '');
-        // cpu/memory/disk en la BD son specs de hardware (cores, GB) — convertir a porcentajes de uso
-        const cpuPct = Math.round(Math.min(95, 25 + seed * 45));
-        const memPct = Math.round(Math.min(95, 35 + seed * 40));
-        const diskPct = Math.round(Math.min(90, 30 + seed * 35));
+        // cpu/memory/disk: null for RISE_RESTRICTED (managed infra)
+        const cpuPct = isRise ? null : Math.round(Math.min(95, 25 + seed * 45));
+        const memPct = isRise ? null : Math.round(Math.min(95, 35 + seed * 40));
+        const diskPct = isRise ? null : Math.round(Math.min(90, 30 + seed * 35));
         return {
           ...h,
           cpu: cpuPct,
           mem: memPct,
           disk: diskPct,
-          availability: +(99 + seed * 0.95).toFixed(2),
+          availability: isRise ? null : +(99 + seed * 0.95).toFixed(2),
           os: h.os ? `${h.os} ${h.osVersion || ''}`.trim() : '',
           ec2Id: null,
           ec2Type: null,
