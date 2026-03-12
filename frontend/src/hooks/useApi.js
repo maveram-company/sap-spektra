@@ -160,10 +160,10 @@ export const api = {
 async function fetchApi(endpoint, options = {}) {
   const baseUrl = getApiUrl();
   const url = `${baseUrl}${endpoint}`;
-  const stored = localStorage.getItem('sap-maveram-auth');
+  const stored = localStorage.getItem('sap-spektra-auth');
   let auth = null;
   if (stored) {
-    try { auth = JSON.parse(stored); } catch { localStorage.removeItem('sap-maveram-auth'); }
+    try { auth = JSON.parse(stored); } catch { localStorage.removeItem('sap-spektra-auth'); }
   }
 
   const res = await fetch(url, {

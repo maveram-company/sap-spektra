@@ -4,19 +4,11 @@ import { api } from '../hooks/useApi';
 
 const AuthContext = createContext(null);
 
-const STORAGE_KEY = 'sap-maveram-auth';
+const STORAGE_KEY = 'sap-spektra-auth';
 
 function isTokenValid(user) {
   if (!user?.exp || typeof user.exp !== 'number') return false;
   return Date.now() / 1000 < user.exp;
-}
-
-function getRoleFromUsername(username) {
-  const u = username.toLowerCase();
-  if (u.includes('admin')) return 'admin';
-  if (u.includes('oper')) return 'operator';
-  if (u.includes('escal')) return 'escalation';
-  return 'viewer';
 }
 
 function parseJwt(token) {
@@ -73,14 +65,13 @@ export function AuthProvider({ children }) {
       return authUser;
     }
 
-    // Modo demo
-    const role = getRoleFromUsername(username);
+    // Modo demo — rol fijo 'admin' para acceso completo en demostraciones
     const demoUser = {
       id: `demo-${Date.now()}`,
       username,
-      email: `${username}@demo.maveram.com`,
+      email: `${username}@demo.spektra.com`,
       name: username.charAt(0).toUpperCase() + username.slice(1),
-      role,
+      role: 'admin',
       token: `demo-token-${Date.now()}`,
       organization: { id: 'org-demo', name: 'Demo Organization', plan: 'professional' },
       exp: Math.floor(Date.now() / 1000) + 86400,
