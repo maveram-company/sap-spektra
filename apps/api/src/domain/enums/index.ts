@@ -133,6 +133,45 @@ export enum HAStrategy {
   BACKUP_RESTORE = 'BACKUP_RESTORE',
 }
 
+// ── Runbook Categories ──
+export enum RunbookCategory {
+  SAP_HANA = 'SAP_HANA',
+  ORACLE = 'ORACLE',
+  MSSQL = 'MSSQL',
+  IBM_DB2 = 'IBM_DB2',
+  SAP_ASE = 'SAP_ASE',
+  SAP_MAXDB = 'SAP_MAXDB',
+  HANA_HA = 'HANA_HA',
+  SAP_ABAP = 'SAP_ABAP',
+  SAP_JAVA = 'SAP_JAVA',
+  SAP_APPS = 'SAP_APPS',
+  CROSS_PLATFORM = 'CROSS_PLATFORM',
+  LINUX_OS = 'LINUX_OS',
+  WINDOWS_OS = 'WINDOWS_OS',
+  AIX_OS = 'AIX_OS',
+  SOLARIS_OS = 'SOLARIS_OS',
+  SAP_KERNEL_PATCHING = 'SAP_KERNEL_PATCHING',
+}
+
+export const RUNBOOK_CATEGORY_LABELS: Record<RunbookCategory, string> = {
+  [RunbookCategory.SAP_HANA]: 'SAP HANA',
+  [RunbookCategory.ORACLE]: 'Oracle',
+  [RunbookCategory.MSSQL]: 'Microsoft SQL Server',
+  [RunbookCategory.IBM_DB2]: 'IBM DB2',
+  [RunbookCategory.SAP_ASE]: 'SAP ASE / Sybase',
+  [RunbookCategory.SAP_MAXDB]: 'SAP MaxDB',
+  [RunbookCategory.HANA_HA]: 'HANA HA & Replication',
+  [RunbookCategory.SAP_ABAP]: 'SAP ABAP Stack',
+  [RunbookCategory.SAP_JAVA]: 'SAP Java / PO Stack',
+  [RunbookCategory.SAP_APPS]: 'SAP Applications (BW/PO)',
+  [RunbookCategory.CROSS_PLATFORM]: 'Cross-Platform / General',
+  [RunbookCategory.LINUX_OS]: 'Linux OS',
+  [RunbookCategory.WINDOWS_OS]: 'Windows Server',
+  [RunbookCategory.AIX_OS]: 'AIX',
+  [RunbookCategory.SOLARIS_OS]: 'Solaris',
+  [RunbookCategory.SAP_KERNEL_PATCHING]: 'SAP Kernel Patching',
+};
+
 // ── Audit ──
 export enum AuditSeverity {
   INFO = 'info',

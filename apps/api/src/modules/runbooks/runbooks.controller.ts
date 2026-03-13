@@ -1,4 +1,12 @@
-import { Controller, Get, Post, Param, Body, UseGuards } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Param,
+  Body,
+  Query,
+  UseGuards,
+} from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiBearerAuth } from '@nestjs/swagger';
 import { RunbooksService } from './runbooks.service';
 import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
@@ -22,8 +30,8 @@ export class RunbooksController {
   @Get()
   @Roles('viewer')
   @ApiOperation({ summary: 'List all runbooks' })
-  findAll(@TenantId() orgId: string) {
-    return this.runbooksService.findAll(orgId);
+  findAll(@TenantId() orgId: string, @Query('category') category?: string) {
+    return this.runbooksService.findAll(orgId, category);
   }
 
   @Get('executions')

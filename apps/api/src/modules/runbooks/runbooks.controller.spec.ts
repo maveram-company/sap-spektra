@@ -38,7 +38,19 @@ describe('RunbooksController', () => {
       const result = await controller.findAll('org-1');
 
       expect(result).toEqual(expected);
-      expect(service.findAll).toHaveBeenCalledWith('org-1');
+      expect(service.findAll).toHaveBeenCalledWith('org-1', undefined);
+    });
+
+    it('passes category filter when provided', async () => {
+      const expected = [
+        { id: 'rb-1', name: 'Restart HANA', category: 'SAP_HANA' },
+      ];
+      mockService.findAll.mockResolvedValue(expected);
+
+      const result = await controller.findAll('org-1', 'SAP_HANA');
+
+      expect(result).toEqual(expected);
+      expect(service.findAll).toHaveBeenCalledWith('org-1', 'SAP_HANA');
     });
   });
 

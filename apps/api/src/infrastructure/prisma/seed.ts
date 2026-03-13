@@ -1494,6 +1494,7 @@ async function main() {
   const rb1 = await prisma.runbook.create({
     data: {
       organizationId: org.id,
+      category: 'SAP_HANA',
       name: 'HANA Log Backup Area Cleanup',
       description:
         'Reclaim space in HANA log backup area by removing old backups beyond retention',
@@ -1524,6 +1525,7 @@ async function main() {
   const rb2 = await prisma.runbook.create({
     data: {
       organizationId: org.id,
+      category: 'SAP_ABAP',
       name: 'Restart ICM Process',
       description:
         'Restart the Internet Communication Manager on Java/ABAP stack',
@@ -1545,6 +1547,7 @@ async function main() {
   const rb3 = await prisma.runbook.create({
     data: {
       organizationId: org.id,
+      category: 'SAP_ABAP',
       name: 'Clear Old Spool Requests',
       description: 'Housekeeping — remove spool requests older than 14 days',
       costSafe: true,
@@ -1568,6 +1571,7 @@ async function main() {
   const rb4 = await prisma.runbook.create({
     data: {
       organizationId: org.id,
+      category: 'CROSS_PLATFORM',
       name: 'Extend /usr/sap Filesystem',
       description: 'Extend filesystem when disk usage exceeds 85%',
       costSafe: false,
@@ -1602,6 +1606,7 @@ async function main() {
   const rb5 = await prisma.runbook.create({
     data: {
       organizationId: org.id,
+      category: 'SAP_ASE',
       name: 'Dump tran log + kill old tx',
       description:
         'Trunca el transaction log y elimina transacciones antiguas bloqueadas',
@@ -1631,6 +1636,7 @@ async function main() {
   const _rb6 = await prisma.runbook.create({
     data: {
       organizationId: org.id,
+      category: 'SAP_ASE',
       name: 'Expand EBS log volume',
       description:
         'Expande el volumen EBS del log. Requiere aprobación por costo de infra',
@@ -1660,6 +1666,7 @@ async function main() {
   const _rb7 = await prisma.runbook.create({
     data: {
       organizationId: org.id,
+      category: 'SAP_ASE',
       name: 'Combined log truncate + disk expand',
       description: 'Trunca log + expansión de disco combinado',
       costSafe: false,
@@ -1689,6 +1696,7 @@ async function main() {
   const _rb8 = await prisma.runbook.create({
     data: {
       organizationId: org.id,
+      category: 'HANA_HA',
       name: 'Resume HANA System Replication',
       description: 'Reanuda replicación HANA System Replication cuando hay lag',
       costSafe: true,
@@ -1724,6 +1732,7 @@ async function main() {
   const _rb9 = await prisma.runbook.create({
     data: {
       organizationId: org.id,
+      category: 'SAP_JAVA',
       name: 'Force JVM Garbage Collection',
       description: 'Fuerza garbage collection en JVM heap',
       costSafe: true,
@@ -1740,6 +1749,7 @@ async function main() {
   const _rb10 = await prisma.runbook.create({
     data: {
       organizationId: org.id,
+      category: 'SAP_JAVA',
       name: 'Force OldGen GC',
       description: 'Fuerza GC de OldGen para liberar memoria',
       costSafe: true,
@@ -1769,6 +1779,7 @@ async function main() {
   const _rb11 = await prisma.runbook.create({
     data: {
       organizationId: org.id,
+      category: 'SAP_JAVA',
       name: 'Restart PI/PO Adapter Framework',
       description: 'Reinicia framework de adaptadores SAP PO',
       costSafe: true,
@@ -1803,6 +1814,7 @@ async function main() {
   const rb12 = await prisma.runbook.create({
     data: {
       organizationId: org.id,
+      category: 'SAP_ABAP',
       name: 'Clean sessions + restart WPs',
       description: 'Limpia sesiones y reinicia work processes',
       costSafe: true,
@@ -1838,6 +1850,7 @@ async function main() {
   const rb13 = await prisma.runbook.create({
     data: {
       organizationId: org.id,
+      category: 'CROSS_PLATFORM',
       name: 'Verify backup status',
       description: 'Verifica estado de backups de BD',
       costSafe: true,
@@ -1867,6 +1880,7 @@ async function main() {
   const rb14 = await prisma.runbook.create({
     data: {
       organizationId: org.id,
+      category: 'CROSS_PLATFORM',
       name: 'Check certificate expiry (ICM/PSE)',
       description: 'Valida certificados ICM/PSE y alerta si vencen pronto',
       costSafe: true,
@@ -1897,6 +1911,7 @@ async function main() {
   const _rb15 = await prisma.runbook.create({
     data: {
       organizationId: org.id,
+      category: 'SAP_ABAP',
       name: 'Clean PRIV/Hold Work Processes',
       description: 'Limpia work processes en PRIV mode o Hold',
       costSafe: true,
@@ -1919,6 +1934,7 @@ async function main() {
   const _rb16 = await prisma.runbook.create({
     data: {
       organizationId: org.id,
+      category: 'SAP_ABAP',
       name: 'Diagnose RFC queues',
       description: 'Diagnostica colas tRFC/qRFC/bgRFC',
       costSafe: true,
@@ -1949,6 +1965,7 @@ async function main() {
   const rb17 = await prisma.runbook.create({
     data: {
       organizationId: org.id,
+      category: 'SAP_ABAP',
       name: 'Check failed/long-running jobs',
       description: 'Revisa jobs fallidos o de larga duración (SM37)',
       costSafe: true,
@@ -1979,6 +1996,7 @@ async function main() {
   const rb18 = await prisma.runbook.create({
     data: {
       organizationId: org.id,
+      category: 'SAP_ABAP',
       name: 'Transport queue monitoring (STMS)',
       description: 'Monitorea cola de transportes y detecta bloqueados',
       costSafe: true,
@@ -2013,6 +2031,7 @@ async function main() {
     // ═══ HANA Avanzados ═══
     {
       organizationId: org.id,
+      category: 'SAP_HANA',
       name: 'HANA Delta Merge forzado',
       description:
         'Fuerza merge de delta store a main store para liberar memoria y mejorar queries',
@@ -2042,6 +2061,7 @@ async function main() {
     },
     {
       organizationId: org.id,
+      category: 'SAP_HANA',
       name: 'HANA Table Unload por memoria',
       description:
         'Descarga tablas poco usadas del column store para liberar RAM',
@@ -2069,6 +2089,7 @@ async function main() {
     },
     {
       organizationId: org.id,
+      category: 'SAP_HANA',
       name: 'HANA Expensive SQL Analysis',
       description: 'Detecta las top 10 queries más costosas en CPU y memoria',
       costSafe: true,
@@ -2096,6 +2117,7 @@ async function main() {
     },
     {
       organizationId: org.id,
+      category: 'SAP_HANA',
       name: 'HANA Trace File Cleanup',
       description:
         'Limpia archivos de trace de indexserver/nameserver mayores a 7 días',
@@ -2124,6 +2146,7 @@ async function main() {
     },
     {
       organizationId: org.id,
+      category: 'SAP_HANA',
       name: 'HANA Alert Check (M_SYSTEM_ALERTS)',
       description: 'Lee alertas internas de HANA y genera eventos en Spektra',
       costSafe: true,
@@ -2149,6 +2172,7 @@ async function main() {
     },
     {
       organizationId: org.id,
+      category: 'SAP_HANA',
       name: 'HANA Row→Column Store Migration Check',
       description:
         'Detecta tablas grandes en row store que deberían migrarse a columnar',
@@ -2175,6 +2199,7 @@ async function main() {
     },
     {
       organizationId: org.id,
+      category: 'SAP_HANA',
       name: 'HANA Log Segment Cleanup',
       description:
         'Limpia log segments ya respaldados para liberar espacio en disco',
@@ -2203,6 +2228,7 @@ async function main() {
     },
     {
       organizationId: org.id,
+      category: 'SAP_HANA',
       name: 'HANA Consistency Check',
       description: 'Ejecuta verificación de consistencia de páginas de datos',
       costSafe: true,
@@ -2229,6 +2255,7 @@ async function main() {
     },
     {
       organizationId: org.id,
+      category: 'SAP_HANA',
       name: 'HANA Memory Profiler Snapshot',
       description: 'Captura snapshot de uso de memoria por servicio y tabla',
       costSafe: true,
@@ -2255,6 +2282,7 @@ async function main() {
     },
     {
       organizationId: org.id,
+      category: 'SAP_HANA',
       name: 'HANA Connection Cleanup',
       description: 'Cierra conexiones idle > 2 horas para liberar recursos',
       costSafe: true,
@@ -2282,6 +2310,7 @@ async function main() {
     // ═══ Oracle ═══
     {
       organizationId: org.id,
+      category: 'ORACLE',
       name: 'Oracle Tablespace Utilization Check',
       description:
         'Revisa porcentaje de uso de cada tablespace y alerta si > 85%',
@@ -2310,6 +2339,7 @@ async function main() {
     },
     {
       organizationId: org.id,
+      category: 'ORACLE',
       name: 'Oracle Tablespace Auto-Extend',
       description:
         'Agrega datafile o habilita auto-extend cuando tablespace está lleno',
@@ -2342,6 +2372,7 @@ async function main() {
     },
     {
       organizationId: org.id,
+      category: 'ORACLE',
       name: 'Oracle RMAN Backup Verification',
       description: 'Valida integridad del último backup RMAN',
       costSafe: true,
@@ -2363,6 +2394,7 @@ async function main() {
     },
     {
       organizationId: org.id,
+      category: 'ORACLE',
       name: 'Oracle Archive Log Cleanup',
       description:
         'Limpia archive logs ya respaldados que consumen espacio en disco',
@@ -2390,6 +2422,7 @@ async function main() {
     },
     {
       organizationId: org.id,
+      category: 'ORACLE',
       name: 'Oracle AWR Report Generation',
       description:
         'Genera reporte AWR de las últimas 2 horas para diagnóstico de performance',
@@ -2417,6 +2450,7 @@ async function main() {
     },
     {
       organizationId: org.id,
+      category: 'ORACLE',
       name: 'Oracle Invalid Objects Recompile',
       description: 'Recompila objetos inválidos en schema SAP (SAPSR3)',
       costSafe: true,
@@ -2444,6 +2478,7 @@ async function main() {
     },
     {
       organizationId: org.id,
+      category: 'ORACLE',
       name: 'Oracle Blocking Session Kill',
       description:
         'Detecta y mata sesiones que bloquean a otras por más de 30 minutos',
@@ -2471,6 +2506,7 @@ async function main() {
     },
     {
       organizationId: org.id,
+      category: 'ORACLE',
       name: 'Oracle Temp Tablespace Cleanup',
       description:
         'Libera espacio en temp tablespace cuando sorts grandes lo llenan',
@@ -2497,6 +2533,7 @@ async function main() {
     },
     {
       organizationId: org.id,
+      category: 'ORACLE',
       name: 'Oracle Statistics Gathering',
       description:
         'Recalcula estadísticas de tablas SAP para el optimizador SQL',
@@ -2525,6 +2562,7 @@ async function main() {
     },
     {
       organizationId: org.id,
+      category: 'ORACLE',
       name: 'Oracle Redo Log Switch Analysis',
       description:
         'Analiza frecuencia de redo log switches para detectar problemas de sizing',
@@ -2554,6 +2592,7 @@ async function main() {
     // ═══ Microsoft SQL Server ═══
     {
       organizationId: org.id,
+      category: 'MSSQL',
       name: 'MSSQL Transaction Log Shrink',
       description: 'Reduce el transaction log cuando crece excesivamente',
       costSafe: true,
@@ -2583,6 +2622,7 @@ async function main() {
     },
     {
       organizationId: org.id,
+      category: 'MSSQL',
       name: 'MSSQL Index Rebuild/Reorganize',
       description: 'Reconstruye índices con fragmentación > 30%',
       costSafe: true,
@@ -2609,6 +2649,7 @@ async function main() {
     },
     {
       organizationId: org.id,
+      category: 'MSSQL',
       name: 'MSSQL TempDB Monitor',
       description: 'Verifica uso de TempDB y limpia objetos temporales',
       costSafe: true,
@@ -2635,6 +2676,7 @@ async function main() {
     },
     {
       organizationId: org.id,
+      category: 'MSSQL',
       name: 'MSSQL Backup Verification (VERIFYONLY)',
       description: 'Valida que el último backup SQL Server sea restaurable',
       costSafe: true,
@@ -2661,6 +2703,7 @@ async function main() {
     },
     {
       organizationId: org.id,
+      category: 'MSSQL',
       name: 'MSSQL Blocked Process Analysis',
       description: 'Detecta cadenas de bloqueo y reporta SPIDs involucrados',
       costSafe: true,
@@ -2687,6 +2730,7 @@ async function main() {
     },
     {
       organizationId: org.id,
+      category: 'MSSQL',
       name: 'MSSQL DBCC CHECKDB',
       description: 'Ejecuta verificación de integridad de la base de datos',
       costSafe: true,
@@ -2716,6 +2760,7 @@ async function main() {
     },
     {
       organizationId: org.id,
+      category: 'MSSQL',
       name: 'MSSQL Auto-Grow Event Check',
       description:
         'Detecta eventos de auto-grow frecuentes que indican sizing incorrecto',
@@ -2743,6 +2788,7 @@ async function main() {
     },
     {
       organizationId: org.id,
+      category: 'MSSQL',
       name: 'MSSQL Agent Job Failure Check',
       description: 'Revisa SQL Agent jobs fallidos en las últimas 24 horas',
       costSafe: true,
@@ -2765,6 +2811,7 @@ async function main() {
     },
     {
       organizationId: org.id,
+      category: 'MSSQL',
       name: 'MSSQL Data File Growth Projection',
       description:
         'Proyecta cuándo se llenará el disco al ritmo de crecimiento actual',
@@ -2791,6 +2838,7 @@ async function main() {
     },
     {
       organizationId: org.id,
+      category: 'MSSQL',
       name: 'MSSQL Always On Health Check',
       description:
         'Verifica estado de réplicas Always On y lag de sincronización',
@@ -2820,6 +2868,7 @@ async function main() {
     // ═══ IBM DB2 ═══
     {
       organizationId: org.id,
+      category: 'IBM_DB2',
       name: 'DB2 Log Utilization Check',
       description: 'Monitorea uso de active logs y archive logs',
       costSafe: true,
@@ -2845,6 +2894,7 @@ async function main() {
     },
     {
       organizationId: org.id,
+      category: 'IBM_DB2',
       name: 'DB2 RUNSTATS Refresh',
       description: 'Actualiza estadísticas de tablas para el optimizador DB2',
       costSafe: true,
@@ -2873,6 +2923,7 @@ async function main() {
     },
     {
       organizationId: org.id,
+      category: 'IBM_DB2',
       name: 'DB2 REORG Check (REORGCHK)',
       description: 'Detecta tablas que necesitan reorganización',
       costSafe: true,
@@ -2898,6 +2949,7 @@ async function main() {
     },
     {
       organizationId: org.id,
+      category: 'IBM_DB2',
       name: 'DB2 REORG Execute',
       description: 'Ejecuta reorganización de tablas marcadas por REORGCHK',
       costSafe: true,
@@ -2928,6 +2980,7 @@ async function main() {
     },
     {
       organizationId: org.id,
+      category: 'IBM_DB2',
       name: 'DB2 Tablespace Container Add',
       description: 'Agrega contenedor cuando un tablespace está lleno',
       costSafe: false,
@@ -2958,6 +3011,7 @@ async function main() {
     },
     {
       organizationId: org.id,
+      category: 'IBM_DB2',
       name: 'DB2 Deadlock Analysis',
       description: 'Analiza deadlocks recientes del diaglog',
       costSafe: true,
@@ -2983,6 +3037,7 @@ async function main() {
     },
     {
       organizationId: org.id,
+      category: 'IBM_DB2',
       name: 'DB2 HADR Status Check',
       description: 'Verifica estado de High Availability Disaster Recovery',
       costSafe: true,
@@ -3009,6 +3064,7 @@ async function main() {
     },
     {
       organizationId: org.id,
+      category: 'IBM_DB2',
       name: 'DB2 Archive Log Prune',
       description: 'Limpia archive logs ya no necesarios para recovery',
       costSafe: true,
@@ -3035,6 +3091,7 @@ async function main() {
     },
     {
       organizationId: org.id,
+      category: 'IBM_DB2',
       name: 'DB2 Connection Monitor',
       description: 'Monitorea conexiones activas vs máximo configurado',
       costSafe: true,
@@ -3060,6 +3117,7 @@ async function main() {
     },
     {
       organizationId: org.id,
+      category: 'IBM_DB2',
       name: 'DB2 Backup History Verification',
       description:
         'Verifica cadena de backups completa para point-in-time recovery',
@@ -3088,6 +3146,7 @@ async function main() {
     // ═══ ASE (nuevos) ═══
     {
       organizationId: org.id,
+      category: 'SAP_ASE',
       name: 'ASE Tempdb Usage Monitor',
       description: 'Monitorea uso de tempdb y limpia objetos huérfanos',
       costSafe: true,
@@ -3113,6 +3172,7 @@ async function main() {
     },
     {
       organizationId: org.id,
+      category: 'SAP_ASE',
       name: 'ASE Lock Contention Analysis',
       description: 'Detecta bloqueos largos entre procesos en ASE',
       costSafe: true,
@@ -3134,6 +3194,7 @@ async function main() {
     },
     {
       organizationId: org.id,
+      category: 'SAP_ASE',
       name: 'ASE DBCC Consistency Check',
       description:
         'Ejecuta verificación de consistencia de la base de datos ASE',
@@ -3161,6 +3222,7 @@ async function main() {
     },
     {
       organizationId: org.id,
+      category: 'SAP_ASE',
       name: 'ASE Cache Hit Ratio Analysis',
       description: 'Analiza eficiencia de data cache y procedure cache',
       costSafe: true,
@@ -3188,6 +3250,7 @@ async function main() {
     // ═══ MaxDB ═══
     {
       organizationId: org.id,
+      category: 'SAP_MAXDB',
       name: 'MaxDB Data Area Utilization',
       description: 'Monitorea uso de data volumes y alerta si excede umbral',
       costSafe: true,
@@ -3213,6 +3276,7 @@ async function main() {
     },
     {
       organizationId: org.id,
+      category: 'SAP_MAXDB',
       name: 'MaxDB Log Area Monitor',
       description: 'Monitorea uso de log area y ejecuta backup si es necesario',
       costSafe: true,
@@ -3238,6 +3302,7 @@ async function main() {
     },
     {
       organizationId: org.id,
+      category: 'SAP_MAXDB',
       name: 'MaxDB Update Statistics',
       description: 'Actualiza estadísticas del optimizer MaxDB',
       costSafe: true,
@@ -3264,6 +3329,7 @@ async function main() {
     },
     {
       organizationId: org.id,
+      category: 'SAP_MAXDB',
       name: 'MaxDB Session Cleanup',
       description: 'Cierra sesiones inactivas que consumen recursos en MaxDB',
       costSafe: true,
@@ -3289,6 +3355,7 @@ async function main() {
     },
     {
       organizationId: org.id,
+      category: 'SAP_MAXDB',
       name: 'MaxDB Backup History Check',
       description: 'Verifica que la cadena de backups esté completa',
       costSafe: true,
@@ -3314,6 +3381,7 @@ async function main() {
     },
     {
       organizationId: org.id,
+      category: 'SAP_MAXDB',
       name: 'MaxDB Bad Index Analysis',
       description:
         'Detecta índices con mala selectividad que degradan performance',
@@ -3340,6 +3408,7 @@ async function main() {
     },
     {
       organizationId: org.id,
+      category: 'SAP_MAXDB',
       name: 'MaxDB Cache Hit Analysis',
       description: 'Analiza eficiencia del data cache y catalog cache',
       costSafe: true,
@@ -3367,6 +3436,7 @@ async function main() {
     // ═══ Linux (SLES / RHEL) ═══
     {
       organizationId: org.id,
+      category: 'LINUX_OS',
       name: 'Linux Filesystem Usage Check',
       description:
         'Revisa todos los mount points y alerta si alguno supera 85%',
@@ -3394,6 +3464,7 @@ async function main() {
     },
     {
       organizationId: org.id,
+      category: 'LINUX_OS',
       name: 'Linux Old Log Cleanup',
       description: 'Rota y limpia logs del sistema y SAP mayores a 30 días',
       costSafe: true,
@@ -3425,6 +3496,7 @@ async function main() {
     },
     {
       organizationId: org.id,
+      category: 'LINUX_OS',
       name: 'Linux Swap Usage Analysis',
       description:
         'Detecta si el sistema está usando swap, señal de falta de RAM',
@@ -3453,6 +3525,7 @@ async function main() {
     },
     {
       organizationId: org.id,
+      category: 'LINUX_OS',
       name: 'Linux Zombie Process Cleanup',
       description: 'Detecta y limpia procesos zombie/defunct del sistema',
       costSafe: true,
@@ -3479,6 +3552,7 @@ async function main() {
     },
     {
       organizationId: org.id,
+      category: 'LINUX_OS',
       name: 'Linux NTP/Chrony Sync Check',
       description:
         'Verifica sincronización de reloj — crítico para clusters y HANA HSR',
@@ -3506,6 +3580,7 @@ async function main() {
     },
     {
       organizationId: org.id,
+      category: 'LINUX_OS',
       name: 'Linux Kernel Parameter Audit',
       description:
         'Compara parámetros del kernel vs recomendaciones SAP (SAP Notes)',
@@ -3533,6 +3608,7 @@ async function main() {
     },
     {
       organizationId: org.id,
+      category: 'LINUX_OS',
       name: 'Linux Core Dump Cleanup',
       description: 'Limpia core dumps antiguos que ocupan espacio en disco',
       costSafe: true,
@@ -3555,6 +3631,7 @@ async function main() {
     },
     {
       organizationId: org.id,
+      category: 'LINUX_OS',
       name: 'Linux Network Interface Health',
       description: 'Verifica errores en interfaces de red y dropped packets',
       costSafe: true,
@@ -3581,6 +3658,7 @@ async function main() {
     },
     {
       organizationId: org.id,
+      category: 'LINUX_OS',
       name: 'Linux Pacemaker/Corosync Cluster Check',
       description: 'Verifica estado del cluster HA — nodos, recursos, fencing',
       costSafe: true,
@@ -3608,6 +3686,7 @@ async function main() {
     },
     {
       organizationId: org.id,
+      category: 'LINUX_OS',
       name: 'Linux I/O Latency Check',
       description:
         'Detecta latencia alta en discos (> 20ms) que afecta performance de BD',
@@ -3631,6 +3710,7 @@ async function main() {
     },
     {
       organizationId: org.id,
+      category: 'LINUX_OS',
       name: 'Linux Huge Pages Verification',
       description:
         'Verifica configuración de transparent huge pages según SAP Notes',
@@ -3658,6 +3738,7 @@ async function main() {
     },
     {
       organizationId: org.id,
+      category: 'LINUX_OS',
       name: 'Linux OS Patch Level Check',
       description: 'Compara kernel y paquetes vs niveles recomendados por SAP',
       costSafe: true,
@@ -3680,6 +3761,7 @@ async function main() {
     },
     {
       organizationId: org.id,
+      category: 'SAP_KERNEL_PATCHING',
       name: 'Linux Kernel Patch — Verify',
       description:
         'Verifica estado de parchado del kernel y si requiere reboot',
@@ -3708,6 +3790,7 @@ async function main() {
     },
     {
       organizationId: org.id,
+      category: 'SAP_KERNEL_PATCHING',
       name: 'Linux Kernel Patch — Prepare',
       description:
         'Descarga patches de kernel y prepara snapshot para rollback',
@@ -3740,6 +3823,7 @@ async function main() {
     },
     {
       organizationId: org.id,
+      category: 'SAP_KERNEL_PATCHING',
       name: 'Linux Kernel Patch — Apply',
       description:
         'Aplica parche de kernel con parada controlada de SAP y reboot',
@@ -3790,6 +3874,7 @@ async function main() {
     },
     {
       organizationId: org.id,
+      category: 'SAP_KERNEL_PATCHING',
       name: 'Linux Kernel Patch — Rollback',
       description: 'Rollback a kernel anterior si el parche causó problemas',
       costSafe: false,
@@ -3839,6 +3924,7 @@ async function main() {
     // ═══ Windows Server ═══
     {
       organizationId: org.id,
+      category: 'WINDOWS_OS',
       name: 'Windows Disk Space Check',
       description: 'Revisa espacio libre en todos los drives y alerta si < 15%',
       costSafe: true,
@@ -3865,6 +3951,7 @@ async function main() {
     },
     {
       organizationId: org.id,
+      category: 'WINDOWS_OS',
       name: 'Windows Event Log Analysis',
       description: 'Busca errores críticos en Application y System event logs',
       costSafe: true,
@@ -3893,6 +3980,7 @@ async function main() {
     },
     {
       organizationId: org.id,
+      category: 'WINDOWS_OS',
       name: 'Windows Service Status Check',
       description: 'Verifica que servicios SAP y SQL Server estén corriendo',
       costSafe: true,
@@ -3919,6 +4007,7 @@ async function main() {
     },
     {
       organizationId: org.id,
+      category: 'WINDOWS_OS',
       name: 'Windows Update Pending Check',
       description:
         'Detecta Windows updates pendientes que pueden requerir reboot',
@@ -3947,6 +4036,7 @@ async function main() {
     },
     {
       organizationId: org.id,
+      category: 'WINDOWS_OS',
       name: 'Windows Page File Monitor',
       description: 'Monitorea uso de page file (memoria virtual)',
       costSafe: true,
@@ -3973,6 +4063,7 @@ async function main() {
     },
     {
       organizationId: org.id,
+      category: 'WINDOWS_OS',
       name: 'Windows WSFC Cluster Health',
       description: 'Verifica estado de Windows Server Failover Cluster',
       costSafe: true,
@@ -3996,6 +4087,7 @@ async function main() {
     },
     {
       organizationId: org.id,
+      category: 'WINDOWS_OS',
       name: 'Windows Certificate Store Expiry',
       description: 'Revisa certificados en Windows certificate store',
       costSafe: true,
@@ -4023,6 +4115,7 @@ async function main() {
     },
     {
       organizationId: org.id,
+      category: 'WINDOWS_OS',
       name: 'Windows Temp Folder Cleanup',
       description: 'Limpia archivos temporales del sistema y SAP temp dirs',
       costSafe: true,
@@ -4050,6 +4143,7 @@ async function main() {
     },
     {
       organizationId: org.id,
+      category: 'WINDOWS_OS',
       name: 'Windows Firewall Rule Audit',
       description:
         'Verifica que puertos SAP estén abiertos según configuración',
@@ -4078,6 +4172,7 @@ async function main() {
     },
     {
       organizationId: org.id,
+      category: 'SAP_KERNEL_PATCHING',
       name: 'Windows Kernel Patch — Verify',
       description:
         'Verifica estado de Windows Updates de seguridad y parches KB',
@@ -4107,6 +4202,7 @@ async function main() {
     },
     {
       organizationId: org.id,
+      category: 'SAP_KERNEL_PATCHING',
       name: 'Windows Kernel Patch — Apply',
       description: 'Aplica Windows Updates con parada controlada de SAP',
       costSafe: false,
@@ -4162,6 +4258,7 @@ async function main() {
     // ═══ AIX ═══
     {
       organizationId: org.id,
+      category: 'AIX_OS',
       name: 'AIX Filesystem Check (JFS2)',
       description: 'Revisa uso de filesystems JFS2 y proyecta crecimiento',
       costSafe: true,
@@ -4188,6 +4285,7 @@ async function main() {
     },
     {
       organizationId: org.id,
+      category: 'AIX_OS',
       name: 'AIX Paging Space Analysis',
       description: 'Verifica uso de paging space y alerta si > 70%',
       costSafe: true,
@@ -4206,6 +4304,7 @@ async function main() {
     },
     {
       organizationId: org.id,
+      category: 'AIX_OS',
       name: 'AIX Error Report (errpt)',
       description: 'Analiza errpt por errores de hardware/software recientes',
       costSafe: true,
@@ -4232,6 +4331,7 @@ async function main() {
     },
     {
       organizationId: org.id,
+      category: 'AIX_OS',
       name: 'AIX LVM Health Check',
       description: 'Verifica volume groups, logical volumes y mirrors',
       costSafe: true,
@@ -4258,6 +4358,7 @@ async function main() {
     },
     {
       organizationId: org.id,
+      category: 'AIX_OS',
       name: 'AIX LPAR Resource Utilization',
       description: 'Revisa uso de CPU entitlements y memoria en LPAR',
       costSafe: true,
@@ -4276,6 +4377,7 @@ async function main() {
     },
     {
       organizationId: org.id,
+      category: 'AIX_OS',
       name: 'AIX Network Health',
       description: 'Verifica errores en adapters Ethernet y link status',
       costSafe: true,
@@ -4302,6 +4404,7 @@ async function main() {
     },
     {
       organizationId: org.id,
+      category: 'AIX_OS',
       name: 'AIX PowerHA Cluster Status',
       description: 'Verifica estado del cluster PowerHA/HACMP',
       costSafe: true,
@@ -4321,6 +4424,7 @@ async function main() {
     },
     {
       organizationId: org.id,
+      category: 'AIX_OS',
       name: 'AIX Core Dump Cleanup',
       description: 'Limpia core dumps y snap data viejos en /var/adm',
       costSafe: true,
@@ -4349,6 +4453,7 @@ async function main() {
     // ═══ Solaris ═══
     {
       organizationId: org.id,
+      category: 'SOLARIS_OS',
       name: 'Solaris ZFS Pool Health',
       description: 'Verifica estado de zpools — degraded, faulted, online',
       costSafe: true,
@@ -4371,6 +4476,7 @@ async function main() {
     },
     {
       organizationId: org.id,
+      category: 'SOLARIS_OS',
       name: 'Solaris ZFS Snapshot Cleanup',
       description: 'Limpia snapshots ZFS viejos que consumen espacio',
       costSafe: true,
@@ -4397,6 +4503,7 @@ async function main() {
     },
     {
       organizationId: org.id,
+      category: 'SOLARIS_OS',
       name: 'Solaris SMF Service Check',
       description: 'Verifica que servicios SAP en SMF estén online',
       costSafe: true,
@@ -4423,6 +4530,7 @@ async function main() {
     },
     {
       organizationId: org.id,
+      category: 'SOLARIS_OS',
       name: 'Solaris FMA Fault Check',
       description:
         'Revisa Fault Management Architecture por errores de hardware',
@@ -4450,6 +4558,7 @@ async function main() {
     },
     {
       organizationId: org.id,
+      category: 'SOLARIS_OS',
       name: 'Solaris Zone Resource Monitor',
       description: 'Monitorea recursos de zonas Solaris donde corre SAP',
       costSafe: true,
@@ -4476,6 +4585,7 @@ async function main() {
     },
     {
       organizationId: org.id,
+      category: 'SOLARIS_OS',
       name: 'Solaris Network Datalink Health',
       description: 'Verifica errores en datalinks y VNICs',
       costSafe: true,
@@ -4498,6 +4608,7 @@ async function main() {
     },
     {
       organizationId: org.id,
+      category: 'SOLARIS_OS',
       name: 'Solaris Core Dump Cleanup',
       description: 'Limpia core files viejos de /var/cores',
       costSafe: true,
@@ -4520,6 +4631,7 @@ async function main() {
     },
     {
       organizationId: org.id,
+      category: 'SAP_KERNEL_PATCHING',
       name: 'Solaris Kernel Patch Verify',
       description: 'Verifica nivel de parchado del kernel Solaris',
       costSafe: true,
@@ -4548,6 +4660,7 @@ async function main() {
     // ═══ ABAP Avanzados ═══
     {
       organizationId: org.id,
+      category: 'SAP_ABAP',
       name: 'ABAP Dump Analysis (ST22)',
       description:
         'Analiza short dumps de las últimas 24h y detecta patrones recurrentes',
@@ -4575,6 +4688,7 @@ async function main() {
     },
     {
       organizationId: org.id,
+      category: 'SAP_ABAP',
       name: 'ABAP Update Request Monitor (SM13)',
       description:
         'Detecta update requests fallidos que bloquean transacciones',
@@ -4602,6 +4716,7 @@ async function main() {
     },
     {
       organizationId: org.id,
+      category: 'SAP_ABAP',
       name: 'ABAP Gateway Monitor (SMGW)',
       description: 'Revisa conexiones RFC registradas y limpia sesiones zombie',
       costSafe: true,
@@ -4628,6 +4743,7 @@ async function main() {
     },
     {
       organizationId: org.id,
+      category: 'SAP_ABAP',
       name: 'ABAP User Session Cleanup (SM04)',
       description:
         'Cierra sesiones de usuario inactivas que consumen work processes',
@@ -4656,6 +4772,7 @@ async function main() {
     },
     {
       organizationId: org.id,
+      category: 'SAP_ABAP',
       name: 'ABAP IDoc Reprocessing',
       description: 'Detecta IDocs en error y los reprocesa automáticamente',
       costSafe: true,
@@ -4686,6 +4803,7 @@ async function main() {
     },
     {
       organizationId: org.id,
+      category: 'SAP_ABAP',
       name: 'ABAP RFC Destination Health Check',
       description:
         'Prueba conectividad de todas las conexiones RFC registradas',
@@ -4713,6 +4831,7 @@ async function main() {
     },
     {
       organizationId: org.id,
+      category: 'SAP_ABAP',
       name: 'ABAP Failed Login Monitor (SM20)',
       description:
         'Detecta intentos de login fallidos — posible ataque de fuerza bruta',
@@ -4740,6 +4859,7 @@ async function main() {
     },
     {
       organizationId: org.id,
+      category: 'SAP_ABAP',
       name: 'ABAP Critical Auth Audit',
       description: 'Revisa usuarios con SAP_ALL o SAP_NEW asignados',
       costSafe: true,
@@ -4769,6 +4889,7 @@ async function main() {
     // ═══ BW Specific ═══
     {
       organizationId: org.id,
+      category: 'SAP_APPS',
       name: 'BW Process Chain Monitor',
       description: 'Detecta cadenas de procesos fallidas o retrasadas en BW',
       costSafe: true,
@@ -4795,6 +4916,7 @@ async function main() {
     },
     {
       organizationId: org.id,
+      category: 'SAP_APPS',
       name: 'BW InfoCube Compression',
       description:
         'Comprime fact tables de InfoCubes para mejorar rendimiento de queries',
@@ -4828,6 +4950,7 @@ async function main() {
     // ═══ Integración SAP PO ═══
     {
       organizationId: org.id,
+      category: 'SAP_APPS',
       name: 'PO SOAP/REST Channel Monitor',
       description: 'Verifica canales de comunicación activos en SAP PO',
       costSafe: true,

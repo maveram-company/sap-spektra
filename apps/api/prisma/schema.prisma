@@ -380,6 +380,7 @@ model Runbook {
   description    String
   costSafe       Boolean  @default(true)
   autoExecute    Boolean  @default(false)
+  category       String?
   dbType         String?
   txCode         String?  // SAP Transaction Code
   prereqs        Json?

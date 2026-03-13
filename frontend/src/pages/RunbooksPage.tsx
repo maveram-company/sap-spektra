@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
-import { Play, FlaskConical, Clock, ShieldCheck, CheckCircle, X, AlertTriangle, Loader2 } from 'lucide-react';
+import { Play, FlaskConical, Clock, ShieldCheck, CheckCircle, X, AlertTriangle, Loader2, Filter } from 'lucide-react';
 import Header from '../components/layout/Header';
 import PageHeader from '../components/layout/PageHeader';
 import Tabs from '../components/ui/Tabs';
@@ -16,12 +16,32 @@ import { createLogger } from '../lib/logger';
 
 const log = createLogger('RunbooksPage');
 
+const CATEGORY_LABELS: Record<string, string> = {
+  SAP_HANA: 'SAP HANA',
+  ORACLE: 'Oracle',
+  MSSQL: 'SQL Server',
+  IBM_DB2: 'IBM DB2',
+  SAP_ASE: 'SAP ASE',
+  SAP_MAXDB: 'SAP MaxDB',
+  HANA_HA: 'HANA HA',
+  SAP_ABAP: 'SAP ABAP',
+  SAP_JAVA: 'SAP Java/PO',
+  SAP_APPS: 'SAP Apps',
+  CROSS_PLATFORM: 'Cross-Platform',
+  LINUX_OS: 'Linux',
+  WINDOWS_OS: 'Windows',
+  AIX_OS: 'AIX',
+  SOLARIS_OS: 'Solaris',
+  SAP_KERNEL_PATCHING: 'Kernel Patching',
+};
+
 export default function RunbooksPage() {
   const [runbooks, setRunbooks] = useState([]);
   const [executions, setExecutions] = useState([]);
   const [systems, setSystems] = useState([]);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState('catalog');
+  const [categoryFilter, setCategoryFilter] = useState('');
   const [toast, setToast] = useState(null);
   const { hasRole } = useAuth();
   const canExecute = hasRole('operator');
@@ -200,9 +220,32 @@ export default function RunbooksPage() {
 
         {/* ── Tab: Catálogo ── */}
         {activeTab === 'catalog' && (
+          <>
+          {/* Category filter */}
+          <div className="flex items-center gap-3 mb-4">
+            <Filter size={14} className="text-text-tertiary" />
+            <select
+              value={categoryFilter}
+              onChange={(e) => setCategoryFilter(e.target.value)}
+              className="text-sm bg-surface-secondary border border-border rounded-lg px-3 py-1.5 text-text-primary focus:outline-none focus:ring-1 focus:ring-primary-500"
+            >
+              <option value="">Todas las categorías ({runbooks.length})</option>
+              {[...new Set(runbooks.map((rb) => rb.category).filter(Boolean))].sort().map((cat) => (
+                <option key={cat} value={cat}>
+                  {CATEGORY_LABELS[cat] || cat} ({runbooks.filter((rb) => rb.category === cat).length})
+                </option>
+              ))}
+            </select>
+            {categoryFilter && (
+              <button onClick={() => setCategoryFilter('')} className="text-xs text-text-tertiary hover:text-text-primary">
+                Limpiar filtro
+              </button>
+            )}
+          </div>
           <Table>
             <TableHeader>
               <tr>
+                <TableHead>Categoría</TableHead>
                 <TableHead>Nombre</TableHead>
                 <TableHead>Cost-Safe</TableHead>
                 <TableHead>Modo</TableHead>
@@ -216,8 +259,12 @@ export default function RunbooksPage() {
               </tr>
             </TableHeader>
             <TableBody>
-              {runbooks.map((rb) => (
+              {runbooks.filter((rb) => !categoryFilter || rb.category === categoryFilter).map((rb) => (
                 <TableRow key={rb.id}>
+                  {/* Categoría */}
+                  <TableCell>
+                    <Badge variant="default" size="sm">{CATEGORY_LABELS[rb.category] || rb.category || '—'}</Badge>
+                  </TableCell>
                   {/* Nombre + descripción */}
                   <TableCell>
                     <div className="max-w-[260px]">
@@ -311,6 +358,7 @@ export default function RunbooksPage() {
               ))}
             </TableBody>
           </Table>
+          </>
         )}
 
         {/* ── Tab: Ejecuciones ── */}
@@ -422,6 +470,9 @@ export default function RunbooksPage() {
               <Badge variant={selectedRunbook.gate === 'SAFE' ? 'success' : 'warning'} size="sm">
                 Gate: {selectedRunbook.gate || (selectedRunbook.costSafe ? 'SAFE' : 'HUMAN')}
               </Badge>
+              {selectedRunbook.category && (
+                <Badge variant="default" size="sm">{CATEGORY_LABELS[selectedRunbook.category] || selectedRunbook.category}</Badge>
+              )}
               {selectedRunbook.dbType && (
                 <Badge variant="default" size="sm">{selectedRunbook.dbType}</Badge>
               )}

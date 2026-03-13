@@ -13,11 +13,14 @@ export class RunbooksService {
 
   constructor(private readonly prisma: PrismaService) {}
 
-  async findAll(organizationId: string) {
+  async findAll(organizationId: string, category?: string) {
     return this.prisma.runbook.findMany({
-      where: { organizationId },
+      where: {
+        organizationId,
+        ...(category ? { category } : {}),
+      },
       include: { executions: { orderBy: { startedAt: 'desc' }, take: 5 } },
-      orderBy: { name: 'asc' },
+      orderBy: [{ category: 'asc' }, { name: 'asc' }],
     });
   }
 
@@ -282,6 +285,7 @@ export class RunbooksService {
         dryRun: true,
         runbookId,
         runbookName: runbook.name,
+        category: runbook.category,
         systemId,
         gate,
         costSafe: runbook.costSafe,
