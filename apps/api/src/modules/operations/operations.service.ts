@@ -251,7 +251,7 @@ export class OperationsService {
 
     for (let i = 0; i < commands.length; i++) {
       const step = commands[i];
-      const command = step.command.replace(/SID/g, system.sid);
+      const command = step.command.replaceAll('SID', system.sid);
 
       this.logger.log(`  Step ${i + 1}/${commands.length}: ${step.label}`);
 

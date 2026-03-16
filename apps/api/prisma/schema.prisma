@@ -182,11 +182,12 @@ model Instance {
   features    Json   @default("{}") // SAP features enabled
 
   system    System     @relation(fields: [systemId], references: [id], onDelete: Cascade)
-  component Component? @relation(fields: [componentId], references: [id])
-  host      Host?      @relation(fields: [hostId], references: [id])
+  component Component? @relation(fields: [componentId], references: [id], onDelete: Cascade)
+  host      Host?      @relation(fields: [hostId], references: [id], onDelete: Cascade)
 
   @@index([systemId])
   @@index([componentId])
+  @@index([hostId])
   @@map("instances")
 }
 
