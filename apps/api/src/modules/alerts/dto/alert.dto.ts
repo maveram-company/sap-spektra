@@ -1,4 +1,4 @@
-import { IsOptional, IsString } from 'class-validator';
+import { IsOptional, IsString, IsIn } from 'class-validator';
 
 export class ResolveAlertDto {
   @IsOptional()
@@ -12,11 +12,11 @@ export class ResolveAlertDto {
 
 export class AlertFiltersDto {
   @IsOptional()
-  @IsString()
+  @IsIn(['active', 'acknowledged', 'resolved'])
   status?: string;
 
   @IsOptional()
-  @IsString()
+  @IsIn(['info', 'warning', 'critical'])
   level?: string;
 
   @IsOptional()

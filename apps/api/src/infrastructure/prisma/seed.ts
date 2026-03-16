@@ -3,6 +3,7 @@ import { PrismaClient } from '@prisma/client';
 import { PrismaPg } from '@prisma/adapter-pg';
 import pg from 'pg';
 import * as bcrypt from 'bcryptjs';
+import { randomUUID } from 'node:crypto';
 
 const logger = new Logger('Seed');
 
@@ -5866,7 +5867,9 @@ async function main() {
   // ══════════════════════════════════════════════
   // API KEYS
   // ══════════════════════════════════════════════
-  const demoApiKey = process.env.DEMO_API_KEY || 'sk-spektra-demo-key-12345678';
+  const demoApiKey =
+    process.env.DEMO_API_KEY ||
+    `sk-spektra-demo-${randomUUID().replace(/-/g, '').slice(0, 16)}`;
   const keyHash = await bcrypt.hash(demoApiKey, 12);
   await prisma.apiKey.create({
     data: {

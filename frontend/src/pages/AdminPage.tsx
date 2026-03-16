@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Shield, RefreshCw, Server, Trash2, Edit, Activity, Plus } from 'lucide-react';
 import Header from '../components/layout/Header';
@@ -16,16 +16,28 @@ export default function AdminPage() {
   const [loading, setLoading] = useState(true);
   const [checking, setChecking] = useState(null);
   const [deleteConfirm, setDeleteConfirm] = useState(null);
+  const [actionError, setActionError] = useState(null);
+  const deleteTimerRef = useRef<ReturnType<typeof setTimeout>>();
   const navigate = useNavigate();
 
   useEffect(() => {
     dataService.getSystems().then(data => { setSystems(data); setLoading(false); });
+    return () => {
+      if (deleteTimerRef.current) clearTimeout(deleteTimerRef.current);
+    };
   }, []);
 
   const handleHealthCheck = async (id) => {
     setChecking(id);
-    await new Promise(r => setTimeout(r, 1500));
-    setChecking(null);
+    setActionError(null);
+    try {
+      // Demo mode: simulated delay — connect to real API when available
+      await new Promise(r => setTimeout(r, 1500));
+    } catch (err) {
+      setActionError(err instanceof Error ? err.message : 'Error al ejecutar health check');
+    } finally {
+      setChecking(null);
+    }
   };
 
   const handleEdit = (sys) => {
@@ -34,12 +46,18 @@ export default function AdminPage() {
 
   const handleDelete = async (id) => {
     if (deleteConfirm === id) {
-      await new Promise(r => setTimeout(r, 500));
-      setSystems(prev => prev.filter(s => s.id !== id));
-      setDeleteConfirm(null);
+      setActionError(null);
+      try {
+        // Demo mode: simulated delay — connect to real API when available
+        await new Promise(r => setTimeout(r, 500));
+        setSystems(prev => prev.filter(s => s.id !== id));
+        setDeleteConfirm(null);
+      } catch (err) {
+        setActionError(err instanceof Error ? err.message : 'Error al eliminar sistema');
+      }
     } else {
       setDeleteConfirm(id);
-      setTimeout(() => setDeleteConfirm(null), 3000);
+      deleteTimerRef.current = setTimeout(() => setDeleteConfirm(null), 3000);
     }
   };
 
@@ -49,6 +67,13 @@ export default function AdminPage() {
     <div>
       <Header title="Administración" subtitle="Gestión de sistemas y configuración" />
       <div className="p-6">
+        {actionError && (
+          <div className="mb-4 flex items-center gap-2 px-4 py-3 rounded-lg bg-danger-50 border border-danger-200 text-danger-700 text-sm">
+            <Activity size={14} className="flex-shrink-0" />
+            {actionError}
+            <button onClick={() => setActionError(null)} className="ml-auto opacity-60 hover:opacity-100">×</button>
+          </div>
+        )}
         <div className="flex items-center justify-between mb-6">
           <PageHeader
             title="Gestión de Sistemas"

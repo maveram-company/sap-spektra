@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Building2, Globe, Clock, Save, AlertTriangle, Shield, Calendar, Key, Copy, Eye, EyeOff } from 'lucide-react';
+import { Building2, Globe, Save, AlertTriangle, Shield, Calendar, Key, Copy } from 'lucide-react';
 import { useTenant } from '../../contexts/TenantContext';
 import { dataService } from '../../services/dataService';
 import Card, { CardHeader, CardTitle, CardDescription } from '../../components/ui/Card';
@@ -16,6 +16,8 @@ export default function GeneralSettings() {
   const [maintenanceWindows, setMaintenanceWindows] = useState([]);
   const [apiKeys, setApiKeys] = useState([]);
   const [saving, setSaving] = useState(false);
+  const [saveError, setSaveError] = useState(null);
+  const [nameError, setNameError] = useState('');
 
   useEffect(() => {
     Promise.all([
@@ -38,10 +40,22 @@ export default function GeneralSettings() {
   });
 
   const handleSave = async () => {
+    if (!form.name.trim()) {
+      setNameError('El nombre de la organización es requerido');
+      return;
+    }
+    setNameError('');
     setSaving(true);
-    await new Promise(r => setTimeout(r, 800));
-    updateSettings({ timezone: form.timezone, language: form.language });
-    setSaving(false);
+    setSaveError(null);
+    try {
+      // Demo mode: simulated delay — connect to real API when available
+      await new Promise(r => setTimeout(r, 800));
+      updateSettings({ timezone: form.timezone, language: form.language });
+    } catch (err) {
+      setSaveError(err instanceof Error ? err.message : 'Error al guardar configuración');
+    } finally {
+      setSaving(false);
+    }
   };
 
   return (
@@ -63,8 +77,10 @@ export default function GeneralSettings() {
           <Input
             label="Nombre de la Organización"
             value={form.name}
-            onChange={(e) => setForm({ ...form, name: e.target.value })}
+            onChange={(e) => { setForm({ ...form, name: e.target.value }); if (nameError) setNameError(''); }}
             icon={Building2}
+            required
+            error={nameError || undefined}
           />
           <Input
             label="Slug (URL)"
@@ -73,7 +89,7 @@ export default function GeneralSettings() {
             icon={Globe}
             hint="Se usa en URLs: app.spektra.maveram.com/org-slug"
           />
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <Select
               label="Zona Horaria"
               value={form.timezone}
@@ -99,6 +115,12 @@ export default function GeneralSettings() {
           </div>
         </div>
 
+        {saveError && (
+          <div className="mt-4 flex items-center gap-2 px-4 py-3 rounded-lg bg-danger-50 border border-danger-200 text-danger-700 text-sm">
+            <AlertTriangle size={14} className="flex-shrink-0" />
+            {saveError}
+          </div>
+        )}
         <div className="flex justify-end mt-6 pt-4 border-t border-border">
           <Button icon={Save} loading={saving} onClick={handleSave}>Guardar Cambios</Button>
         </div>

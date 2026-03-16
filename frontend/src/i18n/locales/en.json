@@ -116,6 +116,27 @@
     "revokeKey": "Revoke",
     "createKey": "Create API Key"
   },
+  "backgroundJobs": {
+    "statusRunning": "Running",
+    "statusScheduled": "Scheduled",
+    "statusFinished": "Finished",
+    "statusFailed": "Failed",
+    "statusCanceled": "Canceled",
+    "kpiRunning": "Running",
+    "kpiScheduled": "Scheduled",
+    "kpiFinished": "Finished",
+    "kpiFailed": "Failed"
+  },
+  "reports": {
+    "typeDaily": "Daily",
+    "typeWeekly": "Weekly",
+    "typeHealth": "Health",
+    "typeAudit": "Audit",
+    "typeDescDaily": "Last 24h",
+    "typeDescWeekly": "7-day trends",
+    "typeDescHealth": "Full infra status",
+    "typeDescAudit": "Immutable hash chain"
+  },
   "topnav": {
     "notifications": "Notifications",
     "viewAll": "View all",

@@ -23,6 +23,8 @@ export default function OperationsPage() {
   const [activeTab, setActiveTab] = useState('all');
   const [showNewModal, setShowNewModal] = useState(false);
   const [saving, setSaving] = useState(false);
+  const [saveError, setSaveError] = useState(null);
+  const [formErrors, setFormErrors] = useState<{ systemId?: string; description?: string }>({});
   const [newOp, setNewOp] = useState({ systemId: '', type: 'BACKUP', description: '', riskLevel: 'LOW', scheduledTime: '' });
 
   useEffect(() => {
@@ -48,23 +50,35 @@ export default function OperationsPage() {
   );
 
   const handleCreateOperation = async () => {
+    const errors: { systemId?: string; description?: string } = {};
+    if (!newOp.systemId) errors.systemId = 'Selecciona un sistema';
+    if (!newOp.description.trim()) errors.description = 'La descripción es requerida';
+    if (Object.keys(errors).length > 0) { setFormErrors(errors); return; }
+    setFormErrors({});
     setSaving(true);
-    await new Promise(r => setTimeout(r, 800));
-    const sys = systems.find(s => s.id === newOp.systemId);
-    setOperations(prev => [...prev, {
-      id: `OP-${String(prev.length + 1).padStart(3, '0')}`,
-      systemId: newOp.systemId,
-      sid: sys?.sid || 'N/A',
-      type: newOp.type,
-      scheduledTime: newOp.scheduledTime || new Date(Date.now() + 86400000).toISOString(),
-      status: 'SCHEDULED',
-      riskLevel: newOp.riskLevel,
-      requestedBy: 'demo@empresa.com',
-      description: newOp.description,
-    }]);
-    setShowNewModal(false);
-    setNewOp({ systemId: '', type: 'BACKUP', description: '', riskLevel: 'LOW', scheduledTime: '' });
-    setSaving(false);
+    setSaveError(null);
+    try {
+      // Demo mode: simulated delay — connect to real API when available
+      await new Promise(r => setTimeout(r, 800));
+      const sys = systems.find(s => s.id === newOp.systemId);
+      setOperations(prev => [...prev, {
+        id: `OP-${String(prev.length + 1).padStart(3, '0')}`,
+        systemId: newOp.systemId,
+        sid: sys?.sid || 'N/A',
+        type: newOp.type,
+        scheduledTime: newOp.scheduledTime || new Date(Date.now() + 86400000).toISOString(),
+        status: 'SCHEDULED',
+        riskLevel: newOp.riskLevel,
+        requestedBy: 'demo@empresa.com',
+        description: newOp.description,
+      }]);
+      setShowNewModal(false);
+      setNewOp({ systemId: '', type: 'BACKUP', description: '', riskLevel: 'LOW', scheduledTime: '' });
+    } catch (err) {
+      setSaveError(err instanceof Error ? err.message : 'Error al crear operación');
+    } finally {
+      setSaving(false);
+    }
   };
 
   const filtered = activeTab === 'all' ? operations : operations.filter(o => o.status === activeTab);
@@ -140,28 +154,37 @@ export default function OperationsPage() {
         {/* New Operation Modal */}
         <Modal
           isOpen={showNewModal}
-          onClose={() => setShowNewModal(false)}
+          onClose={() => { setShowNewModal(false); setFormErrors({}); setSaveError(null); }}
           title="Nueva Operación"
           description="Programa una nueva operación para un sistema SAP"
           footer={
             <>
-              <Button variant="outline" onClick={() => setShowNewModal(false)}>Cancelar</Button>
-              <Button icon={Save} loading={saving} onClick={handleCreateOperation} disabled={!newOp.systemId || !newOp.description}>
+              <Button variant="outline" onClick={() => { setShowNewModal(false); setFormErrors({}); setSaveError(null); }}>Cancelar</Button>
+              <Button icon={Save} loading={saving} onClick={handleCreateOperation} disabled={saving}>
                 Programar
               </Button>
             </>
           }
         >
           <div className="space-y-4">
-            <Select
-              label="Sistema"
-              value={newOp.systemId}
-              onChange={(e) => setNewOp({ ...newOp, systemId: e.target.value })}
-              options={[
-                { value: '', label: 'Seleccionar sistema...' },
-                ...systems.map(s => ({ value: s.id, label: `${s.sid} — ${s.type} (${s.environment})` }))
-              ]}
-            />
+            {saveError && (
+              <div className="flex items-center gap-2 px-4 py-3 rounded-lg bg-danger-50 border border-danger-200 text-danger-700 text-sm">
+                <AlertCircle size={14} className="flex-shrink-0" />
+                {saveError}
+              </div>
+            )}
+            <div>
+              <Select
+                label="Sistema"
+                value={newOp.systemId}
+                onChange={(e) => { setNewOp({ ...newOp, systemId: e.target.value }); if (formErrors.systemId) setFormErrors(prev => ({ ...prev, systemId: undefined })); }}
+                options={[
+                  { value: '', label: 'Seleccionar sistema...' },
+                  ...systems.map(s => ({ value: s.id, label: `${s.sid} — ${s.type} (${s.environment})` }))
+                ]}
+              />
+              {formErrors.systemId && <p className="mt-1 text-xs text-danger-600">{formErrors.systemId}</p>}
+            </div>
             <Select
               label="Tipo de Operación"
               value={newOp.type}
@@ -174,12 +197,16 @@ export default function OperationsPage() {
                 { value: 'PATCH', label: 'Actualización / Parche' },
               ]}
             />
-            <Input
-              label="Descripción"
-              value={newOp.description}
-              onChange={(e) => setNewOp({ ...newOp, description: e.target.value })}
-              placeholder="Descripción de la operación..."
-            />
+            <div>
+              <Input
+                label="Descripción"
+                value={newOp.description}
+                onChange={(e) => { setNewOp({ ...newOp, description: e.target.value }); if (formErrors.description) setFormErrors(prev => ({ ...prev, description: undefined })); }}
+                placeholder="Descripción de la operación..."
+                required
+                error={formErrors.description}
+              />
+            </div>
             <Select
               label="Nivel de Riesgo"
               value={newOp.riskLevel}

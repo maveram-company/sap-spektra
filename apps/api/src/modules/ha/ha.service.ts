@@ -1,4 +1,9 @@
-import { Injectable, NotFoundException, Logger } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  BadRequestException,
+  Logger,
+} from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { PrismaService } from '../../infrastructure/prisma/prisma.service';
 import { AuditService } from '../audit/audit.service';
@@ -260,7 +265,9 @@ export class HAService {
         c.method === 'Spektra Agent' && c.status === 'connected',
     );
     if (!connector) {
-      throw new Error(`No Spektra Agent connected for ${system.sid}`);
+      throw new BadRequestException(
+        `No Spektra Agent connected for ${system.sid}`,
+      );
     }
 
     const agentUrl = this.resolveAgentUrl(connector);

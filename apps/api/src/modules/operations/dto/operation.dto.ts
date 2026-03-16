@@ -1,5 +1,19 @@
-import { IsString, IsNotEmpty, IsOptional, IsDate } from 'class-validator';
+import {
+  IsString,
+  IsNotEmpty,
+  IsOptional,
+  IsDate,
+  IsEnum,
+} from 'class-validator';
 import { Type } from 'class-transformer';
+
+export enum OperationStatus {
+  PENDING = 'PENDING',
+  IN_PROGRESS = 'IN_PROGRESS',
+  COMPLETED = 'COMPLETED',
+  FAILED = 'FAILED',
+  CANCELLED = 'CANCELLED',
+}
 
 export class CreateOperationDto {
   @IsString()
@@ -29,7 +43,6 @@ export class CreateOperationDto {
 }
 
 export class UpdateOperationStatusDto {
-  @IsString()
-  @IsNotEmpty()
-  status!: string;
+  @IsEnum(OperationStatus)
+  status!: OperationStatus;
 }

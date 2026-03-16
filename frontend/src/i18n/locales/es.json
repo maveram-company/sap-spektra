@@ -116,6 +116,27 @@
     "revokeKey": "Revocar",
     "createKey": "Crear API Key"
   },
+  "backgroundJobs": {
+    "statusRunning": "Ejecutando",
+    "statusScheduled": "Programado",
+    "statusFinished": "Finalizado",
+    "statusFailed": "Fallido",
+    "statusCanceled": "Cancelado",
+    "kpiRunning": "Ejecutando",
+    "kpiScheduled": "Programados",
+    "kpiFinished": "Finalizados",
+    "kpiFailed": "Fallidos"
+  },
+  "reports": {
+    "typeDaily": "Diario",
+    "typeWeekly": "Semanal",
+    "typeHealth": "Salud",
+    "typeAudit": "Auditoría",
+    "typeDescDaily": "Últimas 24h",
+    "typeDescWeekly": "Tendencias 7 días",
+    "typeDescHealth": "Estado infra completo",
+    "typeDescAudit": "Hash chain inmutable"
+  },
   "topnav": {
     "notifications": "Notificaciones",
     "viewAll": "Ver todas",

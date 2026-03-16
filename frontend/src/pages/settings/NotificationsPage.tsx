@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Mail, Save } from 'lucide-react';
+import { Mail, Save, AlertTriangle } from 'lucide-react';
 import Card, { CardHeader, CardTitle, CardDescription } from '../../components/ui/Card';
 import Button from '../../components/ui/Button';
 
@@ -31,13 +31,21 @@ export default function NotificationsPage() {
     digestWeekly: true,
   });
   const [saving, setSaving] = useState(false);
+  const [saveError, setSaveError] = useState(null);
 
   const update = (key, value) => setSettings(prev => ({ ...prev, [key]: value }));
 
   const handleSave = async () => {
     setSaving(true);
-    await new Promise(r => setTimeout(r, 600));
-    setSaving(false);
+    setSaveError(null);
+    try {
+      // Demo mode: simulated delay — connect to real API when available
+      await new Promise(r => setTimeout(r, 600));
+    } catch (err) {
+      setSaveError(err instanceof Error ? err.message : 'Error al guardar preferencias');
+    } finally {
+      setSaving(false);
+    }
   };
 
   return (
@@ -76,6 +84,12 @@ export default function NotificationsPage() {
           </div>
         </Card>
 
+        {saveError && (
+          <div className="flex items-center gap-2 px-4 py-3 rounded-lg bg-danger-50 border border-danger-200 text-danger-700 text-sm">
+            <AlertTriangle size={14} className="flex-shrink-0" />
+            {saveError}
+          </div>
+        )}
         <div className="flex justify-end">
           <Button icon={Save} loading={saving} onClick={handleSave}>Guardar Preferencias</Button>
         </div>

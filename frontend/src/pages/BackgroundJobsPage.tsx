@@ -1,4 +1,5 @@
 import { useState, useEffect, useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Play, Square, Clock, AlertTriangle, CheckCircle, XCircle, RotateCcw, Filter } from 'lucide-react';
 import Header from '../components/layout/Header';
 import Card, { CardHeader, CardTitle } from '../components/ui/Card';
@@ -8,27 +9,29 @@ import PageLoading from '../components/ui/PageLoading';
 import { dataService } from '../services/dataService';
 
 const statusConfig = {
-  running: { icon: Play, label: 'Ejecutando', color: 'bg-primary-100 dark:bg-primary-900/30 text-primary-700 dark:text-primary-400', dot: 'bg-primary-500 animate-pulse' },
-  scheduled: { icon: Clock, label: 'Programado', color: 'bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400', dot: 'bg-blue-500' },
-  finished: { icon: CheckCircle, label: 'Finalizado', color: 'bg-success-100 dark:bg-success-900/30 text-success-700 dark:text-success-400', dot: 'bg-success-500' },
-  failed: { icon: XCircle, label: 'Fallido', color: 'bg-danger-100 dark:bg-danger-900/30 text-danger-700 dark:text-danger-400', dot: 'bg-danger-500' },
-  canceled: { icon: Square, label: 'Cancelado', color: 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-400', dot: 'bg-gray-500' },
+  running: { icon: Play, labelKey: 'backgroundJobs.statusRunning', color: 'bg-primary-100 dark:bg-primary-900/30 text-primary-700 dark:text-primary-400', dot: 'bg-primary-500 animate-pulse' },
+  scheduled: { icon: Clock, labelKey: 'backgroundJobs.statusScheduled', color: 'bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400', dot: 'bg-blue-500' },
+  finished: { icon: CheckCircle, labelKey: 'backgroundJobs.statusFinished', color: 'bg-success-100 dark:bg-success-900/30 text-success-700 dark:text-success-400', dot: 'bg-success-500' },
+  failed: { icon: XCircle, labelKey: 'backgroundJobs.statusFailed', color: 'bg-danger-100 dark:bg-danger-900/30 text-danger-700 dark:text-danger-400', dot: 'bg-danger-500' },
+  canceled: { icon: Square, labelKey: 'backgroundJobs.statusCanceled', color: 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-400', dot: 'bg-gray-500' },
 };
 
 const classLabels = { A: 'Clase A (alta)', B: 'Clase B (media)', C: 'Clase C (baja)' };
 
 function JobStatusBadge({ status }) {
+  const { t } = useTranslation();
   const cfg = statusConfig[status] || statusConfig.finished;
   const Icon = cfg.icon;
   return (
     <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium ${cfg.color}`}>
       <Icon size={12} />
-      {cfg.label}
+      {t(cfg.labelKey)}
     </span>
   );
 }
 
 export default function BackgroundJobsPage() {
+  const { t } = useTranslation();
   const [jobs, setJobs] = useState([]);
   const [systems, setSystems] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -87,7 +90,7 @@ export default function BackgroundJobsPage() {
               </div>
               <div>
                 <p className="text-2xl font-bold text-text-primary">{running}</p>
-                <p className="text-xs text-text-secondary">Ejecutando</p>
+                <p className="text-xs text-text-secondary">{t('backgroundJobs.kpiRunning')}</p>
               </div>
             </div>
           </Card>
@@ -98,7 +101,7 @@ export default function BackgroundJobsPage() {
               </div>
               <div>
                 <p className="text-2xl font-bold text-text-primary">{scheduled}</p>
-                <p className="text-xs text-text-secondary">Programados</p>
+                <p className="text-xs text-text-secondary">{t('backgroundJobs.kpiScheduled')}</p>
               </div>
             </div>
           </Card>
@@ -109,7 +112,7 @@ export default function BackgroundJobsPage() {
               </div>
               <div>
                 <p className="text-2xl font-bold text-text-primary">{finished}</p>
-                <p className="text-xs text-text-secondary">Finalizados</p>
+                <p className="text-xs text-text-secondary">{t('backgroundJobs.kpiFinished')}</p>
               </div>
             </div>
           </Card>
@@ -120,7 +123,7 @@ export default function BackgroundJobsPage() {
               </div>
               <div>
                 <p className="text-2xl font-bold text-text-primary">{failed}</p>
-                <p className="text-xs text-text-secondary">Fallidos</p>
+                <p className="text-xs text-text-secondary">{t('backgroundJobs.kpiFailed')}</p>
               </div>
             </div>
           </Card>
@@ -136,11 +139,11 @@ export default function BackgroundJobsPage() {
               className="appearance-none bg-surface border border-border rounded-lg px-3 py-2 text-sm text-text-primary focus:outline-none focus:ring-2 focus:ring-primary-500 cursor-pointer"
             >
               <option value="all">Todos los estados</option>
-              <option value="running">Ejecutando</option>
-              <option value="scheduled">Programados</option>
-              <option value="finished">Finalizados</option>
-              <option value="failed">Fallidos</option>
-              <option value="canceled">Cancelados</option>
+              <option value="running">{t('backgroundJobs.statusRunning')}</option>
+              <option value="scheduled">{t('backgroundJobs.statusScheduled')}</option>
+              <option value="finished">{t('backgroundJobs.statusFinished')}</option>
+              <option value="failed">{t('backgroundJobs.statusFailed')}</option>
+              <option value="canceled">{t('backgroundJobs.statusCanceled')}</option>
             </select>
           </div>
           <select

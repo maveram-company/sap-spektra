@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { UserPlus, Mail, Trash2, Edit, Save, AlertTriangle } from 'lucide-react';
 import Card, { CardHeader, CardTitle } from '../../components/ui/Card';
 import Button from '../../components/ui/Button';
@@ -33,7 +33,15 @@ export default function UsersPage() {
   const [sending, setSending] = useState(false);
   const [deleteConfirm, setDeleteConfirm] = useState(null);
   const [fieldErrors, setFieldErrors] = useState({});
+  const [actionError, setActionError] = useState(null);
+  const deleteTimerRef = useRef<ReturnType<typeof setTimeout>>();
   const { organization } = useTenant();
+
+  useEffect(() => {
+    return () => {
+      if (deleteTimerRef.current) clearTimeout(deleteTimerRef.current);
+    };
+  }, []);
 
   const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   const VALID_ROLES = ['admin', 'operator', 'escalation', 'viewer'];
@@ -71,19 +79,26 @@ export default function UsersPage() {
   const handleInvite = async () => {
     if (!validateForm(inviteForm)) return;
     setSending(true);
-    await new Promise(r => setTimeout(r, 800));
-    setUsers(prev => [...prev, {
-      id: `usr-${Date.now()}`,
-      name: inviteForm.name.trim() || inviteForm.email.trim().split('@')[0],
-      email: inviteForm.email.trim(),
-      role: inviteForm.role,
-      status: 'invited',
-      lastLogin: null,
-    }]);
-    setShowInviteModal(false);
-    setInviteForm({ email: '', role: 'viewer', name: '' });
-    setFieldErrors({});
-    setSending(false);
+    setActionError(null);
+    try {
+      // Demo mode: simulated delay — connect to real API when available
+      await new Promise(r => setTimeout(r, 800));
+      setUsers(prev => [...prev, {
+        id: `usr-${Date.now()}`,
+        name: inviteForm.name.trim() || inviteForm.email.trim().split('@')[0],
+        email: inviteForm.email.trim(),
+        role: inviteForm.role,
+        status: 'invited',
+        lastLogin: null,
+      }]);
+      setShowInviteModal(false);
+      setInviteForm({ email: '', role: 'viewer', name: '' });
+      setFieldErrors({});
+    } catch (err) {
+      setActionError(err instanceof Error ? err.message : 'Error al enviar invitación');
+    } finally {
+      setSending(false);
+    }
   };
 
   const handleEdit = (user) => {
@@ -94,22 +109,35 @@ export default function UsersPage() {
   const handleSaveEdit = async () => {
     if (!validateForm(editingUser)) return;
     setSending(true);
-    await new Promise(r => setTimeout(r, 600));
-    setUsers(prev => prev.map(u => u.id === editingUser.id ? editingUser : u));
-    setShowEditModal(false);
-    setEditingUser(null);
-    setFieldErrors({});
-    setSending(false);
+    setActionError(null);
+    try {
+      // Demo mode: simulated delay — connect to real API when available
+      await new Promise(r => setTimeout(r, 600));
+      setUsers(prev => prev.map(u => u.id === editingUser.id ? editingUser : u));
+      setShowEditModal(false);
+      setEditingUser(null);
+      setFieldErrors({});
+    } catch (err) {
+      setActionError(err instanceof Error ? err.message : 'Error al guardar cambios');
+    } finally {
+      setSending(false);
+    }
   };
 
   const handleDelete = async (id) => {
     if (deleteConfirm === id) {
-      await new Promise(r => setTimeout(r, 500));
-      setUsers(prev => prev.filter(u => u.id !== id));
-      setDeleteConfirm(null);
+      setActionError(null);
+      try {
+        // Demo mode: simulated delay — connect to real API when available
+        await new Promise(r => setTimeout(r, 500));
+        setUsers(prev => prev.filter(u => u.id !== id));
+        setDeleteConfirm(null);
+      } catch (err) {
+        setActionError(err instanceof Error ? err.message : 'Error al eliminar usuario');
+      }
     } else {
       setDeleteConfirm(id);
-      setTimeout(() => setDeleteConfirm(null), 3000);
+      deleteTimerRef.current = setTimeout(() => setDeleteConfirm(null), 3000);
     }
   };
 
@@ -128,6 +156,13 @@ export default function UsersPage() {
 
   return (
     <div className="max-w-4xl">
+      {actionError && (
+        <div className="mb-4 px-4 py-3 rounded-lg bg-danger-50 border border-danger-200 text-danger-700 text-sm flex items-center gap-2">
+          <AlertTriangle size={14} className="flex-shrink-0" />
+          {actionError}
+          <button onClick={() => setActionError(null)} className="ml-auto opacity-60 hover:opacity-100">×</button>
+        </div>
+      )}
       <div className="flex items-center justify-between mb-6">
         <div>
           <h2 className="text-xl font-bold text-text-primary">Usuarios</h2>

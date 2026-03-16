@@ -3,6 +3,25 @@ import { render, screen, waitFor } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 import BackgroundJobsPage from '../BackgroundJobsPage';
 
+vi.mock('react-i18next', () => ({
+  useTranslation: () => ({
+    t: (key: string) => {
+      const translations: Record<string, string> = {
+        'backgroundJobs.statusRunning': 'Ejecutando',
+        'backgroundJobs.statusScheduled': 'Programado',
+        'backgroundJobs.statusFinished': 'Finalizado',
+        'backgroundJobs.statusFailed': 'Fallido',
+        'backgroundJobs.statusCanceled': 'Cancelado',
+        'backgroundJobs.kpiRunning': 'Ejecutando',
+        'backgroundJobs.kpiScheduled': 'Programados',
+        'backgroundJobs.kpiFinished': 'Finalizados',
+        'backgroundJobs.kpiFailed': 'Fallidos',
+      };
+      return translations[key] || key;
+    },
+  }),
+}));
+
 vi.mock('../../services/dataService', () => ({
   dataService: {
     getBackgroundJobs: vi.fn().mockResolvedValue([

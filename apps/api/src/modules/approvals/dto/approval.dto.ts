@@ -1,12 +1,17 @@
-import { IsString, IsNotEmpty, IsOptional, IsNumber } from 'class-validator';
+import {
+  IsString,
+  IsNotEmpty,
+  IsOptional,
+  IsNumber,
+  IsIn,
+} from 'class-validator';
 
 export class CreateApprovalDto {
   @IsString()
   @IsNotEmpty()
   systemId!: string;
 
-  @IsString()
-  @IsNotEmpty()
+  @IsIn(['low', 'medium', 'high', 'critical'])
   severity!: string;
 
   @IsString()

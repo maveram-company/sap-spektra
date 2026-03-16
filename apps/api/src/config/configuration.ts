@@ -39,12 +39,17 @@ export default (): AppConfig => {
     );
   }
 
+  const databaseUrl = process.env.DATABASE_URL;
+  if (!databaseUrl && nodeEnv !== 'test') {
+    throw new Error('DATABASE_URL environment variable is required');
+  }
+
   return {
     runtime: (process.env.RUNTIME_MODE as RuntimeMode) || 'LOCAL_SIMULATED',
     port: parseInt(process.env.PORT || '3001', 10),
     nodeEnv,
     database: {
-      url: process.env.DATABASE_URL || '',
+      url: databaseUrl || '',
     },
     redis: {
       url: process.env.REDIS_URL || 'redis://localhost:6379',

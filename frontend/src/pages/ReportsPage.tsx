@@ -39,7 +39,8 @@ export default function ReportsPage() {
   const [generating, setGenerating] = useState(null);
   const [toast, setToast] = useState(null);
   const [error, setError] = useState<string | null>(null);
-  const toastTimerRef = useRef(null);
+  const toastTimerRef = useRef<ReturnType<typeof setTimeout>>(null);
+  const generateTimerRef = useRef<ReturnType<typeof setTimeout>>(null);
 
   useEffect(() => {
     let mounted = true;
@@ -51,7 +52,11 @@ export default function ReportsPage() {
       if (!mounted) return;
       setError('Error al cargar datos. Intenta de nuevo.');
     });
-    return () => { mounted = false; clearTimeout(toastTimerRef.current); };
+    return () => {
+      mounted = false;
+      clearTimeout(toastTimerRef.current);
+      clearTimeout(generateTimerRef.current);
+    };
   }, []);
 
   // Mostrar notificación temporal
@@ -62,11 +67,14 @@ export default function ReportsPage() {
   };
 
   // Generar reporte
-  const handleGenerate = (typeKey) => {
+  const handleGenerate = async (typeKey) => {
     if (generating) return;
     setGenerating(typeKey);
-
-    setTimeout(() => {
+    try {
+      // Demo mode: simulated delay — connect to real API when available
+      await new Promise<void>((resolve, reject) => {
+        generateTimerRef.current = setTimeout(() => resolve(), 1500);
+      });
       const now = new Date();
       const newReport = {
         id: `RPT-${String(reports.length + 1).padStart(3, '0')}`,
@@ -75,9 +83,12 @@ export default function ReportsPage() {
         estado: 'OK',
       };
       setReports((prev) => [newReport, ...prev]);
-      setGenerating(null);
       showToast(`Reporte ${typeKey} generado exitosamente`, 'success');
-    }, 1500);
+    } catch (err) {
+      showToast(err instanceof Error ? err.message : 'Error al generar reporte', 'error');
+    } finally {
+      setGenerating(null);
+    }
   };
 
   // Descargar reporte como JSON

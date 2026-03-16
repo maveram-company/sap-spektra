@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Link2, ExternalLink, Check, X } from 'lucide-react';
+import { Link2, ExternalLink, Check, X, AlertTriangle } from 'lucide-react';
 import Card from '../../components/ui/Card';
 import Button from '../../components/ui/Button';
 import Badge from '../../components/ui/Badge';
@@ -17,11 +17,19 @@ const integrations = [
 export default function IntegrationsPage() {
   const { hasFeature } = usePlan();
   const [connecting, setConnecting] = useState(null);
+  const [connectError, setConnectError] = useState(null);
 
   const handleConnect = async (id) => {
     setConnecting(id);
-    await new Promise(r => setTimeout(r, 1000));
-    setConnecting(null);
+    setConnectError(null);
+    try {
+      // Demo mode: simulated delay — connect to real API when available
+      await new Promise(r => setTimeout(r, 1000));
+    } catch (err) {
+      setConnectError(err instanceof Error ? err.message : 'Error al conectar integración');
+    } finally {
+      setConnecting(null);
+    }
   };
 
   return (
@@ -31,6 +39,13 @@ export default function IntegrationsPage() {
         <p className="text-sm text-text-secondary mt-1">Conecta SAP Spektra con tus herramientas</p>
       </div>
 
+      {connectError && (
+        <div className="mb-4 flex items-center gap-2 px-4 py-3 rounded-lg bg-danger-50 border border-danger-200 text-danger-700 text-sm">
+          <AlertTriangle size={14} className="flex-shrink-0" />
+          {connectError}
+          <button onClick={() => setConnectError(null)} className="ml-auto opacity-60 hover:opacity-100">×</button>
+        </div>
+      )}
       <div className="space-y-4">
         {integrations.map(integration => {
           const available = hasFeature(integration.plan);

@@ -3,6 +3,24 @@ import { render, screen, waitFor } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 import ReportsPage from '../ReportsPage';
 
+vi.mock('react-i18next', () => ({
+  useTranslation: () => ({
+    t: (key: string) => {
+      const translations: Record<string, string> = {
+        'reports.typeDaily': 'Diario',
+        'reports.typeWeekly': 'Semanal',
+        'reports.typeHealth': 'Salud',
+        'reports.typeAudit': 'Auditoría',
+        'reports.typeDescDaily': 'Últimas 24h',
+        'reports.typeDescWeekly': 'Tendencias 7 días',
+        'reports.typeDescHealth': 'Estado infra completo',
+        'reports.typeDescAudit': 'Hash chain inmutable',
+      };
+      return translations[key] || key;
+    },
+  }),
+}));
+
 vi.mock('../../services/dataService', () => ({
   dataService: {
     getEvents: vi.fn().mockResolvedValue([

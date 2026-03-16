@@ -67,15 +67,15 @@ export default function LoginPage() {
 
       {/* ── Decorative gradient orbs ── */}
       <div
-        className="absolute login-orb login-orb-cyan"
+        className="absolute hidden md:block login-orb login-orb-cyan"
         style={{ top: '-10%', left: '-8%', width: '520px', height: '520px' }}
       />
       <div
-        className="absolute login-orb login-orb-violet"
+        className="absolute hidden md:block login-orb login-orb-violet"
         style={{ bottom: '-12%', right: '-8%', width: '580px', height: '580px' }}
       />
       <div
-        className="absolute login-orb login-orb-cyan-sm"
+        className="absolute hidden lg:block login-orb login-orb-cyan-sm"
         style={{ top: '40%', right: '15%', width: '300px', height: '300px' }}
       />
 
