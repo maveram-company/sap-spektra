@@ -26,11 +26,15 @@ export default function CertificatesPage() {
   const [certificates, setCertificates] = useState([]);
   const [licenses, setLicenses] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     Promise.all([dataService.getCertificates(), dataService.getLicenses()]).then(([certs, lics]) => {
       setCertificates(certs);
       setLicenses(lics);
+      setLoading(false);
+    }).catch(() => {
+      setError('Error al cargar datos. Intenta de nuevo.');
       setLoading(false);
     });
   }, []);
@@ -41,6 +45,17 @@ export default function CertificatesPage() {
   const warningLics = useMemo(() => licenses.filter(l => l.status === 'warning').length, [licenses]);
 
   if (loading) return <PageLoading message="Cargando certificados..." />;
+
+  if (error) return (
+    <div className="flex items-center justify-center h-64">
+      <div className="text-center">
+        <p className="text-red-400 mb-4">{error}</p>
+        <button onClick={() => window.location.reload()} className="px-4 py-2 bg-cyan-600 text-white rounded-lg hover:bg-cyan-700 transition-colors">
+          Reintentar
+        </button>
+      </div>
+    </div>
+  );
 
   return (
     <div>

@@ -30,6 +30,7 @@ export class ApprovalsService {
       },
       include: { system: { select: { sid: true, description: true } } },
       orderBy: { createdAt: 'desc' },
+      take: 200,
     });
   }
 

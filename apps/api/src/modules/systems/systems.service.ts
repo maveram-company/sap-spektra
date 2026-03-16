@@ -30,9 +30,9 @@ export class SystemsService {
         return cached;
       }
     } catch (error) {
-      this.logger.warn(
-        `Cache GET failed for ${cacheKey}: ${(error as Error).message}`,
-      );
+      this.logger.warn(`Cache GET failed for key=${cacheKey}`, {
+        error: (error as Error)?.message,
+      });
     }
 
     const result = await this.prisma.system.findMany({
@@ -46,6 +46,7 @@ export class SystemsService {
         systemMeta: true,
       },
       orderBy: { sid: 'asc' },
+      take: 200,
     });
 
     // Store in cache (60s TTL)
@@ -53,9 +54,9 @@ export class SystemsService {
       await this.cache.set(cacheKey, result, 60000);
       this.logger.debug(`Cache SET for ${cacheKey}`);
     } catch (error) {
-      this.logger.warn(
-        `Cache SET failed for ${cacheKey}: ${(error as Error).message}`,
-      );
+      this.logger.warn(`Cache SET failed for key=${cacheKey}`, {
+        error: (error as Error)?.message,
+      });
     }
 
     return result;
@@ -208,9 +209,9 @@ export class SystemsService {
         await this.cache.del(key);
         this.logger.debug(`Cache DEL for ${key}`);
       } catch (error) {
-        this.logger.warn(
-          `Cache DEL failed for ${key}: ${(error as Error).message}`,
-        );
+        this.logger.warn(`Cache DEL failed for key=${key}`, {
+          error: (error as Error)?.message,
+        });
       }
     }
   }

@@ -88,6 +88,7 @@ export default function SystemDetailPage() {
   const [hostsData, setHostsData] = useState([]);
   const [metricHistoryData, setMetricHistoryData] = useState({});
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState('overview');
   const [chartRange, setChartRange] = useState('6h');
   const [selectedHost, setSelectedHost] = useState('');
@@ -118,9 +119,15 @@ export default function SystemDetailPage() {
           dataService.getMetricHistory(h.hostname).then(hist => {
             if (!mounted) return;
             setMetricHistoryData(prev => ({ ...prev, [h.hostname]: hist }));
+          }).catch(() => {
+            // Silently ignore individual host metric history failures
           });
         });
       }
+      setLoading(false);
+    }).catch(() => {
+      if (!mounted) return;
+      setError('Error al cargar datos. Intenta de nuevo.');
       setLoading(false);
     });
     return () => { mounted = false; };
@@ -165,6 +172,18 @@ export default function SystemDetailPage() {
   }, [effectiveHost, chartRange, metricHistoryData]);
 
   if (loading) return <PageLoading message="Cargando sistema..." />;
+
+  if (error) return (
+    <div className="flex items-center justify-center h-64">
+      <div className="text-center">
+        <p className="text-red-400 mb-4">{error}</p>
+        <button onClick={() => window.location.reload()} className="px-4 py-2 bg-cyan-600 text-white rounded-lg hover:bg-cyan-700 transition-colors">
+          Reintentar
+        </button>
+      </div>
+    </div>
+  );
+
   if (!system) return <div className="p-6 text-text-secondary">Sistema no encontrado</div>;
 
   const db = sm?.dbInfo;

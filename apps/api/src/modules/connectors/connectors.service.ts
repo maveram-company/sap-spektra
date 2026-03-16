@@ -211,6 +211,6 @@ export class ConnectorsService {
         return features.agentUrl;
       }
     }
-    return 'http://localhost:9110';
+    return process.env.SPEKTRA_AGENT_URL || 'http://localhost:9110';
   }
 }

@@ -365,13 +365,20 @@ export class OperationsService {
 
     const agentUrl = this.resolveAgentUrl(connector);
     const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), 120_000);
+    const timeout = setTimeout(
+      () => controller.abort(),
+      Number(process.env.OPERATION_TIMEOUT_MS) || 120_000,
+    );
 
     try {
       const response = await fetch(`${agentUrl}/execute`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ command, timeout: 120, sid: system.sid }),
+        body: JSON.stringify({
+          command,
+          timeout: Number(process.env.OPERATION_TIMEOUT_S) || 120,
+          sid: system.sid,
+        }),
         signal: controller.signal,
       });
 
@@ -411,10 +418,16 @@ export class OperationsService {
         return features.agentUrl;
       }
     }
-    return 'http://localhost:9110';
+    return process.env.SPEKTRA_AGENT_URL || 'http://localhost:9110';
   }
 
-  async getJobs(systemId?: string) {
+  async getJobs(organizationId: string, systemId?: string) {
+    if (systemId) {
+      const system = await this.prisma.system.findFirst({
+        where: { id: systemId, organizationId },
+      });
+      if (!system) throw new NotFoundException('System not found');
+    }
     return this.prisma.jobRecord.findMany({
       where: systemId ? { systemId } : {},
       include: { system: { select: { sid: true } } },
@@ -422,7 +435,13 @@ export class OperationsService {
     });
   }
 
-  async getTransports(systemId?: string) {
+  async getTransports(organizationId: string, systemId?: string) {
+    if (systemId) {
+      const system = await this.prisma.system.findFirst({
+        where: { id: systemId, organizationId },
+      });
+      if (!system) throw new NotFoundException('System not found');
+    }
     return this.prisma.transportRecord.findMany({
       where: systemId ? { systemId } : {},
       include: { system: { select: { sid: true } } },
@@ -430,7 +449,13 @@ export class OperationsService {
     });
   }
 
-  async getCertificates(systemId?: string) {
+  async getCertificates(organizationId: string, systemId?: string) {
+    if (systemId) {
+      const system = await this.prisma.system.findFirst({
+        where: { id: systemId, organizationId },
+      });
+      if (!system) throw new NotFoundException('System not found');
+    }
     return this.prisma.certificateRecord.findMany({
       where: systemId ? { systemId } : {},
       include: { system: { select: { sid: true } } },

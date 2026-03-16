@@ -77,21 +77,24 @@ export class OperationsController {
   @Get('jobs')
   @Roles('viewer')
   @ApiOperation({ summary: 'List background job records' })
-  jobs(@Query('systemId') systemId?: string) {
-    return this.operationsService.getJobs(systemId);
+  jobs(@TenantId() orgId: string, @Query('systemId') systemId?: string) {
+    return this.operationsService.getJobs(orgId, systemId);
   }
 
   @Get('transports')
   @Roles('viewer')
   @ApiOperation({ summary: 'List transport records' })
-  transports(@Query('systemId') systemId?: string) {
-    return this.operationsService.getTransports(systemId);
+  transports(@TenantId() orgId: string, @Query('systemId') systemId?: string) {
+    return this.operationsService.getTransports(orgId, systemId);
   }
 
   @Get('certificates')
   @Roles('viewer')
   @ApiOperation({ summary: 'List certificate records' })
-  certificates(@Query('systemId') systemId?: string) {
-    return this.operationsService.getCertificates(systemId);
+  certificates(
+    @TenantId() orgId: string,
+    @Query('systemId') systemId?: string,
+  ) {
+    return this.operationsService.getCertificates(orgId, systemId);
   }
 }

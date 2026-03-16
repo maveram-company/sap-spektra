@@ -147,6 +147,7 @@ export default function DashboardPage() {
   const [systems, setSystems] = useState([]);
   const [approvals, setApprovals] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [refreshing, setRefreshing] = useState(false);
   const navigate = useNavigate();
   const { user } = useAuth();
@@ -155,14 +156,21 @@ export default function DashboardPage() {
   useEffect(() => {
     let mounted = true;
     (async () => {
-      const [systemsData, approvalsData] = await Promise.all([
-        dataService.getSystems(),
-        dataService.getApprovals(),
-      ]);
-      if (mounted) {
-        setSystems(systemsData);
-        setApprovals(approvalsData);
-        setLoading(false);
+      try {
+        const [systemsData, approvalsData] = await Promise.all([
+          dataService.getSystems(),
+          dataService.getApprovals(),
+        ]);
+        if (mounted) {
+          setSystems(systemsData);
+          setApprovals(approvalsData);
+          setLoading(false);
+        }
+      } catch {
+        if (mounted) {
+          setError('Error al cargar datos. Intenta de nuevo.');
+          setLoading(false);
+        }
       }
     })();
     return () => { mounted = false; };
@@ -180,6 +188,17 @@ export default function DashboardPage() {
   }, []);
 
   if (loading) return <PageLoading message="Cargando dashboard..." />;
+
+  if (error) return (
+    <div className="flex items-center justify-center h-64">
+      <div className="text-center">
+        <p className="text-red-400 mb-4">{error}</p>
+        <button onClick={() => window.location.reload()} className="px-4 py-2 bg-cyan-600 text-white rounded-lg hover:bg-cyan-700 transition-colors">
+          Reintentar
+        </button>
+      </div>
+    </div>
+  );
 
   // Cálculo de KPIs
   const healthySystems    = systems.filter(s => s.healthScore >= 90).length;

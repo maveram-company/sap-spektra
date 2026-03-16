@@ -61,6 +61,7 @@ describe('LandscapeService', () => {
       expect(prisma.system.findMany).toHaveBeenCalledWith({
         where: { organizationId: 'org-other' },
         include: { connectors: true, haConfig: true },
+        take: 200,
       });
     });
 

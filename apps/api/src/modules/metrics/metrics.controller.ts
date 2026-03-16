@@ -56,10 +56,8 @@ export class MetricsController {
     @Param('hostId') hostId: string,
     @Query() query: MetricsHoursQueryDto,
   ) {
-    return this.metricsService.getHostMetrics(
-      hostId,
-      query.hours ? parseInt(query.hours, 10) : 24,
-    );
+    const h = Math.min(Math.max(Number(query.hours) || 24, 1), 8760);
+    return this.metricsService.getHostMetrics(hostId, h);
   }
 
   @Get('systems/:systemId/hosts')
@@ -70,11 +68,8 @@ export class MetricsController {
     @Param('systemId') systemId: string,
     @Query() query: MetricsHoursQueryDto,
   ) {
-    return this.metricsService.getHostMetricsBySystem(
-      orgId,
-      systemId,
-      query.hours ? parseInt(query.hours, 10) : 24,
-    );
+    const h = Math.min(Math.max(Number(query.hours) || 24, 1), 8760);
+    return this.metricsService.getHostMetricsBySystem(orgId, systemId, h);
   }
 
   @Get('systems/:systemId/health')
@@ -85,11 +80,8 @@ export class MetricsController {
     @Param('systemId') systemId: string,
     @Query() query: MetricsHoursQueryDto,
   ) {
-    return this.metricsService.getHealthSnapshots(
-      orgId,
-      systemId,
-      query.hours ? parseInt(query.hours, 10) : 24,
-    );
+    const h = Math.min(Math.max(Number(query.hours) || 24, 1), 8760);
+    return this.metricsService.getHealthSnapshots(orgId, systemId, h);
   }
 
   @Get('breaches')

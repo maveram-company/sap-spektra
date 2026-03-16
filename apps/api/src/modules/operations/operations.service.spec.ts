@@ -39,6 +39,7 @@ describe('OperationsService', () => {
       },
       system: {
         findUnique: jest.fn(),
+        findFirst: jest.fn(),
       },
       jobRecord: { findMany: jest.fn() },
       transportRecord: { findMany: jest.fn() },
@@ -260,7 +261,7 @@ describe('OperationsService', () => {
       const jobs = [{ id: 'j1', name: 'RSUSR002', system: { sid: 'EP1' } }];
       prisma.jobRecord.findMany.mockResolvedValue(jobs);
 
-      const result = await service.getJobs();
+      const result = await service.getJobs(ORG_ID);
 
       expect(result).toHaveLength(1);
       expect(prisma.jobRecord.findMany).toHaveBeenCalledWith(
@@ -271,15 +272,24 @@ describe('OperationsService', () => {
       );
     });
 
-    it('filters by systemId when provided', async () => {
+    it('filters by systemId when provided and system belongs to org', async () => {
+      prisma.system.findFirst.mockResolvedValue({ id: 'sys-1' });
       prisma.jobRecord.findMany.mockResolvedValue([]);
 
-      await service.getJobs('sys-1');
+      await service.getJobs(ORG_ID, 'sys-1');
 
       expect(prisma.jobRecord.findMany).toHaveBeenCalledWith(
         expect.objectContaining({
           where: { systemId: 'sys-1' },
         }),
+      );
+    });
+
+    it('throws NotFoundException when systemId does not belong to org', async () => {
+      prisma.system.findFirst.mockResolvedValue(null);
+
+      await expect(service.getJobs(ORG_ID, 'sys-other')).rejects.toThrow(
+        NotFoundException,
       );
     });
   });
@@ -293,7 +303,7 @@ describe('OperationsService', () => {
       ];
       prisma.transportRecord.findMany.mockResolvedValue(transports);
 
-      const result = await service.getTransports();
+      const result = await service.getTransports(ORG_ID);
 
       expect(result).toHaveLength(1);
       expect(prisma.transportRecord.findMany).toHaveBeenCalledWith(
@@ -304,15 +314,24 @@ describe('OperationsService', () => {
       );
     });
 
-    it('filters by systemId when provided', async () => {
+    it('filters by systemId when provided and system belongs to org', async () => {
+      prisma.system.findFirst.mockResolvedValue({ id: 'sys-1' });
       prisma.transportRecord.findMany.mockResolvedValue([]);
 
-      await service.getTransports('sys-1');
+      await service.getTransports(ORG_ID, 'sys-1');
 
       expect(prisma.transportRecord.findMany).toHaveBeenCalledWith(
         expect.objectContaining({
           where: { systemId: 'sys-1' },
         }),
+      );
+    });
+
+    it('throws NotFoundException when systemId does not belong to org', async () => {
+      prisma.system.findFirst.mockResolvedValue(null);
+
+      await expect(service.getTransports(ORG_ID, 'sys-other')).rejects.toThrow(
+        NotFoundException,
       );
     });
   });
@@ -326,7 +345,7 @@ describe('OperationsService', () => {
       ];
       prisma.certificateRecord.findMany.mockResolvedValue(certs);
 
-      const result = await service.getCertificates();
+      const result = await service.getCertificates(ORG_ID);
 
       expect(result).toHaveLength(1);
       expect(prisma.certificateRecord.findMany).toHaveBeenCalledWith(
@@ -337,16 +356,25 @@ describe('OperationsService', () => {
       );
     });
 
-    it('filters by systemId when provided', async () => {
+    it('filters by systemId when provided and system belongs to org', async () => {
+      prisma.system.findFirst.mockResolvedValue({ id: 'sys-1' });
       prisma.certificateRecord.findMany.mockResolvedValue([]);
 
-      await service.getCertificates('sys-1');
+      await service.getCertificates(ORG_ID, 'sys-1');
 
       expect(prisma.certificateRecord.findMany).toHaveBeenCalledWith(
         expect.objectContaining({
           where: { systemId: 'sys-1' },
         }),
       );
+    });
+
+    it('throws NotFoundException when systemId does not belong to org', async () => {
+      prisma.system.findFirst.mockResolvedValue(null);
+
+      await expect(
+        service.getCertificates(ORG_ID, 'sys-other'),
+      ).rejects.toThrow(NotFoundException);
     });
   });
 });

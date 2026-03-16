@@ -36,6 +36,7 @@ export default function ComparisonPage() {
   const [systemMeta, setSystemMeta] = useState({});
   const [landscapeValidation, setLandscapeValidation] = useState({});
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [selectedLine, setSelectedLine] = useState('ERP');
 
   useEffect(() => {
@@ -49,6 +50,9 @@ export default function ComparisonPage() {
       setSidLines(lines);
       setSystemMeta(meta);
       setLandscapeValidation(validation);
+      setLoading(false);
+    }).catch(() => {
+      setError('Error al cargar datos. Intenta de nuevo.');
       setLoading(false);
     });
   }, []);
@@ -129,6 +133,17 @@ export default function ComparisonPage() {
   }
 
   if (loading) return <PageLoading message="Cargando comparación..." />;
+
+  if (error) return (
+    <div className="flex items-center justify-center h-64">
+      <div className="text-center">
+        <p className="text-red-400 mb-4">{error}</p>
+        <button onClick={() => window.location.reload()} className="px-4 py-2 bg-cyan-600 text-white rounded-lg hover:bg-cyan-700 transition-colors">
+          Reintentar
+        </button>
+      </div>
+    </div>
+  );
 
   return (
     <div>

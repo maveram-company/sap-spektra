@@ -67,16 +67,33 @@ export default function SLAPage() {
   const [systems, setSystems] = useState([]);
   const [analytics, setAnalytics] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     Promise.all([dataService.getSystems(), dataService.getAnalytics()]).then(([sys, anl]) => {
       setSystems(sys);
       setAnalytics(anl);
       setLoading(false);
+    }).catch(() => {
+      setError('Error al cargar datos. Intenta de nuevo.');
+      setLoading(false);
     });
   }, []);
 
-  if (loading || !analytics) return <PageLoading message="Cargando SLA..." />;
+  if (loading) return <PageLoading message="Cargando SLA..." />;
+
+  if (error) return (
+    <div className="flex items-center justify-center h-64">
+      <div className="text-center">
+        <p className="text-red-400 mb-4">{error}</p>
+        <button onClick={() => window.location.reload()} className="px-4 py-2 bg-cyan-600 text-white rounded-lg hover:bg-cyan-700 transition-colors">
+          Reintentar
+        </button>
+      </div>
+    </div>
+  );
+
+  if (!analytics) return <PageLoading message="Cargando SLA..." />;
 
   const { alertStats, slaMetrics } = analytics;
 

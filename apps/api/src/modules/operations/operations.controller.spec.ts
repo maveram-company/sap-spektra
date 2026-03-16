@@ -107,50 +107,50 @@ describe('OperationsController', () => {
   // ── jobs ──
 
   describe('jobs', () => {
-    it('delegates to operationsService.getJobs with systemId', async () => {
+    it('delegates to operationsService.getJobs with orgId and systemId', async () => {
       const expected = [{ id: 'job-1' }];
       mockService.getJobs.mockResolvedValue(expected);
 
-      const result = await controller.jobs('sys-1');
+      const result = await controller.jobs('org-1', 'sys-1');
 
       expect(result).toEqual(expected);
-      expect(service.getJobs).toHaveBeenCalledWith('sys-1');
+      expect(service.getJobs).toHaveBeenCalledWith('org-1', 'sys-1');
     });
 
     it('passes undefined when no systemId provided', async () => {
       mockService.getJobs.mockResolvedValue([]);
 
-      await controller.jobs(undefined);
+      await controller.jobs('org-1', undefined);
 
-      expect(service.getJobs).toHaveBeenCalledWith(undefined);
+      expect(service.getJobs).toHaveBeenCalledWith('org-1', undefined);
     });
   });
 
   // ── transports ──
 
   describe('transports', () => {
-    it('delegates to operationsService.getTransports with systemId', async () => {
+    it('delegates to operationsService.getTransports with orgId and systemId', async () => {
       const expected = [{ id: 'tr-1' }];
       mockService.getTransports.mockResolvedValue(expected);
 
-      const result = await controller.transports('sys-1');
+      const result = await controller.transports('org-1', 'sys-1');
 
       expect(result).toEqual(expected);
-      expect(service.getTransports).toHaveBeenCalledWith('sys-1');
+      expect(service.getTransports).toHaveBeenCalledWith('org-1', 'sys-1');
     });
   });
 
   // ── certificates ──
 
   describe('certificates', () => {
-    it('delegates to operationsService.getCertificates with systemId', async () => {
+    it('delegates to operationsService.getCertificates with orgId and systemId', async () => {
       const expected = [{ id: 'cert-1' }];
       mockService.getCertificates.mockResolvedValue(expected);
 
-      const result = await controller.certificates('sys-1');
+      const result = await controller.certificates('org-1', 'sys-1');
 
       expect(result).toEqual(expected);
-      expect(service.getCertificates).toHaveBeenCalledWith('sys-1');
+      expect(service.getCertificates).toHaveBeenCalledWith('org-1', 'sys-1');
     });
   });
 });

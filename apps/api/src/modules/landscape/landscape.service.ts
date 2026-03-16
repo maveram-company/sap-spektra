@@ -9,6 +9,7 @@ export class LandscapeService {
     const systems = await this.prisma.system.findMany({
       where: { organizationId },
       include: { connectors: true, haConfig: true },
+      take: 200,
     });
 
     return systems.map((sys) => {

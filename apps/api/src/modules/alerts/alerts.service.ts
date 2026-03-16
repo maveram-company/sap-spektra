@@ -20,6 +20,7 @@ export class AlertsService {
       },
       include: { system: { select: { sid: true, description: true } } },
       orderBy: { createdAt: 'desc' },
+      take: 200,
     });
   }
 

@@ -7,6 +7,7 @@ export interface AppConfig {
   database: { url: string };
   redis: { url: string };
   cacheTtl: number;
+  spektraAgentUrl: string;
   jwt: {
     secret: string;
     expiration: string;
@@ -32,10 +33,9 @@ export default (): AppConfig => {
   const nodeEnv = process.env.NODE_ENV || 'development';
 
   const jwtSecret = process.env.JWT_SECRET;
-  if (!jwtSecret && nodeEnv === 'production') {
+  if (!jwtSecret && !['development', 'test'].includes(nodeEnv)) {
     throw new Error(
-      'JWT_SECRET environment variable is required in production. ' +
-        'Set a strong, unique secret before starting the server.',
+      'JWT_SECRET environment variable is required in non-development environments',
     );
   }
 
@@ -50,6 +50,7 @@ export default (): AppConfig => {
       url: process.env.REDIS_URL || 'redis://localhost:6379',
     },
     cacheTtl: parseInt(process.env.CACHE_TTL || '30000', 10),
+    spektraAgentUrl: process.env.SPEKTRA_AGENT_URL || 'http://localhost:9110',
     jwt: {
       secret: jwtSecret || 'spektra-dev-secret',
       expiration: process.env.JWT_EXPIRATION || '24h',

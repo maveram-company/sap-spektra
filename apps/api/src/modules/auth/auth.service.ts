@@ -76,7 +76,9 @@ export class AuthService {
         resource: `user/${user.id}`,
         details: `User logged in`,
       })
-      .catch(() => {});
+      .catch((err) =>
+        this.logger.warn('Audit log failed', { error: err?.message }),
+      );
 
     return {
       accessToken,
@@ -155,7 +157,9 @@ export class AuthService {
         resource: `user/${result.user.id}`,
         details: `New user registered, organization "${result.org.name}" created`,
       })
-      .catch(() => {});
+      .catch((err) =>
+        this.logger.warn('Audit log failed', { error: err?.message }),
+      );
 
     return {
       accessToken,

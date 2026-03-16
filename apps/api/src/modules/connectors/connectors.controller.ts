@@ -35,17 +35,17 @@ export class ConnectorsController {
     return this.connectorsService.heartbeat(orgId, id);
   }
 
-  @Get(':id/validate')
-  @Roles('operator')
-  @ApiOperation({ summary: 'Validate connectivity of a specific connector' })
-  validate(@TenantId() orgId: string, @Param('id') id: string) {
-    return this.connectorsService.validateConnectivity(orgId, id);
-  }
-
   @Get('validate/all')
   @Roles('operator')
   @ApiOperation({ summary: 'Validate connectivity of all connectors' })
   validateAll(@TenantId() orgId: string) {
     return this.connectorsService.validateAll(orgId);
+  }
+
+  @Get(':id/validate')
+  @Roles('operator')
+  @ApiOperation({ summary: 'Validate connectivity of a specific connector' })
+  validate(@TenantId() orgId: string, @Param('id') id: string) {
+    return this.connectorsService.validateConnectivity(orgId, id);
   }
 }

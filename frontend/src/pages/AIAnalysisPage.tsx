@@ -89,6 +89,7 @@ export default function AIAnalysisPage() {
   const [aiUseCases, setAiUseCases] = useState([]);
   const [aiResponses, setAiResponses] = useState({});
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [messages, setMessages] = useState([
     {
       id: 'welcome',
@@ -105,6 +106,9 @@ export default function AIAnalysisPage() {
     Promise.all([dataService.getAIUseCases(), dataService.getAIResponses()]).then(([uc, resp]) => {
       setAiUseCases(uc);
       setAiResponses(resp);
+      setLoading(false);
+    }).catch(() => {
+      setError('Error al cargar datos. Intenta de nuevo.');
       setLoading(false);
     });
   }, []);
@@ -173,6 +177,17 @@ export default function AIAnalysisPage() {
   }
 
   if (loading) return <PageLoading message="Cargando análisis IA..." />;
+
+  if (error) return (
+    <div className="flex items-center justify-center h-64">
+      <div className="text-center">
+        <p className="text-red-400 mb-4">{error}</p>
+        <button onClick={() => window.location.reload()} className="px-4 py-2 bg-cyan-600 text-white rounded-lg hover:bg-cyan-700 transition-colors">
+          Reintentar
+        </button>
+      </div>
+    </div>
+  );
 
   return (
     <div className="flex flex-col h-full">

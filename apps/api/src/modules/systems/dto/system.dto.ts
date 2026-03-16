@@ -1,5 +1,29 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { IsOptional, IsString, Length } from 'class-validator';
+import { IsEnum, IsIn, IsOptional, IsString, Length } from 'class-validator';
+
+enum SapEnvironment {
+  PRD = 'PRD',
+  QAS = 'QAS',
+  DEV = 'DEV',
+  SBX = 'SBX',
+  DR = 'DR',
+}
+
+const SAP_PRODUCTS = [
+  'S4HANA',
+  'ECC',
+  'BW4HANA',
+  'BW',
+  'CRM',
+  'SRM',
+  'PI',
+  'PO',
+  'EP',
+  'SOLMAN',
+  'GRC',
+  'IDES',
+  'OTHER',
+] as const;
 
 export class CreateSystemDto {
   @ApiProperty({ example: 'EP1', description: '3-char SAP System ID' })
@@ -11,8 +35,8 @@ export class CreateSystemDto {
   @IsString()
   description!: string;
 
-  @ApiProperty({ example: 'S/4HANA' })
-  @IsString()
+  @ApiProperty({ example: 'S4HANA', enum: SAP_PRODUCTS })
+  @IsIn(SAP_PRODUCTS)
   sapProduct!: string;
 
   @ApiProperty({ example: 'ABAP_BUSINESS_SUITE' })
@@ -27,8 +51,8 @@ export class CreateSystemDto {
   @IsString()
   dbType!: string;
 
-  @ApiProperty({ example: 'PRD' })
-  @IsString()
+  @ApiProperty({ example: 'PRD', enum: SapEnvironment })
+  @IsEnum(SapEnvironment)
   environment!: string;
 
   @ApiPropertyOptional({ example: 'ON_PREMISE' })
