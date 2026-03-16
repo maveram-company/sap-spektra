@@ -1,4 +1,4 @@
-import { NotFoundException } from '@nestjs/common';
+import { NotFoundException, BadRequestException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { SettingsService } from './settings.service';
 import { PrismaService } from '../../infrastructure/prisma/prisma.service';
@@ -87,7 +87,7 @@ describe('SettingsService', () => {
 
   describe('updateSettings', () => {
     it('calls prisma update with settings', async () => {
-      const settings = { theme: 'light', notifications: true };
+      const settings = { notifications: true };
       const updated = { id: ORG_ID, settings };
       prisma.organization.update.mockResolvedValue(updated);
 
@@ -98,6 +98,12 @@ describe('SettingsService', () => {
         where: { id: ORG_ID },
         data: { settings },
       });
+    });
+
+    it('rejects invalid settings keys', async () => {
+      await expect(
+        service.updateSettings('org-1', { invalidKey: true }),
+      ).rejects.toThrow(BadRequestException);
     });
   });
 

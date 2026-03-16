@@ -6,6 +6,10 @@ import { TenantGuard } from '../../common/guards/tenant.guard';
 import { RolesGuard } from '../../common/guards/roles.guard';
 import { Roles } from '../../common/decorators/roles.decorator';
 import { TenantId } from '../../common/decorators/tenant.decorator';
+import {
+  CurrentUser,
+  JwtPayload,
+} from '../../common/decorators/current-user.decorator';
 import { UpdateHAStatusDto } from './dto/ha.dto';
 
 @ApiTags('HA/DR')
@@ -35,8 +39,9 @@ export class HAController {
   triggerFailover(
     @TenantId() orgId: string,
     @Param('systemId') systemId: string,
+    @CurrentUser() user: JwtPayload,
   ) {
-    return this.haService.triggerFailover(orgId, systemId);
+    return this.haService.triggerFailover(orgId, systemId, user.email);
   }
 
   @Patch(':systemId/status')

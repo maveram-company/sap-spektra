@@ -41,6 +41,16 @@ export class RunbooksController {
     return this.runbooksService.getExecutions(orgId);
   }
 
+  @Get('executions/:executionId')
+  @Roles('viewer')
+  @ApiOperation({ summary: 'Get execution detail with step results' })
+  executionDetail(
+    @TenantId() orgId: string,
+    @Param('executionId') executionId: string,
+  ) {
+    return this.runbooksService.getExecutionDetail(orgId, executionId);
+  }
+
   @Get(':id')
   @Roles('viewer')
   @ApiOperation({ summary: 'Get runbook by ID' })

@@ -396,24 +396,48 @@ model Runbook {
 }
 
 model RunbookExecution {
-  id         String   @id @default(uuid())
-  runbookId  String
-  systemId   String
-  gate       String   // SAFE | HUMAN
-  result     String   // SUCCESS | FAILED | PENDING | RUNNING
-  duration   String?
-  detail     String?
-  executedBy String?
-  evidence   Json?
-  startedAt  DateTime @default(now())
-  completedAt DateTime?
+  id            String   @id @default(uuid())
+  runbookId     String
+  systemId      String
+  gate          String   // SAFE | HUMAN
+  result        String   // SUCCESS | FAILED | PENDING | RUNNING | CANCELLED
+  duration      String?
+  detail        String?
+  executedBy    String?
+  evidence      Json?
+  totalSteps    Int      @default(0)
+  completedSteps Int     @default(0)
+  currentStep   Int      @default(0)
+  startedAt     DateTime @default(now())
+  completedAt   DateTime?
 
-  runbook Runbook @relation(fields: [runbookId], references: [id], onDelete: Cascade)
-  system  System  @relation(fields: [systemId], references: [id], onDelete: Cascade)
+  runbook    Runbook              @relation(fields: [runbookId], references: [id], onDelete: Cascade)
+  system     System               @relation(fields: [systemId], references: [id], onDelete: Cascade)
+  stepResults RunbookStepResult[]
 
   @@index([runbookId, startedAt])
   @@index([systemId])
   @@map("runbook_executions")
+}
+
+model RunbookStepResult {
+  id          String   @id @default(uuid())
+  executionId String
+  stepOrder   Int
+  action      String
+  command     String?
+  status      String   @default("PENDING") // PENDING | RUNNING | SUCCESS | FAILED | SKIPPED
+  exitCode    Int?
+  stdout      String?
+  stderr      String?
+  duration    String?
+  startedAt   DateTime?
+  completedAt DateTime?
+
+  execution RunbookExecution @relation(fields: [executionId], references: [id], onDelete: Cascade)
+
+  @@index([executionId, stepOrder])
+  @@map("runbook_step_results")
 }
 
 // ── Operations ──

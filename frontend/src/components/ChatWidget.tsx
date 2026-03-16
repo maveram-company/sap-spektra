@@ -1,26 +1,7 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
 import { MessageSquare, X, Send, Bot, User, Sparkles } from 'lucide-react';
 import { usePlan } from '../hooks/usePlan';
-
-const mockResponses = [
-  { trigger: 'hola', response: 'Hola! Soy el asistente IA de SAP Spektra. ¿En qué puedo ayudarte hoy con tus sistemas SAP?' },
-  { trigger: 'cpu', response: 'El sistema SM1 (SolMan) tiene CPU al 95% — CRÍTICO.\n\nDiagnóstico (SM50): 2 work processes en PRIV mode consumiendo CPU excesiva. ST22 muestra 0 short dumps.\n\nRecomendación: Ejecutar RB-ABAP-001 (Clean sessions + restart WPs). Prerequisitos verificados: sapcontrol accesible, 7 WPs free.\n\nTCode referencia: SM50, ST02, ST06.' },
-  { trigger: 'breach', response: 'Actualmente hay 11 breaches activos:\n- SM1: 5 breaches (CPU 95%, memory, swap 78%, failed_jobs 15, queue)\n- ED1: 3 breaches (response_time 5200ms, CPU, memory 87%)\n- PO1: 2 breaches (disk 91%, queue_depth 450)\n- EW1: 1 breach (response_time 4100ms)\n\nTCodes: SM21 (system log), ST22 (dumps), SM12 (locks).' },
-  { trigger: 'backup', response: 'Estado de backups por BD:\n- EP1 (HANA): Último hace 6.2h — OK (DB13/DBACOCKPIT)\n- EQ1 (HANA): Último hace 8.5h — OK\n- BP1 (ASE): Último hace 5.5h — OK (sp_helpdb)\n- SM1 (MaxDB): Último hace 3.1h — OK (dbmcli)\n- CR1 (Oracle): Último hace 7.2h — OK (RMAN)\n\nPróximo backup: EP1 a las 22:00 (OP-001).' },
-  { trigger: 'health', response: 'Resumen de salud del landscape SAP:\n- Saludables (>=90): EP1 (94), BP1 (91), GR1 (96) — 3 sistemas\n- Warning: EQ1 (87), CR1 (88), EW1 (82) — 3 sistemas\n- Degradados: ED1 (72), PO1 (63) — 2 sistemas\n- Críticos: SM1 (45) — 1 sistema\n\nSM12: 12 old locks en EP1. SM37: 2 jobs fallidos en EQ1. HSR Lag EP1: 0.8s (OK).' },
-  { trigger: 'runbook', response: 'Top 5 runbooks por ejecuciones:\n1. RB-BACKUP-001 (Verify backup) — 198 runs, 99.5% éxito\n2. RB-HANA-001 (Reclaim memory) — 156 runs, 98.1% — TCode: DBACOCKPIT\n3. RB-ABAP-001 (Clean WPs) — 134 runs, 96.3% — TCode: SM50\n4. RB-ASE-001 (Dump tran log) — 112 runs, 97.3%\n5. RB-WP-001 (Clean PRIV WPs) — 98 runs, 96.9% — TCode: SM50\n\n2 runbooks pendientes aprobación (APR-001, APR-002).' },
-  { trigger: 'sistema', response: 'Landscape SAP — 9 sistemas, 25+ instancias:\n- ERP Line: EP1 (PRD/S/4HANA), EQ1 (QAS), ED1 (DEV)\n- BW: BP1 (PRD/BW4HANA) — ASE 16.0\n- SOL: SM1 (PRD/SolMan 7.2) — MaxDB\n- CRM: CR1 (PRD/CRM 7.0) — Oracle 19c + ASCS/ERS HA\n- GRC: GR1 (QAS/GRC 12.0) — MSSQL\n- PO: PO1 (PRD/PO 7.5) — DB2 11.5\n- EWM: EW1 (PRD/S/4HANA EWM) — HANA\n\n¿Sobre cuál SID necesitas detalle?' },
-  { trigger: 'lock', response: 'SM12 — Estado de Enqueue Locks:\n- EP1: 45 total, 12 antiguos (max 4.2h) — Tablas: VBAK, EKKO, MARA\n- CR1: 35 total, 8 antiguos (max 3.1h) — Tablas: CRMD_ORDERADM_H\n- BP1: 22 total, 3 antiguos — Normal para BW con cargas\n\nRecomendación: Ejecutar RB-LOCK-001 en EP1 para limpiar locks >2h.' },
-  { trigger: 'transport', response: 'STMS — Cola de transportes:\n- 2 transportes pendientes de import a QAS (EP1K900001, EQ1K200001)\n- 1 transporte con error RC=8 en EQ1 (EP1K900003) — Objeto TADIR bloqueado\n- Último import exitoso: EP1K900002 (RC=0)\n\nAcción: Revisar EP1K900003 en SE09/SE10, resolver conflicto de objeto.' },
-  { trigger: 'job', response: 'SM37 — Background Jobs activos:\n- EP1: 5 running, 18 scheduled, 2 failed/24h\n  - RSUSR002 ejecutando hace 45min (Clase A)\n- BP1: 8 running (BW loads), BI_PROCESS_TRIGGER hace 2h15min\n- PO1: RSXMB_REORG hace 35min\n\n1 job fallido: CRM_BILLING_RUN en CR1 — DBIF_RSQL_SQL_ERROR.' },
-];
-
-function getAIResponse(message) {
-  const lower = message.toLowerCase();
-  const match = mockResponses.find(r => lower.includes(r.trigger));
-  if (match) return match.response;
-  return 'Entiendo tu consulta. En este momento estoy analizando tu landscape SAP. Para preguntas más específicas, intenta preguntarme sobre: health del landscape, breaches activos, estado de backups, runbooks ejecutados, o métricas de CPU/memoria de un sistema específico.';
-}
+import { dataService } from '../services/dataService';
 
 export default function ChatWidget() {
   const [isOpen, setIsOpen] = useState(false);
@@ -50,15 +31,19 @@ export default function ChatWidget() {
     setMessages(prev => [...prev, { role: 'user', content: userMessage }]);
     setIsTyping(true);
 
-    // Simulate AI response delay
-    await new Promise(r => setTimeout(r, 800 + Math.sin(userMessage.length) * 500));
-
-    if (!mountedRef.current) return;
-
-    const aiResponse = getAIResponse(userMessage);
-    setMessages(prev => [...prev, { role: 'assistant', content: aiResponse }]);
-    setIsTyping(false);
-  }, [input]);
+    try {
+      const history = messages.map(m => ({ role: m.role, content: m.content }));
+      const response = await dataService.chat(userMessage, { history });
+      if (!mountedRef.current) return;
+      const aiText = response?.message || response?.data?.message || 'No pude procesar tu consulta. Intenta de nuevo.';
+      setMessages(prev => [...prev, { role: 'assistant', content: aiText }]);
+    } catch {
+      if (!mountedRef.current) return;
+      setMessages(prev => [...prev, { role: 'assistant', content: 'Error al conectar con el asistente. Intenta de nuevo.' }]);
+    } finally {
+      if (mountedRef.current) setIsTyping(false);
+    }
+  }, [input, messages]);
 
   const handleKeyDown = (e) => {
     if (e.key === 'Enter' && !e.shiftKey) {
@@ -163,7 +148,7 @@ export default function ChatWidget() {
                 <Send size={16} />
               </button>
             </div>
-            <p className="text-[10px] text-text-tertiary mt-1.5 text-center">IA powered by Amazon Bedrock</p>
+            <p className="text-[10px] text-text-tertiary mt-1.5 text-center">IA powered by Claude</p>
           </div>
         </div>
       )}

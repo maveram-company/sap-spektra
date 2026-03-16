@@ -1,5 +1,5 @@
-import { useState, useRef, useEffect } from 'react';
-import { Play, FlaskConical, Clock, ShieldCheck, CheckCircle, X, AlertTriangle, Loader2, Filter } from 'lucide-react';
+import { useState, useRef, useEffect, useCallback } from 'react';
+import { Play, FlaskConical, Clock, ShieldCheck, CheckCircle, X, AlertTriangle, Loader2, Filter, XCircle, SkipForward, Terminal, ChevronDown, ChevronRight } from 'lucide-react';
 import Header from '../components/layout/Header';
 import PageHeader from '../components/layout/PageHeader';
 import Tabs from '../components/ui/Tabs';
@@ -16,7 +16,7 @@ import { createLogger } from '../lib/logger';
 
 const log = createLogger('RunbooksPage');
 
-const CATEGORY_LABELS: Record<string, string> = {
+const CATEGORY_LABELS = {
   SAP_HANA: 'SAP HANA',
   ORACLE: 'Oracle',
   MSSQL: 'SQL Server',
@@ -32,8 +32,92 @@ const CATEGORY_LABELS: Record<string, string> = {
   WINDOWS_OS: 'Windows',
   AIX_OS: 'AIX',
   SOLARIS_OS: 'Solaris',
-  SAP_KERNEL_PATCHING: 'Kernel Patching',
+  SAP_KERNEL_PATCHING: 'SAP Kernel Patching',
 };
+
+// Step status icon component
+function StepStatusIcon({ status }) {
+  switch (status) {
+    case 'SUCCESS':
+      return <CheckCircle size={14} className="text-success-500" />;
+    case 'RUNNING':
+      return <Loader2 size={14} className="text-primary-500 animate-spin" />;
+    case 'FAILED':
+      return <XCircle size={14} className="text-danger-500" />;
+    case 'SKIPPED':
+      return <SkipForward size={14} className="text-text-tertiary" />;
+    default:
+      return (
+        <span className="inline-flex items-center justify-center w-3.5 h-3.5 rounded-full bg-surface-tertiary text-text-tertiary text-[10px] font-medium">
+          -
+        </span>
+      );
+  }
+}
+
+// Step result row with expandable stdout/stderr
+function StepResultRow({ step, isLast }) {
+  const [expanded, setExpanded] = useState(false);
+  const hasOutput = step.stdout || step.stderr;
+
+  return (
+    <li className={`${!isLast ? 'pb-2 border-b border-border/50' : ''}`}>
+      <div
+        className={`flex items-start gap-2.5 text-xs ${hasOutput ? 'cursor-pointer' : ''}`}
+        onClick={() => hasOutput && setExpanded(!expanded)}
+      >
+        <span className="flex-shrink-0 mt-0.5">
+          <StepStatusIcon status={step.status} />
+        </span>
+        <div className="flex-1 min-w-0">
+          <div className="flex items-center gap-2">
+            <p className="text-text-primary font-medium">{step.action}</p>
+            {step.duration && (
+              <span className="text-[10px] text-text-tertiary">{step.duration}</span>
+            )}
+            {step.exitCode !== null && step.exitCode !== undefined && step.exitCode !== 0 && (
+              <Badge variant="danger" size="sm">exit: {step.exitCode}</Badge>
+            )}
+            {hasOutput && (
+              <span className="text-text-tertiary ml-auto flex-shrink-0">
+                {expanded ? <ChevronDown size={12} /> : <ChevronRight size={12} />}
+              </span>
+            )}
+          </div>
+          {step.command && (
+            <code className="text-[10px] text-text-tertiary font-mono block truncate">{step.command}</code>
+          )}
+        </div>
+      </div>
+      {expanded && hasOutput && (
+        <div className="mt-2 ml-6 space-y-1.5">
+          {step.stdout && (
+            <div className="bg-surface-tertiary rounded-lg p-2 overflow-x-auto">
+              <div className="flex items-center gap-1.5 mb-1">
+                <Terminal size={10} className="text-success-500" />
+                <span className="text-[10px] font-medium text-text-secondary">stdout</span>
+              </div>
+              <pre className="text-[10px] text-text-primary font-mono whitespace-pre-wrap break-all leading-relaxed">
+                {step.stdout}
+              </pre>
+            </div>
+          )}
+          {step.stderr && (
+            <div className="bg-red-500/5 border border-red-500/10 rounded-lg p-2 overflow-x-auto">
+              <div className="flex items-center gap-1.5 mb-1">
+                <Terminal size={10} className="text-danger-500" />
+                <span className="text-[10px] font-medium text-danger-500">stderr</span>
+              </div>
+              <pre className="text-[10px] text-red-500 dark:text-red-400 font-mono whitespace-pre-wrap break-all leading-relaxed">
+                {step.stderr}
+              </pre>
+            </div>
+          )}
+        </div>
+      )}
+    </li>
+  );
+}
 
 export default function RunbooksPage() {
   const [runbooks, setRunbooks] = useState([]);
@@ -54,7 +138,9 @@ export default function RunbooksPage() {
   const [selectedSystemId, setSelectedSystemId] = useState('');
   const [executing, setExecuting] = useState(false);
   const [executionResult, setExecutionResult] = useState(null);
-  const [executionSteps, setExecutionSteps] = useState([]);
+  const [liveStepResults, setLiveStepResults] = useState([]);
+  const [executionProgress, setExecutionProgress] = useState(null);
+  const pollingRef = useRef(null);
 
   useEffect(() => {
     let mounted = true;
@@ -71,7 +157,7 @@ export default function RunbooksPage() {
       })
       .catch((err) => { if (mounted) log.error('Failed to load runbooks data', { error: err.message }); })
       .finally(() => { if (mounted) setLoading(false); });
-    return () => { mounted = false; clearTimeout(toastTimerRef.current); };
+    return () => { mounted = false; clearTimeout(toastTimerRef.current); stopPolling(); };
   }, []);
 
   // Mostrar notificación temporal
@@ -80,6 +166,52 @@ export default function RunbooksPage() {
     setToast({ message, type });
     toastTimerRef.current = setTimeout(() => setToast(null), 4000);
   };
+
+  // Polling para obtener el progreso de la ejecución
+  const stopPolling = useCallback(() => {
+    if (pollingRef.current) {
+      clearInterval(pollingRef.current);
+      pollingRef.current = null;
+    }
+  }, []);
+
+  const startPolling = useCallback((executionId) => {
+    stopPolling();
+    pollingRef.current = setInterval(async () => {
+      try {
+        const detail = await dataService.getExecutionDetail(executionId);
+        if (!detail) return;
+
+        setExecutionProgress({
+          totalSteps: detail.totalSteps,
+          completedSteps: detail.completedSteps,
+          currentStep: detail.currentStep,
+          result: detail.result,
+        });
+
+        if (detail.stepResults?.length > 0) {
+          setLiveStepResults(detail.stepResults);
+        }
+
+        // Parar polling cuando la ejecución termine
+        if (['SUCCESS', 'FAILED', 'CANCELLED'].includes(detail.result)) {
+          stopPolling();
+          setExecutionResult(detail);
+          showToast(
+            detail.result === 'SUCCESS'
+              ? `Runbook ejecutado exitosamente (${detail.duration})`
+              : `Runbook fallo en paso ${detail.currentStep}`,
+            detail.result === 'SUCCESS' ? 'success' : 'info',
+          );
+          // Refrescar lista de ejecuciónes
+          const updatedExecs = await dataService.getRunbookExecutions();
+          setExecutions(updatedExecs);
+        }
+      } catch (err) {
+        log.error('Polling failed', { error: err.message });
+      }
+    }, 1500);
+  }, [stopPolling]);
 
   // Abrir modal de ejecución
   const handleExecute = (runbook) => {
@@ -90,7 +222,8 @@ export default function RunbooksPage() {
     setSelectedRunbook(runbook);
     setSelectedSystemId('');
     setExecutionResult(null);
-    setExecutionSteps([]);
+    setLiveStepResults([]);
+    setExecutionProgress(null);
     setShowExecuteModal(true);
   };
 
@@ -106,12 +239,13 @@ export default function RunbooksPage() {
     setShowDryRunModal(true);
   };
 
-  // Confirmar ejecución real — primero valida compatibilidad via dry-run
+  // Confirmar ejecución real
   const confirmExecute = async () => {
     if (!selectedSystemId || !selectedRunbook) return;
     setExecuting(true);
     setExecutionResult(null);
-    setExecutionSteps([]);
+    setLiveStepResults([]);
+    setExecutionProgress(null);
 
     try {
       // Paso 1: validar compatibilidad via dry-run
@@ -126,34 +260,41 @@ export default function RunbooksPage() {
         return;
       }
 
-      // Paso 2: animar pasos uno por uno
-      const steps = selectedRunbook.steps || [];
-      for (let i = 0; i < steps.length; i++) {
-        setExecutionSteps(prev => [...prev, { ...steps[i], status: 'running' }]);
-        await new Promise(r => setTimeout(r, 800 + Math.random() * 400));
-        setExecutionSteps(prev =>
-          prev.map((s, idx) => idx === i ? { ...s, status: 'done' } : s)
-        );
-      }
-
-      // Paso 3: ejecutar realmente
+      // Paso 2: ejecutar realmente — el backend responde inmediatamente con RUNNING
       const result = await dataService.executeRunbook(selectedRunbook.id, selectedSystemId, false);
-      setExecutionResult(result);
-      showToast(`Runbook "${selectedRunbook.name}" ejecutado exitosamente`, 'success');
-      // Refrescar lista de ejecuciones
-      const updatedExecs = await dataService.getRunbookExecutions();
-      setExecutions(updatedExecs);
+
+      if (result.id) {
+        // Inicializar step results desde la definicion del runbook
+        const initialSteps = (selectedRunbook.steps || []).map((s, i) => ({
+          stepOrder: s.order || i + 1,
+          action: s.action,
+          command: s.command,
+          status: 'PENDING',
+        }));
+        setLiveStepResults(initialSteps);
+        setExecutionProgress({
+          totalSteps: initialSteps.length,
+          completedSteps: 0,
+          currentStep: 0,
+          result: 'RUNNING',
+        });
+
+        // Iniciar polling para obtener progreso real
+        startPolling(result.id);
+      } else {
+        // El resultado vino inmediato (demo mode o PENDING)
+        setExecutionResult(result);
+        setExecuting(false);
+      }
     } catch (err) {
-      // Parsear error de validación del backend
       let detail = err.message;
       let failures = [];
       try {
         const parsed = JSON.parse(err.message);
         if (parsed.failures) { detail = parsed.message; failures = parsed.failures; }
-      } catch { /* no es JSON, usar message directo */ }
+      } catch { /* no es JSON */ }
       setExecutionResult({ result: 'FAILED', detail, failures });
       showToast(`Error: ${detail}`, 'info');
-    } finally {
       setExecuting(false);
     }
   };
@@ -175,9 +316,12 @@ export default function RunbooksPage() {
 
   // Cerrar modales
   const closeExecuteModal = () => {
+    stopPolling();
     setShowExecuteModal(false);
     setExecutionResult(null);
-    setExecutionSteps([]);
+    setLiveStepResults([]);
+    setExecutionProgress(null);
+    setExecuting(false);
   };
 
   const closeDryRunModal = () => {
@@ -185,7 +329,7 @@ export default function RunbooksPage() {
     setExecutionResult(null);
   };
 
-  // Configuración de tabs
+  // Configuracion de tabs
   const tabs = [
     { value: 'catalog', label: `Catálogo (${runbooks.length})` },
     { value: 'executions', label: `Ejecuciones (${executions.length})` },
@@ -193,7 +337,7 @@ export default function RunbooksPage() {
 
   // Variante de badge para resultado de ejecución
   const resultVariant = (result) => {
-    const map = { SUCCESS: 'success', PENDING: 'warning', FAILED: 'danger', RUNNING: 'warning', BLOCKED: 'danger' };
+    const map = { SUCCESS: 'success', PENDING: 'warning', FAILED: 'danger', RUNNING: 'warning', BLOCKED: 'danger', CANCELLED: 'danger' };
     return map[result] || 'default';
   };
 
@@ -205,20 +349,25 @@ export default function RunbooksPage() {
   // Nombre del sistema para el selector
   const systemLabel = (s) => `${s.sid} — ${s.type || s.product || 'SAP'} (${s.environment || s.tier || '—'})`;
 
+  // Progress bar
+  const progressPercent = executionProgress
+    ? Math.round((executionProgress.completedSteps / Math.max(executionProgress.totalSteps, 1)) * 100)
+    : 0;
+
   if (loading) return <PageLoading message="Cargando runbooks..." />;
 
   return (
     <div>
-      <Header title="Runbooks" subtitle={`${runbooks.length} runbooks integrados + ejecución automática`} />
+      <Header title="Runbooks" subtitle={`${runbooks.length} runbooks integrados + ejecución end-to-end`} />
       <div className="p-6">
         <PageHeader
           title="Runbooks"
-          description="Catálogo completo de runbooks de remediación automática y registro de ejecuciones"
+          description="Catálogo completo de runbooks de remediación automática y registro de ejecuciónes"
         />
 
         <Tabs tabs={tabs} activeTab={activeTab} onChange={setActiveTab} className="mb-6" />
 
-        {/* ── Tab: Catálogo ── */}
+        {/* ── Tab: Catalogo ── */}
         {activeTab === 'catalog' && (
           <>
           {/* Category filter */}
@@ -261,11 +410,11 @@ export default function RunbooksPage() {
             <TableBody>
               {runbooks.filter((rb) => !categoryFilter || rb.category === categoryFilter).map((rb) => (
                 <TableRow key={rb.id}>
-                  {/* Categoría */}
+                  {/* Categoria */}
                   <TableCell>
                     <Badge variant="default" size="sm">{CATEGORY_LABELS[rb.category] || rb.category || '—'}</Badge>
                   </TableCell>
-                  {/* Nombre + descripción */}
+                  {/* Nombre + descripcion */}
                   <TableCell>
                     <div className="max-w-[260px]">
                       <p className="font-medium text-text-primary text-sm">{rb.name}</p>
@@ -276,7 +425,7 @@ export default function RunbooksPage() {
                   {/* Cost-Safe */}
                   <TableCell>
                     {rb.costSafe ? (
-                      <Badge variant="success" size="sm">Sí</Badge>
+                      <Badge variant="success" size="sm">Si</Badge>
                     ) : (
                       <Badge variant="danger" size="sm">No</Badge>
                     )}
@@ -367,8 +516,8 @@ export default function RunbooksPage() {
             {executions.length === 0 ? (
               <EmptyState
                 icon={Clock}
-                title="Sin ejecuciones"
-                description="No hay ejecuciones de runbooks registradas"
+                title="Sin ejecuciónes"
+                description="No hay ejecuciónes de runbooks registradas"
               />
             ) : (
               <Table>
@@ -379,6 +528,7 @@ export default function RunbooksPage() {
                     <TableHead>Runbook</TableHead>
                     <TableHead>Safety Gate</TableHead>
                     <TableHead>Resultado</TableHead>
+                    <TableHead>Progreso</TableHead>
                     <TableHead>Duración</TableHead>
                     <TableHead>Detalle</TableHead>
                   </tr>
@@ -410,6 +560,21 @@ export default function RunbooksPage() {
                           {exec.result}
                         </Badge>
                       </TableCell>
+                      <TableCell>
+                        {exec.totalSteps > 0 ? (
+                          <div className="flex items-center gap-2">
+                            <div className="w-16 h-1.5 bg-surface-tertiary rounded-full overflow-hidden">
+                              <div
+                                className={`h-full rounded-full transition-all ${exec.result === 'SUCCESS' ? 'bg-success-500' : exec.result === 'FAILED' ? 'bg-danger-500' : 'bg-primary-500'}`}
+                                style={{ width: `${Math.round((exec.completedSteps / exec.totalSteps) * 100)}%` }}
+                              />
+                            </div>
+                            <span className="text-[10px] text-text-tertiary">{exec.completedSteps}/{exec.totalSteps}</span>
+                          </div>
+                        ) : (
+                          <span className="text-text-tertiary text-xs">—</span>
+                        )}
+                      </TableCell>
                       <TableCell className="text-xs text-text-secondary whitespace-nowrap">
                         {exec.duration || '—'}
                       </TableCell>
@@ -435,8 +600,10 @@ export default function RunbooksPage() {
         description={selectedRunbook?.description}
         size="lg"
         footer={
-          executionResult ? (
+          executionResult && !['RUNNING'].includes(executionResult.result) ? (
             <Button variant="outline" onClick={closeExecuteModal}>Cerrar</Button>
+          ) : executionProgress?.result === 'RUNNING' ? (
+            <Button variant="outline" disabled>Ejecutando...</Button>
           ) : (
             <>
               <Button variant="outline" onClick={closeExecuteModal}>Cancelar</Button>
@@ -458,7 +625,7 @@ export default function RunbooksPage() {
             {!selectedRunbook.costSafe && (
               <div className="flex items-center gap-2 p-3 rounded-lg bg-yellow-500/10 border border-yellow-500/20 text-yellow-600 dark:text-yellow-400 text-sm">
                 <AlertTriangle size={16} className="flex-shrink-0" />
-                <span>Este runbook <strong>NO es cost-safe</strong>. Puede generar costos de infraestructura.</span>
+                <span>Este runbook <strong>NO es cost-safe</strong>. Requiere aprobación humana.</span>
               </div>
             )}
 
@@ -496,23 +663,59 @@ export default function RunbooksPage() {
               </div>
             )}
 
-            {/* Pasos de ejecución */}
-            {Array.isArray(selectedRunbook.steps) && selectedRunbook.steps.length > 0 && (
+            {/* Progress bar cuando hay ejecución activa */}
+            {executionProgress && (
+              <div className="space-y-2">
+                <div className="flex items-center justify-between text-xs">
+                  <span className="font-medium text-text-primary">
+                    {executionProgress.result === 'RUNNING' ? 'Ejecutando...' :
+                     executionProgress.result === 'SUCCESS' ? 'Completado' :
+                     executionProgress.result === 'FAILED' ? 'Fallido' : executionProgress.result}
+                  </span>
+                  <span className="text-text-secondary">
+                    {executionProgress.completedSteps} / {executionProgress.totalSteps} pasos
+                  </span>
+                </div>
+                <div className="w-full h-2 bg-surface-tertiary rounded-full overflow-hidden">
+                  <div
+                    className={`h-full rounded-full transition-all duration-500 ${
+                      executionProgress.result === 'SUCCESS' ? 'bg-success-500' :
+                      executionProgress.result === 'FAILED' ? 'bg-danger-500' :
+                      'bg-primary-500'
+                    }`}
+                    style={{ width: `${progressPercent}%` }}
+                  />
+                </div>
+              </div>
+            )}
+
+            {/* Step results en vivo */}
+            {liveStepResults.length > 0 && (
+              <div>
+                <p className="text-xs font-medium text-text-secondary mb-2">Pasos de ejecución:</p>
+                <ol className="space-y-2">
+                  {liveStepResults.map((step, i) => (
+                    <StepResultRow
+                      key={step.id || i}
+                      step={step}
+                      isLast={i === liveStepResults.length - 1}
+                    />
+                  ))}
+                </ol>
+              </div>
+            )}
+
+            {/* Pasos pre-ejecución (cuando aun no hay live steps) */}
+            {liveStepResults.length === 0 && Array.isArray(selectedRunbook.steps) && selectedRunbook.steps.length > 0 && (
               <div>
                 <p className="text-xs font-medium text-text-secondary mb-1.5">Pasos de ejecución:</p>
                 <ol className="space-y-2">
-                  {(executionSteps.length > 0 ? executionSteps : selectedRunbook.steps).map((step, i) => (
+                  {selectedRunbook.steps.map((step, i) => (
                     <li key={i} className="flex items-start gap-2.5 text-xs">
                       <span className="flex-shrink-0 mt-0.5">
-                        {step.status === 'done' ? (
-                          <CheckCircle size={14} className="text-success-500" />
-                        ) : step.status === 'running' ? (
-                          <Loader2 size={14} className="text-primary-500 animate-spin" />
-                        ) : (
-                          <span className="inline-flex items-center justify-center w-3.5 h-3.5 rounded-full bg-surface-tertiary text-text-tertiary text-[10px] font-medium">
-                            {step.order || i + 1}
-                          </span>
-                        )}
+                        <span className="inline-flex items-center justify-center w-3.5 h-3.5 rounded-full bg-surface-tertiary text-text-tertiary text-[10px] font-medium">
+                          {step.order || i + 1}
+                        </span>
                       </span>
                       <div>
                         <p className="text-text-primary">{step.action}</p>
@@ -527,7 +730,7 @@ export default function RunbooksPage() {
             )}
 
             {/* Selector de sistema */}
-            {!executionResult && (
+            {!executionResult && !executionProgress && (
               <Select
                 label="Sistema destino"
                 value={selectedSystemId}
@@ -538,12 +741,12 @@ export default function RunbooksPage() {
               />
             )}
 
-            {/* Resultado de ejecución */}
-            {executionResult && (
+            {/* Resultado final de ejecución */}
+            {executionResult && !['RUNNING'].includes(executionResult.result) && (
               <div className={`p-3 rounded-lg border ${
                 executionResult.result === 'BLOCKED' || executionResult.result === 'FAILED'
                   ? 'bg-red-500/5 border-red-500/20'
-                  : 'bg-surface-tertiary border-border'
+                  : 'bg-success-50 dark:bg-success-900/10 border-success-200 dark:border-success-800'
               }`}>
                 <div className="flex items-center gap-2 mb-1">
                   <p className="text-sm font-medium text-text-primary">Resultado:</p>
@@ -618,7 +821,7 @@ export default function RunbooksPage() {
               )}
             </div>
 
-            {/* Pasos que se ejecutarían */}
+            {/* Pasos que se ejecutarian */}
             {Array.isArray(selectedRunbook.steps) && selectedRunbook.steps.length > 0 && (
               <div>
                 <p className="text-xs font-medium text-text-secondary mb-1.5">Pasos que se ejecutarían:</p>
@@ -677,7 +880,7 @@ export default function RunbooksPage() {
                   <p className="text-xs text-danger-500">{executionResult.error}</p>
                 ) : (
                   <div className="space-y-2 text-xs text-text-secondary">
-                    {/* Validación de compatibilidad */}
+                    {/* Validacion de compatibilidad */}
                     {executionResult.compatible === false && (
                       <div className="p-2 rounded bg-red-500/10 border border-red-500/20">
                         <p className="font-medium text-red-500 dark:text-red-400 mb-1">Sistema incompatible — no se puede ejecutar</p>

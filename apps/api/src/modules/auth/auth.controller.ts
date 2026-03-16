@@ -8,6 +8,7 @@ import {
   HttpStatus,
 } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiBearerAuth } from '@nestjs/swagger';
+import { Throttle } from '@nestjs/throttler';
 import { AuthService } from './auth.service';
 import { LoginDto, RegisterDto, LoginResponseDto } from './dto/login.dto';
 import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
@@ -23,12 +24,14 @@ export class AuthController {
 
   @Post('login')
   @HttpCode(HttpStatus.OK)
+  @Throttle({ default: { ttl: 60000, limit: 10 } }) // 10 login attempts per minute
   @ApiOperation({ summary: 'Login with email and password' })
   async login(@Body() dto: LoginDto): Promise<LoginResponseDto> {
     return this.authService.login(dto);
   }
 
   @Post('register')
+  @Throttle({ default: { ttl: 60000, limit: 5 } }) // 5 registrations per minute
   @ApiOperation({ summary: 'Register new user and organization' })
   async register(@Body() dto: RegisterDto): Promise<LoginResponseDto> {
     return this.authService.register(dto);

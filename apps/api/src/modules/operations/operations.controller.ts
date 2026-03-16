@@ -63,9 +63,15 @@ export class OperationsController {
   updateStatus(
     @TenantId() orgId: string,
     @Param('id') id: string,
+    @CurrentUser() user: JwtPayload,
     @Body() data: UpdateOperationStatusDto,
   ) {
-    return this.operationsService.updateStatus(orgId, id, data.status);
+    return this.operationsService.updateStatus(
+      orgId,
+      id,
+      data.status,
+      user.email,
+    );
   }
 
   @Get('jobs')

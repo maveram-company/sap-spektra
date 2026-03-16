@@ -1,6 +1,15 @@
-import { Controller, Get, Param, Query, UseGuards } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Param,
+  Query,
+  UseGuards,
+} from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiBearerAuth } from '@nestjs/swagger';
 import { MetricsService } from './metrics.service';
+import { MetricsPipelineService } from './metrics-pipeline.service';
 import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
 import { TenantGuard } from '../../common/guards/tenant.guard';
 import { RolesGuard } from '../../common/guards/roles.guard';
@@ -17,7 +26,28 @@ import {
 @UseGuards(JwtAuthGuard, TenantGuard, RolesGuard)
 @Controller('metrics')
 export class MetricsController {
-  constructor(private readonly metricsService: MetricsService) {}
+  constructor(
+    private readonly metricsService: MetricsService,
+    private readonly pipeline: MetricsPipelineService,
+  ) {}
+
+  @Post('ingest')
+  @Roles('operator')
+  @ApiOperation({ summary: 'Ingest metric data point from agent' })
+  ingest(
+    @Body()
+    data: {
+      hostId: string;
+      cpu: number;
+      memory: number;
+      disk: number;
+      iops?: number;
+      networkIn?: number;
+      networkOut?: number;
+    },
+  ) {
+    return this.pipeline.ingest(data);
+  }
 
   @Get('hosts/:hostId')
   @Roles('viewer')

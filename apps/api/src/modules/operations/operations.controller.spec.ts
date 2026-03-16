@@ -81,18 +81,25 @@ describe('OperationsController', () => {
   // ── updateStatus ──
 
   describe('updateStatus', () => {
-    it('delegates to operationsService.updateStatus with orgId, id, and status', async () => {
+    it('delegates to operationsService.updateStatus with orgId, id, user, and status', async () => {
+      const user = {
+        email: 'admin@test.com',
+        sub: 'u-1',
+        orgId: 'org-1',
+        role: 'operator',
+      } as any;
       const data = { status: 'COMPLETED' } as any;
       const expected = { id: 'op-1', status: 'COMPLETED' };
       mockService.updateStatus.mockResolvedValue(expected);
 
-      const result = await controller.updateStatus('org-1', 'op-1', data);
+      const result = await controller.updateStatus('org-1', 'op-1', user, data);
 
       expect(result).toEqual(expected);
       expect(service.updateStatus).toHaveBeenCalledWith(
         'org-1',
         'op-1',
         'COMPLETED',
+        'admin@test.com',
       );
     });
   });

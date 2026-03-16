@@ -7,6 +7,7 @@ import {
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcryptjs';
 import { PrismaService } from '../../infrastructure/prisma/prisma.service';
+import { AuditService } from '../audit/audit.service';
 import { LoginDto, RegisterDto, LoginResponseDto } from './dto/login.dto';
 import { JwtPayload } from '../../common/decorators/current-user.decorator';
 
@@ -17,6 +18,7 @@ export class AuthService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly jwtService: JwtService,
+    private readonly audit: AuditService,
   ) {}
 
   async login(dto: LoginDto): Promise<LoginResponseDto> {
@@ -64,6 +66,17 @@ export class AuthService {
     this.logger.log(
       `User ${user.email} logged in → org ${membership.organization.slug}`,
     );
+
+    // Audit log (fire and forget)
+    this.audit
+      .log(membership.organizationId, {
+        userId: user.id,
+        userEmail: user.email,
+        action: 'auth.login',
+        resource: `user/${user.id}`,
+        details: `User logged in`,
+      })
+      .catch(() => {});
 
     return {
       accessToken,
@@ -132,6 +145,17 @@ export class AuthService {
     const accessToken = this.jwtService.sign(payload);
 
     this.logger.log(`New registration: ${dto.email} → org ${slug}`);
+
+    // Audit log (fire and forget)
+    this.audit
+      .log(result.org.id, {
+        userId: result.user.id,
+        userEmail: result.user.email,
+        action: 'auth.register',
+        resource: `user/${result.user.id}`,
+        details: `New user registered, organization "${result.org.name}" created`,
+      })
+      .catch(() => {});
 
     return {
       accessToken,

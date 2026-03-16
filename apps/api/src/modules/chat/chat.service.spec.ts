@@ -69,7 +69,7 @@ describe('ChatService', () => {
         const result = await service.processMessage(ORG_ID, keyword);
 
         expect(result.type).toBe('status_summary');
-        expect(result.data).toEqual(
+        expect((result as any).data).toEqual(
           expect.objectContaining({
             systemCount: 5,
             activeAlerts: 3,
@@ -96,8 +96,8 @@ describe('ChatService', () => {
       );
 
       expect(result.type).toBe('alert_list');
-      expect(result.data).toHaveLength(1);
-      expect((result.data as any[])[0]).toEqual(
+      expect((result as any).data).toHaveLength(1);
+      expect(((result as any).data as any[])[0]).toEqual(
         expect.objectContaining({ id: 'a-1', system: 'EP1' }),
       );
     });
@@ -115,8 +115,8 @@ describe('ChatService', () => {
       const result = await service.processMessage(ORG_ID, 'Listar sistemas');
 
       expect(result.type).toBe('system_list');
-      expect(result.data).toHaveLength(1);
-      expect((result.data as any[])[0]).toEqual(
+      expect((result as any).data).toHaveLength(1);
+      expect(((result as any).data as any[])[0]).toEqual(
         expect.objectContaining({ sid: 'EP1' }),
       );
     });

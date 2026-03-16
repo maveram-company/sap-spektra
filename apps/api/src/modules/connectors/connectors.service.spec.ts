@@ -1,5 +1,6 @@
 import { NotFoundException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
+import { ConfigService } from '@nestjs/config';
 import { ConnectorsService } from './connectors.service';
 import { PrismaService } from '../../infrastructure/prisma/prisma.service';
 
@@ -13,6 +14,7 @@ function mockConnector(overrides = {}) {
     method: 'AGENT',
     status: 'connected',
     lastHeartbeat: new Date(),
+    system: { sid: 'EP1' },
     ...overrides,
   };
 }
@@ -34,6 +36,15 @@ describe('ConnectorsService', () => {
       providers: [
         ConnectorsService,
         { provide: PrismaService, useValue: prisma },
+        {
+          provide: ConfigService,
+          useValue: {
+            get: jest.fn((key: string, fallback: string) => {
+              if (key === 'RUNTIME_MODE') return 'LOCAL_SIMULATED';
+              return fallback;
+            }),
+          },
+        },
       ],
     }).compile();
 

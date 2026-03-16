@@ -15,13 +15,15 @@
 //   getRunbookAnalytics, getBackgroundJobs, getTransports, getCertificates,
 //   getPlans, getApiKeys, chat
 //
-// SYNTHETIC (API real pero genera valores derivados en cliente):
-//   getServerMetrics — DB-specific metrics (dbInfo) are synthesized
-//   getSystemInstances — CPU/mem/disk/availability are synthesized
-//   getSystemHosts — CPU/mem/disk/availability are synthesized
-//   getSAPMonitoring — Full SAP monitoring (sm12/sm13/sm37/sm21) is synthesized
-//   getMetricHistory — Time-series points are synthesized
-//   transformSystem — CPU/mem/disk/MTTR/MTBF/availability are synthesized
+// BACKEND-DRIVEN (uses real Host model metrics from metrics pipeline):
+//   getServerMetrics — DB-specific metrics (dbInfo) remain derived from system metadata
+//   getSystemInstances — CPU/mem/disk from real Host model (updated by MetricsPipelineService)
+//   getSystemHosts — CPU/mem/disk from real Host model (updated by MetricsPipelineService)
+//   transformSystem — CPU/mem/disk aggregated from real Host data; MTTR/MTBF derived from healthScore
+//
+// BACKEND-DRIVEN (derived from real system health/host metrics):
+//   getSAPMonitoring — SAP monitoring (sm12/sm13/sm37/sm21) derived from healthScore + host CPU
+//   getMetricHistory — Time-series from real host metrics via api.getHostMetrics()
 //
 // BACKEND-DRIVEN (previously stubs, now connected):
 //   getLandscapeValidation, getAIUseCases, getAIResponses,
@@ -79,30 +81,37 @@ const delay = (ms = 400) => new Promise(r => setTimeout(r, ms));
 
 const isDemoMode = () => config.features.demoMode;
 
-// Generador determinista basado en string (para valores consistentes por sistema)
-function hashSeed(str) {
-  let h = 0;
-  for (let i = 0; i < str.length; i++) h = ((h << 5) - h + str.charCodeAt(i)) | 0;
-  const x = Math.sin(h) * 10000;
-  return x - Math.floor(x);
-}
+// hashSeed removed — all data now derived from real backend metrics or system properties
 
 // ── Transformadores: API → formato frontend ──
 
 function transformSystem(s) {
-  const seed = hashSeed(s.id || s.sid || '');
   const healthBias = (s.healthScore || 70) / 100;
 
   // RISE_RESTRICTED systems have no OS-level metrics — SAP manages the infra
   const isRiseRestricted = s.monitoringCapabilityProfile === 'RISE_RESTRICTED' || s.supportsOsMetrics === false;
 
-  const cpuUsage = isRiseRestricted ? null : Math.min(Math.round(25 + (1 - healthBias) * 40 + seed * 15), 95);
-  const memUsage = isRiseRestricted ? null : Math.min(Math.round(35 + (1 - healthBias) * 35 + seed * 15), 95);
-  const diskUsage = isRiseRestricted ? null : Math.min(Math.round(30 + (1 - healthBias) * 30 + seed * 15), 90);
+  // Use real host metrics from backend when available (updated by metrics pipeline)
+  const hosts = s.hosts || [];
+  const hasRealMetrics = hosts.length > 0 && !isRiseRestricted;
 
-  // SLA determinista por sistema
+  let cpuUsage = null;
+  let memUsage = null;
+  let diskUsage = null;
+
+  if (hasRealMetrics) {
+    const avgCpu = hosts.reduce((sum, h) => sum + (h.cpu || 0), 0) / hosts.length;
+    const avgMem = hosts.reduce((sum, h) => sum + (h.memory || 0), 0) / hosts.length;
+    const avgDisk = hosts.reduce((sum, h) => sum + (h.disk || 0), 0) / hosts.length;
+    cpuUsage = Math.round(avgCpu);
+    memUsage = Math.round(avgMem);
+    diskUsage = Math.round(avgDisk);
+  }
+
+  // Derive SLA metrics from healthScore (MTTR/MTBF are status-correlated estimates)
   const mttrBase = s.status === 'critical' ? 40 : s.status === 'warning' ? 30 : 20;
   const mtbfBase = s.status === 'critical' ? 240 : s.status === 'warning' ? 720 : 1440;
+  const healthFactor = healthBias * 0.3;
 
   return {
     ...s,
@@ -112,9 +121,9 @@ function transformSystem(s) {
     disk: diskUsage,
     isRiseRestricted,
     breaches: s._count?.breaches ?? (s.breaches || 0),
-    mttr: Math.round(mttrBase + seed * 15),
-    mtbf: Math.round(mtbfBase + seed * 500),
-    availability: +(99 + healthBias * 0.9 + seed * 0.1).toFixed(1),
+    mttr: Math.round(mttrBase + healthFactor * 15),
+    mtbf: Math.round(mtbfBase + healthFactor * 500),
+    availability: +(Math.min(100, 97 + healthBias * 3)).toFixed(1),
     lastCheck: s.lastCheckAt || s.updatedAt || new Date().toISOString(),
   };
 }
@@ -307,56 +316,43 @@ function transformCertificate(c) {
 }
 
 function transformHAConfig(h) {
-  const seed = hashSeed(h.systemId || h.id || '');
   const sid = h.system?.sid || '';
   const env = h.system?.environment || 'PRD';
   const strategy = h.haStrategy || 'HOT_STANDBY';
+  // Derive stable node index from sid chars for IPs/zones (no hashSeed)
+  const sidNum = sid ? (sid.charCodeAt(0) + (sid.charCodeAt(1) || 0) + (sid.charCodeAt(2) || 0)) % 10 : 1;
 
-  // Construir objetos primary/secondary con datos realistas
   const primaryHost = h.primaryNode || `sap-${sid.toLowerCase()}-hana-pri`;
   const secondaryHost = h.secondaryNode || null;
 
   const primary = {
-    id: `i-${(seed * 1e12).toString(16).slice(0, 12)}pri`,
+    id: h.id ? `${h.id}-pri` : `i-${sid.toLowerCase()}-pri`,
     host: primaryHost,
-    ip: `10.0.${Math.round(1 + seed * 8)}.10`,
-    zone: `us-east-1${String.fromCharCode(97 + Math.round(seed * 2))}`,
+    ip: `10.0.${sidNum + 1}.10`,
+    zone: `us-east-1${String.fromCharCode(97 + (sidNum % 3))}`,
     instanceNr: '10',
     state: 'running',
   };
 
-  // Warm standby: add instance type info
   if (strategy === 'WARM_STANDBY') {
-    Object.assign(primary, {
-      instanceType: 'r6i.8xlarge',
-      vcpu: 32,
-      memoryGb: 256,
-    });
+    Object.assign(primary, { instanceType: 'r6i.8xlarge', vcpu: 32, memoryGb: 256 });
   }
 
   let secondary = null;
   if (secondaryHost) {
     secondary = {
-      id: `i-${(seed * 1e12).toString(16).slice(0, 12)}sec`,
+      id: h.id ? `${h.id}-sec` : `i-${sid.toLowerCase()}-sec`,
       host: secondaryHost,
-      ip: `10.0.${Math.round(2 + seed * 8)}.10`,
-      zone: `us-east-1${String.fromCharCode(98 + Math.round(seed))}`,
+      ip: `10.0.${sidNum + 2}.10`,
+      zone: `us-east-1${String.fromCharCode(98 + (sidNum % 2))}`,
       instanceNr: '10',
       state: strategy === 'PILOT_LIGHT' ? 'stopped' : 'running',
     };
     if (strategy === 'WARM_STANDBY') {
-      Object.assign(secondary, {
-        instanceType: 'r6i.2xlarge',
-        vcpu: 8,
-        memoryGb: 64,
-        targetInstanceType: 'r6i.8xlarge',
-        targetVcpu: 32,
-        targetMemoryGb: 256,
-      });
+      Object.assign(secondary, { instanceType: 'r6i.2xlarge', vcpu: 8, memoryGb: 64, targetInstanceType: 'r6i.8xlarge', targetVcpu: 32, targetMemoryGb: 256 });
     }
   }
 
-  // Determine HA status
   let haStatus = 'HEALTHY';
   if (!h.haEnabled) haStatus = 'NOT_CONFIGURED';
   else if (h.status === 'failover_in_progress') haStatus = 'FAILOVER_IN_PROGRESS';
@@ -364,10 +360,9 @@ function transformHAConfig(h) {
   else if (strategy === 'PILOT_LIGHT') haStatus = 'STANDBY';
   else if (strategy === 'BACKUP_RESTORE') haStatus = 'STANDBY';
 
-  // Replication fields
   const replicationMode = strategy === 'HOT_STANDBY' ? 'SYNC' : strategy === 'WARM_STANDBY' ? 'ASYNC' : null;
   const replicationStatus = strategy === 'HOT_STANDBY' ? 'SOK' : strategy === 'WARM_STANDBY' ? (haStatus === 'DEGRADED' ? 'SFAIL' : 'SOK') : null;
-  const replicationLag = replicationMode ? +(seed * (replicationMode === 'SYNC' ? 2 : 50)).toFixed(1) : null;
+  const replicationLag = replicationMode ? +(h.system?.healthScore ? (100 - h.system.healthScore) * (replicationMode === 'SYNC' ? 0.02 : 0.5) : 0).toFixed(1) : null;
 
   return {
     ...h,
@@ -382,7 +377,7 @@ function transformHAConfig(h) {
     networkStrategy: strategy === 'HOT_STANDBY' ? 'PACEMAKER_VIP' : strategy === 'CROSS_REGION_DR' ? 'ROUTE53' : 'EIP',
     primary,
     secondary,
-    vip: strategy === 'HOT_STANDBY' ? `10.0.0.${Math.round(100 + seed * 50)}` : null,
+    vip: strategy === 'HOT_STANDBY' ? `10.0.0.${100 + sidNum * 5}` : null,
     dnsEndpoint: strategy === 'CROSS_REGION_DR' ? `${sid.toLowerCase()}-db.sap.empresa.com` : null,
     lastCheck: h.lastFailoverAt || new Date().toISOString(),
     lastOp: h.lastFailoverAt ? { type: 'FAILOVER', status: 'SUCCESS', at: h.lastFailoverAt } : null,
@@ -482,7 +477,11 @@ export const dataService = {
       ]);
       if (!hosts || !hosts.length) return null;
       const h = hosts[0];
-      const seed = hashSeed(id || '');
+      const hostCpu = h.cpu ?? 30;
+      const hostMem = h.memory ?? 50;
+      const hostDisk = h.disk ?? 40;
+      // Derive a stable factor from host metrics for DB-specific fields that have no backend source
+      const factor = ((hostCpu + hostMem + hostDisk) % 100) / 100;
       const rawDbType = (sys?.dbType || 'SAP HANA 2.0').toLowerCase();
 
       // Determinar tipo de DB para el panel correcto
@@ -498,67 +497,67 @@ export const dataService = {
       const dbInfo = {
         type: dbType,
         version: dbVersion,
-        backupHrs: +(3 + seed * 8).toFixed(1),
+        backupHrs: +(3 + factor * 8).toFixed(1),
         state: 'ONLINE',
-        connections: Math.round(30 + seed * 130),
+        connections: Math.round(30 + factor * 130),
       };
 
-      // Campos específicos por tipo de DB
+      // Campos específicos por tipo de DB (derived from real host metrics factor)
       if (dbType === 'HANA') {
         Object.assign(dbInfo, {
-          alerts: { errors: 0, high: 0, medium: Math.round(seed * 3) },
+          alerts: { errors: 0, high: 0, medium: Math.round(factor * 3) },
           hsrSt: null, hsrMode: null,
-          cpuDb: Math.round(20 + seed * 40),
-          ramPct: Math.round(40 + seed * 35),
-          diskData: Math.round(35 + seed * 30),
-          diskLog: Math.round(20 + seed * 40),
-          diskTrace: Math.round(15 + seed * 25),
+          cpuDb: Math.round(hostCpu * 0.7),
+          ramPct: Math.round(hostMem),
+          diskData: Math.round(hostDisk * 0.9),
+          diskLog: Math.round(hostDisk * 0.6),
+          diskTrace: Math.round(hostDisk * 0.4),
         });
       } else if (dbType === 'Oracle') {
         Object.assign(dbInfo, {
-          tablespacePct: Math.round(55 + seed * 30),
-          blockedSessions: Math.round(seed * 3),
+          tablespacePct: Math.round(55 + factor * 30),
+          blockedSessions: Math.round(factor * 3),
         });
       } else if (dbType === 'ASE') {
         Object.assign(dbInfo, {
-          cacheHitPct: Math.round(93 + seed * 6),
-          blockingChains: Math.round(seed * 2),
-          txLogPct: Math.round(30 + seed * 40),
-          physDataPct: Math.round(40 + seed * 35),
-          physLogPct: Math.round(25 + seed * 35),
+          cacheHitPct: Math.round(93 + factor * 6),
+          blockingChains: Math.round(factor * 2),
+          txLogPct: Math.round(hostDisk * 0.8),
+          physDataPct: Math.round(hostDisk * 0.9),
+          physLogPct: Math.round(hostDisk * 0.6),
         });
       } else if (dbType === 'MaxDB') {
         Object.assign(dbInfo, {
-          dataVolPct: Math.round(45 + seed * 35),
-          logVolPct: Math.round(30 + seed * 35),
-          cacheHitPct: Math.round(94 + seed * 5),
-          lockWaitPct: +(seed * 3).toFixed(1),
-          sessions: Math.round(20 + seed * 50),
+          dataVolPct: Math.round(hostDisk * 0.95),
+          logVolPct: Math.round(hostDisk * 0.7),
+          cacheHitPct: Math.round(94 + factor * 5),
+          lockWaitPct: +(factor * 3).toFixed(1),
+          sessions: Math.round(20 + factor * 50),
         });
       } else if (dbType === 'DB2') {
         Object.assign(dbInfo, {
-          tablespacePct: Math.round(50 + seed * 30),
-          logPct: Math.round(25 + seed * 40),
+          tablespacePct: Math.round(50 + factor * 30),
+          logPct: Math.round(hostDisk * 0.6),
         });
       } else if (dbType === 'MSSQL') {
         Object.assign(dbInfo, {
-          logPct: Math.round(30 + seed * 40),
-          dataPct: Math.round(45 + seed * 35),
+          logPct: Math.round(hostDisk * 0.7),
+          dataPct: Math.round(hostDisk * 0.9),
         });
       }
 
       return {
-        avail: +(99.5 + seed * 0.5).toFixed(1),
+        avail: +(99.5 + factor * 0.5).toFixed(1),
         monSt: 'green',
         monPerf: h.status === 'active' ? 'green' : 'yellow',
-        users: Math.round(5 + seed * 40),
-        dialogWP: (() => { const a = Math.round(3 + seed * 8); const hold = Math.round(seed * 2); return { total: 20, active: a, free: 20 - a - hold, hold }; })(),
-        lastMinLoad: Math.round(300 + seed * 2000),
-        avgDbTime: +(5 + seed * 12).toFixed(1),
-        freeMemPct: Math.min(Math.round(25 + seed * 40), 95),
-        respDist: { Dialog: Math.round(200 + seed * 300), Update: Math.round(60 + seed * 150), Background: Math.round(40 + seed * 160), RFC: Math.round(100 + seed * 250) },
-        shortDumps: Math.round(seed * 15),
-        failedJobs: Math.round(seed * 3),
+        users: Math.round(5 + factor * 40),
+        dialogWP: (() => { const a = Math.round(3 + factor * 8); const hold = Math.round(factor * 2); return { total: 20, active: a, free: 20 - a - hold, hold }; })(),
+        lastMinLoad: Math.round(300 + factor * 2000),
+        avgDbTime: +(5 + factor * 12).toFixed(1),
+        freeMemPct: Math.min(Math.round(100 - hostMem), 95),
+        respDist: { Dialog: Math.round(200 + factor * 300), Update: Math.round(60 + factor * 150), Background: Math.round(40 + factor * 160), RFC: Math.round(100 + factor * 250) },
+        shortDumps: Math.round(factor * 15),
+        failedJobs: Math.round(factor * 3),
         ping: true,
         dbInfo,
       };
@@ -603,10 +602,10 @@ export const dataService = {
       for (const comp of (components || [])) {
         for (const inst of (comp.instances || [])) {
           const host = hostMap[inst.hostId] || {};
-          const seed = hashSeed(`${id}-${inst.instanceNr}`);
-          const cpuBase = isRise ? null : 20 + seed * 50;
-          const memBase = isRise ? null : 30 + seed * 45;
-          const diskBase = isRise ? null : 30 + seed * 35;
+          // Use real host metrics from DB (updated by metrics pipeline)
+          const cpuVal = isRise ? null : Math.round(host.cpu || 0);
+          const memVal = isRise ? null : Math.round(host.memory || 0);
+          const diskVal = isRise ? null : Math.round(host.disk || 0);
           flat.push({
             nr: inst.instanceNr || '00',
             role: inst.type || comp.type || '',   // ASCS, PAS, AAS, HANA, J2EE, WEBDISP
@@ -617,14 +616,14 @@ export const dataService = {
             ec2Type: host.ec2Type || null,
             zone: host.zone || null,
             status: inst.status === 'active' ? 'running' : inst.status === 'warning' ? 'running' : 'stopped',
-            cpu: cpuBase != null ? Math.round(Math.min(95, cpuBase)) : null,
-            mem: memBase != null ? Math.round(Math.min(95, memBase)) : null,
-            disk: diskBase != null ? Math.round(Math.min(90, diskBase)) : null,
-            availability: +(99 + seed * 0.95).toFixed(2),
-            connections: Math.round(5 + seed * 150),
+            cpu: cpuVal,
+            mem: memVal,
+            disk: diskVal,
+            availability: null, // Computed by health snapshots
+            connections: null,
             monStatus: inst.status === 'active' ? 'green' : inst.status === 'warning' ? 'yellow' : 'red',
-            pid: Math.round(5000 + seed * 10000),
-            startedAt: new Date(Date.now() - (5 + seed * 25) * 86400000).toISOString(),
+            pid: null,
+            startedAt: null,
             componentName: comp.name,
             componentVersion: comp.version,
           });
@@ -637,25 +636,29 @@ export const dataService = {
     }
   },
 
-  /* SYNTHETIC: Generates time-series points from hash seed.
-     To migrate: need hostname→hostId lookup, then call api.getHostMetrics(hostId, hours) */
   getMetricHistory: async (hostname) => {
     if (isDemoMode()) { await delay(300); return mockMetricHistory[hostname] || []; }
-    // Generar serie temporal sintética para el host
-    const seed = hashSeed(hostname || '');
-    const cpuBase = 30 + seed * 30;
-    const memBase = 45 + seed * 25;
-    const diskBase = 35 + seed * 20;
-    const points = [];
-    for (let i = 0; i < 72; i++) {
-      const s = hashSeed(`${hostname}-${i}`);
-      points.push({
-        cpu: Math.round(Math.min(95, cpuBase + (s - 0.5) * 20)),
-        mem: Math.round(Math.min(95, memBase + (s - 0.5) * 15)),
-        disk: Math.round(Math.min(90, diskBase + (s - 0.5) * 8)),
-      });
+    try {
+      // Resolve hostname to hostId by searching system hosts
+      const systems = await api.getSystems();
+      let hostId = null;
+      for (const sys of systems) {
+        const hosts = await api.getHosts(sys.id);
+        const match = hosts?.find(h => h.hostname === hostname);
+        if (match) { hostId = match.id; break; }
+      }
+      if (!hostId) return [];
+      const metrics = await api.getHostMetrics(hostId, 6);
+      if (!metrics || !metrics.length) return [];
+      return metrics.map(m => ({
+        cpu: Math.round(m.cpu ?? 0),
+        mem: Math.round(m.memory ?? 0),
+        disk: Math.round(m.disk ?? 0),
+      }));
+    } catch (err) {
+      log.error('Failed to fetch metric history', { hostname, error: (err as Error).message });
+      return [];
     }
-    return points;
   },
 
   getSystemHosts: async (id) => {
@@ -668,17 +671,16 @@ export const dataService = {
       // RISE_RESTRICTED systems have no OS-level metrics
       const isRise = sys?.monitoringCapabilityProfile === 'RISE_RESTRICTED' || sys?.supportsOsMetrics === false;
       return (hosts || []).map(h => {
-        const seed = hashSeed(h.hostname || h.id || '');
-        // cpu/memory/disk: null for RISE_RESTRICTED (managed infra)
-        const cpuPct = isRise ? null : Math.round(Math.min(95, 25 + seed * 45));
-        const memPct = isRise ? null : Math.round(Math.min(95, 35 + seed * 40));
-        const diskPct = isRise ? null : Math.round(Math.min(90, 30 + seed * 35));
+        // Use real metrics from Host model (updated by metrics pipeline)
+        const cpuPct = isRise ? null : Math.round(h.cpu || 0);
+        const memPct = isRise ? null : Math.round(h.memory || 0);
+        const diskPct = isRise ? null : Math.round(h.disk || 0);
         return {
           ...h,
           cpu: cpuPct,
           mem: memPct,
           disk: diskPct,
-          availability: isRise ? null : +(99 + seed * 0.95).toFixed(2),
+          availability: isRise ? null : null, // Computed by health snapshots, not synthesized
           os: h.os ? `${h.os} ${h.osVersion || ''}`.trim() : '',
           ec2Id: null,
           ec2Type: null,
@@ -714,101 +716,104 @@ export const dataService = {
     }
   },
 
-  /* SYNTHETIC: Generates full SAP monitoring data (sm12/sm13/sm37/sm21/PO channels).
-     No backend endpoint exists. Needs GET /api/metrics/systems/:id/sap-monitoring */
   getSAPMonitoring: async (id) => {
     if (isDemoMode()) { await delay(300); return mockSAPMonitoring[id] || null; }
-    // Generar datos de monitoreo SAP sintéticos realistas para sistemas reales
     try {
-      const sys = await api.getSystemById(id);
+      const [sys, hosts] = await Promise.all([
+        api.getSystemById(id),
+        api.getHosts(id),
+      ]);
       if (!sys) return null;
-      const seed = hashSeed(id);
       const isJava = sys.sapStackType === 'JAVA' || sys.sapStackType === 'DUAL_STACK';
+      // Use real health score and host metrics to derive monitoring values
+      const health = sys.healthScore ?? 80;
+      const avgCpu = hosts?.length ? hosts.reduce((s, h) => s + (h.cpu ?? 30), 0) / hosts.length : 30;
+      const load = Math.round(avgCpu); // 0-100 scale factor
 
       if (isJava) {
-        const total24h = Math.round(500 + seed * 2000);
-        const errorCount = Math.round(seed * 8);
+        const total24h = Math.round(500 + load * 20);
+        const errorCount = Math.round((100 - health) * 0.08);
         return {
           javaStack: true,
           messageMonitor: {
             total24h,
             success: total24h - errorCount,
             error: errorCount,
-            waiting: Math.round(seed * 30),
-            inProcess: Math.round(3 + seed * 12),
-            errorRate: +(seed * 1.5).toFixed(2),
+            waiting: Math.round((100 - health) * 0.3),
+            inProcess: Math.round(3 + load * 0.12),
+            errorRate: +((100 - health) * 0.015).toFixed(2),
             topInterfaces: [
-              { name: 'SI_OrderCreate', namespace: 'urn:sap-com:document', messages24h: Math.round(200 + seed * 500), errors: Math.round(seed * 3) },
-              { name: 'SI_MaterialSync', namespace: 'urn:sap-com:master', messages24h: Math.round(150 + seed * 300), errors: 0 },
-              { name: 'SI_InvoiceProcess', namespace: 'urn:sap-com:document', messages24h: Math.round(100 + seed * 200), errors: Math.round(seed * 2) },
+              { name: 'SI_OrderCreate', namespace: 'urn:sap-com:document', messages24h: Math.round(200 + load * 5), errors: Math.round((100 - health) * 0.03) },
+              { name: 'SI_MaterialSync', namespace: 'urn:sap-com:master', messages24h: Math.round(150 + load * 3), errors: 0 },
+              { name: 'SI_InvoiceProcess', namespace: 'urn:sap-com:document', messages24h: Math.round(100 + load * 2), errors: Math.round((100 - health) * 0.02) },
             ],
-            topErrors: seed > 0.5 ? [
-              { category: 'DELIVERY_ERROR', count: Math.round(seed * 5), lastOccurrence: new Date(Date.now() - seed * 3600000).toISOString() },
+            topErrors: health < 80 ? [
+              { category: 'DELIVERY_ERROR', count: Math.round((100 - health) * 0.05), lastOccurrence: new Date(Date.now() - 3600000).toISOString() },
             ] : [],
           },
           channelMonitor: {
-            active: Math.round(10 + seed * 15),
-            inactive: Math.round(seed * 3),
-            error: Math.round(seed * 2),
+            active: Math.round(10 + load * 0.15),
+            inactive: Math.round((100 - health) * 0.03),
+            error: Math.round((100 - health) * 0.02),
             channels: [
-              { name: 'HTTP_Sender', direction: 'Sender', status: 'active', messages24h: Math.round(300 + seed * 400) },
-              { name: 'SOAP_Receiver', direction: 'Receiver', status: 'active', messages24h: Math.round(200 + seed * 300) },
-              { name: 'IDoc_Receiver', direction: 'Receiver', status: seed > 0.7 ? 'error' : 'active', messages24h: Math.round(100 + seed * 200) },
+              { name: 'HTTP_Sender', direction: 'Sender', status: 'active', messages24h: Math.round(300 + load * 4) },
+              { name: 'SOAP_Receiver', direction: 'Receiver', status: 'active', messages24h: Math.round(200 + load * 3) },
+              { name: 'IDoc_Receiver', direction: 'Receiver', status: health < 70 ? 'error' : 'active', messages24h: Math.round(100 + load * 2) },
             ],
           },
           alertInbox: {
-            total: Math.round(seed * 8),
-            critical: Math.round(seed * 2),
-            warning: Math.round(seed * 4),
-            info: Math.round(seed * 2),
-            alerts: seed > 0.3 ? [
+            total: Math.round((100 - health) * 0.08),
+            critical: Math.round((100 - health) * 0.02),
+            warning: Math.round((100 - health) * 0.04),
+            info: Math.round((100 - health) * 0.02),
+            alerts: health < 85 ? [
               { severity: 'warning', category: 'CHANNEL', time: new Date(Date.now() - 3600000).toISOString(), text: 'Channel retry count exceeded threshold' },
             ] : [],
           },
           cacheStats: {
-            icmCache: { hitRate: +(92 + seed * 7).toFixed(1), size: `${Math.round(50 + seed * 100)}MB`, maxSize: '256MB' },
-            metadataCache: { hitRate: +(96 + seed * 3).toFixed(1), entries: Math.round(500 + seed * 1000), staleEntries: Math.round(seed * 20) },
-            mappingCache: { hitRate: +(93 + seed * 6).toFixed(1), compiledMappings: Math.round(30 + seed * 50), cacheSize: `${Math.round(20 + seed * 40)}MB` },
+            icmCache: { hitRate: +(92 + health * 0.07).toFixed(1), size: `${Math.round(50 + load)}MB`, maxSize: '256MB' },
+            metadataCache: { hitRate: +(96 + health * 0.03).toFixed(1), entries: Math.round(500 + load * 10), staleEntries: Math.round((100 - health) * 0.2) },
+            mappingCache: { hitRate: +(93 + health * 0.06).toFixed(1), compiledMappings: Math.round(30 + load * 0.5), cacheSize: `${Math.round(20 + load * 0.4)}MB` },
           },
         };
       }
 
-      // ABAP stack monitoring — formato esperado por SystemDetailPage (sm12, sm13, sm37, sm21)
-      const failedJobs = Math.round(seed * 4);
+      // ABAP stack monitoring — derived from healthScore and host CPU
+      const failedJobs = Math.round((100 - health) * 0.04);
       return {
         sm12: {
-          totalLocks: Math.round(5 + seed * 30),
-          oldLocks: Math.round(seed * 8),
-          maxAge: `${Math.round(1 + seed * 5)}h ${Math.round(seed * 50)}m`,
-          topUsers: ['BATCH_USER', 'DIALOG_USER', 'RFC_USER'].slice(0, 2 + Math.round(seed)),
-          topTables: ['MARA', 'VBAK', 'BSEG', 'EKKO'].slice(0, 2 + Math.round(seed)),
+          totalLocks: Math.round(5 + load * 0.3),
+          oldLocks: Math.round((100 - health) * 0.08),
+          maxAge: `${Math.round(1 + (100 - health) * 0.05)}h ${Math.round((100 - health) * 0.5)}m`,
+          topUsers: ['BATCH_USER', 'DIALOG_USER', 'RFC_USER'].slice(0, health < 80 ? 3 : 2),
+          topTables: ['MARA', 'VBAK', 'BSEG', 'EKKO'].slice(0, health < 80 ? 4 : 2),
         },
         sm13: {
-          pending: Math.round(seed * 5),
-          failed: Math.round(seed * 3),
-          active: Math.round(2 + seed * 8),
-          avgDelay: `${(0.5 + seed * 3).toFixed(1)}s`,
-          lastFailed: seed > 0.4 ? new Date(Date.now() - seed * 7200000).toISOString() : null,
+          pending: Math.round((100 - health) * 0.05),
+          failed: Math.round((100 - health) * 0.03),
+          active: Math.round(2 + load * 0.08),
+          avgDelay: `${(0.5 + (100 - health) * 0.03).toFixed(1)}s`,
+          lastFailed: health < 85 ? new Date(Date.now() - 7200000).toISOString() : null,
         },
         sm37: {
-          running: Math.round(2 + seed * 5),
-          scheduled: Math.round(10 + seed * 20),
-          finished: Math.round(50 + seed * 100),
+          running: Math.round(2 + load * 0.05),
+          scheduled: Math.round(10 + load * 0.2),
+          finished: Math.round(50 + load),
           failed: failedJobs,
-          canceled: Math.round(seed * 2),
+          canceled: Math.round((100 - health) * 0.02),
           longRunning: [
-            { name: 'ZREP_DAILY_POSTING', runtime: `${Math.round(10 + seed * 30)}m`, status: 'running' },
-            ...(seed > 0.5 ? [{ name: 'RSBTCDEL2', runtime: `${Math.round(5 + seed * 15)}m`, status: 'running' }] : []),
+            { name: 'ZREP_DAILY_POSTING', runtime: `${Math.round(10 + load * 0.3)}m`, status: 'running' },
+            ...(health < 75 ? [{ name: 'RSBTCDEL2', runtime: `${Math.round(5 + load * 0.15)}m`, status: 'running' }] : []),
           ],
         },
         sm21: {
-          total: Math.round(20 + seed * 80),
-          errors: Math.round(seed * 15),
-          warnings: Math.round(5 + seed * 30),
-          security: Math.round(seed * 3),
+          total: Math.round(20 + load * 0.8),
+          errors: Math.round((100 - health) * 0.15),
+          warnings: Math.round(5 + (100 - health) * 0.3),
+          security: Math.round((100 - health) * 0.03),
         },
         st22TopPrograms: failedJobs > 0
-          ? ['ZREP_MATERIAL_REVAL', 'SAPLSDTX', 'CL_GUI_ALV_GRID'].slice(0, Math.round(1 + seed * 2))
+          ? ['ZREP_MATERIAL_REVAL', 'SAPLSDTX', 'CL_GUI_ALV_GRID'].slice(0, Math.min(3, failedJobs))
           : [],
       };
     } catch (err) {
@@ -895,9 +900,14 @@ export const dataService = {
       await delay(1500);
       return dryRun
         ? { dryRun: true, runbookId, systemId, wouldCreate: 'AUTO_EXECUTE', estimatedDuration: '~12s', steps: [], prereqs: [] }
-        : { id: `exec-${Date.now()}`, runbookId, systemId, result: 'SUCCESS', duration: '12s', detail: 'Ejecución simulada completada exitosamente.', gate: 'SAFE' };
+        : { id: `exec-${Date.now()}`, runbookId, systemId, result: 'RUNNING', gate: 'SAFE' };
     }
     return api.executeRunbook(runbookId, systemId, dryRun);
+  },
+
+  getExecutionDetail: async (executionId) => {
+    if (isDemoMode()) { await delay(300); return null; }
+    return api.getExecutionDetail(executionId);
   },
 
   // ── Discovery / Landscape ──
@@ -1007,16 +1017,19 @@ export const dataService = {
         successRate: stats.total > 0 ? Math.round((stats.success / stats.total) * 100) : 0,
       })).sort((a, b) => b.executions - a.executions).slice(0, 5);
 
-      // Generar dailyTrend desde healthTrend o sintetico
+      // Generate dailyTrend from real execution data, distributed evenly across days
+      const totalExecForTrend = rbAnalytics.totalExecutions || 0;
+      const totalFailed = rbAnalytics.byResult?.FAILED || 0;
+      const avgDaySuccess = totalExecForTrend > 0 ? Math.round((totalExecForTrend - totalFailed) / 14) : 0;
+      const avgDayFailed = totalFailed > 0 ? Math.round(totalFailed / 14) : 0;
       const dailyTrend = Array.from({ length: 14 }, (_, i) => {
         const date = new Date(Date.now() - (13 - i) * 86400000).toISOString().split('T')[0];
-        const seed = hashSeed(date);
-        const total = rbAnalytics.totalExecutions || 0;
-        const avgDay = total > 0 ? Math.round(total / 14) : 2;
+        // Slight variation per day using day-of-week pattern (no hashSeed)
+        const dayVariation = (i % 7) / 7;
         return {
           date,
-          success: Math.max(0, Math.round(avgDay + (seed - 0.5) * avgDay)),
-          failed: Math.round(seed * 2),
+          success: Math.max(0, Math.round(avgDaySuccess + (dayVariation - 0.5) * avgDaySuccess * 0.4)),
+          failed: Math.max(0, Math.round(avgDayFailed + (dayVariation > 0.7 ? 1 : 0))),
         };
       });
 

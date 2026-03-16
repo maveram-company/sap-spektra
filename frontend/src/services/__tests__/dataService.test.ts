@@ -6,6 +6,7 @@ vi.mock('../../hooks/useApi', () => ({
     getSystems: vi.fn(),
     getSystemById: vi.fn(),
     getSystemHostMetrics: vi.fn(),
+    getHostMetrics: vi.fn(),
     getBreaches: vi.fn(),
     getHealthSnapshots: vi.fn(),
     getHosts: vi.fn(),
@@ -133,7 +134,7 @@ describe('dataService', () => {
   // 2. Transformation functions
   // ════════════════════════════════════════════════════════════
   describe('transformSystem', () => {
-    it('synthesizes cpu, mem, disk from healthScore and seed', async () => {
+    it('aggregates cpu, mem, disk from real host data', async () => {
       const apiSystem = {
         id: 'SYS-001',
         sid: 'EP1',
@@ -141,6 +142,10 @@ describe('dataService', () => {
         status: 'healthy',
         sapProduct: 'S/4HANA',
         updatedAt: '2026-01-01T00:00:00Z',
+        hosts: [
+          { cpu: 45, memory: 60, disk: 50 },
+          { cpu: 55, memory: 70, disk: 40 },
+        ],
       };
       mockedApi.getSystems.mockResolvedValue([apiSystem]);
       const result = await dataService.getSystems();
@@ -149,10 +154,9 @@ describe('dataService', () => {
       expect(sys.cpu).toBeTypeOf('number');
       expect(sys.mem).toBeTypeOf('number');
       expect(sys.disk).toBeTypeOf('number');
-      expect(sys.cpu).toBeGreaterThanOrEqual(0);
-      expect(sys.cpu).toBeLessThanOrEqual(95);
-      expect(sys.mem).toBeLessThanOrEqual(95);
-      expect(sys.disk).toBeLessThanOrEqual(90);
+      expect(sys.cpu).toBe(50); // avg of 45, 55
+      expect(sys.mem).toBe(65); // avg of 60, 70
+      expect(sys.disk).toBe(45); // avg of 50, 40
     });
 
     it('produces deterministic values for the same system id', async () => {
@@ -253,12 +257,13 @@ describe('dataService', () => {
       expect(sys.isRiseRestricted).toBe(true);
     });
 
-    it('returns numeric metrics when not RISE_RESTRICTED', async () => {
+    it('returns numeric metrics when hosts have real data', async () => {
       const normalSystem = {
         id: 'NORMAL-1',
         sid: 'N01',
         healthScore: 85,
         status: 'healthy',
+        hosts: [{ cpu: 40, memory: 55, disk: 35 }],
       };
       mockedApi.getSystems.mockResolvedValue([normalSystem]);
       const [sys] = await dataService.getSystems();
@@ -608,7 +613,7 @@ describe('dataService', () => {
       const promise = dataService.executeRunbook('RB-1', 'SYS-1', false);
       vi.advanceTimersByTime(2000);
       const result = await promise;
-      expect(result.result).toBe('SUCCESS');
+      expect(result.result).toBe('RUNNING');
       expect(result.runbookId).toBe('RB-1');
       expect(result.systemId).toBe('SYS-1');
     });
@@ -1058,33 +1063,29 @@ describe('dataService', () => {
   // ════════════════════════════════════════════════════════════
   // 12. Synthetic metrics generation
   // ════════════════════════════════════════════════════════════
-  describe('synthetic metrics — deterministic hash seeding', () => {
-    it('getMetricHistory generates 72 deterministic points in API mode', async () => {
+  describe('metrics from real host data', () => {
+    it('getMetricHistory returns metrics from real API when host found', async () => {
+      mockedApi.getSystems.mockResolvedValue([{ id: 'SYS1' }]);
+      mockedApi.getHosts.mockResolvedValue([{ id: 'H1', hostname: 'sap-ep1-pas' }]);
+      mockedApi.getHostMetrics.mockResolvedValue([
+        { cpu: 45, memory: 60, disk: 30 },
+        { cpu: 50, memory: 62, disk: 31 },
+      ]);
       const result = await dataService.getMetricHistory('sap-ep1-pas');
-      expect(result).toHaveLength(72);
-      // Verify deterministic — calling again yields same results
-      const result2 = await dataService.getMetricHistory('sap-ep1-pas');
-      expect(result).toEqual(result2);
-      // Verify bounds
-      for (const p of result) {
-        expect(p.cpu).toBeLessThanOrEqual(95);
-        expect(p.mem).toBeLessThanOrEqual(95);
-        expect(p.disk).toBeLessThanOrEqual(90);
-        expect(p.cpu).toBeGreaterThanOrEqual(0);
-      }
+      expect(result).toHaveLength(2);
+      expect(result[0]).toEqual({ cpu: 45, mem: 60, disk: 30 });
     });
 
-    it('different hostnames produce different metric series', async () => {
-      const r1 = await dataService.getMetricHistory('host-a');
-      const r2 = await dataService.getMetricHistory('host-b');
-      // At least some points should differ
-      const hasDiff = r1.some((p, i) => p.cpu !== r2[i].cpu);
-      expect(hasDiff).toBe(true);
+    it('getMetricHistory returns empty array when host not found', async () => {
+      mockedApi.getSystems.mockResolvedValue([{ id: 'SYS1' }]);
+      mockedApi.getHosts.mockResolvedValue([]);
+      const result = await dataService.getMetricHistory('unknown-host');
+      expect(result).toEqual([]);
     });
 
     it('getServerMetrics synthesizes DB-specific fields for HANA', async () => {
       mockedApi.getHosts.mockResolvedValue([
-        { id: 'H1', hostname: 'sap-ep1-hana', status: 'active' },
+        { id: 'H1', hostname: 'sap-ep1-hana', status: 'active', cpu: 45, memory: 60, disk: 50 },
       ]);
       mockedApi.getSystemById.mockResolvedValue({
         id: 'SYS1',
@@ -1103,7 +1104,7 @@ describe('dataService', () => {
 
     it('getServerMetrics synthesizes DB-specific fields for Oracle', async () => {
       mockedApi.getHosts.mockResolvedValue([
-        { id: 'H2', hostname: 'sap-cr1', status: 'active' },
+        { id: 'H2', hostname: 'sap-cr1', status: 'active', cpu: 35, memory: 55, disk: 45 },
       ]);
       mockedApi.getSystemById.mockResolvedValue({
         id: 'SYS2',
@@ -1116,7 +1117,7 @@ describe('dataService', () => {
     });
 
     it('getServerMetrics synthesizes DB-specific fields for ASE', async () => {
-      mockedApi.getHosts.mockResolvedValue([{ id: 'H3', hostname: 'h', status: 'active' }]);
+      mockedApi.getHosts.mockResolvedValue([{ id: 'H3', hostname: 'h', status: 'active', cpu: 40, memory: 50, disk: 55 }]);
       mockedApi.getSystemById.mockResolvedValue({ id: 'SYS3', dbType: 'SAP ASE 16.0' });
       const result = await dataService.getServerMetrics('SYS3');
       expect(result.dbInfo.type).toBe('ASE');
@@ -1125,7 +1126,7 @@ describe('dataService', () => {
     });
 
     it('getServerMetrics synthesizes DB-specific fields for MSSQL', async () => {
-      mockedApi.getHosts.mockResolvedValue([{ id: 'H4', hostname: 'h', status: 'active' }]);
+      mockedApi.getHosts.mockResolvedValue([{ id: 'H4', hostname: 'h', status: 'active', cpu: 30, memory: 45, disk: 40 }]);
       mockedApi.getSystemById.mockResolvedValue({ id: 'SYS4', dbType: 'MSSQL 2019' });
       const result = await dataService.getServerMetrics('SYS4');
       expect(result.dbInfo.type).toBe('MSSQL');
@@ -1134,7 +1135,7 @@ describe('dataService', () => {
     });
 
     it('getServerMetrics synthesizes DB-specific fields for DB2', async () => {
-      mockedApi.getHosts.mockResolvedValue([{ id: 'H5', hostname: 'h', status: 'active' }]);
+      mockedApi.getHosts.mockResolvedValue([{ id: 'H5', hostname: 'h', status: 'active', cpu: 25, memory: 40, disk: 35 }]);
       mockedApi.getSystemById.mockResolvedValue({ id: 'SYS5', dbType: 'DB2 11.5' });
       const result = await dataService.getServerMetrics('SYS5');
       expect(result.dbInfo.type).toBe('DB2');
@@ -1143,7 +1144,7 @@ describe('dataService', () => {
     });
 
     it('getServerMetrics synthesizes DB-specific fields for MaxDB', async () => {
-      mockedApi.getHosts.mockResolvedValue([{ id: 'H6', hostname: 'h', status: 'active' }]);
+      mockedApi.getHosts.mockResolvedValue([{ id: 'H6', hostname: 'h', status: 'active', cpu: 20, memory: 35, disk: 30 }]);
       mockedApi.getSystemById.mockResolvedValue({ id: 'SYS6', dbType: 'MaxDB 7.9' });
       const result = await dataService.getServerMetrics('SYS6');
       expect(result.dbInfo.type).toBe('MaxDB');

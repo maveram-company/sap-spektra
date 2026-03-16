@@ -62,14 +62,24 @@ describe('HAController', () => {
   // ── triggerFailover ──
 
   describe('triggerFailover', () => {
-    it('delegates to haService.triggerFailover with orgId and systemId', async () => {
+    it('delegates to haService.triggerFailover with orgId, systemId, and user email', async () => {
+      const user = {
+        email: 'admin@test.com',
+        sub: 'u-1',
+        orgId: 'org-1',
+        role: 'admin',
+      } as any;
       const expected = { success: true };
       mockService.triggerFailover.mockResolvedValue(expected);
 
-      const result = await controller.triggerFailover('org-1', 'sys-1');
+      const result = await controller.triggerFailover('org-1', 'sys-1', user);
 
       expect(result).toEqual(expected);
-      expect(service.triggerFailover).toHaveBeenCalledWith('org-1', 'sys-1');
+      expect(service.triggerFailover).toHaveBeenCalledWith(
+        'org-1',
+        'sys-1',
+        'admin@test.com',
+      );
     });
   });
 

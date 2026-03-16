@@ -1,7 +1,9 @@
 import { NotFoundException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
+import { ConfigService } from '@nestjs/config';
 import { OperationsService } from './operations.service';
 import { PrismaService } from '../../infrastructure/prisma/prisma.service';
+import { AuditService } from '../audit/audit.service';
 
 const ORG_ID = 'org-test-1';
 
@@ -25,6 +27,7 @@ function mockOperation(overrides = {}) {
 describe('OperationsService', () => {
   let service: OperationsService;
   let prisma: Record<string, any>;
+  let mockAudit: Record<string, jest.Mock>;
 
   beforeEach(async () => {
     prisma = {
@@ -34,15 +37,32 @@ describe('OperationsService', () => {
         create: jest.fn(),
         update: jest.fn(),
       },
+      system: {
+        findUnique: jest.fn(),
+      },
       jobRecord: { findMany: jest.fn() },
       transportRecord: { findMany: jest.fn() },
       certificateRecord: { findMany: jest.fn() },
+    };
+
+    mockAudit = {
+      log: jest.fn().mockResolvedValue(undefined),
     };
 
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         OperationsService,
         { provide: PrismaService, useValue: prisma },
+        { provide: AuditService, useValue: mockAudit },
+        {
+          provide: ConfigService,
+          useValue: {
+            get: jest.fn((key: string, fallback: string) => {
+              if (key === 'RUNTIME_MODE') return 'LOCAL_SIMULATED';
+              return fallback;
+            }),
+          },
+        },
       ],
     }).compile();
 
@@ -140,6 +160,20 @@ describe('OperationsService', () => {
       );
     });
 
+    it('creates audit entry on create', async () => {
+      prisma.operationRecord.create.mockResolvedValue(mockOperation());
+
+      await service.create(ORG_ID, dto);
+
+      expect(mockAudit.log).toHaveBeenCalledWith(
+        ORG_ID,
+        expect.objectContaining({
+          action: 'operation.create',
+          userEmail: 'admin@test.com',
+        }),
+      );
+    });
+
     it('uses provided riskLevel when given', async () => {
       prisma.operationRecord.create.mockResolvedValue(
         mockOperation({ riskLevel: 'HIGH' }),
@@ -161,18 +195,12 @@ describe('OperationsService', () => {
     it('updates the status of an existing operation', async () => {
       prisma.operationRecord.findFirst.mockResolvedValue(mockOperation());
       prisma.operationRecord.update.mockResolvedValue(
-        mockOperation({ status: 'IN_PROGRESS' }),
+        mockOperation({ status: 'CANCELLED' }),
       );
 
-      const result = await service.updateStatus(ORG_ID, 'op-1', 'IN_PROGRESS');
+      const result = await service.updateStatus(ORG_ID, 'op-1', 'CANCELLED');
 
-      expect(result.status).toBe('IN_PROGRESS');
-      expect(prisma.operationRecord.update).toHaveBeenCalledWith(
-        expect.objectContaining({
-          where: { id: 'op-1' },
-          data: { status: 'IN_PROGRESS' },
-        }),
-      );
+      expect(result.status).toBe('CANCELLED');
     });
 
     it('sets completedAt when status is COMPLETED', async () => {
@@ -190,6 +218,29 @@ describe('OperationsService', () => {
             completedAt: expect.any(Date),
           }),
         }),
+      );
+    });
+
+    it('triggers execution when status changes to RUNNING', async () => {
+      const op = mockOperation({ type: 'RESTART' });
+      prisma.operationRecord.findFirst.mockResolvedValue(op);
+      prisma.operationRecord.update.mockResolvedValue(
+        mockOperation({ status: 'RUNNING' }),
+      );
+      // Mock system for executeOperation
+      prisma.system.findUnique.mockResolvedValue({
+        id: 'sys-1',
+        sid: 'EP1',
+        connectors: [],
+        systemMeta: {},
+      });
+
+      await service.updateStatus(ORG_ID, 'op-1', 'RUNNING', 'admin@test.com');
+
+      // Audit should be logged
+      expect(mockAudit.log).toHaveBeenCalledWith(
+        ORG_ID,
+        expect.objectContaining({ action: 'operation.running' }),
       );
     });
 

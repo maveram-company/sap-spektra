@@ -6,6 +6,7 @@ const mockService = {
   findAll: jest.fn(),
   findOne: jest.fn(),
   getExecutions: jest.fn(),
+  getExecutionDetail: jest.fn(),
   execute: jest.fn(),
 };
 
@@ -65,6 +66,30 @@ describe('RunbooksController', () => {
 
       expect(result).toEqual(expected);
       expect(service.getExecutions).toHaveBeenCalledWith('org-1');
+    });
+  });
+
+  // ── executionDetail ──
+
+  describe('executionDetail', () => {
+    it('delegates to runbooksService.getExecutionDetail', async () => {
+      const expected = {
+        id: 'exec-1',
+        result: 'SUCCESS',
+        stepResults: [
+          { stepOrder: 1, action: 'Stop', status: 'SUCCESS' },
+          { stepOrder: 2, action: 'Backup', status: 'SUCCESS' },
+        ],
+      };
+      mockService.getExecutionDetail.mockResolvedValue(expected);
+
+      const result = await controller.executionDetail('org-1', 'exec-1');
+
+      expect(result).toEqual(expected);
+      expect(service.getExecutionDetail).toHaveBeenCalledWith(
+        'org-1',
+        'exec-1',
+      );
     });
   });
 

@@ -66,16 +66,7 @@ const sections = [
   },
 ];
 
-// Notificaciones mock
-const notifications = [
-  { id: 1, title: 'Breach detectado', message: 'CPU al 95% en SAP-SOL-P01', time: 'Hace 30 min', type: 'danger' },
-  { id: 2, title: 'Aprobación pendiente', message: 'Expansión de disco en EP1', time: 'Hace 1h', type: 'warning' },
-  { id: 3, title: 'Runbook completado', message: 'Backup exitoso en BP1', time: 'Hace 2h', type: 'success' },
-];
-
 const NAV_HEIGHT = 52;
-const pendingApprovals = 2;
-const activeAlerts = 11;
 
 export default function TopNav({ topOffset = 0 }) {
   const [activeDropdown, setActiveDropdown] = useState(null);
@@ -113,8 +104,11 @@ export default function TopNav({ topOffset = 0 }) {
     return () => clearInterval(interval);
   }, []);
 
-  // Conteos del sistema
+  // Conteos del sistema + badges reales
   const [systemCounts, setSystemCounts] = useState({ healthy: 0, warning: 0, critical: 0 });
+  const [pendingApprovals, setPendingApprovals] = useState(0);
+  const [activeAlerts, setActiveAlerts] = useState(0);
+  const [notifications, setNotifications] = useState<Array<{ id: string; title: string; message: string; time: string; type: string }>>([]);
   useEffect(() => {
     dataService.getSystems().then(systems => {
       setSystemCounts({
@@ -123,6 +117,18 @@ export default function TopNav({ topOffset = 0 }) {
         critical: systems.filter(s => s.healthScore < 70).length,
       });
     });
+    dataService.getApprovals('PENDING').then(approvals => setPendingApprovals(approvals?.length || 0)).catch(() => {});
+    dataService.getAlerts({ status: 'active' }).then(alerts => {
+      setActiveAlerts(alerts?.length || 0);
+      const recent = (alerts || []).slice(0, 5).map((a, i) => ({
+        id: a.id || String(i),
+        title: a.title || 'Alerta',
+        message: `${a.systemSid || a.system?.sid || ''}: ${a.metric || a.title || ''}`,
+        time: a.createdAt ? new Date(a.createdAt).toLocaleTimeString('es-CO', { hour: '2-digit', minute: '2-digit' }) : '',
+        type: a.level === 'critical' ? 'danger' : a.level === 'warning' ? 'warning' : 'info',
+      }));
+      setNotifications(recent);
+    }).catch(() => {});
   }, []);
   const { healthy, warning, critical } = systemCounts;
 

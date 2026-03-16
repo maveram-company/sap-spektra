@@ -92,6 +92,7 @@ export const api = {
   getRunbooks: () => fetchApi('/runbooks'),
   getRunbookById: (id) => fetchApi(`/runbooks/${id}`),
   getRunbookExecutions: () => fetchApi('/runbooks/executions'),
+  getExecutionDetail: (executionId) => fetchApi(`/runbooks/executions/${executionId}`),
   executeRunbook: (id, systemId, dryRun = false) => fetchApi(`/runbooks/${id}/execute`, { method: 'POST', body: { systemId, dryRun } }),
 
   // Operations

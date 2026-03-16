@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../../infrastructure/prisma/prisma.service';
 
 @Injectable()
@@ -6,6 +6,8 @@ export class MetricsService {
   constructor(private readonly prisma: PrismaService) {}
 
   async getHostMetrics(hostId: string, hours: number = 24) {
+    const host = await this.prisma.host.findUnique({ where: { id: hostId } });
+    if (!host) throw new NotFoundException('Host not found');
     const since = new Date(Date.now() - hours * 3600000);
     return this.prisma.hostMetric.findMany({
       where: { hostId, timestamp: { gte: since } },
@@ -18,6 +20,10 @@ export class MetricsService {
     systemId: string,
     hours: number = 24,
   ) {
+    const system = await this.prisma.system.findFirst({
+      where: { id: systemId, organizationId },
+    });
+    if (!system) throw new NotFoundException('System not found');
     const since = new Date(Date.now() - hours * 3600000);
     return this.prisma.hostMetric.findMany({
       where: {
@@ -34,6 +40,10 @@ export class MetricsService {
     systemId: string,
     hours: number = 24,
   ) {
+    const system = await this.prisma.system.findFirst({
+      where: { id: systemId, organizationId },
+    });
+    if (!system) throw new NotFoundException('System not found');
     const since = new Date(Date.now() - hours * 3600000);
     return this.prisma.healthSnapshot.findMany({
       where: {
@@ -62,6 +72,10 @@ export class MetricsService {
   }
 
   async getDependencies(organizationId: string, systemId: string) {
+    const system = await this.prisma.system.findFirst({
+      where: { id: systemId, organizationId },
+    });
+    if (!system) throw new NotFoundException('System not found');
     return this.prisma.dependency.findMany({
       where: { systemId, system: { organizationId } },
       orderBy: { status: 'asc' },
@@ -69,6 +83,10 @@ export class MetricsService {
   }
 
   async getHosts(organizationId: string, systemId: string) {
+    const system = await this.prisma.system.findFirst({
+      where: { id: systemId, organizationId },
+    });
+    if (!system) throw new NotFoundException('System not found');
     return this.prisma.host.findMany({
       where: { systemId, system: { organizationId } },
       include: { instances: true },
@@ -76,6 +94,10 @@ export class MetricsService {
   }
 
   async getComponents(organizationId: string, systemId: string) {
+    const system = await this.prisma.system.findFirst({
+      where: { id: systemId, organizationId },
+    });
+    if (!system) throw new NotFoundException('System not found');
     return this.prisma.component.findMany({
       where: { systemId, system: { organizationId } },
       include: { instances: true },

@@ -6,12 +6,16 @@ import {
 } from '@nestjs/common';
 import { Runbook } from '@prisma/client';
 import { PrismaService } from '../../infrastructure/prisma/prisma.service';
+import { RunbookExecutionEngineService } from './runbook-execution-engine.service';
 
 @Injectable()
 export class RunbooksService {
   private readonly logger = new Logger(RunbooksService.name);
 
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly engine: RunbookExecutionEngineService,
+  ) {}
 
   async findAll(organizationId: string, category?: string) {
     return this.prisma.runbook.findMany({
@@ -42,6 +46,19 @@ export class RunbooksService {
       },
       orderBy: { startedAt: 'desc' },
     });
+  }
+
+  async getExecutionDetail(organizationId: string, executionId: string) {
+    const execution = await this.prisma.runbookExecution.findFirst({
+      where: { id: executionId, runbook: { organizationId } },
+      include: {
+        runbook: { select: { name: true, category: true } },
+        system: { select: { sid: true, description: true } },
+        stepResults: { orderBy: { stepOrder: 'asc' } },
+      },
+    });
+    if (!execution) throw new NotFoundException('Execution not found');
+    return execution;
   }
 
   /**
@@ -75,7 +92,6 @@ export class RunbooksService {
     const sysDbType = system.dbType?.toUpperCase() || '';
 
     if (rbDbType && rbDbType !== 'ALL') {
-      // Mapear variantes de nombre a categorías
       const dbCategory = (dt: string) => {
         if (dt.includes('HANA')) return 'HANA';
         if (dt.includes('ORACLE')) return 'ORACLE';
@@ -94,7 +110,6 @@ export class RunbooksService {
       const rbCategory = dbCategory(rbDbType);
       const sysCategory = dbCategory(sysDbType);
 
-      // Tipos de stack que no son BD
       const isStackType = ['ABAP', 'JAVA', 'PO', 'DUAL_STACK'].includes(
         rbCategory,
       );
@@ -131,7 +146,7 @@ export class RunbooksService {
       );
     }
 
-    // 4. Validar compatibilidad de OS (si el runbook tiene osType en parameters)
+    // 4. Validar compatibilidad de OS
     let params: Record<string, unknown> | null = null;
     if (typeof runbook.parameters === 'string') {
       try {
@@ -192,7 +207,6 @@ export class RunbooksService {
       for (const prereq of prereqs) {
         if (typeof prereq !== 'string') continue;
         const p = prereq.toUpperCase();
-        // Verificar prerequisitos que podemos validar automáticamente
         if (p.includes('HANA') && !sysDbType.includes('HANA')) {
           failures.push(
             `Pre-requisito no cumplido: "${prereq}" — sistema no usa HANA`,
@@ -209,7 +223,6 @@ export class RunbooksService {
           );
         }
         if (p.includes('CLUSTER') || p.includes('PACEMAKER')) {
-          // Verificar que el sistema tiene HA configurado
           const haConfig = await this.prisma.hAConfig.findUnique({
             where: { systemId },
           });
@@ -312,13 +325,14 @@ export class RunbooksService {
       });
     }
 
-    // Crear registro y simular resultado
+    // Crear registro de ejecución
     const execution = await this.prisma.runbookExecution.create({
       data: {
         runbookId,
         systemId,
         gate,
         result: gate === 'HUMAN' ? 'PENDING' : 'RUNNING',
+        totalSteps: stepCount,
         executedBy,
         startedAt: new Date(),
       },
@@ -332,28 +346,20 @@ export class RunbooksService {
       `Execution created: id=${execution.id} gate=${gate} result=${execution.result}`,
     );
 
-    // Simular completado para gate SAFE
-    if (gate === 'SAFE') {
-      const durationSec = 3 + stepCount * 4;
-      const completed = new Date();
-      completed.setSeconds(completed.getSeconds() + durationSec);
-
-      return this.prisma.runbookExecution.update({
-        where: { id: execution.id },
-        data: {
-          result: 'SUCCESS',
-          duration: `${durationSec}s`,
-          detail: `Completado: ${runbook.description}`,
-          completedAt: completed,
-        },
-        include: {
-          runbook: { select: { name: true } },
-          system: { select: { sid: true } },
-        },
-      });
+    // Gate HUMAN: queda en PENDING para aprobación
+    if (gate === 'HUMAN') {
+      return execution;
     }
 
-    // Gate HUMAN: queda en PENDING para aprobación
+    // Gate SAFE: lanzar ejecución real (async, no bloquea la respuesta HTTP)
+    this.engine
+      .executeRunbook(execution.id, runbookId, systemId)
+      .catch((err) => {
+        this.logger.error(
+          `Async execution failed for ${execution.id}: ${err.message}`,
+        );
+      });
+
     return execution;
   }
 }

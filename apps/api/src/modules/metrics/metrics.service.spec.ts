@@ -1,3 +1,4 @@
+import { NotFoundException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { MetricsService } from './metrics.service';
 import { PrismaService } from '../../infrastructure/prisma/prisma.service';
@@ -14,8 +15,16 @@ describe('MetricsService', () => {
       healthSnapshot: { findMany: jest.fn() },
       breach: { findMany: jest.fn() },
       dependency: { findMany: jest.fn() },
-      host: { findMany: jest.fn() },
+      host: {
+        findMany: jest.fn(),
+        findUnique: jest.fn().mockResolvedValue({ id: 'h1' }),
+      },
       component: { findMany: jest.fn() },
+      system: {
+        findFirst: jest
+          .fn()
+          .mockResolvedValue({ id: 'sys-1', organizationId: ORG_ID }),
+      },
       systemMeta: { findFirst: jest.fn(), findMany: jest.fn() },
     };
 
@@ -25,6 +34,31 @@ describe('MetricsService', () => {
 
     service = module.get<MetricsService>(MetricsService);
     jest.clearAllMocks();
+  });
+
+  // ── tenant validation ──
+
+  describe('tenant validation', () => {
+    it('throws NotFoundException for unknown host in getHostMetrics', async () => {
+      prisma.host.findUnique.mockResolvedValue(null);
+      await expect(service.getHostMetrics('unknown')).rejects.toThrow(
+        NotFoundException,
+      );
+    });
+
+    it('throws NotFoundException for invalid system in getHostMetricsBySystem', async () => {
+      prisma.system.findFirst.mockResolvedValue(null);
+      await expect(
+        service.getHostMetricsBySystem(ORG_ID, 'bad'),
+      ).rejects.toThrow(NotFoundException);
+    });
+
+    it('throws NotFoundException for invalid system in getHosts', async () => {
+      prisma.system.findFirst.mockResolvedValue(null);
+      await expect(service.getHosts(ORG_ID, 'bad')).rejects.toThrow(
+        NotFoundException,
+      );
+    });
   });
 
   // ── getHostMetrics ──

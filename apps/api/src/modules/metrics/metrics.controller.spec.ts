@@ -1,6 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { MetricsController } from './metrics.controller';
 import { MetricsService } from './metrics.service';
+import { MetricsPipelineService } from './metrics-pipeline.service';
 
 const mockService = {
   getHostMetrics: jest.fn(),
@@ -13,6 +14,10 @@ const mockService = {
   getSystemMeta: jest.fn(),
 };
 
+const mockPipeline = {
+  ingest: jest.fn(),
+};
+
 describe('MetricsController', () => {
   let controller: MetricsController;
   let service: MetricsService;
@@ -20,7 +25,10 @@ describe('MetricsController', () => {
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [MetricsController],
-      providers: [{ provide: MetricsService, useValue: mockService }],
+      providers: [
+        { provide: MetricsService, useValue: mockService },
+        { provide: MetricsPipelineService, useValue: mockPipeline },
+      ],
     }).compile();
 
     controller = module.get(MetricsController);

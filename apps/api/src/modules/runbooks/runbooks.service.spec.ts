@@ -1,6 +1,7 @@
 import { NotFoundException, BadRequestException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { RunbooksService } from './runbooks.service';
+import { RunbookExecutionEngineService } from './runbook-execution-engine.service';
 import { PrismaService } from '../../infrastructure/prisma/prisma.service';
 
 const ORG_ID = 'org-test-1';
@@ -14,7 +15,11 @@ function mockRunbook(overrides = {}) {
     costSafe: true,
     autoExecute: true,
     dbType: 'HANA',
-    steps: JSON.stringify(['Stop tenant', 'Create snapshot', 'Verify backup']),
+    steps: JSON.stringify([
+      { order: 1, action: 'Stop tenant', command: 'HDB stop' },
+      { order: 2, action: 'Create snapshot', command: 'hdbsql backup' },
+      { order: 3, action: 'Verify backup', command: 'hdbsql verify' },
+    ]),
     prereqs: JSON.stringify(['HANA 2.0 or higher']),
     parameters: null,
     ...overrides,
@@ -38,6 +43,7 @@ function mockSystem(overrides = {}) {
 describe('RunbooksService', () => {
   let service: RunbooksService;
   let prisma: Record<string, any>;
+  let engine: Record<string, any>;
 
   beforeEach(async () => {
     prisma = {
@@ -47,6 +53,7 @@ describe('RunbooksService', () => {
       },
       runbookExecution: {
         findMany: jest.fn(),
+        findFirst: jest.fn(),
         create: jest.fn(),
         update: jest.fn(),
       },
@@ -58,10 +65,15 @@ describe('RunbooksService', () => {
       },
     };
 
+    engine = {
+      executeRunbook: jest.fn().mockResolvedValue(undefined),
+    };
+
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         RunbooksService,
         { provide: PrismaService, useValue: prisma },
+        { provide: RunbookExecutionEngineService, useValue: engine },
       ],
     }).compile();
 
@@ -191,15 +203,17 @@ describe('RunbooksService', () => {
       ).rejects.toThrow(BadRequestException);
     });
 
-    it('creates execution and returns SUCCESS for cost-safe runbooks', async () => {
+    it('creates RUNNING execution and calls engine for cost-safe runbooks', async () => {
       prisma.runbook.findFirst.mockResolvedValue(mockRunbook());
       prisma.system.findUnique.mockResolvedValue(mockSystem());
-      const createdExec = { id: 'exec-1', result: 'RUNNING' };
+      const createdExec = {
+        id: 'exec-1',
+        result: 'RUNNING',
+        gate: 'SAFE',
+        runbook: { name: 'HANA Backup' },
+        system: { sid: 'EP1' },
+      };
       prisma.runbookExecution.create.mockResolvedValue(createdExec);
-      prisma.runbookExecution.update.mockResolvedValue({
-        ...createdExec,
-        result: 'SUCCESS',
-      });
 
       const result = (await service.execute(
         ORG_ID,
@@ -207,15 +221,29 @@ describe('RunbooksService', () => {
         'sys-1',
         'user@test.com',
       )) as any;
-      expect(result.result).toBe('SUCCESS');
+
+      expect(result.result).toBe('RUNNING');
+      // Engine should be called asynchronously
+      await new Promise((r) => setTimeout(r, 50));
+      expect(engine.executeRunbook).toHaveBeenCalledWith(
+        'exec-1',
+        'rb-1',
+        'sys-1',
+      );
     });
 
-    it('creates PENDING execution for non-cost-safe runbooks', async () => {
+    it('creates PENDING execution for non-cost-safe runbooks without calling engine', async () => {
       prisma.runbook.findFirst.mockResolvedValue(
         mockRunbook({ costSafe: false }),
       );
       prisma.system.findUnique.mockResolvedValue(mockSystem());
-      const createdExec = { id: 'exec-1', result: 'PENDING', gate: 'HUMAN' };
+      const createdExec = {
+        id: 'exec-1',
+        result: 'PENDING',
+        gate: 'HUMAN',
+        runbook: { name: 'HANA Backup' },
+        system: { sid: 'EP1' },
+      };
       prisma.runbookExecution.create.mockResolvedValue(createdExec);
 
       const result = (await service.execute(
@@ -224,7 +252,9 @@ describe('RunbooksService', () => {
         'sys-1',
         'user@test.com',
       )) as any;
+
       expect(result.result).toBe('PENDING');
+      expect(engine.executeRunbook).not.toHaveBeenCalled();
     });
   });
 

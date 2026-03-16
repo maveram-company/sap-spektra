@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  BadRequestException,
+} from '@nestjs/common';
 import { PrismaService } from '../../infrastructure/prisma/prisma.service';
 import * as bcrypt from 'bcryptjs';
 import { randomBytes } from 'crypto';
@@ -26,6 +30,29 @@ export class SettingsService {
     organizationId: string,
     settings: Record<string, unknown>,
   ) {
+    const ALLOWED_SETTINGS_KEYS = new Set([
+      'notifications',
+      'alertThresholds',
+      'timezone',
+      'language',
+      'dashboardLayout',
+      'emailReports',
+      'slackWebhook',
+      'maintenanceWindows',
+      'retentionDays',
+      'autoResolveAlerts',
+      'defaultView',
+    ]);
+
+    const invalidKeys = Object.keys(settings).filter(
+      (k) => !ALLOWED_SETTINGS_KEYS.has(k),
+    );
+    if (invalidKeys.length > 0) {
+      throw new BadRequestException(
+        `Invalid settings keys: ${invalidKeys.join(', ')}`,
+      );
+    }
+
     return this.prisma.organization.update({
       where: { id: organizationId },
       data: { settings: settings as object },

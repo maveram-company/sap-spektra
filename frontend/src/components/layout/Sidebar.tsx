@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
 import {
   LayoutDashboard, Monitor, CheckCircle, Calendar, BarChart3,
@@ -11,6 +12,7 @@ import { useAuth } from '../../contexts/AuthContext';
 import { usePlan } from '../../hooks/usePlan';
 import { useTenant } from '../../contexts/TenantContext';
 import { useSidebar } from '../../contexts/SidebarContext';
+import { dataService } from '../../services/dataService';
 
 const navigation = [
   { section: 'Command Center' },
@@ -54,8 +56,12 @@ export default function Sidebar() {
   const { organization } = useTenant();
   const location = useLocation();
 
-  const pendingApprovals = 2; // mock
-  const activeAlerts = 11;   // mock
+  const [pendingApprovals, setPendingApprovals] = useState(0);
+  const [activeAlerts, setActiveAlerts] = useState(0);
+  useEffect(() => {
+    dataService.getApprovals('PENDING').then(a => setPendingApprovals(a?.length || 0)).catch(() => {});
+    dataService.getAlerts({ status: 'active' }).then(a => setActiveAlerts(a?.length || 0)).catch(() => {});
+  }, []);
 
   const usagePercent = Math.round(
     ((organization?.usage?.systems || 0) / (organization?.limits?.maxSystems || 25)) * 100
