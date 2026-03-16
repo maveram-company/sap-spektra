@@ -117,7 +117,7 @@ export default function TopNav({ topOffset = 0 }) {
         critical: systems.filter(s => s.healthScore < 70).length,
       });
     });
-    dataService.getApprovals('PENDING').then(approvals => setPendingApprovals(approvals?.length || 0)).catch(() => {});
+    dataService.getApprovals('PENDING').then(approvals => setPendingApprovals(approvals?.length || 0)).catch(() => { /* badge fetch failed — counts may be stale */ });
     dataService.getAlerts({ status: 'active' }).then(alerts => {
       setActiveAlerts(alerts?.length || 0);
       const recent = (alerts || []).slice(0, 5).map((a, i) => ({
@@ -128,7 +128,7 @@ export default function TopNav({ topOffset = 0 }) {
         type: a.level === 'critical' ? 'danger' : a.level === 'warning' ? 'warning' : 'info',
       }));
       setNotifications(recent);
-    }).catch(() => {});
+    }).catch(() => { /* badge fetch failed — counts may be stale */ });
   }, []);
   const { healthy, warning, critical } = systemCounts;
 

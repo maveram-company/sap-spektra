@@ -115,13 +115,23 @@ export default function SystemDetailPage() {
       setHostsData(hosts);
       // Pre-load metric history for all hosts
       if (hosts && hosts.length) {
-        hosts.forEach(h => {
-          dataService.getMetricHistory(h.hostname).then(hist => {
-            if (!mounted) return;
-            setMetricHistoryData(prev => ({ ...prev, [h.hostname]: hist }));
-          }).catch(() => {
-            // Silently ignore individual host metric history failures
-          });
+        // Fetch metric history for all hosts concurrently (bounded by Promise.all)
+        Promise.all(
+          hosts.map(async (h) => {
+            try {
+              const hist = await dataService.getMetricHistory(h.hostname);
+              return [h.hostname, hist] as const;
+            } catch {
+              return [h.hostname, []] as const;
+            }
+          })
+        ).then(historyEntries => {
+          if (!mounted) return;
+          const historyMap: Record<string, typeof historyEntries[0][1]> = {};
+          for (const [hostname, hist] of historyEntries) {
+            historyMap[hostname] = hist;
+          }
+          setMetricHistoryData(historyMap);
         });
       }
       setLoading(false);

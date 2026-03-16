@@ -59,8 +59,8 @@ export default function Sidebar() {
   const [pendingApprovals, setPendingApprovals] = useState(0);
   const [activeAlerts, setActiveAlerts] = useState(0);
   useEffect(() => {
-    dataService.getApprovals('PENDING').then(a => setPendingApprovals(a?.length || 0)).catch(() => {});
-    dataService.getAlerts({ status: 'active' }).then(a => setActiveAlerts(a?.length || 0)).catch(() => {});
+    dataService.getApprovals('PENDING').then(a => setPendingApprovals(a?.length || 0)).catch(() => { /* badge fetch failed — counts may be stale */ });
+    dataService.getAlerts({ status: 'active' }).then(a => setActiveAlerts(a?.length || 0)).catch(() => { /* badge fetch failed — counts may be stale */ });
   }, []);
 
   const usagePercent = Math.round(
