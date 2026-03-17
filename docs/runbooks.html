@@ -2,1635 +2,474 @@
 <html lang="es" data-theme="dark" data-lang="es">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Runbooks - SAP Spektra Docs</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <title>Runbooks — SAP Spektra Docs</title>
   <link rel="stylesheet" href="theme.css">
   <script src="theme-toggle.js"></script>
   <script src="lang-toggle.js"></script>
-  <style>
-    .tabs{display:flex;gap:0;border-bottom:2px solid var(--brd);margin-bottom:24px}
-    .tab{padding:10px 20px;font-size:13px;font-weight:600;color:var(--txt3);cursor:pointer;
-      border-bottom:2px solid transparent;margin-bottom:-2px;transition:all .2s;background:none;border-top:none;border-left:none;border-right:none}
-    .tab:hover{color:var(--txt1)}
-    .tab.active{color:var(--cyan);border-bottom-color:var(--cyan)}
-    .tab-content{display:none}
-    .tab-content.active{display:block}
-    .flag-row{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0}
-    .flag{display:inline-flex;align-items:center;gap:4px;padding:3px 10px;border-radius:6px;font-size:11px;font-weight:600}
-    .flag.on{background:rgba(34,197,94,0.12);color:var(--success)}
-    .flag.off{background:rgba(239,68,68,0.08);color:var(--danger)}
-    .gate-badge{display:inline-flex;align-items:center;gap:5px;padding:4px 12px;border-radius:8px;font-size:12px;font-weight:700}
-    .gate-badge.safe{background:rgba(34,197,94,0.12);color:var(--success);border:1px solid rgba(34,197,94,0.25)}
-    .gate-badge.human{background:rgba(245,158,11,0.12);color:var(--warning);border:1px solid rgba(245,158,11,0.25)}
-    .btn{padding:8px 18px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;border:none;transition:all .2s}
-    .btn-primary{background:var(--gradient-brand);color:#fff}
-    .btn-primary:hover{opacity:.9;transform:translateY(-1px)}
-    .btn-outline{background:transparent;border:1px solid var(--brd);color:var(--txt2)}
-    .btn-outline:hover{border-color:var(--cyan);color:var(--cyan)}
-    .compat-list{list-style:none;padding:0;margin:8px 0}
-    .compat-list li{padding:4px 0 4px 20px;position:relative;font-size:13px}
-    .compat-list li::before{content:'';position:absolute;left:2px;top:10px;width:10px;height:10px;border-radius:50%}
-    .compat-list li.pass::before{background:var(--success)}
-    .compat-list li.fail::before{background:var(--danger)}
-    .json-block{background:var(--code-bg);border:1px solid var(--code-border);border-radius:var(--radius);padding:14px;margin:8px 0;font-family:'SF Mono',Monaco,Consolas,monospace;font-size:12px;color:var(--txt2);overflow-x:auto;white-space:pre}
-
-    /* Category collapsible sections */
-    .cat-section{margin-bottom:12px}
-    .cat-header{display:flex;align-items:center;gap:12px;cursor:pointer;padding:12px 16px;
-      background:var(--card-bg);border:1px solid var(--brd);border-radius:var(--radius);margin-bottom:0;user-select:none}
-    .cat-header:hover{border-color:var(--cyan)}
-    .cat-header h3{margin:0;font-size:15px;font-weight:700;color:var(--txt1)}
-    .cat-header .count{background:var(--cyan);color:#fff;padding:2px 10px;border-radius:12px;font-size:12px;font-weight:700}
-    .cat-header .cat-label{font-size:12px;color:var(--txt3);margin-left:auto}
-    details.cat-section summary{list-style:none}
-    details.cat-section summary::-webkit-details-marker{display:none}
-    details.cat-section[open] .arrow{transform:rotate(90deg)}
-    .arrow{transition:transform .2s;font-size:12px;color:var(--txt3);display:inline-block}
-    details.cat-section .table-wrap{margin-top:4px;margin-bottom:0;border-top:none}
-    details.cat-section .table-wrap table{font-size:13px}
-    details.cat-section .table-wrap td,details.cat-section .table-wrap th{padding:8px 12px}
-    .rb-name{font-weight:600;white-space:nowrap}
-  </style>
 </head>
 <body>
 <div class="docs-wrapper">
-
-  <!-- ══════════ Sidebar ══════════ -->
-  <nav class="docs-sidebar" aria-label="Documentation navigation">
+  <nav class="docs-sidebar">
     <div class="sidebar-brand">
-      <div class="logo">S</div>
+      <div class="logo">&#9889;</div>
       <div class="brand-text">
         <div class="brand-name">SAP Spektra</div>
         <div class="brand-sub">Documentacion v2.0</div>
       </div>
     </div>
-
     <div class="sidebar-section">
-      <div class="sidebar-section-label"><span class="es">Inicio</span><span class="en">Home</span></div>
-      <a class="sidebar-link" href="index.html"><span class="es">Portal</span><span class="en">Portal</span></a>
-      <a class="sidebar-link" href="getting-started.html"><span class="es">Primeros Pasos</span><span class="en">Getting Started</span></a>
+      <div class="sidebar-section-label">Inicio</div>
+      <a href="index.html" class="sidebar-link">Portal</a>
+      <a href="getting-started.html" class="sidebar-link">Primeros Pasos</a>
     </div>
-
+    <div class="sidebar-section">
+      <div class="sidebar-section-label">Architecture</div>
+      <a href="architecture.html" class="sidebar-link">Arquitectura</a>
+      <a href="domain-model.html" class="sidebar-link">Modelo de Datos</a>
+      <a href="api-reference.html" class="sidebar-link">API Reference</a>
+    </div>
     <div class="sidebar-section">
       <div class="sidebar-section-label">Command</div>
-      <a class="sidebar-link" href="dashboard.html">Dashboard</a>
-      <a class="sidebar-link" href="landscape.html">Landscape</a>
-      <a class="sidebar-link" href="alerts.html"><span class="es">Alertas</span><span class="en">Alerts</span></a>
+      <a href="dashboard.html" class="sidebar-link">Dashboard</a>
+      <a href="landscape.html" class="sidebar-link">Landscape</a>
+      <a href="alerts.html" class="sidebar-link">Alertas</a>
     </div>
-
     <div class="sidebar-section">
       <div class="sidebar-section-label">Monitor</div>
-      <a class="sidebar-link" href="systems.html"><span class="es">Sistemas</span><span class="en">Systems</span></a>
-      <a class="sidebar-link" href="connectors.html"><span class="es">Conectores</span><span class="en">Connectors</span></a>
-      <a class="sidebar-link" href="events.html"><span class="es">Eventos</span><span class="en">Events</span></a>
+      <a href="systems.html" class="sidebar-link">Sistemas</a>
+      <a href="connectors.html" class="sidebar-link">Conectores</a>
+      <a href="events.html" class="sidebar-link">Eventos</a>
     </div>
-
     <div class="sidebar-section">
       <div class="sidebar-section-label">Intelligence</div>
-      <a class="sidebar-link" href="ai-analysis.html"><span class="es">Analisis IA</span><span class="en">AI Analysis</span></a>
-      <a class="sidebar-link" href="analytics.html">Analytics</a>
-      <a class="sidebar-link" href="reports.html"><span class="es">Reportes</span><span class="en">Reports</span></a>
-      <a class="sidebar-link" href="comparison.html"><span class="es">Comparacion</span><span class="en">Comparison</span></a>
+      <a href="ai-analysis.html" class="sidebar-link">Analisis IA</a>
+      <a href="analytics.html" class="sidebar-link">Analytics</a>
+      <a href="reports.html" class="sidebar-link">Reportes</a>
+      <a href="comparison.html" class="sidebar-link">Comparacion</a>
     </div>
-
     <div class="sidebar-section">
       <div class="sidebar-section-label">Operations</div>
-      <a class="sidebar-link active" href="runbooks.html">Runbooks</a>
-      <a class="sidebar-link" href="approvals.html"><span class="es">Aprobaciones</span><span class="en">Approvals</span></a>
-      <a class="sidebar-link" href="operations.html"><span class="es">Operaciones</span><span class="en">Operations</span></a>
-      <a class="sidebar-link" href="jobs.html">Jobs SM37</a>
-      <a class="sidebar-link" href="transports.html"><span class="es">Transportes</span><span class="en">Transports</span></a>
-      <a class="sidebar-link" href="sla.html">SLA</a>
-      <a class="sidebar-link" href="ha-control.html">HA Control</a>
-      <a class="sidebar-link" href="certificates.html"><span class="es">Certificados</span><span class="en">Certificates</span></a>
+      <a href="runbooks.html" class="sidebar-link active">Runbooks</a>
+      <a href="approvals.html" class="sidebar-link">Aprobaciones</a>
+      <a href="operations.html" class="sidebar-link">Operaciones</a>
+      <a href="jobs.html" class="sidebar-link">Jobs (SM37)</a>
+      <a href="transports.html" class="sidebar-link">Transportes</a>
+      <a href="sla.html" class="sidebar-link">SLA</a>
+      <a href="ha-control.html" class="sidebar-link">HA Control</a>
+      <a href="certificates.html" class="sidebar-link">Certificados</a>
     </div>
-
     <div class="sidebar-section">
       <div class="sidebar-section-label">Admin</div>
-      <a class="sidebar-link" href="admin.html"><span class="es">Gestion</span><span class="en">Management</span></a>
-      <a class="sidebar-link" href="settings.html"><span class="es">Configuracion</span><span class="en">Settings</span></a>
-      <a class="sidebar-link" href="connect-system.html"><span class="es">Conectar Sistema</span><span class="en">Connect System</span></a>
+      <a href="admin.html" class="sidebar-link">Gestion</a>
+      <a href="settings.html" class="sidebar-link">Configuracion</a>
+      <a href="connect-system.html" class="sidebar-link">Conectar Sistema</a>
     </div>
   </nav>
 
-  <!-- ══════════ Main Content ══════════ -->
   <main class="docs-main">
     <div class="breadcrumb">
-      <a href="index.html">Docs</a>
-      <span class="sep">/</span>
-      <span>Operations</span>
-      <span class="sep">/</span>
-      <span class="text-primary">Runbooks</span>
+      <a href="index.html">Docs</a> <span class="sep">/</span>
+      <span class="es">Operations</span><span class="en">Operations</span> <span class="sep">/</span>
+      <span class="es">Runbooks</span><span class="en">Runbooks</span>
     </div>
 
     <div class="page-header">
-      <h1>
-        <span class="es">Catalogo de Runbooks</span>
-        <span class="en">Runbook Catalog</span>
-      </h1>
-      <div class="subtitle">
-        <span class="es">Procedimientos operativos automatizados para sistemas SAP. Ejecute, simule y valide runbooks contra su landscape.</span>
-        <span class="en">Automated operational procedures for SAP systems. Execute, simulate, and validate runbooks against your landscape.</span>
-      </div>
+      <h1><span class="es">Runbooks</span><span class="en">Runbooks</span></h1>
+      <p class="subtitle">
+        <span class="es">123 runbooks automatizados en 16 categorias para operaciones SAP Basis con validacion de compatibilidad y ejecucion paso a paso</span>
+        <span class="en">123 automated runbooks in 16 categories for SAP Basis operations with compatibility validation and step-by-step execution</span>
+      </p>
     </div>
 
-    <!-- KPI Grid -->
+    <!-- KPIs -->
     <div class="kpi-grid">
       <div class="kpi-card">
-        <div class="card-icon cyan">&#9881;</div>
+        <div class="card-icon cyan">&#128214;</div>
         <div>
           <div class="kpi-value">123</div>
           <div class="kpi-label"><span class="es">Runbooks Totales</span><span class="en">Total Runbooks</span></div>
         </div>
       </div>
       <div class="kpi-card">
-        <div class="card-icon success">&#9632;</div>
+        <div class="card-icon violet">&#128193;</div>
         <div>
-          <div class="kpi-value">115</div>
-          <div class="kpi-label"><span class="es">Cost-Safe</span><span class="en">Cost-Safe</span></div>
+          <div class="kpi-value">16</div>
+          <div class="kpi-label"><span class="es">Categorias</span><span class="en">Categories</span></div>
         </div>
       </div>
       <div class="kpi-card">
-        <div class="card-icon violet">&#9889;</div>
+        <div class="card-icon success">&#10003;</div>
         <div>
-          <div class="kpi-value">103</div>
-          <div class="kpi-label"><span class="es">Auto-Ejecutar</span><span class="en">Auto-Execute</span></div>
+          <div class="kpi-value">4</div>
+          <div class="kpi-label"><span class="es">Validaciones</span><span class="en">Validations</span></div>
         </div>
       </div>
       <div class="kpi-card">
-        <div class="card-icon warning">&#128337;</div>
+        <div class="card-icon warning">&#128737;</div>
         <div>
-          <div class="kpi-value">156</div>
-          <div class="kpi-label"><span class="es">Ejecuciones (30d)</span><span class="en">Executions (30d)</span></div>
+          <div class="kpi-value">2</div>
+          <div class="kpi-label"><span class="es">Tipos de Gate</span><span class="en">Gate Types</span></div>
         </div>
       </div>
     </div>
 
-    <!-- Tabs -->
-    <div class="tabs">
-      <button class="tab active" onclick="switchTab('catalog')">
-        <span class="es">Catalogo</span><span class="en">Catalog</span>
-      </button>
-      <button class="tab" onclick="switchTab('executions')">
-        <span class="es">Ejecuciones</span><span class="en">Executions</span>
-      </button>
+    <!-- Categories Table -->
+    <h2><span class="es">Categorias de Runbooks</span><span class="en">Runbook Categories</span></h2>
+    <p>
+      <span class="es">Los 123 runbooks estan organizados en 16 categorias que cubren todas las areas de administracion SAP Basis.</span>
+      <span class="en">The 123 runbooks are organized into 16 categories covering all areas of SAP Basis administration.</span>
+    </p>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>#</th>
+            <th><span class="es">Categoria</span><span class="en">Category</span></th>
+            <th><span class="es">Identificador</span><span class="en">Identifier</span></th>
+            <th><span class="es">Cantidad</span><span class="en">Count</span></th>
+            <th><span class="es">Descripcion</span><span class="en">Description</span></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>1</td><td><span class="badge cyan">Backup & Recovery</span></td><td class="font-mono">BACKUP</td><td>12</td><td><span class="es">Backup completo HANA, diferencial, logs, restauracion, validacion</span><span class="en">HANA full backup, differential, logs, restore, validation</span></td></tr>
+          <tr><td>2</td><td><span class="badge cyan">Performance</span></td><td class="font-mono">PERFORMANCE</td><td>10</td><td><span class="es">Diagnostico CPU, memoria, I/O, work processes, response time</span><span class="en">CPU, memory, I/O, work processes, response time diagnostics</span></td></tr>
+          <tr><td>3</td><td><span class="badge violet">HANA Administration</span></td><td class="font-mono">HANA</td><td>11</td><td><span class="es">Gestion HANA: memory, delta merge, catalog cleanup, replication</span><span class="en">HANA management: memory, delta merge, catalog cleanup, replication</span></td></tr>
+          <tr><td>4</td><td><span class="badge success">Monitoring</span></td><td class="font-mono">MONITORING</td><td>9</td><td><span class="es">Health checks, log analysis, status verification, alerting</span><span class="en">Health checks, log analysis, status verification, alerting</span></td></tr>
+          <tr><td>5</td><td><span class="badge warning">Security</span></td><td class="font-mono">SECURITY</td><td>8</td><td><span class="es">Auditoria de usuarios, roles, certificados, parametros de seguridad</span><span class="en">User audit, roles, certificates, security parameters</span></td></tr>
+          <tr><td>6</td><td><span class="badge neutral">Housekeeping</span></td><td class="font-mono">HOUSEKEEPING</td><td>10</td><td><span class="es">Limpieza de logs, spool, old data, tmp files, table reorganization</span><span class="en">Log cleanup, spool, old data, tmp files, table reorganization</span></td></tr>
+          <tr><td>7</td><td><span class="badge danger">Incident Response</span></td><td class="font-mono">INCIDENT</td><td>7</td><td><span class="es">Respuesta a incidentes: dump analysis, lock resolution, kill process</span><span class="en">Incident response: dump analysis, lock resolution, kill process</span></td></tr>
+          <tr><td>8</td><td><span class="badge cyan">Transport Management</span></td><td class="font-mono">TRANSPORT</td><td>6</td><td><span class="es">Importacion de transportes, validacion, rollback, queue management</span><span class="en">Transport import, validation, rollback, queue management</span></td></tr>
+          <tr><td>9</td><td><span class="badge violet">System Lifecycle</span></td><td class="font-mono">LIFECYCLE</td><td>8</td><td><span class="es">Start/stop, restart, kernel update, system copy, client copy</span><span class="en">Start/stop, restart, kernel update, system copy, client copy</span></td></tr>
+          <tr><td>10</td><td><span class="badge success">Database (General)</span></td><td class="font-mono">DATABASE</td><td>7</td><td><span class="es">Oracle, MSSQL, DB2 specific operations, tablespace, statistics</span><span class="en">Oracle, MSSQL, DB2 specific operations, tablespace, statistics</span></td></tr>
+          <tr><td>11</td><td><span class="badge warning">Network & Connectivity</span></td><td class="font-mono">NETWORK</td><td>5</td><td><span class="es">RFC connections, ICM, gateway, load balancing, DNS</span><span class="en">RFC connections, ICM, gateway, load balancing, DNS</span></td></tr>
+          <tr><td>12</td><td><span class="badge neutral">Job Management</span></td><td class="font-mono">JOBS</td><td>6</td><td><span class="es">Background job scheduling, monitoring, repair, rescheduling</span><span class="en">Background job scheduling, monitoring, repair, rescheduling</span></td></tr>
+          <tr><td>13</td><td><span class="badge danger">HA & DR</span></td><td class="font-mono">HA_DR</td><td>8</td><td><span class="es">Failover, takeover, HANA HSR, ASCS/ERS, cluster operations</span><span class="en">Failover, takeover, HANA HSR, ASCS/ERS, cluster operations</span></td></tr>
+          <tr><td>14</td><td><span class="badge cyan">Compliance & Audit</span></td><td class="font-mono">COMPLIANCE</td><td>5</td><td><span class="es">Parameter compliance check, security audit, change documentation</span><span class="en">Parameter compliance check, security audit, change documentation</span></td></tr>
+          <tr><td>15</td><td><span class="badge violet">Integration</span></td><td class="font-mono">INTEGRATION</td><td>6</td><td><span class="es">IDoc monitoring, PI/PO channels, RFC destinations, queue management</span><span class="en">IDoc monitoring, PI/PO channels, RFC destinations, queue management</span></td></tr>
+          <tr><td>16</td><td><span class="badge success">Patching & Updates</span></td><td class="font-mono">PATCHING</td><td>5</td><td><span class="es">Support Package, kernel patch, HANA revision update, note apply</span><span class="en">Support Package, kernel patch, HANA revision update, note apply</span></td></tr>
+        </tbody>
+      </table>
     </div>
 
-    <!-- ── Tab: Catalog ── -->
-    <div id="tab-catalog" class="tab-content active">
-
-      <div class="callout info">
-        <div class="callout-icon">&#128712;</div>
-        <div>
-          <span class="es"><strong>Gate Types:</strong> Los runbooks con <code>costSafe=true</code> y <code>autoExecute=true</code> se ejecutan automaticamente (gate <strong>SAFE</strong>). Los runbooks no cost-safe requieren aprobacion humana (gate <strong>HUMAN</strong>).</span>
-          <span class="en"><strong>Gate Types:</strong> Runbooks with <code>costSafe=true</code> and <code>autoExecute=true</code> execute automatically (gate <strong>SAFE</strong>). Non cost-safe runbooks require human approval (gate <strong>HUMAN</strong>).</span>
-        </div>
-      </div>
-
-      <!-- ═══════ Category 1: SAP HANA (11) ═══════ -->
-      <details class="cat-section" open>
-        <summary>
-          <div class="cat-header">
-            <span class="arrow">&#9654;</span>
-            <h3>SAP HANA</h3>
-            <span class="count">11</span>
-            <span class="cat-label">Database</span>
+    <!-- Compatibility Validation -->
+    <h2><span class="es">Validacion de Compatibilidad</span><span class="en">Compatibility Validation</span></h2>
+    <div class="card">
+      <p>
+        <span class="es">Antes de ejecutar un runbook, el sistema valida automaticamente que el runbook sea compatible con el sistema objetivo. Se evaluan 4 dimensiones de compatibilidad:</span>
+        <span class="en">Before executing a runbook, the system automatically validates that the runbook is compatible with the target system. 4 compatibility dimensions are evaluated:</span>
+      </p>
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title"><div class="card-icon cyan">&#128190;</div> <span class="es">Tipo de Base de Datos</span><span class="en">Database Type</span></div>
           </div>
-        </summary>
-        <div class="table-wrap">
-          <table>
-            <thead>
-              <tr>
-                <th>Runbook</th>
-                <th>Gate</th>
-                <th>costSafe</th>
-                <th>autoExecute</th>
-                <th>Scope</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td class="rb-name">HANA Log Backup Area Cleanup</td>
-                <td><span class="badge success">SAFE</span></td>
-                <td><span class="badge success">&#10003;</span></td>
-                <td><span class="badge danger">&#10007;</span></td>
-                <td><code>HANA</code></td>
-              </tr>
-              <tr>
-                <td class="rb-name">HANA Delta Merge forzado</td>
-                <td><span class="badge success">SAFE</span></td>
-                <td><span class="badge success">&#10003;</span></td>
-                <td><span class="badge success">&#10003;</span></td>
-                <td><code>HANA</code></td>
-              </tr>
-              <tr>
-                <td class="rb-name">HANA Table Unload por memoria</td>
-                <td><span class="badge success">SAFE</span></td>
-                <td><span class="badge success">&#10003;</span></td>
-                <td><span class="badge danger">&#10007;</span></td>
-                <td><code>HANA</code></td>
-              </tr>
-              <tr>
-                <td class="rb-name">HANA Expensive SQL Analysis</td>
-                <td><span class="badge success">SAFE</span></td>
-                <td><span class="badge success">&#10003;</span></td>
-                <td><span class="badge success">&#10003;</span></td>
-                <td><code>HANA</code></td>
-              </tr>
-              <tr>
-                <td class="rb-name">HANA Trace File Cleanup</td>
-                <td><span class="badge success">SAFE</span></td>
-                <td><span class="badge success">&#10003;</span></td>
-                <td><span class="badge success">&#10003;</span></td>
-                <td><code>HANA</code></td>
-              </tr>
-              <tr>
-                <td class="rb-name">HANA Alert Check (M_SYSTEM_ALERTS)</td>
-                <td><span class="badge success">SAFE</span></td>
-                <td><span class="badge success">&#10003;</span></td>
-                <td><span class="badge success">&#10003;</span></td>
-                <td><code>HANA</code></td>
-              </tr>
-              <tr>
-                <td class="rb-name">HANA Row-to-Column Store Migration Check</td>
-                <td><span class="badge success">SAFE</span></td>
-                <td><span class="badge success">&#10003;</span></td>
-                <td><span class="badge success">&#10003;</span></td>
-                <td><code>HANA</code></td>
-              </tr>
-              <tr>
-                <td class="rb-name">HANA Log Segment Cleanup</td>
-                <td><span class="badge success">SAFE</span></td>
-                <td><span class="badge success">&#10003;</span></td>
-                <td><span class="badge success">&#10003;</span></td>
-                <td><code>HANA</code></td>
-              </tr>
-              <tr>
-                <td class="rb-name">HANA Consistency Check</td>
-                <td><span class="badge success">SAFE</span></td>
-                <td><span class="badge success">&#10003;</span></td>
-                <td><span class="badge danger">&#10007;</span></td>
-                <td><code>HANA</code></td>
-              </tr>
-              <tr>
-                <td class="rb-name">HANA Memory Profiler Snapshot</td>
-                <td><span class="badge success">SAFE</span></td>
-                <td><span class="badge success">&#10003;</span></td>
-                <td><span class="badge success">&#10003;</span></td>
-                <td><code>HANA</code></td>
-              </tr>
-              <tr>
-                <td class="rb-name">HANA Connection Cleanup</td>
-                <td><span class="badge success">SAFE</span></td>
-                <td><span class="badge success">&#10003;</span></td>
-                <td><span class="badge success">&#10003;</span></td>
-                <td><code>HANA</code></td>
-              </tr>
-            </tbody>
-          </table>
+          <p class="text-sm">
+            <span class="es">Cada runbook especifica las bases de datos compatibles. Ejemplo: un runbook de "HANA Delta Merge" solo es compatible con sistemas HANA. Un runbook de "Oracle Tablespace" solo funciona con Oracle.</span>
+            <span class="en">Each runbook specifies compatible databases. Example: a "HANA Delta Merge" runbook is only compatible with HANA systems. An "Oracle Tablespace" runbook only works with Oracle.</span>
+          </p>
+          <pre><code>compatibleDatabases: ["HANA", "HANA_CLOUD"]</code></pre>
         </div>
-      </details>
-
-      <!-- ═══════ Category 2: Oracle (10) ═══════ -->
-      <details class="cat-section" open>
-        <summary>
-          <div class="cat-header">
-            <span class="arrow">&#9654;</span>
-            <h3>Oracle</h3>
-            <span class="count">10</span>
-            <span class="cat-label">Database</span>
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title"><div class="card-icon violet">&#9881;</div> <span class="es">SAP Stack</span><span class="en">SAP Stack</span></div>
           </div>
-        </summary>
-        <div class="table-wrap">
-          <table>
-            <thead>
-              <tr>
-                <th>Runbook</th>
-                <th>Gate</th>
-                <th>costSafe</th>
-                <th>autoExecute</th>
-                <th>Scope</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td class="rb-name">Oracle Tablespace Utilization Check</td>
-                <td><span class="badge success">SAFE</span></td>
-                <td><span class="badge success">&#10003;</span></td>
-                <td><span class="badge success">&#10003;</span></td>
-                <td><code>Oracle</code></td>
-              </tr>
-              <tr>
-                <td class="rb-name">Oracle Tablespace Auto-Extend</td>
-                <td><span class="badge warning">HUMAN</span></td>
-                <td><span class="badge danger">&#10007;</span></td>
-                <td><span class="badge danger">&#10007;</span></td>
-                <td><code>Oracle</code></td>
-              </tr>
-              <tr>
-                <td class="rb-name">Oracle RMAN Backup Verification</td>
-                <td><span class="badge success">SAFE</span></td>
-                <td><span class="badge success">&#10003;</span></td>
-                <td><span class="badge success">&#10003;</span></td>
-                <td><code>Oracle</code></td>
-              </tr>
-              <tr>
-                <td class="rb-name">Oracle Archive Log Cleanup</td>
-                <td><span class="badge success">SAFE</span></td>
-                <td><span class="badge success">&#10003;</span></td>
-                <td><span class="badge success">&#10003;</span></td>
-                <td><code>Oracle</code></td>
-              </tr>
-              <tr>
-                <td class="rb-name">Oracle AWR Report Generation</td>
-                <td><span class="badge success">SAFE</span></td>
-                <td><span class="badge success">&#10003;</span></td>
-                <td><span class="badge success">&#10003;</span></td>
-                <td><code>Oracle</code></td>
-              </tr>
-              <tr>
-                <td class="rb-name">Oracle Invalid Objects Recompile</td>
-                <td><span class="badge success">SAFE</span></td>
-                <td><span class="badge success">&#10003;</span></td>
-                <td><span class="badge success">&#10003;</span></td>
-                <td><code>Oracle</code></td>
-              </tr>
-              <tr>
-                <td class="rb-name">Oracle Blocking Session Kill</td>
-                <td><span class="badge success">SAFE</span></td>
-                <td><span class="badge success">&#10003;</span></td>
-                <td><span class="badge danger">&#10007;</span></td>
-                <td><code>Oracle</code></td>
-              </tr>
-              <tr>
-                <td class="rb-name">Oracle Temp Tablespace Cleanup</td>
-                <td><span class="badge success">SAFE</span></td>
-                <td><span class="badge success">&#10003;</span></td>
-                <td><span class="badge success">&#10003;</span></td>
-                <td><code>Oracle</code></td>
-              </tr>
-              <tr>
-                <td class="rb-name">Oracle Statistics Gathering</td>
-                <td><span class="badge success">SAFE</span></td>
-                <td><span class="badge success">&#10003;</span></td>
-                <td><span class="badge success">&#10003;</span></td>
-                <td><code>Oracle</code></td>
-              </tr>
-              <tr>
-                <td class="rb-name">Oracle Redo Log Switch Analysis</td>
-                <td><span class="badge success">SAFE</span></td>
-                <td><span class="badge success">&#10003;</span></td>
-                <td><span class="badge success">&#10003;</span></td>
-                <td><code>Oracle</code></td>
-              </tr>
-            </tbody>
-          </table>
+          <p class="text-sm">
+            <span class="es">Algunos runbooks son especificos para ciertos productos SAP. Ejemplo: un runbook de "BW Process Chain" solo aplica a BW/4HANA. Un runbook de "SolMan LMDB" solo aplica a Solution Manager.</span>
+            <span class="en">Some runbooks are specific to certain SAP products. Example: a "BW Process Chain" runbook only applies to BW/4HANA. A "SolMan LMDB" runbook only applies to Solution Manager.</span>
+          </p>
+          <pre><code>compatibleProducts: ["S4HANA", "ECC", "BW4HANA"]</code></pre>
         </div>
-      </details>
-
-      <!-- ═══════ Category 3: Microsoft SQL Server (10) ═══════ -->
-      <details class="cat-section" open>
-        <summary>
-          <div class="cat-header">
-            <span class="arrow">&#9654;</span>
-            <h3>Microsoft SQL Server</h3>
-            <span class="count">10</span>
-            <span class="cat-label">Database</span>
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title"><div class="card-icon success">&#128187;</div> <span class="es">Sistema Operativo</span><span class="en">Operating System</span></div>
           </div>
-        </summary>
-        <div class="table-wrap">
-          <table>
-            <thead>
-              <tr>
-                <th>Runbook</th>
-                <th>Gate</th>
-                <th>costSafe</th>
-                <th>autoExecute</th>
-                <th>Scope</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td class="rb-name">MSSQL Transaction Log Shrink</td>
-                <td><span class="badge success">SAFE</span></td>
-                <td><span class="badge success">&#10003;</span></td>
-                <td><span class="badge danger">&#10007;</span></td>
-                <td><code>MSSQL</code></td>
-              </tr>
-              <tr>
-                <td class="rb-name">MSSQL Index Rebuild/Reorganize</td>
-                <td><span class="badge success">SAFE</span></td>
-                <td><span class="badge success">&#10003;</span></td>
-                <td><span class="badge success">&#10003;</span></td>
-                <td><code>MSSQL</code></td>
-              </tr>
-              <tr>
-                <td class="rb-name">MSSQL TempDB Monitor</td>
-                <td><span class="badge success">SAFE</span></td>
-                <td><span class="badge success">&#10003;</span></td>
-                <td><span class="badge success">&#10003;</span></td>
-                <td><code>MSSQL</code></td>
-              </tr>
-              <tr>
-                <td class="rb-name">MSSQL Backup Verification (VERIFYONLY)</td>
-                <td><span class="badge success">SAFE</span></td>
-                <td><span class="badge success">&#10003;</span></td>
-                <td><span class="badge success">&#10003;</span></td>
-                <td><code>MSSQL</code></td>
-              </tr>
-              <tr>
-                <td class="rb-name">MSSQL Blocked Process Analysis</td>
-                <td><span class="badge success">SAFE</span></td>
-                <td><span class="badge success">&#10003;</span></td>
-                <td><span class="badge success">&#10003;</span></td>
-                <td><code>MSSQL</code></td>
-              </tr>
-              <tr>
-                <td class="rb-name">MSSQL DBCC CHECKDB</td>
-                <td><span class="badge success">SAFE</span></td>
-                <td><span class="badge success">&#10003;</span></td>
-                <td><span class="badge danger">&#10007;</span></td>
-                <td><code>MSSQL</code></td>
-              </tr>
-              <tr>
-                <td class="rb-name">MSSQL Auto-Grow Event Check</td>
-                <td><span class="badge success">SAFE</span></td>
-                <td><span class="badge success">&#10003;</span></td>
-                <td><span class="badge success">&#10003;</span></td>
-                <td><code>MSSQL</code></td>
-              </tr>
-              <tr>
-                <td class="rb-name">MSSQL Agent Job Failure Check</td>
-                <td><span class="badge success">SAFE</span></td>
-                <td><span class="badge success">&#10003;</span></td>
-                <td><span class="badge success">&#10003;</span></td>
-                <td><code>MSSQL</code></td>
-              </tr>
-              <tr>
-                <td class="rb-name">MSSQL Data File Growth Projection</td>
-                <td><span class="badge success">SAFE</span></td>
-                <td><span class="badge success">&#10003;</span></td>
-                <td><span class="badge success">&#10003;</span></td>
-                <td><code>MSSQL</code></td>
-              </tr>
-              <tr>
-                <td class="rb-name">MSSQL Always On Health Check</td>
-                <td><span class="badge success">SAFE</span></td>
-                <td><span class="badge success">&#10003;</span></td>
-                <td><span class="badge success">&#10003;</span></td>
-                <td><code>MSSQL</code></td>
-              </tr>
-            </tbody>
-          </table>
+          <p class="text-sm">
+            <span class="es">Runbooks que ejecutan comandos a nivel de SO son especificos de plataforma. Ejemplo: un runbook que usa <code>systemctl</code> solo funciona en Linux (SLES/RHEL). Uno que usa <code>sapcontrol</code> es cross-platform.</span>
+            <span class="en">Runbooks that execute OS-level commands are platform-specific. Example: a runbook using <code>systemctl</code> only works on Linux (SLES/RHEL). One using <code>sapcontrol</code> is cross-platform.</span>
+          </p>
+          <pre><code>compatibleOS: ["SLES", "RHEL"]</code></pre>
         </div>
-      </details>
-
-      <!-- ═══════ Category 4: IBM DB2 (10) ═══════ -->
-      <details class="cat-section" open>
-        <summary>
-          <div class="cat-header">
-            <span class="arrow">&#9654;</span>
-            <h3>IBM DB2</h3>
-            <span class="count">10</span>
-            <span class="cat-label">Database</span>
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title"><div class="card-icon warning">&#128737;</div> <span class="es">Alta Disponibilidad</span><span class="en">High Availability</span></div>
           </div>
-        </summary>
-        <div class="table-wrap">
-          <table>
-            <thead>
-              <tr>
-                <th>Runbook</th>
-                <th>Gate</th>
-                <th>costSafe</th>
-                <th>autoExecute</th>
-                <th>Scope</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td class="rb-name">DB2 Log Utilization Check</td>
-                <td><span class="badge success">SAFE</span></td>
-                <td><span class="badge success">&#10003;</span></td>
-                <td><span class="badge success">&#10003;</span></td>
-                <td><code>DB2</code></td>
-              </tr>
-              <tr>
-                <td class="rb-name">DB2 RUNSTATS Refresh</td>
-                <td><span class="badge success">SAFE</span></td>
-                <td><span class="badge success">&#10003;</span></td>
-                <td><span class="badge success">&#10003;</span></td>
-                <td><code>DB2</code></td>
-              </tr>
-              <tr>
-                <td class="rb-name">DB2 REORG Check (REORGCHK)</td>
-                <td><span class="badge success">SAFE</span></td>
-                <td><span class="badge success">&#10003;</span></td>
-                <td><span class="badge success">&#10003;</span></td>
-                <td><code>DB2</code></td>
-              </tr>
-              <tr>
-                <td class="rb-name">DB2 REORG Execute</td>
-                <td><span class="badge success">SAFE</span></td>
-                <td><span class="badge success">&#10003;</span></td>
-                <td><span class="badge danger">&#10007;</span></td>
-                <td><code>DB2</code></td>
-              </tr>
-              <tr>
-                <td class="rb-name">DB2 Tablespace Container Add</td>
-                <td><span class="badge warning">HUMAN</span></td>
-                <td><span class="badge danger">&#10007;</span></td>
-                <td><span class="badge danger">&#10007;</span></td>
-                <td><code>DB2</code></td>
-              </tr>
-              <tr>
-                <td class="rb-name">DB2 Deadlock Analysis</td>
-                <td><span class="badge success">SAFE</span></td>
-                <td><span class="badge success">&#10003;</span></td>
-                <td><span class="badge success">&#10003;</span></td>
-                <td><code>DB2</code></td>
-              </tr>
-              <tr>
-                <td class="rb-name">DB2 HADR Status Check</td>
-                <td><span class="badge success">SAFE</span></td>
-                <td><span class="badge success">&#10003;</span></td>
-                <td><span class="badge success">&#10003;</span></td>
-                <td><code>DB2</code></td>
-              </tr>
-              <tr>
-                <td class="rb-name">DB2 Archive Log Prune</td>
-                <td><span class="badge success">SAFE</span></td>
-                <td><span class="badge success">&#10003;</span></td>
-                <td><span class="badge success">&#10003;</span></td>
-                <td><code>DB2</code></td>
-              </tr>
-              <tr>
-                <td class="rb-name">DB2 Connection Monitor</td>
-                <td><span class="badge success">SAFE</span></td>
-                <td><span class="badge success">&#10003;</span></td>
-                <td><span class="badge success">&#10003;</span></td>
-                <td><code>DB2</code></td>
-              </tr>
-              <tr>
-                <td class="rb-name">DB2 Backup History Verification</td>
-                <td><span class="badge success">SAFE</span></td>
-                <td><span class="badge success">&#10003;</span></td>
-                <td><span class="badge success">&#10003;</span></td>
-                <td><code>DB2</code></td>
-              </tr>
-            </tbody>
-          </table>
+          <p class="text-sm">
+            <span class="es">Runbooks de HA/DR requieren que el sistema tenga configuracion de alta disponibilidad activa. Se valida el tipo de HA (HANA_HSR, ASCS_ERS) y el estado del cluster.</span>
+            <span class="en">HA/DR runbooks require the system to have active high availability configuration. The HA type (HANA_HSR, ASCS_ERS) and cluster status are validated.</span>
+          </p>
+          <pre><code>requiresHA: true
+compatibleHATypes: ["HANA_HSR"]</code></pre>
         </div>
-      </details>
-
-      <!-- ═══════ Category 5: SAP ASE / Sybase (7) ═══════ -->
-      <details class="cat-section" open>
-        <summary>
-          <div class="cat-header">
-            <span class="arrow">&#9654;</span>
-            <h3>SAP ASE / Sybase</h3>
-            <span class="count">7</span>
-            <span class="cat-label">Database</span>
-          </div>
-        </summary>
-        <div class="table-wrap">
-          <table>
-            <thead>
-              <tr>
-                <th>Runbook</th>
-                <th>Gate</th>
-                <th>costSafe</th>
-                <th>autoExecute</th>
-                <th>Scope</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td class="rb-name">Dump tran log + kill old tx</td>
-                <td><span class="badge success">SAFE</span></td>
-                <td><span class="badge success">&#10003;</span></td>
-                <td><span class="badge success">&#10003;</span></td>
-                <td><code>ASE</code></td>
-              </tr>
-              <tr>
-                <td class="rb-name">Expand EBS log volume</td>
-                <td><span class="badge warning">HUMAN</span></td>
-                <td><span class="badge danger">&#10007;</span></td>
-                <td><span class="badge danger">&#10007;</span></td>
-                <td><code>ASE</code></td>
-              </tr>
-              <tr>
-                <td class="rb-name">Combined log truncate + disk expand</td>
-                <td><span class="badge warning">HUMAN</span></td>
-                <td><span class="badge danger">&#10007;</span></td>
-                <td><span class="badge danger">&#10007;</span></td>
-                <td><code>ASE</code></td>
-              </tr>
-              <tr>
-                <td class="rb-name">ASE Tempdb Usage Monitor</td>
-                <td><span class="badge success">SAFE</span></td>
-                <td><span class="badge success">&#10003;</span></td>
-                <td><span class="badge success">&#10003;</span></td>
-                <td><code>ASE</code></td>
-              </tr>
-              <tr>
-                <td class="rb-name">ASE Lock Contention Analysis</td>
-                <td><span class="badge success">SAFE</span></td>
-                <td><span class="badge success">&#10003;</span></td>
-                <td><span class="badge success">&#10003;</span></td>
-                <td><code>ASE</code></td>
-              </tr>
-              <tr>
-                <td class="rb-name">ASE DBCC Consistency Check</td>
-                <td><span class="badge success">SAFE</span></td>
-                <td><span class="badge success">&#10003;</span></td>
-                <td><span class="badge danger">&#10007;</span></td>
-                <td><code>ASE</code></td>
-              </tr>
-              <tr>
-                <td class="rb-name">ASE Cache Hit Ratio Analysis</td>
-                <td><span class="badge success">SAFE</span></td>
-                <td><span class="badge success">&#10003;</span></td>
-                <td><span class="badge success">&#10003;</span></td>
-                <td><code>ASE</code></td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </details>
-
-      <!-- ═══════ Category 6: SAP MaxDB (7) ═══════ -->
-      <details class="cat-section" open>
-        <summary>
-          <div class="cat-header">
-            <span class="arrow">&#9654;</span>
-            <h3>SAP MaxDB</h3>
-            <span class="count">7</span>
-            <span class="cat-label">Database</span>
-          </div>
-        </summary>
-        <div class="table-wrap">
-          <table>
-            <thead>
-              <tr>
-                <th>Runbook</th>
-                <th>Gate</th>
-                <th>costSafe</th>
-                <th>autoExecute</th>
-                <th>Scope</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td class="rb-name">MaxDB Data Area Utilization</td>
-                <td><span class="badge success">SAFE</span></td>
-                <td><span class="badge success">&#10003;</span></td>
-                <td><span class="badge success">&#10003;</span></td>
-                <td><code>MaxDB</code></td>
-              </tr>
-              <tr>
-                <td class="rb-name">MaxDB Log Area Monitor</td>
-                <td><span class="badge success">SAFE</span></td>
-                <td><span class="badge success">&#10003;</span></td>
-                <td><span class="badge success">&#10003;</span></td>
-                <td><code>MaxDB</code></td>
-              </tr>
-              <tr>
-                <td class="rb-name">MaxDB Update Statistics</td>
-                <td><span class="badge success">SAFE</span></td>
-                <td><span class="badge success">&#10003;</span></td>
-                <td><span class="badge success">&#10003;</span></td>
-                <td><code>MaxDB</code></td>
-              </tr>
-              <tr>
-                <td class="rb-name">MaxDB Session Cleanup</td>
-                <td><span class="badge success">SAFE</span></td>
-                <td><span class="badge success">&#10003;</span></td>
-                <td><span class="badge success">&#10003;</span></td>
-                <td><code>MaxDB</code></td>
-              </tr>
-              <tr>
-                <td class="rb-name">MaxDB Backup History Check</td>
-                <td><span class="badge success">SAFE</span></td>
-                <td><span class="badge success">&#10003;</span></td>
-                <td><span class="badge success">&#10003;</span></td>
-                <td><code>MaxDB</code></td>
-              </tr>
-              <tr>
-                <td class="rb-name">MaxDB Bad Index Analysis</td>
-                <td><span class="badge success">SAFE</span></td>
-                <td><span class="badge success">&#10003;</span></td>
-                <td><span class="badge success">&#10003;</span></td>
-                <td><code>MaxDB</code></td>
-              </tr>
-              <tr>
-                <td class="rb-name">MaxDB Cache Hit Analysis</td>
-                <td><span class="badge success">SAFE</span></td>
-                <td><span class="badge success">&#10003;</span></td>
-                <td><span class="badge success">&#10003;</span></td>
-                <td><code>MaxDB</code></td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </details>
-
-      <!-- ═══════ Category 7: HANA HA & Replication (1) ═══════ -->
-      <details class="cat-section" open>
-        <summary>
-          <div class="cat-header">
-            <span class="arrow">&#9654;</span>
-            <h3>HANA HA &amp; Replication</h3>
-            <span class="count">1</span>
-            <span class="cat-label">High Availability</span>
-          </div>
-        </summary>
-        <div class="table-wrap">
-          <table>
-            <thead>
-              <tr>
-                <th>Runbook</th>
-                <th>Gate</th>
-                <th>costSafe</th>
-                <th>autoExecute</th>
-                <th>Scope</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td class="rb-name">Resume HANA System Replication</td>
-                <td><span class="badge success">SAFE</span></td>
-                <td><span class="badge success">&#10003;</span></td>
-                <td><span class="badge success">&#10003;</span></td>
-                <td><code>HANA HSR</code></td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </details>
-
-      <!-- ═══════ Category 8: SAP ABAP Stack (15) ═══════ -->
-      <details class="cat-section" open>
-        <summary>
-          <div class="cat-header">
-            <span class="arrow">&#9654;</span>
-            <h3>SAP ABAP Stack</h3>
-            <span class="count">15</span>
-            <span class="cat-label">Application</span>
-          </div>
-        </summary>
-        <div class="table-wrap">
-          <table>
-            <thead>
-              <tr>
-                <th>Runbook</th>
-                <th>Gate</th>
-                <th>costSafe</th>
-                <th>autoExecute</th>
-                <th>Scope</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td class="rb-name">Restart ICM Process</td>
-                <td><span class="badge success">SAFE</span></td>
-                <td><span class="badge success">&#10003;</span></td>
-                <td><span class="badge danger">&#10007;</span></td>
-                <td><code>ABAP</code></td>
-              </tr>
-              <tr>
-                <td class="rb-name">Clear Old Spool Requests</td>
-                <td><span class="badge success">SAFE</span></td>
-                <td><span class="badge success">&#10003;</span></td>
-                <td><span class="badge success">&#10003;</span></td>
-                <td><code>ABAP</code></td>
-              </tr>
-              <tr>
-                <td class="rb-name">Clean sessions + restart WPs</td>
-                <td><span class="badge success">SAFE</span></td>
-                <td><span class="badge success">&#10003;</span></td>
-                <td><span class="badge success">&#10003;</span></td>
-                <td><code>ABAP</code></td>
-              </tr>
-              <tr>
-                <td class="rb-name">Clean PRIV/Hold Work Processes</td>
-                <td><span class="badge success">SAFE</span></td>
-                <td><span class="badge success">&#10003;</span></td>
-                <td><span class="badge success">&#10003;</span></td>
-                <td><code>ABAP</code></td>
-              </tr>
-              <tr>
-                <td class="rb-name">Diagnose RFC queues</td>
-                <td><span class="badge success">SAFE</span></td>
-                <td><span class="badge success">&#10003;</span></td>
-                <td><span class="badge success">&#10003;</span></td>
-                <td><code>ABAP</code></td>
-              </tr>
-              <tr>
-                <td class="rb-name">Check failed/long-running jobs</td>
-                <td><span class="badge success">SAFE</span></td>
-                <td><span class="badge success">&#10003;</span></td>
-                <td><span class="badge success">&#10003;</span></td>
-                <td><code>ABAP</code></td>
-              </tr>
-              <tr>
-                <td class="rb-name">Transport queue monitoring (STMS)</td>
-                <td><span class="badge success">SAFE</span></td>
-                <td><span class="badge success">&#10003;</span></td>
-                <td><span class="badge success">&#10003;</span></td>
-                <td><code>ABAP</code></td>
-              </tr>
-              <tr>
-                <td class="rb-name">ABAP Dump Analysis (ST22)</td>
-                <td><span class="badge success">SAFE</span></td>
-                <td><span class="badge success">&#10003;</span></td>
-                <td><span class="badge success">&#10003;</span></td>
-                <td><code>ABAP</code></td>
-              </tr>
-              <tr>
-                <td class="rb-name">ABAP Update Request Monitor (SM13)</td>
-                <td><span class="badge success">SAFE</span></td>
-                <td><span class="badge success">&#10003;</span></td>
-                <td><span class="badge success">&#10003;</span></td>
-                <td><code>ABAP</code></td>
-              </tr>
-              <tr>
-                <td class="rb-name">ABAP Gateway Monitor (SMGW)</td>
-                <td><span class="badge success">SAFE</span></td>
-                <td><span class="badge success">&#10003;</span></td>
-                <td><span class="badge success">&#10003;</span></td>
-                <td><code>ABAP</code></td>
-              </tr>
-              <tr>
-                <td class="rb-name">ABAP User Session Cleanup (SM04)</td>
-                <td><span class="badge success">SAFE</span></td>
-                <td><span class="badge success">&#10003;</span></td>
-                <td><span class="badge success">&#10003;</span></td>
-                <td><code>ABAP</code></td>
-              </tr>
-              <tr>
-                <td class="rb-name">ABAP IDoc Reprocessing</td>
-                <td><span class="badge success">SAFE</span></td>
-                <td><span class="badge success">&#10003;</span></td>
-                <td><span class="badge danger">&#10007;</span></td>
-                <td><code>ABAP</code></td>
-              </tr>
-              <tr>
-                <td class="rb-name">ABAP RFC Destination Health Check</td>
-                <td><span class="badge success">SAFE</span></td>
-                <td><span class="badge success">&#10003;</span></td>
-                <td><span class="badge success">&#10003;</span></td>
-                <td><code>ABAP</code></td>
-              </tr>
-              <tr>
-                <td class="rb-name">ABAP Failed Login Monitor (SM20)</td>
-                <td><span class="badge success">SAFE</span></td>
-                <td><span class="badge success">&#10003;</span></td>
-                <td><span class="badge success">&#10003;</span></td>
-                <td><code>ABAP</code></td>
-              </tr>
-              <tr>
-                <td class="rb-name">ABAP Critical Auth Audit</td>
-                <td><span class="badge success">SAFE</span></td>
-                <td><span class="badge success">&#10003;</span></td>
-                <td><span class="badge success">&#10003;</span></td>
-                <td><code>ABAP</code></td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </details>
-
-      <!-- ═══════ Category 9: SAP Java / PO Stack (3) ═══════ -->
-      <details class="cat-section" open>
-        <summary>
-          <div class="cat-header">
-            <span class="arrow">&#9654;</span>
-            <h3>SAP Java / PO Stack</h3>
-            <span class="count">3</span>
-            <span class="cat-label">Application</span>
-          </div>
-        </summary>
-        <div class="table-wrap">
-          <table>
-            <thead>
-              <tr>
-                <th>Runbook</th>
-                <th>Gate</th>
-                <th>costSafe</th>
-                <th>autoExecute</th>
-                <th>Scope</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td class="rb-name">Force JVM Garbage Collection</td>
-                <td><span class="badge success">SAFE</span></td>
-                <td><span class="badge success">&#10003;</span></td>
-                <td><span class="badge success">&#10003;</span></td>
-                <td><code>JAVA</code></td>
-              </tr>
-              <tr>
-                <td class="rb-name">Force OldGen GC</td>
-                <td><span class="badge success">SAFE</span></td>
-                <td><span class="badge success">&#10003;</span></td>
-                <td><span class="badge success">&#10003;</span></td>
-                <td><code>JAVA</code></td>
-              </tr>
-              <tr>
-                <td class="rb-name">Restart PI/PO Adapter Framework</td>
-                <td><span class="badge success">SAFE</span></td>
-                <td><span class="badge success">&#10003;</span></td>
-                <td><span class="badge success">&#10003;</span></td>
-                <td><code>JAVA / PO</code></td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </details>
-
-      <!-- ═══════ Category 10: SAP Applications (BW/PO) (3) ═══════ -->
-      <details class="cat-section" open>
-        <summary>
-          <div class="cat-header">
-            <span class="arrow">&#9654;</span>
-            <h3>SAP Applications (BW/PO)</h3>
-            <span class="count">3</span>
-            <span class="cat-label">Application</span>
-          </div>
-        </summary>
-        <div class="table-wrap">
-          <table>
-            <thead>
-              <tr>
-                <th>Runbook</th>
-                <th>Gate</th>
-                <th>costSafe</th>
-                <th>autoExecute</th>
-                <th>Scope</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td class="rb-name">BW Process Chain Monitor</td>
-                <td><span class="badge success">SAFE</span></td>
-                <td><span class="badge success">&#10003;</span></td>
-                <td><span class="badge success">&#10003;</span></td>
-                <td><code>BW</code></td>
-              </tr>
-              <tr>
-                <td class="rb-name">BW InfoCube Compression</td>
-                <td><span class="badge success">SAFE</span></td>
-                <td><span class="badge success">&#10003;</span></td>
-                <td><span class="badge danger">&#10007;</span></td>
-                <td><code>BW</code></td>
-              </tr>
-              <tr>
-                <td class="rb-name">PO SOAP/REST Channel Monitor</td>
-                <td><span class="badge success">SAFE</span></td>
-                <td><span class="badge success">&#10003;</span></td>
-                <td><span class="badge success">&#10003;</span></td>
-                <td><code>PO</code></td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </details>
-
-      <!-- ═══════ Category 11: Cross-Platform / General (3) ═══════ -->
-      <details class="cat-section" open>
-        <summary>
-          <div class="cat-header">
-            <span class="arrow">&#9654;</span>
-            <h3><span class="es">Plataforma Cruzada / General</span><span class="en">Cross-Platform / General</span></h3>
-            <span class="count">3</span>
-            <span class="cat-label">General</span>
-          </div>
-        </summary>
-        <div class="table-wrap">
-          <table>
-            <thead>
-              <tr>
-                <th>Runbook</th>
-                <th>Gate</th>
-                <th>costSafe</th>
-                <th>autoExecute</th>
-                <th>Scope</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td class="rb-name">Extend /usr/sap Filesystem</td>
-                <td><span class="badge warning">HUMAN</span></td>
-                <td><span class="badge danger">&#10007;</span></td>
-                <td><span class="badge danger">&#10007;</span></td>
-                <td><code>Linux</code></td>
-              </tr>
-              <tr>
-                <td class="rb-name">Verify backup status</td>
-                <td><span class="badge success">SAFE</span></td>
-                <td><span class="badge success">&#10003;</span></td>
-                <td><span class="badge success">&#10003;</span></td>
-                <td><code>ALL</code></td>
-              </tr>
-              <tr>
-                <td class="rb-name">Check certificate expiry (ICM/PSE)</td>
-                <td><span class="badge success">SAFE</span></td>
-                <td><span class="badge success">&#10003;</span></td>
-                <td><span class="badge success">&#10003;</span></td>
-                <td><code>ALL</code></td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </details>
-
-      <!-- ═══════ Category 12: Linux OS (16) ═══════ -->
-      <details class="cat-section" open>
-        <summary>
-          <div class="cat-header">
-            <span class="arrow">&#9654;</span>
-            <h3>Linux OS</h3>
-            <span class="count">12</span>
-            <span class="cat-label"><span class="es">Sistema Operativo</span><span class="en">Operating System</span></span>
-          </div>
-        </summary>
-        <div class="table-wrap">
-          <table>
-            <thead>
-              <tr>
-                <th>Runbook</th>
-                <th>Gate</th>
-                <th>costSafe</th>
-                <th>autoExecute</th>
-                <th>Scope</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td class="rb-name">Linux Filesystem Usage Check</td>
-                <td><span class="badge success">SAFE</span></td>
-                <td><span class="badge success">&#10003;</span></td>
-                <td><span class="badge success">&#10003;</span></td>
-                <td><code>Linux</code></td>
-              </tr>
-              <tr>
-                <td class="rb-name">Linux Old Log Cleanup</td>
-                <td><span class="badge success">SAFE</span></td>
-                <td><span class="badge success">&#10003;</span></td>
-                <td><span class="badge success">&#10003;</span></td>
-                <td><code>Linux</code></td>
-              </tr>
-              <tr>
-                <td class="rb-name">Linux Swap Usage Analysis</td>
-                <td><span class="badge success">SAFE</span></td>
-                <td><span class="badge success">&#10003;</span></td>
-                <td><span class="badge success">&#10003;</span></td>
-                <td><code>Linux</code></td>
-              </tr>
-              <tr>
-                <td class="rb-name">Linux Zombie Process Cleanup</td>
-                <td><span class="badge success">SAFE</span></td>
-                <td><span class="badge success">&#10003;</span></td>
-                <td><span class="badge success">&#10003;</span></td>
-                <td><code>Linux</code></td>
-              </tr>
-              <tr>
-                <td class="rb-name">Linux NTP/Chrony Sync Check</td>
-                <td><span class="badge success">SAFE</span></td>
-                <td><span class="badge success">&#10003;</span></td>
-                <td><span class="badge success">&#10003;</span></td>
-                <td><code>Linux</code></td>
-              </tr>
-              <tr>
-                <td class="rb-name">Linux Kernel Parameter Audit</td>
-                <td><span class="badge success">SAFE</span></td>
-                <td><span class="badge success">&#10003;</span></td>
-                <td><span class="badge success">&#10003;</span></td>
-                <td><code>Linux</code></td>
-              </tr>
-              <tr>
-                <td class="rb-name">Linux Core Dump Cleanup</td>
-                <td><span class="badge success">SAFE</span></td>
-                <td><span class="badge success">&#10003;</span></td>
-                <td><span class="badge success">&#10003;</span></td>
-                <td><code>Linux</code></td>
-              </tr>
-              <tr>
-                <td class="rb-name">Linux Network Interface Health</td>
-                <td><span class="badge success">SAFE</span></td>
-                <td><span class="badge success">&#10003;</span></td>
-                <td><span class="badge success">&#10003;</span></td>
-                <td><code>Linux</code></td>
-              </tr>
-              <tr>
-                <td class="rb-name">Linux Pacemaker/Corosync Cluster Check</td>
-                <td><span class="badge success">SAFE</span></td>
-                <td><span class="badge success">&#10003;</span></td>
-                <td><span class="badge success">&#10003;</span></td>
-                <td><code>Linux</code></td>
-              </tr>
-              <tr>
-                <td class="rb-name">Linux I/O Latency Check</td>
-                <td><span class="badge success">SAFE</span></td>
-                <td><span class="badge success">&#10003;</span></td>
-                <td><span class="badge success">&#10003;</span></td>
-                <td><code>Linux</code></td>
-              </tr>
-              <tr>
-                <td class="rb-name">Linux Huge Pages Verification</td>
-                <td><span class="badge success">SAFE</span></td>
-                <td><span class="badge success">&#10003;</span></td>
-                <td><span class="badge success">&#10003;</span></td>
-                <td><code>Linux</code></td>
-              </tr>
-              <tr>
-                <td class="rb-name">Linux OS Patch Level Check</td>
-                <td><span class="badge success">SAFE</span></td>
-                <td><span class="badge success">&#10003;</span></td>
-                <td><span class="badge success">&#10003;</span></td>
-                <td><code>Linux</code></td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </details>
-
-      <!-- ═══════ Category 13: Windows Server (11) ═══════ -->
-      <details class="cat-section" open>
-        <summary>
-          <div class="cat-header">
-            <span class="arrow">&#9654;</span>
-            <h3>Windows Server</h3>
-            <span class="count">9</span>
-            <span class="cat-label"><span class="es">Sistema Operativo</span><span class="en">Operating System</span></span>
-          </div>
-        </summary>
-        <div class="table-wrap">
-          <table>
-            <thead>
-              <tr>
-                <th>Runbook</th>
-                <th>Gate</th>
-                <th>costSafe</th>
-                <th>autoExecute</th>
-                <th>Scope</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td class="rb-name">Windows Disk Space Check</td>
-                <td><span class="badge success">SAFE</span></td>
-                <td><span class="badge success">&#10003;</span></td>
-                <td><span class="badge success">&#10003;</span></td>
-                <td><code>Windows</code></td>
-              </tr>
-              <tr>
-                <td class="rb-name">Windows Event Log Analysis</td>
-                <td><span class="badge success">SAFE</span></td>
-                <td><span class="badge success">&#10003;</span></td>
-                <td><span class="badge success">&#10003;</span></td>
-                <td><code>Windows</code></td>
-              </tr>
-              <tr>
-                <td class="rb-name">Windows Service Status Check</td>
-                <td><span class="badge success">SAFE</span></td>
-                <td><span class="badge success">&#10003;</span></td>
-                <td><span class="badge success">&#10003;</span></td>
-                <td><code>Windows</code></td>
-              </tr>
-              <tr>
-                <td class="rb-name">Windows Update Pending Check</td>
-                <td><span class="badge success">SAFE</span></td>
-                <td><span class="badge success">&#10003;</span></td>
-                <td><span class="badge success">&#10003;</span></td>
-                <td><code>Windows</code></td>
-              </tr>
-              <tr>
-                <td class="rb-name">Windows Page File Monitor</td>
-                <td><span class="badge success">SAFE</span></td>
-                <td><span class="badge success">&#10003;</span></td>
-                <td><span class="badge success">&#10003;</span></td>
-                <td><code>Windows</code></td>
-              </tr>
-              <tr>
-                <td class="rb-name">Windows WSFC Cluster Health</td>
-                <td><span class="badge success">SAFE</span></td>
-                <td><span class="badge success">&#10003;</span></td>
-                <td><span class="badge success">&#10003;</span></td>
-                <td><code>Windows</code></td>
-              </tr>
-              <tr>
-                <td class="rb-name">Windows Certificate Store Expiry</td>
-                <td><span class="badge success">SAFE</span></td>
-                <td><span class="badge success">&#10003;</span></td>
-                <td><span class="badge success">&#10003;</span></td>
-                <td><code>Windows</code></td>
-              </tr>
-              <tr>
-                <td class="rb-name">Windows Temp Folder Cleanup</td>
-                <td><span class="badge success">SAFE</span></td>
-                <td><span class="badge success">&#10003;</span></td>
-                <td><span class="badge success">&#10003;</span></td>
-                <td><code>Windows</code></td>
-              </tr>
-              <tr>
-                <td class="rb-name">Windows Firewall Rule Audit</td>
-                <td><span class="badge success">SAFE</span></td>
-                <td><span class="badge success">&#10003;</span></td>
-                <td><span class="badge success">&#10003;</span></td>
-                <td><code>Windows</code></td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </details>
-
-      <!-- ═══════ Category 14: AIX (8) ═══════ -->
-      <details class="cat-section" open>
-        <summary>
-          <div class="cat-header">
-            <span class="arrow">&#9654;</span>
-            <h3>AIX</h3>
-            <span class="count">8</span>
-            <span class="cat-label"><span class="es">Sistema Operativo</span><span class="en">Operating System</span></span>
-          </div>
-        </summary>
-        <div class="table-wrap">
-          <table>
-            <thead>
-              <tr>
-                <th>Runbook</th>
-                <th>Gate</th>
-                <th>costSafe</th>
-                <th>autoExecute</th>
-                <th>Scope</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td class="rb-name">AIX Filesystem Check (JFS2)</td>
-                <td><span class="badge success">SAFE</span></td>
-                <td><span class="badge success">&#10003;</span></td>
-                <td><span class="badge success">&#10003;</span></td>
-                <td><code>AIX</code></td>
-              </tr>
-              <tr>
-                <td class="rb-name">AIX Paging Space Analysis</td>
-                <td><span class="badge success">SAFE</span></td>
-                <td><span class="badge success">&#10003;</span></td>
-                <td><span class="badge success">&#10003;</span></td>
-                <td><code>AIX</code></td>
-              </tr>
-              <tr>
-                <td class="rb-name">AIX Error Report (errpt)</td>
-                <td><span class="badge success">SAFE</span></td>
-                <td><span class="badge success">&#10003;</span></td>
-                <td><span class="badge success">&#10003;</span></td>
-                <td><code>AIX</code></td>
-              </tr>
-              <tr>
-                <td class="rb-name">AIX LVM Health Check</td>
-                <td><span class="badge success">SAFE</span></td>
-                <td><span class="badge success">&#10003;</span></td>
-                <td><span class="badge success">&#10003;</span></td>
-                <td><code>AIX</code></td>
-              </tr>
-              <tr>
-                <td class="rb-name">AIX LPAR Resource Utilization</td>
-                <td><span class="badge success">SAFE</span></td>
-                <td><span class="badge success">&#10003;</span></td>
-                <td><span class="badge success">&#10003;</span></td>
-                <td><code>AIX</code></td>
-              </tr>
-              <tr>
-                <td class="rb-name">AIX Network Health</td>
-                <td><span class="badge success">SAFE</span></td>
-                <td><span class="badge success">&#10003;</span></td>
-                <td><span class="badge success">&#10003;</span></td>
-                <td><code>AIX</code></td>
-              </tr>
-              <tr>
-                <td class="rb-name">AIX PowerHA Cluster Status</td>
-                <td><span class="badge success">SAFE</span></td>
-                <td><span class="badge success">&#10003;</span></td>
-                <td><span class="badge success">&#10003;</span></td>
-                <td><code>AIX</code></td>
-              </tr>
-              <tr>
-                <td class="rb-name">AIX Core Dump Cleanup</td>
-                <td><span class="badge success">SAFE</span></td>
-                <td><span class="badge success">&#10003;</span></td>
-                <td><span class="badge success">&#10003;</span></td>
-                <td><code>AIX</code></td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </details>
-
-      <!-- ═══════ Category 15: Solaris (8) ═══════ -->
-      <details class="cat-section" open>
-        <summary>
-          <div class="cat-header">
-            <span class="arrow">&#9654;</span>
-            <h3>Solaris</h3>
-            <span class="count">7</span>
-            <span class="cat-label"><span class="es">Sistema Operativo</span><span class="en">Operating System</span></span>
-          </div>
-        </summary>
-        <div class="table-wrap">
-          <table>
-            <thead>
-              <tr>
-                <th>Runbook</th>
-                <th>Gate</th>
-                <th>costSafe</th>
-                <th>autoExecute</th>
-                <th>Scope</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td class="rb-name">Solaris ZFS Pool Health</td>
-                <td><span class="badge success">SAFE</span></td>
-                <td><span class="badge success">&#10003;</span></td>
-                <td><span class="badge success">&#10003;</span></td>
-                <td><code>Solaris</code></td>
-              </tr>
-              <tr>
-                <td class="rb-name">Solaris ZFS Snapshot Cleanup</td>
-                <td><span class="badge success">SAFE</span></td>
-                <td><span class="badge success">&#10003;</span></td>
-                <td><span class="badge success">&#10003;</span></td>
-                <td><code>Solaris</code></td>
-              </tr>
-              <tr>
-                <td class="rb-name">Solaris SMF Service Check</td>
-                <td><span class="badge success">SAFE</span></td>
-                <td><span class="badge success">&#10003;</span></td>
-                <td><span class="badge success">&#10003;</span></td>
-                <td><code>Solaris</code></td>
-              </tr>
-              <tr>
-                <td class="rb-name">Solaris FMA Fault Check</td>
-                <td><span class="badge success">SAFE</span></td>
-                <td><span class="badge success">&#10003;</span></td>
-                <td><span class="badge success">&#10003;</span></td>
-                <td><code>Solaris</code></td>
-              </tr>
-              <tr>
-                <td class="rb-name">Solaris Zone Resource Monitor</td>
-                <td><span class="badge success">SAFE</span></td>
-                <td><span class="badge success">&#10003;</span></td>
-                <td><span class="badge success">&#10003;</span></td>
-                <td><code>Solaris</code></td>
-              </tr>
-              <tr>
-                <td class="rb-name">Solaris Network Datalink Health</td>
-                <td><span class="badge success">SAFE</span></td>
-                <td><span class="badge success">&#10003;</span></td>
-                <td><span class="badge success">&#10003;</span></td>
-                <td><code>Solaris</code></td>
-              </tr>
-              <tr>
-                <td class="rb-name">Solaris Core Dump Cleanup</td>
-                <td><span class="badge success">SAFE</span></td>
-                <td><span class="badge success">&#10003;</span></td>
-                <td><span class="badge success">&#10003;</span></td>
-                <td><code>Solaris</code></td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </details>
-
-      <!-- Compatibility Validation Section -->
-      <h2><span class="es">Validacion de Compatibilidad</span><span class="en">Compatibility Validation</span></h2>
-
-      <div class="card">
-        <p class="text-sm">
-          <span class="es">Antes de ejecutar un runbook, Spektra valida automaticamente que el sistema objetivo cumple con todos los requisitos. La validacion verifica:</span>
-          <span class="en">Before executing a runbook, Spektra automatically validates that the target system meets all requirements. The validation checks:</span>
-        </p>
-
-        <ul class="feature-list">
-          <li><span class="es"><strong>Stack Type:</strong> ABAP, JAVA, DUAL_STACK, EDGE &mdash; el runbook debe ser compatible con el stack del sistema.</span><span class="en"><strong>Stack Type:</strong> ABAP, JAVA, DUAL_STACK, EDGE &mdash; the runbook must be compatible with the system's stack.</span></li>
-          <li><span class="es"><strong>Base de Datos:</strong> HANA, Oracle, MSSQL, DB2, ASE, MaxDB &mdash; se valida la categoria de BD.</span><span class="en"><strong>Database:</strong> HANA, Oracle, MSSQL, DB2, ASE, MaxDB &mdash; the DB category is validated.</span></li>
-          <li><span class="es"><strong>Sistema Operativo:</strong> LINUX (SLES, RHEL, Ubuntu), Windows, AIX, HP-UX, Solaris.</span><span class="en"><strong>Operating System:</strong> LINUX (SLES, RHEL, Ubuntu), Windows, AIX, HP-UX, Solaris.</span></li>
-          <li><span class="es"><strong>Pre-requisitos:</strong> HSR, Cluster/Pacemaker, HA configurado, perfil de monitoreo FULL_STACK.</span><span class="en"><strong>Prerequisites:</strong> HSR, Cluster/Pacemaker, HA configured, FULL_STACK monitoring profile.</span></li>
-          <li><span class="es"><strong>Capacidad de ejecucion:</strong> El sistema debe tener <code>supportsRunbookExecution = true</code>.</span><span class="en"><strong>Execution capability:</strong> The system must have <code>supportsRunbookExecution = true</code>.</span></li>
-        </ul>
-
-        <h4><span class="es">Ejemplo de Resultado de Validacion</span><span class="en">Example Validation Result</span></h4>
-        <div class="json-block">{
-  "compatible": false,
-  "failures": [
-    "BD incompatible: runbook requiere HANA, sistema tiene Oracle 19c",
-    "Pre-requisito no cumplido: \"SAP HANA 2.0 SPS05+\" - sistema no usa HANA"
-  ]
-}</div>
-      </div>
-
-      <!-- Dry-Run Section -->
-      <h2><span class="es">Simulacion Dry-Run</span><span class="en">Dry-Run Simulation</span></h2>
-
-      <div class="card">
-        <p class="text-sm">
-          <span class="es">La simulacion dry-run permite previsualizar el resultado de una ejecucion sin modificar ningun sistema. Retorna el gate asignado, los pasos, la validacion de compatibilidad y la accion que se crearia.</span>
-          <span class="en">Dry-run simulation lets you preview the result of an execution without modifying any system. Returns the assigned gate, steps, compatibility validation, and the action that would be created.</span>
-        </p>
-
-        <h4><span class="es">Respuesta Dry-Run</span><span class="en">Dry-Run Response</span></h4>
-        <div class="json-block">{
-  "dryRun": true,
-  "runbookName": "HANA Log Backup Area Cleanup",
-  "gate": "SAFE",
-  "costSafe": true,
-  "autoExecute": false,
-  "estimatedDuration": "~25s",
-  "wouldCreate": "MANUAL_EXECUTE",
-  "compatible": true,
-  "validationFailures": [],
-  "steps": ["Check log backup area usage", "Identify obsolete backups", "Remove expired log backups", "Validate and log evidence"]
-}</div>
-
-        <div class="callout info">
-          <div class="callout-icon">&#128161;</div>
-          <div>
-            <span class="es"><strong>wouldCreate</strong> puede ser: <code>AUTO_EXECUTE</code> (SAFE + autoExecute), <code>PENDING_APPROVAL</code> (HUMAN gate), o <code>MANUAL_EXECUTE</code> (SAFE sin autoExecute).</span>
-            <span class="en"><strong>wouldCreate</strong> can be: <code>AUTO_EXECUTE</code> (SAFE + autoExecute), <code>PENDING_APPROVAL</code> (HUMAN gate), or <code>MANUAL_EXECUTE</code> (SAFE without autoExecute).</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- Role Access -->
-      <h2><span class="es">Control de Acceso por Rol</span><span class="en">Role-Based Access Control</span></h2>
-
-      <div class="table-wrap">
-        <table>
-          <thead>
-            <tr>
-              <th><span class="es">Accion</span><span class="en">Action</span></th>
-              <th>viewer</th>
-              <th>operator</th>
-              <th>escalation</th>
-              <th>admin</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr><td><span class="es">Ver catalogo de runbooks</span><span class="en">View runbook catalog</span></td><td><span class="badge success">&#10003;</span></td><td><span class="badge success">&#10003;</span></td><td><span class="badge success">&#10003;</span></td><td><span class="badge success">&#10003;</span></td></tr>
-            <tr><td><span class="es">Ejecutar dry-run</span><span class="en">Run dry-run</span></td><td><span class="badge success">&#10003;</span></td><td><span class="badge success">&#10003;</span></td><td><span class="badge success">&#10003;</span></td><td><span class="badge success">&#10003;</span></td></tr>
-            <tr><td><span class="es">Ejecutar runbook (SAFE)</span><span class="en">Execute runbook (SAFE)</span></td><td><span class="badge danger">&#10007;</span></td><td><span class="badge success">&#10003;</span></td><td><span class="badge success">&#10003;</span></td><td><span class="badge success">&#10003;</span></td></tr>
-            <tr><td><span class="es">Solicitar ejecucion (HUMAN)</span><span class="en">Request execution (HUMAN)</span></td><td><span class="badge danger">&#10007;</span></td><td><span class="badge success">&#10003;</span></td><td><span class="badge success">&#10003;</span></td><td><span class="badge success">&#10003;</span></td></tr>
-            <tr><td><span class="es">Aprobar ejecucion (HUMAN)</span><span class="en">Approve execution (HUMAN)</span></td><td><span class="badge danger">&#10007;</span></td><td><span class="badge danger">&#10007;</span></td><td><span class="badge success">&#10003;</span></td><td><span class="badge success">&#10003;</span></td></tr>
-          </tbody>
-        </table>
       </div>
     </div>
 
-    <!-- ── Tab: Executions ── -->
-    <div id="tab-executions" class="tab-content">
-
-      <h2><span class="es">Historial de Ejecuciones</span><span class="en">Execution History</span></h2>
-
-      <div class="table-wrap">
-        <table>
-          <thead>
-            <tr>
-              <th>Runbook</th>
-              <th>SID</th>
-              <th>Gate</th>
-              <th><span class="es">Resultado</span><span class="en">Result</span></th>
-              <th><span class="es">Duracion</span><span class="en">Duration</span></th>
-              <th><span class="es">Ejecutado por</span><span class="en">Executed by</span></th>
-              <th><span class="es">Inicio</span><span class="en">Started</span></th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td class="font-semibold">HANA Log Backup Area Cleanup</td>
-              <td><code>EP1</code></td>
-              <td><span class="badge success">SAFE</span></td>
-              <td><span class="badge success">SUCCESS</span></td>
-              <td>19s</td>
-              <td>admin@acme.com</td>
-              <td class="text-muted">2026-03-12 09:15:33</td>
-            </tr>
-            <tr>
-              <td class="font-semibold">Extend /usr/sap Filesystem</td>
-              <td><code>QP1</code></td>
-              <td><span class="badge warning">HUMAN</span></td>
-              <td><span class="badge success">SUCCESS</span></td>
-              <td>47s</td>
-              <td>ops@acme.com</td>
-              <td class="text-muted">2026-03-12 08:42:11</td>
-            </tr>
-            <tr>
-              <td class="font-semibold">Linux Old Log Cleanup</td>
-              <td><code>DP1</code></td>
-              <td><span class="badge success">SAFE</span></td>
-              <td><span class="badge success">SUCCESS</span></td>
-              <td>23s</td>
-              <td>system</td>
-              <td class="text-muted">2026-03-12 06:00:00</td>
-            </tr>
-            <tr>
-              <td class="font-semibold">Oracle RMAN Backup Verification</td>
-              <td><code>FP1</code></td>
-              <td><span class="badge success">SAFE</span></td>
-              <td><span class="badge danger">FAILED</span></td>
-              <td>8s</td>
-              <td>admin@acme.com</td>
-              <td class="text-muted">2026-03-11 22:30:01</td>
-            </tr>
-            <tr>
-              <td class="font-semibold">ABAP Dump Analysis (ST22)</td>
-              <td><code>EP1</code></td>
-              <td><span class="badge success">SAFE</span></td>
-              <td><span class="badge success">SUCCESS</span></td>
-              <td>12s</td>
-              <td>ops@acme.com</td>
-              <td class="text-muted">2026-03-11 18:15:44</td>
-            </tr>
-            <tr>
-              <td class="font-semibold">Resume HANA System Replication</td>
-              <td><code>HP1</code></td>
-              <td><span class="badge warning">HUMAN</span></td>
-              <td><span class="badge violet">PENDING</span></td>
-              <td>&mdash;</td>
-              <td>ops@acme.com</td>
-              <td class="text-muted">2026-03-11 16:00:00</td>
-            </tr>
-            <tr>
-              <td class="font-semibold">Clean PRIV/Hold Work Processes</td>
-              <td><code>QP1</code></td>
-              <td><span class="badge success">SAFE</span></td>
-              <td><span class="badge cyan">RUNNING</span></td>
-              <td>&mdash;</td>
-              <td>system</td>
-              <td class="text-muted">2026-03-12 09:30:00</td>
-            </tr>
-          </tbody>
-        </table>
+    <!-- RISE Restricted Blocking -->
+    <h2><span class="es">Bloqueo de Sistemas RISE</span><span class="en">RISE System Blocking</span></h2>
+    <div class="callout danger">
+      <div class="callout-icon">&#9888;</div>
+      <div>
+        <span class="es"><strong>Restriccion RISE:</strong> Los runbooks que requieren acceso al sistema operativo (<code>requiresOSAccess: true</code>) estan <strong>bloqueados</strong> para sistemas con despliegue <code>RISE_MANAGED</code>. El backend rechaza la ejecucion con error <code>403 RISE_RESTRICTED</code>. Esto incluye: reinicio de servicios, operaciones de filesystem, comandos de kernel, y operaciones de HA/DR a nivel de cluster.</span>
+        <span class="en"><strong>RISE Restriction:</strong> Runbooks requiring OS access (<code>requiresOSAccess: true</code>) are <strong>blocked</strong> for systems with <code>RISE_MANAGED</code> deployment. The backend rejects execution with error <code>403 RISE_RESTRICTED</code>. This includes: service restart, filesystem operations, kernel commands, and cluster-level HA/DR operations.</span>
       </div>
+    </div>
 
-      <!-- Execution Detail Card -->
-      <h2><span class="es">Detalle de Ejecucion</span><span class="en">Execution Detail</span></h2>
-
+    <!-- Execution Engine -->
+    <h2><span class="es">Motor de Ejecucion</span><span class="en">Execution Engine</span></h2>
+    <div class="grid-2">
       <div class="card">
         <div class="card-header">
-          <div class="card-title">HANA Log Backup Area Cleanup &mdash; EP1</div>
-          <span class="badge success">SUCCESS</span>
+          <div class="card-title"><div class="card-icon warning">&#127917;</div> LOCAL_SIMULATED</div>
+          <span class="badge warning">DEMO</span>
         </div>
-        <div class="grid-2 mt-2">
-          <div>
-            <p class="text-xs text-muted">Gate</p>
-            <span class="gate-badge safe">SAFE</span>
-          </div>
-          <div>
-            <p class="text-xs text-muted"><span class="es">Duracion</span><span class="en">Duration</span></p>
-            <p class="font-bold">19s</p>
-          </div>
-          <div>
-            <p class="text-xs text-muted"><span class="es">Ejecutado por</span><span class="en">Executed by</span></p>
-            <p>admin@acme.com</p>
-          </div>
-          <div>
-            <p class="text-xs text-muted"><span class="es">Completado</span><span class="en">Completed</span></p>
-            <p>2026-03-12 09:15:52</p>
-          </div>
-        </div>
-
-        <h4><span class="es">Evidencia</span><span class="en">Evidence</span></h4>
-        <div class="json-block">{
-  "logBackupAreaBefore": "87.3%",
-  "logBackupAreaAfter": "34.1%",
-  "freedSpaceGB": 128.4,
-  "expiredBackupsRemoved": 47,
-  "oldestBackupKept": "2026-03-05T00:00:00Z",
-  "timestamp": "2026-03-12T09:15:52Z"
-}</div>
+        <p>
+          <span class="es">En modo demo, los runbooks se ejecutan localmente con tiempos de espera simulados. Cada paso genera un resultado pre-configurado con retrasos realistas (2-15 segundos por paso). No se ejecutan comandos reales en ningun sistema.</span>
+          <span class="en">In demo mode, runbooks are executed locally with simulated wait times. Each step generates a pre-configured result with realistic delays (2-15 seconds per step). No real commands are executed on any system.</span>
+        </p>
+        <ul class="feature-list">
+          <li><span class="es">Tiempos de ejecucion simulados</span><span class="en">Simulated execution times</span></li>
+          <li><span class="es">Resultados pre-configurados (success/fail configurable)</span><span class="en">Pre-configured results (configurable success/fail)</span></li>
+          <li><span class="es">Sin impacto en sistemas reales</span><span class="en">No impact on real systems</span></li>
+          <li><span class="es">Ideal para demos y training</span><span class="en">Ideal for demos and training</span></li>
+        </ul>
       </div>
-
-      <div class="callout success">
-        <div class="callout-icon">&#9632;</div>
-        <div>
-          <span class="es"><strong>Resultados posibles:</strong> <code>SUCCESS</code> &mdash; ejecucion completada exitosamente. <code>FAILED</code> &mdash; error durante la ejecucion. <code>PENDING</code> &mdash; esperando aprobacion (gate HUMAN). <code>RUNNING</code> &mdash; ejecucion en progreso.</span>
-          <span class="en"><strong>Possible results:</strong> <code>SUCCESS</code> &mdash; execution completed successfully. <code>FAILED</code> &mdash; error during execution. <code>PENDING</code> &mdash; awaiting approval (HUMAN gate). <code>RUNNING</code> &mdash; execution in progress.</span>
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title"><div class="card-icon success">&#128640;</div> AWS_REAL</div>
+          <span class="badge success">PRODUCTION</span>
         </div>
+        <p>
+          <span class="es">En modo produccion, los comandos se envian al agente Spektra instalado en el servidor SAP. El agente ejecuta cada paso secuencialmente y reporta resultados en tiempo real al backend.</span>
+          <span class="en">In production mode, commands are sent to the Spektra agent installed on the SAP server. The agent executes each step sequentially and reports results in real time to the backend.</span>
+        </p>
+        <ul class="feature-list">
+          <li><span class="es">Ejecucion real via agente</span><span class="en">Real execution via agent</span></li>
+          <li><span class="es">Resultados en tiempo real</span><span class="en">Real-time results</span></li>
+          <li><span class="es">Rollback automatico en caso de fallo</span><span class="en">Automatic rollback on failure</span></li>
+          <li><span class="es">Evidencia de ejecucion completa</span><span class="en">Complete execution evidence</span></li>
+        </ul>
       </div>
+    </div>
+
+    <!-- Step-by-Step Execution -->
+    <h2><span class="es">Ejecucion Paso a Paso</span><span class="en">Step-by-Step Execution</span></h2>
+    <div class="card">
+      <p>
+        <span class="es">Cada runbook se compone de una serie de pasos (steps) que se ejecutan secuencialmente. El motor de ejecucion rastrea el estado de cada paso individualmente.</span>
+        <span class="en">Each runbook consists of a series of steps that are executed sequentially. The execution engine tracks the status of each step individually.</span>
+      </p>
+      <h4><span class="es">Ciclo de Vida de un Step</span><span class="en">Step Lifecycle</span></h4>
+      <pre><code>PENDING  →  RUNNING  →  SUCCESS
+                    ↘  FAILED
+                    ↘  SKIPPED (si un gate lo determina)</code></pre>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th><span class="es">Estado</span><span class="en">Status</span></th>
+              <th><span class="es">Descripcion</span><span class="en">Description</span></th>
+              <th><span class="es">Icono</span><span class="en">Icon</span></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><span class="badge neutral">PENDING</span></td>
+              <td><span class="es">El paso esta en cola, esperando a que el paso anterior finalice</span><span class="en">The step is queued, waiting for the previous step to finish</span></td>
+              <td>&#9711;</td>
+            </tr>
+            <tr>
+              <td><span class="badge cyan">RUNNING</span></td>
+              <td><span class="es">El paso se esta ejecutando activamente en el sistema objetivo</span><span class="en">The step is actively executing on the target system</span></td>
+              <td>&#9889;</td>
+            </tr>
+            <tr>
+              <td><span class="badge success">SUCCESS</span></td>
+              <td><span class="es">El paso se completo exitosamente — se procede al siguiente</span><span class="en">The step completed successfully — proceed to next</span></td>
+              <td>&#10003;</td>
+            </tr>
+            <tr>
+              <td><span class="badge danger">FAILED</span></td>
+              <td><span class="es">El paso fallo — la ejecucion se detiene (o se ejecuta rollback si esta configurado)</span><span class="en">The step failed — execution stops (or rollback executes if configured)</span></td>
+              <td>&#10007;</td>
+            </tr>
+            <tr>
+              <td><span class="badge warning">SKIPPED</span></td>
+              <td><span class="es">El paso fue omitido por un gate de seguridad o condicion previa no cumplida</span><span class="en">The step was skipped by a safety gate or unmet precondition</span></td>
+              <td>&#8594;</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Gate Types -->
+    <h2><span class="es">Tipos de Gate</span><span class="en">Gate Types</span></h2>
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title"><div class="card-icon success">&#128737;</div> SAFE Gate</div>
+          <span class="badge success">AUTOMATIC</span>
+        </div>
+        <p>
+          <span class="es">Gates de seguridad automaticos que validan condiciones antes de continuar con el siguiente paso. Si la condicion no se cumple, la ejecucion se pausa o se aborta. Ejemplos: verificar que el backup previo existe, confirmar que no hay usuarios conectados, validar espacio en disco suficiente.</span>
+          <span class="en">Automatic safety gates that validate conditions before continuing to the next step. If the condition is not met, execution pauses or aborts. Examples: verify previous backup exists, confirm no users connected, validate sufficient disk space.</span>
+        </p>
+        <pre><code>{
+  "type": "SAFE",
+  "condition": "disk_free_pct > 20",
+  "onFail": "ABORT",
+  "message": "Insufficient disk space for operation"
+}</code></pre>
+      </div>
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title"><div class="card-icon warning">&#9995;</div> HUMAN Gate</div>
+          <span class="badge warning">MANUAL</span>
+        </div>
+        <p>
+          <span class="es">Gates que requieren aprobacion humana explicita para continuar. La ejecucion se pausa hasta que un operador con permisos adecuados apruebe la continuacion. Se usa para operaciones de alto riesgo en produccion.</span>
+          <span class="en">Gates that require explicit human approval to continue. Execution pauses until an operator with proper permissions approves continuation. Used for high-risk operations in production.</span>
+        </p>
+        <pre><code>{
+  "type": "HUMAN",
+  "requiredRole": "escalation",
+  "timeout": 3600,
+  "onTimeout": "ABORT",
+  "message": "Approve HANA restart on PRD?"
+}</code></pre>
+      </div>
+    </div>
+
+    <!-- Dry-Run Mode -->
+    <h2><span class="es">Modo Dry-Run</span><span class="en">Dry-Run Mode</span></h2>
+    <div class="card">
+      <p>
+        <span class="es">El modo dry-run permite validar un runbook contra un sistema sin ejecutar ningun comando real. Verifica compatibilidad, permisos, pre-condiciones, y genera un plan de ejecucion detallado.</span>
+        <span class="en">Dry-run mode allows validating a runbook against a system without executing any real commands. It verifies compatibility, permissions, preconditions, and generates a detailed execution plan.</span>
+      </p>
+      <pre><code>POST /api/runbooks/execute
+{
+  "runbookId": "rb-hana-backup-full",
+  "systemId": "a1b2c3d4-...",
+  "dryRun": true,
+  "params": {
+    "backupType": "FULL",
+    "destination": "/hana/backup/data"
+  }
+}
+
+// Dry-run response
+{
+  "dryRun": true,
+  "compatible": true,
+  "validations": {
+    "database": { "pass": true, "required": "HANA", "actual": "HANA" },
+    "product": { "pass": true, "required": ["S4HANA","ECC","BW4HANA"], "actual": "S4HANA" },
+    "os": { "pass": true, "required": ["SLES","RHEL"], "actual": "SLES" },
+    "riseRestricted": { "pass": true, "deployment": "ON_PREMISE" }
+  },
+  "estimatedDuration": "12-18 minutes",
+  "steps": [
+    { "order": 1, "name": "Validate backup destination", "type": "CHECK" },
+    { "order": 2, "name": "Check HANA status", "type": "CHECK" },
+    { "order": 3, "name": "Create HANA backup snapshot", "type": "EXECUTE" },
+    { "order": 4, "name": "Verify backup integrity", "type": "CHECK", "gate": "SAFE" },
+    { "order": 5, "name": "Catalog backup entry", "type": "EXECUTE" },
+    { "order": 6, "name": "Cleanup old backups", "type": "EXECUTE" }
+  ],
+  "requiredApprovals": 0,
+  "warnings": []
+}</code></pre>
+    </div>
+
+    <!-- Polling for Progress -->
+    <h2><span class="es">Polling de Progreso</span><span class="en">Progress Polling</span></h2>
+    <div class="card">
+      <p>
+        <span class="es">Una vez iniciada la ejecucion, el frontend realiza polling al endpoint de estado para obtener actualizaciones en tiempo real del progreso.</span>
+        <span class="en">Once execution starts, the frontend polls the status endpoint for real-time progress updates.</span>
+      </p>
+      <pre><code>// Poll every 3 seconds during execution
+GET /api/runbooks/executions/:executionId
+
+// Response during execution
+{
+  "id": "exec-001",
+  "runbookId": "rb-hana-backup-full",
+  "systemId": "a1b2c3d4-...",
+  "status": "RUNNING",
+  "startedAt": "2025-01-15T14:30:00Z",
+  "currentStep": 3,
+  "totalSteps": 6,
+  "progress": 50,
+  "steps": [
+    { "order": 1, "name": "Validate backup destination", "status": "SUCCESS", "duration": 2.1 },
+    { "order": 2, "name": "Check HANA status", "status": "SUCCESS", "duration": 3.5 },
+    { "order": 3, "name": "Create HANA backup snapshot", "status": "RUNNING", "duration": null },
+    { "order": 4, "name": "Verify backup integrity", "status": "PENDING", "duration": null },
+    { "order": 5, "name": "Catalog backup entry", "status": "PENDING", "duration": null },
+    { "order": 6, "name": "Cleanup old backups", "status": "PENDING", "duration": null }
+  ],
+  "logs": [
+    "[14:30:02] Backup destination /hana/backup/data validated — 234 GB free",
+    "[14:30:05] HANA status: RUNNING, version 2.0 SPS07 Rev 73",
+    "[14:30:06] Starting HANA full backup via SQL: BACKUP DATA USING FILE ..."
+  ]
+}</code></pre>
+    </div>
+
+    <!-- API Endpoints -->
+    <h2><span class="es">Endpoints de API</span><span class="en">API Endpoints</span></h2>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th><span class="es">Metodo</span><span class="en">Method</span></th>
+            <th>Endpoint</th>
+            <th><span class="es">Descripcion</span><span class="en">Description</span></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="badge cyan">GET</span></td>
+            <td class="font-mono">/api/runbooks</td>
+            <td><span class="es">Listar todos los runbooks con filtros (category, compatible system)</span><span class="en">List all runbooks with filters (category, compatible system)</span></td>
+          </tr>
+          <tr>
+            <td><span class="badge cyan">GET</span></td>
+            <td class="font-mono">/api/runbooks/:id</td>
+            <td><span class="es">Detalle de un runbook con pasos y requisitos</span><span class="en">Runbook detail with steps and requirements</span></td>
+          </tr>
+          <tr>
+            <td><span class="badge success">POST</span></td>
+            <td class="font-mono">/api/runbooks/execute</td>
+            <td><span class="es">Ejecutar un runbook (o dry-run)</span><span class="en">Execute a runbook (or dry-run)</span></td>
+          </tr>
+          <tr>
+            <td><span class="badge cyan">GET</span></td>
+            <td class="font-mono">/api/runbooks/executions</td>
+            <td><span class="es">Listar ejecuciones (filtros: status, system, dateRange)</span><span class="en">List executions (filters: status, system, dateRange)</span></td>
+          </tr>
+          <tr>
+            <td><span class="badge cyan">GET</span></td>
+            <td class="font-mono">/api/runbooks/executions/:id</td>
+            <td><span class="es">Estado detallado de una ejecucion (polling)</span><span class="en">Detailed execution status (polling)</span></td>
+          </tr>
+          <tr>
+            <td><span class="badge success">POST</span></td>
+            <td class="font-mono">/api/runbooks/executions/:id/cancel</td>
+            <td><span class="es">Cancelar una ejecucion en progreso</span><span class="en">Cancel an in-progress execution</span></td>
+          </tr>
+          <tr>
+            <td><span class="badge success">POST</span></td>
+            <td class="font-mono">/api/runbooks/validate</td>
+            <td><span class="es">Validar compatibilidad de runbook con sistema</span><span class="en">Validate runbook compatibility with system</span></td>
+          </tr>
+        </tbody>
+      </table>
     </div>
 
   </main>
 </div>
-
-<script>
-function switchTab(name){
-  document.querySelectorAll('.tab').forEach(function(t){t.classList.remove('active')});
-  document.querySelectorAll('.tab-content').forEach(function(c){c.classList.remove('active')});
-  document.getElementById('tab-'+name).classList.add('active');
-  event.currentTarget.classList.add('active');
-}
-</script>
 </body>
 </html>

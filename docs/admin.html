@@ -2,438 +2,389 @@
 <html lang="es" data-theme="dark" data-lang="es">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Admin / Gestion — SAP Spektra Docs</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <title>Administracion — SAP Spektra Docs</title>
   <link rel="stylesheet" href="theme.css">
   <script src="theme-toggle.js"></script>
   <script src="lang-toggle.js"></script>
 </head>
 <body>
 <div class="docs-wrapper">
-
-  <!-- ═══ Sidebar ═══ -->
   <nav class="docs-sidebar">
     <div class="sidebar-brand">
-      <div class="logo">S</div>
+      <div class="logo">&#9889;</div>
       <div class="brand-text">
         <div class="brand-name">SAP Spektra</div>
         <div class="brand-sub">Documentacion v2.0</div>
       </div>
     </div>
-
     <div class="sidebar-section">
       <div class="sidebar-section-label">Inicio</div>
-      <a href="index.html" class="sidebar-link"><span class="es">Portal</span><span class="en">Portal</span></a>
-      <a href="getting-started.html" class="sidebar-link"><span class="es">Primeros Pasos</span><span class="en">Getting Started</span></a>
+      <a href="index.html" class="sidebar-link">Portal</a>
+      <a href="getting-started.html" class="sidebar-link">Primeros Pasos</a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-section-label">Architecture</div>
+      <a href="architecture.html" class="sidebar-link">Arquitectura</a>
+      <a href="domain-model.html" class="sidebar-link">Modelo de Datos</a>
+      <a href="api-reference.html" class="sidebar-link">API Reference</a>
     </div>
     <div class="sidebar-section">
       <div class="sidebar-section-label">Command</div>
       <a href="dashboard.html" class="sidebar-link">Dashboard</a>
       <a href="landscape.html" class="sidebar-link">Landscape</a>
-      <a href="alerts.html" class="sidebar-link"><span class="es">Alertas</span><span class="en">Alerts</span></a>
+      <a href="alerts.html" class="sidebar-link">Alertas</a>
     </div>
     <div class="sidebar-section">
       <div class="sidebar-section-label">Monitor</div>
-      <a href="systems.html" class="sidebar-link"><span class="es">Sistemas</span><span class="en">Systems</span></a>
-      <a href="connectors.html" class="sidebar-link"><span class="es">Conectores</span><span class="en">Connectors</span></a>
-      <a href="events.html" class="sidebar-link"><span class="es">Eventos</span><span class="en">Events</span></a>
+      <a href="systems.html" class="sidebar-link">Sistemas</a>
+      <a href="connectors.html" class="sidebar-link">Conectores</a>
+      <a href="events.html" class="sidebar-link">Eventos</a>
     </div>
     <div class="sidebar-section">
       <div class="sidebar-section-label">Intelligence</div>
-      <a href="ai-analysis.html" class="sidebar-link"><span class="es">Analisis IA</span><span class="en">AI Analysis</span></a>
+      <a href="ai-analysis.html" class="sidebar-link">Analisis IA</a>
       <a href="analytics.html" class="sidebar-link">Analytics</a>
-      <a href="reports.html" class="sidebar-link"><span class="es">Reportes</span><span class="en">Reports</span></a>
-      <a href="comparison.html" class="sidebar-link"><span class="es">Comparacion</span><span class="en">Comparison</span></a>
+      <a href="reports.html" class="sidebar-link">Reportes</a>
+      <a href="comparison.html" class="sidebar-link">Comparacion</a>
     </div>
     <div class="sidebar-section">
       <div class="sidebar-section-label">Operations</div>
       <a href="runbooks.html" class="sidebar-link">Runbooks</a>
-      <a href="approvals.html" class="sidebar-link"><span class="es">Aprobaciones</span><span class="en">Approvals</span></a>
-      <a href="operations.html" class="sidebar-link"><span class="es">Operaciones</span><span class="en">Operations</span></a>
-      <a href="jobs.html" class="sidebar-link">Jobs SM37</a>
-      <a href="transports.html" class="sidebar-link"><span class="es">Transportes</span><span class="en">Transports</span></a>
+      <a href="approvals.html" class="sidebar-link">Aprobaciones</a>
+      <a href="operations.html" class="sidebar-link">Operaciones</a>
+      <a href="jobs.html" class="sidebar-link">Jobs (SM37)</a>
+      <a href="transports.html" class="sidebar-link">Transportes</a>
       <a href="sla.html" class="sidebar-link">SLA</a>
       <a href="ha-control.html" class="sidebar-link">HA Control</a>
-      <a href="certificates.html" class="sidebar-link"><span class="es">Certificados</span><span class="en">Certificates</span></a>
+      <a href="certificates.html" class="sidebar-link">Certificados</a>
     </div>
     <div class="sidebar-section">
       <div class="sidebar-section-label">Admin</div>
-      <a href="admin.html" class="sidebar-link active"><span class="es">Gestion</span><span class="en">Management</span></a>
-      <a href="settings.html" class="sidebar-link"><span class="es">Configuracion</span><span class="en">Settings</span></a>
-      <a href="connect-system.html" class="sidebar-link"><span class="es">Conectar Sistema</span><span class="en">Connect System</span></a>
+      <a href="admin.html" class="sidebar-link active">Gestion</a>
+      <a href="settings.html" class="sidebar-link">Configuracion</a>
+      <a href="connect-system.html" class="sidebar-link">Conectar Sistema</a>
     </div>
   </nav>
 
-  <!-- ═══ Main Content ═══ -->
   <main class="docs-main">
-
     <div class="breadcrumb">
-      <a href="index.html">Docs</a>
-      <span class="sep">/</span>
-      <span>Admin</span>
-      <span class="sep">/</span>
-      <span class="text-primary"><span class="es">Gestion</span><span class="en">Management</span></span>
+      <a href="index.html">Docs</a> <span class="sep">/</span>
+      <span class="es">Admin</span><span class="en">Admin</span> <span class="sep">/</span>
+      <span class="es">Gestion</span><span class="en">Management</span>
     </div>
 
     <div class="page-header">
-      <h1><span class="es">Gestion de Sistemas SAP</span><span class="en">SAP System Management</span></h1>
-      <div class="subtitle">
-        <span class="es">Administracion centralizada de todos los sistemas SAP conectados a Spektra</span>
-        <span class="en">Centralized administration of all SAP systems connected to Spektra</span>
-      </div>
+      <h1><span class="es">Administracion del Sistema</span><span class="en">System Administration</span></h1>
+      <p class="subtitle">
+        <span class="es">Funciones administrativas para la gestion del landscape, health checks, eliminacion de sistemas, y operaciones batch</span>
+        <span class="en">Administrative functions for landscape management, health checks, system deletion, and batch operations</span>
+      </p>
     </div>
 
-    <div class="demo-disclaimer">
-      <strong><span class="es">Acceso Administrativo:</span><span class="en">Administrative Access:</span></strong>
-      <span class="es">Este modulo requiere rol <code>admin</code> (nivel 40) para crear, editar o eliminar sistemas. Los roles <code>operator</code> (20) y <code>viewer</code> (10) solo pueden visualizar.</span>
-      <span class="en">This module requires <code>admin</code> role (level 40) to create, edit, or delete systems. Roles <code>operator</code> (20) and <code>viewer</code> (10) can only view.</span>
-    </div>
-
-    <!-- ── KPI Cards ── -->
-    <div class="kpi-grid">
-      <div class="kpi-card">
-        <div class="card-icon cyan">&#128187;</div>
-        <div>
-          <div class="kpi-value">7</div>
-          <div class="kpi-label"><span class="es">Sistemas Totales</span><span class="en">Total Systems</span></div>
-        </div>
-      </div>
-      <div class="kpi-card">
-        <div class="card-icon success">&#9889;</div>
-        <div>
-          <div class="kpi-value">5</div>
-          <div class="kpi-label"><span class="es">En Linea</span><span class="en">Online</span></div>
-        </div>
-      </div>
-      <div class="kpi-card">
-        <div class="card-icon warning">&#128260;</div>
-        <div>
-          <div class="kpi-value">1</div>
-          <div class="kpi-label"><span class="es">Mantenimiento</span><span class="en">Maintenance</span></div>
-        </div>
-      </div>
-      <div class="kpi-card">
-        <div class="card-icon danger">&#10060;</div>
-        <div>
-          <div class="kpi-value">1</div>
-          <div class="kpi-label"><span class="es">Sin Conexion</span><span class="en">Offline</span></div>
-        </div>
-      </div>
-    </div>
-
-    <!-- ── Actions Bar ── -->
-    <div class="card mb-2" style="padding:12px 16px;">
-      <div style="display:flex;gap:12px;align-items:center;justify-content:space-between;flex-wrap:wrap;">
-        <div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap;">
-          <input type="text" placeholder="Buscar por SID... / Search by SID..." style="min-width:220px;background:var(--bg3);border:1px solid var(--brd);color:var(--txt1);padding:8px 12px;border-radius:8px;font-size:13px;">
-          <select style="background:var(--bg3);border:1px solid var(--brd);color:var(--txt1);padding:8px 12px;border-radius:8px;font-size:13px;">
-            <option value=""><span class="es">Todos los estados</span></option>
-            <option value="online">Online</option>
-            <option value="maintenance">Maintenance</option>
-            <option value="offline">Offline</option>
-          </select>
-          <select style="background:var(--bg3);border:1px solid var(--brd);color:var(--txt1);padding:8px 12px;border-radius:8px;font-size:13px;">
-            <option value="">All Environments</option>
-            <option value="production">Production</option>
-            <option value="quality">Quality</option>
-            <option value="development">Development</option>
-            <option value="sandbox">Sandbox</option>
-          </select>
-        </div>
-        <a href="connect-system.html" style="background:var(--gradient-brand);color:#fff;border:none;padding:8px 20px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;gap:6px;">
-          + <span class="es">Conectar Sistema</span><span class="en">Connect System</span>
-        </a>
-      </div>
-    </div>
-
-    <!-- ── Systems Table ── -->
-    <h2><span class="es">Lista de Sistemas</span><span class="en">System List</span></h2>
-
-    <div class="table-wrap">
-      <table>
-        <thead>
-          <tr>
-            <th>SID</th>
-            <th><span class="es">Descripcion</span><span class="en">Description</span></th>
-            <th><span class="es">Tipo</span><span class="en">Type</span></th>
-            <th><span class="es">Ambiente</span><span class="en">Environment</span></th>
-            <th>Status</th>
-            <th><span class="es">Ultimo Chequeo</span><span class="en">Last Check</span></th>
-            <th><span class="es">Conector</span><span class="en">Connector</span></th>
-            <th><span class="es">Acciones</span><span class="en">Actions</span></th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td class="font-mono font-bold text-primary">PRD</td>
-            <td>SAP ECC 6.0 <span class="es">Productivo</span><span class="en">Production</span></td>
-            <td><span class="badge cyan">ECC</span></td>
-            <td><span class="badge success">Production</span></td>
-            <td><span class="badge success">online</span></td>
-            <td class="font-mono text-sm text-muted">2026-03-12 09:45</td>
-            <td><span class="badge neutral">Cloud Connector</span></td>
-            <td><a href="#" class="text-cyan text-sm"><span class="es">Editar</span><span class="en">Edit</span></a></td>
-          </tr>
-          <tr>
-            <td class="font-mono font-bold text-primary">QAS</td>
-            <td>SAP ECC 6.0 <span class="es">Calidad</span><span class="en">Quality</span></td>
-            <td><span class="badge cyan">ECC</span></td>
-            <td><span class="badge warning">Quality</span></td>
-            <td><span class="badge success">online</span></td>
-            <td class="font-mono text-sm text-muted">2026-03-12 09:44</td>
-            <td><span class="badge neutral">Cloud Connector</span></td>
-            <td><a href="#" class="text-cyan text-sm"><span class="es">Editar</span><span class="en">Edit</span></a></td>
-          </tr>
-          <tr>
-            <td class="font-mono font-bold text-primary">DEV</td>
-            <td>SAP ECC 6.0 <span class="es">Desarrollo</span><span class="en">Development</span></td>
-            <td><span class="badge cyan">ECC</span></td>
-            <td><span class="badge violet">Development</span></td>
-            <td><span class="badge success">online</span></td>
-            <td class="font-mono text-sm text-muted">2026-03-12 09:43</td>
-            <td><span class="badge neutral">Spektra Agent</span></td>
-            <td><a href="#" class="text-cyan text-sm"><span class="es">Editar</span><span class="en">Edit</span></a></td>
-          </tr>
-          <tr>
-            <td class="font-mono font-bold text-primary">FIN</td>
-            <td>SAP S/4HANA Finance</td>
-            <td><span class="badge violet">S/4HANA</span></td>
-            <td><span class="badge success">Production</span></td>
-            <td><span class="badge success">online</span></td>
-            <td class="font-mono text-sm text-muted">2026-03-12 09:45</td>
-            <td><span class="badge neutral">RFC/BAPI</span></td>
-            <td><a href="#" class="text-cyan text-sm"><span class="es">Editar</span><span class="en">Edit</span></a></td>
-          </tr>
-          <tr>
-            <td class="font-mono font-bold text-primary">BW4</td>
-            <td>SAP BW/4HANA Analytics</td>
-            <td><span class="badge warning">BW/4HANA</span></td>
-            <td><span class="badge success">Production</span></td>
-            <td><span class="badge success">online</span></td>
-            <td class="font-mono text-sm text-muted">2026-03-12 09:42</td>
-            <td><span class="badge neutral">API Gateway</span></td>
-            <td><a href="#" class="text-cyan text-sm"><span class="es">Editar</span><span class="en">Edit</span></a></td>
-          </tr>
-          <tr>
-            <td class="font-mono font-bold text-primary">SBX</td>
-            <td>SAP S/4HANA Sandbox</td>
-            <td><span class="badge violet">S/4HANA</span></td>
-            <td><span class="badge neutral">Sandbox</span></td>
-            <td><span class="badge warning">maintenance</span></td>
-            <td class="font-mono text-sm text-muted">2026-03-12 08:00</td>
-            <td><span class="badge neutral">Spektra Agent</span></td>
-            <td><a href="#" class="text-cyan text-sm"><span class="es">Editar</span><span class="en">Edit</span></a></td>
-          </tr>
-          <tr>
-            <td class="font-mono font-bold text-primary">CRM</td>
-            <td>SAP CRM 7.0</td>
-            <td><span class="badge danger">CRM</span></td>
-            <td><span class="badge success">Production</span></td>
-            <td><span class="badge danger">offline</span></td>
-            <td class="font-mono text-sm text-danger">2026-03-11 23:15</td>
-            <td><span class="badge neutral">Cloud Connector</span></td>
-            <td><a href="#" class="text-cyan text-sm"><span class="es">Editar</span><span class="en">Edit</span></a></td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-
-    <!-- ── System Details Section ── -->
-    <h2><span class="es">Detalle de Sistema: PRD</span><span class="en">System Detail: PRD</span></h2>
-
-    <div class="grid-2">
-      <div class="card">
-        <div class="card-header">
-          <div class="card-title"><div class="card-icon cyan">&#128196;</div> <span class="es">Informacion General</span><span class="en">General Information</span></div>
-        </div>
-        <div class="table-wrap" style="margin-bottom:0;">
-          <table>
-            <tbody>
-              <tr><td class="font-semibold" style="width:40%;">SID</td><td class="font-mono">PRD</td></tr>
-              <tr><td class="font-semibold">Hostname</td><td class="font-mono">sapapp01.prod.local</td></tr>
-              <tr><td class="font-semibold">Instance Nr.</td><td class="font-mono">00</td></tr>
-              <tr><td class="font-semibold">Client</td><td class="font-mono">100</td></tr>
-              <tr><td class="font-semibold"><span class="es">Tipo</span><span class="en">Type</span></td><td>SAP ECC 6.0</td></tr>
-              <tr><td class="font-semibold"><span class="es">Version Kernel</span><span class="en">Kernel Version</span></td><td class="font-mono">7.53</td></tr>
-              <tr><td class="font-semibold">DB</td><td>HANA 2.0 SPS06</td></tr>
-              <tr><td class="font-semibold">OS</td><td>SLES 15 SP4</td></tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-      <div class="card">
-        <div class="card-header">
-          <div class="card-title"><div class="card-icon success">&#128200;</div> <span class="es">Metricas Actuales</span><span class="en">Current Metrics</span></div>
-        </div>
-        <div class="table-wrap" style="margin-bottom:0;">
-          <table>
-            <tbody>
-              <tr><td class="font-semibold" style="width:40%;">CPU</td><td><span class="text-success">34%</span></td></tr>
-              <tr><td class="font-semibold"><span class="es">Memoria</span><span class="en">Memory</span></td><td><span class="text-warning">72%</span></td></tr>
-              <tr><td class="font-semibold"><span class="es">Disco</span><span class="en">Disk</span></td><td><span class="text-success">45%</span></td></tr>
-              <tr><td class="font-semibold"><span class="es">Usuarios Activos</span><span class="en">Active Users</span></td><td>156</td></tr>
-              <tr><td class="font-semibold"><span class="es">Dialog Processes</span><span class="en">Dialog Processes</span></td><td>12/40 <span class="text-muted">(30%)</span></td></tr>
-              <tr><td class="font-semibold">Uptime</td><td>45d 12h 33m</td></tr>
-              <tr><td class="font-semibold"><span class="es">Resp. Promedio</span><span class="en">Avg Response</span></td><td>245ms</td></tr>
-              <tr><td class="font-semibold"><span class="es">Jobs Activos</span><span class="en">Active Jobs</span></td><td>8</td></tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </div>
-
-    <!-- ── Admin-Only Features ── -->
-    <h2><span class="es">Funciones Administrativas</span><span class="en">Administrative Functions</span></h2>
-
-    <div class="callout warning mb-2">
+    <!-- Admin-Only Access -->
+    <div class="callout danger">
       <div class="callout-icon">&#128274;</div>
       <div>
-        <span class="es">Las siguientes acciones requieren rol <code>admin</code> (nivel 40). Proceda con precaucion en sistemas productivos.</span>
-        <span class="en">The following actions require <code>admin</code> role (level 40). Proceed with caution on production systems.</span>
+        <span class="es"><strong>Acceso Restringido:</strong> Todas las funciones de esta seccion requieren el rol <code>admin</code>. Los usuarios con rol <code>operator</code> o <code>viewer</code> no tienen acceso a estas operaciones. Todas las acciones administrativas se registran en el audit trail.</span>
+        <span class="en"><strong>Restricted Access:</strong> All functions in this section require the <code>admin</code> role. Users with <code>operator</code> or <code>viewer</code> roles do not have access to these operations. All administrative actions are logged in the audit trail.</span>
       </div>
     </div>
 
-    <div class="grid-3">
-      <div class="card">
-        <div class="card-header">
-          <div class="card-title"><div class="card-icon cyan">&#128260;</div> <span class="es">Reiniciar Servicios</span><span class="en">Restart Services</span></div>
+    <!-- KPIs -->
+    <div class="kpi-grid">
+      <div class="kpi-card">
+        <div class="card-icon danger">&#128274;</div>
+        <div>
+          <div class="kpi-value">Admin</div>
+          <div class="kpi-label"><span class="es">Rol Requerido</span><span class="en">Required Role</span></div>
         </div>
-        <p class="text-sm text-muted"><span class="es">Reinicio controlado de servicios SAP (dispatcher, ICM, message server).</span><span class="en">Controlled restart of SAP services (dispatcher, ICM, message server).</span></p>
-        <button style="margin-top:8px;background:var(--cyan-dim);color:var(--cyan);border:1px solid rgba(6,182,212,0.3);padding:6px 14px;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;">
-          <span class="es">Reiniciar</span><span class="en">Restart</span>
-        </button>
       </div>
-      <div class="card">
-        <div class="card-header">
-          <div class="card-title"><div class="card-icon warning">&#128736;&#65039;</div> <span class="es">Modo Mantenimiento</span><span class="en">Maintenance Mode</span></div>
+      <div class="kpi-card">
+        <div class="card-icon cyan">&#9881;</div>
+        <div>
+          <div class="kpi-value">4</div>
+          <div class="kpi-label"><span class="es">Funciones Principales</span><span class="en">Main Functions</span></div>
         </div>
-        <p class="text-sm text-muted"><span class="es">Activar modo mantenimiento para suspender alertas y notificaciones.</span><span class="en">Activate maintenance mode to suspend alerts and notifications.</span></p>
-        <button style="margin-top:8px;background:rgba(245,158,11,0.12);color:var(--warning);border:1px solid rgba(245,158,11,0.3);padding:6px 14px;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;">
-          <span class="es">Activar</span><span class="en">Activate</span>
-        </button>
       </div>
-      <div class="card">
-        <div class="card-header">
-          <div class="card-title"><div class="card-icon danger">&#128465;&#65039;</div> <span class="es">Eliminar Sistema</span><span class="en">Delete System</span></div>
+      <div class="kpi-card">
+        <div class="card-icon violet">&#128203;</div>
+        <div>
+          <div class="kpi-value">Full</div>
+          <div class="kpi-label"><span class="es">Audit Trail</span><span class="en">Audit Trail</span></div>
         </div>
-        <p class="text-sm text-muted"><span class="es">Desconectar y eliminar permanentemente este sistema de Spektra.</span><span class="en">Disconnect and permanently remove this system from Spektra.</span></p>
-        <button style="margin-top:8px;background:rgba(239,68,68,0.12);color:var(--danger);border:1px solid rgba(239,68,68,0.3);padding:6px 14px;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;">
-          <span class="es">Eliminar</span><span class="en">Delete</span>
-        </button>
       </div>
     </div>
 
-    <!-- ── Role Permissions ── -->
-    <h2><span class="es">Permisos por Rol</span><span class="en">Role Permissions</span></h2>
+    <!-- Health Check Triggering -->
+    <h2><span class="es">Activacion de Health Check</span><span class="en">Health Check Triggering</span></h2>
+    <div class="card">
+      <p>
+        <span class="es">Los administradores pueden forzar un health check inmediato en uno o multiples sistemas. Esto es util cuando se sospecha que las metricas automaticas no reflejan el estado real (ej: despues de un mantenimiento de red).</span>
+        <span class="en">Administrators can force an immediate health check on one or multiple systems. This is useful when automatic metrics are suspected not to reflect the real state (e.g., after network maintenance).</span>
+      </p>
+      <div class="grid-2">
+        <div>
+          <h4><span class="es">Health Check Individual</span><span class="en">Individual Health Check</span></h4>
+          <pre><code>POST /api/systems/:id/health-check
+Authorization: Bearer &lt;admin_jwt&gt;
 
+// Response
+{
+  "systemId": "a1b2c3d4-...",
+  "sid": "PRD",
+  "previousScore": 96,
+  "newScore": 94,
+  "checkDuration": "2.3s",
+  "metricsUpdated": {
+    "cpu": 38.2,
+    "memory": 72.1,
+    "disk": 52.8
+  },
+  "timestamp": "2025-01-15T14:30:00Z"
+}</code></pre>
+        </div>
+        <div>
+          <h4><span class="es">Health Check Masivo</span><span class="en">Batch Health Check</span></h4>
+          <pre><code>POST /api/admin/health-check-all
+Authorization: Bearer &lt;admin_jwt&gt;
+{
+  "systems": ["PRD", "QAS", "ECP"],
+  // or "all": true for all systems
+}
+
+// Response
+{
+  "triggered": 3,
+  "results": [
+    { "sid": "PRD", "score": 94 },
+    { "sid": "QAS", "score": 91 },
+    { "sid": "ECP", "score": 65 }
+  ],
+  "duration": "8.1s"
+}</code></pre>
+        </div>
+      </div>
+    </div>
+
+    <!-- System Deletion -->
+    <h2><span class="es">Eliminacion de Sistemas</span><span class="en">System Deletion</span></h2>
+    <div class="card">
+      <div class="callout danger">
+        <div class="callout-icon">&#9888;</div>
+        <div>
+          <span class="es"><strong>Operacion Destructiva:</strong> Eliminar un sistema borra permanentemente todos los datos asociados: metricas historicas, alertas, eventos, ejecuciones de runbooks, jobs, transportes, y certificados. Esta accion es <strong>irreversible</strong> y requiere confirmacion explicita.</span>
+          <span class="en"><strong>Destructive Operation:</strong> Deleting a system permanently removes all associated data: historical metrics, alerts, events, runbook executions, jobs, transports, and certificates. This action is <strong>irreversible</strong> and requires explicit confirmation.</span>
+        </div>
+      </div>
+      <h4><span class="es">Proceso de Eliminacion</span><span class="en">Deletion Process</span></h4>
+      <div class="steps">
+        <div class="step">
+          <span class="es"><strong>Solicitud:</strong> El admin envia un DELETE request con el motivo de la eliminacion y la confirmacion del SID.</span>
+          <span class="en"><strong>Request:</strong> The admin sends a DELETE request with the deletion reason and SID confirmation.</span>
+        </div>
+        <div class="step">
+          <span class="es"><strong>Validacion:</strong> El backend verifica que el sistema no tiene operaciones en curso, runbooks en ejecucion, ni aprobaciones pendientes.</span>
+          <span class="en"><strong>Validation:</strong> The backend verifies the system has no in-progress operations, running runbooks, or pending approvals.</span>
+        </div>
+        <div class="step">
+          <span class="es"><strong>Cascade Delete:</strong> Se eliminan en cascada: alertas, eventos, metricas, ejecuciones, jobs, transportes, certificados, y configuraciones HA/DR.</span>
+          <span class="en"><strong>Cascade Delete:</strong> Cascade deletes: alerts, events, metrics, executions, jobs, transports, certificates, and HA/DR configurations.</span>
+        </div>
+        <div class="step">
+          <span class="es"><strong>Audit:</strong> Se registra un evento de seguridad con quien elimino, cuando, que sistema, y el motivo proporcionado.</span>
+          <span class="en"><strong>Audit:</strong> A security event is logged with who deleted, when, which system, and the provided reason.</span>
+        </div>
+      </div>
+      <pre><code>DELETE /api/systems/:id
+Authorization: Bearer &lt;admin_jwt&gt;
+Content-Type: application/json
+
+{
+  "confirmSID": "ECP",
+  "reason": "System decommissioned — migrated to S/4HANA (PRD)"
+}
+
+// Response
+{
+  "deleted": true,
+  "sid": "ECP",
+  "cascadeDeleted": {
+    "alerts": 42,
+    "events": 1847,
+    "runbookExecutions": 23,
+    "jobs": 156,
+    "transports": 89,
+    "certificates": 4
+  }
+}</code></pre>
+    </div>
+
+    <!-- Batch Operations -->
+    <h2><span class="es">Operaciones Batch</span><span class="en">Batch Operations</span></h2>
+    <div class="card">
+      <p>
+        <span class="es">Las operaciones batch permiten ejecutar acciones administrativas sobre multiples sistemas simultaneamente.</span>
+        <span class="en">Batch operations allow executing administrative actions on multiple systems simultaneously.</span>
+      </p>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th><span class="es">Operacion</span><span class="en">Operation</span></th>
+              <th><span class="es">Descripcion</span><span class="en">Description</span></th>
+              <th>Endpoint</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><span class="es">Health Check Masivo</span><span class="en">Batch Health Check</span></td>
+              <td><span class="es">Forzar health check en todos los sistemas o un subconjunto</span><span class="en">Force health check on all systems or a subset</span></td>
+              <td class="font-mono">POST /api/admin/health-check-all</td>
+            </tr>
+            <tr>
+              <td><span class="es">Resync de Conectores</span><span class="en">Connector Resync</span></td>
+              <td><span class="es">Forzar resincronizacion de todos los conectores</span><span class="en">Force resynchronization of all connectors</span></td>
+              <td class="font-mono">POST /api/admin/resync-connectors</td>
+            </tr>
+            <tr>
+              <td><span class="es">Limpieza de Datos</span><span class="en">Data Cleanup</span></td>
+              <td><span class="es">Purgar eventos y metricas antiguas segun politica de retencion</span><span class="en">Purge old events and metrics per retention policy</span></td>
+              <td class="font-mono">POST /api/admin/cleanup</td>
+            </tr>
+            <tr>
+              <td><span class="es">Actualizacion de Tags</span><span class="en">Tag Update</span></td>
+              <td><span class="es">Aplicar tags a multiples sistemas simultaneamente</span><span class="en">Apply tags to multiple systems simultaneously</span></td>
+              <td class="font-mono">PATCH /api/admin/batch-tags</td>
+            </tr>
+            <tr>
+              <td><span class="es">Exportar Landscape</span><span class="en">Export Landscape</span></td>
+              <td><span class="es">Exportar configuracion completa del landscape en JSON</span><span class="en">Export complete landscape configuration in JSON</span></td>
+              <td class="font-mono">GET /api/admin/export</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Roles and Permissions -->
+    <h2><span class="es">Roles y Permisos</span><span class="en">Roles and Permissions</span></h2>
     <div class="table-wrap">
       <table>
         <thead>
           <tr>
             <th><span class="es">Accion</span><span class="en">Action</span></th>
-            <th>admin (40)</th>
-            <th>escalation (30)</th>
-            <th>operator (20)</th>
-            <th>viewer (10)</th>
+            <th><span class="badge neutral">viewer</span></th>
+            <th><span class="badge cyan">operator</span></th>
+            <th><span class="badge violet">escalation</span></th>
+            <th><span class="badge danger">admin</span></th>
           </tr>
         </thead>
         <tbody>
           <tr>
-            <td><span class="es">Ver lista de sistemas</span><span class="en">View system list</span></td>
-            <td><span class="badge success">&#10003;</span></td>
-            <td><span class="badge success">&#10003;</span></td>
-            <td><span class="badge success">&#10003;</span></td>
-            <td><span class="badge success">&#10003;</span></td>
+            <td><span class="es">Ver dashboard y metricas</span><span class="en">View dashboard and metrics</span></td>
+            <td class="text-success">&#10003;</td>
+            <td class="text-success">&#10003;</td>
+            <td class="text-success">&#10003;</td>
+            <td class="text-success">&#10003;</td>
           </tr>
           <tr>
-            <td><span class="es">Ver detalle de sistema</span><span class="en">View system details</span></td>
-            <td><span class="badge success">&#10003;</span></td>
-            <td><span class="badge success">&#10003;</span></td>
-            <td><span class="badge success">&#10003;</span></td>
-            <td><span class="badge success">&#10003;</span></td>
+            <td><span class="es">Ejecutar runbooks</span><span class="en">Execute runbooks</span></td>
+            <td class="text-danger">&#10007;</td>
+            <td class="text-success">&#10003;</td>
+            <td class="text-success">&#10003;</td>
+            <td class="text-success">&#10003;</td>
           </tr>
           <tr>
-            <td><span class="es">Conectar nuevo sistema</span><span class="en">Connect new system</span></td>
-            <td><span class="badge success">&#10003;</span></td>
-            <td><span class="badge neutral">--</span></td>
-            <td><span class="badge neutral">--</span></td>
-            <td><span class="badge neutral">--</span></td>
+            <td><span class="es">Aprobar/rechazar solicitudes</span><span class="en">Approve/reject requests</span></td>
+            <td class="text-danger">&#10007;</td>
+            <td class="text-danger">&#10007;</td>
+            <td class="text-success">&#10003;</td>
+            <td class="text-success">&#10003;</td>
           </tr>
           <tr>
-            <td><span class="es">Editar configuracion</span><span class="en">Edit configuration</span></td>
-            <td><span class="badge success">&#10003;</span></td>
-            <td><span class="badge neutral">--</span></td>
-            <td><span class="badge neutral">--</span></td>
-            <td><span class="badge neutral">--</span></td>
+            <td><span class="es">Crear/eliminar sistemas</span><span class="en">Create/delete systems</span></td>
+            <td class="text-danger">&#10007;</td>
+            <td class="text-danger">&#10007;</td>
+            <td class="text-danger">&#10007;</td>
+            <td class="text-success">&#10003;</td>
           </tr>
           <tr>
-            <td><span class="es">Reiniciar servicios</span><span class="en">Restart services</span></td>
-            <td><span class="badge success">&#10003;</span></td>
-            <td><span class="badge success">&#10003;</span></td>
-            <td><span class="badge neutral">--</span></td>
-            <td><span class="badge neutral">--</span></td>
+            <td><span class="es">Health check manual</span><span class="en">Manual health check</span></td>
+            <td class="text-danger">&#10007;</td>
+            <td class="text-danger">&#10007;</td>
+            <td class="text-danger">&#10007;</td>
+            <td class="text-success">&#10003;</td>
           </tr>
           <tr>
-            <td><span class="es">Modo mantenimiento</span><span class="en">Maintenance mode</span></td>
-            <td><span class="badge success">&#10003;</span></td>
-            <td><span class="badge neutral">--</span></td>
-            <td><span class="badge neutral">--</span></td>
-            <td><span class="badge neutral">--</span></td>
+            <td><span class="es">Configuracion de org</span><span class="en">Org configuration</span></td>
+            <td class="text-danger">&#10007;</td>
+            <td class="text-danger">&#10007;</td>
+            <td class="text-danger">&#10007;</td>
+            <td class="text-success">&#10003;</td>
           </tr>
           <tr>
-            <td><span class="es">Eliminar sistema</span><span class="en">Delete system</span></td>
-            <td><span class="badge success">&#10003;</span></td>
-            <td><span class="badge neutral">--</span></td>
-            <td><span class="badge neutral">--</span></td>
-            <td><span class="badge neutral">--</span></td>
+            <td><span class="es">Gestion de API keys</span><span class="en">API key management</span></td>
+            <td class="text-danger">&#10007;</td>
+            <td class="text-danger">&#10007;</td>
+            <td class="text-danger">&#10007;</td>
+            <td class="text-success">&#10003;</td>
+          </tr>
+          <tr>
+            <td><span class="es">Operaciones batch</span><span class="en">Batch operations</span></td>
+            <td class="text-danger">&#10007;</td>
+            <td class="text-danger">&#10007;</td>
+            <td class="text-danger">&#10007;</td>
+            <td class="text-success">&#10003;</td>
           </tr>
         </tbody>
       </table>
     </div>
 
-    <!-- ── Connection Methods ── -->
-    <h2><span class="es">Metodos de Conexion</span><span class="en">Connection Methods</span></h2>
-    <p class="text-muted mb-2">
-      <span class="es">Spektra soporta multiples metodos de conexion a sistemas SAP. Para agregar un nuevo sistema, use el asistente de conexion.</span>
-      <span class="en">Spektra supports multiple connection methods to SAP systems. To add a new system, use the connection wizard.</span>
-    </p>
-
-    <div class="grid-2">
-      <div class="card">
-        <div class="card-header">
-          <div class="card-title"><div class="card-icon cyan">&#9729;&#65039;</div> SAP Cloud Connector</div>
-          <span class="badge success"><span class="es">Recomendado</span><span class="en">Recommended</span></span>
-        </div>
-        <p class="text-sm text-muted"><span class="es">Conexion segura via SAP BTP Cloud Connector. Ideal para sistemas en la nube y on-premise con BTP.</span><span class="en">Secure connection via SAP BTP Cloud Connector. Ideal for cloud and on-premise systems with BTP.</span></p>
-      </div>
-      <div class="card">
-        <div class="card-header">
-          <div class="card-title"><div class="card-icon violet">&#128225;</div> Spektra Agent</div>
-          <span class="badge violet">On-Premise</span>
-        </div>
-        <p class="text-sm text-muted"><span class="es">Agente ligero instalado directamente en el servidor SAP. Comunicacion cifrada via WebSocket.</span><span class="en">Lightweight agent installed directly on the SAP server. Encrypted communication via WebSocket.</span></p>
-      </div>
-      <div class="card">
-        <div class="card-header">
-          <div class="card-title"><div class="card-icon warning">&#128268;</div> RFC/BAPI</div>
-          <span class="badge warning">Legacy</span>
-        </div>
-        <p class="text-sm text-muted"><span class="es">Conexion directa via RFC para sistemas legacy. Requiere apertura de puertos y usuario de servicio.</span><span class="en">Direct RFC connection for legacy systems. Requires port opening and service user.</span></p>
-      </div>
-      <div class="card">
-        <div class="card-header">
-          <div class="card-title"><div class="card-icon success">&#127760;</div> API Gateway</div>
-          <span class="badge cyan">REST</span>
-        </div>
-        <p class="text-sm text-muted"><span class="es">Conexion via SAP API Gateway o SAP Integration Suite para APIs OData y REST.</span><span class="en">Connection via SAP API Gateway or SAP Integration Suite for OData and REST APIs.</span></p>
-      </div>
-    </div>
-
-    <div class="card mt-2" style="text-align:center;padding:24px;">
-      <p class="text-muted mb-1"><span class="es">Para registrar un nuevo sistema SAP en Spektra:</span><span class="en">To register a new SAP system in Spektra:</span></p>
-      <a href="connect-system.html" style="background:var(--gradient-brand);color:#fff;border:none;padding:10px 28px;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;text-decoration:none;display:inline-block;">
-        <span class="es">Iniciar Asistente de Conexion</span><span class="en">Start Connection Wizard</span>
-      </a>
+    <!-- API Endpoints -->
+    <h2><span class="es">Endpoints de API</span><span class="en">API Endpoints</span></h2>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th><span class="es">Metodo</span><span class="en">Method</span></th>
+            <th>Endpoint</th>
+            <th><span class="es">Descripcion</span><span class="en">Description</span></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="badge success">POST</span></td>
+            <td class="font-mono">/api/admin/health-check-all</td>
+            <td><span class="es">Forzar health check masivo</span><span class="en">Force batch health check</span></td>
+          </tr>
+          <tr>
+            <td><span class="badge success">POST</span></td>
+            <td class="font-mono">/api/admin/resync-connectors</td>
+            <td><span class="es">Resincronizar conectores</span><span class="en">Resync connectors</span></td>
+          </tr>
+          <tr>
+            <td><span class="badge success">POST</span></td>
+            <td class="font-mono">/api/admin/cleanup</td>
+            <td><span class="es">Ejecutar limpieza de datos</span><span class="en">Execute data cleanup</span></td>
+          </tr>
+          <tr>
+            <td><span class="badge warning">PATCH</span></td>
+            <td class="font-mono">/api/admin/batch-tags</td>
+            <td><span class="es">Actualizar tags en batch</span><span class="en">Update tags in batch</span></td>
+          </tr>
+          <tr>
+            <td><span class="badge cyan">GET</span></td>
+            <td class="font-mono">/api/admin/export</td>
+            <td><span class="es">Exportar configuracion del landscape</span><span class="en">Export landscape configuration</span></td>
+          </tr>
+          <tr>
+            <td><span class="badge cyan">GET</span></td>
+            <td class="font-mono">/api/admin/audit-trail</td>
+            <td><span class="es">Ver registro de auditorias</span><span class="en">View audit trail</span></td>
+          </tr>
+        </tbody>
+      </table>
     </div>
 
   </main>

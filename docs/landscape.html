@@ -7,10 +7,11 @@
   <link rel="stylesheet" href="theme.css">
   <script src="theme-toggle.js"></script>
   <script src="lang-toggle.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+  <script src="mermaid-init.js"></script>
 </head>
 <body>
 <div class="docs-wrapper">
-  <!-- Sidebar -->
   <nav class="docs-sidebar">
     <div class="sidebar-brand">
       <div class="logo">&#9889;</div>
@@ -23,6 +24,12 @@
       <div class="sidebar-section-label">Inicio</div>
       <a href="index.html" class="sidebar-link">Portal</a>
       <a href="getting-started.html" class="sidebar-link">Primeros Pasos</a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-section-label">Architecture</div>
+      <a href="architecture.html" class="sidebar-link">Arquitectura</a>
+      <a href="domain-model.html" class="sidebar-link">Modelo de Datos</a>
+      <a href="api-reference.html" class="sidebar-link">API Reference</a>
     </div>
     <div class="sidebar-section">
       <div class="sidebar-section-label">Command</div>
@@ -63,371 +70,302 @@
   </nav>
 
   <main class="docs-main">
-    <!-- Breadcrumb -->
     <div class="breadcrumb">
       <a href="index.html">SAP Spektra</a>
       <span class="sep">/</span>
-      <span class="es">Landscape</span><span class="en">Landscape</span>
+      <span>Landscape</span>
     </div>
 
-    <!-- Page Header -->
     <div class="page-header">
-      <h1><span class="es">Validacion de Landscape</span><span class="en">Landscape Validation</span></h1>
+      <h1>Landscape</h1>
       <div class="subtitle">
-        <span class="es">Topologia de sistemas, validacion de conectividad, estado HA e instancias descubiertas en el entorno SAP.</span>
-        <span class="en">System topology, connectivity validation, HA status and discovered instances in the SAP environment.</span>
+        <span class="es">Topologia SAP, agrupacion por SID, descubrimiento de instancias, dependencias de red y validacion del landscape</span>
+        <span class="en">SAP topology, SID grouping, instance discovery, network dependencies and landscape validation</span>
       </div>
     </div>
 
-    <!-- Overview -->
-    <h2><span class="es">Vision General</span><span class="en">Overview</span></h2>
-
-    <div class="card">
-      <div class="card-header">
-        <div class="card-title">
-          <div class="card-icon cyan">&#127760;</div>
-          <span class="es">Proposito del Landscape</span><span class="en">Landscape Purpose</span>
-        </div>
-      </div>
-      <p>
-        <span class="es">La pagina de Landscape proporciona una vista completa del entorno SAP, validando la salud de cada sistema mediante cuatro verificaciones automaticas. Permite identificar rapidamente problemas de conectividad, configuracion y rendimiento en todo el landscape.</span>
-        <span class="en">The Landscape page provides a complete view of the SAP environment, validating each system's health through four automatic checks. It allows quick identification of connectivity, configuration and performance issues across the entire landscape.</span>
-      </p>
-    </div>
-
-    <!-- Overall Status -->
-    <h2><span class="es">Estado General del Landscape</span><span class="en">Overall Landscape Status</span></h2>
-
-    <div class="kpi-grid">
-      <div class="kpi-card">
-        <div class="card-icon success">&#9989;</div>
-        <div>
-          <div class="kpi-value">8</div>
-          <div class="kpi-label"><span class="es">Sistemas OK (Pass)</span><span class="en">Systems OK (Pass)</span></div>
-        </div>
-      </div>
-      <div class="kpi-card">
-        <div class="card-icon warning">&#9888;&#65039;</div>
-        <div>
-          <div class="kpi-value">3</div>
-          <div class="kpi-label"><span class="es">Con Advertencias (Warn)</span><span class="en">With Warnings (Warn)</span></div>
-        </div>
-      </div>
-      <div class="kpi-card">
-        <div class="card-icon danger">&#10060;</div>
-        <div>
-          <div class="kpi-value">1</div>
-          <div class="kpi-label"><span class="es">Fallidos (Fail)</span><span class="en">Failed (Fail)</span></div>
-        </div>
-      </div>
-      <div class="kpi-card">
-        <div class="card-icon violet">&#128202;</div>
-        <div>
-          <div class="kpi-value">48</div>
-          <div class="kpi-label"><span class="es">Validaciones Totales</span><span class="en">Total Validations</span></div>
-        </div>
-      </div>
-    </div>
-
-    <div class="callout info">
-      <div class="callout-icon">&#128161;</div>
-      <div>
-        <span class="es"><strong>Estado general:</strong> Se calcula como el peor resultado entre los cuatro chequeos. Si uno falla, el sistema se marca como <em>Fail</em>. Si al menos uno es advertencia y ninguno falla, el sistema es <em>Warn</em>.</span>
-        <span class="en"><strong>Overall status:</strong> Calculated as the worst result among the four checks. If one fails, the system is marked as <em>Fail</em>. If at least one is warning and none fail, the system is <em>Warn</em>.</span>
-      </div>
-    </div>
-
-    <!-- 4 Validation Checks -->
-    <h2><span class="es">4 Verificaciones por Sistema</span><span class="en">4 Checks per System</span></h2>
+    <!-- ═══ Overview ═══ -->
+    <h2>
+      <span class="es">Vista General</span>
+      <span class="en">Overview</span>
+    </h2>
 
     <p>
-      <span class="es">Cada sistema SAP registrado se somete a cuatro verificaciones automaticas que determinan su estado en el landscape:</span>
-      <span class="en">Each registered SAP system undergoes four automatic checks that determine its landscape status:</span>
+      <span class="es">La pagina de Landscape proporciona una vista topologica completa del landscape SAP de la organizacion. Muestra todos los sistemas, sus componentes, instancias, hosts y las dependencias entre ellos. Esta vista es crucial para entender la arquitectura del landscape y detectar problemas de configuracion.</span>
+      <span class="en">The Landscape page provides a complete topological view of the organization's SAP landscape. It shows all systems, their components, instances, hosts and dependencies between them. This view is crucial for understanding landscape architecture and detecting configuration issues.</span>
     </p>
 
-    <div class="grid-2">
-      <div class="card">
-        <div class="card-header">
-          <div class="card-title">
-            <div class="card-icon cyan">&#128279;</div>
-            <span class="es">1. Conectividad</span><span class="en">1. Connectivity</span>
-          </div>
-          <span class="badge success">Pass</span>
-        </div>
-        <p class="text-sm">
-          <span class="es">Verifica que el sistema SAP es alcanzable desde la plataforma. Se realiza un ping al conector configurado y se valida que el tiempo de respuesta esta dentro de los umbrales aceptables.</span>
-          <span class="en">Verifies that the SAP system is reachable from the platform. A ping is performed on the configured connector and the response time is validated against acceptable thresholds.</span>
-        </p>
-        <ul class="feature-list">
-          <li><span class="es">Ping RFC/HTTP al sistema destino</span><span class="en">RFC/HTTP ping to target system</span></li>
-          <li><span class="es">Timeout maximo: 5 segundos</span><span class="en">Maximum timeout: 5 seconds</span></li>
-          <li><span class="es">Reintentos automaticos: 3</span><span class="en">Automatic retries: 3</span></li>
-        </ul>
-      </div>
-
-      <div class="card">
-        <div class="card-header">
-          <div class="card-title">
-            <div class="card-icon violet">&#128200;</div>
-            <span class="es">2. Monitoreo</span><span class="en">2. Monitoring</span>
-          </div>
-          <span class="badge success">Pass</span>
-        </div>
-        <p class="text-sm">
-          <span class="es">Confirma que la recoleccion de metricas esta activa y que se estan recibiendo datos recientes. Valida que el ultimo dato recibido no supere el umbral de staleness.</span>
-          <span class="en">Confirms that metrics collection is active and recent data is being received. Validates that the last received data does not exceed the staleness threshold.</span>
-        </p>
-        <ul class="feature-list">
-          <li><span class="es">Ultimo dato recibido &lt; 5 minutos</span><span class="en">Last data received &lt; 5 minutes</span></li>
-          <li><span class="es">Metricas de CPU, memoria, disco activas</span><span class="en">CPU, memory, disk metrics active</span></li>
-          <li><span class="es">Alertas de staleness configurables</span><span class="en">Configurable staleness alerts</span></li>
-        </ul>
-      </div>
-
-      <div class="card">
-        <div class="card-header">
-          <div class="card-title">
-            <div class="card-icon success">&#128737;</div>
-            <span class="es">3. Configuracion HA</span><span class="en">3. HA Configuration</span>
-          </div>
-          <span class="badge warning">Warn</span>
-        </div>
-        <p class="text-sm">
-          <span class="es">Verifica que la configuracion de alta disponibilidad es correcta. Incluye validacion de cluster, replicacion de base de datos y configuracion de failover.</span>
-          <span class="en">Verifies that the high availability configuration is correct. Includes cluster validation, database replication and failover configuration.</span>
-        </p>
-        <ul class="feature-list">
-          <li><span class="es">Cluster Pacemaker/Corosync activo</span><span class="en">Active Pacemaker/Corosync cluster</span></li>
-          <li><span class="es">Replicacion HANA System Replication</span><span class="en">HANA System Replication status</span></li>
-          <li><span class="es">Failover automatico configurado</span><span class="en">Automatic failover configured</span></li>
-        </ul>
-      </div>
-
-      <div class="card">
-        <div class="card-header">
-          <div class="card-title">
-            <div class="card-icon warning">&#128153;</div>
-            <span class="es">4. Indice de Salud</span><span class="en">4. Health Score</span>
-          </div>
-          <span class="badge success">Pass</span>
-        </div>
-        <p class="text-sm">
-          <span class="es">Calcula un puntaje compuesto de salud (0-100) basado en multiples metricas: CPU, memoria, disco, tiempos de respuesta, errores y carga de trabajo.</span>
-          <span class="en">Calculates a composite health score (0-100) based on multiple metrics: CPU, memory, disk, response times, errors and workload.</span>
-        </p>
-        <ul class="feature-list">
-          <li><span class="es">Pass: &ge; 80 puntos</span><span class="en">Pass: &ge; 80 points</span></li>
-          <li><span class="es">Warn: 50-79 puntos</span><span class="en">Warn: 50-79 points</span></li>
-          <li><span class="es">Fail: &lt; 50 puntos</span><span class="en">Fail: &lt; 50 points</span></li>
-        </ul>
-      </div>
-    </div>
-
-    <!-- System Topology -->
-    <h2><span class="es">Topologia de Sistemas por SID</span><span class="en">System Topology by SID</span></h2>
+    <!-- ═══ Topology Diagram ═══ -->
+    <h2>
+      <span class="es">Topologia SAP</span>
+      <span class="en">SAP Topology</span>
+    </h2>
 
     <div class="card">
-      <div class="card-header">
-        <div class="card-title">
-          <div class="card-icon cyan">&#128468;</div>
-          <span class="es">Grupos Topologicos</span><span class="en">Topology Groups</span>
-        </div>
-      </div>
-      <p>
-        <span class="es">Los sistemas se agrupan por SID en una vista topologica que muestra las relaciones entre instancias, bases de datos y servicios asociados. Cada grupo representa un sistema logico SAP completo.</span>
-        <span class="en">Systems are grouped by SID in a topology view that shows relationships between instances, databases and associated services. Each group represents a complete logical SAP system.</span>
-      </p>
-    </div>
-
-    <!-- Example Topology Group PRD -->
-    <div class="card">
-      <div class="card-header">
-        <div class="card-title">
-          <strong>PRD</strong> &mdash; S/4HANA Production
-        </div>
-        <span class="badge success">&#9679; Pass</span>
-      </div>
-      <div class="table-wrap" style="border:none;margin:0">
-        <table>
-          <thead>
-            <tr>
-              <th><span class="es">Instancia</span><span class="en">Instance</span></th>
-              <th><span class="es">Tipo</span><span class="en">Type</span></th>
-              <th>Host</th>
-              <th><span class="es">Estado</span><span class="en">Status</span></th>
-              <th><span class="es">Rol HA</span><span class="en">HA Role</span></th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td><code>PRD_ASCS00</code></td>
-              <td>ASCS</td>
-              <td><code>sap-prd-app01</code></td>
-              <td><span class="badge success">Running</span></td>
-              <td><span class="badge cyan">Primary</span></td>
-            </tr>
-            <tr>
-              <td><code>PRD_D01</code></td>
-              <td>Dialog</td>
-              <td><code>sap-prd-app01</code></td>
-              <td><span class="badge success">Running</span></td>
-              <td><span class="badge neutral">N/A</span></td>
-            </tr>
-            <tr>
-              <td><code>PRD_D02</code></td>
-              <td>Dialog</td>
-              <td><code>sap-prd-app02</code></td>
-              <td><span class="badge success">Running</span></td>
-              <td><span class="badge neutral">N/A</span></td>
-            </tr>
-            <tr>
-              <td><code>PRD_HDB00</code></td>
-              <td>HANA DB</td>
-              <td><code>sap-prd-db01</code></td>
-              <td><span class="badge success">Running</span></td>
-              <td><span class="badge cyan">Primary</span></td>
-            </tr>
-            <tr>
-              <td><code>PRD_HDB00</code></td>
-              <td>HANA DB</td>
-              <td><code>sap-prd-db02</code></td>
-              <td><span class="badge success">Replicating</span></td>
-              <td><span class="badge violet">Secondary</span></td>
-            </tr>
-          </tbody>
-        </table>
+      <div class="mermaid">
+graph LR
+    subgraph landscape["ACME Corp SAP Landscape"]
+        subgraph s4["S/4HANA Track"]
+            direction LR
+            ED1["&lt;b&gt;ED1&lt;/b&gt;&lt;br/&gt;DEV · H:85"] -->|Transport| EQ1["&lt;b&gt;EQ1&lt;/b&gt;&lt;br/&gt;QAS · H:78"]
+            EQ1 -->|Transport| EP1["&lt;b&gt;EP1&lt;/b&gt;&lt;br/&gt;PRD · H:92"]
+        end
+        subgraph analytics["Analytics"]
+            BW1["&lt;b&gt;BW1&lt;/b&gt;&lt;br/&gt;PRD · H:88"]
+        end
+        subgraph middleware["Middleware"]
+            PI1["&lt;b&gt;PI1&lt;/b&gt;&lt;br/&gt;PRD · H:45"]
+        end
+        subgraph cloud["Cloud"]
+            RS1["&lt;b&gt;RS1&lt;/b&gt;&lt;br/&gt;PRD · H:90"]
+        end
+        subgraph governance["Governance"]
+            GR1["&lt;b&gt;GR1&lt;/b&gt;&lt;br/&gt;PRD"]
+            SM1["&lt;b&gt;SM1&lt;/b&gt;&lt;br/&gt;PRD"]
+        end
+        subgraph crm["CRM"]
+            CR1["&lt;b&gt;CR1&lt;/b&gt;&lt;br/&gt;PRD"]
+        end
+        subgraph lgcy["Legacy"]
+            MX1["&lt;b&gt;MX1&lt;/b&gt;&lt;br/&gt;PRD"]
+            SO1["&lt;b&gt;SO1&lt;/b&gt;&lt;br/&gt;PRD"]
+        end
+    end
       </div>
     </div>
 
-    <!-- Example Topology Group QAS -->
-    <div class="card">
-      <div class="card-header">
-        <div class="card-title">
-          <strong>QAS</strong> &mdash; ECC 6.0 Quality
-        </div>
-        <span class="badge warning">&#9679; Warn</span>
-      </div>
-      <div class="table-wrap" style="border:none;margin:0">
-        <table>
-          <thead>
-            <tr>
-              <th><span class="es">Instancia</span><span class="en">Instance</span></th>
-              <th><span class="es">Tipo</span><span class="en">Type</span></th>
-              <th>Host</th>
-              <th><span class="es">Estado</span><span class="en">Status</span></th>
-              <th><span class="es">Rol HA</span><span class="en">HA Role</span></th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td><code>QAS_ASCS01</code></td>
-              <td>ASCS</td>
-              <td><code>sap-qas-app01</code></td>
-              <td><span class="badge success">Running</span></td>
-              <td><span class="badge cyan">Primary</span></td>
-            </tr>
-            <tr>
-              <td><code>QAS_D00</code></td>
-              <td>Dialog</td>
-              <td><code>sap-qas-app01</code></td>
-              <td><span class="badge warning">Degraded</span></td>
-              <td><span class="badge neutral">N/A</span></td>
-            </tr>
-            <tr>
-              <td><code>QAS_ORA00</code></td>
-              <td>Oracle DB</td>
-              <td><code>sap-qas-db01</code></td>
-              <td><span class="badge success">Running</span></td>
-              <td><span class="badge cyan">Primary</span></td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
+    <!-- ═══ System Grouping ═══ -->
+    <h2>
+      <span class="es">Agrupacion por SID y Ambiente</span>
+      <span class="en">Grouping by SID and Environment</span>
+    </h2>
 
-    <!-- Discovery Instances Table -->
-    <h2><span class="es">Tabla de Instancias Descubiertas</span><span class="en">Discovered Instances Table</span></h2>
-
-    <div class="card">
-      <div class="card-header">
-        <div class="card-title">
-          <div class="card-icon violet">&#128270;</div>
-          <span class="es">Auto-Descubrimiento</span><span class="en">Auto-Discovery</span>
-        </div>
-      </div>
-      <p>
-        <span class="es">SAP Spektra descubre automaticamente las instancias SAP desplegadas en el landscape a traves de los conectores configurados. Esta tabla muestra todas las instancias detectadas, incluyendo aquellas que aun no han sido registradas formalmente.</span>
-        <span class="en">SAP Spektra automatically discovers SAP instances deployed in the landscape through configured connectors. This table shows all detected instances, including those that have not been formally registered.</span>
-      </p>
-    </div>
+    <p>
+      <span class="es">Los sistemas se agrupan logicamente por su relacion funcional. En SAP, un "track" tipicamente consiste en DEV → QAS → PRD del mismo producto:</span>
+      <span class="en">Systems are logically grouped by their functional relationship. In SAP, a "track" typically consists of DEV → QAS → PRD of the same product:</span>
+    </p>
 
     <div class="table-wrap">
       <table>
         <thead>
           <tr>
-            <th>SID</th>
-            <th><span class="es">Instancia</span><span class="en">Instance</span></th>
-            <th><span class="es">Tipo</span><span class="en">Type</span></th>
-            <th>Host</th>
-            <th><span class="es">Puerto</span><span class="en">Port</span></th>
-            <th><span class="es">Descubierto</span><span class="en">Discovered</span></th>
-            <th><span class="es">Registrado</span><span class="en">Registered</span></th>
+            <th><span class="es">Grupo</span><span class="en">Group</span></th>
+            <th><span class="es">Sistemas</span><span class="en">Systems</span></th>
+            <th><span class="es">Producto</span><span class="en">Product</span></th>
+            <th><span class="es">Descripcion</span><span class="en">Description</span></th>
           </tr>
         </thead>
         <tbody>
           <tr>
-            <td><code>PRD</code></td>
-            <td><code>PRD_ASCS00</code></td>
+            <td><strong>S/4HANA Track</strong></td>
+            <td><code>ED1</code> → <code>EQ1</code> → <code>EP1</code></td>
+            <td>S/4HANA 2023</td>
+            <td><span class="es">Landscape completo DEV/QAS/PRD del ERP principal</span><span class="en">Complete DEV/QAS/PRD landscape for the main ERP</span></td>
+          </tr>
+          <tr>
+            <td><strong>Analytics</strong></td>
+            <td><code>BW1</code></td>
+            <td>BW/4HANA</td>
+            <td><span class="es">Data warehouse para reporting y analytics</span><span class="en">Data warehouse for reporting and analytics</span></td>
+          </tr>
+          <tr>
+            <td><strong>Middleware</strong></td>
+            <td><code>PI1</code></td>
+            <td>SAP PO 7.5</td>
+            <td><span class="es">Integracion de procesos y middleware de mensajeria</span><span class="en">Process integration and messaging middleware</span></td>
+          </tr>
+          <tr>
+            <td><strong>Governance</strong></td>
+            <td><code>SM1</code>, <code>GR1</code></td>
+            <td>SolMan 7.2, GRC 12.0</td>
+            <td><span class="es">Solution Manager y Governance, Risk & Compliance</span><span class="en">Solution Manager and Governance, Risk & Compliance</span></td>
+          </tr>
+          <tr>
+            <td><strong>CRM</strong></td>
+            <td><code>CR1</code></td>
+            <td>SAP CRM 7.0</td>
+            <td><span class="es">Gestion de relaciones con clientes</span><span class="en">Customer relationship management</span></td>
+          </tr>
+          <tr>
+            <td><strong>Warehouse</strong></td>
+            <td><code>EW1</code></td>
+            <td>SAP EWM 9.5</td>
+            <td><span class="es">Gestion extendida de almacenes</span><span class="en">Extended warehouse management</span></td>
+          </tr>
+          <tr>
+            <td><strong>Cloud</strong></td>
+            <td><code>RS1</code></td>
+            <td>S/4HANA Cloud</td>
+            <td><span class="es">RISE with SAP — capacidades restringidas</span><span class="en">RISE with SAP — restricted capabilities</span></td>
+          </tr>
+          <tr>
+            <td><strong>Legacy</strong></td>
+            <td><code>MX1</code>, <code>SO1</code></td>
+            <td>SAP ECC 6.0</td>
+            <td><span class="es">Sistemas legados en plan de migracion</span><span class="en">Legacy systems in migration plan</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- ═══ Instance Discovery ═══ -->
+    <h2>
+      <span class="es">Descubrimiento de Instancias</span>
+      <span class="en">Instance Discovery</span>
+    </h2>
+
+    <p>
+      <span class="es">Cada sistema SAP consiste en multiples instancias que se ejecutan en uno o mas hosts. El agente descubre automaticamente la topologia de instancias usando <code>sapcontrol</code> y los puertos estandar de SAP:</span>
+      <span class="en">Each SAP system consists of multiple instances running on one or more hosts. The agent automatically discovers instance topology using <code>sapcontrol</code> and standard SAP ports:</span>
+    </p>
+
+    <h3>
+      <span class="es">Ejemplo: EP1 (S/4HANA Production)</span>
+      <span class="en">Example: EP1 (S/4HANA Production)</span>
+    </h3>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th><span class="es">Instancia</span><span class="en">Instance</span></th>
+            <th>Nr</th>
+            <th><span class="es">Tipo</span><span class="en">Type</span></th>
+            <th><span class="es">Rol</span><span class="en">Role</span></th>
+            <th>Host</th>
+            <th><span class="es">Componente</span><span class="en">Component</span></th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
             <td>ASCS</td>
-            <td><code>sap-prd-app01</code></td>
-            <td><code>3600</code></td>
-            <td>2026-03-10 08:15</td>
-            <td><span class="badge success">&#10003;</span></td>
-          </tr>
-          <tr>
-            <td><code>PRD</code></td>
-            <td><code>PRD_D01</code></td>
-            <td>Dialog</td>
-            <td><code>sap-prd-app01</code></td>
-            <td><code>3201</code></td>
-            <td>2026-03-10 08:15</td>
-            <td><span class="badge success">&#10003;</span></td>
-          </tr>
-          <tr>
-            <td><code>PRD</code></td>
-            <td><code>PRD_D02</code></td>
-            <td>Dialog</td>
-            <td><code>sap-prd-app02</code></td>
-            <td><code>3202</code></td>
-            <td>2026-03-10 08:16</td>
-            <td><span class="badge success">&#10003;</span></td>
-          </tr>
-          <tr>
-            <td><code>QAS</code></td>
-            <td><code>QAS_ASCS01</code></td>
+            <td>01</td>
             <td>ASCS</td>
-            <td><code>sap-qas-app01</code></td>
-            <td><code>3601</code></td>
-            <td>2026-03-10 08:20</td>
-            <td><span class="badge success">&#10003;</span></td>
+            <td><span class="es">Central Services</span><span class="en">Central Services</span></td>
+            <td><code>ep1ascs01</code></td>
+            <td>ABAP</td>
+            <td><span class="badge success">active</span></td>
           </tr>
           <tr>
-            <td><code>DEV</code></td>
-            <td><code>DEV_D00</code></td>
-            <td>Dialog</td>
-            <td><code>sap-dev-app01</code></td>
-            <td><code>3200</code></td>
-            <td>2026-03-11 14:30</td>
-            <td><span class="badge warning">&#9203;</span></td>
+            <td>ERS</td>
+            <td>11</td>
+            <td>ERS</td>
+            <td><span class="es">Enqueue Replication</span><span class="en">Enqueue Replication</span></td>
+            <td><code>ep1ers01</code></td>
+            <td>ABAP</td>
+            <td><span class="badge success">active</span></td>
           </tr>
           <tr>
-            <td><code>SBX</code></td>
-            <td><code>SBX_D00</code></td>
+            <td>PAS</td>
+            <td>00</td>
+            <td>PAS</td>
+            <td>Dialog + Batch</td>
+            <td><code>ep1app01</code></td>
+            <td>ABAP</td>
+            <td><span class="badge success">active</span></td>
+          </tr>
+          <tr>
+            <td>AAS</td>
+            <td>02</td>
+            <td>AAS</td>
             <td>Dialog</td>
-            <td><code>sap-sbx-app01</code></td>
-            <td><code>3200</code></td>
-            <td>2026-03-12 09:00</td>
-            <td><span class="badge neutral">&#10007;</span></td>
+            <td><code>ep1app02</code></td>
+            <td>ABAP</td>
+            <td><span class="badge success">active</span></td>
+          </tr>
+          <tr>
+            <td>HANA</td>
+            <td>00</td>
+            <td>HANA</td>
+            <td>Database</td>
+            <td><code>ep1hana01</code></td>
+            <td>DB</td>
+            <td><span class="badge success">active</span></td>
+          </tr>
+          <tr>
+            <td>WEBDISP</td>
+            <td>10</td>
+            <td>WEBDISP</td>
+            <td>Web Dispatcher</td>
+            <td><code>ep1web01</code></td>
+            <td>WEBDISP</td>
+            <td><span class="badge success">active</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="callout info">
+      <div class="callout-icon">&#128161;</div>
+      <div>
+        <span class="es"><strong>Tipo de instancias SAP:</strong> PAS (Primary Application Server), AAS (Additional Application Server), ASCS (ABAP Central Services), ERS (Enqueue Replication Server), HANA (Database Instance), WEBDISP (Web Dispatcher).</span>
+        <span class="en"><strong>SAP Instance types:</strong> PAS (Primary Application Server), AAS (Additional Application Server), ASCS (ABAP Central Services), ERS (Enqueue Replication Server), HANA (Database Instance), WEBDISP (Web Dispatcher).</span>
+      </div>
+    </div>
+
+    <!-- ═══ Network Dependencies ═══ -->
+    <h2>
+      <span class="es">Dependencias de Red</span>
+      <span class="en">Network Dependencies</span>
+    </h2>
+
+    <p>
+      <span class="es">Cada sistema tiene dependencias que pueden ser conexiones a bases de datos, llamadas RFC a otros sistemas, conexiones HTTP o envio de IDocs. El endpoint <code>GET /metrics/systems/:systemId/dependencies</code> retorna las dependencias de un sistema:</span>
+      <span class="en">Each system has dependencies that can be database connections, RFC calls to other systems, HTTP connections or IDoc sending. The <code>GET /metrics/systems/:systemId/dependencies</code> endpoint returns a system's dependencies:</span>
+    </p>
+
+    <h3>
+      <span class="es">Ejemplo: Dependencias de EP1</span>
+      <span class="en">Example: EP1 Dependencies</span>
+    </h3>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th><span class="es">Nombre</span><span class="en">Name</span></th>
+            <th><span class="es">Tipo</span><span class="en">Type</span></th>
+            <th><span class="es">Destino</span><span class="en">Target</span></th>
+            <th>Status</th>
+            <th><span class="es">Latencia</span><span class="en">Latency</span></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>HANA DB Primary</td>
+            <td><span class="badge cyan">DB</span></td>
+            <td><code>ep1hana01:30015</code></td>
+            <td><span class="badge success">ok</span></td>
+            <td>2ms</td>
+          </tr>
+          <tr>
+            <td>RFC to BW1</td>
+            <td><span class="badge violet">RFC</span></td>
+            <td><code>BW1 (bw1app01:3300)</code></td>
+            <td><span class="badge success">ok</span></td>
+            <td>15ms</td>
+          </tr>
+          <tr>
+            <td>RFC to PI1</td>
+            <td><span class="badge violet">RFC</span></td>
+            <td><code>PI1 (pi1app01:50000)</code></td>
+            <td><span class="badge warning">warning</span></td>
+            <td>245ms</td>
+          </tr>
+          <tr>
+            <td>IDoc to CR1</td>
+            <td><span class="badge warning">IDoc</span></td>
+            <td><code>CR1 (cr1app01:3300)</code></td>
+            <td><span class="badge success">ok</span></td>
+            <td>8ms</td>
+          </tr>
+          <tr>
+            <td>HTTP to SolMan</td>
+            <td><span class="badge neutral">HTTP</span></td>
+            <td><code>SM1 (sm1web01:443)</code></td>
+            <td><span class="badge success">ok</span></td>
+            <td>22ms</td>
           </tr>
         </tbody>
       </table>
@@ -436,182 +374,226 @@
     <div class="callout warning">
       <div class="callout-icon">&#9888;&#65039;</div>
       <div>
-        <span class="es"><strong>Instancias sin registrar:</strong> Las instancias descubiertas pero no registradas (icono &#9203; o &#10007;) no se incluyen en el monitoreo activo. Registralas desde <a href="connect-system.html">Conectar Sistema</a>.</span>
-        <span class="en"><strong>Unregistered instances:</strong> Discovered but unregistered instances (&#9203; or &#10007; icon) are not included in active monitoring. Register them from <a href="connect-system.html">Connect System</a>.</span>
+        <span class="es"><strong>Alerta:</strong> La dependencia RFC a PI1 muestra latencia elevada (245ms). Esto puede indicar saturacion del middleware de integracion. Revisa el health score de PI1 (45 — <span class="badge danger">critical</span>).</span>
+        <span class="en"><strong>Alert:</strong> The RFC dependency to PI1 shows elevated latency (245ms). This may indicate integration middleware saturation. Check PI1 health score (45 — <span class="badge danger">critical</span>).</span>
       </div>
     </div>
 
-    <!-- HA Status -->
-    <h2><span class="es">Estado de Alta Disponibilidad (HA)</span><span class="en">High Availability (HA) Status</span></h2>
+    <!-- ═══ Landscape Validation ═══ -->
+    <h2>
+      <span class="es">Validacion del Landscape</span>
+      <span class="en">Landscape Validation</span>
+    </h2>
 
     <div class="card">
       <div class="card-header">
-        <div class="card-title">
-          <div class="card-icon success">&#128737;</div>
-          <span class="es">Badges de Estado HA</span><span class="en">HA Status Badges</span>
-        </div>
+        <div class="card-title"><span class="badge cyan">GET</span> <code>/landscape/validation</code></div>
+        <span class="badge neutral">viewer+</span>
       </div>
-      <p>
-        <span class="es">Cada sistema con configuracion de alta disponibilidad muestra badges que indican el estado de sus componentes HA:</span>
-        <span class="en">Each system with high availability configuration shows badges indicating the status of its HA components:</span>
+      <p class="text-muted text-sm">
+        <span class="es">Ejecuta validaciones automaticas sobre todos los sistemas y retorna un reporte de checks pasados y fallidos.</span>
+        <span class="en">Runs automatic validations across all systems and returns a report of passed and failed checks.</span>
       </p>
-      <div class="table-wrap" style="margin-top:12px">
-        <table>
-          <thead>
-            <tr>
-              <th>Badge</th>
-              <th><span class="es">Significado</span><span class="en">Meaning</span></th>
-              <th><span class="es">Accion Requerida</span><span class="en">Action Required</span></th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td><span class="badge success">HA Active</span></td>
-              <td><span class="es">Cluster HA funcionando correctamente, replicacion sincronizada</span><span class="en">HA cluster functioning correctly, replication synchronized</span></td>
-              <td><span class="es">Ninguna</span><span class="en">None</span></td>
-            </tr>
-            <tr>
-              <td><span class="badge cyan">Primary</span></td>
-              <td><span class="es">Nodo primario activo del cluster</span><span class="en">Active primary node of the cluster</span></td>
-              <td><span class="es">Ninguna</span><span class="en">None</span></td>
-            </tr>
-            <tr>
-              <td><span class="badge violet">Secondary</span></td>
-              <td><span class="es">Nodo secundario en replicacion</span><span class="en">Secondary node in replication</span></td>
-              <td><span class="es">Ninguna</span><span class="en">None</span></td>
-            </tr>
-            <tr>
-              <td><span class="badge warning">HA Degraded</span></td>
-              <td><span class="es">Replicacion con retraso o nodo secundario no responde</span><span class="en">Replication lag or secondary node not responding</span></td>
-              <td><span class="es">Investigar el nodo secundario</span><span class="en">Investigate secondary node</span></td>
-            </tr>
-            <tr>
-              <td><span class="badge danger">HA Failed</span></td>
-              <td><span class="es">Cluster roto, failover no disponible</span><span class="en">Cluster broken, failover not available</span></td>
-              <td><span class="es">Accion inmediata requerida</span><span class="en">Immediate action required</span></td>
-            </tr>
-            <tr>
-              <td><span class="badge neutral">No HA</span></td>
-              <td><span class="es">Sistema sin configuracion de alta disponibilidad</span><span class="en">System without high availability configuration</span></td>
-              <td><span class="es">Considerar configurar HA</span><span class="en">Consider configuring HA</span></td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
     </div>
 
-    <!-- Validation Results Summary -->
-    <h2><span class="es">Resumen de Resultados de Validacion</span><span class="en">Validation Results Summary</span></h2>
+    <h3>
+      <span class="es">Checks de Validacion</span>
+      <span class="en">Validation Checks</span>
+    </h3>
 
     <div class="table-wrap">
       <table>
         <thead>
           <tr>
-            <th>SID</th>
-            <th><span class="es">Entorno</span><span class="en">Env</span></th>
-            <th><span class="es">Conectividad</span><span class="en">Connectivity</span></th>
-            <th><span class="es">Monitoreo</span><span class="en">Monitoring</span></th>
-            <th><span class="es">Config HA</span><span class="en">HA Config</span></th>
-            <th><span class="es">Salud</span><span class="en">Health</span></th>
-            <th><span class="es">Estado General</span><span class="en">Overall</span></th>
+            <th><span class="es">Check</span><span class="en">Check</span></th>
+            <th><span class="es">Severidad</span><span class="en">Severity</span></th>
+            <th><span class="es">Descripcion</span><span class="en">Description</span></th>
           </tr>
         </thead>
         <tbody>
           <tr>
-            <td><code>PRD</code></td>
-            <td><span class="badge success">Prod</span></td>
-            <td><span class="badge success">Pass</span></td>
-            <td><span class="badge success">Pass</span></td>
-            <td><span class="badge success">Pass</span></td>
-            <td><span class="badge success">94</span></td>
-            <td><span class="badge success">&#9679; Pass</span></td>
+            <td><span class="es">Conectividad</span><span class="en">Connectivity</span></td>
+            <td><span class="badge danger">critical</span></td>
+            <td><span class="es">Verifica que cada sistema tiene al menos un conector activo (status=connected)</span><span class="en">Verifies that each system has at least one active connector (status=connected)</span></td>
           </tr>
           <tr>
-            <td><code>QAS</code></td>
-            <td><span class="badge warning">QA</span></td>
-            <td><span class="badge success">Pass</span></td>
-            <td><span class="badge success">Pass</span></td>
-            <td><span class="badge warning">Warn</span></td>
-            <td><span class="badge warning">67</span></td>
-            <td><span class="badge warning">&#9679; Warn</span></td>
+            <td>Health Score</td>
+            <td><span class="badge warning">warning</span></td>
+            <td><span class="es">Detecta sistemas con healthScore &lt; 50 que requieren atencion</span><span class="en">Detects systems with healthScore &lt; 50 that need attention</span></td>
           </tr>
           <tr>
-            <td><code>DEV</code></td>
-            <td><span class="badge cyan">Dev</span></td>
-            <td><span class="badge success">Pass</span></td>
-            <td><span class="badge success">Pass</span></td>
-            <td><span class="badge neutral">No HA</span></td>
-            <td><span class="badge success">82</span></td>
-            <td><span class="badge success">&#9679; Pass</span></td>
+            <td><span class="es">Componentes Faltantes</span><span class="en">Missing Components</span></td>
+            <td><span class="badge warning">warning</span></td>
+            <td><span class="es">Verifica que cada sistema ABAP tiene al menos componente ABAP y DB</span><span class="en">Verifies each ABAP system has at least ABAP and DB components</span></td>
           </tr>
           <tr>
-            <td><code>SBX</code></td>
-            <td><span class="badge neutral">Sandbox</span></td>
-            <td><span class="badge danger">Fail</span></td>
-            <td><span class="badge danger">Fail</span></td>
-            <td><span class="badge neutral">No HA</span></td>
-            <td><span class="badge danger">12</span></td>
-            <td><span class="badge danger">&#9679; Fail</span></td>
+            <td><span class="es">Instancias sin Host</span><span class="en">Instances without Host</span></td>
+            <td><span class="badge warning">warning</span></td>
+            <td><span class="es">Detecta instancias que no estan asignadas a un host</span><span class="en">Detects instances not assigned to a host</span></td>
+          </tr>
+          <tr>
+            <td><span class="es">Dependencias Degradadas</span><span class="en">Degraded Dependencies</span></td>
+            <td><span class="badge warning">warning</span></td>
+            <td><span class="es">Dependencias con status "warning" o "error"</span><span class="en">Dependencies with "warning" or "error" status</span></td>
+          </tr>
+          <tr>
+            <td><span class="es">Certificados Expirando</span><span class="en">Expiring Certificates</span></td>
+            <td><span class="badge danger">critical</span></td>
+            <td><span class="es">Certificados que expiran en menos de 30 dias</span><span class="en">Certificates expiring in less than 30 days</span></td>
+          </tr>
+          <tr>
+            <td><span class="es">HA Sin Configurar</span><span class="en">HA Not Configured</span></td>
+            <td><span class="badge neutral">info</span></td>
+            <td><span class="es">Sistemas PRD sin configuracion de HA activa</span><span class="en">PRD systems without active HA configuration</span></td>
+          </tr>
+          <tr>
+            <td><span class="es">Capacidad RISE</span><span class="en">RISE Capabilities</span></td>
+            <td><span class="badge neutral">info</span></td>
+            <td><span class="es">Identifica sistemas con capacidades restringidas (RISE/managed)</span><span class="en">Identifies systems with restricted capabilities (RISE/managed)</span></td>
           </tr>
         </tbody>
       </table>
     </div>
 
-    <!-- API Endpoints -->
-    <h2><span class="es">Endpoints de Landscape</span><span class="en">Landscape Endpoints</span></h2>
+    <h3>
+      <span class="es">Ejemplo de Respuesta de Validacion</span>
+      <span class="en">Example Validation Response</span>
+    </h3>
 
-    <div class="card">
-      <div class="card-header">
-        <div class="card-title">
-          <div class="card-icon violet">&#128268;</div>
-          API Reference
-        </div>
-      </div>
-      <div class="table-wrap" style="border:none;margin:0">
-        <table>
-          <thead>
-            <tr>
-              <th><span class="es">Metodo</span><span class="en">Method</span></th>
-              <th>Endpoint</th>
-              <th><span class="es">Descripcion</span><span class="en">Description</span></th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td><span class="badge cyan">GET</span></td>
-              <td><code>/api/landscape/validate</code></td>
-              <td><span class="es">Ejecuta las 4 validaciones para todos los sistemas</span><span class="en">Run all 4 validations for all systems</span></td>
-            </tr>
-            <tr>
-              <td><span class="badge cyan">GET</span></td>
-              <td><code>/api/landscape/topology</code></td>
-              <td><span class="es">Retorna la topologia agrupada por SID</span><span class="en">Returns topology grouped by SID</span></td>
-            </tr>
-            <tr>
-              <td><span class="badge cyan">GET</span></td>
-              <td><code>/api/landscape/discovery</code></td>
-              <td><span class="es">Lista instancias descubiertas</span><span class="en">List discovered instances</span></td>
-            </tr>
-            <tr>
-              <td><span class="badge cyan">GET</span></td>
-              <td><code>/api/landscape/ha-status</code></td>
-              <td><span class="es">Estado HA de todos los sistemas</span><span class="en">HA status for all systems</span></td>
-            </tr>
-            <tr>
-              <td><span class="badge cyan">GET</span></td>
-              <td><code>/api/landscape/validate/:systemId</code></td>
-              <td><span class="es">Validacion individual de un sistema</span><span class="en">Individual system validation</span></td>
-            </tr>
-          </tbody>
-        </table>
+<pre><code>{
+  "timestamp": "2026-03-17T10:30:00.000Z",
+  "totalSystems": 12,
+  "totalChecks": 96,
+  "passedChecks": 89,
+  "failedChecks": 7,
+  "checks": [
+    {
+      "systemId": "uuid-pi1",
+      "sid": "PI1",
+      "check": "Health Score",
+      "severity": "critical",
+      "passed": false,
+      "message": "Health score 45 is below threshold (50)"
+    },
+    {
+      "systemId": "uuid-ep1",
+      "sid": "EP1",
+      "check": "Dependency Health",
+      "severity": "warning",
+      "passed": false,
+      "message": "RFC dependency to PI1 has elevated latency (245ms)"
+    },
+    {
+      "systemId": "uuid-rs1",
+      "sid": "RS1",
+      "check": "RISE Capabilities",
+      "severity": "info",
+      "passed": true,
+      "message": "RISE system — restricted monitoring capabilities expected"
+    }
+  ]
+}</code></pre>
+
+    <!-- ═══ Related Endpoints ═══ -->
+    <h2>
+      <span class="es">Endpoints Relacionados</span>
+      <span class="en">Related Endpoints</span>
+    </h2>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>Method</th><th>Path</th><th><span class="es">Descripcion</span><span class="en">Description</span></th></tr>
+        </thead>
+        <tbody>
+          <tr><td><span class="badge cyan">GET</span></td><td><code>/landscape/validation</code></td><td><span class="es">Validacion completa del landscape</span><span class="en">Complete landscape validation</span></td></tr>
+          <tr><td><span class="badge cyan">GET</span></td><td><code>/systems</code></td><td><span class="es">Lista completa de sistemas con metadatos</span><span class="en">Full system list with metadata</span></td></tr>
+          <tr><td><span class="badge cyan">GET</span></td><td><code>/systems/:id</code></td><td><span class="es">Detalle de un sistema con componentes, instancias y hosts</span><span class="en">System detail with components, instances and hosts</span></td></tr>
+          <tr><td><span class="badge cyan">GET</span></td><td><code>/metrics/systems/:systemId/dependencies</code></td><td><span class="es">Dependencias del sistema (RFC, DB, HTTP, IDoc)</span><span class="en">System dependencies (RFC, DB, HTTP, IDoc)</span></td></tr>
+          <tr><td><span class="badge cyan">GET</span></td><td><code>/metrics/systems/:systemId/hosts-detail</code></td><td><span class="es">Hosts con instancias asociadas</span><span class="en">Hosts with associated instances</span></td></tr>
+          <tr><td><span class="badge cyan">GET</span></td><td><code>/metrics/systems/:systemId/components</code></td><td><span class="es">Componentes del sistema con instancias</span><span class="en">System components with instances</span></td></tr>
+          <tr><td><span class="badge cyan">GET</span></td><td><code>/connectors</code></td><td><span class="es">Estado de conectores por sistema</span><span class="en">Connector status per system</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- ═══ Deployment Models ═══ -->
+    <h2>
+      <span class="es">Modelos de Despliegue</span>
+      <span class="en">Deployment Models</span>
+    </h2>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th><span class="es">Modelo</span><span class="en">Model</span></th>
+            <th><span class="es">Sistemas Demo</span><span class="en">Demo Systems</span></th>
+            <th><span class="es">Monitoreo Disponible</span><span class="en">Available Monitoring</span></th>
+            <th><span class="es">Restricciones</span><span class="en">Restrictions</span></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>ON_PREMISE</strong></td>
+            <td>EP1, EQ1, ED1, BW1, SM1, PI1, GR1, CR1, EW1, MX1, SO1</td>
+            <td><span class="es">Full Stack: host, OS, SAP, DB, topologia, runbooks</span><span class="en">Full Stack: host, OS, SAP, DB, topology, runbooks</span></td>
+            <td><span class="es">Ninguna — acceso completo via agente</span><span class="en">None — full access via agent</span></td>
+          </tr>
+          <tr>
+            <td><strong>RISE_MANAGED</strong></td>
+            <td>RS1</td>
+            <td><span class="es">Solo metricas SAP y DB (restricciones del proveedor)</span><span class="en">SAP and DB metrics only (provider restrictions)</span></td>
+            <td><span class="es">Sin metricas de host/OS, sin descubrimiento de topologia, sin runbooks</span><span class="en">No host/OS metrics, no topology discovery, no runbooks</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="callout warning">
+      <div class="callout-icon">&#9888;&#65039;</div>
+      <div>
+        <span class="es"><strong>RISE Managed:</strong> Los sistemas RISE tienen <code>integrationTrustLevel: "restricted"</code>. No se puede acceder a metricas de infraestructura del host ni ejecutar runbooks operativos. Solo se monitorean metricas a nivel de aplicacion SAP via API restricta.</span>
+        <span class="en"><strong>RISE Managed:</strong> RISE systems have <code>integrationTrustLevel: "restricted"</code>. Host infrastructure metrics cannot be accessed and operational runbooks cannot be executed. Only SAP application-level metrics are monitored via restricted API.</span>
       </div>
     </div>
 
-    <div class="callout success mt-2">
-      <div class="callout-icon">&#128640;</div>
+    <!-- ═══ Database Diversity ═══ -->
+    <h2>
+      <span class="es">Diversidad de Bases de Datos</span>
+      <span class="en">Database Diversity</span>
+    </h2>
+
+    <p>
+      <span class="es">El landscape de demo incluye 6 tipos diferentes de bases de datos para simular un landscape corporativo real:</span>
+      <span class="en">The demo landscape includes 6 different database types to simulate a real corporate landscape:</span>
+    </p>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th><span class="es">Base de Datos</span><span class="en">Database</span></th>
+            <th><span class="es">Sistemas</span><span class="en">Systems</span></th>
+            <th><span class="es">Notas</span><span class="en">Notes</span></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td><strong>SAP HANA 2.0</strong></td><td>EP1, EQ1, ED1, BW1, SM1</td><td><span class="es">In-memory database — principal para S/4HANA y BW/4HANA</span><span class="en">In-memory database — primary for S/4HANA and BW/4HANA</span></td></tr>
+          <tr><td><strong>SAP HANA Cloud</strong></td><td>RS1</td><td><span class="es">Version cloud managed — RISE with SAP</span><span class="en">Cloud managed version — RISE with SAP</span></td></tr>
+          <tr><td><strong>Oracle 19c</strong></td><td>PI1, CR1, SO1</td><td><span class="es">Comun en sistemas legados y middleware Java</span><span class="en">Common in legacy systems and Java middleware</span></td></tr>
+          <tr><td><strong>Microsoft SQL Server</strong></td><td>GR1</td><td><span class="es">Usado en implementaciones Windows</span><span class="en">Used in Windows deployments</span></td></tr>
+          <tr><td><strong>IBM DB2 11.5</strong></td><td>EW1</td><td><span class="es">Comun en entornos AIX/z</span><span class="en">Common in AIX/z environments</span></td></tr>
+          <tr><td><strong>SAP MaxDB 7.9</strong></td><td>MX1</td><td><span class="es">Base de datos legacy de SAP (antes liveCache)</span><span class="en">SAP legacy database (formerly liveCache)</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="callout success">
+      <div class="callout-icon">&#9989;</div>
       <div>
-        <span class="es"><strong>Consejo:</strong> Ejecuta la validacion de landscape periodicamente para detectar problemas antes de que afecten la produccion. Configura alertas automaticas en la seccion de <a href="alerts.html">Alertas</a>.</span>
-        <span class="en"><strong>Tip:</strong> Run landscape validation periodically to detect issues before they impact production. Configure automatic alerts in the <a href="alerts.html">Alerts</a> section.</span>
+        <span class="es"><strong>Runbooks multi-DB:</strong> Los runbooks de SAP Spektra son conscientes del tipo de base de datos. Un runbook de optimizacion de HANA no se ofrecera para ejecutar en un sistema con Oracle 19c.</span>
+        <span class="en"><strong>Multi-DB Runbooks:</strong> SAP Spektra runbooks are database-type aware. A HANA optimization runbook will not be offered for execution on a system with Oracle 19c.</span>
       </div>
     </div>
 

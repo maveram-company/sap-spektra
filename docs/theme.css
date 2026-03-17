@@ -305,6 +305,14 @@ li{margin:4px 0}
   color: var(--txt1);
 }
 
+/* ── Mermaid diagrams ── */
+.mermaid{
+  margin:12px 0;padding:24px 16px;
+  background:var(--card-bg);border:1px solid var(--card-border);
+  border-radius:var(--radius);overflow-x:auto;text-align:center;
+}
+.mermaid svg{max-width:100%;height:auto}
+
 /* ── Scrollbar ── */
 ::-webkit-scrollbar{width:6px;height:6px}
 ::-webkit-scrollbar-track{background:transparent}

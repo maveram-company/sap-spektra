@@ -2,864 +2,472 @@
 <html lang="es" data-theme="dark" data-lang="es">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
   <title>Configuracion — SAP Spektra Docs</title>
   <link rel="stylesheet" href="theme.css">
   <script src="theme-toggle.js"></script>
   <script src="lang-toggle.js"></script>
-  <style>
-    /* ── Settings Layout ── */
-    .settings-layout { display: flex; gap: 24px; min-height: 600px; }
-    .settings-nav {
-      width: 200px; flex-shrink: 0;
-      background: var(--card-bg); border: 1px solid var(--card-border);
-      border-radius: var(--radius); padding: 8px; height: fit-content;
-      position: sticky; top: 20px;
-    }
-    .settings-nav-item {
-      display: block; padding: 8px 12px; border-radius: 8px;
-      font-size: 13px; font-weight: 500; color: var(--txt2);
-      text-decoration: none; cursor: pointer; border: none;
-      background: none; width: 100%; text-align: left; transition: all .15s;
-    }
-    .settings-nav-item:hover { color: var(--txt1); background: var(--bg3); text-decoration: none; }
-    .settings-nav-item.active {
-      color: var(--cyan); background: var(--cyan-dim); font-weight: 600;
-    }
-    .settings-content { flex: 1; min-width: 0; }
-    .settings-panel { display: none; }
-    .settings-panel.active { display: block; }
-    .form-group { margin-bottom: 16px; }
-    .form-label {
-      display: block; font-size: 12px; font-weight: 600;
-      color: var(--txt1); margin-bottom: 6px; letter-spacing: .02em;
-    }
-    .form-input, .form-select, .form-textarea {
-      width: 100%; background: var(--bg3); border: 1px solid var(--brd);
-      color: var(--txt1); padding: 9px 12px; border-radius: 8px;
-      font-size: 13px; font-family: inherit; transition: border-color .15s;
-    }
-    .form-input:focus, .form-select:focus, .form-textarea:focus {
-      outline: none; border-color: var(--cyan);
-    }
-    .form-textarea { min-height: 80px; resize: vertical; }
-    .form-hint { font-size: 11px; color: var(--txt3); margin-top: 4px; }
-    .btn-primary {
-      background: var(--gradient-brand); color: #fff; border: none;
-      padding: 8px 20px; border-radius: 8px; font-size: 13px;
-      font-weight: 600; cursor: pointer;
-    }
-    .btn-secondary {
-      background: var(--bg3); color: var(--txt1); border: 1px solid var(--brd);
-      padding: 8px 20px; border-radius: 8px; font-size: 13px;
-      font-weight: 600; cursor: pointer;
-    }
-    .btn-danger {
-      background: rgba(239,68,68,0.12); color: var(--danger);
-      border: 1px solid rgba(239,68,68,0.3); padding: 8px 20px;
-      border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer;
-    }
-    .usage-bar-bg {
-      width: 100%; height: 8px; background: var(--bg3);
-      border-radius: 4px; overflow: hidden;
-    }
-    .usage-bar-fill { height: 100%; border-radius: 4px; transition: width .3s; }
-    @media(max-width:768px) {
-      .settings-layout { flex-direction: column; }
-      .settings-nav { width: 100%; position: static; display: flex; flex-wrap: wrap; gap: 4px; }
-    }
-  </style>
 </head>
 <body>
 <div class="docs-wrapper">
-
-  <!-- ═══ Sidebar ═══ -->
   <nav class="docs-sidebar">
     <div class="sidebar-brand">
-      <div class="logo">S</div>
+      <div class="logo">&#9889;</div>
       <div class="brand-text">
         <div class="brand-name">SAP Spektra</div>
         <div class="brand-sub">Documentacion v2.0</div>
       </div>
     </div>
-
     <div class="sidebar-section">
       <div class="sidebar-section-label">Inicio</div>
-      <a href="index.html" class="sidebar-link"><span class="es">Portal</span><span class="en">Portal</span></a>
-      <a href="getting-started.html" class="sidebar-link"><span class="es">Primeros Pasos</span><span class="en">Getting Started</span></a>
+      <a href="index.html" class="sidebar-link">Portal</a>
+      <a href="getting-started.html" class="sidebar-link">Primeros Pasos</a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-section-label">Architecture</div>
+      <a href="architecture.html" class="sidebar-link">Arquitectura</a>
+      <a href="domain-model.html" class="sidebar-link">Modelo de Datos</a>
+      <a href="api-reference.html" class="sidebar-link">API Reference</a>
     </div>
     <div class="sidebar-section">
       <div class="sidebar-section-label">Command</div>
       <a href="dashboard.html" class="sidebar-link">Dashboard</a>
       <a href="landscape.html" class="sidebar-link">Landscape</a>
-      <a href="alerts.html" class="sidebar-link"><span class="es">Alertas</span><span class="en">Alerts</span></a>
+      <a href="alerts.html" class="sidebar-link">Alertas</a>
     </div>
     <div class="sidebar-section">
       <div class="sidebar-section-label">Monitor</div>
-      <a href="systems.html" class="sidebar-link"><span class="es">Sistemas</span><span class="en">Systems</span></a>
-      <a href="connectors.html" class="sidebar-link"><span class="es">Conectores</span><span class="en">Connectors</span></a>
-      <a href="events.html" class="sidebar-link"><span class="es">Eventos</span><span class="en">Events</span></a>
+      <a href="systems.html" class="sidebar-link">Sistemas</a>
+      <a href="connectors.html" class="sidebar-link">Conectores</a>
+      <a href="events.html" class="sidebar-link">Eventos</a>
     </div>
     <div class="sidebar-section">
       <div class="sidebar-section-label">Intelligence</div>
-      <a href="ai-analysis.html" class="sidebar-link"><span class="es">Analisis IA</span><span class="en">AI Analysis</span></a>
+      <a href="ai-analysis.html" class="sidebar-link">Analisis IA</a>
       <a href="analytics.html" class="sidebar-link">Analytics</a>
-      <a href="reports.html" class="sidebar-link"><span class="es">Reportes</span><span class="en">Reports</span></a>
-      <a href="comparison.html" class="sidebar-link"><span class="es">Comparacion</span><span class="en">Comparison</span></a>
+      <a href="reports.html" class="sidebar-link">Reportes</a>
+      <a href="comparison.html" class="sidebar-link">Comparacion</a>
     </div>
     <div class="sidebar-section">
       <div class="sidebar-section-label">Operations</div>
       <a href="runbooks.html" class="sidebar-link">Runbooks</a>
-      <a href="approvals.html" class="sidebar-link"><span class="es">Aprobaciones</span><span class="en">Approvals</span></a>
-      <a href="operations.html" class="sidebar-link"><span class="es">Operaciones</span><span class="en">Operations</span></a>
-      <a href="jobs.html" class="sidebar-link">Jobs SM37</a>
-      <a href="transports.html" class="sidebar-link"><span class="es">Transportes</span><span class="en">Transports</span></a>
+      <a href="approvals.html" class="sidebar-link">Aprobaciones</a>
+      <a href="operations.html" class="sidebar-link">Operaciones</a>
+      <a href="jobs.html" class="sidebar-link">Jobs (SM37)</a>
+      <a href="transports.html" class="sidebar-link">Transportes</a>
       <a href="sla.html" class="sidebar-link">SLA</a>
       <a href="ha-control.html" class="sidebar-link">HA Control</a>
-      <a href="certificates.html" class="sidebar-link"><span class="es">Certificados</span><span class="en">Certificates</span></a>
+      <a href="certificates.html" class="sidebar-link">Certificados</a>
     </div>
     <div class="sidebar-section">
       <div class="sidebar-section-label">Admin</div>
-      <a href="admin.html" class="sidebar-link"><span class="es">Gestion</span><span class="en">Management</span></a>
-      <a href="settings.html" class="sidebar-link active"><span class="es">Configuracion</span><span class="en">Settings</span></a>
-      <a href="connect-system.html" class="sidebar-link"><span class="es">Conectar Sistema</span><span class="en">Connect System</span></a>
+      <a href="admin.html" class="sidebar-link">Gestion</a>
+      <a href="settings.html" class="sidebar-link active">Configuracion</a>
+      <a href="connect-system.html" class="sidebar-link">Conectar Sistema</a>
     </div>
   </nav>
 
-  <!-- ═══ Main Content ═══ -->
   <main class="docs-main">
-
     <div class="breadcrumb">
-      <a href="index.html">Docs</a>
-      <span class="sep">/</span>
-      <span>Admin</span>
-      <span class="sep">/</span>
-      <span class="text-primary"><span class="es">Configuracion</span><span class="en">Settings</span></span>
+      <a href="index.html">Docs</a> <span class="sep">/</span>
+      <span class="es">Admin</span><span class="en">Admin</span> <span class="sep">/</span>
+      <span class="es">Configuracion</span><span class="en">Settings</span>
     </div>
 
     <div class="page-header">
-      <h1><span class="es">Configuracion</span><span class="en">Settings</span></h1>
-      <div class="subtitle">
-        <span class="es">Configuracion general de la organizacion, perfil, usuarios, integraciones y facturacion</span>
-        <span class="en">General organization settings, profile, users, integrations, and billing</span>
+      <h1><span class="es">Configuracion de la Organizacion</span><span class="en">Organization Settings</span></h1>
+      <p class="subtitle">
+        <span class="es">Configuracion general, notificaciones, seguridad, umbrales, politicas de escalamiento, ventanas de mantenimiento, y gestion de API keys</span>
+        <span class="en">General settings, notifications, security, thresholds, escalation policies, maintenance windows, and API key management</span>
+      </p>
+    </div>
+
+    <!-- General Settings -->
+    <h2><span class="es">Configuracion General</span><span class="en">General Settings</span></h2>
+    <div class="card">
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th><span class="es">Campo</span><span class="en">Field</span></th>
+              <th><span class="es">Tipo</span><span class="en">Type</span></th>
+              <th><span class="es">Ejemplo</span><span class="en">Example</span></th>
+              <th><span class="es">Descripcion</span><span class="en">Description</span></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="font-mono">name</td>
+              <td>string</td>
+              <td>Acme Corp SAP</td>
+              <td><span class="es">Nombre de la organizacion que aparece en reportes y UI</span><span class="en">Organization name displayed in reports and UI</span></td>
+            </tr>
+            <tr>
+              <td class="font-mono">timezone</td>
+              <td>string (IANA)</td>
+              <td>America/Bogota</td>
+              <td><span class="es">Zona horaria por defecto para programacion de jobs y reportes</span><span class="en">Default timezone for job scheduling and reports</span></td>
+            </tr>
+            <tr>
+              <td class="font-mono">language</td>
+              <td>enum</td>
+              <td>es</td>
+              <td><span class="es">Idioma por defecto: <code>es</code> (espanol) o <code>en</code> (ingles)</span><span class="en">Default language: <code>es</code> (Spanish) or <code>en</code> (English)</span></td>
+            </tr>
+            <tr>
+              <td class="font-mono">dateFormat</td>
+              <td>string</td>
+              <td>DD/MM/YYYY</td>
+              <td><span class="es">Formato de fecha (DD/MM/YYYY o MM/DD/YYYY o YYYY-MM-DD)</span><span class="en">Date format (DD/MM/YYYY or MM/DD/YYYY or YYYY-MM-DD)</span></td>
+            </tr>
+            <tr>
+              <td class="font-mono">logo</td>
+              <td>URL</td>
+              <td>https://...</td>
+              <td><span class="es">Logo corporativo para reportes y UI</span><span class="en">Corporate logo for reports and UI</span></td>
+            </tr>
+          </tbody>
+        </table>
       </div>
     </div>
 
-    <!-- ═══ Settings Layout ═══ -->
-    <div class="settings-layout">
-
-      <!-- ── Settings Sidebar Nav ── -->
-      <nav class="settings-nav">
-        <button class="settings-nav-item active" onclick="showSettings('general')">
-          <span class="es">General</span><span class="en">General</span>
-        </button>
-        <button class="settings-nav-item" onclick="showSettings('profile')">
-          <span class="es">Perfil</span><span class="en">Profile</span>
-        </button>
-        <button class="settings-nav-item" onclick="showSettings('users')">
-          <span class="es">Usuarios</span><span class="en">Users</span>
-        </button>
-        <button class="settings-nav-item" onclick="showSettings('roles')">
-          <span class="es">Roles</span><span class="en">Roles</span>
-        </button>
-        <button class="settings-nav-item" onclick="showSettings('integrations')">
-          <span class="es">Integraciones</span><span class="en">Integrations</span>
-        </button>
-        <button class="settings-nav-item" onclick="showSettings('notifications')">
-          <span class="es">Notificaciones</span><span class="en">Notifications</span>
-        </button>
-        <button class="settings-nav-item" onclick="showSettings('billing')">
-          <span class="es">Facturacion</span><span class="en">Billing</span>
-        </button>
-        <button class="settings-nav-item" onclick="showSettings('audit')">
-          Audit Log
-        </button>
-        <button class="settings-nav-item" onclick="showSettings('apikeys')">
-          API Keys
-        </button>
-      </nav>
-
-      <!-- ── Settings Content ── -->
-      <div class="settings-content">
-
-        <!-- ══ GENERAL ══ -->
-        <div id="settings-general" class="settings-panel active">
-          <h2><span class="es">Configuracion General</span><span class="en">General Settings</span></h2>
-
-          <div class="card mb-2">
-            <h3><span class="es">Informacion de la Organizacion</span><span class="en">Organization Information</span></h3>
-            <div class="grid-2 mt-2">
-              <div class="form-group">
-                <label class="form-label"><span class="es">Nombre de Organizacion</span><span class="en">Organization Name</span></label>
-                <input type="text" class="form-input" value="Acme Corporation">
-              </div>
-              <div class="form-group">
-                <label class="form-label">Tenant ID</label>
-                <input type="text" class="form-input font-mono" value="tn_acme_prod_01" disabled style="opacity:0.6;">
-              </div>
-              <div class="form-group">
-                <label class="form-label"><span class="es">Plan Actual</span><span class="en">Current Plan</span></label>
-                <input type="text" class="form-input" value="Professional" disabled style="opacity:0.6;">
-              </div>
-              <div class="form-group">
-                <label class="form-label"><span class="es">Region</span><span class="en">Region</span></label>
-                <select class="form-select">
-                  <option selected>EU Central (Frankfurt)</option>
-                  <option>US East (Virginia)</option>
-                  <option>AP Southeast (Singapore)</option>
-                </select>
-              </div>
-            </div>
-          </div>
-
-          <!-- Usage Overview -->
-          <div class="card mb-2">
-            <h3><span class="es">Resumen de Uso</span><span class="en">Usage Overview</span></h3>
-            <div class="grid-3 mt-2">
-              <div>
-                <div style="display:flex;justify-content:space-between;margin-bottom:6px;">
-                  <span class="text-sm font-semibold"><span class="es">Sistemas</span><span class="en">Systems</span></span>
-                  <span class="text-sm text-muted">7 / 15</span>
-                </div>
-                <div class="usage-bar-bg"><div class="usage-bar-fill" style="width:47%;background:var(--cyan);"></div></div>
-              </div>
-              <div>
-                <div style="display:flex;justify-content:space-between;margin-bottom:6px;">
-                  <span class="text-sm font-semibold"><span class="es">Usuarios</span><span class="en">Users</span></span>
-                  <span class="text-sm text-muted">12 / 25</span>
-                </div>
-                <div class="usage-bar-bg"><div class="usage-bar-fill" style="width:48%;background:var(--violet);"></div></div>
-              </div>
-              <div>
-                <div style="display:flex;justify-content:space-between;margin-bottom:6px;">
-                  <span class="text-sm font-semibold"><span class="es">Integraciones</span><span class="en">Integrations</span></span>
-                  <span class="text-sm text-muted">4 / 10</span>
-                </div>
-                <div class="usage-bar-bg"><div class="usage-bar-fill" style="width:40%;background:var(--success);"></div></div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Thresholds Configuration -->
-          <div class="card mb-2">
-            <h3><span class="es">Umbrales de Alerta</span><span class="en">Alert Thresholds</span></h3>
-            <p class="text-sm text-muted mb-2"><span class="es">Defina los umbrales para las alertas globales de monitoreo.</span><span class="en">Define thresholds for global monitoring alerts.</span></p>
-            <div class="grid-3 mt-1">
-              <div class="form-group">
-                <label class="form-label">CPU Warning (%)</label>
-                <input type="number" class="form-input" value="75">
-              </div>
-              <div class="form-group">
-                <label class="form-label">CPU Critical (%)</label>
-                <input type="number" class="form-input" value="90">
-              </div>
-              <div class="form-group">
-                <label class="form-label"><span class="es">Memoria Warning (%)</span><span class="en">Memory Warning (%)</span></label>
-                <input type="number" class="form-input" value="80">
-              </div>
-              <div class="form-group">
-                <label class="form-label"><span class="es">Memoria Critical (%)</span><span class="en">Memory Critical (%)</span></label>
-                <input type="number" class="form-input" value="95">
-              </div>
-              <div class="form-group">
-                <label class="form-label"><span class="es">Disco Warning (%)</span><span class="en">Disk Warning (%)</span></label>
-                <input type="number" class="form-input" value="80">
-              </div>
-              <div class="form-group">
-                <label class="form-label"><span class="es">Disco Critical (%)</span><span class="en">Disk Critical (%)</span></label>
-                <input type="number" class="form-input" value="90">
-              </div>
-            </div>
-          </div>
-
-          <!-- Escalation Policy -->
-          <div class="card mb-2">
-            <h3><span class="es">Politica de Escalamiento</span><span class="en">Escalation Policy</span></h3>
-            <div class="grid-2 mt-1">
-              <div class="form-group">
-                <label class="form-label"><span class="es">Tiempo para escalar a Nivel 2 (min)</span><span class="en">Time to escalate to Level 2 (min)</span></label>
-                <input type="number" class="form-input" value="15">
-              </div>
-              <div class="form-group">
-                <label class="form-label"><span class="es">Tiempo para escalar a Nivel 3 (min)</span><span class="en">Time to escalate to Level 3 (min)</span></label>
-                <input type="number" class="form-input" value="60">
-              </div>
-            </div>
-            <div class="form-group">
-              <label class="form-label"><span class="es">Contacto de escalamiento</span><span class="en">Escalation contact</span></label>
-              <input type="email" class="form-input" value="oncall-team@acme.com">
-            </div>
-          </div>
-
-          <!-- Maintenance Windows -->
-          <div class="card mb-2">
-            <h3><span class="es">Ventanas de Mantenimiento</span><span class="en">Maintenance Windows</span></h3>
-            <p class="text-sm text-muted mb-1"><span class="es">Las alertas se suspenden durante las ventanas de mantenimiento programadas.</span><span class="en">Alerts are suspended during scheduled maintenance windows.</span></p>
-            <div class="table-wrap" style="margin-bottom:0;">
-              <table>
-                <thead>
-                  <tr>
-                    <th><span class="es">Nombre</span><span class="en">Name</span></th>
-                    <th><span class="es">Recurrencia</span><span class="en">Recurrence</span></th>
-                    <th><span class="es">Horario</span><span class="en">Schedule</span></th>
-                    <th>Status</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td class="font-semibold">Weekly Patch Window</td>
-                    <td><span class="es">Semanal - Domingos</span><span class="en">Weekly - Sundays</span></td>
-                    <td class="font-mono text-sm">02:00 - 06:00 CET</td>
-                    <td><span class="badge success"><span class="es">Activo</span><span class="en">Active</span></span></td>
-                  </tr>
-                  <tr>
-                    <td class="font-semibold">Monthly DB Maintenance</td>
-                    <td><span class="es">Mensual - 1er Sabado</span><span class="en">Monthly - 1st Saturday</span></td>
-                    <td class="font-mono text-sm">22:00 - 04:00 CET</td>
-                    <td><span class="badge success"><span class="es">Activo</span><span class="en">Active</span></span></td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
-
-          <!-- Danger Zone -->
-          <div class="card" style="border-color:var(--danger);background:rgba(239,68,68,0.03);">
-            <h3 class="text-danger"><span class="es">Zona de Peligro</span><span class="en">Danger Zone</span></h3>
-            <div style="display:flex;justify-content:space-between;align-items:center;margin-top:12px;flex-wrap:wrap;gap:12px;">
-              <div>
-                <p class="text-sm font-semibold text-primary"><span class="es">Eliminar Organizacion</span><span class="en">Delete Organization</span></p>
-                <p class="text-xs text-muted"><span class="es">Esta accion es irreversible. Se eliminaran todos los datos, sistemas y usuarios.</span><span class="en">This action is irreversible. All data, systems, and users will be deleted.</span></p>
-              </div>
-              <button class="btn-danger"><span class="es">Eliminar Organizacion</span><span class="en">Delete Organization</span></button>
-            </div>
-          </div>
-
-          <div class="mt-2" style="display:flex;gap:12px;">
-            <button class="btn-primary"><span class="es">Guardar Cambios</span><span class="en">Save Changes</span></button>
-            <button class="btn-secondary"><span class="es">Cancelar</span><span class="en">Cancel</span></button>
-          </div>
+    <!-- Notification Settings -->
+    <h2><span class="es">Configuracion de Notificaciones</span><span class="en">Notification Settings</span></h2>
+    <div class="grid-3">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title"><div class="card-icon cyan">&#9993;</div> Email</div>
         </div>
-
-        <!-- ══ PROFILE ══ -->
-        <div id="settings-profile" class="settings-panel">
-          <h2><span class="es">Perfil Personal</span><span class="en">Personal Profile</span></h2>
-
-          <div class="card mb-2">
-            <h3><span class="es">Informacion Personal</span><span class="en">Personal Information</span></h3>
-            <div style="display:flex;align-items:center;gap:16px;margin:16px 0;">
-              <div style="width:64px;height:64px;border-radius:50%;background:var(--gradient-brand);display:flex;align-items:center;justify-content:center;font-size:24px;color:#fff;font-weight:700;">JD</div>
-              <div>
-                <p class="font-semibold text-primary">Juan Delgado</p>
-                <p class="text-sm text-muted">juan.delgado@acme.com</p>
-                <span class="badge cyan mt-1">admin (40)</span>
-              </div>
-            </div>
-            <div class="grid-2 mt-2">
-              <div class="form-group">
-                <label class="form-label"><span class="es">Nombre</span><span class="en">First Name</span></label>
-                <input type="text" class="form-input" value="Juan">
-              </div>
-              <div class="form-group">
-                <label class="form-label"><span class="es">Apellido</span><span class="en">Last Name</span></label>
-                <input type="text" class="form-input" value="Delgado">
-              </div>
-              <div class="form-group">
-                <label class="form-label">Email</label>
-                <input type="email" class="form-input" value="juan.delgado@acme.com">
-              </div>
-              <div class="form-group">
-                <label class="form-label"><span class="es">Telefono</span><span class="en">Phone</span></label>
-                <input type="tel" class="form-input" value="+49 170 1234567">
-              </div>
-            </div>
-            <div class="form-group">
-              <label class="form-label"><span class="es">Zona Horaria</span><span class="en">Timezone</span></label>
-              <select class="form-select">
-                <option selected>Europe/Berlin (CET, UTC+1)</option>
-                <option>America/New_York (EST, UTC-5)</option>
-                <option>Asia/Singapore (SGT, UTC+8)</option>
-              </select>
-            </div>
-            <button class="btn-primary"><span class="es">Guardar Perfil</span><span class="en">Save Profile</span></button>
-          </div>
-
-          <!-- Password Change -->
-          <div class="card mb-2">
-            <h3><span class="es">Cambiar Contrasena</span><span class="en">Change Password</span></h3>
-            <div class="form-group">
-              <label class="form-label"><span class="es">Contrasena Actual</span><span class="en">Current Password</span></label>
-              <input type="password" class="form-input" placeholder="********">
-            </div>
-            <div class="grid-2">
-              <div class="form-group">
-                <label class="form-label"><span class="es">Nueva Contrasena</span><span class="en">New Password</span></label>
-                <input type="password" class="form-input">
-                <div class="form-hint"><span class="es">Min. 12 caracteres, 1 mayuscula, 1 numero, 1 simbolo</span><span class="en">Min. 12 chars, 1 uppercase, 1 number, 1 symbol</span></div>
-              </div>
-              <div class="form-group">
-                <label class="form-label"><span class="es">Confirmar Contrasena</span><span class="en">Confirm Password</span></label>
-                <input type="password" class="form-input">
-              </div>
-            </div>
-            <button class="btn-primary"><span class="es">Cambiar Contrasena</span><span class="en">Change Password</span></button>
-          </div>
-
-          <!-- Session Info -->
-          <div class="card">
-            <h3><span class="es">Informacion de Sesion</span><span class="en">Session Information</span></h3>
-            <div class="table-wrap" style="margin-bottom:0;">
-              <table>
-                <tbody>
-                  <tr><td class="font-semibold" style="width:35%;"><span class="es">Sesion Actual</span><span class="en">Current Session</span></td><td class="font-mono text-sm">ses_8f3a...b2c1</td></tr>
-                  <tr><td class="font-semibold"><span class="es">Inicio de Sesion</span><span class="en">Login Time</span></td><td class="font-mono text-sm">2026-03-12 08:15 CET</td></tr>
-                  <tr><td class="font-semibold">IP</td><td class="font-mono text-sm">203.0.113.42</td></tr>
-                  <tr><td class="font-semibold">User Agent</td><td class="text-sm text-muted">Chrome 124 / macOS</td></tr>
-                  <tr><td class="font-semibold"><span class="es">Ultimo Acceso</span><span class="en">Last Access</span></td><td class="font-mono text-sm"><span class="es">Hace 3 minutos</span><span class="en">3 minutes ago</span></td></tr>
-                  <tr><td class="font-semibold">Rol</td><td><span class="badge cyan">admin (40)</span></td></tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
+        <p>
+          <span class="es">Notificaciones por email via SMTP o AWS SES. Se pueden configurar destinatarios diferentes por tipo de alerta y sistema.</span>
+          <span class="en">Email notifications via SMTP or AWS SES. Different recipients can be configured per alert type and system.</span>
+        </p>
+        <pre><code>{
+  "email": {
+    "enabled": true,
+    "provider": "SES",
+    "from": "alerts@spektra.com",
+    "recipients": {
+      "critical": ["oncall@co.com"],
+      "warning": ["team@co.com"],
+      "info": ["log@co.com"]
+    }
+  }
+}</code></pre>
+      </div>
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title"><div class="card-icon violet">&#128172;</div> Slack</div>
         </div>
-
-        <!-- ══ USERS ══ -->
-        <div id="settings-users" class="settings-panel">
-          <h2><span class="es">Gestion de Usuarios</span><span class="en">User Management</span></h2>
-
-          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:12px;">
-            <div>
-              <span class="text-sm text-muted"><span class="es">Usuarios activos:</span><span class="en">Active users:</span></span>
-              <span class="font-bold text-primary">12 / 25</span>
-            </div>
-            <button class="btn-primary"><span class="es">+ Invitar Usuario</span><span class="en">+ Invite User</span></button>
-          </div>
-
-          <div class="table-wrap">
-            <table>
-              <thead>
-                <tr>
-                  <th><span class="es">Nombre</span><span class="en">Name</span></th>
-                  <th>Email</th>
-                  <th>Rol</th>
-                  <th>Status</th>
-                  <th><span class="es">Ultimo Login</span><span class="en">Last Login</span></th>
-                  <th><span class="es">Acciones</span><span class="en">Actions</span></th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td class="font-semibold text-primary">Juan Delgado</td>
-                  <td class="font-mono text-sm">juan.delgado@acme.com</td>
-                  <td><span class="badge cyan">admin</span></td>
-                  <td><span class="badge success">active</span></td>
-                  <td class="font-mono text-sm text-muted">2026-03-12 08:15</td>
-                  <td><a href="#" class="text-cyan text-sm"><span class="es">Editar</span><span class="en">Edit</span></a></td>
-                </tr>
-                <tr>
-                  <td class="font-semibold text-primary">Maria Santos</td>
-                  <td class="font-mono text-sm">maria.santos@acme.com</td>
-                  <td><span class="badge violet">escalation</span></td>
-                  <td><span class="badge success">active</span></td>
-                  <td class="font-mono text-sm text-muted">2026-03-12 07:50</td>
-                  <td><a href="#" class="text-cyan text-sm"><span class="es">Editar</span><span class="en">Edit</span></a></td>
-                </tr>
-                <tr>
-                  <td class="font-semibold text-primary">Carlos Mendez</td>
-                  <td class="font-mono text-sm">carlos.mendez@acme.com</td>
-                  <td><span class="badge warning">operator</span></td>
-                  <td><span class="badge success">active</span></td>
-                  <td class="font-mono text-sm text-muted">2026-03-11 17:22</td>
-                  <td><a href="#" class="text-cyan text-sm"><span class="es">Editar</span><span class="en">Edit</span></a></td>
-                </tr>
-                <tr>
-                  <td class="font-semibold text-primary">Ana Ruiz</td>
-                  <td class="font-mono text-sm">ana.ruiz@acme.com</td>
-                  <td><span class="badge neutral">viewer</span></td>
-                  <td><span class="badge success">active</span></td>
-                  <td class="font-mono text-sm text-muted">2026-03-10 14:05</td>
-                  <td><a href="#" class="text-cyan text-sm"><span class="es">Editar</span><span class="en">Edit</span></a></td>
-                </tr>
-                <tr>
-                  <td class="font-semibold text-muted">Pedro Lopez</td>
-                  <td class="font-mono text-sm">pedro.lopez@acme.com</td>
-                  <td><span class="badge warning">operator</span></td>
-                  <td><span class="badge neutral">invited</span></td>
-                  <td class="text-muted text-sm">--</td>
-                  <td><a href="#" class="text-cyan text-sm"><span class="es">Reenviar</span><span class="en">Resend</span></a></td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
+        <p>
+          <span class="es">Integracion con Slack via webhooks. Alertas se envian a canales especificos con formato enriquecido (bloques, botones de accion).</span>
+          <span class="en">Slack integration via webhooks. Alerts are sent to specific channels with rich formatting (blocks, action buttons).</span>
+        </p>
+        <pre><code>{
+  "slack": {
+    "enabled": true,
+    "webhookUrl": "https://hooks...",
+    "channels": {
+      "critical": "#sap-alerts",
+      "warning": "#sap-monitor",
+      "approvals": "#sap-approvals"
+    }
+  }
+}</code></pre>
+      </div>
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title"><div class="card-icon success">&#128187;</div> Teams</div>
         </div>
+        <p>
+          <span class="es">Integracion con Microsoft Teams via connectors/webhooks. Soporte para tarjetas adaptativas con acciones directas.</span>
+          <span class="en">Microsoft Teams integration via connectors/webhooks. Support for adaptive cards with direct actions.</span>
+        </p>
+        <pre><code>{
+  "teams": {
+    "enabled": true,
+    "webhookUrl": "https://...",
+    "channelId": "19:abc...",
+    "tenantId": "xxxxx"
+  }
+}</code></pre>
+      </div>
+    </div>
 
-        <!-- ══ ROLES ══ -->
-        <div id="settings-roles" class="settings-panel">
-          <h2><span class="es">Roles y Permisos</span><span class="en">Roles and Permissions</span></h2>
-          <p class="text-muted mb-2"><span class="es">Spektra utiliza un sistema jerarquico de roles con niveles numericos.</span><span class="en">Spektra uses a hierarchical role system with numeric levels.</span></p>
+    <!-- Security Settings -->
+    <h2><span class="es">Configuracion de Seguridad</span><span class="en">Security Settings</span></h2>
+    <div class="card">
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th><span class="es">Parametro</span><span class="en">Parameter</span></th>
+              <th><span class="es">Valor por Defecto</span><span class="en">Default Value</span></th>
+              <th><span class="es">Descripcion</span><span class="en">Description</span></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="font-mono">mfaRequired</td>
+              <td><span class="badge success">true</span></td>
+              <td><span class="es">Requerir autenticacion multifactor (MFA/2FA) para todos los usuarios</span><span class="en">Require multi-factor authentication (MFA/2FA) for all users</span></td>
+            </tr>
+            <tr>
+              <td class="font-mono">sessionTimeout</td>
+              <td class="font-mono">30 min</td>
+              <td><span class="es">Tiempo de inactividad antes de cerrar sesion automaticamente</span><span class="en">Inactivity time before automatic session logout</span></td>
+            </tr>
+            <tr>
+              <td class="font-mono">maxSessions</td>
+              <td class="font-mono">3</td>
+              <td><span class="es">Numero maximo de sesiones simultaneas por usuario</span><span class="en">Maximum number of simultaneous sessions per user</span></td>
+            </tr>
+            <tr>
+              <td class="font-mono">passwordPolicy</td>
+              <td class="font-mono">strong</td>
+              <td><span class="es">Min 12 caracteres, mayuscula, minuscula, numero, simbolo</span><span class="en">Min 12 chars, uppercase, lowercase, number, symbol</span></td>
+            </tr>
+            <tr>
+              <td class="font-mono">ipWhitelist</td>
+              <td><span class="es">Deshabilitado</span><span class="en">Disabled</span></td>
+              <td><span class="es">Lista de IPs/CIDRs permitidos para acceder a la plataforma</span><span class="en">List of allowed IPs/CIDRs to access the platform</span></td>
+            </tr>
+            <tr>
+              <td class="font-mono">auditRetention</td>
+              <td class="font-mono">365 days</td>
+              <td><span class="es">Tiempo de retencion de registros de auditoria</span><span class="en">Audit record retention time</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
 
-          <div class="table-wrap">
-            <table>
-              <thead>
-                <tr>
-                  <th>Rol</th>
-                  <th><span class="es">Nivel</span><span class="en">Level</span></th>
-                  <th><span class="es">Descripcion</span><span class="en">Description</span></th>
-                  <th><span class="es">Usuarios</span><span class="en">Users</span></th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td><span class="badge cyan">admin</span></td>
-                  <td class="font-bold">40</td>
-                  <td><span class="es">Acceso completo. Gestion de sistemas, usuarios, configuracion y facturacion.</span><span class="en">Full access. System, user, configuration, and billing management.</span></td>
-                  <td>2</td>
-                </tr>
-                <tr>
-                  <td><span class="badge violet">escalation</span></td>
-                  <td class="font-bold">30</td>
-                  <td><span class="es">Acceso operativo avanzado. Puede escalar incidentes, reiniciar servicios y aprobar operaciones.</span><span class="en">Advanced operational access. Can escalate incidents, restart services, and approve operations.</span></td>
-                  <td>3</td>
-                </tr>
-                <tr>
-                  <td><span class="badge warning">operator</span></td>
-                  <td class="font-bold">20</td>
-                  <td><span class="es">Operaciones diarias. Ejecutar runbooks, monitorear sistemas, gestionar alertas.</span><span class="en">Day-to-day operations. Execute runbooks, monitor systems, manage alerts.</span></td>
-                  <td>5</td>
-                </tr>
-                <tr>
-                  <td><span class="badge neutral">viewer</span></td>
-                  <td class="font-bold">10</td>
-                  <td><span class="es">Solo lectura. Ver dashboards, reportes y estado de sistemas.</span><span class="en">Read-only. View dashboards, reports, and system status.</span></td>
-                  <td>2</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
+    <!-- Threshold Configuration -->
+    <h2><span class="es">Configuracion de Umbrales</span><span class="en">Threshold Configuration</span></h2>
+    <div class="card">
+      <p>
+        <span class="es">Los umbrales determinan cuando se generan alertas de warning y critical para cada metrica. Son configurables globalmente o por sistema individual.</span>
+        <span class="en">Thresholds determine when warning and critical alerts are generated for each metric. They are configurable globally or per individual system.</span>
+      </p>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th><span class="es">Metrica</span><span class="en">Metric</span></th>
+              <th><span class="es">Warning</span><span class="en">Warning</span></th>
+              <th><span class="es">Critical</span><span class="en">Critical</span></th>
+              <th><span class="es">Duracion Minima</span><span class="en">Minimum Duration</span></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>CPU %</td>
+              <td class="font-mono text-warning">&gt; 80%</td>
+              <td class="font-mono text-danger">&gt; 95%</td>
+              <td>5 min</td>
+            </tr>
+            <tr>
+              <td><span class="es">Memoria %</span><span class="en">Memory %</span></td>
+              <td class="font-mono text-warning">&gt; 85%</td>
+              <td class="font-mono text-danger">&gt; 95%</td>
+              <td>5 min</td>
+            </tr>
+            <tr>
+              <td><span class="es">Disco %</span><span class="en">Disk %</span></td>
+              <td class="font-mono text-warning">&gt; 80%</td>
+              <td class="font-mono text-danger">&gt; 90%</td>
+              <td>1 min</td>
+            </tr>
+            <tr>
+              <td><span class="es">Response Time</span><span class="en">Response Time</span></td>
+              <td class="font-mono text-warning">&gt; 2000ms</td>
+              <td class="font-mono text-danger">&gt; 5000ms</td>
+              <td>3 min</td>
+            </tr>
+            <tr>
+              <td><span class="es">Certificado (dias)</span><span class="en">Certificate (days)</span></td>
+              <td class="font-mono text-warning">&lt; 90d</td>
+              <td class="font-mono text-danger">&lt; 30d</td>
+              <td>N/A</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Escalation Policy -->
+    <h2><span class="es">Politica de Escalamiento</span><span class="en">Escalation Policy</span></h2>
+    <div class="card">
+      <p>
+        <span class="es">Define como escalan las alertas cuando no se atienden dentro del tiempo estipulado.</span>
+        <span class="en">Defines how alerts escalate when not addressed within the stipulated time.</span>
+      </p>
+      <div class="steps">
+        <div class="step">
+          <strong><span class="es">Nivel 1 — Notificacion Inicial (0 min):</span><span class="en">Level 1 — Initial Notification (0 min):</span></strong><br>
+          <span class="es">Se notifica al equipo de operaciones por email + Slack. Destinatario: equipo on-call del sistema afectado.</span>
+          <span class="en">Operations team is notified via email + Slack. Recipient: on-call team for the affected system.</span>
         </div>
-
-        <!-- ══ INTEGRATIONS ══ -->
-        <div id="settings-integrations" class="settings-panel">
-          <h2><span class="es">Integraciones</span><span class="en">Integrations</span></h2>
-          <p class="text-muted mb-2"><span class="es">Conecte servicios externos para notificaciones, monitoreo y automatizacion.</span><span class="en">Connect external services for notifications, monitoring, and automation.</span></p>
-
-          <div class="grid-2">
-            <div class="card">
-              <div class="card-header">
-                <div class="card-title">Slack</div>
-                <span class="badge success"><span class="es">Conectado</span><span class="en">Connected</span></span>
-              </div>
-              <p class="text-sm text-muted"><span class="es">Canal: #sap-alerts</span><span class="en">Channel: #sap-alerts</span></p>
-            </div>
-            <div class="card">
-              <div class="card-header">
-                <div class="card-title">Microsoft Teams</div>
-                <span class="badge success"><span class="es">Conectado</span><span class="en">Connected</span></span>
-              </div>
-              <p class="text-sm text-muted"><span class="es">Canal: SAP Operations</span><span class="en">Channel: SAP Operations</span></p>
-            </div>
-            <div class="card">
-              <div class="card-header">
-                <div class="card-title">PagerDuty</div>
-                <span class="badge success"><span class="es">Conectado</span><span class="en">Connected</span></span>
-              </div>
-              <p class="text-sm text-muted">Service: SAP-Spektra-Prod</p>
-            </div>
-            <div class="card">
-              <div class="card-header">
-                <div class="card-title">Jira</div>
-                <span class="badge neutral"><span class="es">No conectado</span><span class="en">Not connected</span></span>
-              </div>
-              <p class="text-sm text-muted"><span class="es">Crear tickets automaticamente desde alertas.</span><span class="en">Auto-create tickets from alerts.</span></p>
-              <button class="btn-secondary mt-1" style="font-size:12px;padding:6px 12px;"><span class="es">Conectar</span><span class="en">Connect</span></button>
-            </div>
-          </div>
+        <div class="step">
+          <strong><span class="es">Nivel 2 — Escalamiento (15 min):</span><span class="en">Level 2 — Escalation (15 min):</span></strong><br>
+          <span class="es">Si no hay respuesta, se escala al team lead y se envia notificacion push adicional. Se crea un incidente en el sistema de tickets.</span>
+          <span class="en">If no response, escalate to team lead and send additional push notification. An incident is created in the ticketing system.</span>
         </div>
-
-        <!-- ══ NOTIFICATIONS ══ -->
-        <div id="settings-notifications" class="settings-panel">
-          <h2><span class="es">Notificaciones</span><span class="en">Notifications</span></h2>
-          <p class="text-muted mb-2"><span class="es">Configure como y cuando recibir notificaciones.</span><span class="en">Configure how and when to receive notifications.</span></p>
-
-          <div class="card mb-2">
-            <h3><span class="es">Canales de Notificacion</span><span class="en">Notification Channels</span></h3>
-            <div class="table-wrap" style="margin-bottom:0;">
-              <table>
-                <thead>
-                  <tr>
-                    <th><span class="es">Evento</span><span class="en">Event</span></th>
-                    <th>Email</th>
-                    <th>Slack</th>
-                    <th>Teams</th>
-                    <th>PagerDuty</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td><span class="es">Alerta Critica</span><span class="en">Critical Alert</span></td>
-                    <td><span class="badge success">&#10003;</span></td>
-                    <td><span class="badge success">&#10003;</span></td>
-                    <td><span class="badge success">&#10003;</span></td>
-                    <td><span class="badge success">&#10003;</span></td>
-                  </tr>
-                  <tr>
-                    <td><span class="es">Alerta Warning</span><span class="en">Warning Alert</span></td>
-                    <td><span class="badge success">&#10003;</span></td>
-                    <td><span class="badge success">&#10003;</span></td>
-                    <td><span class="badge neutral">--</span></td>
-                    <td><span class="badge neutral">--</span></td>
-                  </tr>
-                  <tr>
-                    <td>Failover</td>
-                    <td><span class="badge success">&#10003;</span></td>
-                    <td><span class="badge success">&#10003;</span></td>
-                    <td><span class="badge success">&#10003;</span></td>
-                    <td><span class="badge success">&#10003;</span></td>
-                  </tr>
-                  <tr>
-                    <td><span class="es">Certificado por Vencer</span><span class="en">Certificate Expiring</span></td>
-                    <td><span class="badge success">&#10003;</span></td>
-                    <td><span class="badge neutral">--</span></td>
-                    <td><span class="badge neutral">--</span></td>
-                    <td><span class="badge neutral">--</span></td>
-                  </tr>
-                  <tr>
-                    <td><span class="es">Reporte Semanal</span><span class="en">Weekly Report</span></td>
-                    <td><span class="badge success">&#10003;</span></td>
-                    <td><span class="badge neutral">--</span></td>
-                    <td><span class="badge neutral">--</span></td>
-                    <td><span class="badge neutral">--</span></td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
+        <div class="step">
+          <strong><span class="es">Nivel 3 — Gestion (30 min):</span><span class="en">Level 3 — Management (30 min):</span></strong><br>
+          <span class="es">Se notifica al manager de SAP Basis y al CTO. Se incluye un resumen ejecutivo del impacto de negocio estimado.</span>
+          <span class="en">SAP Basis manager and CTO are notified. An executive summary of estimated business impact is included.</span>
         </div>
+      </div>
+    </div>
 
-        <!-- ══ BILLING ══ -->
-        <div id="settings-billing" class="settings-panel">
-          <h2><span class="es">Facturacion</span><span class="en">Billing</span></h2>
+    <!-- Maintenance Windows -->
+    <h2><span class="es">Ventanas de Mantenimiento</span><span class="en">Maintenance Windows</span></h2>
+    <div class="card">
+      <p>
+        <span class="es">Las ventanas de mantenimiento suprimen alertas y excluyen tiempo de downtime del calculo de SLA. Se pueden configurar como recurrentes o puntuales.</span>
+        <span class="en">Maintenance windows suppress alerts and exclude downtime from SLA calculations. They can be configured as recurring or one-time.</span>
+      </p>
+      <pre><code>// Maintenance window configuration
+{
+  "maintenanceWindows": [
+    {
+      "name": "Weekly Sunday Maintenance",
+      "systems": ["PRD", "QAS", "ECP"],
+      "schedule": "0 2 * * 0",  // Sundays at 2:00 AM
+      "duration": 240,           // 4 hours
+      "suppressAlerts": true,
+      "excludeFromSLA": true
+    },
+    {
+      "name": "Monthly Patch Window",
+      "systems": ["ALL"],
+      "schedule": "0 22 1 * *",  // 1st of month at 10 PM
+      "duration": 480,            // 8 hours
+      "suppressAlerts": true,
+      "excludeFromSLA": true
+    }
+  ]
+}</code></pre>
+    </div>
 
-          <div class="kpi-grid mb-2">
-            <div class="kpi-card">
-              <div class="card-icon violet">&#128179;</div>
-              <div>
-                <div class="kpi-value">Professional</div>
-                <div class="kpi-label"><span class="es">Plan Actual</span><span class="en">Current Plan</span></div>
-              </div>
-            </div>
-            <div class="kpi-card">
-              <div class="card-icon cyan">&#128197;</div>
-              <div>
-                <div class="kpi-value">$2,400<span class="text-sm text-muted">/mo</span></div>
-                <div class="kpi-label"><span class="es">Costo Mensual</span><span class="en">Monthly Cost</span></div>
-              </div>
-            </div>
-            <div class="kpi-card">
-              <div class="card-icon success">&#128198;</div>
-              <div>
-                <div class="kpi-value">2026-04-01</div>
-                <div class="kpi-label"><span class="es">Prox. Facturacion</span><span class="en">Next Billing</span></div>
-              </div>
-            </div>
-          </div>
+    <!-- API Key Management -->
+    <h2><span class="es">Gestion de API Keys</span><span class="en">API Key Management</span></h2>
+    <div class="card">
+      <p>
+        <span class="es">Las API keys permiten autenticacion programatica para integraciones externas, agentes, y automatizaciones. Los admins pueden crear y revocar keys.</span>
+        <span class="en">API keys allow programmatic authentication for external integrations, agents, and automations. Admins can create and revoke keys.</span>
+      </p>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th><span class="es">Accion</span><span class="en">Action</span></th>
+              <th>Endpoint</th>
+              <th><span class="es">Descripcion</span><span class="en">Description</span></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><span class="badge success">Crear</span></td>
+              <td class="font-mono">POST /api/settings/api-keys</td>
+              <td><span class="es">Generar nueva API key con nombre y permisos. El secret se muestra solo una vez.</span><span class="en">Generate new API key with name and permissions. The secret is shown only once.</span></td>
+            </tr>
+            <tr>
+              <td><span class="badge cyan">Listar</span></td>
+              <td class="font-mono">GET /api/settings/api-keys</td>
+              <td><span class="es">Ver todas las API keys (sin mostrar secret). Muestra fecha de creacion y ultimo uso.</span><span class="en">View all API keys (without showing secret). Shows creation date and last use.</span></td>
+            </tr>
+            <tr>
+              <td><span class="badge danger">Revocar</span></td>
+              <td class="font-mono">DELETE /api/settings/api-keys/:id</td>
+              <td><span class="es">Revocar una API key inmediatamente. Todas las peticiones futuras con esa key seran rechazadas.</span><span class="en">Revoke an API key immediately. All future requests with that key will be rejected.</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <pre><code>// Create API key
+POST /api/settings/api-keys
+{
+  "name": "Spektra Agent PRD",
+  "permissions": ["heartbeat", "metrics", "commands"],
+  "expiresIn": "365d"
+}
 
-          <div class="card">
-            <h3><span class="es">Comparacion de Planes</span><span class="en">Plan Comparison</span></h3>
-            <div class="table-wrap mt-1" style="margin-bottom:0;">
-              <table>
-                <thead>
-                  <tr>
-                    <th></th>
-                    <th>Starter</th>
-                    <th>Professional</th>
-                    <th>Enterprise</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr><td class="font-semibold"><span class="es">Sistemas</span><span class="en">Systems</span></td><td>5</td><td>15</td><td><span class="es">Ilimitados</span><span class="en">Unlimited</span></td></tr>
-                  <tr><td class="font-semibold"><span class="es">Usuarios</span><span class="en">Users</span></td><td>5</td><td>25</td><td><span class="es">Ilimitados</span><span class="en">Unlimited</span></td></tr>
-                  <tr><td class="font-semibold"><span class="es">Integraciones</span><span class="en">Integrations</span></td><td>2</td><td>10</td><td><span class="es">Ilimitadas</span><span class="en">Unlimited</span></td></tr>
-                  <tr><td class="font-semibold">HA/DR</td><td><span class="badge neutral">--</span></td><td><span class="badge success">&#10003;</span></td><td><span class="badge success">&#10003;</span></td></tr>
-                  <tr><td class="font-semibold"><span class="es">Analisis IA</span><span class="en">AI Analysis</span></td><td><span class="badge neutral">--</span></td><td><span class="badge success">&#10003;</span></td><td><span class="badge success">&#10003;</span></td></tr>
-                  <tr><td class="font-semibold">Cross-Region DR</td><td><span class="badge neutral">--</span></td><td><span class="badge neutral">--</span></td><td><span class="badge success">&#10003;</span></td></tr>
-                  <tr><td class="font-semibold"><span class="es">Precio</span><span class="en">Price</span></td><td>$800/mo</td><td class="font-bold text-cyan">$2,400/mo</td><td><span class="es">Contactar</span><span class="en">Contact</span></td></tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
+// Response (shown ONCE)
+{
+  "id": "key-001",
+  "name": "Spektra Agent PRD",
+  "key": "spk_example_xxxxxxxxxxxxxxxxxxxxxxxxx",
+  "prefix": "spk_xxxx...xxxx",
+  "createdAt": "2025-01-15T10:00:00Z",
+  "expiresAt": "2026-01-15T10:00:00Z"
+}</code></pre>
+      <div class="callout warning">
+        <div class="callout-icon">&#9888;</div>
+        <div>
+          <span class="es"><strong>Importante:</strong> El secret completo de la API key solo se muestra una vez al momento de la creacion. Almacenalo de forma segura. Si se pierde, deberas revocar la key y crear una nueva.</span>
+          <span class="en"><strong>Important:</strong> The full API key secret is only shown once at creation time. Store it securely. If lost, you must revoke the key and create a new one.</span>
         </div>
+      </div>
+    </div>
 
-        <!-- ══ AUDIT LOG ══ -->
-        <div id="settings-audit" class="settings-panel">
-          <h2>Audit Log</h2>
-
-          <div style="display:flex;gap:12px;align-items:center;margin-bottom:16px;flex-wrap:wrap;">
-            <input type="text" class="form-input" placeholder="Search actions..." style="flex:1;min-width:200px;">
-            <select class="form-select" style="width:auto;">
-              <option value="">All Severity</option>
-              <option value="info">Info</option>
-              <option value="warning">Warning</option>
-              <option value="critical">Critical</option>
-            </select>
-            <button class="btn-secondary" style="white-space:nowrap;">
-              <span class="es">Exportar CSV</span><span class="en">Export CSV</span>
-            </button>
-          </div>
-
-          <div class="table-wrap">
-            <table>
-              <thead>
-                <tr>
-                  <th><span class="es">Fecha</span><span class="en">Date</span></th>
-                  <th><span class="es">Usuario</span><span class="en">User</span></th>
-                  <th><span class="es">Accion</span><span class="en">Action</span></th>
-                  <th><span class="es">Recurso</span><span class="en">Resource</span></th>
-                  <th><span class="es">Severidad</span><span class="en">Severity</span></th>
-                  <th>IP</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td class="font-mono text-sm">2026-03-12 09:45</td>
-                  <td>juan.delgado@acme.com</td>
-                  <td><span class="es">Inicio de sesion</span><span class="en">Login</span></td>
-                  <td class="font-mono text-sm">session</td>
-                  <td><span class="badge success">info</span></td>
-                  <td class="font-mono text-sm">203.0.113.42</td>
-                </tr>
-                <tr>
-                  <td class="font-mono text-sm">2026-03-12 09:30</td>
-                  <td>maria.santos@acme.com</td>
-                  <td><span class="es">Reinicio servicio</span><span class="en">Service restart</span></td>
-                  <td class="font-mono text-sm">system:QAS</td>
-                  <td><span class="badge warning">warning</span></td>
-                  <td class="font-mono text-sm">203.0.113.55</td>
-                </tr>
-                <tr>
-                  <td class="font-mono text-sm">2026-03-12 08:15</td>
-                  <td>juan.delgado@acme.com</td>
-                  <td><span class="es">Configuracion actualizada</span><span class="en">Settings updated</span></td>
-                  <td class="font-mono text-sm">org:thresholds</td>
-                  <td><span class="badge success">info</span></td>
-                  <td class="font-mono text-sm">203.0.113.42</td>
-                </tr>
-                <tr>
-                  <td class="font-mono text-sm">2026-03-12 06:15</td>
-                  <td>system</td>
-                  <td>Auto-failover</td>
-                  <td class="font-mono text-sm">system:FIN</td>
-                  <td><span class="badge danger">critical</span></td>
-                  <td class="font-mono text-sm">10.0.1.5</td>
-                </tr>
-                <tr>
-                  <td class="font-mono text-sm">2026-03-11 18:00</td>
-                  <td>carlos.mendez@acme.com</td>
-                  <td><span class="es">Ejecuto runbook</span><span class="en">Ran runbook</span></td>
-                  <td class="font-mono text-sm">runbook:db-check</td>
-                  <td><span class="badge success">info</span></td>
-                  <td class="font-mono text-sm">203.0.113.78</td>
-                </tr>
-                <tr>
-                  <td class="font-mono text-sm">2026-03-11 15:30</td>
-                  <td>juan.delgado@acme.com</td>
-                  <td><span class="es">Usuario invitado</span><span class="en">User invited</span></td>
-                  <td class="font-mono text-sm">user:pedro.lopez</td>
-                  <td><span class="badge success">info</span></td>
-                  <td class="font-mono text-sm">203.0.113.42</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-
-        <!-- ══ API KEYS ══ -->
-        <div id="settings-apikeys" class="settings-panel">
-          <h2>API Keys</h2>
-
-          <div class="callout warning mb-2">
-            <div class="callout-icon">&#128274;</div>
-            <div>
-              <span class="es">Las API keys otorgan acceso programatico a Spektra. Trate las keys como credenciales sensibles. Solo admins pueden crear o revocar keys.</span>
-              <span class="en">API keys grant programmatic access to Spektra. Treat keys as sensitive credentials. Only admins can create or revoke keys.</span>
-            </div>
-          </div>
-
-          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
-            <span class="text-sm text-muted"><span class="es">Keys activas:</span><span class="en">Active keys:</span> <strong>3</strong></span>
-            <button class="btn-primary"><span class="es">+ Crear API Key</span><span class="en">+ Create API Key</span></button>
-          </div>
-
-          <div class="table-wrap">
-            <table>
-              <thead>
-                <tr>
-                  <th><span class="es">Nombre</span><span class="en">Name</span></th>
-                  <th>Prefix</th>
-                  <th><span class="es">Creada</span><span class="en">Created</span></th>
-                  <th><span class="es">Ultimo Uso</span><span class="en">Last Used</span></th>
-                  <th>Status</th>
-                  <th><span class="es">Acciones</span><span class="en">Actions</span></th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td class="font-semibold text-primary">CI/CD Pipeline</td>
-                  <td class="font-mono text-sm">sk_live_8f3a...</td>
-                  <td class="font-mono text-sm text-muted">2026-01-15</td>
-                  <td class="font-mono text-sm text-muted">2026-03-12 09:30</td>
-                  <td><span class="badge success">active</span></td>
-                  <td><button class="btn-danger" style="font-size:11px;padding:4px 10px;"><span class="es">Revocar</span><span class="en">Revoke</span></button></td>
-                </tr>
-                <tr>
-                  <td class="font-semibold text-primary">Monitoring Agent</td>
-                  <td class="font-mono text-sm">sk_live_b2c1...</td>
-                  <td class="font-mono text-sm text-muted">2026-02-01</td>
-                  <td class="font-mono text-sm text-muted">2026-03-12 09:45</td>
-                  <td><span class="badge success">active</span></td>
-                  <td><button class="btn-danger" style="font-size:11px;padding:4px 10px;"><span class="es">Revocar</span><span class="en">Revoke</span></button></td>
-                </tr>
-                <tr>
-                  <td class="font-semibold text-primary">Grafana Integration</td>
-                  <td class="font-mono text-sm">sk_live_d4e5...</td>
-                  <td class="font-mono text-sm text-muted">2026-02-20</td>
-                  <td class="font-mono text-sm text-muted">2026-03-11 22:00</td>
-                  <td><span class="badge success">active</span></td>
-                  <td><button class="btn-danger" style="font-size:11px;padding:4px 10px;"><span class="es">Revocar</span><span class="en">Revoke</span></button></td>
-                </tr>
-                <tr>
-                  <td class="font-semibold text-muted">Old Test Key</td>
-                  <td class="font-mono text-sm">sk_test_a1b2...</td>
-                  <td class="font-mono text-sm text-muted">2025-11-01</td>
-                  <td class="font-mono text-sm text-muted">2025-12-15</td>
-                  <td><span class="badge danger">revoked</span></td>
-                  <td class="text-muted text-sm">--</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-
-      </div><!-- /settings-content -->
-    </div><!-- /settings-layout -->
+    <!-- Plan/Billing -->
+    <h2><span class="es">Plan y Facturacion</span><span class="en">Plan & Billing</span></h2>
+    <div class="card">
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th><span class="es">Caracteristica</span><span class="en">Feature</span></th>
+              <th><span class="badge neutral">Starter</span></th>
+              <th><span class="badge cyan">Professional</span></th>
+              <th><span class="badge violet">Enterprise</span></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><span class="es">Sistemas</span><span class="en">Systems</span></td>
+              <td>5</td>
+              <td>25</td>
+              <td><span class="es">Ilimitado</span><span class="en">Unlimited</span></td>
+            </tr>
+            <tr>
+              <td><span class="es">Usuarios</span><span class="en">Users</span></td>
+              <td>5</td>
+              <td>25</td>
+              <td><span class="es">Ilimitado</span><span class="en">Unlimited</span></td>
+            </tr>
+            <tr>
+              <td><span class="es">Retencion de datos</span><span class="en">Data retention</span></td>
+              <td>30d</td>
+              <td>90d</td>
+              <td>365d</td>
+            </tr>
+            <tr>
+              <td><span class="es">Analisis IA</span><span class="en">AI Analysis</span></td>
+              <td><span class="es">Demo</span><span class="en">Demo</span></td>
+              <td><span class="es">Live (200 req/dia)</span><span class="en">Live (200 req/day)</span></td>
+              <td><span class="es">Live (ilimitado)</span><span class="en">Live (unlimited)</span></td>
+            </tr>
+            <tr>
+              <td><span class="es">HA/DR Control</span><span class="en">HA/DR Control</span></td>
+              <td class="text-danger">&#10007;</td>
+              <td class="text-success">&#10003;</td>
+              <td class="text-success">&#10003;</td>
+            </tr>
+            <tr>
+              <td><span class="es">Soporte</span><span class="en">Support</span></td>
+              <td>Email</td>
+              <td>Email + Chat</td>
+              <td>24/7 + Dedicated</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
 
   </main>
 </div>
-
-<script>
-function showSettings(name) {
-  // Update panels
-  document.querySelectorAll('.settings-panel').forEach(function(el) {
-    el.classList.remove('active');
-  });
-  var panel = document.getElementById('settings-' + name);
-  if (panel) panel.classList.add('active');
-  // Update nav
-  document.querySelectorAll('.settings-nav-item').forEach(function(el) {
-    el.classList.remove('active');
-  });
-  event.currentTarget.classList.add('active');
-}
-</script>
 </body>
 </html>

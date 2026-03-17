@@ -3,152 +3,15 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width,initial-scale=1.0">
-  <title>Portal — SAP Spektra Docs</title>
+  <title>Portal Principal — SAP Spektra Docs</title>
   <link rel="stylesheet" href="theme.css">
   <script src="theme-toggle.js"></script>
   <script src="lang-toggle.js"></script>
-  <style>
-    .hero {
-      text-align: center;
-      padding: 56px 24px 40px;
-      margin-bottom: 32px;
-      border-radius: var(--radius);
-      background: linear-gradient(160deg, rgba(6,182,212,0.08) 0%, rgba(139,92,246,0.08) 100%);
-      border: 1px solid var(--brd-accent);
-      position: relative;
-      overflow: hidden;
-    }
-    .hero::before {
-      content: '';
-      position: absolute;
-      top: -60%;
-      left: -20%;
-      width: 140%;
-      height: 140%;
-      background: radial-gradient(ellipse at 30% 20%, rgba(6,182,212,0.12) 0%, transparent 60%),
-                  radial-gradient(ellipse at 70% 80%, rgba(139,92,246,0.10) 0%, transparent 60%);
-      pointer-events: none;
-    }
-    .hero-logo {
-      width: 80px;
-      height: 80px;
-      margin: 0 auto 20px;
-      border-radius: 22px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: var(--gradient-brand);
-      box-shadow: 0 0 40px rgba(6,182,212,0.4), 0 0 80px rgba(139,92,246,0.2);
-      font-size: 40px;
-      color: #fff;
-      position: relative;
-      z-index: 1;
-    }
-    .hero-title {
-      font-size: 36px;
-      font-weight: 800;
-      line-height: 1.1;
-      background: var(--gradient-title);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-      margin-bottom: 8px;
-      position: relative;
-      z-index: 1;
-    }
-    .hero-sub {
-      font-size: 16px;
-      color: var(--txt2);
-      max-width: 540px;
-      margin: 0 auto;
-      position: relative;
-      z-index: 1;
-    }
-    .hero-stats {
-      display: flex;
-      justify-content: center;
-      gap: 32px;
-      margin-top: 28px;
-      flex-wrap: wrap;
-      position: relative;
-      z-index: 1;
-    }
-    .hero-stat {
-      text-align: center;
-    }
-    .hero-stat-value {
-      font-size: 28px;
-      font-weight: 800;
-      background: var(--gradient-brand);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-    }
-    .hero-stat-label {
-      font-size: 11px;
-      color: var(--txt3);
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      font-weight: 600;
-    }
-    .category-title {
-      font-size: 13px;
-      font-weight: 700;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      color: var(--cyan);
-      margin-bottom: 12px;
-      padding-left: 4px;
-    }
-    .doc-card {
-      background: var(--card-bg);
-      border: 1px solid var(--card-border);
-      border-radius: var(--radius);
-      padding: 16px 20px;
-      text-decoration: none;
-      display: block;
-      transition: all 0.2s;
-    }
-    .doc-card:hover {
-      border-color: var(--cyan);
-      box-shadow: 0 0 20px var(--card-hover);
-      text-decoration: none;
-      transform: translateY(-2px);
-    }
-    .doc-card-name {
-      font-size: 14px;
-      font-weight: 600;
-      color: var(--txt1);
-      margin-bottom: 4px;
-    }
-    .doc-card-desc {
-      font-size: 12px;
-      color: var(--txt3);
-      line-height: 1.4;
-    }
-    .tech-pills {
-      display: flex;
-      justify-content: center;
-      gap: 10px;
-      margin-top: 20px;
-      flex-wrap: wrap;
-      position: relative;
-      z-index: 1;
-    }
-    .tech-pill {
-      padding: 4px 14px;
-      border-radius: 100px;
-      font-size: 12px;
-      font-weight: 600;
-      border: 1px solid var(--brd);
-      color: var(--txt2);
-      background: var(--card-bg);
-    }
-  </style>
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+  <script src="mermaid-init.js"></script>
 </head>
 <body>
 <div class="docs-wrapper">
-  <!-- Sidebar -->
   <nav class="docs-sidebar">
     <div class="sidebar-brand">
       <div class="logo">&#9889;</div>
@@ -161,6 +24,12 @@
       <div class="sidebar-section-label">Inicio</div>
       <a href="index.html" class="sidebar-link active">Portal</a>
       <a href="getting-started.html" class="sidebar-link">Primeros Pasos</a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-section-label">Architecture</div>
+      <a href="architecture.html" class="sidebar-link">Arquitectura</a>
+      <a href="domain-model.html" class="sidebar-link">Modelo de Datos</a>
+      <a href="api-reference.html" class="sidebar-link">API Reference</a>
     </div>
     <div class="sidebar-section">
       <div class="sidebar-section-label">Command</div>
@@ -201,287 +70,529 @@
   </nav>
 
   <main class="docs-main">
-    <!-- Hero Section -->
-    <div class="hero">
-      <div class="hero-logo">&#9889;</div>
-      <div class="hero-title">SAP Spektra</div>
-      <div class="hero-sub">
-        <span class="es">Plataforma integral de gestion y monitoreo inteligente para entornos SAP. Backend NestJS 11 con PostgreSQL 16 y frontend React 19.</span>
-        <span class="en">Comprehensive intelligent management and monitoring platform for SAP environments. NestJS 11 backend with PostgreSQL 16 and React 19 frontend.</span>
-      </div>
 
-      <div class="hero-stats">
-        <div class="hero-stat">
-          <div class="hero-stat-value">22</div>
-          <div class="hero-stat-label"><span class="es">Modulos API</span><span class="en">API Modules</span></div>
-        </div>
-        <div class="hero-stat">
-          <div class="hero-stat-value">1,029</div>
-          <div class="hero-stat-label">Tests</div>
-        </div>
-        <div class="hero-stat">
-          <div class="hero-stat-value">26</div>
-          <div class="hero-stat-label"><span class="es">Modelos BD</span><span class="en">DB Models</span></div>
-        </div>
-        <div class="hero-stat">
-          <div class="hero-stat-value">96</div>
-          <div class="hero-stat-label"><span class="es">Suites de Test</span><span class="en">Test Suites</span></div>
-        </div>
-      </div>
-
-      <div class="tech-pills">
-        <span class="tech-pill">NestJS 11</span>
-        <span class="tech-pill">React 19</span>
-        <span class="tech-pill">Prisma 6</span>
-        <span class="tech-pill">PostgreSQL 16</span>
-        <span class="tech-pill">Redis 7</span>
-        <span class="tech-pill">Vite 7</span>
-        <span class="tech-pill">Tailwind CSS 4</span>
-        <span class="tech-pill">Recharts</span>
-      </div>
+    <!-- ═══ Hero Section ═══ -->
+    <div style="text-align:center;padding:48px 0 32px">
+      <div style="font-size:64px;margin-bottom:16px">&#9889;</div>
+      <h1 style="font-size:36px;font-weight:800;background:var(--gradient-title);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:8px">
+        SAP Spektra
+      </h1>
+      <p style="font-size:18px;color:var(--txt2);margin-bottom:4px">
+        <span class="es">Centro de Control para Operaciones SAP</span>
+        <span class="en">Mission Control for SAP Operations</span>
+      </p>
+      <p style="font-size:13px;color:var(--txt3)">
+        <span class="es">Monitoreo, automatizacion de runbooks y remediacion inteligente para landscapes SAP</span>
+        <span class="en">Monitoring, runbook automation, and intelligent remediation for SAP landscapes</span>
+      </p>
     </div>
 
-    <!-- Key Features -->
-    <h2><span class="es">Caracteristicas Principales</span><span class="en">Key Features</span></h2>
-
+    <!-- ═══ KPI Stats ═══ -->
     <div class="kpi-grid">
       <div class="kpi-card">
-        <div class="card-icon cyan">&#128274;</div>
+        <div class="card-icon cyan">&#9881;</div>
         <div>
-          <div class="kpi-label"><span class="es">Autenticacion</span><span class="en">Authentication</span></div>
-          <div class="kpi-value text-sm font-semibold" style="font-size:14px">JWT + RBAC</div>
+          <div class="kpi-value text-cyan">22</div>
+          <div class="kpi-label">
+            <span class="es">Modulos</span>
+            <span class="en">Modules</span>
+          </div>
         </div>
       </div>
       <div class="kpi-card">
-        <div class="card-icon violet">&#127959;</div>
+        <div class="card-icon violet">&#8644;</div>
         <div>
-          <div class="kpi-label">Multi-Tenant</div>
-          <div class="kpi-value text-sm font-semibold" style="font-size:14px"><span class="es">Aislamiento por Org</span><span class="en">Org Isolation</span></div>
+          <div class="kpi-value text-violet">97+</div>
+          <div class="kpi-label">Endpoints</div>
         </div>
       </div>
       <div class="kpi-card">
-        <div class="card-icon success">&#128202;</div>
+        <div class="card-icon success">&#9634;</div>
         <div>
-          <div class="kpi-label"><span class="es">Observabilidad</span><span class="en">Observability</span></div>
-          <div class="kpi-value text-sm font-semibold" style="font-size:14px">Structured Logging</div>
+          <div class="kpi-value text-success">24</div>
+          <div class="kpi-label">
+            <span class="es">Modelos de Datos</span>
+            <span class="en">Data Models</span>
+          </div>
         </div>
       </div>
       <div class="kpi-card">
-        <div class="card-icon warning">&#9889;</div>
+        <div class="card-icon warning">&#9654;</div>
         <div>
-          <div class="kpi-label">Cache</div>
-          <div class="kpi-value text-sm font-semibold" style="font-size:14px">Redis 7 + TTL</div>
+          <div class="kpi-value text-warning">123</div>
+          <div class="kpi-label">Runbooks</div>
         </div>
       </div>
     </div>
 
-    <!-- Documentation Categories -->
-    <h2><span class="es">Documentacion por Categoria</span><span class="en">Documentation by Category</span></h2>
+    <!-- ═══ Technology Stack ═══ -->
+    <h2>
+      <span class="es">Stack Tecnologico</span>
+      <span class="en">Technology Stack</span>
+    </h2>
+    <p style="margin-bottom:12px">
+      <span class="badge cyan">NestJS 10</span>
+      <span class="badge violet">React 18</span>
+      <span class="badge cyan">Prisma ORM</span>
+      <span class="badge success">PostgreSQL 16</span>
+      <span class="badge danger">Redis 7</span>
+      <span class="badge violet">Tailwind CSS</span>
+      <span class="badge cyan">Vite 5</span>
+      <span class="badge warning">JWT + Passport</span>
+      <span class="badge neutral">Docker</span>
+      <span class="badge cyan">Swagger / OpenAPI</span>
+      <span class="badge success">bcryptjs</span>
+      <span class="badge violet">Helmet</span>
+    </p>
 
-    <!-- Inicio -->
-    <div class="category-title"><span class="es">Inicio</span><span class="en">Getting Started</span></div>
-    <div class="grid-2 mb-3">
-      <a href="getting-started.html" class="doc-card">
-        <div class="doc-card-name"><span class="es">Primeros Pasos</span><span class="en">Getting Started</span></div>
-        <div class="doc-card-desc"><span class="es">Requisitos, instalacion, configuracion y primeros comandos para levantar el entorno local.</span><span class="en">Requirements, installation, configuration and first commands to set up the local environment.</span></div>
+    <div class="callout info">
+      <div class="callout-icon">&#128161;</div>
+      <div>
+        <span class="es"><strong>Demo lista para usar:</strong> SAP Spektra incluye datos semilla con 12 sistemas SAP, 4 usuarios, 123 runbooks y metricas realistas. Ejecuta <code>npm run seed</code> para poblar la base de datos.</span>
+        <span class="en"><strong>Ready-to-use demo:</strong> SAP Spektra includes seed data with 12 SAP systems, 4 users, 123 runbooks and realistic metrics. Run <code>npm run seed</code> to populate the database.</span>
+      </div>
+    </div>
+
+    <!-- ═══ Documentation Categories ═══ -->
+    <h2>
+      <span class="es">Secciones de Documentacion</span>
+      <span class="en">Documentation Sections</span>
+    </h2>
+
+    <div class="grid-2">
+      <!-- Getting Started -->
+      <a href="getting-started.html" class="card" style="text-decoration:none">
+        <div class="card-header">
+          <div class="card-title"><div class="card-icon cyan">&#128640;</div>
+            <span class="es">Primeros Pasos</span>
+            <span class="en">Getting Started</span>
+          </div>
+        </div>
+        <p class="text-muted text-sm">
+          <span class="es">Instalacion, configuracion, requisitos previos, Docker y primer login con credenciales de demo.</span>
+          <span class="en">Installation, configuration, prerequisites, Docker and first login with demo credentials.</span>
+        </p>
+      </a>
+
+      <!-- Architecture -->
+      <a href="architecture.html" class="card" style="text-decoration:none">
+        <div class="card-header">
+          <div class="card-title"><div class="card-icon violet">&#127959;</div>
+            <span class="es">Arquitectura</span>
+            <span class="en">Architecture</span>
+          </div>
+        </div>
+        <p class="text-muted text-sm">
+          <span class="es">Diagrama de sistema, flujo de datos, autenticacion JWT, multi-tenancy, RBAC y seguridad.</span>
+          <span class="en">System diagram, data flow, JWT authentication, multi-tenancy, RBAC and security.</span>
+        </p>
+      </a>
+
+      <!-- Domain Model -->
+      <a href="domain-model.html" class="card" style="text-decoration:none">
+        <div class="card-header">
+          <div class="card-title"><div class="card-icon success">&#128202;</div>
+            <span class="es">Modelo de Datos</span>
+            <span class="en">Domain Model</span>
+          </div>
+        </div>
+        <p class="text-muted text-sm">
+          <span class="es">24 modelos Prisma detallados: campos, tipos, restricciones, indices y reglas de cascade.</span>
+          <span class="en">24 detailed Prisma models: fields, types, constraints, indexes and cascade rules.</span>
+        </p>
+      </a>
+
+      <!-- API Reference -->
+      <a href="api-reference.html" class="card" style="text-decoration:none">
+        <div class="card-header">
+          <div class="card-title"><div class="card-icon warning">&#128268;</div>
+            <span class="es">API Reference</span>
+            <span class="en">API Reference</span>
+          </div>
+        </div>
+        <p class="text-muted text-sm">
+          <span class="es">97+ endpoints REST documentados por controlador con metodo, ruta, rol y ejemplos.</span>
+          <span class="en">97+ REST endpoints documented by controller with method, path, role and examples.</span>
+        </p>
+      </a>
+
+      <!-- Dashboard -->
+      <a href="dashboard.html" class="card" style="text-decoration:none">
+        <div class="card-header">
+          <div class="card-title"><div class="card-icon cyan">&#128200;</div>
+            <span class="es">Dashboard</span>
+            <span class="en">Dashboard</span>
+          </div>
+        </div>
+        <p class="text-muted text-sm">
+          <span class="es">KPI en tiempo real, tarjetas de sistemas con HealthGauge, acciones rapidas y metricas agregadas.</span>
+          <span class="en">Real-time KPIs, system cards with HealthGauge, quick actions and aggregated metrics.</span>
+        </p>
+      </a>
+
+      <!-- Landscape -->
+      <a href="landscape.html" class="card" style="text-decoration:none">
+        <div class="card-header">
+          <div class="card-title"><div class="card-icon violet">&#127760;</div>
+            <span class="es">Landscape</span>
+            <span class="en">Landscape</span>
+          </div>
+        </div>
+        <p class="text-muted text-sm">
+          <span class="es">Topologia SAP, agrupacion por SID, descubrimiento de instancias y validacion del landscape.</span>
+          <span class="en">SAP topology, SID grouping, instance discovery and landscape validation.</span>
+        </p>
+      </a>
+
+      <!-- Alerts -->
+      <a href="alerts.html" class="card" style="text-decoration:none">
+        <div class="card-header">
+          <div class="card-title"><div class="card-icon danger">&#128680;</div>
+            <span class="es">Alertas</span>
+            <span class="en">Alerts</span>
+          </div>
+        </div>
+        <p class="text-muted text-sm">
+          <span class="es">Ciclo de vida de alertas, severidades, escalamiento L1/L2, resolucion y endpoints de gestion.</span>
+          <span class="en">Alert lifecycle, severities, L1/L2 escalation, resolution and management endpoints.</span>
+        </p>
+      </a>
+
+      <!-- More modules -->
+      <a href="architecture.html#directory-structure" class="card" style="text-decoration:none">
+        <div class="card-header">
+          <div class="card-title"><div class="card-icon neutral">&#128193;</div>
+            <span class="es">Mas Modulos</span>
+            <span class="en">More Modules</span>
+          </div>
+        </div>
+        <p class="text-muted text-sm">
+          <span class="es">Runbooks, Aprobaciones, Operaciones, Jobs SM37, Transportes, HA/DR, Certificados, AI, Analytics y mas.</span>
+          <span class="en">Runbooks, Approvals, Operations, SM37 Jobs, Transports, HA/DR, Certificates, AI, Analytics and more.</span>
+        </p>
       </a>
     </div>
 
-    <!-- Command -->
-    <div class="category-title">Command</div>
-    <div class="grid-3 mb-3">
-      <a href="dashboard.html" class="doc-card">
-        <div class="doc-card-name">Dashboard</div>
-        <div class="doc-card-desc"><span class="es">Vista general con KPIs, tarjetas de sistema, estado del landscape y acciones rapidas.</span><span class="en">Overview with KPIs, system cards, landscape status and quick actions.</span></div>
-      </a>
-      <a href="landscape.html" class="doc-card">
-        <div class="doc-card-name">Landscape</div>
-        <div class="doc-card-desc"><span class="es">Validacion de landscape, topologia de sistemas, instancias descubiertas y estado HA.</span><span class="en">Landscape validation, system topology, discovered instances and HA status.</span></div>
-      </a>
-      <a href="alerts.html" class="doc-card">
-        <div class="doc-card-name"><span class="es">Alertas</span><span class="en">Alerts</span></div>
-        <div class="doc-card-desc"><span class="es">Tabla de alertas con filtros, gestion de incidencias, escalamiento y resolucion.</span><span class="en">Alerts table with filters, incident management, escalation and resolution.</span></div>
-      </a>
-    </div>
-
-    <!-- Monitor -->
-    <div class="category-title">Monitor</div>
-    <div class="grid-3 mb-3">
-      <a href="systems.html" class="doc-card">
-        <div class="doc-card-name"><span class="es">Sistemas</span><span class="en">Systems</span></div>
-        <div class="doc-card-desc"><span class="es">Gestion completa de sistemas SAP registrados, estado y metricas.</span><span class="en">Full management of registered SAP systems, status and metrics.</span></div>
-      </a>
-      <a href="connectors.html" class="doc-card">
-        <div class="doc-card-name"><span class="es">Conectores</span><span class="en">Connectors</span></div>
-        <div class="doc-card-desc"><span class="es">Conectores de integracion con sistemas SAP y servicios externos.</span><span class="en">Integration connectors with SAP systems and external services.</span></div>
-      </a>
-      <a href="events.html" class="doc-card">
-        <div class="doc-card-name"><span class="es">Eventos</span><span class="en">Events</span></div>
-        <div class="doc-card-desc"><span class="es">Feed de eventos en tiempo real con filtros por nivel, fuente y sistema.</span><span class="en">Real-time event feed with filters by level, source and system.</span></div>
-      </a>
-    </div>
-
-    <!-- Intelligence -->
-    <div class="category-title">Intelligence</div>
-    <div class="grid-3 mb-3">
-      <a href="ai-analysis.html" class="doc-card">
-        <div class="doc-card-name"><span class="es">Analisis IA</span><span class="en">AI Analysis</span></div>
-        <div class="doc-card-desc"><span class="es">Analisis inteligente de patrones, predicciones y recomendaciones basadas en IA.</span><span class="en">Intelligent pattern analysis, predictions and AI-based recommendations.</span></div>
-      </a>
-      <a href="analytics.html" class="doc-card">
-        <div class="doc-card-name">Analytics</div>
-        <div class="doc-card-desc"><span class="es">Metricas avanzadas, graficos interactivos y tendencias del entorno SAP.</span><span class="en">Advanced metrics, interactive charts and SAP environment trends.</span></div>
-      </a>
-      <a href="reports.html" class="doc-card">
-        <div class="doc-card-name"><span class="es">Reportes</span><span class="en">Reports</span></div>
-        <div class="doc-card-desc"><span class="es">Generacion de reportes personalizados con exportacion a multiples formatos.</span><span class="en">Custom report generation with export to multiple formats.</span></div>
-      </a>
-    </div>
-
-    <!-- Operations -->
-    <div class="category-title"><span class="es">Operaciones</span><span class="en">Operations</span></div>
-    <div class="grid-3 mb-3">
-      <a href="runbooks.html" class="doc-card">
-        <div class="doc-card-name">Runbooks</div>
-        <div class="doc-card-desc"><span class="es">Procedimientos operativos automatizados y manuales para entornos SAP.</span><span class="en">Automated and manual operational procedures for SAP environments.</span></div>
-      </a>
-      <a href="approvals.html" class="doc-card">
-        <div class="doc-card-name"><span class="es">Aprobaciones</span><span class="en">Approvals</span></div>
-        <div class="doc-card-desc"><span class="es">Flujos de aprobacion con niveles de autorizacion y auditoria completa.</span><span class="en">Approval workflows with authorization levels and full audit trail.</span></div>
-      </a>
-      <a href="operations.html" class="doc-card">
-        <div class="doc-card-name"><span class="es">Operaciones</span><span class="en">Operations</span></div>
-        <div class="doc-card-desc"><span class="es">Centro de operaciones con acciones sobre sistemas, inicio/parada y mantenimiento.</span><span class="en">Operations center with system actions, start/stop and maintenance.</span></div>
-      </a>
-      <a href="jobs.html" class="doc-card">
-        <div class="doc-card-name">Jobs (SM37)</div>
-        <div class="doc-card-desc"><span class="es">Monitoreo de jobs SAP con historial, estados y reprogramacion.</span><span class="en">SAP job monitoring with history, statuses and rescheduling.</span></div>
-      </a>
-      <a href="transports.html" class="doc-card">
-        <div class="doc-card-name"><span class="es">Transportes</span><span class="en">Transports</span></div>
-        <div class="doc-card-desc"><span class="es">Gestion de ordenes de transporte entre entornos SAP.</span><span class="en">Transport order management across SAP environments.</span></div>
-      </a>
-      <a href="sla.html" class="doc-card">
-        <div class="doc-card-name">SLA</div>
-        <div class="doc-card-desc"><span class="es">Monitoreo de acuerdos de nivel de servicio con metricas de cumplimiento.</span><span class="en">Service level agreement monitoring with compliance metrics.</span></div>
-      </a>
-      <a href="ha-control.html" class="doc-card">
-        <div class="doc-card-name">HA Control</div>
-        <div class="doc-card-desc"><span class="es">Alta disponibilidad: estado de clusters, failover y replicacion.</span><span class="en">High availability: cluster status, failover and replication.</span></div>
-      </a>
-      <a href="certificates.html" class="doc-card">
-        <div class="doc-card-name"><span class="es">Certificados</span><span class="en">Certificates</span></div>
-        <div class="doc-card-desc"><span class="es">Gestion de certificados SSL/TLS con alertas de expiracion.</span><span class="en">SSL/TLS certificate management with expiration alerts.</span></div>
-      </a>
-    </div>
-
-    <!-- Admin -->
-    <div class="category-title">Admin</div>
-    <div class="grid-3 mb-3">
-      <a href="admin.html" class="doc-card">
-        <div class="doc-card-name"><span class="es">Gestion</span><span class="en">Management</span></div>
-        <div class="doc-card-desc"><span class="es">Administracion de usuarios, roles, organizaciones y permisos.</span><span class="en">User, role, organization and permission management.</span></div>
-      </a>
-      <a href="settings.html" class="doc-card">
-        <div class="doc-card-name"><span class="es">Configuracion</span><span class="en">Settings</span></div>
-        <div class="doc-card-desc"><span class="es">Configuracion global de la plataforma, notificaciones y politicas.</span><span class="en">Global platform configuration, notifications and policies.</span></div>
-      </a>
-      <a href="connect-system.html" class="doc-card">
-        <div class="doc-card-name"><span class="es">Conectar Sistema</span><span class="en">Connect System</span></div>
-        <div class="doc-card-desc"><span class="es">Asistente paso a paso para registrar y conectar un sistema SAP nuevo.</span><span class="en">Step-by-step wizard to register and connect a new SAP system.</span></div>
-      </a>
-    </div>
-
-    <!-- Architecture Overview -->
-    <h2><span class="es">Arquitectura del Sistema</span><span class="en">System Architecture</span></h2>
+    <!-- ═══ Architecture Overview ═══ -->
+    <h2>
+      <span class="es">Vision General de Arquitectura</span>
+      <span class="en">Architecture Overview</span>
+    </h2>
 
     <div class="card">
       <div class="card-header">
         <div class="card-title">
-          <div class="card-icon cyan">&#128421;</div>
-          <span class="es">Stack Tecnologico</span><span class="en">Technology Stack</span>
+          <span class="es">Componentes del Sistema</span>
+          <span class="en">System Components</span>
+        </div>
+      </div>
+      <div class="mermaid">
+graph TB
+    subgraph platform["SAP Spektra Platform"]
+        FE["&lt;b&gt;Frontend&lt;/b&gt;&lt;br/&gt;React 18 · Vite 5&lt;br/&gt;Tailwind · Port 5173"]
+        BE["&lt;b&gt;API Backend&lt;/b&gt;&lt;br/&gt;NestJS 10 · Prisma ORM&lt;br/&gt;Passport · Port 3001"]
+        AG["&lt;b&gt;Agent&lt;/b&gt;&lt;br/&gt;Collector · RFC/BAPI&lt;br/&gt;OS &amp; SAP Metrics"]
+        INF["&lt;b&gt;Infra&lt;/b&gt;&lt;br/&gt;Docker/AWS&lt;br/&gt;PostgreSQL · Redis · Swagger"]
+    end
+
+    FE -->|"REST / JWT"| BE
+    AG -->|"Ingest"| BE
+    AG -->|"Heartbeat"| BE
+    BE --> INF
+      </div>
+      <div class="grid-3 mt-2">
+        <div>
+          <h4 class="text-cyan">Frontend</h4>
+          <ul class="feature-list">
+            <li>React 18 + Vite 5</li>
+            <li>Tailwind CSS + Framer Motion</li>
+            <li>Recharts + Lucide Icons</li>
+            <li>React Router v6</li>
+            <li><span class="es">Puerto</span><span class="en">Port</span> 5173</li>
+          </ul>
+        </div>
+        <div>
+          <h4 class="text-violet">Backend API</h4>
+          <ul class="feature-list">
+            <li>NestJS 10 + TypeScript</li>
+            <li>Prisma ORM + PostgreSQL</li>
+            <li>JWT + Passport + bcrypt</li>
+            <li>Swagger / OpenAPI</li>
+            <li><span class="es">Puerto</span><span class="en">Port</span> 3001</li>
+          </ul>
+        </div>
+        <div>
+          <h4 class="text-success">
+            <span class="es">Infraestructura</span>
+            <span class="en">Infrastructure</span>
+          </h4>
+          <ul class="feature-list">
+            <li>PostgreSQL 16</li>
+            <li>Redis 7 (caching)</li>
+            <li>Docker Compose</li>
+            <li>
+              <span class="es">Simulacion LOCAL / AWS REAL</span>
+              <span class="en">LOCAL Simulation / AWS REAL</span>
+            </li>
+            <li>Helmet + CORS + Rate Limiting</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ Security Overview ═══ -->
+    <h2>
+      <span class="es">Seguridad</span>
+      <span class="en">Security</span>
+    </h2>
+
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">
+          <div class="card-icon danger">&#128274;</div>
+          <span class="es">Medidas de Seguridad</span>
+          <span class="en">Security Measures</span>
         </div>
       </div>
       <div class="grid-2">
         <div>
-          <h4>Backend</h4>
-          <ul class="feature-list">
-            <li>NestJS 11 <span class="badge cyan">Framework</span></li>
-            <li>Prisma 6 ORM <span class="badge violet">Database</span></li>
-            <li>PostgreSQL 16 <span class="badge success">Storage</span></li>
-            <li>Redis 7 <span class="badge warning">Cache</span></li>
-            <li><span class="es">Autenticacion JWT con RBAC</span><span class="en">JWT Authentication with RBAC</span></li>
-            <li><span class="es">Multi-tenant con aislamiento por organizacion</span><span class="en">Multi-tenant with organization isolation</span></li>
-            <li><span class="es">22 modulos con CRUD completo</span><span class="en">22 modules with full CRUD</span></li>
-            <li><span class="es">Logging estructurado</span><span class="en">Structured logging</span></li>
-          </ul>
+          <h4>
+            <span class="es">Autenticacion y Autorizacion</span>
+            <span class="en">Authentication & Authorization</span>
+          </h4>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th><span class="es">Capa</span><span class="en">Layer</span></th>
+                  <th><span class="es">Tecnologia</span><span class="en">Technology</span></th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr><td>Auth</td><td>JWT + Passport Strategy</td></tr>
+                <tr><td>Password</td><td>bcryptjs (12 rounds)</td></tr>
+                <tr><td>RBAC</td><td>admin | escalation | operator | viewer</td></tr>
+                <tr><td>Multi-tenant</td><td>organizationId <span class="es">en cada consulta</span><span class="en">in every query</span></td></tr>
+                <tr><td>API Keys</td><td><span class="es">Hash SHA-256, prefijo visible</span><span class="en">SHA-256 hash, visible prefix</span></td></tr>
+              </tbody>
+            </table>
+          </div>
         </div>
         <div>
-          <h4>Frontend</h4>
-          <ul class="feature-list">
-            <li>React 19 <span class="badge cyan">UI</span></li>
-            <li>Vite 7 <span class="badge violet">Build</span></li>
-            <li>Tailwind CSS 4 <span class="badge success">Styling</span></li>
-            <li>Recharts <span class="badge warning">Charts</span></li>
-            <li><span class="es">Componentes accesibles</span><span class="en">Accessible components</span></li>
-            <li><span class="es">Internacionalizacion (i18n)</span><span class="en">Internationalization (i18n)</span></li>
-            <li><span class="es">Modo oscuro/claro</span><span class="en">Dark/light mode</span></li>
-            <li><span class="es">Validacion con Zod</span><span class="en">Zod validation</span></li>
-          </ul>
+          <h4>
+            <span class="es">Proteccion de la Plataforma</span>
+            <span class="en">Platform Protection</span>
+          </h4>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th><span class="es">Medida</span><span class="en">Measure</span></th>
+                  <th><span class="es">Detalle</span><span class="en">Detail</span></th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr><td>Helmet</td><td><span class="es">Cabeceras HTTP seguras</span><span class="en">Secure HTTP headers</span></td></tr>
+                <tr><td>CORS</td><td><span class="es">Origenes permitidos configurables</span><span class="en">Configurable allowed origins</span></td></tr>
+                <tr><td>Rate Limiting</td><td>@nestjs/throttler (10 req/min login)</td></tr>
+                <tr><td>XSS Protection</td><td><span class="es">Sanitizacion de entrada</span><span class="en">Input sanitization</span></td></tr>
+                <tr><td>Audit Log</td><td><span class="es">Toda accion critica registrada</span><span class="en">Every critical action logged</span></td></tr>
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
     </div>
 
-    <div class="card">
-      <div class="card-header">
-        <div class="card-title">
-          <div class="card-icon success">&#9989;</div>
-          <span class="es">Calidad y Testing</span><span class="en">Quality &amp; Testing</span>
-        </div>
+    <!-- ═══ Seeded SAP Systems ═══ -->
+    <h2>
+      <span class="es">Sistemas SAP de Demo</span>
+      <span class="en">Demo SAP Systems</span>
+    </h2>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>SID</th>
+            <th><span class="es">Descripcion</span><span class="en">Description</span></th>
+            <th><span class="es">Producto</span><span class="en">Product</span></th>
+            <th>DB</th>
+            <th>Env</th>
+            <th>Health</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>EP1</code></td>
+            <td>ERP Production — S/4HANA</td>
+            <td>S/4HANA 2023</td>
+            <td>SAP HANA 2.0</td>
+            <td><span class="badge cyan">PRD</span></td>
+            <td class="text-success font-bold">92</td>
+            <td><span class="badge success">healthy</span></td>
+          </tr>
+          <tr>
+            <td><code>EQ1</code></td>
+            <td>ERP Quality — S/4HANA</td>
+            <td>S/4HANA 2023</td>
+            <td>SAP HANA 2.0</td>
+            <td><span class="badge violet">QAS</span></td>
+            <td class="text-warning font-bold">78</td>
+            <td><span class="badge warning">warning</span></td>
+          </tr>
+          <tr>
+            <td><code>ED1</code></td>
+            <td>ERP Development — S/4HANA</td>
+            <td>S/4HANA 2023</td>
+            <td>SAP HANA 2.0</td>
+            <td><span class="badge neutral">DEV</span></td>
+            <td class="text-success font-bold">85</td>
+            <td><span class="badge success">healthy</span></td>
+          </tr>
+          <tr>
+            <td><code>BW1</code></td>
+            <td>BW/4HANA Analytics Production</td>
+            <td>BW/4HANA</td>
+            <td>SAP HANA 2.0</td>
+            <td><span class="badge cyan">PRD</span></td>
+            <td class="text-success font-bold">88</td>
+            <td><span class="badge success">healthy</span></td>
+          </tr>
+          <tr>
+            <td><code>SM1</code></td>
+            <td>Solution Manager 7.2</td>
+            <td>SolMan 7.2</td>
+            <td>SAP HANA 2.0</td>
+            <td><span class="badge cyan">PRD</span></td>
+            <td class="text-success font-bold">95</td>
+            <td><span class="badge success">healthy</span></td>
+          </tr>
+          <tr>
+            <td><code>PI1</code></td>
+            <td>Process Orchestration 7.5</td>
+            <td>SAP PO 7.5</td>
+            <td>Oracle 19c</td>
+            <td><span class="badge cyan">PRD</span></td>
+            <td class="text-danger font-bold">45</td>
+            <td><span class="badge danger">critical</span></td>
+          </tr>
+          <tr>
+            <td><code>RS1</code></td>
+            <td>RISE with SAP S/4HANA Cloud</td>
+            <td>S/4HANA Cloud</td>
+            <td>SAP HANA Cloud</td>
+            <td><span class="badge cyan">PRD</span></td>
+            <td class="text-success font-bold">90</td>
+            <td><span class="badge success">healthy</span></td>
+          </tr>
+          <tr>
+            <td><code>GR1</code></td>
+            <td>GRC 12.0 — Governance Risk Compliance</td>
+            <td>SAP GRC 12.0</td>
+            <td>Microsoft SQL Server</td>
+            <td><span class="badge cyan">PRD</span></td>
+            <td class="text-success font-bold">87</td>
+            <td><span class="badge success">healthy</span></td>
+          </tr>
+          <tr>
+            <td><code>CR1</code></td>
+            <td>CRM 7.0 EHP4 — Customer Relationship</td>
+            <td>SAP CRM 7.0</td>
+            <td>Oracle 19c</td>
+            <td><span class="badge cyan">PRD</span></td>
+            <td class="text-success font-bold">82</td>
+            <td><span class="badge success">healthy</span></td>
+          </tr>
+          <tr>
+            <td><code>EW1</code></td>
+            <td>EWM 9.5 — Extended Warehouse Management</td>
+            <td>SAP EWM 9.5</td>
+            <td>IBM DB2 11.5</td>
+            <td><span class="badge cyan">PRD</span></td>
+            <td class="text-warning font-bold">79</td>
+            <td><span class="badge warning">warning</span></td>
+          </tr>
+          <tr>
+            <td><code>MX1</code></td>
+            <td>ECC 6.0 EHP8 — MaxDB Legacy</td>
+            <td>SAP ECC 6.0</td>
+            <td>SAP MaxDB 7.9</td>
+            <td><span class="badge cyan">PRD</span></td>
+            <td class="text-warning font-bold">75</td>
+            <td><span class="badge warning">warning</span></td>
+          </tr>
+          <tr>
+            <td><code>SO1</code></td>
+            <td>ECC 6.0 — Solaris Oracle Legacy</td>
+            <td>SAP ECC 6.0</td>
+            <td>Oracle 19c</td>
+            <td><span class="badge cyan">PRD</span></td>
+            <td class="text-warning font-bold">73</td>
+            <td><span class="badge warning">warning</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- ═══ Quick Start ═══ -->
+    <h2>
+      <span class="es">Inicio Rapido</span>
+      <span class="en">Quick Start</span>
+    </h2>
+
+    <div class="steps">
+      <div class="step">
+        <strong><span class="es">Clonar el repositorio</span><span class="en">Clone the repository</span></strong>
+        <pre><code>git clone https://github.com/maveram-company/sap-spektra.git
+cd sap-spektra</code></pre>
       </div>
-      <div class="kpi-grid">
-        <div class="kpi-card">
-          <div>
-            <div class="kpi-value">1,029</div>
-            <div class="kpi-label"><span class="es">Tests totales</span><span class="en">Total tests</span></div>
-          </div>
-        </div>
-        <div class="kpi-card">
-          <div>
-            <div class="kpi-value">96</div>
-            <div class="kpi-label"><span class="es">Suites de test</span><span class="en">Test suites</span></div>
-          </div>
-        </div>
-        <div class="kpi-card">
-          <div>
-            <div class="kpi-value">Jest</div>
-            <div class="kpi-label">Backend Testing</div>
-          </div>
-        </div>
-        <div class="kpi-card">
-          <div>
-            <div class="kpi-value">Vitest</div>
-            <div class="kpi-label">Frontend Testing</div>
-          </div>
-        </div>
+      <div class="step">
+        <strong><span class="es">Iniciar con Docker</span><span class="en">Start with Docker</span></strong>
+        <pre><code>docker-compose up -d</code></pre>
       </div>
-      <div class="callout info">
-        <div class="callout-icon">&#128161;</div>
-        <div>
-          <span class="es">El proyecto incluye tests unitarios, de integracion y end-to-end. Se ejecutan automaticamente en CI con GitHub Actions.</span>
-          <span class="en">The project includes unit, integration and end-to-end tests. They run automatically in CI with GitHub Actions.</span>
-        </div>
+      <div class="step">
+        <strong><span class="es">Instalar dependencias y poblar datos</span><span class="en">Install dependencies and seed data</span></strong>
+        <pre><code>cd apps/api && npm install && npx prisma migrate dev && npm run seed
+cd ../../frontend && npm install</code></pre>
+      </div>
+      <div class="step">
+        <strong><span class="es">Iniciar la aplicacion</span><span class="en">Start the application</span></strong>
+        <pre><code># Terminal 1: API
+cd apps/api && npm run start:dev
+
+# Terminal 2: Frontend
+cd frontend && npm run dev</code></pre>
+      </div>
+      <div class="step">
+        <strong><span class="es">Acceder al portal</span><span class="en">Access the portal</span></strong>
+        <p>
+          <span class="es">Abre</span><span class="en">Open</span>
+          <code>http://localhost:5173</code>
+          <span class="es">y usa</span><span class="en">and use</span>
+          <code>admin@acme-corp.com</code> / <code>admin123</code>
+        </p>
       </div>
     </div>
 
-    <!-- Quick Start CTA -->
-    <div class="callout success mt-3">
-      <div class="callout-icon">&#128640;</div>
+    <div class="callout success">
+      <div class="callout-icon">&#9989;</div>
       <div>
-        <strong><span class="es">Listo para empezar?</span><span class="en">Ready to get started?</span></strong><br>
-        <span class="es">Visita <a href="getting-started.html">Primeros Pasos</a> para configurar tu entorno de desarrollo en minutos.</span>
-        <span class="en">Visit <a href="getting-started.html">Getting Started</a> to set up your development environment in minutes.</span>
+        <span class="es"><strong>Swagger UI</strong> disponible en <code>http://localhost:3001/api</code> para explorar todos los endpoints de forma interactiva.</span>
+        <span class="en"><strong>Swagger UI</strong> available at <code>http://localhost:3001/api</code> to explore all endpoints interactively.</span>
       </div>
+    </div>
+
+    <!-- ═══ Footer ═══ -->
+    <div style="margin-top:48px;padding-top:24px;border-top:1px solid var(--brd);text-align:center">
+      <p class="text-muted text-sm">
+        SAP Spektra v2.0 — <span class="es">Documentacion generada para</span><span class="en">Documentation generated for</span> Maveram Company
+      </p>
+      <p class="text-muted text-xs" style="margin-top:4px">
+        <span class="es">SAP, S/4HANA, HANA, BW/4HANA, SolMan y otros son marcas registradas de SAP SE.</span>
+        <span class="en">SAP, S/4HANA, HANA, BW/4HANA, SolMan and others are registered trademarks of SAP SE.</span>
+      </p>
     </div>
 
   </main>

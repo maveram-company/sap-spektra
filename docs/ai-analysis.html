@@ -2,441 +2,556 @@
 <html lang="es" data-theme="dark" data-lang="es">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
   <title>Analisis IA — SAP Spektra Docs</title>
   <link rel="stylesheet" href="theme.css">
   <script src="theme-toggle.js"></script>
   <script src="lang-toggle.js"></script>
-  <style>
-    .ai-cases-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px;margin-bottom:24px}
-    .ai-case-card{background:var(--card-bg);border:1px solid var(--card-border);border-radius:var(--radius);padding:24px;transition:all .25s;position:relative;overflow:hidden}
-    .ai-case-card:hover{box-shadow:0 0 24px var(--card-hover);border-color:var(--cyan);transform:translateY(-2px)}
-    .ai-case-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--gradient-brand);opacity:0;transition:opacity .2s}
-    .ai-case-card:hover::before{opacity:1}
-    .ai-case-icon{width:48px;height:48px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:22px;margin-bottom:14px}
-    .ai-case-title{font-size:16px;font-weight:700;color:var(--txt1);margin-bottom:6px}
-    .ai-case-desc{font-size:13px;color:var(--txt2);margin-bottom:12px;line-height:1.6}
-    .status-row{display:flex;align-items:center;gap:8px;margin-top:auto}
-    .chat-widget{background:var(--card-bg);border:1px solid var(--card-border);border-radius:var(--radius);overflow:hidden;margin-bottom:24px}
-    .chat-header{background:var(--gradient-brand);padding:14px 20px;display:flex;align-items:center;gap:10px}
-    .chat-header-text{color:#fff;font-size:14px;font-weight:600}
-    .chat-header-dot{width:8px;height:8px;border-radius:50%;background:#22c55e;animation:pulse 2s infinite}
-    @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
-    .chat-body{padding:20px;max-height:400px;overflow-y:auto}
-    .chat-msg{margin-bottom:16px;display:flex;gap:10px}
-    .chat-msg.user{flex-direction:row-reverse}
-    .chat-avatar{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0}
-    .chat-avatar.ai{background:var(--cyan-dim);color:var(--cyan)}
-    .chat-avatar.human{background:var(--violet-dim);color:var(--violet)}
-    .chat-bubble{max-width:75%;padding:12px 16px;border-radius:12px;font-size:13px;line-height:1.6}
-    .chat-msg.assistant .chat-bubble{background:var(--bg3);color:var(--txt1);border-bottom-left-radius:4px}
-    .chat-msg.user .chat-bubble{background:var(--cyan-dim);color:var(--txt1);border-bottom-right-radius:4px}
-    .chat-input{display:flex;gap:8px;padding:14px 20px;border-top:1px solid var(--brd)}
-    .chat-input input{flex:1;background:var(--bg);border:1px solid var(--brd);border-radius:8px;padding:10px 14px;color:var(--txt1);font-size:13px;outline:none}
-    .chat-input input:focus{border-color:var(--cyan)}
-    .chat-input button{padding:10px 20px;border:none;border-radius:8px;background:var(--gradient-brand);color:#fff;font-size:13px;font-weight:600;cursor:pointer;transition:opacity .15s}
-    .chat-input button:hover{opacity:.85}
-    .confidence-bar{display:flex;align-items:center;gap:10px;margin-top:8px}
-    .confidence-fill-wrapper{flex:1;height:8px;background:var(--bg3);border-radius:4px;overflow:hidden}
-    .confidence-fill{height:100%;border-radius:4px;transition:width .4s}
-    .confidence-label{font-size:11px;font-weight:600;white-space:nowrap}
-    .source-tag{display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border-radius:4px;font-size:10px;font-weight:600;background:var(--bg3);color:var(--txt3);margin-right:4px;margin-top:6px}
-    .source-tag.high{background:var(--cyan-dim);color:var(--cyan)}
-    .source-tag.medium{background:rgba(245,158,11,0.1);color:var(--warning)}
-  </style>
 </head>
 <body>
 <div class="docs-wrapper">
-
-  <!-- ═══ SIDEBAR ═══ -->
-  <aside class="docs-sidebar">
+  <nav class="docs-sidebar">
     <div class="sidebar-brand">
-      <div class="logo">S</div>
+      <div class="logo">&#9889;</div>
       <div class="brand-text">
         <div class="brand-name">SAP Spektra</div>
-        <div class="brand-sub"><span class="es">Documentacion v2.0</span><span class="en">Documentation v2.0</span></div>
+        <div class="brand-sub">Documentacion v2.0</div>
       </div>
     </div>
-    <nav>
-      <div class="sidebar-section">
-        <div class="sidebar-section-label"><span class="es">Inicio</span><span class="en">Home</span></div>
-        <a class="sidebar-link" href="index.html"><span class="es">Portal</span><span class="en">Portal</span></a>
-        <a class="sidebar-link" href="getting-started.html"><span class="es">Primeros Pasos</span><span class="en">Getting Started</span></a>
-      </div>
-      <div class="sidebar-section">
-        <div class="sidebar-section-label">Command</div>
-        <a class="sidebar-link" href="dashboard.html">Dashboard</a>
-        <a class="sidebar-link" href="landscape.html">Landscape</a>
-        <a class="sidebar-link" href="alerts.html"><span class="es">Alertas</span><span class="en">Alerts</span></a>
-      </div>
-      <div class="sidebar-section">
-        <div class="sidebar-section-label">Monitor</div>
-        <a class="sidebar-link" href="systems.html"><span class="es">Sistemas</span><span class="en">Systems</span></a>
-        <a class="sidebar-link" href="connectors.html"><span class="es">Conectores</span><span class="en">Connectors</span></a>
-        <a class="sidebar-link" href="events.html"><span class="es">Eventos</span><span class="en">Events</span></a>
-      </div>
-      <div class="sidebar-section">
-        <div class="sidebar-section-label">Intelligence</div>
-        <a class="sidebar-link active" href="ai-analysis.html"><span class="es">Analisis IA</span><span class="en">AI Analysis</span></a>
-        <a class="sidebar-link" href="analytics.html">Analytics</a>
-        <a class="sidebar-link" href="reports.html"><span class="es">Reportes</span><span class="en">Reports</span></a>
-        <a class="sidebar-link" href="comparison.html"><span class="es">Comparacion</span><span class="en">Comparison</span></a>
-      </div>
-      <div class="sidebar-section">
-        <div class="sidebar-section-label">Operations</div>
-        <a class="sidebar-link" href="runbooks.html">Runbooks</a>
-        <a class="sidebar-link" href="approvals.html"><span class="es">Aprobaciones</span><span class="en">Approvals</span></a>
-        <a class="sidebar-link" href="operations.html"><span class="es">Operaciones</span><span class="en">Operations</span></a>
-        <a class="sidebar-link" href="jobs.html">Jobs SM37</a>
-        <a class="sidebar-link" href="transports.html"><span class="es">Transportes</span><span class="en">Transports</span></a>
-        <a class="sidebar-link" href="sla.html">SLA</a>
-        <a class="sidebar-link" href="ha-control.html">HA Control</a>
-        <a class="sidebar-link" href="certificates.html"><span class="es">Certificados</span><span class="en">Certificates</span></a>
-      </div>
-      <div class="sidebar-section">
-        <div class="sidebar-section-label">Admin</div>
-        <a class="sidebar-link" href="admin.html"><span class="es">Gestion</span><span class="en">Management</span></a>
-        <a class="sidebar-link" href="settings.html"><span class="es">Configuracion</span><span class="en">Settings</span></a>
-        <a class="sidebar-link" href="connect-system.html"><span class="es">Conectar Sistema</span><span class="en">Connect System</span></a>
-      </div>
-    </nav>
-  </aside>
+    <div class="sidebar-section">
+      <div class="sidebar-section-label">Inicio</div>
+      <a href="index.html" class="sidebar-link">Portal</a>
+      <a href="getting-started.html" class="sidebar-link">Primeros Pasos</a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-section-label">Architecture</div>
+      <a href="architecture.html" class="sidebar-link">Arquitectura</a>
+      <a href="domain-model.html" class="sidebar-link">Modelo de Datos</a>
+      <a href="api-reference.html" class="sidebar-link">API Reference</a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-section-label">Command</div>
+      <a href="dashboard.html" class="sidebar-link">Dashboard</a>
+      <a href="landscape.html" class="sidebar-link">Landscape</a>
+      <a href="alerts.html" class="sidebar-link">Alertas</a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-section-label">Monitor</div>
+      <a href="systems.html" class="sidebar-link">Sistemas</a>
+      <a href="connectors.html" class="sidebar-link">Conectores</a>
+      <a href="events.html" class="sidebar-link">Eventos</a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-section-label">Intelligence</div>
+      <a href="ai-analysis.html" class="sidebar-link active">Analisis IA</a>
+      <a href="analytics.html" class="sidebar-link">Analytics</a>
+      <a href="reports.html" class="sidebar-link">Reportes</a>
+      <a href="comparison.html" class="sidebar-link">Comparacion</a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-section-label">Operations</div>
+      <a href="runbooks.html" class="sidebar-link">Runbooks</a>
+      <a href="approvals.html" class="sidebar-link">Aprobaciones</a>
+      <a href="operations.html" class="sidebar-link">Operaciones</a>
+      <a href="jobs.html" class="sidebar-link">Jobs (SM37)</a>
+      <a href="transports.html" class="sidebar-link">Transportes</a>
+      <a href="sla.html" class="sidebar-link">SLA</a>
+      <a href="ha-control.html" class="sidebar-link">HA Control</a>
+      <a href="certificates.html" class="sidebar-link">Certificados</a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-section-label">Admin</div>
+      <a href="admin.html" class="sidebar-link">Gestion</a>
+      <a href="settings.html" class="sidebar-link">Configuracion</a>
+      <a href="connect-system.html" class="sidebar-link">Conectar Sistema</a>
+    </div>
+  </nav>
 
-  <!-- ═══ MAIN ═══ -->
   <main class="docs-main">
     <div class="breadcrumb">
-      <a href="index.html">Spektra</a> <span class="sep">/</span> Intelligence <span class="sep">/</span>
+      <a href="index.html">Docs</a> <span class="sep">/</span>
+      <span class="es">Intelligence</span><span class="en">Intelligence</span> <span class="sep">/</span>
       <span class="es">Analisis IA</span><span class="en">AI Analysis</span>
     </div>
 
     <div class="page-header">
-      <h1><span class="es">Analisis con Inteligencia Artificial</span><span class="en">AI-Powered Analysis</span></h1>
+      <h1><span class="es">Analisis con Inteligencia Artificial</span><span class="en">Artificial Intelligence Analysis</span></h1>
       <p class="subtitle">
-        <span class="es">Spektra integra modelos de IA para deteccion de anomalias, planificacion de capacidad, analisis de causa raiz, alertas predictivas y optimizacion de rendimiento en todo el landscape SAP.</span>
-        <span class="en">Spektra integrates AI models for anomaly detection, capacity planning, root cause analysis, predictive alerts, and performance optimization across the SAP landscape.</span>
+        <span class="es">Integracion con Amazon Bedrock (Claude) para analisis predictivo y asistencia inteligente en la gestion de SAP</span>
+        <span class="en">Amazon Bedrock (Claude) integration for predictive analysis and intelligent assistance in SAP management</span>
       </p>
     </div>
 
-    <!-- AI Use Cases Grid -->
-    <h2><span class="es">Casos de Uso de IA</span><span class="en">AI Use Cases</span></h2>
-    <div class="ai-cases-grid">
-
-      <!-- 1. Anomaly Detection -->
-      <div class="ai-case-card">
-        <div class="ai-case-icon" style="background:var(--cyan-dim);color:var(--cyan)">&#9733;</div>
-        <div class="ai-case-title"><span class="es">Deteccion de Anomalias</span><span class="en">Anomaly Detection</span></div>
-        <div class="ai-case-desc">
-          <span class="es">Identifica automaticamente patrones inusuales en metricas de sistema, tiempos de respuesta, uso de recursos y comportamiento de transacciones. Aprende la linea base de cada sistema para detectar desviaciones significativas.</span>
-          <span class="en">Automatically identifies unusual patterns in system metrics, response times, resource usage, and transaction behavior. Learns each system's baseline to detect significant deviations.</span>
-        </div>
-        <div class="status-row">
-          <span class="badge success">Available</span>
-          <span class="text-xs text-muted">v2.1</span>
-        </div>
-        <div class="confidence-bar">
-          <span class="confidence-label"><span class="es">Precision</span><span class="en">Accuracy</span></span>
-          <div class="confidence-fill-wrapper"><div class="confidence-fill" style="width:94%;background:var(--success)"></div></div>
-          <span class="confidence-label text-success">94%</span>
+    <!-- KPIs -->
+    <div class="kpi-grid">
+      <div class="kpi-card">
+        <div class="card-icon violet">&#129302;</div>
+        <div>
+          <div class="kpi-value">7</div>
+          <div class="kpi-label"><span class="es">Casos de Uso IA</span><span class="en">AI Use Cases</span></div>
         </div>
       </div>
-
-      <!-- 2. Capacity Planning -->
-      <div class="ai-case-card">
-        <div class="ai-case-icon" style="background:var(--violet-dim);color:var(--violet)">&#9651;</div>
-        <div class="ai-case-title"><span class="es">Planificacion de Capacidad</span><span class="en">Capacity Planning</span></div>
-        <div class="ai-case-desc">
-          <span class="es">Proyecta el crecimiento de recursos (CPU, memoria, disco) basado en tendencias historicas y estacionalidad. Genera recomendaciones de escalamiento antes de que se alcancen limites criticos.</span>
-          <span class="en">Projects resource growth (CPU, memory, disk) based on historical trends and seasonality. Generates scaling recommendations before critical limits are reached.</span>
-        </div>
-        <div class="status-row">
-          <span class="badge success">Available</span>
-          <span class="text-xs text-muted">v1.8</span>
-        </div>
-        <div class="confidence-bar">
-          <span class="confidence-label"><span class="es">Precision</span><span class="en">Accuracy</span></span>
-          <div class="confidence-fill-wrapper"><div class="confidence-fill" style="width:89%;background:var(--success)"></div></div>
-          <span class="confidence-label text-success">89%</span>
+      <div class="kpi-card">
+        <div class="card-icon cyan">&#9889;</div>
+        <div>
+          <div class="kpi-value">Claude</div>
+          <div class="kpi-label"><span class="es">Modelo Bedrock</span><span class="en">Bedrock Model</span></div>
         </div>
       </div>
-
-      <!-- 3. Root Cause Analysis -->
-      <div class="ai-case-card">
-        <div class="ai-case-icon" style="background:rgba(239,68,68,0.12);color:var(--danger)">&#9881;</div>
-        <div class="ai-case-title"><span class="es">Analisis de Causa Raiz</span><span class="en">Root Cause Analysis</span></div>
-        <div class="ai-case-desc">
-          <span class="es">Cuando ocurre un incidente, correlaciona eventos, metricas y logs de multiples sistemas para identificar la causa raiz probable. Reduce MTTR significativamente al eliminar la busqueda manual.</span>
-          <span class="en">When an incident occurs, correlates events, metrics, and logs from multiple systems to identify the probable root cause. Significantly reduces MTTR by eliminating manual investigation.</span>
-        </div>
-        <div class="status-row">
-          <span class="badge success">Available</span>
-          <span class="text-xs text-muted">v2.0</span>
-        </div>
-        <div class="confidence-bar">
-          <span class="confidence-label"><span class="es">Precision</span><span class="en">Accuracy</span></span>
-          <div class="confidence-fill-wrapper"><div class="confidence-fill" style="width:87%;background:var(--success)"></div></div>
-          <span class="confidence-label text-success">87%</span>
+      <div class="kpi-card">
+        <div class="card-icon warning">&#128338;</div>
+        <div>
+          <div class="kpi-value">20/min</div>
+          <div class="kpi-label"><span class="es">Rate Limit</span><span class="en">Rate Limit</span></div>
         </div>
       </div>
-
-      <!-- 4. Predictive Alerts -->
-      <div class="ai-case-card">
-        <div class="ai-case-icon" style="background:rgba(245,158,11,0.12);color:var(--warning)">&#9888;</div>
-        <div class="ai-case-title"><span class="es">Alertas Predictivas</span><span class="en">Predictive Alerts</span></div>
-        <div class="ai-case-desc">
-          <span class="es">Anticipa problemas futuros basandose en patrones de degradacion gradual. Genera alertas proactivas horas o dias antes de que un problema impacte a los usuarios. Integrado con el sistema de notificaciones.</span>
-          <span class="en">Anticipates future problems based on gradual degradation patterns. Generates proactive alerts hours or days before an issue impacts users. Integrated with the notification system.</span>
-        </div>
-        <div class="status-row">
-          <span class="badge violet">Beta</span>
-          <span class="text-xs text-muted">v0.9</span>
-        </div>
-        <div class="confidence-bar">
-          <span class="confidence-label"><span class="es">Precision</span><span class="en">Accuracy</span></span>
-          <div class="confidence-fill-wrapper"><div class="confidence-fill" style="width:76%;background:var(--warning)"></div></div>
-          <span class="confidence-label text-warning">76%</span>
-        </div>
-      </div>
-
-      <!-- 5. Performance Optimization -->
-      <div class="ai-case-card">
-        <div class="ai-case-icon" style="background:var(--bg3);color:var(--txt3)">&#9889;</div>
-        <div class="ai-case-title"><span class="es">Optimizacion de Rendimiento</span><span class="en">Performance Optimization</span></div>
-        <div class="ai-case-desc">
-          <span class="es">Analiza queries SQL costosas, transacciones lentas y cuellos de botella en batch jobs. Sugiere optimizaciones de indice, parametros del kernel SAP y configuracion de memoria para mejorar el rendimiento general.</span>
-          <span class="en">Analyzes expensive SQL queries, slow transactions, and batch job bottlenecks. Suggests index optimizations, SAP kernel parameters, and memory configuration to improve overall performance.</span>
-        </div>
-        <div class="status-row">
-          <span class="badge neutral"><span class="es">Proximamente</span><span class="en">Coming Soon</span></span>
-          <span class="text-xs text-muted">Q3 2026</span>
-        </div>
-        <div class="confidence-bar">
-          <span class="confidence-label"><span class="es">Precision</span><span class="en">Accuracy</span></span>
-          <div class="confidence-fill-wrapper"><div class="confidence-fill" style="width:0%;background:var(--bg3)"></div></div>
-          <span class="confidence-label text-muted">N/A</span>
+      <div class="kpi-card">
+        <div class="card-icon success">&#128172;</div>
+        <div>
+          <div class="kpi-value">Chat</div>
+          <div class="kpi-label"><span class="es">Interfaz</span><span class="en">Interface</span></div>
         </div>
       </div>
     </div>
 
-    <!-- AI Chat Widget -->
-    <h2><span class="es">Chat de IA — Asistente Spektra</span><span class="en">AI Chat — Spektra Assistant</span></h2>
-    <p class="text-sm text-muted mb-2">
-      <span class="es">Interactua con el asistente de IA para hacer preguntas sobre tus sistemas SAP, obtener diagnosticos y recomendaciones.</span>
-      <span class="en">Interact with the AI assistant to ask questions about your SAP systems, get diagnostics and recommendations.</span>
+    <!-- Amazon Bedrock Integration -->
+    <h2><span class="es">Integracion con Amazon Bedrock</span><span class="en">Amazon Bedrock Integration</span></h2>
+    <div class="card">
+      <p>
+        <span class="es">SAP Spektra utiliza <strong>Amazon Bedrock</strong> como servicio de inteligencia artificial, especificamente el modelo <strong>Anthropic Claude</strong> (claude-3-sonnet / claude-3-haiku). Bedrock proporciona acceso gestionado a modelos de lenguaje grandes (LLMs) sin necesidad de gestionar infraestructura de ML.</span>
+        <span class="en">SAP Spektra uses <strong>Amazon Bedrock</strong> as its AI service, specifically the <strong>Anthropic Claude</strong> model (claude-3-sonnet / claude-3-haiku). Bedrock provides managed access to large language models (LLMs) without needing to manage ML infrastructure.</span>
+      </p>
+      <div class="callout info">
+        <div class="callout-icon">&#8505;</div>
+        <div>
+          <span class="es"><strong>Privacidad:</strong> Las consultas a Bedrock son procesadas dentro de la region AWS configurada. Los datos del cliente no se utilizan para entrenar modelos. Cada peticion incluye solo el contexto minimo necesario para la respuesta.</span>
+          <span class="en"><strong>Privacy:</strong> Bedrock queries are processed within the configured AWS region. Customer data is not used to train models. Each request includes only the minimum context necessary for the response.</span>
+        </div>
+      </div>
+      <pre><code>// Bedrock configuration
+{
+  "provider": "aws-bedrock",
+  "model": "anthropic.claude-3-sonnet-20240229-v1:0",
+  "region": "us-east-1",
+  "maxTokens": 4096,
+  "temperature": 0.3,
+  "topP": 0.9,
+  "rateLimit": {
+    "requestsPerMinute": 20,
+    "tokensPerMinute": 100000
+  }
+}</code></pre>
+    </div>
+
+    <!-- 7 AI Use Cases -->
+    <h2><span class="es">7 Casos de Uso de IA</span><span class="en">7 AI Use Cases</span></h2>
+    <p>
+      <span class="es">Spektra ofrece 7 analisis predefinidos que el motor de IA puede generar automaticamente basandose en los datos del sistema. Cada caso de uso tiene un patron de keyword matching que activa la respuesta especializada.</span>
+      <span class="en">Spektra offers 7 predefined analyses that the AI engine can generate automatically based on system data. Each use case has a keyword matching pattern that triggers the specialized response.</span>
     </p>
 
-    <div class="chat-widget">
-      <div class="chat-header">
-        <div class="chat-header-dot"></div>
-        <div class="chat-header-text">Spektra AI Assistant</div>
+    <!-- Use Case 1 -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title"><div class="card-icon danger">&#128293;</div> 1. <span class="es">Incidente CPU</span><span class="en">CPU Incident</span></div>
+        <span class="badge danger">critical</span>
       </div>
-      <div class="chat-body">
-        <!-- User message -->
-        <div class="chat-msg user">
-          <div class="chat-avatar human">U</div>
-          <div class="chat-bubble">
-            <span class="es">Por que el sistema BWP tiene health score bajo?</span>
-            <span class="en">Why does the BWP system have a low health score?</span>
-          </div>
-        </div>
-        <!-- AI Response -->
-        <div class="chat-msg assistant">
-          <div class="chat-avatar ai">AI</div>
-          <div class="chat-bubble">
-            <span class="es">
-              <strong>Analisis del sistema BWP (BW/4HANA Production):</strong><br><br>
-              El health score actual es <strong>64/100</strong> (degradado). He identificado 3 factores principales:<br><br>
-              1. <strong>Memoria HANA al 89%</strong> — El consumo de columnas del column store ha crecido 12% en los ultimos 7 dias. Recomiendo ejecutar una revision de tablas no usadas con HANA_TABLES_COLUMNS.<br><br>
-              2. <strong>3 batch jobs fallidos</strong> en las ultimas 24h — Los jobs BI_PROCESS_CHAIN_01, BI_LOAD_FI_01 y BI_COMPRESS_01 terminaron con error. El log muestra "out of memory" en el paso de transformacion.<br><br>
-              3. <strong>Latencia RFC elevada</strong> (320ms) — La conexion RFC desde S4P esta degradada. Verificar el Cloud Connector y la carga de red.
-            </span>
-            <span class="en">
-              <strong>BWP system analysis (BW/4HANA Production):</strong><br><br>
-              Current health score is <strong>64/100</strong> (degraded). I've identified 3 main factors:<br><br>
-              1. <strong>HANA memory at 89%</strong> — Column store consumption grew 12% in the last 7 days. I recommend running an unused table review with HANA_TABLES_COLUMNS.<br><br>
-              2. <strong>3 failed batch jobs</strong> in the last 24h — Jobs BI_PROCESS_CHAIN_01, BI_LOAD_FI_01, and BI_COMPRESS_01 ended in error. The log shows "out of memory" in the transformation step.<br><br>
-              3. <strong>Elevated RFC latency</strong> (320ms) — The RFC connection from S4P is degraded. Check the Cloud Connector and network load.
-            </span>
-            <div style="margin-top:10px">
-              <span class="source-tag high"><span class="es">Fuente: Metricas HANA</span><span class="en">Source: HANA Metrics</span></span>
-              <span class="source-tag high"><span class="es">Fuente: SM37 Logs</span><span class="en">Source: SM37 Logs</span></span>
-              <span class="source-tag medium"><span class="es">Fuente: Heartbeat Conector</span><span class="en">Source: Connector Heartbeat</span></span>
-            </div>
-            <div class="confidence-bar mt-1">
-              <span class="confidence-label"><span class="es">Confianza</span><span class="en">Confidence</span></span>
-              <div class="confidence-fill-wrapper"><div class="confidence-fill" style="width:91%;background:var(--success)"></div></div>
-              <span class="confidence-label text-success">91%</span>
-            </div>
-          </div>
-        </div>
-        <!-- User follow-up -->
-        <div class="chat-msg user">
-          <div class="chat-avatar human">U</div>
-          <div class="chat-bubble">
-            <span class="es">Que runbook debo ejecutar primero?</span>
-            <span class="en">Which runbook should I execute first?</span>
-          </div>
-        </div>
-        <!-- AI Response 2 -->
-        <div class="chat-msg assistant">
-          <div class="chat-avatar ai">AI</div>
-          <div class="chat-bubble">
-            <span class="es">
-              Recomiendo esta secuencia de prioridad:<br><br>
-              1. <strong>RB-HANA-MEMORY-CLEANUP</strong> — Libera memoria del column store eliminando tablas no usadas y snapshots antiguos. Impacto inmediato en el health score.<br><br>
-              2. <strong>RB-JOB-RESTART-CHAIN</strong> — Reinicia la cadena de procesos BI_PROCESS_CHAIN_01 despues de la limpieza de memoria.<br><br>
-              3. <strong>RB-NETWORK-DIAG</strong> — Diagnostico de latencia RFC para la conexion BWP-S4P.<br><br>
-              Todos estan disponibles para ejecucion inmediata. El primero requiere aprobacion de nivel ADMIN.
-            </span>
-            <span class="en">
-              I recommend this priority sequence:<br><br>
-              1. <strong>RB-HANA-MEMORY-CLEANUP</strong> — Frees column store memory by removing unused tables and old snapshots. Immediate impact on health score.<br><br>
-              2. <strong>RB-JOB-RESTART-CHAIN</strong> — Restarts the BI_PROCESS_CHAIN_01 process chain after memory cleanup.<br><br>
-              3. <strong>RB-NETWORK-DIAG</strong> — RFC latency diagnostic for the BWP-S4P connection.<br><br>
-              All are available for immediate execution. The first one requires ADMIN-level approval.
-            </span>
-            <div style="margin-top:10px">
-              <span class="source-tag high"><span class="es">Fuente: Catalogo Runbooks</span><span class="en">Source: Runbook Catalog</span></span>
-              <span class="source-tag high"><span class="es">Fuente: Historial Ejecuciones</span><span class="en">Source: Execution History</span></span>
-            </div>
-            <div class="confidence-bar mt-1">
-              <span class="confidence-label"><span class="es">Confianza</span><span class="en">Confidence</span></span>
-              <div class="confidence-fill-wrapper"><div class="confidence-fill" style="width:88%;background:var(--success)"></div></div>
-              <span class="confidence-label text-success">88%</span>
-            </div>
-          </div>
-        </div>
+      <p>
+        <span class="es"><strong>Trigger keywords:</strong> <code>cpu</code>, <code>alto</code>, <code>high</code>, <code>procesador</code>, <code>processor</code></span>
+        <span class="en"><strong>Trigger keywords:</strong> <code>cpu</code>, <code>alto</code>, <code>high</code>, <code>procesador</code>, <code>processor</code></span>
+      </p>
+      <p>
+        <span class="es">Analiza los datos de CPU del sistema seleccionado y genera un diagnostico con: causa raiz probable, procesos sospechosos, impacto en el negocio, acciones recomendadas, y runbooks sugeridos para la remediacion. Incluye analisis historico de las ultimas 24 horas.</span>
+        <span class="en">Analyzes CPU data from the selected system and generates a diagnostic with: probable root cause, suspicious processes, business impact, recommended actions, and suggested runbooks for remediation. Includes historical analysis of the last 24 hours.</span>
+      </p>
+      <pre><code>// Example AI response structure
+{
+  "analysis": "CPU Incident Analysis for PRD",
+  "severity": "critical",
+  "rootCause": "ABAP report ZSALES_REPORT consuming 3 dialog work processes",
+  "impact": "Online transactions delayed by 15-30 seconds",
+  "recommendations": [
+    "Kill long-running work processes via SM50",
+    "Optimize ZSALES_REPORT — missing index on VBAK-ERDAT",
+    "Schedule report for off-peak hours"
+  ],
+  "suggestedRunbooks": ["rb-cpu-diagnosis", "rb-kill-workprocess"]
+}</code></pre>
+    </div>
+
+    <!-- Use Case 2 -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title"><div class="card-icon warning">&#128190;</div> 2. <span class="es">Disco Predictivo</span><span class="en">Predictive Disk</span></div>
+        <span class="badge warning">predictive</span>
       </div>
-      <div class="chat-input">
-        <input type="text" placeholder="Pregunta al asistente IA...  /  Ask the AI assistant...">
-        <button><span class="es">Enviar</span><span class="en">Send</span></button>
+      <p>
+        <span class="es"><strong>Trigger keywords:</strong> <code>disco</code>, <code>disk</code>, <code>espacio</code>, <code>space</code>, <code>storage</code>, <code>lleno</code>, <code>full</code></span>
+        <span class="en"><strong>Trigger keywords:</strong> <code>disco</code>, <code>disk</code>, <code>espacio</code>, <code>space</code>, <code>storage</code>, <code>lleno</code>, <code>full</code></span>
+      </p>
+      <p>
+        <span class="es">Predice la fecha estimada en que el disco se llenara basandose en la tendencia de crecimiento de los ultimos 30 dias. Identifica los directorios que mas crecen (logs, traces, data) y sugiere acciones de housekeeping.</span>
+        <span class="en">Predicts the estimated date when the disk will be full based on the growth trend of the last 30 days. Identifies the fastest-growing directories (logs, traces, data) and suggests housekeeping actions.</span>
+      </p>
+    </div>
+
+    <!-- Use Case 3 -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title"><div class="card-icon success">&#128737;</div> 3. <span class="es">Safety Gate</span><span class="en">Safety Gate</span></div>
+        <span class="badge success">gate</span>
+      </div>
+      <p>
+        <span class="es"><strong>Trigger keywords:</strong> <code>seguro</code>, <code>safe</code>, <code>gate</code>, <code>riesgo</code>, <code>risk</code>, <code>validar</code>, <code>validate</code></span>
+        <span class="en"><strong>Trigger keywords:</strong> <code>seguro</code>, <code>safe</code>, <code>gate</code>, <code>riesgo</code>, <code>risk</code>, <code>validar</code>, <code>validate</code></span>
+      </p>
+      <p>
+        <span class="es">Evalua si es seguro proceder con una operacion critica (deploy de transporte, reinicio de sistema, failover). Analiza el estado actual del sistema, alertas activas, ventana de mantenimiento, y dependencias. Emite un veredicto SAFE / CAUTION / UNSAFE.</span>
+        <span class="en">Evaluates whether it is safe to proceed with a critical operation (transport deploy, system restart, failover). Analyzes current system state, active alerts, maintenance window, and dependencies. Issues a SAFE / CAUTION / UNSAFE verdict.</span>
+      </p>
+    </div>
+
+    <!-- Use Case 4 -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title"><div class="card-icon violet">&#128200;</div> 4. <span class="es">Digest Ejecutivo</span><span class="en">Executive Digest</span></div>
+        <span class="badge violet">digest</span>
+      </div>
+      <p>
+        <span class="es"><strong>Trigger keywords:</strong> <code>resumen</code>, <code>summary</code>, <code>digest</code>, <code>ejecutivo</code>, <code>executive</code>, <code>overview</code></span>
+        <span class="en"><strong>Trigger keywords:</strong> <code>resumen</code>, <code>summary</code>, <code>digest</code>, <code>ejecutivo</code>, <code>executive</code>, <code>overview</code></span>
+      </p>
+      <p>
+        <span class="es">Genera un resumen ejecutivo del estado del landscape SAP en las ultimas 24 horas. Incluye: numero de alertas por severidad, sistemas con mayor degradacion, runbooks ejecutados, incidentes resueltos, y recomendaciones para las proximas 24 horas.</span>
+        <span class="en">Generates an executive summary of the SAP landscape status over the last 24 hours. Includes: number of alerts by severity, most degraded systems, executed runbooks, resolved incidents, and recommendations for the next 24 hours.</span>
+      </p>
+    </div>
+
+    <!-- Use Case 5 -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title"><div class="card-icon cyan">&#128161;</div> 5. <span class="es">Adaptacion</span><span class="en">Adaptation</span></div>
+        <span class="badge cyan">adaptive</span>
+      </div>
+      <p>
+        <span class="es"><strong>Trigger keywords:</strong> <code>adaptar</code>, <code>adapt</code>, <code>optimizar</code>, <code>optimize</code>, <code>mejorar</code>, <code>improve</code>, <code>tuning</code></span>
+        <span class="en"><strong>Trigger keywords:</strong> <code>adaptar</code>, <code>adapt</code>, <code>optimizar</code>, <code>optimize</code>, <code>mejorar</code>, <code>improve</code>, <code>tuning</code></span>
+      </p>
+      <p>
+        <span class="es">Sugiere optimizaciones basadas en los patrones de uso del sistema. Analiza tendencias de CPU, memoria, y I/O para recomendar ajustes en parametros de perfil SAP (rdisp/wp_no_dia, abap/heap_area_total, etc.), cache de HANA, y politicas de scheduling.</span>
+        <span class="en">Suggests optimizations based on system usage patterns. Analyzes CPU, memory, and I/O trends to recommend adjustments to SAP profile parameters (rdisp/wp_no_dia, abap/heap_area_total, etc.), HANA cache, and scheduling policies.</span>
+      </p>
+    </div>
+
+    <!-- Use Case 6 -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title"><div class="card-icon success">&#128154;</div> 6. <span class="es">Estado General</span><span class="en">General Health</span></div>
+        <span class="badge success">health</span>
+      </div>
+      <p>
+        <span class="es"><strong>Trigger keywords:</strong> <code>salud</code>, <code>health</code>, <code>estado</code>, <code>status</code>, <code>como esta</code>, <code>how is</code></span>
+        <span class="en"><strong>Trigger keywords:</strong> <code>salud</code>, <code>health</code>, <code>estado</code>, <code>status</code>, <code>como esta</code>, <code>how is</code></span>
+      </p>
+      <p>
+        <span class="es">Proporciona un analisis completo del estado de salud de un sistema o del landscape completo. Incluye health score desglosado, componentes en riesgo, comparacion con baseline historico, y recomendaciones priorizadas.</span>
+        <span class="en">Provides a comprehensive health status analysis for a system or the entire landscape. Includes detailed health score breakdown, at-risk components, comparison with historical baseline, and prioritized recommendations.</span>
+      </p>
+    </div>
+
+    <!-- Use Case 7 -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title"><div class="card-icon danger">&#9888;</div> 7. <span class="es">Riesgo de Restart</span><span class="en">Restart Risk</span></div>
+        <span class="badge danger">risk</span>
+      </div>
+      <p>
+        <span class="es"><strong>Trigger keywords:</strong> <code>restart</code>, <code>reinicio</code>, <code>reboot</code>, <code>apagar</code>, <code>shutdown</code>, <code>parar</code>, <code>stop</code></span>
+        <span class="en"><strong>Trigger keywords:</strong> <code>restart</code>, <code>reinicio</code>, <code>reboot</code>, <code>apagar</code>, <code>shutdown</code>, <code>parar</code>, <code>stop</code></span>
+      </p>
+      <p>
+        <span class="es">Evalua el riesgo de reiniciar un sistema SAP en el momento actual. Considera: usuarios conectados, jobs en ejecucion, procesos batch activos, updates pendientes, integraciones activas (IDocs, interfaces PI/PO), y horario de negocio. Calcula un puntaje de riesgo de 0-100.</span>
+        <span class="en">Evaluates the risk of restarting an SAP system at the current time. Considers: connected users, running jobs, active batch processes, pending updates, active integrations (IDocs, PI/PO interfaces), and business hours. Calculates a risk score from 0-100.</span>
+      </p>
+    </div>
+
+    <!-- Chat Interface -->
+    <h2><span class="es">Interfaz de Chat</span><span class="en">Chat Interface</span></h2>
+    <div class="card">
+      <p>
+        <span class="es">La interfaz de chat permite a los operadores interactuar con el asistente IA de forma conversacional. El chat mantiene contexto entre mensajes dentro de la misma sesion y puede acceder a datos en tiempo real del landscape.</span>
+        <span class="en">The chat interface allows operators to interact with the AI assistant conversationally. The chat maintains context between messages within the same session and can access real-time landscape data.</span>
+      </p>
+      <h4><span class="es">Flujo de Interaccion</span><span class="en">Interaction Flow</span></h4>
+      <div class="steps">
+        <div class="step">
+          <span class="es"><strong>El operador escribe una pregunta</strong> en lenguaje natural en espanol o ingles. Ejemplo: "Como esta el sistema PRD? Esta seguro para reiniciar?"</span>
+          <span class="en"><strong>The operator types a question</strong> in natural language in Spanish or English. Example: "How is the PRD system? Is it safe to restart?"</span>
+        </div>
+        <div class="step">
+          <span class="es"><strong>Keyword matching</strong> identifica el caso de uso (en este caso: "estado general" + "riesgo restart"). El sistema recopila metricas relevantes del sistema PRD.</span>
+          <span class="en"><strong>Keyword matching</strong> identifies the use case (in this case: "general health" + "restart risk"). The system collects relevant metrics from the PRD system.</span>
+        </div>
+        <div class="step">
+          <span class="es"><strong>Se construye el prompt</strong> con el system prompt base + contexto SAP + metricas del sistema + historial de chat. Se envia a Amazon Bedrock.</span>
+          <span class="en"><strong>The prompt is built</strong> with the base system prompt + SAP context + system metrics + chat history. It is sent to Amazon Bedrock.</span>
+        </div>
+        <div class="step">
+          <span class="es"><strong>La respuesta se formatea</strong> y se presenta al operador con recomendaciones accionables, badges de severidad, y links a runbooks sugeridos.</span>
+          <span class="en"><strong>The response is formatted</strong> and presented to the operator with actionable recommendations, severity badges, and links to suggested runbooks.</span>
+        </div>
       </div>
     </div>
 
-    <!-- Confidence Scores Explanation -->
-    <h2><span class="es">Puntuaciones de Confianza</span><span class="en">Confidence Scores</span></h2>
+    <!-- System Prompt -->
+    <h2><span class="es">System Prompt con Contexto SAP</span><span class="en">System Prompt with SAP Context</span></h2>
     <div class="card">
-      <p class="text-sm">
-        <span class="es">Cada respuesta del asistente incluye una puntuacion de confianza que refleja la certeza del modelo basada en la cantidad y calidad de los datos analizados:</span>
-        <span class="en">Each assistant response includes a confidence score that reflects the model's certainty based on the quantity and quality of analyzed data:</span>
+      <p>
+        <span class="es">Cada peticion a Bedrock incluye un system prompt especializado que le proporciona al modelo contexto sobre SAP Basis, la arquitectura del landscape, y las mejores practicas operativas.</span>
+        <span class="en">Each Bedrock request includes a specialized system prompt that provides the model with context about SAP Basis, landscape architecture, and operational best practices.</span>
       </p>
-      <div class="table-wrap mt-2">
+      <pre><code>// System prompt (simplified)
+const SYSTEM_PROMPT = `
+You are an SAP Basis Expert AI Assistant for SAP Spektra.
+
+Context:
+- You assist SAP Basis administrators with system monitoring, troubleshooting,
+  and operational decisions.
+- You have access to real-time metrics from the SAP landscape.
+- You understand SAP technologies: S/4HANA, ECC, BW/4HANA, SolMan, PO, GRC.
+- You know database engines: HANA 2.0, Oracle 19c, MSSQL, DB2, ASE, MaxDB.
+- You are familiar with SAP transactions: SM50, SM51, SM37, SM21, ST22,
+  STMS, SE38, DB02, DBACOCKPIT.
+
+Guidelines:
+- Always prioritize system stability and data integrity.
+- Recommend runbooks when appropriate.
+- Flag risks before suggesting operations on production systems.
+- Provide SAP-specific technical details (OSS notes, parameters, transactions).
+- Respond in the user's language (Spanish or English).
+- Structure responses with: Analysis, Impact, Recommendations, Risk Level.
+`;
+</code></pre>
+    </div>
+
+    <!-- Keyword Matching -->
+    <h2><span class="es">Mecanismo de Keyword Matching</span><span class="en">Keyword Matching Mechanism</span></h2>
+    <div class="card">
+      <p>
+        <span class="es">El motor de IA utiliza un sistema de keyword matching para identificar la intencion del usuario y seleccionar el caso de uso apropiado. Las keywords se evaluan en espanol e ingles.</span>
+        <span class="en">The AI engine uses a keyword matching system to identify user intent and select the appropriate use case. Keywords are evaluated in both Spanish and English.</span>
+      </p>
+      <pre><code>// Keyword matching configuration
+const USE_CASE_KEYWORDS = {
+  CPU_INCIDENT:    ['cpu', 'alto', 'high', 'procesador', 'processor', 'work process'],
+  DISK_PREDICTIVE: ['disco', 'disk', 'espacio', 'space', 'storage', 'lleno', 'full'],
+  SAFETY_GATE:     ['seguro', 'safe', 'gate', 'riesgo', 'risk', 'validar', 'validate'],
+  EXEC_DIGEST:     ['resumen', 'summary', 'digest', 'ejecutivo', 'executive'],
+  ADAPTATION:      ['adaptar', 'adapt', 'optimizar', 'optimize', 'tuning', 'mejorar'],
+  GENERAL_HEALTH:  ['salud', 'health', 'estado', 'status', 'como esta', 'how is'],
+  RESTART_RISK:    ['restart', 'reinicio', 'reboot', 'apagar', 'shutdown', 'parar']
+};
+
+// Matching algorithm: score-based with threshold
+function matchUseCase(userMessage: string): UseCase | null {
+  const normalized = userMessage.toLowerCase();
+  let bestMatch = null;
+  let bestScore = 0;
+
+  for (const [useCase, keywords] of Object.entries(USE_CASE_KEYWORDS)) {
+    const score = keywords.filter(kw => normalized.includes(kw)).length;
+    if (score > bestScore) {
+      bestScore = score;
+      bestMatch = useCase;
+    }
+  }
+
+  return bestScore >= 1 ? bestMatch : null; // Fallback to general chat
+}</code></pre>
+    </div>
+
+    <!-- Model Configuration -->
+    <h2><span class="es">Configuracion del Modelo</span><span class="en">Model Configuration</span></h2>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th><span class="es">Parametro</span><span class="en">Parameter</span></th>
+            <th><span class="es">Valor</span><span class="en">Value</span></th>
+            <th><span class="es">Descripcion</span><span class="en">Description</span></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="font-mono">model</td>
+            <td class="font-mono">claude-3-sonnet</td>
+            <td><span class="es">Modelo principal para analisis complejos</span><span class="en">Main model for complex analyses</span></td>
+          </tr>
+          <tr>
+            <td class="font-mono">fallbackModel</td>
+            <td class="font-mono">claude-3-haiku</td>
+            <td><span class="es">Modelo fallback para respuestas rapidas y bajo costo</span><span class="en">Fallback model for fast, low-cost responses</span></td>
+          </tr>
+          <tr>
+            <td class="font-mono">maxTokens</td>
+            <td>4096</td>
+            <td><span class="es">Tokens maximos en la respuesta</span><span class="en">Maximum tokens in the response</span></td>
+          </tr>
+          <tr>
+            <td class="font-mono">temperature</td>
+            <td>0.3</td>
+            <td><span class="es">Baja temperatura para respuestas consistentes y factuales</span><span class="en">Low temperature for consistent, factual responses</span></td>
+          </tr>
+          <tr>
+            <td class="font-mono">topP</td>
+            <td>0.9</td>
+            <td><span class="es">Nucleus sampling para diversidad controlada</span><span class="en">Nucleus sampling for controlled diversity</span></td>
+          </tr>
+          <tr>
+            <td class="font-mono">contextWindow</td>
+            <td>200K</td>
+            <td><span class="es">Ventana de contexto maxima disponible</span><span class="en">Maximum available context window</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Rate Limiting -->
+    <h2><span class="es">Rate Limiting</span><span class="en">Rate Limiting</span></h2>
+    <div class="card">
+      <p>
+        <span class="es">Las consultas de IA estan sujetas a rate limiting para controlar costos y evitar abuso. Los limites se aplican por usuario y por organizacion.</span>
+        <span class="en">AI queries are subject to rate limiting to control costs and prevent abuse. Limits are applied per user and per organization.</span>
+      </p>
+      <div class="table-wrap">
         <table>
           <thead>
             <tr>
-              <th><span class="es">Rango</span><span class="en">Range</span></th>
-              <th><span class="es">Nivel</span><span class="en">Level</span></th>
-              <th><span class="es">Significado</span><span class="en">Meaning</span></th>
+              <th><span class="es">Limite</span><span class="en">Limit</span></th>
+              <th><span class="es">Valor</span><span class="en">Value</span></th>
+              <th><span class="es">Scope</span><span class="en">Scope</span></th>
             </tr>
           </thead>
           <tbody>
             <tr>
-              <td><span class="badge success">90-100%</span></td>
-              <td><span class="es">Alta</span><span class="en">High</span></td>
-              <td class="text-sm"><span class="es">Multiples fuentes de datos coinciden. La recomendacion es fiable y puede ejecutarse con confianza.</span><span class="en">Multiple data sources agree. The recommendation is reliable and can be executed with confidence.</span></td>
+              <td><span class="es">Solicitudes por minuto</span><span class="en">Requests per minute</span></td>
+              <td class="font-mono font-bold">20</td>
+              <td><span class="es">Por usuario</span><span class="en">Per user</span></td>
             </tr>
             <tr>
-              <td><span class="badge cyan">75-89%</span></td>
-              <td><span class="es">Media-Alta</span><span class="en">Medium-High</span></td>
-              <td class="text-sm"><span class="es">Buena correlacion de datos. Recomendacion solida, pero considere verificar antes de ejecutar en produccion.</span><span class="en">Good data correlation. Solid recommendation, but consider verifying before executing in production.</span></td>
+              <td><span class="es">Solicitudes por hora</span><span class="en">Requests per hour</span></td>
+              <td class="font-mono font-bold">200</td>
+              <td><span class="es">Por organizacion</span><span class="en">Per organization</span></td>
             </tr>
             <tr>
-              <td><span class="badge warning">50-74%</span></td>
-              <td><span class="es">Media</span><span class="en">Medium</span></td>
-              <td class="text-sm"><span class="es">Datos parciales o inconsistentes. El analisis es exploratorio. Se recomienda revision manual adicional.</span><span class="en">Partial or inconsistent data. The analysis is exploratory. Additional manual review recommended.</span></td>
-            </tr>
-            <tr>
-              <td><span class="badge danger">&lt; 50%</span></td>
-              <td><span class="es">Baja</span><span class="en">Low</span></td>
-              <td class="text-sm"><span class="es">Datos insuficientes. La respuesta es una estimacion. No se recomienda ejecutar acciones sin investigacion adicional.</span><span class="en">Insufficient data. The response is an estimate. Do not execute actions without further investigation.</span></td>
+              <td><span class="es">Tokens por minuto</span><span class="en">Tokens per minute</span></td>
+              <td class="font-mono font-bold">100,000</td>
+              <td><span class="es">Por organizacion</span><span class="en">Per organization</span></td>
             </tr>
           </tbody>
         </table>
       </div>
-    </div>
-
-    <!-- Response Sources -->
-    <h2><span class="es">Fuentes de Respuesta</span><span class="en">Response Sources</span></h2>
-    <div class="card">
-      <p class="text-sm mb-2">
-        <span class="es">El asistente IA indica las fuentes de datos utilizadas para cada analisis. Esto permite verificar y auditar cada recomendacion:</span>
-        <span class="en">The AI assistant indicates the data sources used for each analysis. This enables verification and auditing of each recommendation:</span>
-      </p>
-      <div class="grid-3">
-        <div style="padding:12px;background:var(--bg3);border-radius:8px">
-          <h4 class="text-cyan"><span class="es">Metricas de Sistema</span><span class="en">System Metrics</span></h4>
-          <p class="text-xs text-muted"><span class="es">CPU, memoria, disco, IOPS en tiempo real via conectores.</span><span class="en">CPU, memory, disk, IOPS in real-time via connectors.</span></p>
-        </div>
-        <div style="padding:12px;background:var(--bg3);border-radius:8px">
-          <h4 class="text-cyan"><span class="es">Logs de Aplicacion</span><span class="en">Application Logs</span></h4>
-          <p class="text-xs text-muted"><span class="es">SM21, SM37, ST22, CCMS logs indexados y analizados.</span><span class="en">SM21, SM37, ST22, CCMS logs indexed and analyzed.</span></p>
-        </div>
-        <div style="padding:12px;background:var(--bg3);border-radius:8px">
-          <h4 class="text-cyan"><span class="es">Historial de Eventos</span><span class="en">Event History</span></h4>
-          <p class="text-xs text-muted"><span class="es">Alertas, incidentes y cambios recientes correlacionados.</span><span class="en">Alerts, incidents, and recent changes correlated.</span></p>
-        </div>
-        <div style="padding:12px;background:var(--bg3);border-radius:8px">
-          <h4 class="text-violet"><span class="es">Base de Conocimiento</span><span class="en">Knowledge Base</span></h4>
-          <p class="text-xs text-muted"><span class="es">SAP Notes, KBAs, y documentacion de mejores practicas.</span><span class="en">SAP Notes, KBAs, and best practices documentation.</span></p>
-        </div>
-        <div style="padding:12px;background:var(--bg3);border-radius:8px">
-          <h4 class="text-violet"><span class="es">Catalogo de Runbooks</span><span class="en">Runbook Catalog</span></h4>
-          <p class="text-xs text-muted"><span class="es">Runbooks disponibles con historial de exito y parametros.</span><span class="en">Available runbooks with success history and parameters.</span></p>
-        </div>
-        <div style="padding:12px;background:var(--bg3);border-radius:8px">
-          <h4 class="text-violet"><span class="es">Datos de Heartbeat</span><span class="en">Heartbeat Data</span></h4>
-          <p class="text-xs text-muted"><span class="es">Disponibilidad y latencia de conexiones en tiempo real.</span><span class="en">Connection availability and latency in real-time.</span></p>
+      <div class="callout warning">
+        <div class="callout-icon">&#9888;</div>
+        <div>
+          <span class="es"><strong>Error 429:</strong> Cuando se excede el rate limit, la API retorna <code>429 Too Many Requests</code> con un header <code>Retry-After</code> indicando cuantos segundos esperar. La interfaz muestra un mensaje amigable al usuario.</span>
+          <span class="en"><strong>Error 429:</strong> When the rate limit is exceeded, the API returns <code>429 Too Many Requests</code> with a <code>Retry-After</code> header indicating how many seconds to wait. The interface shows a friendly message to the user.</span>
         </div>
       </div>
     </div>
 
-    <!-- Callout -->
-    <div class="callout info mt-3">
-      <div class="callout-icon">&#8505;</div>
-      <div>
-        <span class="es"><strong>Nota:</strong> El asistente IA utiliza datos en tiempo real de los conectores activos. Para sistemas con conector desconectado, las respuestas se basan en los ultimos datos disponibles y la confianza se reduce automaticamente.</span>
-        <span class="en"><strong>Note:</strong> The AI assistant uses real-time data from active connectors. For systems with a disconnected connector, responses are based on the last available data and confidence is automatically reduced.</span>
-      </div>
-    </div>
-
-    <!-- API Reference -->
-    <h2><span class="es">Referencia API</span><span class="en">API Reference</span></h2>
-    <div class="card">
-      <h4>POST /api/ai/chat</h4>
-      <p class="text-sm text-muted">
-        <span class="es">Envia un mensaje al asistente IA y recibe una respuesta contextualizada.</span>
-        <span class="en">Send a message to the AI assistant and receive a contextualized response.</span>
-      </p>
-      <pre><code>POST /api/ai/chat
+    <!-- Demo Mode vs Live API -->
+    <h2><span class="es">Modo Demo vs API en Vivo</span><span class="en">Demo Mode vs Live API</span></h2>
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title"><div class="card-icon warning">&#127917;</div> <span class="es">Modo Demo</span><span class="en">Demo Mode</span></div>
+          <span class="badge warning">DEMO</span>
+        </div>
+        <p>
+          <span class="es">En modo demo, las respuestas de IA se generan localmente usando plantillas pre-configuradas. No se realizan llamadas a Amazon Bedrock. Este modo se activa cuando:</span>
+          <span class="en">In demo mode, AI responses are generated locally using pre-configured templates. No calls are made to Amazon Bedrock. This mode is activated when:</span>
+        </p>
+        <ul class="feature-list">
+          <li><span class="es">No hay credenciales AWS configuradas</span><span class="en">No AWS credentials configured</span></li>
+          <li><span class="es">La variable <code>AI_DEMO_MODE=true</code> esta activa</span><span class="en">The <code>AI_DEMO_MODE=true</code> variable is active</span></li>
+          <li><span class="es">El entorno es local/desarrollo</span><span class="en">The environment is local/development</span></li>
+        </ul>
+        <pre><code>// Demo response example
 {
-  "message": "Why is BWP health score low?",
-  "context": { "sid": "BWP" }
-}
-
-Response: {
-  "response": "...",
-  "confidence": 0.91,
-  "sources": ["hana_metrics", "sm37_logs", "connector_heartbeat"],
-  "suggestedRunbooks": ["RB-HANA-MEMORY-CLEANUP", ...]
+  "source": "demo",
+  "model": "template-engine",
+  "response": "Based on the current metrics...",
+  "tokensUsed": 0,
+  "latencyMs": 50
 }</code></pre>
-    </div>
-    <div class="card">
-      <h4>GET /api/ai/use-cases</h4>
-      <p class="text-sm text-muted">
-        <span class="es">Lista los casos de uso de IA disponibles con su estado y precision actual.</span>
-        <span class="en">Lists available AI use cases with their status and current accuracy.</span>
-      </p>
-      <pre><code>GET /api/ai/use-cases
-
-Response: {
-  "useCases": [
-    { "id": "anomaly_detection", "status": "available", "accuracy": 0.94 },
-    { "id": "capacity_planning", "status": "available", "accuracy": 0.89 },
-    { "id": "root_cause", "status": "available", "accuracy": 0.87 },
-    { "id": "predictive_alerts", "status": "beta", "accuracy": 0.76 },
-    { "id": "perf_optimization", "status": "coming_soon", "accuracy": null }
-  ]
+      </div>
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title"><div class="card-icon success">&#128640;</div> <span class="es">API en Vivo</span><span class="en">Live API</span></div>
+          <span class="badge success">LIVE</span>
+        </div>
+        <p>
+          <span class="es">En modo live, las consultas se envian a Amazon Bedrock en tiempo real. Las respuestas son generadas por Claude con contexto actualizado del landscape. Requisitos:</span>
+          <span class="en">In live mode, queries are sent to Amazon Bedrock in real time. Responses are generated by Claude with up-to-date landscape context. Requirements:</span>
+        </p>
+        <ul class="feature-list">
+          <li><span class="es">Credenciales AWS validas (IAM role o access keys)</span><span class="en">Valid AWS credentials (IAM role or access keys)</span></li>
+          <li><span class="es">Acceso a Bedrock habilitado en la region</span><span class="en">Bedrock access enabled in the region</span></li>
+          <li><span class="es">Modelo Claude aprovisionado</span><span class="en">Claude model provisioned</span></li>
+        </ul>
+        <pre><code>// Live response example
+{
+  "source": "bedrock",
+  "model": "anthropic.claude-3-sonnet",
+  "response": "## CPU Analysis for PRD\n...",
+  "tokensUsed": 1847,
+  "latencyMs": 3200
 }</code></pre>
+      </div>
     </div>
+
+    <!-- API Endpoints -->
+    <h2><span class="es">Endpoints de API</span><span class="en">API Endpoints</span></h2>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th><span class="es">Metodo</span><span class="en">Method</span></th>
+            <th>Endpoint</th>
+            <th><span class="es">Descripcion</span><span class="en">Description</span></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="badge success">POST</span></td>
+            <td class="font-mono">/api/ai/chat</td>
+            <td><span class="es">Enviar mensaje al asistente IA</span><span class="en">Send message to AI assistant</span></td>
+          </tr>
+          <tr>
+            <td><span class="badge cyan">GET</span></td>
+            <td class="font-mono">/api/ai/history</td>
+            <td><span class="es">Obtener historial de chat del usuario</span><span class="en">Get user's chat history</span></td>
+          </tr>
+          <tr>
+            <td><span class="badge success">POST</span></td>
+            <td class="font-mono">/api/ai/analyze/:systemId</td>
+            <td><span class="es">Ejecutar analisis IA para un sistema especifico</span><span class="en">Run AI analysis for a specific system</span></td>
+          </tr>
+          <tr>
+            <td><span class="badge cyan">GET</span></td>
+            <td class="font-mono">/api/ai/config</td>
+            <td><span class="es">Obtener configuracion actual del motor IA</span><span class="en">Get current AI engine configuration</span></td>
+          </tr>
+          <tr>
+            <td><span class="badge cyan">GET</span></td>
+            <td class="font-mono">/api/ai/usage</td>
+            <td><span class="es">Ver estadisticas de uso (tokens, requests)</span><span class="en">View usage statistics (tokens, requests)</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
   </main>
 </div>
 </body>

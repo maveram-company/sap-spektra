@@ -2,7 +2,7 @@
 <html lang="es" data-theme="dark" data-lang="es">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
   <title>Conectar Sistema — SAP Spektra Docs</title>
   <link rel="stylesheet" href="theme.css">
   <script src="theme-toggle.js"></script>
@@ -10,549 +10,519 @@
 </head>
 <body>
 <div class="docs-wrapper">
-
-  <!-- ═══ Sidebar ═══ -->
   <nav class="docs-sidebar">
     <div class="sidebar-brand">
-      <div class="logo">S</div>
+      <div class="logo">&#9889;</div>
       <div class="brand-text">
         <div class="brand-name">SAP Spektra</div>
         <div class="brand-sub">Documentacion v2.0</div>
       </div>
     </div>
-
     <div class="sidebar-section">
       <div class="sidebar-section-label">Inicio</div>
-      <a href="index.html" class="sidebar-link"><span class="es">Portal</span><span class="en">Portal</span></a>
-      <a href="getting-started.html" class="sidebar-link"><span class="es">Primeros Pasos</span><span class="en">Getting Started</span></a>
+      <a href="index.html" class="sidebar-link">Portal</a>
+      <a href="getting-started.html" class="sidebar-link">Primeros Pasos</a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-section-label">Architecture</div>
+      <a href="architecture.html" class="sidebar-link">Arquitectura</a>
+      <a href="domain-model.html" class="sidebar-link">Modelo de Datos</a>
+      <a href="api-reference.html" class="sidebar-link">API Reference</a>
     </div>
     <div class="sidebar-section">
       <div class="sidebar-section-label">Command</div>
       <a href="dashboard.html" class="sidebar-link">Dashboard</a>
       <a href="landscape.html" class="sidebar-link">Landscape</a>
-      <a href="alerts.html" class="sidebar-link"><span class="es">Alertas</span><span class="en">Alerts</span></a>
+      <a href="alerts.html" class="sidebar-link">Alertas</a>
     </div>
     <div class="sidebar-section">
       <div class="sidebar-section-label">Monitor</div>
-      <a href="systems.html" class="sidebar-link"><span class="es">Sistemas</span><span class="en">Systems</span></a>
-      <a href="connectors.html" class="sidebar-link"><span class="es">Conectores</span><span class="en">Connectors</span></a>
-      <a href="events.html" class="sidebar-link"><span class="es">Eventos</span><span class="en">Events</span></a>
+      <a href="systems.html" class="sidebar-link">Sistemas</a>
+      <a href="connectors.html" class="sidebar-link">Conectores</a>
+      <a href="events.html" class="sidebar-link">Eventos</a>
     </div>
     <div class="sidebar-section">
       <div class="sidebar-section-label">Intelligence</div>
-      <a href="ai-analysis.html" class="sidebar-link"><span class="es">Analisis IA</span><span class="en">AI Analysis</span></a>
+      <a href="ai-analysis.html" class="sidebar-link">Analisis IA</a>
       <a href="analytics.html" class="sidebar-link">Analytics</a>
-      <a href="reports.html" class="sidebar-link"><span class="es">Reportes</span><span class="en">Reports</span></a>
-      <a href="comparison.html" class="sidebar-link"><span class="es">Comparacion</span><span class="en">Comparison</span></a>
+      <a href="reports.html" class="sidebar-link">Reportes</a>
+      <a href="comparison.html" class="sidebar-link">Comparacion</a>
     </div>
     <div class="sidebar-section">
       <div class="sidebar-section-label">Operations</div>
       <a href="runbooks.html" class="sidebar-link">Runbooks</a>
-      <a href="approvals.html" class="sidebar-link"><span class="es">Aprobaciones</span><span class="en">Approvals</span></a>
-      <a href="operations.html" class="sidebar-link"><span class="es">Operaciones</span><span class="en">Operations</span></a>
-      <a href="jobs.html" class="sidebar-link">Jobs SM37</a>
-      <a href="transports.html" class="sidebar-link"><span class="es">Transportes</span><span class="en">Transports</span></a>
+      <a href="approvals.html" class="sidebar-link">Aprobaciones</a>
+      <a href="operations.html" class="sidebar-link">Operaciones</a>
+      <a href="jobs.html" class="sidebar-link">Jobs (SM37)</a>
+      <a href="transports.html" class="sidebar-link">Transportes</a>
       <a href="sla.html" class="sidebar-link">SLA</a>
       <a href="ha-control.html" class="sidebar-link">HA Control</a>
-      <a href="certificates.html" class="sidebar-link"><span class="es">Certificados</span><span class="en">Certificates</span></a>
+      <a href="certificates.html" class="sidebar-link">Certificados</a>
     </div>
     <div class="sidebar-section">
       <div class="sidebar-section-label">Admin</div>
-      <a href="admin.html" class="sidebar-link"><span class="es">Gestion</span><span class="en">Management</span></a>
-      <a href="settings.html" class="sidebar-link"><span class="es">Configuracion</span><span class="en">Settings</span></a>
-      <a href="connect-system.html" class="sidebar-link active"><span class="es">Conectar Sistema</span><span class="en">Connect System</span></a>
+      <a href="admin.html" class="sidebar-link">Gestion</a>
+      <a href="settings.html" class="sidebar-link">Configuracion</a>
+      <a href="connect-system.html" class="sidebar-link active">Conectar Sistema</a>
     </div>
   </nav>
 
-  <!-- ═══ Main Content ═══ -->
   <main class="docs-main">
-
     <div class="breadcrumb">
-      <a href="index.html">Docs</a>
-      <span class="sep">/</span>
-      <span>Admin</span>
-      <span class="sep">/</span>
-      <span class="text-primary"><span class="es">Conectar Sistema</span><span class="en">Connect System</span></span>
-    </div>
-
-    <!-- Back Button -->
-    <div class="mb-2">
-      <a href="admin.html" style="display:inline-flex;align-items:center;gap:6px;font-size:13px;color:var(--txt2);text-decoration:none;">
-        &#8592; <span class="es">Volver a Gestion</span><span class="en">Back to Management</span>
-      </a>
+      <a href="index.html">Docs</a> <span class="sep">/</span>
+      <span class="es">Admin</span><span class="en">Admin</span> <span class="sep">/</span>
+      <span class="es">Conectar Sistema</span><span class="en">Connect System</span>
     </div>
 
     <div class="page-header">
-      <h1><span class="es">Asistente de Conexion de Sistemas</span><span class="en">System Connection Wizard</span></h1>
-      <div class="subtitle">
-        <span class="es">Conecte un nuevo sistema SAP a Spektra seleccionando el metodo de conexion adecuado</span>
-        <span class="en">Connect a new SAP system to Spektra by selecting the appropriate connection method</span>
-      </div>
+      <h1><span class="es">Conectar un Sistema SAP</span><span class="en">Connect an SAP System</span></h1>
+      <p class="subtitle">
+        <span class="es">Guia paso a paso para conectar un sistema SAP a Spektra mediante Agente (on-premise) o Cloud Connector (RISE)</span>
+        <span class="en">Step-by-step guide to connect an SAP system to Spektra via Agent (on-premise) or Cloud Connector (RISE)</span>
+      </p>
     </div>
 
-    <div class="demo-disclaimer">
-      <strong><span class="es">Requisito:</span><span class="en">Requirement:</span></strong>
-      <span class="es">Solo usuarios con rol <code>admin</code> (nivel 40) pueden conectar nuevos sistemas. Verifique que tiene la informacion del sistema SAP antes de iniciar.</span>
-      <span class="en">Only users with <code>admin</code> role (level 40) can connect new systems. Verify you have the SAP system information before starting.</span>
-    </div>
-
-    <!-- ═══ Step 1: Method Selection ═══ -->
-    <h2><span class="es">Paso 1: Seleccione el Metodo de Conexion</span><span class="en">Step 1: Select Connection Method</span></h2>
-    <p class="text-muted mb-2">
-      <span class="es">Elija el metodo que mejor se adapte a su infraestructura y requisitos de seguridad.</span>
-      <span class="en">Choose the method that best fits your infrastructure and security requirements.</span>
-    </p>
-
+    <!-- Connection Methods -->
+    <h2><span class="es">Metodos de Conexion</span><span class="en">Connection Methods</span></h2>
     <div class="grid-2">
-      <!-- SAP Cloud Connector -->
-      <div class="card" id="method-cloud" style="cursor:pointer;border-color:var(--cyan);" onclick="selectMethod('cloud')">
+      <div class="card">
         <div class="card-header">
-          <div class="card-title"><div class="card-icon cyan">&#9729;&#65039;</div> SAP Cloud Connector</div>
-          <span class="badge success"><span class="es">Recomendado</span><span class="en">Recommended</span></span>
+          <div class="card-title"><div class="card-icon cyan">&#128640;</div> <span class="es">Metodo 1: Agente</span><span class="en">Method 1: Agent</span></div>
+          <span class="badge cyan">ON_PREMISE</span>
         </div>
-        <p class="text-sm text-muted mb-1">
-          <span class="es">Conexion segura a traves de SAP BTP Cloud Connector. Ideal para entornos con SAP Business Technology Platform.</span>
-          <span class="en">Secure connection through SAP BTP Cloud Connector. Ideal for environments with SAP Business Technology Platform.</span>
+        <p>
+          <span class="es">Para sistemas SAP on-premise o en IaaS (AWS, Azure, GCP). El agente Spektra se instala directamente en el servidor y proporciona acceso completo a metricas y operaciones.</span>
+          <span class="en">For on-premise SAP systems or IaaS (AWS, Azure, GCP). The Spektra agent is installed directly on the server and provides full access to metrics and operations.</span>
         </p>
         <ul class="feature-list">
-          <li><span class="es">Tunelizacion segura sin abrir puertos</span><span class="en">Secure tunneling without opening ports</span></li>
-          <li><span class="es">Soporte multi-sistema en un conector</span><span class="en">Multi-system support in one connector</span></li>
-          <li><span class="es">Certificados SSL/TLS automaticos</span><span class="en">Automatic SSL/TLS certificates</span></li>
-          <li><span class="es">Gestion centralizada via BTP Cockpit</span><span class="en">Centralized management via BTP Cockpit</span></li>
-          <li><span class="es">Monitoreo de conexion integrado</span><span class="en">Built-in connection monitoring</span></li>
+          <li><span class="es">Acceso completo a SO y SAP</span><span class="en">Full OS and SAP access</span></li>
+          <li><span class="es">Todos los runbooks disponibles</span><span class="en">All runbooks available</span></li>
+          <li><span class="es">HA/DR operations</span><span class="en">HA/DR operations</span></li>
         </ul>
-        <div class="callout info mt-2" style="margin-bottom:0;">
-          <div class="callout-icon">&#9432;</div>
-          <div class="text-sm">
-            <span class="es">Requiere SAP BTP Subaccount con Cloud Connector configurado.</span>
-            <span class="en">Requires SAP BTP Subaccount with Cloud Connector configured.</span>
-          </div>
-        </div>
       </div>
-
-      <!-- Spektra Agent -->
-      <div class="card" id="method-agent" style="cursor:pointer;" onclick="selectMethod('agent')">
+      <div class="card">
         <div class="card-header">
-          <div class="card-title"><div class="card-icon violet">&#128225;</div> Spektra Agent</div>
-          <span class="badge violet">On-Premise</span>
+          <div class="card-title"><div class="card-icon violet">&#9729;</div> <span class="es">Metodo 2: Cloud Connector</span><span class="en">Method 2: Cloud Connector</span></div>
+          <span class="badge violet">RISE</span>
         </div>
-        <p class="text-sm text-muted mb-1">
-          <span class="es">Agente ligero instalado en el servidor SAP. Comunicacion cifrada via WebSocket con compresion.</span>
-          <span class="en">Lightweight agent installed on the SAP server. Encrypted communication via WebSocket with compression.</span>
+        <p>
+          <span class="es">Para sistemas gestionados bajo RISE with SAP. Se conecta mediante SAP Cloud Connector (SCC) a traves de un subaccount BTP. Acceso limitado a capa de aplicacion.</span>
+          <span class="en">For systems managed under RISE with SAP. Connects via SAP Cloud Connector (SCC) through a BTP subaccount. Access limited to application layer.</span>
         </p>
         <ul class="feature-list">
-          <li><span class="es">Instalacion en 5 minutos</span><span class="en">5-minute installation</span></li>
-          <li><span class="es">Bajo consumo de recursos (&lt;50MB RAM)</span><span class="en">Low resource consumption (&lt;50MB RAM)</span></li>
-          <li><span class="es">Conexion saliente (sin abrir puertos entrantes)</span><span class="en">Outbound connection (no inbound ports)</span></li>
-          <li><span class="es">Auto-actualizacion segura</span><span class="en">Secure auto-update</span></li>
-          <li><span class="es">Soporte Linux/Windows</span><span class="en">Linux/Windows support</span></li>
+          <li><span class="es">Solo metricas SAP</span><span class="en">SAP metrics only</span></li>
+          <li><span class="es">Runbooks limitados</span><span class="en">Limited runbooks</span></li>
+          <li><span class="es">Sin acceso a SO</span><span class="en">No OS access</span></li>
         </ul>
-        <div class="callout info mt-2" style="margin-bottom:0;">
-          <div class="callout-icon">&#9432;</div>
-          <div class="text-sm">
-            <span class="es">Ideal para sistemas on-premise sin SAP BTP.</span>
-            <span class="en">Ideal for on-premise systems without SAP BTP.</span>
-          </div>
-        </div>
       </div>
+    </div>
 
-      <!-- RFC/BAPI -->
-      <div class="card" id="method-rfc" style="cursor:pointer;" onclick="selectMethod('rfc')">
-        <div class="card-header">
-          <div class="card-title"><div class="card-icon warning">&#128268;</div> RFC/BAPI</div>
-          <span class="badge warning">Legacy</span>
+    <!-- Step-by-Step Wizard -->
+    <h2><span class="es">Wizard Paso a Paso</span><span class="en">Step-by-Step Wizard</span></h2>
+    <div class="card">
+      <p>
+        <span class="es">El wizard de conexion guia al administrador a traves de 5 pasos para configurar un nuevo sistema en Spektra.</span>
+        <span class="en">The connection wizard guides the administrator through 5 steps to configure a new system in Spektra.</span>
+      </p>
+      <div class="steps">
+        <div class="step">
+          <strong><span class="es">Paso 1: Informacion del Sistema</span><span class="en">Step 1: System Information</span></strong><br>
+          <span class="es">Ingresar SID (3 caracteres), producto SAP, entorno (PRD/QAS/DEV/SBX/DR), hostname, base de datos, y version. Seleccionar modelo de despliegue (ON_PREMISE o RISE_MANAGED).</span>
+          <span class="en">Enter SID (3 characters), SAP product, environment (PRD/QAS/DEV/SBX/DR), hostname, database, and version. Select deployment model (ON_PREMISE or RISE_MANAGED).</span>
         </div>
-        <p class="text-sm text-muted mb-1">
-          <span class="es">Conexion directa via RFC (Remote Function Call) para integracion con BAPIs y Function Modules estandar de SAP.</span>
-          <span class="en">Direct connection via RFC (Remote Function Call) for integration with standard SAP BAPIs and Function Modules.</span>
-        </p>
-        <ul class="feature-list">
-          <li><span class="es">Compatible con todos los sistemas SAP</span><span class="en">Compatible with all SAP systems</span></li>
-          <li><span class="es">Acceso a BAPIs y Function Modules</span><span class="en">Access to BAPIs and Function Modules</span></li>
-          <li><span class="es">Soporte SNC para cifrado</span><span class="en">SNC support for encryption</span></li>
-          <li><span class="es">Requiere usuario de servicio SAP</span><span class="en">Requires SAP service user</span></li>
-        </ul>
-        <div class="callout warning mt-2" style="margin-bottom:0;">
-          <div class="callout-icon">&#9888;&#65039;</div>
-          <div class="text-sm">
-            <span class="es">Requiere apertura de puertos 33XX y 32XX en el firewall.</span>
-            <span class="en">Requires opening ports 33XX and 32XX in the firewall.</span>
-          </div>
+        <div class="step">
+          <strong><span class="es">Paso 2: Seleccion de OS</span><span class="en">Step 2: OS Selection</span></strong><br>
+          <span class="es">Seleccionar el sistema operativo del servidor para generar las instrucciones de instalacion correctas. Las opciones dependen del metodo de conexion seleccionado.</span>
+          <span class="en">Select the server's operating system to generate the correct installation instructions. Options depend on the selected connection method.</span>
         </div>
-      </div>
-
-      <!-- API Gateway -->
-      <div class="card" id="method-api" style="cursor:pointer;" onclick="selectMethod('api')">
-        <div class="card-header">
-          <div class="card-title"><div class="card-icon success">&#127760;</div> API Gateway</div>
-          <span class="badge cyan">REST/OData</span>
+        <div class="step">
+          <strong><span class="es">Paso 3: Instalacion del Conector</span><span class="en">Step 3: Connector Installation</span></strong><br>
+          <span class="es">Seguir las instrucciones especificas de la plataforma para instalar el agente o configurar el Cloud Connector (ver secciones detalladas abajo).</span>
+          <span class="en">Follow platform-specific instructions to install the agent or configure the Cloud Connector (see detailed sections below).</span>
         </div>
-        <p class="text-sm text-muted mb-1">
-          <span class="es">Conexion via SAP API Gateway, SAP Integration Suite o API Management para servicios REST y OData.</span>
-          <span class="en">Connection via SAP API Gateway, SAP Integration Suite, or API Management for REST and OData services.</span>
-        </p>
-        <ul class="feature-list">
-          <li><span class="es">APIs RESTful y OData v4</span><span class="en">RESTful and OData v4 APIs</span></li>
-          <li><span class="es">OAuth2 / API Key authentication</span><span class="en">OAuth2 / API Key authentication</span></li>
-          <li><span class="es">Rate limiting y throttling</span><span class="en">Rate limiting and throttling</span></li>
-          <li><span class="es">Compatible con S/4HANA Cloud</span><span class="en">Compatible with S/4HANA Cloud</span></li>
-        </ul>
-        <div class="callout info mt-2" style="margin-bottom:0;">
-          <div class="callout-icon">&#9432;</div>
-          <div class="text-sm">
-            <span class="es">Ideal para S/4HANA Cloud y sistemas con API Management habilitado.</span>
-            <span class="en">Ideal for S/4HANA Cloud and systems with API Management enabled.</span>
-          </div>
+        <div class="step">
+          <strong><span class="es">Paso 4: Configuracion de Credenciales</span><span class="en">Step 4: Credential Setup</span></strong><br>
+          <span class="es">Configurar las credenciales SAP necesarias: usuario RFC con autorizaciones adecuadas, API key del agente, o datos del BTP subaccount.</span>
+          <span class="en">Configure necessary SAP credentials: RFC user with proper authorizations, agent API key, or BTP subaccount data.</span>
+        </div>
+        <div class="step">
+          <strong><span class="es">Paso 5: Verificacion de Conectividad</span><span class="en">Step 5: Connectivity Verification</span></strong><br>
+          <span class="es">Ejecutar test de conectividad end-to-end. Verificar que las metricas llegan correctamente y que el health score se calcula.</span>
+          <span class="en">Run end-to-end connectivity test. Verify that metrics arrive correctly and that the health score is calculated.</span>
         </div>
       </div>
     </div>
 
-    <!-- ═══ Step 2: System Information ═══ -->
-    <h2 class="mt-3"><span class="es">Paso 2: Informacion del Sistema</span><span class="en">Step 2: System Information</span></h2>
-
-    <div class="card mb-2">
-      <h3><span class="es">Datos Basicos del Sistema</span><span class="en">Basic System Data</span></h3>
-      <div class="grid-2 mt-2">
-        <div style="margin-bottom:16px;">
-          <label style="display:block;font-size:12px;font-weight:600;color:var(--txt1);margin-bottom:6px;">SID <span class="text-danger">*</span></label>
-          <input type="text" maxlength="3" placeholder="PRD" style="width:100%;background:var(--bg3);border:1px solid var(--brd);color:var(--txt1);padding:9px 12px;border-radius:8px;font-size:13px;font-family:monospace;text-transform:uppercase;">
-          <div style="font-size:11px;color:var(--txt3);margin-top:4px;"><span class="es">Identificador de 3 caracteres del sistema SAP</span><span class="en">3-character SAP system identifier</span></div>
-        </div>
-        <div style="margin-bottom:16px;">
-          <label style="display:block;font-size:12px;font-weight:600;color:var(--txt1);margin-bottom:6px;"><span class="es">Descripcion</span><span class="en">Description</span> <span class="text-danger">*</span></label>
-          <input type="text" placeholder="SAP ECC 6.0 Production" style="width:100%;background:var(--bg3);border:1px solid var(--brd);color:var(--txt1);padding:9px 12px;border-radius:8px;font-size:13px;">
-        </div>
-        <div style="margin-bottom:16px;">
-          <label style="display:block;font-size:12px;font-weight:600;color:var(--txt1);margin-bottom:6px;">Hostname <span class="text-danger">*</span></label>
-          <input type="text" placeholder="sapapp01.prod.local" style="width:100%;background:var(--bg3);border:1px solid var(--brd);color:var(--txt1);padding:9px 12px;border-radius:8px;font-size:13px;font-family:monospace;">
-        </div>
-        <div style="margin-bottom:16px;">
-          <label style="display:block;font-size:12px;font-weight:600;color:var(--txt1);margin-bottom:6px;">Instance Nr. <span class="text-danger">*</span></label>
-          <input type="text" maxlength="2" placeholder="00" style="width:100%;background:var(--bg3);border:1px solid var(--brd);color:var(--txt1);padding:9px 12px;border-radius:8px;font-size:13px;font-family:monospace;">
-        </div>
-        <div style="margin-bottom:16px;">
-          <label style="display:block;font-size:12px;font-weight:600;color:var(--txt1);margin-bottom:6px;"><span class="es">Ambiente</span><span class="en">Environment</span> <span class="text-danger">*</span></label>
-          <select style="width:100%;background:var(--bg3);border:1px solid var(--brd);color:var(--txt1);padding:9px 12px;border-radius:8px;font-size:13px;">
-            <option value="">-- <span class="es">Seleccionar</span><span class="en">Select</span> --</option>
-            <option value="production">Production</option>
-            <option value="quality">Quality</option>
-            <option value="development">Development</option>
-            <option value="sandbox">Sandbox</option>
-          </select>
-        </div>
-        <div style="margin-bottom:16px;">
-          <label style="display:block;font-size:12px;font-weight:600;color:var(--txt1);margin-bottom:6px;"><span class="es">Tipo de Sistema</span><span class="en">System Type</span> <span class="text-danger">*</span></label>
-          <select style="width:100%;background:var(--bg3);border:1px solid var(--brd);color:var(--txt1);padding:9px 12px;border-radius:8px;font-size:13px;">
-            <option value="">-- <span class="es">Seleccionar</span><span class="en">Select</span> --</option>
-            <option value="ecc">SAP ECC</option>
-            <option value="s4hana">SAP S/4HANA</option>
-            <option value="bw4hana">SAP BW/4HANA</option>
-            <option value="crm">SAP CRM</option>
-            <option value="solman">SAP Solution Manager</option>
-            <option value="other">Other</option>
-          </select>
-        </div>
-      </div>
+    <!-- OS Selection -->
+    <h2><span class="es">Seleccion de Sistema Operativo</span><span class="en">Operating System Selection</span></h2>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>OS</th>
+            <th><span class="es">Versiones Soportadas</span><span class="en">Supported Versions</span></th>
+            <th><span class="es">Metodo de Instalacion</span><span class="en">Installation Method</span></th>
+            <th><span class="es">Requisitos</span><span class="en">Requirements</span></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Windows</strong></td>
+            <td>Server 2019, 2022</td>
+            <td>PowerShell script</td>
+            <td><span class="es">PowerShell 5.1+, .NET 4.7.2+, Admin privileges</span><span class="en">PowerShell 5.1+, .NET 4.7.2+, Admin privileges</span></td>
+          </tr>
+          <tr>
+            <td><strong>Linux (SLES)</strong></td>
+            <td>15 SP3, 15 SP4, 15 SP5</td>
+            <td>Shell script (bash)</td>
+            <td><span class="es">bash 4+, curl, root/sudo</span><span class="en">bash 4+, curl, root/sudo</span></td>
+          </tr>
+          <tr>
+            <td><strong>Linux (RHEL)</strong></td>
+            <td>8.x, 9.x</td>
+            <td>Shell script (bash)</td>
+            <td><span class="es">bash 4+, curl, root/sudo</span><span class="en">bash 4+, curl, root/sudo</span></td>
+          </tr>
+          <tr>
+            <td><strong>AIX</strong></td>
+            <td>7.2, 7.3</td>
+            <td>Shell script (ksh)</td>
+            <td><span class="es">ksh93, curl/wget, root</span><span class="en">ksh93, curl/wget, root</span></td>
+          </tr>
+          <tr>
+            <td><strong>HP-UX</strong></td>
+            <td>11i v3</td>
+            <td>Shell script (sh)</td>
+            <td><span class="es">sh, curl/wget, root</span><span class="en">sh, curl/wget, root</span></td>
+          </tr>
+          <tr>
+            <td><strong>Solaris</strong></td>
+            <td>11.4</td>
+            <td>Shell script (bash)</td>
+            <td><span class="es">bash 4+, curl, root</span><span class="en">bash 4+, curl, root</span></td>
+          </tr>
+        </tbody>
+      </table>
     </div>
 
-    <!-- ═══ Step 3: Method-Specific Setup ═══ -->
-    <h2><span class="es">Paso 3: Configuracion del Metodo</span><span class="en">Step 3: Method Configuration</span></h2>
+    <!-- Agent Installation: Linux -->
+    <h2><span class="es">Instalacion del Agente: Linux (SLES/RHEL)</span><span class="en">Agent Installation: Linux (SLES/RHEL)</span></h2>
+    <div class="card">
+      <h4><span class="es">Paso 1: Descargar e instalar</span><span class="en">Step 1: Download and install</span></h4>
+      <pre><code># Download and run installation script
+curl -fsSL https://agent.spektra.maveram.com/install.sh | \
+  sudo bash -s -- \
+    --api-key "spk_example_xxxxxxxxxxxxxxxxxxxxxxxx" \
+    --sid "PRD" \
+    --instance-number "00" \
+    --region "eu-central-1"</code></pre>
+
+      <h4><span class="es">Paso 2: Verificar el servicio</span><span class="en">Step 2: Verify the service</span></h4>
+      <pre><code># Check agent status
+sudo systemctl status spektra-agent
+
+# Expected output:
+# ● spektra-agent.service - SAP Spektra Monitoring Agent
+#    Loaded: loaded (/etc/systemd/system/spektra-agent.service; enabled)
+#    Active: active (running) since ...
+#    Main PID: 12345 (spektra-agent)</code></pre>
+
+      <h4><span class="es">Paso 3: Verificar conectividad</span><span class="en">Step 3: Verify connectivity</span></h4>
+      <pre><code># Test connectivity to Spektra backend
+sudo spektra-agent test-connection
+
+# Expected output:
+# ✓ DNS resolution: agent.spektra.maveram.com → 52.xx.xx.xx
+# ✓ TLS handshake: OK (TLS 1.3)
+# ✓ Authentication: API key valid
+# ✓ Heartbeat: sent and acknowledged (latency: 45ms)
+# ✓ SAP detection: SID=PRD, Instance=00, DB=HANA
+# ✓ All checks passed!</code></pre>
+
+      <h4><span class="es">Paso 4: Configurar usuario SAP</span><span class="en">Step 4: Configure SAP user</span></h4>
+      <pre><code># The agent needs an RFC user in the SAP system
+# Create user SPEKTRA_MON in SU01 with the following roles:
+#   - SAP_BC_MON_ADMIN (Monitoring)
+#   - SAP_BC_BAS_MON (Basis Monitoring)
+#   - Z_SPEKTRA_AGENT (custom role - see documentation)
+
+# Configure RFC credentials in the agent
+sudo spektra-agent configure-sap \
+  --client 100 \
+  --user SPEKTRA_MON \
+  --password "********" \
+  --language EN</code></pre>
+    </div>
+
+    <!-- Agent Installation: Windows -->
+    <h2><span class="es">Instalacion del Agente: Windows</span><span class="en">Agent Installation: Windows</span></h2>
+    <div class="card">
+      <h4><span class="es">PowerShell (Run as Administrator)</span><span class="en">PowerShell (Run as Administrator)</span></h4>
+      <pre><code># Download installer
+Invoke-WebRequest `
+  -Uri "https://agent.spektra.maveram.com/install.ps1" `
+  -OutFile "$env:TEMP\spektra-install.ps1"
+
+# Run installer
+& "$env:TEMP\spektra-install.ps1" `
+  -ApiKey "spk_example_xxxxxxxxxxxxxxxxxxxxxxxx" `
+  -SID "CRP" `
+  -InstanceNumber "00" `
+  -Region "eu-central-1"
+
+# Verify service
+Get-Service SpektraAgent
+
+# Expected:
+# Status   Name           DisplayName
+# ------   ----           -----------
+# Running  SpektraAgent   SAP Spektra Monitoring Agent</code></pre>
+
+      <h4><span class="es">Verificar conectividad</span><span class="en">Verify connectivity</span></h4>
+      <pre><code># Test connection
+& "C:\Program Files\Spektra\Agent\spektra-agent.exe" test-connection
+
+# Expected: All checks passed!</code></pre>
+    </div>
+
+    <!-- Agent Installation: AIX / HP-UX / Solaris -->
+    <h2><span class="es">Instalacion del Agente: AIX / HP-UX / Solaris</span><span class="en">Agent Installation: AIX / HP-UX / Solaris</span></h2>
+    <div class="card">
+      <h4>AIX 7.2+</h4>
+      <pre><code># Download for AIX
+wget -O /tmp/spektra-agent-aix.tar.gz \
+  "https://agent.spektra.maveram.com/releases/latest/aix-ppc64"
+
+# Extract and install
+cd /opt
+tar xzf /tmp/spektra-agent-aix.tar.gz
+cd spektra-agent
+./install.sh \
+  --api-key "sk_live_xxxx..." \
+  --sid "ECP" \
+  --instance-number "00"
+
+# Start service
+startsrc -s spektra-agent</code></pre>
+
+      <h4>HP-UX 11i v3</h4>
+      <pre><code># Download for HP-UX
+wget -O /tmp/spektra-agent-hpux.tar.gz \
+  "https://agent.spektra.maveram.com/releases/latest/hpux-ia64"
+
+# Extract and install
+cd /opt
+tar xzf /tmp/spektra-agent-hpux.tar.gz
+cd spektra-agent
+./install.sh \
+  --api-key "sk_live_xxxx..." \
+  --sid "ECP" \
+  --instance-number "00"</code></pre>
+
+      <h4>Solaris 11.4</h4>
+      <pre><code># Download for Solaris
+wget -O /tmp/spektra-agent-sol.tar.gz \
+  "https://agent.spektra.maveram.com/releases/latest/solaris-sparc64"
+
+# Extract and install
+cd /opt
+gtar xzf /tmp/spektra-agent-sol.tar.gz
+cd spektra-agent
+./install.sh \
+  --api-key "sk_live_xxxx..." \
+  --sid "ECP" \
+  --instance-number "00"
+
+# Enable service
+svcadm enable spektra-agent</code></pre>
+    </div>
 
     <!-- Cloud Connector Setup -->
-    <div id="setup-cloud" class="card mb-2">
-      <div class="card-header">
-        <div class="card-title"><div class="card-icon cyan">&#9729;&#65039;</div> SAP Cloud Connector <span class="es">— Configuracion</span><span class="en">— Configuration</span></div>
-      </div>
-      <div class="steps mt-2">
-        <div class="step">
-          <strong><span class="es">Configurar Cloud Connector en BTP</span><span class="en">Configure Cloud Connector in BTP</span></strong>
-          <p class="text-sm text-muted"><span class="es">En SAP BTP Cockpit, navegue a Connectivity &gt; Cloud Connectors y agregue un Virtual System Mapping para su sistema SAP.</span><span class="en">In SAP BTP Cockpit, navigate to Connectivity &gt; Cloud Connectors and add a Virtual System Mapping for your SAP system.</span></p>
-        </div>
-        <div class="step">
-          <strong><span class="es">Registrar destino en BTP</span><span class="en">Register destination in BTP</span></strong>
-          <p class="text-sm text-muted"><span class="es">Cree un Destination en BTP con el Virtual Host y puerto del sistema SAP.</span><span class="en">Create a Destination in BTP with the Virtual Host and port of the SAP system.</span></p>
-          <pre><code>Name:          SPEKTRA_PRD
-Type:          RFC
-Virtual Host:  sapapp01.prod.local:3200
-Auth:          BasicAuthentication
-User:          SPEKTRA_SVC</code></pre>
-        </div>
-        <div class="step">
-          <strong><span class="es">Ingresar credenciales BTP en Spektra</span><span class="en">Enter BTP credentials in Spektra</span></strong>
-          <p class="text-sm text-muted"><span class="es">Proporcione el Subaccount ID, Service Key y el nombre del Destination.</span><span class="en">Provide the Subaccount ID, Service Key, and the Destination name.</span></p>
-        </div>
-        <div class="step">
-          <strong><span class="es">Verificar conexion</span><span class="en">Verify connection</span></strong>
-          <p class="text-sm text-muted"><span class="es">Ejecute la prueba de conectividad para confirmar que Spektra puede alcanzar el sistema.</span><span class="en">Run the connectivity test to confirm Spektra can reach the system.</span></p>
-        </div>
-      </div>
-      <div class="grid-2 mt-2">
-        <div style="margin-bottom:16px;">
-          <label style="display:block;font-size:12px;font-weight:600;color:var(--txt1);margin-bottom:6px;">BTP Subaccount ID</label>
-          <input type="text" placeholder="xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx" style="width:100%;background:var(--bg3);border:1px solid var(--brd);color:var(--txt1);padding:9px 12px;border-radius:8px;font-size:13px;font-family:monospace;">
-        </div>
-        <div style="margin-bottom:16px;">
-          <label style="display:block;font-size:12px;font-weight:600;color:var(--txt1);margin-bottom:6px;">Destination Name</label>
-          <input type="text" placeholder="SPEKTRA_PRD" style="width:100%;background:var(--bg3);border:1px solid var(--brd);color:var(--txt1);padding:9px 12px;border-radius:8px;font-size:13px;font-family:monospace;">
-        </div>
-      </div>
-    </div>
-
-    <!-- Spektra Agent Deployment -->
-    <div id="setup-agent" class="card mb-2">
-      <div class="card-header">
-        <div class="card-title"><div class="card-icon violet">&#128225;</div> Spektra Agent <span class="es">— Despliegue</span><span class="en">— Deployment</span></div>
-      </div>
-
-      <h4 class="mt-2"><span class="es">Instrucciones de Despliegue</span><span class="en">Deployment Instructions</span></h4>
-
-      <div class="steps mt-1">
-        <div class="step">
-          <strong><span class="es">Descargar el agente</span><span class="en">Download the agent</span></strong>
-          <p class="text-sm text-muted"><span class="es">Descargue la ultima version del agente Spektra para su sistema operativo:</span><span class="en">Download the latest version of the Spektra agent for your operating system:</span></p>
-          <pre><code># Linux (SLES, RHEL, Ubuntu)
-curl -fsSL https://get.spektra.io/agent | sudo bash
-
-# Windows (PowerShell como Admin)
-iwr -useb https://get.spektra.io/agent.ps1 | iex</code></pre>
-        </div>
-        <div class="step">
-          <strong><span class="es">Configurar el token de registro</span><span class="en">Configure the registration token</span></strong>
-          <p class="text-sm text-muted"><span class="es">Use el token generado por Spektra para vincular el agente a su tenant:</span><span class="en">Use the token generated by Spektra to link the agent to your tenant:</span></p>
-          <pre><code># Linux
-sudo spektra-agent configure \
-  --token "stk_reg_xxxxxxxxxxxxxxxx" \
-  --sid PRD \
-  --instance-nr 00
-
-# El token expira en 24 horas / The token expires in 24 hours</code></pre>
-        </div>
-        <div class="step">
-          <strong><span class="es">Iniciar el servicio</span><span class="en">Start the service</span></strong>
-          <pre><code># Linux (systemd)
-sudo systemctl enable spektra-agent
-sudo systemctl start spektra-agent
-
-# Verificar status / Verify status
-sudo systemctl status spektra-agent</code></pre>
-        </div>
-        <div class="step">
-          <strong><span class="es">Verificar en Spektra</span><span class="en">Verify in Spektra</span></strong>
-          <p class="text-sm text-muted"><span class="es">El sistema aparecera automaticamente en la lista de sistemas una vez que el agente se conecte.</span><span class="en">The system will automatically appear in the system list once the agent connects.</span></p>
-        </div>
-      </div>
-
-      <div class="callout info mt-1">
-        <div class="callout-icon">&#128230;</div>
-        <div>
-          <strong><span class="es">Requisitos del Agente:</span><span class="en">Agent Requirements:</span></strong>
-          <span class="es">Linux (kernel 4.15+) o Windows Server 2016+, 50MB RAM, 100MB disco, acceso HTTPS saliente al puerto 443.</span>
-          <span class="en">Linux (kernel 4.15+) or Windows Server 2016+, 50MB RAM, 100MB disk, outbound HTTPS access on port 443.</span>
-        </div>
-      </div>
-    </div>
-
-    <!-- RFC/BAPI Setup -->
-    <div id="setup-rfc" class="card mb-2">
-      <div class="card-header">
-        <div class="card-title"><div class="card-icon warning">&#128268;</div> RFC/BAPI <span class="es">— Configuracion</span><span class="en">— Configuration</span></div>
-      </div>
-      <div class="steps mt-2">
-        <div class="step">
-          <strong><span class="es">Crear usuario de servicio en SAP</span><span class="en">Create service user in SAP</span></strong>
-          <p class="text-sm text-muted"><span class="es">Cree un usuario tipo System/Communication en SU01 con los roles necesarios para monitoreo.</span><span class="en">Create a System/Communication type user in SU01 with the roles needed for monitoring.</span></p>
-          <pre><code>Tipo:    System (tipo B)
-Rol:     Z_SPEKTRA_MONITOR
-Perfil:  SAP_ALL no recomendado — usar roles restrictivos</code></pre>
-        </div>
-        <div class="step">
-          <strong><span class="es">Configurar acceso de red</span><span class="en">Configure network access</span></strong>
-          <p class="text-sm text-muted"><span class="es">Abra los puertos RFC en el firewall:</span><span class="en">Open RFC ports in the firewall:</span></p>
-          <pre><code># Puertos tipicos para Instance Nr. 00:
-33&lt;NN&gt;  = 3300  (Gateway)
-32&lt;NN&gt;  = 3200  (Dispatcher)
-# Donde NN = Instance Number</code></pre>
-        </div>
-        <div class="step">
-          <strong><span class="es">Ingresar credenciales en Spektra</span><span class="en">Enter credentials in Spektra</span></strong>
-          <p class="text-sm text-muted"><span class="es">Proporcione hostname, instance number, client, usuario y contrasena.</span><span class="en">Provide hostname, instance number, client, user, and password.</span></p>
-        </div>
-      </div>
-      <div class="grid-2 mt-2">
-        <div style="margin-bottom:16px;">
-          <label style="display:block;font-size:12px;font-weight:600;color:var(--txt1);margin-bottom:6px;">Client</label>
-          <input type="text" placeholder="100" maxlength="3" style="width:100%;background:var(--bg3);border:1px solid var(--brd);color:var(--txt1);padding:9px 12px;border-radius:8px;font-size:13px;font-family:monospace;">
-        </div>
-        <div style="margin-bottom:16px;">
-          <label style="display:block;font-size:12px;font-weight:600;color:var(--txt1);margin-bottom:6px;"><span class="es">Usuario de Servicio</span><span class="en">Service User</span></label>
-          <input type="text" placeholder="SPEKTRA_SVC" style="width:100%;background:var(--bg3);border:1px solid var(--brd);color:var(--txt1);padding:9px 12px;border-radius:8px;font-size:13px;font-family:monospace;">
-        </div>
-        <div style="margin-bottom:16px;">
-          <label style="display:block;font-size:12px;font-weight:600;color:var(--txt1);margin-bottom:6px;"><span class="es">Contrasena</span><span class="en">Password</span></label>
-          <input type="password" placeholder="********" style="width:100%;background:var(--bg3);border:1px solid var(--brd);color:var(--txt1);padding:9px 12px;border-radius:8px;font-size:13px;">
-        </div>
-        <div style="margin-bottom:16px;">
-          <label style="display:block;font-size:12px;font-weight:600;color:var(--txt1);margin-bottom:6px;">SNC</label>
-          <select style="width:100%;background:var(--bg3);border:1px solid var(--brd);color:var(--txt1);padding:9px 12px;border-radius:8px;font-size:13px;">
-            <option value="off"><span class="es">Desactivado</span><span class="en">Disabled</span></option>
-            <option value="on"><span class="es">Activado</span><span class="en">Enabled</span></option>
-          </select>
-        </div>
-      </div>
-    </div>
-
-    <!-- API Gateway Setup -->
-    <div id="setup-api" class="card mb-2">
-      <div class="card-header">
-        <div class="card-title"><div class="card-icon success">&#127760;</div> API Gateway <span class="es">— Configuracion</span><span class="en">— Configuration</span></div>
-      </div>
-      <div class="steps mt-2">
-        <div class="step">
-          <strong><span class="es">Obtener URL del API Gateway</span><span class="en">Get API Gateway URL</span></strong>
-          <p class="text-sm text-muted"><span class="es">Copie la URL base del SAP API Hub o Integration Suite de su sistema.</span><span class="en">Copy the base URL from your system's SAP API Hub or Integration Suite.</span></p>
-        </div>
-        <div class="step">
-          <strong><span class="es">Configurar autenticacion</span><span class="en">Configure authentication</span></strong>
-          <p class="text-sm text-muted"><span class="es">Elija entre OAuth2 Client Credentials o API Key y proporcione las credenciales.</span><span class="en">Choose between OAuth2 Client Credentials or API Key and provide the credentials.</span></p>
-        </div>
-        <div class="step">
-          <strong><span class="es">Seleccionar APIs a monitorear</span><span class="en">Select APIs to monitor</span></strong>
-          <p class="text-sm text-muted"><span class="es">Spektra detectara automaticamente los endpoints OData disponibles.</span><span class="en">Spektra will automatically detect available OData endpoints.</span></p>
-        </div>
-      </div>
-      <div class="grid-2 mt-2">
-        <div style="margin-bottom:16px;">
-          <label style="display:block;font-size:12px;font-weight:600;color:var(--txt1);margin-bottom:6px;">API Base URL</label>
-          <input type="url" placeholder="https://myapi.s4hana.cloud.sap" style="width:100%;background:var(--bg3);border:1px solid var(--brd);color:var(--txt1);padding:9px 12px;border-radius:8px;font-size:13px;font-family:monospace;">
-        </div>
-        <div style="margin-bottom:16px;">
-          <label style="display:block;font-size:12px;font-weight:600;color:var(--txt1);margin-bottom:6px;"><span class="es">Metodo de Autenticacion</span><span class="en">Auth Method</span></label>
-          <select style="width:100%;background:var(--bg3);border:1px solid var(--brd);color:var(--txt1);padding:9px 12px;border-radius:8px;font-size:13px;">
-            <option value="oauth2">OAuth2 Client Credentials</option>
-            <option value="apikey">API Key</option>
-            <option value="basic">Basic Auth</option>
-          </select>
-        </div>
-      </div>
-    </div>
-
-    <!-- ═══ Step 4: Connection Test ═══ -->
-    <h2><span class="es">Paso 4: Prueba de Conexion</span><span class="en">Step 4: Connection Test</span></h2>
-
-    <div class="card mb-2">
-      <div class="card-header">
-        <div class="card-title"><div class="card-icon success">&#128267;</div> <span class="es">Prueba de Conectividad</span><span class="en">Connectivity Test</span></div>
-      </div>
-      <p class="text-sm text-muted mb-2">
-        <span class="es">Ejecute la prueba de conectividad para validar que Spektra puede comunicarse con el sistema SAP antes de completar el registro.</span>
-        <span class="en">Run the connectivity test to validate that Spektra can communicate with the SAP system before completing registration.</span>
+    <h2><span class="es">Configuracion de SAP Cloud Connector (RISE)</span><span class="en">SAP Cloud Connector Setup (RISE)</span></h2>
+    <div class="card">
+      <p>
+        <span class="es">Para sistemas RISE with SAP, la conexion se establece mediante SAP Cloud Connector (SCC). Este metodo no requiere instalar software en el servidor SAP.</span>
+        <span class="en">For RISE with SAP systems, the connection is established through SAP Cloud Connector (SCC). This method does not require installing software on the SAP server.</span>
       </p>
+      <div class="steps">
+        <div class="step">
+          <strong><span class="es">Configurar BTP Subaccount</span><span class="en">Configure BTP Subaccount</span></strong><br>
+          <span class="es">Acceder a SAP BTP Cockpit y navegar al subaccount donde esta configurado el Cloud Connector. Verificar que el SCC esta conectado (<code>Status: Connected</code>).</span>
+          <span class="en">Access SAP BTP Cockpit and navigate to the subaccount where the Cloud Connector is configured. Verify the SCC is connected (<code>Status: Connected</code>).</span>
+        </div>
+        <div class="step">
+          <strong><span class="es">Registrar Spektra como Destino</span><span class="en">Register Spektra as Destination</span></strong><br>
+          <span class="es">Crear un nuevo destination en BTP pointing a la API de Spektra con las credenciales OAuth2 proporcionadas por Spektra.</span>
+          <span class="en">Create a new destination in BTP pointing to the Spektra API with the OAuth2 credentials provided by Spektra.</span>
+        </div>
+        <div class="step">
+          <strong><span class="es">Configurar Mapping en SCC</span><span class="en">Configure Mapping in SCC</span></strong><br>
+          <span class="es">En el Cloud Connector, agregar un mapping para el sistema SAP RISE, exponiendo los recursos necesarios (RFC, HTTP) a traves del tunel seguro.</span>
+          <span class="en">In the Cloud Connector, add a mapping for the RISE SAP system, exposing the necessary resources (RFC, HTTP) through the secure tunnel.</span>
+        </div>
+        <div class="step">
+          <strong><span class="es">Ingresar Datos en Spektra</span><span class="en">Enter Data in Spektra</span></strong><br>
+          <span class="es">En el wizard de Spektra, ingresar el BTP subaccount ID, el location ID del SCC, y las credenciales de servicio generadas.</span>
+          <span class="en">In the Spektra wizard, enter the BTP subaccount ID, the SCC location ID, and the generated service credentials.</span>
+        </div>
+        <div class="step">
+          <strong><span class="es">Verificar Conectividad</span><span class="en">Verify Connectivity</span></strong><br>
+          <span class="es">Ejecutar test de conectividad para confirmar que Spektra puede acceder al sistema SAP a traves del Cloud Connector.</span>
+          <span class="en">Run connectivity test to confirm Spektra can access the SAP system through the Cloud Connector.</span>
+        </div>
+      </div>
+      <pre><code>// Cloud Connector configuration payload
+{
+  "connectionMethod": "CLOUD_CONNECTOR",
+  "btpSubaccountId": "abc123-def456-...",
+  "sccLocationId": "scc-prod-01",
+  "serviceCredentials": {
+    "clientId": "sb-spektra-xxxx",
+    "clientSecret": "xxxxxx",
+    "tokenUrl": "https://auth.eu10.hana.ondemand.com/oauth/token"
+  },
+  "systemMapping": {
+    "virtualHost": "sap-rise-prd",
+    "virtualPort": 443,
+    "protocol": "HTTPS"
+  }
+}</code></pre>
+    </div>
 
-      <div class="table-wrap mb-2">
+    <!-- SID Configuration -->
+    <h2><span class="es">Configuracion del SID</span><span class="en">SID Configuration</span></h2>
+    <div class="card">
+      <p>
+        <span class="es">El SID se configura durante la instalacion del agente o la conexion via Cloud Connector. Asegurate de que el SID coincida exactamente con el SID configurado en el sistema SAP (<code>sapcontrol -function GetSystemInstanceList</code>).</span>
+        <span class="en">The SID is configured during agent installation or Cloud Connector connection. Ensure the SID exactly matches the SID configured in the SAP system (<code>sapcontrol -function GetSystemInstanceList</code>).</span>
+      </p>
+      <div class="callout warning">
+        <div class="callout-icon">&#9888;</div>
+        <div>
+          <span class="es"><strong>Importante:</strong> El SID debe coincidir exactamente con el del sistema SAP (3 caracteres, mayusculas). Un SID incorrecto causara que el agente no pueda detectar los procesos SAP ni recopilar metricas. Ademas, el SID debe ser unico dentro de tu organizacion en Spektra.</span>
+          <span class="en"><strong>Important:</strong> The SID must exactly match the SAP system's (3 characters, uppercase). An incorrect SID will cause the agent to be unable to detect SAP processes or collect metrics. Also, the SID must be unique within your organization in Spektra.</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Credential Setup -->
+    <h2><span class="es">Configuracion de Credenciales</span><span class="en">Credential Setup</span></h2>
+    <div class="card">
+      <p>
+        <span class="es">El agente necesita credenciales para acceder al sistema SAP via RFC. Se recomienda crear un usuario tecnico dedicado con las autorizaciones minimas necesarias.</span>
+        <span class="en">The agent needs credentials to access the SAP system via RFC. It is recommended to create a dedicated technical user with the minimum necessary authorizations.</span>
+      </p>
+      <div class="table-wrap">
         <table>
           <thead>
             <tr>
-              <th><span class="es">Verificacion</span><span class="en">Check</span></th>
-              <th>Status</th>
-              <th><span class="es">Detalle</span><span class="en">Detail</span></th>
+              <th><span class="es">Parametro</span><span class="en">Parameter</span></th>
+              <th><span class="es">Valor Recomendado</span><span class="en">Recommended Value</span></th>
+              <th><span class="es">Descripcion</span><span class="en">Description</span></th>
             </tr>
           </thead>
           <tbody>
             <tr>
-              <td><span class="es">Conectividad de red</span><span class="en">Network connectivity</span></td>
-              <td><span class="badge success">&#10003; OK</span></td>
-              <td class="font-mono text-sm">TCP sapapp01.prod.local:3200 - 8ms</td>
+              <td class="font-mono">User</td>
+              <td class="font-mono">SPEKTRA_MON</td>
+              <td><span class="es">Usuario tecnico tipo SYSTEM o COMMUNICATION</span><span class="en">Technical user type SYSTEM or COMMUNICATION</span></td>
             </tr>
             <tr>
-              <td><span class="es">Autenticacion</span><span class="en">Authentication</span></td>
-              <td><span class="badge success">&#10003; OK</span></td>
-              <td><span class="es">Login exitoso como SPEKTRA_SVC</span><span class="en">Successful login as SPEKTRA_SVC</span></td>
+              <td class="font-mono">Client</td>
+              <td class="font-mono">100</td>
+              <td><span class="es">Mandante de produccion o el que corresponda</span><span class="en">Production client or the appropriate one</span></td>
             </tr>
             <tr>
-              <td><span class="es">Permisos RFC</span><span class="en">RFC permissions</span></td>
-              <td><span class="badge success">&#10003; OK</span></td>
-              <td>RFC_READ_TABLE, BAPI_SYSTEM_STATUS</td>
+              <td class="font-mono">Language</td>
+              <td class="font-mono">EN</td>
+              <td><span class="es">Idioma de logon (EN recomendado para consistencia)</span><span class="en">Logon language (EN recommended for consistency)</span></td>
             </tr>
             <tr>
-              <td><span class="es">Informacion del sistema</span><span class="en">System information</span></td>
-              <td><span class="badge success">&#10003; OK</span></td>
-              <td>SAP ECC 6.0 / HANA 2.0 / Kernel 7.53</td>
-            </tr>
-            <tr>
-              <td><span class="es">Cifrado de conexion</span><span class="en">Connection encryption</span></td>
-              <td><span class="badge success">&#10003; OK</span></td>
-              <td>TLS 1.3</td>
+              <td class="font-mono">Roles</td>
+              <td class="font-mono">SAP_BC_MON_ADMIN</td>
+              <td><span class="es">Rol SAP estandar de monitoreo. Agregar Z_SPEKTRA_AGENT custom.</span><span class="en">Standard SAP monitoring role. Add Z_SPEKTRA_AGENT custom.</span></td>
             </tr>
           </tbody>
         </table>
       </div>
-
-      <div class="callout success mb-2">
-        <div class="callout-icon">&#10003;</div>
+      <div class="callout info">
+        <div class="callout-icon">&#8505;</div>
         <div>
-          <strong><span class="es">Todas las verificaciones exitosas.</span><span class="en">All checks passed.</span></strong>
-          <span class="es">El sistema esta listo para ser registrado en Spektra.</span>
-          <span class="en">The system is ready to be registered in Spektra.</span>
+          <span class="es"><strong>Seguridad:</strong> Las credenciales se almacenan cifradas con AES-256 en el agente local y nunca se transmiten en texto plano al backend de Spektra. Solo se usa la conexion RFC local entre el agente y el sistema SAP.</span>
+          <span class="en"><strong>Security:</strong> Credentials are stored encrypted with AES-256 on the local agent and are never transmitted in plain text to the Spektra backend. Only the local RFC connection between the agent and the SAP system is used.</span>
         </div>
       </div>
-
-      <div style="display:flex;gap:12px;flex-wrap:wrap;">
-        <button style="background:var(--bg3);color:var(--txt1);border:1px solid var(--brd);padding:8px 20px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;">
-          <span class="es">Ejecutar Prueba</span><span class="en">Run Test</span>
-        </button>
-        <button style="background:var(--gradient-brand);color:#fff;border:none;padding:8px 20px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;">
-          <span class="es">Registrar Sistema</span><span class="en">Register System</span>
-        </button>
-        <a href="admin.html" style="display:inline-flex;align-items:center;background:none;color:var(--txt2);border:1px solid var(--brd);padding:8px 20px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;text-decoration:none;">
-          <span class="es">Cancelar</span><span class="en">Cancel</span>
-        </a>
-      </div>
     </div>
 
-    <!-- ═══ Troubleshooting ═══ -->
-    <h2><span class="es">Solucion de Problemas</span><span class="en">Troubleshooting</span></h2>
-
-    <div class="card mb-2">
-      <h4><span class="es">Error: Timeout de conexion</span><span class="en">Error: Connection timeout</span></h4>
-      <p class="text-sm text-muted"><span class="es">Verifique que los puertos estan abiertos en el firewall y que el hostname es accesible desde la red de Spektra.</span><span class="en">Verify that the ports are open in the firewall and the hostname is reachable from the Spektra network.</span></p>
-      <pre><code># Test de conectividad
-telnet sapapp01.prod.local 3200
-nc -zv sapapp01.prod.local 3200</code></pre>
-    </div>
-
-    <div class="card mb-2">
-      <h4><span class="es">Error: Autenticacion fallida</span><span class="en">Error: Authentication failed</span></h4>
-      <p class="text-sm text-muted"><span class="es">Verifique que el usuario de servicio existe, no esta bloqueado, y tiene los roles correctos asignados.</span><span class="en">Verify that the service user exists, is not locked, and has the correct roles assigned.</span></p>
-      <pre><code># Verificar en SAP:
-# SU01 — Estado del usuario
-# SU53 — Verificar autorizaciones faltantes
-# SM21 — Log del sistema para errores de login</code></pre>
-    </div>
-
+    <!-- Connectivity Verification -->
+    <h2><span class="es">Verificacion de Conectividad</span><span class="en">Connectivity Verification</span></h2>
     <div class="card">
-      <h4><span class="es">Error: Agente no se conecta</span><span class="en">Error: Agent not connecting</span></h4>
-      <p class="text-sm text-muted"><span class="es">Verifique que el agente puede realizar conexiones HTTPS salientes al puerto 443.</span><span class="en">Verify the agent can make outbound HTTPS connections on port 443.</span></p>
-      <pre><code># Verificar logs del agente
-sudo journalctl -u spektra-agent -f
+      <p>
+        <span class="es">Despues de la instalacion, ejecuta el test completo de conectividad para verificar que todo esta configurado correctamente.</span>
+        <span class="en">After installation, run the full connectivity test to verify everything is configured correctly.</span>
+      </p>
+      <pre><code># Full connectivity test
+sudo spektra-agent test-connection --verbose
 
-# Verificar conectividad saliente
-curl -v https://api.spektra.io/health
+# Checks performed:
+# 1. DNS Resolution      → agent.spektra.maveram.com
+# 2. TLS Handshake       → TLS 1.3, certificate valid
+# 3. API Authentication  → API key accepted
+# 4. Heartbeat           → Sent and acknowledged
+# 5. SAP Process Detection → SID=PRD, Inst=00 found
+# 6. RFC Connection      → User SPEKTRA_MON, Client 100
+# 7. Database Detection  → HANA 2.0 SPS07
+# 8. OS Metrics          → CPU, Memory, Disk readable
+# 9. SAP Metrics         → Work processes, users, response time
+# 10. Health Score       → Calculated: 96
 
-# Verificar token
-sudo spektra-agent status</code></pre>
+# Result: ALL 10 CHECKS PASSED ✓
+# System PRD is now connected to SAP Spektra.</code></pre>
+    </div>
+
+    <!-- Troubleshooting -->
+    <h2><span class="es">Solucion de Problemas Comunes</span><span class="en">Common Troubleshooting</span></h2>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th><span class="es">Problema</span><span class="en">Problem</span></th>
+            <th><span class="es">Causa</span><span class="en">Cause</span></th>
+            <th><span class="es">Solucion</span><span class="en">Solution</span></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="es">DNS resolution failed</span><span class="en">DNS resolution failed</span></td>
+            <td><span class="es">Firewall o DNS bloqueando acceso</span><span class="en">Firewall or DNS blocking access</span></td>
+            <td><span class="es">Verificar reglas de firewall: permitir HTTPS (443) a <code>*.spektra.maveram.com</code></span><span class="en">Verify firewall rules: allow HTTPS (443) to <code>*.spektra.maveram.com</code></span></td>
+          </tr>
+          <tr>
+            <td><span class="es">API key rejected</span><span class="en">API key rejected</span></td>
+            <td><span class="es">Key invalida o expirada</span><span class="en">Invalid or expired key</span></td>
+            <td><span class="es">Generar nueva API key en Settings > API Keys</span><span class="en">Generate new API key in Settings > API Keys</span></td>
+          </tr>
+          <tr>
+            <td><span class="es">SAP not detected</span><span class="en">SAP not detected</span></td>
+            <td><span class="es">SID incorrecto o SAP no running</span><span class="en">Incorrect SID or SAP not running</span></td>
+            <td><span class="es">Verificar SID con <code>sapcontrol -nr 00 -function GetSystemInstanceList</code></span><span class="en">Verify SID with <code>sapcontrol -nr 00 -function GetSystemInstanceList</code></span></td>
+          </tr>
+          <tr>
+            <td><span class="es">RFC connection failed</span><span class="en">RFC connection failed</span></td>
+            <td><span class="es">Credenciales incorrectas o usuario bloqueado</span><span class="en">Incorrect credentials or locked user</span></td>
+            <td><span class="es">Verificar usuario en SU01, desbloquear si necesario. Revisar autorizaciones.</span><span class="en">Verify user in SU01, unlock if needed. Review authorizations.</span></td>
+          </tr>
+          <tr>
+            <td><span class="es">Heartbeat timeout</span><span class="en">Heartbeat timeout</span></td>
+            <td><span class="es">Latencia de red alta o proxy interference</span><span class="en">High network latency or proxy interference</span></td>
+            <td><span class="es">Verificar que no hay proxy interceptando HTTPS. Probar <code>curl -v https://agent.spektra.maveram.com/health</code></span><span class="en">Verify no proxy is intercepting HTTPS. Test <code>curl -v https://agent.spektra.maveram.com/health</code></span></td>
+          </tr>
+        </tbody>
+      </table>
     </div>
 
   </main>
 </div>
-
-<script>
-function selectMethod(name) {
-  var methods = ['cloud','agent','rfc','api'];
-  methods.forEach(function(m) {
-    var card = document.getElementById('method-' + m);
-    if (card) card.style.borderColor = (m === name) ? 'var(--cyan)' : 'var(--card-border)';
-  });
-}
-</script>
 </body>
 </html>

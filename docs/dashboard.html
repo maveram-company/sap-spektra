@@ -10,7 +10,6 @@
 </head>
 <body>
 <div class="docs-wrapper">
-  <!-- Sidebar -->
   <nav class="docs-sidebar">
     <div class="sidebar-brand">
       <div class="logo">&#9889;</div>
@@ -23,6 +22,12 @@
       <div class="sidebar-section-label">Inicio</div>
       <a href="index.html" class="sidebar-link">Portal</a>
       <a href="getting-started.html" class="sidebar-link">Primeros Pasos</a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-section-label">Architecture</div>
+      <a href="architecture.html" class="sidebar-link">Arquitectura</a>
+      <a href="domain-model.html" class="sidebar-link">Modelo de Datos</a>
+      <a href="api-reference.html" class="sidebar-link">API Reference</a>
     </div>
     <div class="sidebar-section">
       <div class="sidebar-section-label">Command</div>
@@ -63,460 +68,441 @@
   </nav>
 
   <main class="docs-main">
-    <!-- Breadcrumb -->
     <div class="breadcrumb">
       <a href="index.html">SAP Spektra</a>
       <span class="sep">/</span>
-      <span class="es">Dashboard</span><span class="en">Dashboard</span>
+      <span>Dashboard</span>
     </div>
 
-    <!-- Page Header -->
     <div class="page-header">
-      <h1><span class="es">Dashboard Principal</span><span class="en">Main Dashboard</span></h1>
+      <h1>Dashboard</h1>
       <div class="subtitle">
-        <span class="es">Vista general del estado de todos los sistemas SAP, KPIs en tiempo real y acciones rapidas.</span>
-        <span class="en">Overview of all SAP system status, real-time KPIs and quick actions.</span>
+        <span class="es">Vista de comando central con KPIs en tiempo real, salud de sistemas, alertas y acciones rapidas</span>
+        <span class="en">Central command view with real-time KPIs, system health, alerts and quick actions</span>
       </div>
     </div>
 
-    <!-- Header Bar -->
-    <h2><span class="es">Barra de Cabecera</span><span class="en">Header Bar</span></h2>
-
-    <div class="card">
-      <div class="card-header">
-        <div class="card-title">
-          <div class="card-icon cyan">&#128075;</div>
-          <span class="es">Saludo y Contexto</span><span class="en">Greeting &amp; Context</span>
-        </div>
-      </div>
-      <p>
-        <span class="es">La barra superior del dashboard muestra informacion contextual del usuario autenticado:</span>
-        <span class="en">The top bar of the dashboard shows contextual information of the authenticated user:</span>
-      </p>
-      <div class="table-wrap">
-        <table>
-          <thead>
-            <tr>
-              <th><span class="es">Elemento</span><span class="en">Element</span></th>
-              <th><span class="es">Descripcion</span><span class="en">Description</span></th>
-              <th><span class="es">Ejemplo</span><span class="en">Example</span></th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td><span class="es">Saludo</span><span class="en">Greeting</span></td>
-              <td><span class="es">Nombre del usuario autenticado</span><span class="en">Authenticated user name</span></td>
-              <td><code>Buenos dias, Admin</code></td>
-            </tr>
-            <tr>
-              <td><span class="es">Organizacion</span><span class="en">Organization</span></td>
-              <td><span class="es">Tenant activo del usuario</span><span class="en">User's active tenant</span></td>
-              <td><span class="badge violet">Acme Corp</span></td>
-            </tr>
-            <tr>
-              <td><span class="es">Fecha</span><span class="en">Date</span></td>
-              <td><span class="es">Fecha y hora actual, formato local</span><span class="en">Current date and time, local format</span></td>
-              <td><code>12 Mar 2026, 10:30</code></td>
-            </tr>
-            <tr>
-              <td><span class="es">Boton Refrescar</span><span class="en">Refresh Button</span></td>
-              <td><span class="es">Recarga todos los datos del dashboard</span><span class="en">Reloads all dashboard data</span></td>
-              <td><span class="badge cyan">&#8635; Refresh</span></td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-
-    <!-- KPI Cards -->
-    <h2><span class="es">Tarjetas KPI</span><span class="en">KPI Cards</span></h2>
-
+    <!-- ═══ Overview ═══ -->
+    <h2>
+      <span class="es">Vista General</span>
+      <span class="en">Overview</span>
+    </h2>
     <p>
-      <span class="es">El dashboard presenta cuatro indicadores clave de rendimiento que resumen el estado global del landscape SAP:</span>
-      <span class="en">The dashboard presents four key performance indicators that summarize the global state of the SAP landscape:</span>
+      <span class="es">El Dashboard es la pagina principal de SAP Spektra. Proporciona una vista de alto nivel del estado completo del landscape SAP, permitiendo a los operadores identificar rapidamente problemas, actuar sobre alertas y monitorear la salud general de todos los sistemas.</span>
+      <span class="en">The Dashboard is the main page of SAP Spektra. It provides a high-level view of the complete SAP landscape status, allowing operators to quickly identify issues, act on alerts and monitor the overall health of all systems.</span>
     </p>
+
+    <!-- ═══ KPI Cards ═══ -->
+    <h2>
+      <span class="es">Tarjetas KPI</span>
+      <span class="en">KPI Cards</span>
+    </h2>
 
     <div class="kpi-grid">
       <div class="kpi-card">
-        <div class="card-icon cyan">&#128421;</div>
+        <div class="card-icon cyan">&#9634;</div>
         <div>
-          <div class="kpi-value">12</div>
-          <div class="kpi-label"><span class="es">Sistemas Activos</span><span class="en">Active Systems</span></div>
-        </div>
-      </div>
-      <div class="kpi-card">
-        <div class="card-icon success">&#9989;</div>
-        <div>
-          <div class="kpi-value">10</div>
-          <div class="kpi-label"><span class="es">Saludables</span><span class="en">Healthy</span></div>
-        </div>
-      </div>
-      <div class="kpi-card">
-        <div class="card-icon danger">&#128680;</div>
-        <div>
-          <div class="kpi-value">2</div>
-          <div class="kpi-label"><span class="es">Incumplimientos SLA</span><span class="en">SLA Breaches</span></div>
-        </div>
-      </div>
-      <div class="kpi-card">
-        <div class="card-icon warning">&#128203;</div>
-        <div>
-          <div class="kpi-value">5</div>
-          <div class="kpi-label"><span class="es">Aprobaciones Pendientes</span><span class="en">Pending Approvals</span></div>
-        </div>
-      </div>
-    </div>
-
-    <div class="card">
-      <div class="card-header">
-        <div class="card-title">
-          <div class="card-icon cyan">&#128202;</div>
-          <span class="es">Detalle de KPIs</span><span class="en">KPI Details</span>
-        </div>
-      </div>
-      <div class="table-wrap" style="border:none;margin:0">
-        <table>
-          <thead>
-            <tr>
-              <th>KPI</th>
-              <th><span class="es">Fuente de Datos</span><span class="en">Data Source</span></th>
-              <th>API Endpoint</th>
-              <th><span class="es">Actualizacion</span><span class="en">Refresh</span></th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td><span class="es">Sistemas Activos</span><span class="en">Active Systems</span></td>
-              <td><code>systems</code> <span class="es">tabla</span><span class="en">table</span></td>
-              <td><code>GET /api/systems?status=active</code></td>
-              <td><span class="badge cyan">30s</span></td>
-            </tr>
-            <tr>
-              <td><span class="es">Saludables</span><span class="en">Healthy</span></td>
-              <td><code>systems</code> <span class="es">con healthScore &ge; 80</span><span class="en">with healthScore &ge; 80</span></td>
-              <td><code>GET /api/systems?healthMin=80</code></td>
-              <td><span class="badge cyan">30s</span></td>
-            </tr>
-            <tr>
-              <td><span class="es">Incumplimientos SLA</span><span class="en">SLA Breaches</span></td>
-              <td><code>sla_records</code> <span class="es">donde breached=true</span><span class="en">where breached=true</span></td>
-              <td><code>GET /api/sla?breached=true</code></td>
-              <td><span class="badge warning">60s</span></td>
-            </tr>
-            <tr>
-              <td><span class="es">Aprobaciones Pendientes</span><span class="en">Pending Approvals</span></td>
-              <td><code>approvals</code> <span class="es">donde status=PENDING</span><span class="en">where status=PENDING</span></td>
-              <td><code>GET /api/approvals?status=PENDING</code></td>
-              <td><span class="badge warning">60s</span></td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-
-    <!-- Landscape SAP Section -->
-    <h2><span class="es">Seccion Landscape SAP</span><span class="en">SAP Landscape Section</span></h2>
-
-    <div class="card">
-      <div class="card-header">
-        <div class="card-title">
-          <div class="card-icon violet">&#127760;</div>
-          Landscape SAP
-        </div>
-        <span class="badge cyan">12 <span class="es">sistemas</span><span class="en">systems</span></span>
-      </div>
-      <p>
-        <span class="es">Esta seccion presenta una vista panoramica de todos los sistemas SAP registrados en la organizacion. El pill de conteo muestra el numero total de sistemas activos. La vista se divide en una grilla de tarjetas de sistema, cada una representando un SID unico.</span>
-        <span class="en">This section presents a panoramic view of all SAP systems registered in the organization. The count pill shows the total number of active systems. The view is divided into a system card grid, each representing a unique SID.</span>
-      </p>
-    </div>
-
-    <!-- System Cards Grid -->
-    <h2><span class="es">Tarjetas de Sistema</span><span class="en">System Cards</span></h2>
-
-    <p>
-      <span class="es">Cada tarjeta de sistema muestra la informacion esencial de un sistema SAP individual:</span>
-      <span class="en">Each system card shows the essential information of an individual SAP system:</span>
-    </p>
-
-    <div class="grid-2">
-      <!-- Example System Card 1 -->
-      <div class="card">
-        <div class="card-header">
-          <div class="card-title">
-            <strong>PRD</strong>
+          <div class="kpi-value text-cyan">12</div>
+          <div class="kpi-label">
+            <span class="es">Sistemas Activos</span>
+            <span class="en">Active Systems</span>
           </div>
-          <span class="badge success">&#9679; Healthy</span>
-        </div>
-        <p class="text-xs text-muted mb-1"><span class="es">Indice de salud</span><span class="en">Health score</span></p>
-        <div style="background:var(--bg3);border-radius:100px;height:8px;margin-bottom:12px;overflow:hidden">
-          <div style="width:94%;height:100%;background:var(--success);border-radius:100px"></div>
-        </div>
-        <div class="grid-2" style="gap:8px">
-          <div class="text-xs"><span class="text-muted"><span class="es">Tipo:</span><span class="en">Type:</span></span> <span class="text-primary">S/4HANA</span></div>
-          <div class="text-xs"><span class="text-muted">DB:</span> <span class="text-primary">HANA 2.0</span></div>
-          <div class="text-xs"><span class="text-muted"><span class="es">Entorno:</span><span class="en">Environment:</span></span> <span class="badge success text-xs">Production</span></div>
-          <div class="text-xs"><span class="text-muted">SLA Breaches:</span> <span class="text-primary">0</span></div>
         </div>
       </div>
-      <!-- Example System Card 2 -->
-      <div class="card">
-        <div class="card-header">
-          <div class="card-title">
-            <strong>QAS</strong>
+      <div class="kpi-card">
+        <div class="card-icon success">&#10003;</div>
+        <div>
+          <div class="kpi-value text-success">8</div>
+          <div class="kpi-label">
+            <span class="es">Sistemas Saludables</span>
+            <span class="en">Healthy Systems</span>
           </div>
-          <span class="badge warning">&#9679; Warning</span>
         </div>
-        <p class="text-xs text-muted mb-1"><span class="es">Indice de salud</span><span class="en">Health score</span></p>
-        <div style="background:var(--bg3);border-radius:100px;height:8px;margin-bottom:12px;overflow:hidden">
-          <div style="width:67%;height:100%;background:var(--warning);border-radius:100px"></div>
+      </div>
+      <div class="kpi-card">
+        <div class="card-icon danger">&#9888;</div>
+        <div>
+          <div class="kpi-value text-danger">5</div>
+          <div class="kpi-label">
+            <span class="es">Breaches Activos</span>
+            <span class="en">Active Breaches</span>
+          </div>
         </div>
-        <div class="grid-2" style="gap:8px">
-          <div class="text-xs"><span class="text-muted"><span class="es">Tipo:</span><span class="en">Type:</span></span> <span class="text-primary">ECC 6.0</span></div>
-          <div class="text-xs"><span class="text-muted">DB:</span> <span class="text-primary">Oracle 19c</span></div>
-          <div class="text-xs"><span class="text-muted"><span class="es">Entorno:</span><span class="en">Environment:</span></span> <span class="badge warning text-xs">QA</span></div>
-          <div class="text-xs"><span class="text-muted">SLA Breaches:</span> <span class="text-warning">1</span></div>
+      </div>
+      <div class="kpi-card">
+        <div class="card-icon warning">&#9201;</div>
+        <div>
+          <div class="kpi-value text-warning">3</div>
+          <div class="kpi-label">
+            <span class="es">Aprobaciones Pendientes</span>
+            <span class="en">Pending Approvals</span>
+          </div>
         </div>
       </div>
     </div>
-
-    <div class="card">
-      <div class="card-header">
-        <div class="card-title">
-          <div class="card-icon cyan">&#128196;</div>
-          <span class="es">Campos de la Tarjeta de Sistema</span><span class="en">System Card Fields</span>
-        </div>
-      </div>
-      <div class="table-wrap" style="border:none;margin:0">
-        <table>
-          <thead>
-            <tr>
-              <th><span class="es">Campo</span><span class="en">Field</span></th>
-              <th><span class="es">Descripcion</span><span class="en">Description</span></th>
-              <th><span class="es">Valores</span><span class="en">Values</span></th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td><strong>SID</strong></td>
-              <td><span class="es">Identificador unico del sistema SAP (3 caracteres)</span><span class="en">SAP system unique identifier (3 characters)</span></td>
-              <td><code>PRD</code>, <code>QAS</code>, <code>DEV</code>, <code>SBX</code></td>
-            </tr>
-            <tr>
-              <td><span class="es">Estado</span><span class="en">Status Badge</span></td>
-              <td><span class="es">Indicador visual del estado actual del sistema</span><span class="en">Visual indicator of the system's current status</span></td>
-              <td>
-                <span class="badge success">Healthy</span>
-                <span class="badge warning">Warning</span>
-                <span class="badge danger">Critical</span>
-              </td>
-            </tr>
-            <tr>
-              <td><span class="es">Indice de Salud</span><span class="en">Health Gauge</span></td>
-              <td><span class="es">Barra de progreso 0-100 con color dinamico</span><span class="en">Progress bar 0-100 with dynamic color</span></td>
-              <td><span class="es">Verde &ge;80, Amarillo &ge;50, Rojo &lt;50</span><span class="en">Green &ge;80, Yellow &ge;50, Red &lt;50</span></td>
-            </tr>
-            <tr>
-              <td><span class="es">Tipo</span><span class="en">Type</span></td>
-              <td><span class="es">Tipo de sistema SAP</span><span class="en">SAP system type</span></td>
-              <td>S/4HANA, ECC 6.0, BW/4HANA, etc.</td>
-            </tr>
-            <tr>
-              <td>Database</td>
-              <td><span class="es">Motor de base de datos subyacente</span><span class="en">Underlying database engine</span></td>
-              <td>HANA 2.0, Oracle 19c, SQL Server, etc.</td>
-            </tr>
-            <tr>
-              <td><span class="es">Entorno</span><span class="en">Environment</span></td>
-              <td><span class="es">Clasificacion del entorno</span><span class="en">Environment classification</span></td>
-              <td>
-                <span class="badge success">Production</span>
-                <span class="badge warning">QA</span>
-                <span class="badge cyan">Development</span>
-                <span class="badge neutral">Sandbox</span>
-              </td>
-            </tr>
-            <tr>
-              <td>SLA Breaches</td>
-              <td><span class="es">Numero de incumplimientos de SLA activos</span><span class="en">Number of active SLA breaches</span></td>
-              <td><span class="es">Numerico, 0 indica cumplimiento total</span><span class="en">Numeric, 0 indicates full compliance</span></td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-
-    <!-- Quick Actions -->
-    <h2><span class="es">Acciones Rapidas</span><span class="en">Quick Actions</span></h2>
-
-    <div class="card">
-      <div class="card-header">
-        <div class="card-title">
-          <div class="card-icon warning">&#128203;</div>
-          <span class="es">Aprobaciones Pendientes</span><span class="en">Pending Approvals</span>
-        </div>
-        <span class="badge warning">5 <span class="es">pendientes</span><span class="en">pending</span></span>
-      </div>
-      <p>
-        <span class="es">La tarjeta de acciones rapidas muestra las aprobaciones que requieren atencion inmediata. Cada entrada incluye el tipo de solicitud, el sistema afectado y el solicitante. Un clic redirige a la pagina de <a href="approvals.html">Aprobaciones</a> con el filtro correspondiente.</span>
-        <span class="en">The quick actions card shows approvals that require immediate attention. Each entry includes the request type, affected system and requester. A click redirects to the <a href="approvals.html">Approvals</a> page with the corresponding filter.</span>
-      </p>
-      <div class="table-wrap" style="margin-top:12px">
-        <table>
-          <thead>
-            <tr>
-              <th><span class="es">Solicitud</span><span class="en">Request</span></th>
-              <th><span class="es">Sistema</span><span class="en">System</span></th>
-              <th><span class="es">Solicitante</span><span class="en">Requester</span></th>
-              <th><span class="es">Prioridad</span><span class="en">Priority</span></th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td><span class="es">Transporte a PRD</span><span class="en">Transport to PRD</span></td>
-              <td><code>PRD</code></td>
-              <td>operator@acme-corp.com</td>
-              <td><span class="badge danger">Alta / High</span></td>
-            </tr>
-            <tr>
-              <td><span class="es">Reinicio planificado</span><span class="en">Planned restart</span></td>
-              <td><code>QAS</code></td>
-              <td>operator@acme-corp.com</td>
-              <td><span class="badge warning">Media / Medium</span></td>
-            </tr>
-            <tr>
-              <td><span class="es">Cambio de parametros</span><span class="en">Parameter change</span></td>
-              <td><code>DEV</code></td>
-              <td>admin@acme-corp.com</td>
-              <td><span class="badge neutral">Baja / Low</span></td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-
-    <!-- API Endpoints -->
-    <h2><span class="es">Endpoints del Dashboard</span><span class="en">Dashboard Endpoints</span></h2>
-
-    <div class="card">
-      <div class="card-header">
-        <div class="card-title">
-          <div class="card-icon violet">&#128268;</div>
-          API Reference
-        </div>
-      </div>
-      <div class="table-wrap" style="border:none;margin:0">
-        <table>
-          <thead>
-            <tr>
-              <th><span class="es">Metodo</span><span class="en">Method</span></th>
-              <th>Endpoint</th>
-              <th><span class="es">Descripcion</span><span class="en">Description</span></th>
-              <th><span class="es">Autenticacion</span><span class="en">Auth</span></th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td><span class="badge cyan">GET</span></td>
-              <td><code>/api/dashboard/summary</code></td>
-              <td><span class="es">Resumen de KPIs del dashboard</span><span class="en">Dashboard KPIs summary</span></td>
-              <td><span class="badge neutral">JWT</span></td>
-            </tr>
-            <tr>
-              <td><span class="badge cyan">GET</span></td>
-              <td><code>/api/systems</code></td>
-              <td><span class="es">Lista todos los sistemas de la organizacion</span><span class="en">List all systems for the organization</span></td>
-              <td><span class="badge neutral">JWT</span></td>
-            </tr>
-            <tr>
-              <td><span class="badge cyan">GET</span></td>
-              <td><code>/api/approvals?status=PENDING</code></td>
-              <td><span class="es">Aprobaciones pendientes</span><span class="en">Pending approvals</span></td>
-              <td><span class="badge neutral">JWT + ADMIN/OPERATOR</span></td>
-            </tr>
-            <tr>
-              <td><span class="badge cyan">GET</span></td>
-              <td><code>/api/sla?breached=true</code></td>
-              <td><span class="es">Incumplimientos de SLA activos</span><span class="en">Active SLA breaches</span></td>
-              <td><span class="badge neutral">JWT</span></td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-
-    <!-- Data Refresh -->
-    <h2><span class="es">Actualizacion de Datos</span><span class="en">Data Refresh</span></h2>
-
-    <div class="card">
-      <div class="card-header">
-        <div class="card-title">
-          <div class="card-icon success">&#8635;</div>
-          <span class="es">Estrategia de Refresco</span><span class="en">Refresh Strategy</span>
-        </div>
-      </div>
-      <ul class="feature-list">
-        <li><span class="es"><strong>Auto-refresh:</strong> Los KPIs se actualizan automaticamente cada 30 segundos usando polling.</span><span class="en"><strong>Auto-refresh:</strong> KPIs update automatically every 30 seconds using polling.</span></li>
-        <li><span class="es"><strong>Manual:</strong> El boton de refrescar en la cabecera recarga todos los datos inmediatamente.</span><span class="en"><strong>Manual:</strong> The refresh button in the header reloads all data immediately.</span></li>
-        <li><span class="es"><strong>Cache:</strong> Las respuestas del backend se cachean en Redis con TTL configurable para reducir la carga en PostgreSQL.</span><span class="en"><strong>Cache:</strong> Backend responses are cached in Redis with configurable TTL to reduce PostgreSQL load.</span></li>
-        <li><span class="es"><strong>Optimistic UI:</strong> Las acciones de usuario (como aprobar una solicitud) actualizan la UI inmediatamente mientras la peticion se procesa en segundo plano.</span><span class="en"><strong>Optimistic UI:</strong> User actions (like approving a request) update the UI immediately while the request is processed in the background.</span></li>
-      </ul>
-    </div>
-
-    <div class="callout info">
-      <div class="callout-icon">&#128161;</div>
-      <div>
-        <span class="es"><strong>Multi-tenant:</strong> El dashboard solo muestra datos de la organizacion del usuario autenticado. El filtrado por <code>orgId</code> se aplica automaticamente en el backend mediante guards de NestJS.</span>
-        <span class="en"><strong>Multi-tenant:</strong> The dashboard only shows data for the authenticated user's organization. Filtering by <code>orgId</code> is applied automatically in the backend via NestJS guards.</span>
-      </div>
-    </div>
-
-    <!-- RBAC Permissions -->
-    <h2><span class="es">Permisos por Rol</span><span class="en">Permissions by Role</span></h2>
 
     <div class="table-wrap">
       <table>
         <thead>
           <tr>
-            <th><span class="es">Funcionalidad</span><span class="en">Feature</span></th>
-            <th><span class="badge cyan">ADMIN</span></th>
-            <th><span class="badge success">OPERATOR</span></th>
-            <th><span class="badge neutral">VIEWER</span></th>
+            <th>KPI</th>
+            <th><span class="es">Fuente</span><span class="en">Source</span></th>
+            <th><span class="es">Descripcion</span><span class="en">Description</span></th>
+            <th><span class="es">Actualizacion</span><span class="en">Refresh</span></th>
           </tr>
         </thead>
         <tbody>
           <tr>
-            <td><span class="es">Ver KPIs</span><span class="en">View KPIs</span></td>
-            <td><span class="text-success">&#10003;</span></td>
-            <td><span class="text-success">&#10003;</span></td>
-            <td><span class="text-success">&#10003;</span></td>
+            <td><span class="es">Sistemas Activos</span><span class="en">Active Systems</span></td>
+            <td><code>System.count()</code></td>
+            <td><span class="es">Total de sistemas SAP registrados en la organizacion</span><span class="en">Total SAP systems registered in the organization</span></td>
+            <td>30s (cache)</td>
           </tr>
           <tr>
-            <td><span class="es">Ver tarjetas de sistema</span><span class="en">View system cards</span></td>
-            <td><span class="text-success">&#10003;</span></td>
-            <td><span class="text-success">&#10003;</span></td>
-            <td><span class="text-success">&#10003;</span></td>
+            <td><span class="es">Sistemas Saludables</span><span class="en">Healthy Systems</span></td>
+            <td><code>System.count({ status: 'healthy' })</code></td>
+            <td><span class="es">Sistemas con healthScore >= 80 y sin alertas criticas</span><span class="en">Systems with healthScore >= 80 and no critical alerts</span></td>
+            <td>30s (cache)</td>
           </tr>
           <tr>
-            <td><span class="es">Ver aprobaciones pendientes</span><span class="en">View pending approvals</span></td>
-            <td><span class="text-success">&#10003;</span></td>
-            <td><span class="text-success">&#10003;</span></td>
-            <td><span class="text-danger">&#10007;</span></td>
+            <td><span class="es">Breaches Activos</span><span class="en">Active Breaches</span></td>
+            <td><code>Breach.count({ resolved: false })</code></td>
+            <td><span class="es">Umbrales excedidos que aun no se han resuelto</span><span class="en">Exceeded thresholds that have not been resolved</span></td>
+            <td>30s (cache)</td>
           </tr>
           <tr>
-            <td><span class="es">Aprobar/Rechazar solicitudes</span><span class="en">Approve/Reject requests</span></td>
-            <td><span class="text-success">&#10003;</span></td>
-            <td><span class="text-danger">&#10007;</span></td>
-            <td><span class="text-danger">&#10007;</span></td>
-          </tr>
-          <tr>
-            <td><span class="es">Refrescar datos</span><span class="en">Refresh data</span></td>
-            <td><span class="text-success">&#10003;</span></td>
-            <td><span class="text-success">&#10003;</span></td>
-            <td><span class="text-success">&#10003;</span></td>
+            <td><span class="es">Aprobaciones Pendientes</span><span class="en">Pending Approvals</span></td>
+            <td><code>ApprovalRequest.count({ status: 'PENDING' })</code></td>
+            <td><span class="es">Solicitudes esperando accion del equipo de escalation</span><span class="en">Requests awaiting action from the escalation team</span></td>
+            <td>30s (cache)</td>
           </tr>
         </tbody>
       </table>
+    </div>
+
+    <!-- ═══ System Cards ═══ -->
+    <h2>
+      <span class="es">Tarjetas de Sistemas con HealthGauge</span>
+      <span class="en">System Cards with HealthGauge</span>
+    </h2>
+
+    <p>
+      <span class="es">Cada sistema SAP se representa como una tarjeta con un indicador visual de salud (HealthGauge). El color y el porcentaje reflejan el estado actual del sistema:</span>
+      <span class="en">Each SAP system is represented as a card with a visual health indicator (HealthGauge). The color and percentage reflect the current system status:</span>
+    </p>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th><span class="es">Rango</span><span class="en">Range</span></th>
+            <th>Status</th>
+            <th><span class="es">Color</span><span class="en">Color</span></th>
+            <th><span class="es">Significado</span><span class="en">Meaning</span></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>80 - 100</td>
+            <td><span class="badge success">healthy</span></td>
+            <td class="text-success">Verde</td>
+            <td><span class="es">Sistema operando normalmente, sin problemas criticos</span><span class="en">System operating normally, no critical issues</span></td>
+          </tr>
+          <tr>
+            <td>50 - 79</td>
+            <td><span class="badge warning">warning</span></td>
+            <td class="text-warning">Amarillo</td>
+            <td><span class="es">Rendimiento degradado o umbrales cercanos al limite</span><span class="en">Degraded performance or thresholds near limit</span></td>
+          </tr>
+          <tr>
+            <td>0 - 49</td>
+            <td><span class="badge danger">critical</span></td>
+            <td class="text-danger">Rojo</td>
+            <td><span class="es">Problema grave que requiere atencion inmediata</span><span class="en">Serious problem requiring immediate attention</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="grid-3">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title"><code>EP1</code> — S/4HANA PRD</div>
+          <span class="badge success">92</span>
+        </div>
+        <p class="text-muted text-sm">
+          <span class="es">ERP Production — SAP HANA 2.0</span>
+          <span class="en">ERP Production — SAP HANA 2.0</span>
+        </p>
+        <p class="text-sm">CPU: 45% | Memory: 68% | Disk: 52%</p>
+      </div>
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title"><code>PI1</code> — PO 7.5 PRD</div>
+          <span class="badge danger">45</span>
+        </div>
+        <p class="text-muted text-sm">
+          <span class="es">Process Orchestration — Oracle 19c</span>
+          <span class="en">Process Orchestration — Oracle 19c</span>
+        </p>
+        <p class="text-sm text-danger">CPU: 92% | Memory: 87% | Disk: 78%</p>
+      </div>
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title"><code>BW1</code> — BW/4HANA PRD</div>
+          <span class="badge success">88</span>
+        </div>
+        <p class="text-muted text-sm">
+          <span class="es">BW/4HANA Analytics — SAP HANA 2.0</span>
+          <span class="en">BW/4HANA Analytics — SAP HANA 2.0</span>
+        </p>
+        <p class="text-sm">CPU: 35% | Memory: 55% | Disk: 41%</p>
+      </div>
+    </div>
+
+    <div class="callout info">
+      <div class="callout-icon">&#128161;</div>
+      <div>
+        <span class="es"><strong>Interactividad:</strong> En el frontend, al hacer clic en una tarjeta de sistema se navega al detalle del sistema con metricas en tiempo real, componentes, instancias y hosts.</span>
+        <span class="en"><strong>Interactivity:</strong> In the frontend, clicking a system card navigates to the system detail with real-time metrics, components, instances and hosts.</span>
+      </div>
+    </div>
+
+    <!-- ═══ Quick Actions ═══ -->
+    <h2>
+      <span class="es">Acciones Rapidas</span>
+      <span class="en">Quick Actions</span>
+    </h2>
+
+    <p>
+      <span class="es">El dashboard proporciona acciones rapidas contextuales basadas en el estado actual:</span>
+      <span class="en">The dashboard provides contextual quick actions based on the current status:</span>
+    </p>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th><span class="es">Accion</span><span class="en">Action</span></th>
+            <th><span class="es">Rol Minimo</span><span class="en">Min Role</span></th>
+            <th><span class="es">Condicion</span><span class="en">Condition</span></th>
+            <th><span class="es">Descripcion</span><span class="en">Description</span></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="es">Reconocer Alertas</span><span class="en">Acknowledge Alerts</span></td>
+            <td><span class="badge cyan">operator</span></td>
+            <td><span class="es">Alertas activas sin reconocer</span><span class="en">Unacknowledged active alerts</span></td>
+            <td><span class="es">Navega a la lista de alertas con filtro status=active</span><span class="en">Navigates to alert list with status=active filter</span></td>
+          </tr>
+          <tr>
+            <td><span class="es">Resolver Breaches</span><span class="en">Resolve Breaches</span></td>
+            <td><span class="badge cyan">operator</span></td>
+            <td><span class="es">Breaches activos sin resolver</span><span class="en">Unresolved active breaches</span></td>
+            <td><span class="es">Navega a la vista de breaches para investigacion</span><span class="en">Navigates to breaches view for investigation</span></td>
+          </tr>
+          <tr>
+            <td><span class="es">Procesar Aprobaciones</span><span class="en">Process Approvals</span></td>
+            <td><span class="badge warning">escalation</span></td>
+            <td><span class="es">Aprobaciones pendientes</span><span class="en">Pending approvals</span></td>
+            <td><span class="es">Navega a aprobaciones pendientes</span><span class="en">Navigates to pending approvals</span></td>
+          </tr>
+          <tr>
+            <td><span class="es">Ejecutar Runbook</span><span class="en">Execute Runbook</span></td>
+            <td><span class="badge cyan">operator</span></td>
+            <td><span class="es">Sistemas en warning/critical</span><span class="en">Systems in warning/critical</span></td>
+            <td><span class="es">Sugiere runbooks relevantes para sistemas degradados</span><span class="en">Suggests relevant runbooks for degraded systems</span></td>
+          </tr>
+          <tr>
+            <td><span class="es">Registrar Sistema</span><span class="en">Register System</span></td>
+            <td><span class="badge danger">admin</span></td>
+            <td><span class="es">Siempre disponible</span><span class="en">Always available</span></td>
+            <td><span class="es">Formulario para registrar un nuevo sistema SAP</span><span class="en">Form to register a new SAP system</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- ═══ API Endpoint ═══ -->
+    <h2>API Endpoint</h2>
+
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title"><span class="badge cyan">GET</span> <code>/dashboard</code></div>
+        <span class="badge neutral">viewer+</span>
+      </div>
+      <p class="text-muted text-sm">
+        <span class="es">Retorna un resumen agregado del dashboard para la organizacion del usuario autenticado.</span>
+        <span class="en">Returns an aggregated dashboard summary for the authenticated user's organization.</span>
+      </p>
+    </div>
+
+    <h3>
+      <span class="es">Estructura de Respuesta</span>
+      <span class="en">Response Structure</span>
+    </h3>
+
+<pre><code>{
+  "totalSystems": 12,
+  "healthySystems": 8,
+  "warningSystems": 3,
+  "criticalSystems": 1,
+  "activeAlerts": 7,
+  "criticalAlerts": 2,
+  "pendingApprovals": 3,
+  "activeBreaches": 5,
+  "recentEvents": [...],
+  "systemSummary": [
+    {
+      "id": "uuid-...",
+      "sid": "EP1",
+      "description": "ERP Production — S/4HANA",
+      "sapProduct": "S/4HANA 2023",
+      "environment": "PRD",
+      "healthScore": 92,
+      "status": "healthy",
+      "dbType": "SAP HANA 2.0"
+    },
+    ...
+  ]
+}</code></pre>
+
+    <h3>
+      <span class="es">Campos de Respuesta</span>
+      <span class="en">Response Fields</span>
+    </h3>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th><span class="es">Campo</span><span class="en">Field</span></th>
+            <th><span class="es">Tipo</span><span class="en">Type</span></th>
+            <th><span class="es">Descripcion</span><span class="en">Description</span></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td><code>totalSystems</code></td><td>number</td><td><span class="es">Total de sistemas registrados</span><span class="en">Total registered systems</span></td></tr>
+          <tr><td><code>healthySystems</code></td><td>number</td><td><span class="es">Sistemas con status "healthy"</span><span class="en">Systems with "healthy" status</span></td></tr>
+          <tr><td><code>warningSystems</code></td><td>number</td><td><span class="es">Sistemas con status "warning"</span><span class="en">Systems with "warning" status</span></td></tr>
+          <tr><td><code>criticalSystems</code></td><td>number</td><td><span class="es">Sistemas con status "critical"</span><span class="en">Systems with "critical" status</span></td></tr>
+          <tr><td><code>activeAlerts</code></td><td>number</td><td><span class="es">Alertas con status "active"</span><span class="en">Alerts with "active" status</span></td></tr>
+          <tr><td><code>criticalAlerts</code></td><td>number</td><td><span class="es">Alertas de nivel "critical"</span><span class="en">Alerts with "critical" level</span></td></tr>
+          <tr><td><code>pendingApprovals</code></td><td>number</td><td><span class="es">Solicitudes de aprobacion pendientes</span><span class="en">Pending approval requests</span></td></tr>
+          <tr><td><code>activeBreaches</code></td><td>number</td><td><span class="es">Breaches de umbrales sin resolver</span><span class="en">Unresolved threshold breaches</span></td></tr>
+          <tr><td><code>recentEvents</code></td><td>Event[]</td><td><span class="es">Ultimos 10 eventos del sistema</span><span class="en">Last 10 system events</span></td></tr>
+          <tr><td><code>systemSummary</code></td><td>System[]</td><td><span class="es">Resumen de todos los sistemas</span><span class="en">Summary of all systems</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- ═══ Features ═══ -->
+    <h2>
+      <span class="es">Caracteristicas del Dashboard</span>
+      <span class="en">Dashboard Features</span>
+    </h2>
+
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title"><div class="card-icon cyan">&#128200;</div>
+            <span class="es">Metricas en Tiempo Real</span>
+            <span class="en">Real-Time Metrics</span>
+          </div>
+        </div>
+        <ul class="feature-list">
+          <li><span class="es">Health scores actualizados via pipeline de metricas</span><span class="en">Health scores updated via metrics pipeline</span></li>
+          <li><span class="es">Graficos de CPU, memoria y disco por sistema</span><span class="en">CPU, memory and disk charts per system</span></li>
+          <li><span class="es">Historial de health snapshots</span><span class="en">Health snapshot history</span></li>
+          <li><span class="es">Deteccion automatica de breaches</span><span class="en">Automatic breach detection</span></li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title"><div class="card-icon violet">&#128276;</div>
+            <span class="es">Alertas Integradas</span>
+            <span class="en">Integrated Alerts</span>
+          </div>
+        </div>
+        <ul class="feature-list">
+          <li><span class="es">Conteo de alertas activas por severidad</span><span class="en">Active alert count by severity</span></li>
+          <li><span class="es">Acceso directo a reconocer/resolver desde el dashboard</span><span class="en">Direct access to acknowledge/resolve from dashboard</span></li>
+          <li><span class="es">Indicadores de escalamiento L1/L2</span><span class="en">L1/L2 escalation indicators</span></li>
+          <li><span class="es">Vinculacion con runbooks de remediacion</span><span class="en">Linking with remediation runbooks</span></li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title"><div class="card-icon success">&#127760;</div>
+            <span class="es">Vista del Landscape</span>
+            <span class="en">Landscape View</span>
+          </div>
+        </div>
+        <ul class="feature-list">
+          <li><span class="es">Todos los sistemas en una sola vista</span><span class="en">All systems in a single view</span></li>
+          <li><span class="es">Agrupacion por ambiente (PRD, QAS, DEV)</span><span class="en">Grouping by environment (PRD, QAS, DEV)</span></li>
+          <li><span class="es">Indicadores visuales de conectividad</span><span class="en">Visual connectivity indicators</span></li>
+          <li><span class="es">Estado de conectores (heartbeat)</span><span class="en">Connector status (heartbeat)</span></li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title"><div class="card-icon warning">&#9889;</div>
+            <span class="es">Acciones Contextuales</span>
+            <span class="en">Contextual Actions</span>
+          </div>
+        </div>
+        <ul class="feature-list">
+          <li><span class="es">Sugerencias de runbooks para sistemas degradados</span><span class="en">Runbook suggestions for degraded systems</span></li>
+          <li><span class="es">Acceso rapido a aprobaciones pendientes</span><span class="en">Quick access to pending approvals</span></li>
+          <li><span class="es">Navegacion directa al detalle de cada sistema</span><span class="en">Direct navigation to each system's detail</span></li>
+          <li><span class="es">Timeline de eventos recientes</span><span class="en">Recent events timeline</span></li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- ═══ Caching ═══ -->
+    <h2>
+      <span class="es">Cache y Rendimiento</span>
+      <span class="en">Cache and Performance</span>
+    </h2>
+
+    <div class="callout info">
+      <div class="callout-icon">&#128161;</div>
+      <div>
+        <span class="es"><strong>Cache Redis:</strong> El endpoint <code>GET /dashboard</code> utiliza cache Redis con TTL de 30 segundos. Esto permite que multiples usuarios vean el dashboard sin saturar la base de datos con consultas agregadas pesadas.</span>
+        <span class="en"><strong>Redis Cache:</strong> The <code>GET /dashboard</code> endpoint uses Redis cache with a 30-second TTL. This allows multiple users to view the dashboard without overloading the database with heavy aggregation queries.</span>
+      </div>
+    </div>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th><span class="es">Aspecto</span><span class="en">Aspect</span></th>
+            <th><span class="es">Detalle</span><span class="en">Detail</span></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>Cache TTL</td><td>30 <span class="es">segundos</span><span class="en">seconds</span></td></tr>
+          <tr><td>Cache key</td><td><code>dashboard:summary:{organizationId}</code></td></tr>
+          <tr><td><span class="es">Invalidacion</span><span class="en">Invalidation</span></td><td><span class="es">Automatica por TTL; se invalida en acciones criticas (nueva alerta, breach detectado)</span><span class="en">Automatic by TTL; invalidated on critical actions (new alert, breach detected)</span></td></tr>
+          <tr><td><span class="es">Fallback sin Redis</span><span class="en">Fallback without Redis</span></td><td><span class="es">Consulta directa a PostgreSQL (modo degradado)</span><span class="en">Direct PostgreSQL query (degraded mode)</span></td></tr>
+          <tr><td><span class="es">Complejidad de query</span><span class="en">Query complexity</span></td><td><span class="es">6 consultas agregadas en una sola llamada</span><span class="en">6 aggregate queries in a single call</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="callout success">
+      <div class="callout-icon">&#9989;</div>
+      <div>
+        <span class="es"><strong>Frontend:</strong> El componente React del dashboard usa un intervalo de polling de 30 segundos para mantener los datos frescos, sincronizado con el TTL del cache del backend.</span>
+        <span class="en"><strong>Frontend:</strong> The React dashboard component uses a 30-second polling interval to keep data fresh, synchronized with the backend cache TTL.</span>
+      </div>
     </div>
 
   </main>

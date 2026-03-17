@@ -7,81 +7,9 @@
   <link rel="stylesheet" href="theme.css">
   <script src="theme-toggle.js"></script>
   <script src="lang-toggle.js"></script>
-  <style>
-    .login-mockup {
-      background: var(--card-bg);
-      border: 1px solid var(--card-border);
-      border-radius: var(--radius);
-      padding: 32px;
-      max-width: 380px;
-      margin: 16px auto;
-    }
-    .login-mockup-title {
-      text-align: center;
-      font-size: 20px;
-      font-weight: 700;
-      background: var(--gradient-title);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-      margin-bottom: 20px;
-    }
-    .login-mockup-field {
-      margin-bottom: 14px;
-    }
-    .login-mockup-label {
-      display: block;
-      font-size: 11px;
-      font-weight: 600;
-      color: var(--txt3);
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      margin-bottom: 4px;
-    }
-    .login-mockup-input {
-      display: block;
-      width: 100%;
-      padding: 10px 14px;
-      border-radius: 8px;
-      border: 1px solid var(--brd);
-      background: var(--bg3);
-      color: var(--txt1);
-      font-size: 13px;
-      font-family: 'SF Mono', Monaco, Consolas, monospace;
-      box-sizing: border-box;
-    }
-    .login-mockup-btn {
-      display: block;
-      width: 100%;
-      padding: 10px;
-      border: none;
-      border-radius: 8px;
-      background: var(--gradient-brand);
-      color: #fff;
-      font-size: 14px;
-      font-weight: 600;
-      cursor: pointer;
-      margin-top: 8px;
-      text-align: center;
-    }
-    .login-mockup-logo {
-      width: 48px;
-      height: 48px;
-      border-radius: 14px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: var(--gradient-brand);
-      box-shadow: 0 0 20px rgba(6,182,212,0.3);
-      font-size: 24px;
-      color: #fff;
-      margin: 0 auto 12px;
-    }
-  </style>
 </head>
 <body>
 <div class="docs-wrapper">
-  <!-- Sidebar -->
   <nav class="docs-sidebar">
     <div class="sidebar-brand">
       <div class="logo">&#9889;</div>
@@ -94,6 +22,12 @@
       <div class="sidebar-section-label">Inicio</div>
       <a href="index.html" class="sidebar-link">Portal</a>
       <a href="getting-started.html" class="sidebar-link active">Primeros Pasos</a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-section-label">Architecture</div>
+      <a href="architecture.html" class="sidebar-link">Arquitectura</a>
+      <a href="domain-model.html" class="sidebar-link">Modelo de Datos</a>
+      <a href="api-reference.html" class="sidebar-link">API Reference</a>
     </div>
     <div class="sidebar-section">
       <div class="sidebar-section-label">Command</div>
@@ -134,449 +68,671 @@
   </nav>
 
   <main class="docs-main">
-    <!-- Breadcrumb -->
     <div class="breadcrumb">
       <a href="index.html">SAP Spektra</a>
       <span class="sep">/</span>
-      <span class="es">Primeros Pasos</span><span class="en">Getting Started</span>
+      <span><span class="es">Primeros Pasos</span><span class="en">Getting Started</span></span>
     </div>
 
-    <!-- Page Header -->
     <div class="page-header">
-      <h1><span class="es">Primeros Pasos</span><span class="en">Getting Started</span></h1>
+      <h1>
+        <span class="es">Primeros Pasos</span>
+        <span class="en">Getting Started</span>
+      </h1>
       <div class="subtitle">
-        <span class="es">Configura tu entorno de desarrollo y levanta SAP Spektra en minutos.</span>
-        <span class="en">Set up your development environment and launch SAP Spektra in minutes.</span>
+        <span class="es">Guia completa de instalacion, configuracion y primer uso de SAP Spektra</span>
+        <span class="en">Complete guide for installing, configuring and first use of SAP Spektra</span>
       </div>
     </div>
 
-    <!-- Prerequisites -->
-    <h2><span class="es">Requisitos Previos</span><span class="en">Prerequisites</span></h2>
+    <!-- ═══ Prerequisites ═══ -->
+    <h2>
+      <span class="es">Requisitos Previos</span>
+      <span class="en">Prerequisites</span>
+    </h2>
 
-    <div class="card">
-      <div class="card-header">
-        <div class="card-title">
-          <div class="card-icon cyan">&#128187;</div>
-          <span class="es">Software Requerido</span><span class="en">Required Software</span>
-        </div>
-      </div>
-      <div class="table-wrap" style="border:none;margin:0">
-        <table>
-          <thead>
-            <tr>
-              <th><span class="es">Herramienta</span><span class="en">Tool</span></th>
-              <th><span class="es">Version Minima</span><span class="en">Minimum Version</span></th>
-              <th><span class="es">Proposito</span><span class="en">Purpose</span></th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td><code>Node.js</code></td>
-              <td><span class="badge cyan">22+</span></td>
-              <td><span class="es">Runtime para backend y frontend</span><span class="en">Runtime for backend and frontend</span></td>
-            </tr>
-            <tr>
-              <td><code>npm</code></td>
-              <td><span class="badge cyan">10+</span></td>
-              <td><span class="es">Gestor de paquetes</span><span class="en">Package manager</span></td>
-            </tr>
-            <tr>
-              <td><code>Docker Desktop</code></td>
-              <td><span class="badge violet">4.x</span></td>
-              <td><span class="es">Contenedores para PostgreSQL y Redis</span><span class="en">Containers for PostgreSQL and Redis</span></td>
-            </tr>
-            <tr>
-              <td><code>Git</code></td>
-              <td><span class="badge neutral">2.x</span></td>
-              <td><span class="es">Control de versiones</span><span class="en">Version control</span></td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th><span class="es">Herramienta</span><span class="en">Tool</span></th>
+            <th><span class="es">Version Minima</span><span class="en">Minimum Version</span></th>
+            <th><span class="es">Recomendada</span><span class="en">Recommended</span></th>
+            <th><span class="es">Proposito</span><span class="en">Purpose</span></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>Node.js</code></td>
+            <td>20.x LTS</td>
+            <td>20.11+</td>
+            <td><span class="es">Runtime para API y Frontend</span><span class="en">Runtime for API and Frontend</span></td>
+          </tr>
+          <tr>
+            <td><code>npm</code></td>
+            <td>10.x</td>
+            <td>10.2+</td>
+            <td><span class="es">Gestor de paquetes</span><span class="en">Package manager</span></td>
+          </tr>
+          <tr>
+            <td><code>PostgreSQL</code></td>
+            <td>15.x</td>
+            <td>16.x</td>
+            <td><span class="es">Base de datos principal</span><span class="en">Primary database</span></td>
+          </tr>
+          <tr>
+            <td><code>Redis</code></td>
+            <td>6.x</td>
+            <td>7.x</td>
+            <td><span class="es">Caching y rate limiting</span><span class="en">Caching and rate limiting</span></td>
+          </tr>
+          <tr>
+            <td><code>Docker</code></td>
+            <td>24.x</td>
+            <td>25.x</td>
+            <td><span class="es">Contenedores (opcional)</span><span class="en">Containers (optional)</span></td>
+          </tr>
+          <tr>
+            <td><code>Docker Compose</code></td>
+            <td>2.20+</td>
+            <td>2.24+</td>
+            <td><span class="es">Orquestacion local (opcional)</span><span class="en">Local orchestration (optional)</span></td>
+          </tr>
+          <tr>
+            <td><code>Git</code></td>
+            <td>2.30+</td>
+            <td>2.43+</td>
+            <td><span class="es">Control de versiones</span><span class="en">Version control</span></td>
+          </tr>
+        </tbody>
+      </table>
     </div>
 
     <div class="callout info">
       <div class="callout-icon">&#128161;</div>
       <div>
-        <span class="es"><strong>Tip:</strong> Verifica tus versiones con <code>node -v</code>, <code>npm -v</code> y <code>docker --version</code> antes de continuar.</span>
-        <span class="en"><strong>Tip:</strong> Verify your versions with <code>node -v</code>, <code>npm -v</code> and <code>docker --version</code> before proceeding.</span>
+        <span class="es"><strong>Tip:</strong> Si usas macOS, instala las dependencias con <code>brew install node postgresql@16 redis</code>. En Linux usa el package manager de tu distro.</span>
+        <span class="en"><strong>Tip:</strong> If you use macOS, install dependencies with <code>brew install node postgresql@16 redis</code>. On Linux use your distro's package manager.</span>
       </div>
     </div>
 
-    <!-- Setup Steps -->
-    <h2><span class="es">Instalacion Paso a Paso</span><span class="en">Step-by-Step Installation</span></h2>
+    <!-- ═══ Option A: Docker ═══ -->
+    <h2>
+      <span class="es">Opcion A: Instalacion con Docker (Recomendada)</span>
+      <span class="en">Option A: Docker Installation (Recommended)</span>
+    </h2>
 
-    <h3><span class="es">Paso 1: Infraestructura con Docker</span><span class="en">Step 1: Infrastructure with Docker</span></h3>
-    <div class="card">
-      <p class="text-sm">
-        <span class="es">Levanta PostgreSQL 16 y Redis 7 con Docker Compose:</span>
-        <span class="en">Start PostgreSQL 16 and Redis 7 with Docker Compose:</span>
-      </p>
-      <pre><code>docker compose up -d</code></pre>
-      <p class="text-sm text-muted">
-        <span class="es">Esto inicia los contenedores de base de datos y cache en segundo plano.</span>
-        <span class="en">This starts the database and cache containers in the background.</span>
-      </p>
-    </div>
+    <p>
+      <span class="es">La forma mas rapida de arrancar SAP Spektra es usando Docker Compose, que levanta PostgreSQL, Redis y la API automaticamente.</span>
+      <span class="en">The fastest way to start SAP Spektra is using Docker Compose, which brings up PostgreSQL, Redis and the API automatically.</span>
+    </p>
 
-    <div class="callout success">
-      <div class="callout-icon">&#9989;</div>
-      <div>
-        <span class="es"><strong>Verificacion:</strong> Ejecuta <code>docker ps</code> para confirmar que los contenedores <code>postgres</code> y <code>redis</code> estan corriendo.</span>
-        <span class="en"><strong>Verification:</strong> Run <code>docker ps</code> to confirm the <code>postgres</code> and <code>redis</code> containers are running.</span>
-      </div>
-    </div>
-
-    <h3><span class="es">Paso 2: Configurar el Backend</span><span class="en">Step 2: Configure the Backend</span></h3>
     <div class="steps">
       <div class="step">
-        <strong><span class="es">Instalar dependencias</span><span class="en">Install dependencies</span></strong>
-        <pre><code>cd backend
-npm install</code></pre>
+        <strong><span class="es">Clonar el repositorio</span><span class="en">Clone the repository</span></strong>
+<pre><code>git clone https://github.com/maveram-company/sap-spektra.git
+cd sap-spektra</code></pre>
       </div>
       <div class="step">
         <strong><span class="es">Configurar variables de entorno</span><span class="en">Configure environment variables</span></strong>
-        <pre><code>cp .env.example .env</code></pre>
-        <p class="text-sm text-muted"><span class="es">El archivo <code>.env.example</code> incluye valores predeterminados para desarrollo local.</span><span class="en">The <code>.env.example</code> file includes default values for local development.</span></p>
+<pre><code>cp apps/api/.env.example apps/api/.env</code></pre>
+        <p class="text-muted text-sm">
+          <span class="es">El archivo <code>.env.example</code> incluye valores por defecto que funcionan con Docker Compose.</span>
+          <span class="en">The <code>.env.example</code> file includes default values that work with Docker Compose.</span>
+        </p>
       </div>
       <div class="step">
-        <strong><span class="es">Ejecutar migraciones de Prisma</span><span class="en">Run Prisma migrations</span></strong>
-        <pre><code>npx prisma migrate dev</code></pre>
+        <strong><span class="es">Levantar los servicios</span><span class="en">Start the services</span></strong>
+<pre><code>docker-compose up -d</code></pre>
+        <p class="text-muted text-sm">
+          <span class="es">Esto inicia PostgreSQL (puerto 5432), Redis (puerto 6379) y la API (puerto 3001).</span>
+          <span class="en">This starts PostgreSQL (port 5432), Redis (port 6379) and the API (port 3001).</span>
+        </p>
       </div>
       <div class="step">
-        <strong><span class="es">Sembrar datos iniciales</span><span class="en">Seed initial data</span></strong>
-        <pre><code>npx prisma db seed</code></pre>
+        <strong><span class="es">Ejecutar migraciones y seed</span><span class="en">Run migrations and seed</span></strong>
+<pre><code>cd apps/api
+npx prisma migrate dev --name init
+npm run seed</code></pre>
       </div>
       <div class="step">
-        <strong><span class="es">Iniciar el servidor</span><span class="en">Start the server</span></strong>
-        <pre><code>npm run start:dev</code></pre>
-        <p class="text-sm text-muted"><span class="es">Backend disponible en <code>http://localhost:3001</code></span><span class="en">Backend available at <code>http://localhost:3001</code></span></p>
+        <strong><span class="es">Iniciar el frontend</span><span class="en">Start the frontend</span></strong>
+<pre><code>cd frontend
+npm install
+npm run dev</code></pre>
+      </div>
+      <div class="step">
+        <strong><span class="es">Abrir en el navegador</span><span class="en">Open in browser</span></strong>
+        <p>
+          <span class="es">Navega a</span><span class="en">Navigate to</span>
+          <code>http://localhost:5173</code>
+        </p>
       </div>
     </div>
 
-    <h3><span class="es">Paso 3: Configurar el Frontend</span><span class="en">Step 3: Configure the Frontend</span></h3>
+    <!-- ═══ Option B: Without Docker ═══ -->
+    <h2>
+      <span class="es">Opcion B: Instalacion sin Docker</span>
+      <span class="en">Option B: Installation without Docker</span>
+    </h2>
+
     <div class="steps">
       <div class="step">
-        <strong><span class="es">Instalar dependencias</span><span class="en">Install dependencies</span></strong>
-        <pre><code>cd frontend
+        <strong><span class="es">Iniciar PostgreSQL localmente</span><span class="en">Start PostgreSQL locally</span></strong>
+<pre><code># macOS
+brew services start postgresql@16
+
+# Linux (systemd)
+sudo systemctl start postgresql</code></pre>
+      </div>
+      <div class="step">
+        <strong><span class="es">Crear la base de datos</span><span class="en">Create the database</span></strong>
+<pre><code>createdb sap_spektra
+# o via psql:
+psql -c "CREATE DATABASE sap_spektra;"</code></pre>
+      </div>
+      <div class="step">
+        <strong><span class="es">Iniciar Redis localmente</span><span class="en">Start Redis locally</span></strong>
+<pre><code># macOS
+brew services start redis
+
+# Linux (systemd)
+sudo systemctl start redis-server</code></pre>
+      </div>
+      <div class="step">
+        <strong><span class="es">Configurar la URL de la base de datos</span><span class="en">Configure the database URL</span></strong>
+<pre><code># apps/api/.env
+DATABASE_URL="postgresql://postgres:postgres@localhost:5432/sap_spektra"
+REDIS_URL="redis://localhost:6379"
+JWT_SECRET="your-super-secret-key-change-in-production"
+RUNTIME_MODE="LOCAL_SIMULATED"</code></pre>
+      </div>
+      <div class="step">
+        <strong><span class="es">Instalar dependencias de la API</span><span class="en">Install API dependencies</span></strong>
+<pre><code>cd apps/api
 npm install</code></pre>
       </div>
       <div class="step">
-        <strong><span class="es">Iniciar el servidor de desarrollo</span><span class="en">Start the development server</span></strong>
-        <pre><code>npm run dev</code></pre>
-        <p class="text-sm text-muted"><span class="es">Frontend disponible en <code>http://localhost:5173</code></span><span class="en">Frontend available at <code>http://localhost:5173</code></span></p>
+        <strong><span class="es">Ejecutar migraciones Prisma</span><span class="en">Run Prisma migrations</span></strong>
+<pre><code>npx prisma generate
+npx prisma migrate dev --name init</code></pre>
+      </div>
+      <div class="step">
+        <strong><span class="es">Poblar datos de demo</span><span class="en">Seed demo data</span></strong>
+<pre><code>npm run seed</code></pre>
+      </div>
+      <div class="step">
+        <strong><span class="es">Iniciar la API</span><span class="en">Start the API</span></strong>
+<pre><code>npm run start:dev</code></pre>
+        <p class="text-muted text-sm">
+          <span class="es">La API estara disponible en <code>http://localhost:3001</code></span>
+          <span class="en">The API will be available at <code>http://localhost:3001</code></span>
+        </p>
+      </div>
+      <div class="step">
+        <strong><span class="es">Iniciar el frontend (nueva terminal)</span><span class="en">Start the frontend (new terminal)</span></strong>
+<pre><code>cd frontend
+npm install
+npm run dev</code></pre>
+        <p class="text-muted text-sm">
+          <span class="es">El frontend estara disponible en <code>http://localhost:5173</code></span>
+          <span class="en">The frontend will be available at <code>http://localhost:5173</code></span>
+        </p>
       </div>
     </div>
 
-    <!-- Login Credentials -->
-    <h2><span class="es">Credenciales de Acceso</span><span class="en">Login Credentials</span></h2>
+    <!-- ═══ npm Scripts ═══ -->
+    <h2>
+      <span class="es">Scripts npm Disponibles</span>
+      <span class="en">Available npm Scripts</span>
+    </h2>
 
-    <div class="login-mockup">
-      <div class="login-mockup-logo">&#9889;</div>
-      <div class="login-mockup-title">SAP Spektra</div>
-      <div class="login-mockup-field">
-        <span class="login-mockup-label">Email</span>
-        <div class="login-mockup-input">admin@acme-corp.com</div>
-      </div>
-      <div class="login-mockup-field">
-        <span class="login-mockup-label"><span class="es">Contrasena</span><span class="en">Password</span></span>
-        <div class="login-mockup-input">admin123</div>
-      </div>
-      <div class="login-mockup-btn">
-        <span class="es">Iniciar Sesion</span><span class="en">Sign In</span>
-      </div>
+    <h3>
+      <span class="es">API (apps/api)</span>
+      <span class="en">API (apps/api)</span>
+    </h3>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th><span class="es">Comando</span><span class="en">Command</span></th>
+            <th><span class="es">Descripcion</span><span class="en">Description</span></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td><code>npm run start:dev</code></td><td><span class="es">Inicia la API en modo desarrollo con hot-reload</span><span class="en">Start API in development mode with hot-reload</span></td></tr>
+          <tr><td><code>npm run start:prod</code></td><td><span class="es">Inicia la API en modo produccion</span><span class="en">Start API in production mode</span></td></tr>
+          <tr><td><code>npm run build</code></td><td><span class="es">Compila el proyecto TypeScript</span><span class="en">Build the TypeScript project</span></td></tr>
+          <tr><td><code>npm run seed</code></td><td><span class="es">Ejecuta el script de datos semilla (12 sistemas, 4 usuarios, runbooks, etc.)</span><span class="en">Run the seed data script (12 systems, 4 users, runbooks, etc.)</span></td></tr>
+          <tr><td><code>npm run test</code></td><td><span class="es">Ejecuta tests unitarios con Jest</span><span class="en">Run unit tests with Jest</span></td></tr>
+          <tr><td><code>npm run test:e2e</code></td><td><span class="es">Ejecuta tests end-to-end</span><span class="en">Run end-to-end tests</span></td></tr>
+          <tr><td><code>npm run lint</code></td><td><span class="es">Ejecuta ESLint en el codigo fuente</span><span class="en">Run ESLint on source code</span></td></tr>
+          <tr><td><code>npx prisma studio</code></td><td><span class="es">Abre Prisma Studio (GUI para la BD)</span><span class="en">Open Prisma Studio (DB GUI)</span></td></tr>
+          <tr><td><code>npx prisma migrate dev</code></td><td><span class="es">Ejecuta migraciones pendientes</span><span class="en">Run pending migrations</span></td></tr>
+          <tr><td><code>npx prisma generate</code></td><td><span class="es">Regenera el cliente Prisma</span><span class="en">Regenerate the Prisma client</span></td></tr>
+        </tbody>
+      </table>
     </div>
 
-    <div class="card mt-2">
-      <div class="card-header">
-        <div class="card-title">
-          <div class="card-icon violet">&#128101;</div>
-          <span class="es">Usuarios Disponibles</span><span class="en">Available Users</span>
-        </div>
-      </div>
-      <div class="table-wrap" style="border:none;margin:0">
-        <table>
-          <thead>
-            <tr>
-              <th>Email</th>
-              <th><span class="es">Contrasena</span><span class="en">Password</span></th>
-              <th>Rol</th>
-              <th><span class="es">Organizacion</span><span class="en">Organization</span></th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td><code>admin@acme-corp.com</code></td>
-              <td><code>admin123</code></td>
-              <td><span class="badge cyan">ADMIN</span></td>
-              <td>Acme Corp</td>
-            </tr>
-            <tr>
-              <td><code>operator@acme-corp.com</code></td>
-              <td><code>operator123</code></td>
-              <td><span class="badge success">OPERATOR</span></td>
-              <td>Acme Corp</td>
-            </tr>
-            <tr>
-              <td><code>viewer@acme-corp.com</code></td>
-              <td><code>viewer123</code></td>
-              <td><span class="badge neutral">VIEWER</span></td>
-              <td>Acme Corp</td>
-            </tr>
-            <tr>
-              <td><code>admin@globex.com</code></td>
-              <td><code>admin123</code></td>
-              <td><span class="badge cyan">ADMIN</span></td>
-              <td>Globex Inc</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
+    <h3>Frontend</h3>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th><span class="es">Comando</span><span class="en">Command</span></th>
+            <th><span class="es">Descripcion</span><span class="en">Description</span></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td><code>npm run dev</code></td><td><span class="es">Inicia Vite dev server con hot-reload</span><span class="en">Start Vite dev server with hot-reload</span></td></tr>
+          <tr><td><code>npm run build</code></td><td><span class="es">Genera build de produccion</span><span class="en">Generate production build</span></td></tr>
+          <tr><td><code>npm run preview</code></td><td><span class="es">Previsualiza el build de produccion</span><span class="en">Preview production build</span></td></tr>
+          <tr><td><code>npm run lint</code></td><td><span class="es">Ejecuta ESLint</span><span class="en">Run ESLint</span></td></tr>
+        </tbody>
+      </table>
     </div>
+
+    <h3>
+      <span class="es">Raiz del proyecto</span>
+      <span class="en">Project root</span>
+    </h3>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th><span class="es">Comando</span><span class="en">Command</span></th>
+            <th><span class="es">Descripcion</span><span class="en">Description</span></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td><code>npm run test:e2e</code></td><td><span class="es">Ejecuta Playwright end-to-end tests</span><span class="en">Run Playwright end-to-end tests</span></td></tr>
+          <tr><td><code>npm run test:e2e:ui</code></td><td><span class="es">Abre Playwright con interfaz grafica</span><span class="en">Open Playwright with UI</span></td></tr>
+          <tr><td><code>docker-compose up -d</code></td><td><span class="es">Levanta infraestructura (Postgres + Redis)</span><span class="en">Start infrastructure (Postgres + Redis)</span></td></tr>
+          <tr><td><code>docker-compose down</code></td><td><span class="es">Detiene y elimina contenedores</span><span class="en">Stop and remove containers</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- ═══ Login Credentials ═══ -->
+    <h2>
+      <span class="es">Credenciales de Acceso (Demo)</span>
+      <span class="en">Login Credentials (Demo)</span>
+    </h2>
 
     <div class="callout warning">
       <div class="callout-icon">&#9888;&#65039;</div>
       <div>
-        <span class="es"><strong>Importante:</strong> Estas credenciales son exclusivamente para desarrollo local. Nunca uses contrasenas simples en produccion.</span>
-        <span class="en"><strong>Important:</strong> These credentials are for local development only. Never use simple passwords in production.</span>
+        <span class="es"><strong>Solo para desarrollo:</strong> Estas credenciales son del seed de demo. En produccion, cambia todas las contrasenas y el JWT_SECRET.</span>
+        <span class="en"><strong>Development only:</strong> These credentials are from the demo seed. In production, change all passwords and the JWT_SECRET.</span>
       </div>
     </div>
 
-    <!-- Demo Mode vs API Mode -->
-    <h2><span class="es">Modo Demo vs Modo API</span><span class="en">Demo Mode vs API Mode</span></h2>
-
-    <div class="grid-2">
-      <div class="card">
-        <div class="card-header">
-          <div class="card-title">
-            <div class="card-icon warning">&#127917;</div>
-            <span class="es">Modo Demo</span><span class="en">Demo Mode</span>
-          </div>
-          <span class="badge warning">Frontend Only</span>
-        </div>
-        <ul class="feature-list">
-          <li><span class="es">Usa datos simulados (mocks) en el frontend</span><span class="en">Uses simulated data (mocks) in the frontend</span></li>
-          <li><span class="es">No requiere backend ni base de datos</span><span class="en">No backend or database required</span></li>
-          <li><span class="es">Ideal para demostraciones rapidas</span><span class="en">Ideal for quick demonstrations</span></li>
-          <li><span class="es">Configurar <code>VITE_USE_MOCKS=true</code></span><span class="en">Set <code>VITE_USE_MOCKS=true</code></span></li>
-        </ul>
-      </div>
-      <div class="card">
-        <div class="card-header">
-          <div class="card-title">
-            <div class="card-icon success">&#128279;</div>
-            <span class="es">Modo API (Recomendado)</span><span class="en">API Mode (Recommended)</span>
-          </div>
-          <span class="badge success">Full Stack</span>
-        </div>
-        <ul class="feature-list">
-          <li><span class="es">Conecta con el backend NestJS real</span><span class="en">Connects to the real NestJS backend</span></li>
-          <li><span class="es">Autenticacion JWT funcional</span><span class="en">Functional JWT authentication</span></li>
-          <li><span class="es">Persistencia en PostgreSQL 16</span><span class="en">PostgreSQL 16 persistence</span></li>
-          <li><span class="es">Cache con Redis 7</span><span class="en">Redis 7 caching</span></li>
-          <li><span class="es">Configurar <code>VITE_USE_MOCKS=false</code></span><span class="en">Set <code>VITE_USE_MOCKS=false</code></span></li>
-        </ul>
-      </div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Email</th>
+            <th><span class="es">Contrasena</span><span class="en">Password</span></th>
+            <th><span class="es">Nombre</span><span class="en">Name</span></th>
+            <th>Rol / Role</th>
+            <th><span class="es">Permisos</span><span class="en">Permissions</span></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>admin@acme-corp.com</code></td>
+            <td><code>admin123</code></td>
+            <td>Carlos Admin</td>
+            <td><span class="badge danger">admin</span></td>
+            <td>
+              <span class="es">Acceso total: gestionar sistemas, usuarios, configuracion, HA failover, API keys</span>
+              <span class="en">Full access: manage systems, users, settings, HA failover, API keys</span>
+            </td>
+          </tr>
+          <tr>
+            <td><code>escalation@acme-corp.com</code></td>
+            <td><code>admin123</code></td>
+            <td>Ana Escalation</td>
+            <td><span class="badge warning">escalation</span></td>
+            <td>
+              <span class="es">Aprobar/rechazar solicitudes, ver todo, operar sistemas</span>
+              <span class="en">Approve/reject requests, view all, operate systems</span>
+            </td>
+          </tr>
+          <tr>
+            <td><code>operator@acme-corp.com</code></td>
+            <td><code>admin123</code></td>
+            <td>Maria Operator</td>
+            <td><span class="badge cyan">operator</span></td>
+            <td>
+              <span class="es">Ejecutar runbooks, reconocer alertas, crear operaciones, ingestar metricas</span>
+              <span class="en">Execute runbooks, acknowledge alerts, create operations, ingest metrics</span>
+            </td>
+          </tr>
+          <tr>
+            <td><code>viewer@acme-corp.com</code></td>
+            <td><code>admin123</code></td>
+            <td>Juan Viewer</td>
+            <td><span class="badge neutral">viewer</span></td>
+            <td>
+              <span class="es">Solo lectura: ver dashboard, sistemas, alertas, eventos, metricas</span>
+              <span class="en">Read-only: view dashboard, systems, alerts, events, metrics</span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
     </div>
 
-    <!-- Useful Commands -->
-    <h2><span class="es">Comandos Utiles</span><span class="en">Useful Commands</span></h2>
+    <p>
+      <span class="es">Todas las cuentas pertenecen a la organizacion <strong>ACME Corp</strong> (<code>acme-corp</code>), plan <span class="badge violet">professional</span>.</span>
+      <span class="en">All accounts belong to the <strong>ACME Corp</strong> organization (<code>acme-corp</code>), plan <span class="badge violet">professional</span>.</span>
+    </p>
 
-    <div class="card">
-      <div class="card-header">
-        <div class="card-title">
-          <div class="card-icon cyan">&#9000;</div>
-          Backend
-        </div>
-      </div>
-      <div class="table-wrap" style="border:none;margin:0">
-        <table>
-          <thead>
-            <tr>
-              <th><span class="es">Comando</span><span class="en">Command</span></th>
-              <th><span class="es">Descripcion</span><span class="en">Description</span></th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td><code>npm run start:dev</code></td>
-              <td><span class="es">Inicia el backend en modo desarrollo (hot-reload)</span><span class="en">Start backend in development mode (hot-reload)</span></td>
-            </tr>
-            <tr>
-              <td><code>npm run test</code></td>
-              <td><span class="es">Ejecuta todos los tests con Jest</span><span class="en">Run all tests with Jest</span></td>
-            </tr>
-            <tr>
-              <td><code>npm run test:cov</code></td>
-              <td><span class="es">Tests con reporte de cobertura</span><span class="en">Tests with coverage report</span></td>
-            </tr>
-            <tr>
-              <td><code>npm run lint</code></td>
-              <td><span class="es">Analisis estatico con ESLint</span><span class="en">Static analysis with ESLint</span></td>
-            </tr>
-            <tr>
-              <td><code>npx prisma studio</code></td>
-              <td><span class="es">Abre Prisma Studio (explorador visual de BD)</span><span class="en">Open Prisma Studio (visual DB explorer)</span></td>
-            </tr>
-            <tr>
-              <td><code>npx prisma migrate dev</code></td>
-              <td><span class="es">Ejecuta migraciones pendientes</span><span class="en">Run pending migrations</span></td>
-            </tr>
-            <tr>
-              <td><code>npx prisma db seed</code></td>
-              <td><span class="es">Inserta datos semilla</span><span class="en">Insert seed data</span></td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
+    <!-- ═══ Seeded Systems ═══ -->
+    <h2>
+      <span class="es">Sistemas SAP Precargados (Seed)</span>
+      <span class="en">Pre-loaded SAP Systems (Seed)</span>
+    </h2>
+
+    <p>
+      <span class="es">El seed crea 12 sistemas SAP que representan un landscape corporativo real con diferentes productos, bases de datos y ambientes:</span>
+      <span class="en">The seed creates 12 SAP systems that represent a real corporate landscape with different products, databases and environments:</span>
+    </p>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>SID</th>
+            <th><span class="es">Producto SAP</span><span class="en">SAP Product</span></th>
+            <th>Stack</th>
+            <th>DB</th>
+            <th>Env</th>
+            <th><span class="es">Modo Despliegue</span><span class="en">Deployment</span></th>
+            <th>Health</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>EP1</code></td>
+            <td>S/4HANA 2023</td>
+            <td>ABAP</td>
+            <td>SAP HANA 2.0</td>
+            <td><span class="badge cyan">PRD</span></td>
+            <td>ON_PREMISE</td>
+            <td class="font-bold text-success">92</td>
+            <td><span class="badge success">healthy</span></td>
+          </tr>
+          <tr>
+            <td><code>EQ1</code></td>
+            <td>S/4HANA 2023</td>
+            <td>ABAP</td>
+            <td>SAP HANA 2.0</td>
+            <td><span class="badge violet">QAS</span></td>
+            <td>ON_PREMISE</td>
+            <td class="font-bold text-warning">78</td>
+            <td><span class="badge warning">warning</span></td>
+          </tr>
+          <tr>
+            <td><code>ED1</code></td>
+            <td>S/4HANA 2023</td>
+            <td>ABAP</td>
+            <td>SAP HANA 2.0</td>
+            <td><span class="badge neutral">DEV</span></td>
+            <td>ON_PREMISE</td>
+            <td class="font-bold text-success">85</td>
+            <td><span class="badge success">healthy</span></td>
+          </tr>
+          <tr>
+            <td><code>BW1</code></td>
+            <td>BW/4HANA</td>
+            <td>ABAP</td>
+            <td>SAP HANA 2.0</td>
+            <td><span class="badge cyan">PRD</span></td>
+            <td>ON_PREMISE</td>
+            <td class="font-bold text-success">88</td>
+            <td><span class="badge success">healthy</span></td>
+          </tr>
+          <tr>
+            <td><code>SM1</code></td>
+            <td>SolMan 7.2</td>
+            <td>DUAL_STACK</td>
+            <td>SAP HANA 2.0</td>
+            <td><span class="badge cyan">PRD</span></td>
+            <td>ON_PREMISE</td>
+            <td class="font-bold text-success">95</td>
+            <td><span class="badge success">healthy</span></td>
+          </tr>
+          <tr>
+            <td><code>PI1</code></td>
+            <td>SAP PO 7.5</td>
+            <td>JAVA</td>
+            <td>Oracle 19c</td>
+            <td><span class="badge cyan">PRD</span></td>
+            <td>ON_PREMISE</td>
+            <td class="font-bold text-danger">45</td>
+            <td><span class="badge danger">critical</span></td>
+          </tr>
+          <tr>
+            <td><code>RS1</code></td>
+            <td>S/4HANA Cloud</td>
+            <td>ABAP</td>
+            <td>SAP HANA Cloud</td>
+            <td><span class="badge cyan">PRD</span></td>
+            <td>RISE_MANAGED</td>
+            <td class="font-bold text-success">90</td>
+            <td><span class="badge success">healthy</span></td>
+          </tr>
+          <tr>
+            <td><code>GR1</code></td>
+            <td>SAP GRC 12.0</td>
+            <td>ABAP</td>
+            <td>MS SQL Server</td>
+            <td><span class="badge cyan">PRD</span></td>
+            <td>ON_PREMISE</td>
+            <td class="font-bold text-success">87</td>
+            <td><span class="badge success">healthy</span></td>
+          </tr>
+          <tr>
+            <td><code>CR1</code></td>
+            <td>SAP CRM 7.0</td>
+            <td>ABAP</td>
+            <td>Oracle 19c</td>
+            <td><span class="badge cyan">PRD</span></td>
+            <td>ON_PREMISE</td>
+            <td class="font-bold text-success">82</td>
+            <td><span class="badge success">healthy</span></td>
+          </tr>
+          <tr>
+            <td><code>EW1</code></td>
+            <td>SAP EWM 9.5</td>
+            <td>ABAP</td>
+            <td>IBM DB2 11.5</td>
+            <td><span class="badge cyan">PRD</span></td>
+            <td>ON_PREMISE</td>
+            <td class="font-bold text-warning">79</td>
+            <td><span class="badge warning">warning</span></td>
+          </tr>
+          <tr>
+            <td><code>MX1</code></td>
+            <td>SAP ECC 6.0</td>
+            <td>ABAP</td>
+            <td>SAP MaxDB 7.9</td>
+            <td><span class="badge cyan">PRD</span></td>
+            <td>ON_PREMISE</td>
+            <td class="font-bold text-warning">75</td>
+            <td><span class="badge warning">warning</span></td>
+          </tr>
+          <tr>
+            <td><code>SO1</code></td>
+            <td>SAP ECC 6.0</td>
+            <td>ABAP</td>
+            <td>Oracle 19c</td>
+            <td><span class="badge cyan">PRD</span></td>
+            <td>ON_PREMISE</td>
+            <td class="font-bold text-warning">73</td>
+            <td><span class="badge warning">warning</span></td>
+          </tr>
+        </tbody>
+      </table>
     </div>
 
-    <div class="card">
-      <div class="card-header">
-        <div class="card-title">
-          <div class="card-icon violet">&#127912;</div>
-          Frontend
-        </div>
-      </div>
-      <div class="table-wrap" style="border:none;margin:0">
-        <table>
-          <thead>
-            <tr>
-              <th><span class="es">Comando</span><span class="en">Command</span></th>
-              <th><span class="es">Descripcion</span><span class="en">Description</span></th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td><code>npm run dev</code></td>
-              <td><span class="es">Inicia Vite dev server (puerto 5173)</span><span class="en">Start Vite dev server (port 5173)</span></td>
-            </tr>
-            <tr>
-              <td><code>npm run build</code></td>
-              <td><span class="es">Build de produccion</span><span class="en">Production build</span></td>
-            </tr>
-            <tr>
-              <td><code>npm run test</code></td>
-              <td><span class="es">Ejecuta tests con Vitest</span><span class="en">Run tests with Vitest</span></td>
-            </tr>
-            <tr>
-              <td><code>npm run lint</code></td>
-              <td><span class="es">Analisis estatico con ESLint</span><span class="en">Static analysis with ESLint</span></td>
-            </tr>
-            <tr>
-              <td><code>npm run preview</code></td>
-              <td><span class="es">Vista previa del build de produccion</span><span class="en">Preview production build</span></td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-
-    <div class="card">
-      <div class="card-header">
-        <div class="card-title">
-          <div class="card-icon success">&#128051;</div>
-          Docker
-        </div>
-      </div>
-      <div class="table-wrap" style="border:none;margin:0">
-        <table>
-          <thead>
-            <tr>
-              <th><span class="es">Comando</span><span class="en">Command</span></th>
-              <th><span class="es">Descripcion</span><span class="en">Description</span></th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td><code>docker compose up -d</code></td>
-              <td><span class="es">Inicia PostgreSQL + Redis en segundo plano</span><span class="en">Start PostgreSQL + Redis in background</span></td>
-            </tr>
-            <tr>
-              <td><code>docker compose down</code></td>
-              <td><span class="es">Detiene y elimina los contenedores</span><span class="en">Stop and remove containers</span></td>
-            </tr>
-            <tr>
-              <td><code>docker compose logs -f</code></td>
-              <td><span class="es">Muestra logs en tiempo real</span><span class="en">Show real-time logs</span></td>
-            </tr>
-            <tr>
-              <td><code>docker ps</code></td>
-              <td><span class="es">Lista contenedores activos</span><span class="en">List active containers</span></td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-
-    <!-- Port Reference -->
-    <h2><span class="es">Referencia de Puertos</span><span class="en">Port Reference</span></h2>
-
-    <div class="kpi-grid">
-      <div class="kpi-card">
-        <div class="card-icon cyan">&#128421;</div>
-        <div>
-          <div class="kpi-value" style="font-size:18px">:3001</div>
-          <div class="kpi-label">Backend API (NestJS)</div>
-        </div>
-      </div>
-      <div class="kpi-card">
-        <div class="card-icon violet">&#127760;</div>
-        <div>
-          <div class="kpi-value" style="font-size:18px">:5173</div>
-          <div class="kpi-label">Frontend (Vite)</div>
-        </div>
-      </div>
-      <div class="kpi-card">
-        <div class="card-icon success">&#128451;</div>
-        <div>
-          <div class="kpi-value" style="font-size:18px">:5432</div>
-          <div class="kpi-label">PostgreSQL 16</div>
-        </div>
-      </div>
-      <div class="kpi-card">
-        <div class="card-icon danger">&#9889;</div>
-        <div>
-          <div class="kpi-value" style="font-size:18px">:6379</div>
-          <div class="kpi-label">Redis 7</div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Troubleshooting -->
-    <h2><span class="es">Solucion de Problemas</span><span class="en">Troubleshooting</span></h2>
-
-    <div class="card">
-      <h4><span class="es">El backend no conecta a la base de datos</span><span class="en">Backend cannot connect to database</span></h4>
-      <ul class="feature-list">
-        <li><span class="es">Verifica que Docker esta corriendo: <code>docker ps</code></span><span class="en">Verify Docker is running: <code>docker ps</code></span></li>
-        <li><span class="es">Confirma que <code>DATABASE_URL</code> en <code>.env</code> apunta a <code>localhost:5432</code></span><span class="en">Confirm <code>DATABASE_URL</code> in <code>.env</code> points to <code>localhost:5432</code></span></li>
-        <li><span class="es">Reinicia los contenedores: <code>docker compose down && docker compose up -d</code></span><span class="en">Restart containers: <code>docker compose down && docker compose up -d</code></span></li>
-      </ul>
-    </div>
-
-    <div class="card">
-      <h4><span class="es">Error de migraciones de Prisma</span><span class="en">Prisma migration errors</span></h4>
-      <ul class="feature-list">
-        <li><span class="es">Reset completo: <code>npx prisma migrate reset</code> (borra datos existentes)</span><span class="en">Full reset: <code>npx prisma migrate reset</code> (deletes existing data)</span></li>
-        <li><span class="es">Regenerar el cliente: <code>npx prisma generate</code></span><span class="en">Regenerate client: <code>npx prisma generate</code></span></li>
-      </ul>
-    </div>
-
-    <div class="card">
-      <h4><span class="es">El frontend no conecta al backend</span><span class="en">Frontend cannot connect to backend</span></h4>
-      <ul class="feature-list">
-        <li><span class="es">Verifica que el backend esta corriendo en el puerto 3001</span><span class="en">Verify the backend is running on port 3001</span></li>
-        <li><span class="es">Confirma <code>VITE_API_URL=http://localhost:3001</code> en el <code>.env</code> del frontend</span><span class="en">Confirm <code>VITE_API_URL=http://localhost:3001</code> in the frontend <code>.env</code></span></li>
-        <li><span class="es">Asegurate de que <code>VITE_USE_MOCKS=false</code> para usar el backend real</span><span class="en">Make sure <code>VITE_USE_MOCKS=false</code> to use the real backend</span></li>
-      </ul>
-    </div>
-
-    <div class="callout info mt-2">
-      <div class="callout-icon">&#128218;</div>
+    <div class="callout info">
+      <div class="callout-icon">&#128161;</div>
       <div>
-        <span class="es">Para mas detalles sobre la arquitectura del backend, consulta la pagina de <a href="dashboard.html">Dashboard</a> o la referencia de API.</span>
-        <span class="en">For more details about the backend architecture, see the <a href="dashboard.html">Dashboard</a> page or the API reference.</span>
+        <span class="es"><strong>Nota:</strong> El sistema RS1 (RISE with SAP) tiene capacidades restringidas: no soporta metricas de host, metricas de OS, descubrimiento de topologia ni ejecucion de runbooks. Esto simula las limitaciones reales de RISE managed.</span>
+        <span class="en"><strong>Note:</strong> System RS1 (RISE with SAP) has restricted capabilities: it does not support host metrics, OS metrics, topology discovery or runbook execution. This simulates real RISE managed limitations.</span>
+      </div>
+    </div>
+
+    <!-- ═══ Environment Variables ═══ -->
+    <h2>
+      <span class="es">Variables de Entorno</span>
+      <span class="en">Environment Variables</span>
+    </h2>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th><span class="es">Variable</span><span class="en">Variable</span></th>
+            <th><span class="es">Valor por defecto</span><span class="en">Default value</span></th>
+            <th><span class="es">Descripcion</span><span class="en">Description</span></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>DATABASE_URL</code></td>
+            <td><code>postgresql://postgres:postgres@localhost:5432/sap_spektra</code></td>
+            <td><span class="es">URL de conexion a PostgreSQL</span><span class="en">PostgreSQL connection URL</span></td>
+          </tr>
+          <tr>
+            <td><code>REDIS_URL</code></td>
+            <td><code>redis://localhost:6379</code></td>
+            <td><span class="es">URL de conexion a Redis</span><span class="en">Redis connection URL</span></td>
+          </tr>
+          <tr>
+            <td><code>JWT_SECRET</code></td>
+            <td><code>change-me-in-production</code></td>
+            <td><span class="es">Clave secreta para firmar tokens JWT</span><span class="en">Secret key for signing JWT tokens</span></td>
+          </tr>
+          <tr>
+            <td><code>JWT_EXPIRY</code></td>
+            <td><code>24h</code></td>
+            <td><span class="es">Duracion del token JWT</span><span class="en">JWT token duration</span></td>
+          </tr>
+          <tr>
+            <td><code>RUNTIME_MODE</code></td>
+            <td><code>LOCAL_SIMULATED</code></td>
+            <td><span class="es">Modo: LOCAL_SIMULATED o AWS_REAL</span><span class="en">Mode: LOCAL_SIMULATED or AWS_REAL</span></td>
+          </tr>
+          <tr>
+            <td><code>PORT</code></td>
+            <td><code>3001</code></td>
+            <td><span class="es">Puerto de la API</span><span class="en">API port</span></td>
+          </tr>
+          <tr>
+            <td><code>CORS_ORIGIN</code></td>
+            <td><code>http://localhost:5173</code></td>
+            <td><span class="es">Origen permitido para CORS</span><span class="en">Allowed origin for CORS</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- ═══ Troubleshooting ═══ -->
+    <h2>Troubleshooting</h2>
+
+    <h3>
+      <span class="es">PostgreSQL no inicia (archivo PID)</span>
+      <span class="en">PostgreSQL won't start (PID file)</span>
+    </h3>
+    <div class="callout danger">
+      <div class="callout-icon">&#10060;</div>
+      <div>
+        <span class="es"><strong>Error:</strong> <code>FATAL: lock file "postmaster.pid" already exists</code></span>
+        <span class="en"><strong>Error:</strong> <code>FATAL: lock file "postmaster.pid" already exists</code></span>
+      </div>
+    </div>
+    <p>
+      <span class="es"><strong>Solucion:</strong> Elimina el archivo PID huerfano y reinicia:</span>
+      <span class="en"><strong>Solution:</strong> Remove the orphan PID file and restart:</span>
+    </p>
+<pre><code># macOS
+rm /usr/local/var/postgresql@16/postmaster.pid
+brew services restart postgresql@16
+
+# Linux
+sudo rm /var/lib/postgresql/16/main/postmaster.pid
+sudo systemctl restart postgresql</code></pre>
+
+    <h3>
+      <span class="es">Puerto 3001 o 5173 en uso</span>
+      <span class="en">Port 3001 or 5173 in use</span>
+    </h3>
+    <div class="callout danger">
+      <div class="callout-icon">&#10060;</div>
+      <div>
+        <span class="es"><strong>Error:</strong> <code>EADDRINUSE: address already in use :::3001</code></span>
+        <span class="en"><strong>Error:</strong> <code>EADDRINUSE: address already in use :::3001</code></span>
+      </div>
+    </div>
+    <p>
+      <span class="es"><strong>Solucion:</strong> Identifica y elimina el proceso que usa el puerto:</span>
+      <span class="en"><strong>Solution:</strong> Identify and kill the process using the port:</span>
+    </p>
+<pre><code># Encontrar el proceso
+lsof -i :3001
+# Terminar el proceso
+kill -9 &lt;PID&gt;</code></pre>
+
+    <h3>
+      <span class="es">Error de permisos en Prisma</span>
+      <span class="en">Prisma permission error</span>
+    </h3>
+    <div class="callout danger">
+      <div class="callout-icon">&#10060;</div>
+      <div>
+        <span class="es"><strong>Error:</strong> <code>PrismaClientInitializationError: Can't reach database server</code></span>
+        <span class="en"><strong>Error:</strong> <code>PrismaClientInitializationError: Can't reach database server</code></span>
+      </div>
+    </div>
+    <p>
+      <span class="es"><strong>Solucion:</strong> Verifica que PostgreSQL esta corriendo y que la URL en <code>.env</code> es correcta. Si usas Docker, asegurate de que el contenedor esta levantado:</span>
+      <span class="en"><strong>Solution:</strong> Verify that PostgreSQL is running and the URL in <code>.env</code> is correct. If using Docker, ensure the container is up:</span>
+    </p>
+<pre><code>docker-compose ps
+docker-compose logs postgres</code></pre>
+
+    <h3>
+      <span class="es">Redis no se conecta</span>
+      <span class="en">Redis won't connect</span>
+    </h3>
+    <p>
+      <span class="es"><strong>Solucion:</strong> La aplicacion funciona sin Redis (modo degradado sin cache). Para verificar Redis:</span>
+      <span class="en"><strong>Solution:</strong> The application works without Redis (degraded mode without cache). To verify Redis:</span>
+    </p>
+<pre><code>redis-cli ping
+# Debe responder: PONG</code></pre>
+
+    <h3>
+      <span class="es">El seed falla o no crea datos</span>
+      <span class="en">Seed fails or creates no data</span>
+    </h3>
+    <p>
+      <span class="es"><strong>Solucion:</strong> Asegurate de haber ejecutado las migraciones antes del seed:</span>
+      <span class="en"><strong>Solution:</strong> Make sure you ran migrations before the seed:</span>
+    </p>
+<pre><code>cd apps/api
+npx prisma migrate dev
+npm run seed</code></pre>
+
+    <div class="callout success">
+      <div class="callout-icon">&#9989;</div>
+      <div>
+        <span class="es"><strong>Verificacion:</strong> Despues de completar la instalacion, navega a <code>http://localhost:3001/health</code> para verificar que la API esta saludable. Deberias ver <code>{"status":"ok"}</code>.</span>
+        <span class="en"><strong>Verification:</strong> After completing installation, navigate to <code>http://localhost:3001/health</code> to verify the API is healthy. You should see <code>{"status":"ok"}</code>.</span>
       </div>
     </div>
 

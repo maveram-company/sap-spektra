@@ -2,510 +2,389 @@
 <html lang="es" data-theme="dark" data-lang="es">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Jobs SM37 - SAP Spektra Docs</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <title>Jobs (SM37) — SAP Spektra Docs</title>
   <link rel="stylesheet" href="theme.css">
   <script src="theme-toggle.js"></script>
   <script src="lang-toggle.js"></script>
-  <style>
-    .filter-bar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px;align-items:center}
-    .filter-chip{padding:5px 14px;border-radius:20px;font-size:12px;font-weight:600;border:1px solid var(--brd);background:var(--card-bg);color:var(--txt2);cursor:pointer;transition:all .15s}
-    .filter-chip:hover,.filter-chip.active{border-color:var(--cyan);color:var(--cyan);background:var(--cyan-dim)}
-    .filter-label{font-size:11px;font-weight:600;color:var(--txt3);text-transform:uppercase;letter-spacing:.08em}
-    .class-badge{display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;border-radius:6px;font-size:12px;font-weight:700}
-    .class-badge.a{background:rgba(239,68,68,0.12);color:var(--danger)}
-    .class-badge.b{background:rgba(245,158,11,0.12);color:var(--warning)}
-    .class-badge.c{background:rgba(34,197,94,0.12);color:var(--success)}
-    .status-dot{display:inline-flex;align-items:center;gap:5px;font-size:12px;font-weight:600}
-    .status-dot::before{content:'';width:8px;height:8px;border-radius:50%}
-    .status-dot.running::before{background:var(--cyan);animation:pulse 1.5s infinite}
-    .status-dot.scheduled::before{background:var(--warning)}
-    .status-dot.finished::before{background:var(--success)}
-    .status-dot.failed::before{background:var(--danger)}
-    .status-dot.canceled::before{background:var(--txt3)}
-    @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
-    .json-block{background:var(--code-bg);border:1px solid var(--code-border);border-radius:var(--radius);padding:14px;margin:8px 0;font-family:'SF Mono',Monaco,Consolas,monospace;font-size:12px;color:var(--txt2);overflow-x:auto;white-space:pre}
-    .detail-grid{display:grid;grid-template-columns:140px 1fr;gap:8px 16px;font-size:13px}
-    .detail-grid dt{color:var(--txt3);font-weight:600}
-    .detail-grid dd{color:var(--txt1)}
-    .error-box{background:rgba(239,68,68,0.06);border:1px solid rgba(239,68,68,0.2);border-radius:var(--radius);padding:14px;margin:12px 0;font-size:13px;color:var(--danger)}
-    .error-box code{color:var(--danger);background:rgba(239,68,68,0.1);border-color:rgba(239,68,68,0.2)}
-  </style>
 </head>
 <body>
 <div class="docs-wrapper">
-
-  <!-- ══════════ Sidebar ══════════ -->
-  <nav class="docs-sidebar" aria-label="Documentation navigation">
+  <nav class="docs-sidebar">
     <div class="sidebar-brand">
-      <div class="logo">S</div>
+      <div class="logo">&#9889;</div>
       <div class="brand-text">
         <div class="brand-name">SAP Spektra</div>
         <div class="brand-sub">Documentacion v2.0</div>
       </div>
     </div>
-
     <div class="sidebar-section">
-      <div class="sidebar-section-label"><span class="es">Inicio</span><span class="en">Home</span></div>
-      <a class="sidebar-link" href="index.html"><span class="es">Portal</span><span class="en">Portal</span></a>
-      <a class="sidebar-link" href="getting-started.html"><span class="es">Primeros Pasos</span><span class="en">Getting Started</span></a>
+      <div class="sidebar-section-label">Inicio</div>
+      <a href="index.html" class="sidebar-link">Portal</a>
+      <a href="getting-started.html" class="sidebar-link">Primeros Pasos</a>
     </div>
-
+    <div class="sidebar-section">
+      <div class="sidebar-section-label">Architecture</div>
+      <a href="architecture.html" class="sidebar-link">Arquitectura</a>
+      <a href="domain-model.html" class="sidebar-link">Modelo de Datos</a>
+      <a href="api-reference.html" class="sidebar-link">API Reference</a>
+    </div>
     <div class="sidebar-section">
       <div class="sidebar-section-label">Command</div>
-      <a class="sidebar-link" href="dashboard.html">Dashboard</a>
-      <a class="sidebar-link" href="landscape.html">Landscape</a>
-      <a class="sidebar-link" href="alerts.html"><span class="es">Alertas</span><span class="en">Alerts</span></a>
+      <a href="dashboard.html" class="sidebar-link">Dashboard</a>
+      <a href="landscape.html" class="sidebar-link">Landscape</a>
+      <a href="alerts.html" class="sidebar-link">Alertas</a>
     </div>
-
     <div class="sidebar-section">
       <div class="sidebar-section-label">Monitor</div>
-      <a class="sidebar-link" href="systems.html"><span class="es">Sistemas</span><span class="en">Systems</span></a>
-      <a class="sidebar-link" href="connectors.html"><span class="es">Conectores</span><span class="en">Connectors</span></a>
-      <a class="sidebar-link" href="events.html"><span class="es">Eventos</span><span class="en">Events</span></a>
+      <a href="systems.html" class="sidebar-link">Sistemas</a>
+      <a href="connectors.html" class="sidebar-link">Conectores</a>
+      <a href="events.html" class="sidebar-link">Eventos</a>
     </div>
-
     <div class="sidebar-section">
       <div class="sidebar-section-label">Intelligence</div>
-      <a class="sidebar-link" href="ai-analysis.html"><span class="es">Analisis IA</span><span class="en">AI Analysis</span></a>
-      <a class="sidebar-link" href="analytics.html">Analytics</a>
-      <a class="sidebar-link" href="reports.html"><span class="es">Reportes</span><span class="en">Reports</span></a>
-      <a class="sidebar-link" href="comparison.html"><span class="es">Comparacion</span><span class="en">Comparison</span></a>
+      <a href="ai-analysis.html" class="sidebar-link">Analisis IA</a>
+      <a href="analytics.html" class="sidebar-link">Analytics</a>
+      <a href="reports.html" class="sidebar-link">Reportes</a>
+      <a href="comparison.html" class="sidebar-link">Comparacion</a>
     </div>
-
     <div class="sidebar-section">
       <div class="sidebar-section-label">Operations</div>
-      <a class="sidebar-link" href="runbooks.html">Runbooks</a>
-      <a class="sidebar-link" href="approvals.html"><span class="es">Aprobaciones</span><span class="en">Approvals</span></a>
-      <a class="sidebar-link" href="operations.html"><span class="es">Operaciones</span><span class="en">Operations</span></a>
-      <a class="sidebar-link active" href="jobs.html">Jobs SM37</a>
-      <a class="sidebar-link" href="transports.html"><span class="es">Transportes</span><span class="en">Transports</span></a>
-      <a class="sidebar-link" href="sla.html">SLA</a>
-      <a class="sidebar-link" href="ha-control.html">HA Control</a>
-      <a class="sidebar-link" href="certificates.html"><span class="es">Certificados</span><span class="en">Certificates</span></a>
+      <a href="runbooks.html" class="sidebar-link">Runbooks</a>
+      <a href="approvals.html" class="sidebar-link">Aprobaciones</a>
+      <a href="operations.html" class="sidebar-link">Operaciones</a>
+      <a href="jobs.html" class="sidebar-link active">Jobs (SM37)</a>
+      <a href="transports.html" class="sidebar-link">Transportes</a>
+      <a href="sla.html" class="sidebar-link">SLA</a>
+      <a href="ha-control.html" class="sidebar-link">HA Control</a>
+      <a href="certificates.html" class="sidebar-link">Certificados</a>
     </div>
-
     <div class="sidebar-section">
       <div class="sidebar-section-label">Admin</div>
-      <a class="sidebar-link" href="admin.html"><span class="es">Gestion</span><span class="en">Management</span></a>
-      <a class="sidebar-link" href="settings.html"><span class="es">Configuracion</span><span class="en">Settings</span></a>
-      <a class="sidebar-link" href="connect-system.html"><span class="es">Conectar Sistema</span><span class="en">Connect System</span></a>
+      <a href="admin.html" class="sidebar-link">Gestion</a>
+      <a href="settings.html" class="sidebar-link">Configuracion</a>
+      <a href="connect-system.html" class="sidebar-link">Conectar Sistema</a>
     </div>
   </nav>
 
-  <!-- ══════════ Main Content ══════════ -->
   <main class="docs-main">
     <div class="breadcrumb">
-      <a href="index.html">Docs</a>
-      <span class="sep">/</span>
-      <span>Operations</span>
-      <span class="sep">/</span>
-      <span class="text-primary">Jobs SM37</span>
+      <a href="index.html">Docs</a> <span class="sep">/</span>
+      <span class="es">Operations</span><span class="en">Operations</span> <span class="sep">/</span>
+      <span class="es">Jobs (SM37)</span><span class="en">Jobs (SM37)</span>
     </div>
 
     <div class="page-header">
-      <h1>
-        <span class="es">SAP Background Jobs (SM37)</span>
-        <span class="en">SAP Background Jobs (SM37)</span>
-      </h1>
-      <div class="subtitle">
-        <span class="es">Monitoreo centralizado de background jobs de todos los sistemas SAP conectados. Vista consolidada equivalente a la transaccion SM37 con metricas en tiempo real.</span>
-        <span class="en">Centralized monitoring of background jobs across all connected SAP systems. Consolidated view equivalent to transaction SM37 with real-time metrics.</span>
-      </div>
+      <h1><span class="es">Jobs de Background (SM37)</span><span class="en">Background Jobs (SM37)</span></h1>
+      <p class="subtitle">
+        <span class="es">Monitoreo centralizado de jobs de background SAP equivalente a la transaccion SM37 en todos los sistemas del landscape</span>
+        <span class="en">Centralized monitoring of SAP background jobs equivalent to SM37 transaction across all landscape systems</span>
+      </p>
     </div>
 
-    <!-- KPI Grid -->
+    <!-- KPIs -->
     <div class="kpi-grid">
       <div class="kpi-card">
-        <div class="card-icon cyan">&#128203;</div>
+        <div class="card-icon cyan">&#9881;</div>
         <div>
-          <div class="kpi-value">1,247</div>
-          <div class="kpi-label"><span class="es">Jobs Totales (24h)</span><span class="en">Total Jobs (24h)</span></div>
+          <div class="kpi-value">SM37</div>
+          <div class="kpi-label"><span class="es">Transaccion SAP</span><span class="en">SAP Transaction</span></div>
         </div>
       </div>
       <div class="kpi-card">
-        <div class="card-icon success">&#9889;</div>
+        <div class="card-icon success">&#128202;</div>
         <div>
-          <div class="kpi-value">23</div>
-          <div class="kpi-label"><span class="es">Activos Ahora</span><span class="en">Active Now</span></div>
+          <div class="kpi-value">3</div>
+          <div class="kpi-label"><span class="es">Clases de Job</span><span class="en">Job Classes</span></div>
         </div>
       </div>
       <div class="kpi-card">
-        <div class="card-icon danger">&#9888;</div>
+        <div class="card-icon violet">&#128338;</div>
         <div>
-          <div class="kpi-value">18</div>
-          <div class="kpi-label"><span class="es">Fallidos (24h)</span><span class="en">Failed (24h)</span></div>
+          <div class="kpi-value">5</div>
+          <div class="kpi-label"><span class="es">Estados</span><span class="en">Statuses</span></div>
         </div>
       </div>
       <div class="kpi-card">
-        <div class="card-icon violet">&#128337;</div>
+        <div class="card-icon warning">&#128200;</div>
         <div>
-          <div class="kpi-value">4m 32s</div>
-          <div class="kpi-label"><span class="es">Duracion Promedio</span><span class="en">Avg Duration</span></div>
+          <div class="kpi-value">Real-time</div>
+          <div class="kpi-label"><span class="es">Monitoreo</span><span class="en">Monitoring</span></div>
         </div>
       </div>
     </div>
 
-    <!-- Job Class Legend -->
-    <h2><span class="es">Clases de Job SAP</span><span class="en">SAP Job Classes</span></h2>
+    <!-- Overview -->
+    <h2><span class="es">Descripcion General</span><span class="en">Overview</span></h2>
+    <div class="card">
+      <p>
+        <span class="es">Spektra proporciona una vista centralizada de todos los jobs de background de SAP (equivalente a la transaccion <strong>SM37</strong>) en todos los sistemas del landscape. Esto elimina la necesidad de conectarse a cada sistema individualmente para monitorear jobs criticos.</span>
+        <span class="en">Spektra provides a centralized view of all SAP background jobs (equivalent to the <strong>SM37</strong> transaction) across all landscape systems. This eliminates the need to connect to each system individually to monitor critical jobs.</span>
+      </p>
+      <div class="callout info">
+        <div class="callout-icon">&#8505;</div>
+        <div>
+          <span class="es"><strong>Fuente de datos:</strong> Los datos de jobs se recopilan via el agente Spektra que ejecuta <code>RFC_READ_TABLE</code> sobre la tabla <code>TBTCO</code> (job overview) y <code>TBTCP</code> (job steps) en cada sistema SAP. La recoleccion se realiza cada 60 segundos.</span>
+          <span class="en"><strong>Data source:</strong> Job data is collected via the Spektra agent executing <code>RFC_READ_TABLE</code> on the <code>TBTCO</code> table (job overview) and <code>TBTCP</code> (job steps) in each SAP system. Collection happens every 60 seconds.</span>
+        </div>
+      </div>
+    </div>
 
+    <!-- Job Classes -->
+    <h2><span class="es">Clases de Job</span><span class="en">Job Classes</span></h2>
+    <p>
+      <span class="es">SAP clasifica los jobs en tres clases de prioridad que determinan el orden de ejecucion cuando los work processes de background (BTC) estan limitados.</span>
+      <span class="en">SAP classifies jobs into three priority classes that determine execution order when background work processes (BTC) are limited.</span>
+    </p>
     <div class="grid-3">
       <div class="card">
         <div class="card-header">
-          <div class="card-title"><span class="class-badge a">A</span> <span class="es">Clase A &mdash; Alta Prioridad</span><span class="en">Class A &mdash; High Priority</span></div>
+          <div class="card-title"><div class="card-icon danger">A</div> <span class="es">Clase A — Critica</span><span class="en">Class A — Critical</span></div>
         </div>
-        <p class="text-sm text-muted">
-          <span class="es">Jobs criticos que deben ejecutarse en su ventana programada. Tienen prioridad sobre clases B y C en la asignacion de work processes.</span>
-          <span class="en">Critical jobs that must run in their scheduled window. They have priority over class B and C in work process allocation.</span>
+        <p>
+          <span class="es">Maxima prioridad. Se ejecuta en el primer work process disponible, desplazando jobs de menor prioridad si es necesario. Usar solo para jobs esenciales de negocio.</span>
+          <span class="en">Highest priority. Runs on the first available work process, displacing lower-priority jobs if necessary. Use only for business-essential jobs.</span>
+        </p>
+        <p class="text-muted text-sm">
+          <span class="es">Ejemplos: RDDIMPDP (transport import), RSBTCDEL (job log cleanup), BW process chains criticas</span>
+          <span class="en">Examples: RDDIMPDP (transport import), RSBTCDEL (job log cleanup), critical BW process chains</span>
         </p>
       </div>
       <div class="card">
         <div class="card-header">
-          <div class="card-title"><span class="class-badge b">B</span> <span class="es">Clase B &mdash; Prioridad Media</span><span class="en">Class B &mdash; Medium Priority</span></div>
+          <div class="card-title"><div class="card-icon warning">B</div> <span class="es">Clase B — Normal</span><span class="en">Class B — Normal</span></div>
         </div>
-        <p class="text-sm text-muted">
-          <span class="es">Jobs de negocio regulares. Se ejecutan cuando hay work processes disponibles despues de los jobs clase A.</span>
-          <span class="en">Regular business jobs. Run when work processes are available after class A jobs.</span>
+        <p>
+          <span class="es">Prioridad estandar para la mayoria de jobs planificados. Se ejecuta cuando hay work processes disponibles despues de los jobs clase A.</span>
+          <span class="en">Standard priority for most scheduled jobs. Runs when work processes are available after class A jobs.</span>
+        </p>
+        <p class="text-muted text-sm">
+          <span class="es">Ejemplos: RSPO0041 (spool cleanup), informes financieros nocturnos, extractores BW</span>
+          <span class="en">Examples: RSPO0041 (spool cleanup), nightly financial reports, BW extractors</span>
         </p>
       </div>
       <div class="card">
         <div class="card-header">
-          <div class="card-title"><span class="class-badge c">C</span> <span class="es">Clase C &mdash; Baja Prioridad</span><span class="en">Class C &mdash; Low Priority</span></div>
+          <div class="card-title"><div class="card-icon neutral">C</div> <span class="es">Clase C — Baja</span><span class="en">Class C — Low</span></div>
         </div>
-        <p class="text-sm text-muted">
-          <span class="es">Jobs de baja prioridad (reportes, housekeeping). Se ejecutan con los work processes sobrantes.</span>
-          <span class="en">Low priority jobs (reports, housekeeping). Run with remaining work processes.</span>
+        <p>
+          <span class="es">Prioridad mas baja. Se ejecuta solo cuando hay recursos libres. Ideal para jobs de housekeeping y reportes no urgentes.</span>
+          <span class="en">Lowest priority. Runs only when there are free resources. Ideal for housekeeping jobs and non-urgent reports.</span>
+        </p>
+        <p class="text-muted text-sm">
+          <span class="es">Ejemplos: RSBDCREO (batch input reorganization), reportes estadisticos, archivado de datos</span>
+          <span class="en">Examples: RSBDCREO (batch input reorganization), statistical reports, data archiving</span>
         </p>
       </div>
     </div>
 
-    <!-- Filters -->
-    <h2><span class="es">Lista de Jobs</span><span class="en">Job List</span></h2>
-
-    <div class="filter-bar">
-      <span class="filter-label"><span class="es">Sistema:</span><span class="en">System:</span></span>
-      <span class="filter-chip active"><span class="es">Todos</span><span class="en">All</span></span>
-      <span class="filter-chip">EP1</span>
-      <span class="filter-chip">QP1</span>
-      <span class="filter-chip">DP1</span>
-      <span class="filter-chip">FP1</span>
-      <span class="filter-chip">HP1</span>
-    </div>
-
-    <div class="filter-bar">
-      <span class="filter-label">Status:</span>
-      <span class="filter-chip active"><span class="es">Todos</span><span class="en">All</span></span>
-      <span class="filter-chip">running</span>
-      <span class="filter-chip">scheduled</span>
-      <span class="filter-chip">finished</span>
-      <span class="filter-chip">failed</span>
-      <span class="filter-chip">canceled</span>
-    </div>
-
-    <!-- Jobs Table -->
+    <!-- Status Types -->
+    <h2><span class="es">Tipos de Estado</span><span class="en">Status Types</span></h2>
     <div class="table-wrap">
       <table>
         <thead>
           <tr>
-            <th>Job Name</th>
-            <th>SID</th>
-            <th><span class="es">Clase</span><span class="en">Class</span></th>
-            <th>Status</th>
-            <th><span class="es">Inicio</span><span class="en">Started</span></th>
-            <th><span class="es">Duracion</span><span class="en">Duration</span></th>
-            <th>Client</th>
-            <th>User</th>
+            <th><span class="es">Estado</span><span class="en">Status</span></th>
+            <th><span class="es">Icono SM37</span><span class="en">SM37 Icon</span></th>
+            <th><span class="es">Descripcion</span><span class="en">Description</span></th>
+            <th><span class="es">Accion en Spektra</span><span class="en">Spektra Action</span></th>
           </tr>
         </thead>
         <tbody>
           <tr>
-            <td class="font-semibold">SAP_COLLECTOR_FOR_PERFMONITOR</td>
-            <td><code>EP1</code></td>
-            <td><span class="class-badge a">A</span></td>
-            <td><span class="status-dot running">running</span></td>
-            <td class="text-muted">2026-03-12 10:00:00</td>
-            <td>2m 14s</td>
-            <td>800</td>
-            <td>SAPSYS</td>
+            <td><span class="badge cyan">running</span></td>
+            <td class="text-cyan font-bold">&#9654;</td>
+            <td><span class="es">Job en ejecucion activa. Consume un work process de background (BTC).</span><span class="en">Job actively running. Consumes a background work process (BTC).</span></td>
+            <td><span class="es">Monitorear duracion vs. baseline</span><span class="en">Monitor duration vs. baseline</span></td>
           </tr>
           <tr>
-            <td class="font-semibold">RSSNAPDL_DEL_SNAPSHOT</td>
-            <td><code>EP1</code></td>
-            <td><span class="class-badge b">B</span></td>
-            <td><span class="status-dot finished">finished</span></td>
-            <td class="text-muted">2026-03-12 09:30:00</td>
-            <td>5m 42s</td>
-            <td>800</td>
-            <td>BATCHUSR</td>
+            <td><span class="badge warning">scheduled</span></td>
+            <td class="text-warning font-bold">&#128338;</td>
+            <td><span class="es">Job programado pero aun no iniciado. Esperando su horario de ejecucion o un work process libre.</span><span class="en">Job scheduled but not yet started. Waiting for its execution time or a free work process.</span></td>
+            <td><span class="es">Verificar programacion correcta</span><span class="en">Verify correct scheduling</span></td>
           </tr>
           <tr>
-            <td class="font-semibold">RSBTCDEL2</td>
-            <td><code>QP1</code></td>
-            <td><span class="class-badge c">C</span></td>
-            <td><span class="status-dot finished">finished</span></td>
-            <td class="text-muted">2026-03-12 06:00:00</td>
-            <td>12m 08s</td>
-            <td>001</td>
-            <td>BATCHUSR</td>
+            <td><span class="badge success">finished</span></td>
+            <td class="text-success font-bold">&#10003;</td>
+            <td><span class="es">Job completado exitosamente. El log de ejecucion esta disponible.</span><span class="en">Job completed successfully. Execution log is available.</span></td>
+            <td><span class="es">Registrar en analytics</span><span class="en">Record in analytics</span></td>
           </tr>
           <tr>
-            <td class="font-semibold">MCSAPINT_BATCH_COLLECT</td>
-            <td><code>EP1</code></td>
-            <td><span class="class-badge a">A</span></td>
-            <td><span class="status-dot running">running</span></td>
-            <td class="text-muted">2026-03-12 10:05:00</td>
-            <td>0m 47s</td>
-            <td>800</td>
-            <td>SAPSYS</td>
+            <td><span class="badge danger">failed</span></td>
+            <td class="text-danger font-bold">&#10007;</td>
+            <td><span class="es">Job fallido. Un error (dump, timeout, autorizacion) impidio la ejecucion completa.</span><span class="en">Job failed. An error (dump, timeout, authorization) prevented complete execution.</span></td>
+            <td><span class="es">Generar alerta, sugerir runbook</span><span class="en">Generate alert, suggest runbook</span></td>
           </tr>
           <tr>
-            <td class="font-semibold">SAPMSSY2_BATCH</td>
-            <td><code>FP1</code></td>
-            <td><span class="class-badge b">B</span></td>
-            <td><span class="status-dot failed">failed</span></td>
-            <td class="text-muted">2026-03-12 08:00:00</td>
-            <td>0m 03s</td>
-            <td>100</td>
-            <td>BATCHUSR</td>
-          </tr>
-          <tr>
-            <td class="font-semibold">BI_PROCESS_TRIGGER</td>
-            <td><code>HP1</code></td>
-            <td><span class="class-badge a">A</span></td>
-            <td><span class="status-dot finished">finished</span></td>
-            <td class="text-muted">2026-03-12 07:00:00</td>
-            <td>18m 33s</td>
-            <td>001</td>
-            <td>BI_USER</td>
-          </tr>
-          <tr>
-            <td class="font-semibold">RSARCHIVFILE_DELETE</td>
-            <td><code>DP1</code></td>
-            <td><span class="class-badge c">C</span></td>
-            <td><span class="status-dot scheduled">scheduled</span></td>
-            <td class="text-muted">2026-03-12 22:00:00</td>
-            <td>&mdash;</td>
-            <td>001</td>
-            <td>BATCHUSR</td>
-          </tr>
-          <tr>
-            <td class="font-semibold">RDDIMPDP</td>
-            <td><code>QP1</code></td>
-            <td><span class="class-badge a">A</span></td>
-            <td><span class="status-dot finished">finished</span></td>
-            <td class="text-muted">2026-03-12 09:15:00</td>
-            <td>3m 21s</td>
-            <td>001</td>
-            <td>DDIC</td>
-          </tr>
-          <tr>
-            <td class="font-semibold">CCMS_NOTIFICATION_JOB</td>
-            <td><code>EP1</code></td>
-            <td><span class="class-badge b">B</span></td>
-            <td><span class="status-dot canceled">canceled</span></td>
-            <td class="text-muted">2026-03-12 05:00:00</td>
-            <td>&mdash;</td>
-            <td>800</td>
-            <td>SAPSYS</td>
-          </tr>
-          <tr>
-            <td class="font-semibold">SDBM_BACKUP_ONLINE</td>
-            <td><code>FP1</code></td>
-            <td><span class="class-badge a">A</span></td>
-            <td><span class="status-dot failed">failed</span></td>
-            <td class="text-muted">2026-03-12 03:00:00</td>
-            <td>0m 12s</td>
-            <td>100</td>
-            <td>SAPSYS</td>
+            <td><span class="badge neutral">canceled</span></td>
+            <td class="text-muted font-bold">&#9724;</td>
+            <td><span class="es">Job cancelado manualmente por un administrador o automaticamente por el sistema (ej: server restart).</span><span class="en">Job manually canceled by an administrator or automatically by the system (e.g., server restart).</span></td>
+            <td><span class="es">Registrar evento</span><span class="en">Record event</span></td>
           </tr>
         </tbody>
       </table>
     </div>
 
-    <!-- Job Detail -->
-    <h2><span class="es">Detalle de Job</span><span class="en">Job Detail</span></h2>
-
+    <!-- Job Details -->
+    <h2><span class="es">Detalle del Job</span><span class="en">Job Details</span></h2>
     <div class="card">
-      <div class="card-header">
-        <div class="card-title">
-          <div class="card-icon danger">&#128196;</div>
-          SAPMSSY2_BATCH &mdash; FP1
+      <pre><code>interface SapJob {
+  id:           string;     // Internal ID
+  jobName:      string;     // Job name (e.g., "RSBTCDEL")
+  jobId:        string;     // SAP job number
+  systemId:     string;     // System UUID
+  sid:          string;     // SID (e.g., "PRD")
+  client:       string;     // SAP client (e.g., "100")
+  user:         string;     // Job creator/owner (e.g., "BATCHUSER")
+  status:       JobStatus;  // running | scheduled | finished | failed | canceled
+  jobClass:     JobClass;   // A | B | C
+  startDate:    ISO8601;    // Actual or planned start
+  endDate:      ISO8601;    // Actual end (null if running/scheduled)
+  duration:     number;     // Duration in seconds (null if not finished)
+  programName:  string;     // ABAP program (e.g., "RSBTCDEL")
+  variant:      string;     // Variant name
+  targetServer: string;     // Application server (e.g., "sapapp01_PRD_00")
+  spoolList:    string[];   // Associated spool request IDs
+  hasLog:       boolean;    // Whether job log is available
+  steps:        JobStep[];  // Step details (ABAP report, external command, etc.)
+  periodic:     boolean;    // Whether this is a periodic (recurring) job
+  errorMessage: string;     // Error message if failed
+}</code></pre>
+    </div>
+
+    <!-- Client and User Tracking -->
+    <h2><span class="es">Seguimiento de Cliente y Usuario</span><span class="en">Client and User Tracking</span></h2>
+    <div class="card">
+      <p>
+        <span class="es">Spektra rastrea el cliente SAP y el usuario propietario de cada job para auditorias y analisis. Esto permite identificar rapidamente quien programo un job y en que mandante se ejecuta.</span>
+        <span class="en">Spektra tracks the SAP client and owner user of each job for audits and analysis. This allows quickly identifying who scheduled a job and on which client it runs.</span>
+      </p>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th><span class="es">Campo</span><span class="en">Field</span></th>
+              <th><span class="es">Ejemplo</span><span class="en">Example</span></th>
+              <th><span class="es">Descripcion</span><span class="en">Description</span></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="font-mono">client</td>
+              <td>100</td>
+              <td><span class="es">Mandante SAP donde se ejecuta el job</span><span class="en">SAP client where the job runs</span></td>
+            </tr>
+            <tr>
+              <td class="font-mono">user</td>
+              <td>BATCHUSER</td>
+              <td><span class="es">Usuario tecnico o funcional que creo/programo el job</span><span class="en">Technical or functional user who created/scheduled the job</span></td>
+            </tr>
+            <tr>
+              <td class="font-mono">targetServer</td>
+              <td>sapapp01_PRD_00</td>
+              <td><span class="es">Servidor de aplicacion especifico (si se restringio)</span><span class="en">Specific application server (if restricted)</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Duration Tracking -->
+    <h2><span class="es">Seguimiento de Duracion</span><span class="en">Duration Tracking</span></h2>
+    <div class="card">
+      <p>
+        <span class="es">Spektra rastrea la duracion de cada job y la compara con un baseline historico para detectar anomalias. Un job que toma significativamente mas tiempo que su promedio historico genera una alerta de tipo warning.</span>
+        <span class="en">Spektra tracks each job's duration and compares it with a historical baseline to detect anomalies. A job taking significantly longer than its historical average generates a warning alert.</span>
+      </p>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th><span class="es">Job</span><span class="en">Job</span></th>
+              <th>SID</th>
+              <th><span class="es">Duracion Actual</span><span class="en">Current Duration</span></th>
+              <th><span class="es">Baseline (avg)</span><span class="en">Baseline (avg)</span></th>
+              <th><span class="es">Desviacion</span><span class="en">Deviation</span></th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="font-mono">SAP_REORG_SPOOL</td>
+              <td>PRD</td>
+              <td>12m 34s</td>
+              <td>10m 15s</td>
+              <td><span class="badge success">+22%</span></td>
+              <td><span class="badge success">finished</span></td>
+            </tr>
+            <tr>
+              <td class="font-mono">ZSALES_REPORT</td>
+              <td>PRD</td>
+              <td>2h 15m</td>
+              <td>45m</td>
+              <td><span class="badge danger">+200%</span></td>
+              <td><span class="badge cyan">running</span></td>
+            </tr>
+            <tr>
+              <td class="font-mono">BW_EXTRACT_FI</td>
+              <td>BW4</td>
+              <td>1h 02m</td>
+              <td>55m</td>
+              <td><span class="badge warning">+13%</span></td>
+              <td><span class="badge success">finished</span></td>
+            </tr>
+            <tr>
+              <td class="font-mono">RDDIMPDP</td>
+              <td>QAS</td>
+              <td>8m 22s</td>
+              <td>7m 45s</td>
+              <td><span class="badge success">+8%</span></td>
+              <td><span class="badge success">finished</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="callout warning">
+        <div class="callout-icon">&#9888;</div>
+        <div>
+          <span class="es"><strong>Alerta automatica:</strong> Cuando un job excede su baseline historico en mas del 150%, Spektra genera una alerta warning automatica con el detalle del job y sugerencias de runbooks para diagnostico.</span>
+          <span class="en"><strong>Automatic alert:</strong> When a job exceeds its historical baseline by more than 150%, Spektra generates an automatic warning alert with job details and runbook suggestions for diagnosis.</span>
         </div>
-        <span class="badge danger">failed</span>
       </div>
-
-      <div class="detail-grid mt-2">
-        <dt>Job Name</dt>
-        <dd class="font-semibold">SAPMSSY2_BATCH</dd>
-        <dt>SID</dt>
-        <dd><code>FP1</code> &mdash; ECC Production</dd>
-        <dt><span class="es">Clase</span><span class="en">Class</span></dt>
-        <dd><span class="class-badge b">B</span> <span class="es">Prioridad Media</span><span class="en">Medium Priority</span></dd>
-        <dt>Status</dt>
-        <dd><span class="status-dot failed">failed</span></dd>
-        <dt><span class="es">Inicio</span><span class="en">Started at</span></dt>
-        <dd>2026-03-12 08:00:00</dd>
-        <dt><span class="es">Duracion</span><span class="en">Duration</span></dt>
-        <dd>0m 03s</dd>
-        <dt>Client</dt>
-        <dd>100</dd>
-        <dt>User</dt>
-        <dd>BATCHUSR</dd>
-      </div>
-
-      <h4><span class="es">Error Extraido del Log</span><span class="en">Error Extracted from Log</span></h4>
-      <div class="error-box">
-        <strong>ABAP Runtime Error: TSV_TNEW_PAGE_ALLOC_FAILED</strong><br>
-        <span class="es">El programa intento asignar mas memoria de la permitida por el parametro <code>abap/heap_area_nondia</code>. El work process fue terminado con un dump SYSTEM_NO_MEMORY_EXTENDED.</span>
-        <span class="en">The program attempted to allocate more memory than allowed by parameter <code>abap/heap_area_nondia</code>. The work process was terminated with a SYSTEM_NO_MEMORY_EXTENDED dump.</span>
-      </div>
-
-      <h4><span class="es">Detalles del Job (JSON)</span><span class="en">Job Details (JSON)</span></h4>
-      <div class="json-block">{
-  "jobId": "12847391",
-  "progName": "SAPMSSY2",
-  "variant": "BATCH_DAILY",
-  "targetServer": "ep1_PAS_00",
-  "wpIndex": 4,
-  "abapDump": {
-    "type": "TSV_TNEW_PAGE_ALLOC_FAILED",
-    "program": "SAPMSSY2",
-    "include": "LSSY2U01",
-    "line": 142,
-    "category": "SYSTEM_NO_MEMORY_EXTENDED",
-    "memoryRequested": "512 MB",
-    "memoryLimit": "256 MB"
-  },
-  "sapNote": "2451657",
-  "recommendation": "Increase abap/heap_area_nondia or optimize program memory usage"
-}</div>
     </div>
 
-    <!-- Job Statistics -->
-    <h2><span class="es">Estadisticas por Sistema</span><span class="en">Statistics per System</span></h2>
-
+    <!-- API Endpoints -->
+    <h2><span class="es">Endpoints de API</span><span class="en">API Endpoints</span></h2>
     <div class="table-wrap">
       <table>
         <thead>
           <tr>
-            <th>SID</th>
-            <th><span class="es">Total (24h)</span><span class="en">Total (24h)</span></th>
-            <th><span class="es">Activos</span><span class="en">Active</span></th>
-            <th><span class="es">Completados</span><span class="en">Finished</span></th>
-            <th><span class="es">Fallidos</span><span class="en">Failed</span></th>
-            <th><span class="es">Cancelados</span><span class="en">Canceled</span></th>
-            <th><span class="es">Duracion Prom.</span><span class="en">Avg Duration</span></th>
-            <th><span class="es">Tasa Exito</span><span class="en">Success Rate</span></th>
+            <th><span class="es">Metodo</span><span class="en">Method</span></th>
+            <th>Endpoint</th>
+            <th><span class="es">Descripcion</span><span class="en">Description</span></th>
           </tr>
         </thead>
         <tbody>
           <tr>
-            <td><code>EP1</code></td>
-            <td class="font-bold">487</td>
-            <td>12</td>
-            <td>462</td>
-            <td class="text-danger">8</td>
-            <td>5</td>
-            <td>3m 18s</td>
-            <td><span class="badge success">94.9%</span></td>
+            <td><span class="badge cyan">GET</span></td>
+            <td class="font-mono">/api/jobs</td>
+            <td><span class="es">Listar jobs (filtros: system, status, class, user, dateRange)</span><span class="en">List jobs (filters: system, status, class, user, dateRange)</span></td>
           </tr>
           <tr>
-            <td><code>QP1</code></td>
-            <td class="font-bold">312</td>
-            <td>5</td>
-            <td>301</td>
-            <td class="text-danger">4</td>
-            <td>2</td>
-            <td>5m 02s</td>
-            <td><span class="badge success">96.5%</span></td>
+            <td><span class="badge cyan">GET</span></td>
+            <td class="font-mono">/api/jobs/:id</td>
+            <td><span class="es">Detalle de un job con log y steps</span><span class="en">Job detail with log and steps</span></td>
           </tr>
           <tr>
-            <td><code>DP1</code></td>
-            <td class="font-bold">189</td>
-            <td>3</td>
-            <td>185</td>
-            <td class="text-danger">1</td>
-            <td>0</td>
-            <td>2m 45s</td>
-            <td><span class="badge success">97.9%</span></td>
+            <td><span class="badge cyan">GET</span></td>
+            <td class="font-mono">/api/systems/:id/jobs</td>
+            <td><span class="es">Jobs de un sistema especifico</span><span class="en">Jobs for a specific system</span></td>
           </tr>
           <tr>
-            <td><code>FP1</code></td>
-            <td class="font-bold">198</td>
-            <td>2</td>
-            <td>189</td>
-            <td class="text-danger">5</td>
-            <td>2</td>
-            <td>6m 11s</td>
-            <td><span class="badge warning">95.5%</span></td>
+            <td><span class="badge cyan">GET</span></td>
+            <td class="font-mono">/api/jobs/statistics</td>
+            <td><span class="es">Estadisticas de jobs (total, por estado, por clase)</span><span class="en">Job statistics (total, by status, by class)</span></td>
           </tr>
-          <tr>
-            <td><code>HP1</code></td>
-            <td class="font-bold">61</td>
-            <td>1</td>
-            <td>60</td>
-            <td class="text-danger">0</td>
-            <td>0</td>
-            <td>8m 54s</td>
-            <td><span class="badge success">100%</span></td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-
-    <!-- Data Model -->
-    <h2><span class="es">Modelo de Datos &mdash; JobRecord</span><span class="en">Data Model &mdash; JobRecord</span></h2>
-
-    <div class="table-wrap">
-      <table>
-        <thead>
-          <tr><th><span class="es">Campo</span><span class="en">Field</span></th><th><span class="es">Tipo</span><span class="en">Type</span></th><th><span class="es">Descripcion</span><span class="en">Description</span></th></tr>
-        </thead>
-        <tbody>
-          <tr><td><code>id</code></td><td>UUID</td><td><span class="es">Identificador unico</span><span class="en">Unique identifier</span></td></tr>
-          <tr><td><code>systemId</code></td><td>UUID</td><td><span class="es">Sistema SAP asociado</span><span class="en">Associated SAP system</span></td></tr>
-          <tr><td><code>jobName</code></td><td>string</td><td><span class="es">Nombre del job (programa ABAP o variante)</span><span class="en">Job name (ABAP program or variant)</span></td></tr>
-          <tr><td><code>jobClass</code></td><td>string</td><td><span class="es">Clase: A (alta), B (media), C (baja)</span><span class="en">Class: A (high), B (medium), C (low)</span></td></tr>
-          <tr><td><code>status</code></td><td>string</td><td>running | scheduled | finished | failed | canceled</td></tr>
-          <tr><td><code>startedAt</code></td><td>DateTime?</td><td><span class="es">Timestamp de inicio</span><span class="en">Start timestamp</span></td></tr>
-          <tr><td><code>duration</code></td><td>string?</td><td><span class="es">Duracion de ejecucion (e.g., "5m 42s")</span><span class="en">Execution duration (e.g., "5m 42s")</span></td></tr>
-          <tr><td><code>client</code></td><td>string?</td><td><span class="es">Mandante SAP (e.g., 800, 001, 100)</span><span class="en">SAP client (e.g., 800, 001, 100)</span></td></tr>
-          <tr><td><code>user</code></td><td>string?</td><td><span class="es">Usuario SAP que ejecuta el job</span><span class="en">SAP user running the job</span></td></tr>
-          <tr><td><code>details</code></td><td>JSON?</td><td><span class="es">Detalles extendidos: errores ABAP, dumps, parametros de ejecucion</span><span class="en">Extended details: ABAP errors, dumps, execution parameters</span></td></tr>
-        </tbody>
-      </table>
-    </div>
-
-    <!-- Tips -->
-    <h2><span class="es">Mejores Practicas</span><span class="en">Best Practices</span></h2>
-
-    <div class="callout info">
-      <div class="callout-icon">&#128161;</div>
-      <div>
-        <span class="es"><strong>Monitoreo de Jobs Clase A:</strong> Los jobs de clase A son criticos para el negocio. Configure alertas para recibir notificaciones inmediatas si un job clase A falla o excede su duracion esperada.</span>
-        <span class="en"><strong>Class A Job Monitoring:</strong> Class A jobs are business-critical. Configure alerts to receive immediate notifications if a class A job fails or exceeds its expected duration.</span>
-      </div>
-    </div>
-
-    <div class="callout warning">
-      <div class="callout-icon">&#9888;</div>
-      <div>
-        <span class="es"><strong>Jobs fallidos recurrentes:</strong> Si un job falla repetidamente, revise el campo <code>details</code> para extraer el tipo de dump ABAP, el programa y la linea de error. Consulte las SAP Notes recomendadas.</span>
-        <span class="en"><strong>Recurring failed jobs:</strong> If a job fails repeatedly, review the <code>details</code> field to extract the ABAP dump type, program, and error line. Check the recommended SAP Notes.</span>
-      </div>
-    </div>
-
-    <!-- API -->
-    <h2>API Reference</h2>
-
-    <div class="table-wrap">
-      <table>
-        <thead>
-          <tr><th><span class="es">Metodo</span><span class="en">Method</span></th><th>Endpoint</th><th><span class="es">Descripcion</span><span class="en">Description</span></th></tr>
-        </thead>
-        <tbody>
-          <tr><td><span class="badge cyan">GET</span></td><td><code>/api/operations/jobs</code></td><td><span class="es">Listar todos los jobs (filtro opcional: systemId)</span><span class="en">List all jobs (optional filter: systemId)</span></td></tr>
-          <tr><td><span class="badge cyan">GET</span></td><td><code>/api/operations/jobs?systemId=:id</code></td><td><span class="es">Jobs de un sistema especifico</span><span class="en">Jobs for a specific system</span></td></tr>
         </tbody>
       </table>
     </div>

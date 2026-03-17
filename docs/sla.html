@@ -2,641 +2,439 @@
 <html lang="es" data-theme="dark" data-lang="es">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SLA Metrics - SAP Spektra Docs</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <title>SLA & Analytics — SAP Spektra Docs</title>
   <link rel="stylesheet" href="theme.css">
   <script src="theme-toggle.js"></script>
   <script src="lang-toggle.js"></script>
-  <style>
-    .sla-bar{height:8px;border-radius:4px;background:var(--bg3);overflow:hidden;margin:6px 0}
-    .sla-bar-fill{height:100%;border-radius:4px;transition:width .4s}
-    .sla-bar-fill.green{background:linear-gradient(90deg,#22c55e,#16a34a)}
-    .sla-bar-fill.yellow{background:linear-gradient(90deg,#f59e0b,#d97706)}
-    .sla-bar-fill.red{background:linear-gradient(90deg,#ef4444,#dc2626)}
-    .sla-value{font-size:28px;font-weight:800;line-height:1}
-    .sla-value.green{color:var(--success)}
-    .sla-value.yellow{color:var(--warning)}
-    .sla-value.red{color:var(--danger)}
-    .metric-card{background:var(--card-bg);border:1px solid var(--card-border);border-radius:var(--radius);padding:18px;text-align:center}
-    .metric-card .label{font-size:11px;color:var(--txt3);text-transform:uppercase;letter-spacing:.08em;margin-bottom:6px}
-    .metric-card .value{font-size:22px;font-weight:700;color:var(--txt1)}
-    .metric-card .unit{font-size:12px;color:var(--txt3);margin-left:2px}
-    .threshold-row{display:flex;align-items:center;gap:12px;font-size:12px;padding:6px 0}
-    .threshold-row .dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
-    .threshold-row .dot.green{background:var(--success)}
-    .threshold-row .dot.yellow{background:var(--warning)}
-    .threshold-row .dot.red{background:var(--danger)}
-    .trend-up{color:var(--success)}
-    .trend-down{color:var(--danger)}
-    .trend-flat{color:var(--txt3)}
-    .json-block{background:var(--code-bg);border:1px solid var(--code-border);border-radius:var(--radius);padding:14px;margin:8px 0;font-family:'SF Mono',Monaco,Consolas,monospace;font-size:12px;color:var(--txt2);overflow-x:auto;white-space:pre}
-    .health-timeline{display:flex;gap:3px;align-items:flex-end;height:40px;margin:12px 0}
-    .health-bar{flex:1;border-radius:2px;min-width:4px;transition:height .2s}
-    .health-bar.high{background:var(--success)}
-    .health-bar.med{background:var(--warning)}
-    .health-bar.low{background:var(--danger)}
-  </style>
 </head>
 <body>
 <div class="docs-wrapper">
-
-  <!-- ══════════ Sidebar ══════════ -->
-  <nav class="docs-sidebar" aria-label="Documentation navigation">
+  <nav class="docs-sidebar">
     <div class="sidebar-brand">
-      <div class="logo">S</div>
+      <div class="logo">&#9889;</div>
       <div class="brand-text">
         <div class="brand-name">SAP Spektra</div>
         <div class="brand-sub">Documentacion v2.0</div>
       </div>
     </div>
-
     <div class="sidebar-section">
-      <div class="sidebar-section-label"><span class="es">Inicio</span><span class="en">Home</span></div>
-      <a class="sidebar-link" href="index.html"><span class="es">Portal</span><span class="en">Portal</span></a>
-      <a class="sidebar-link" href="getting-started.html"><span class="es">Primeros Pasos</span><span class="en">Getting Started</span></a>
+      <div class="sidebar-section-label">Inicio</div>
+      <a href="index.html" class="sidebar-link">Portal</a>
+      <a href="getting-started.html" class="sidebar-link">Primeros Pasos</a>
     </div>
-
+    <div class="sidebar-section">
+      <div class="sidebar-section-label">Architecture</div>
+      <a href="architecture.html" class="sidebar-link">Arquitectura</a>
+      <a href="domain-model.html" class="sidebar-link">Modelo de Datos</a>
+      <a href="api-reference.html" class="sidebar-link">API Reference</a>
+    </div>
     <div class="sidebar-section">
       <div class="sidebar-section-label">Command</div>
-      <a class="sidebar-link" href="dashboard.html">Dashboard</a>
-      <a class="sidebar-link" href="landscape.html">Landscape</a>
-      <a class="sidebar-link" href="alerts.html"><span class="es">Alertas</span><span class="en">Alerts</span></a>
+      <a href="dashboard.html" class="sidebar-link">Dashboard</a>
+      <a href="landscape.html" class="sidebar-link">Landscape</a>
+      <a href="alerts.html" class="sidebar-link">Alertas</a>
     </div>
-
     <div class="sidebar-section">
       <div class="sidebar-section-label">Monitor</div>
-      <a class="sidebar-link" href="systems.html"><span class="es">Sistemas</span><span class="en">Systems</span></a>
-      <a class="sidebar-link" href="connectors.html"><span class="es">Conectores</span><span class="en">Connectors</span></a>
-      <a class="sidebar-link" href="events.html"><span class="es">Eventos</span><span class="en">Events</span></a>
+      <a href="systems.html" class="sidebar-link">Sistemas</a>
+      <a href="connectors.html" class="sidebar-link">Conectores</a>
+      <a href="events.html" class="sidebar-link">Eventos</a>
     </div>
-
     <div class="sidebar-section">
       <div class="sidebar-section-label">Intelligence</div>
-      <a class="sidebar-link" href="ai-analysis.html"><span class="es">Analisis IA</span><span class="en">AI Analysis</span></a>
-      <a class="sidebar-link" href="analytics.html">Analytics</a>
-      <a class="sidebar-link" href="reports.html"><span class="es">Reportes</span><span class="en">Reports</span></a>
-      <a class="sidebar-link" href="comparison.html"><span class="es">Comparacion</span><span class="en">Comparison</span></a>
+      <a href="ai-analysis.html" class="sidebar-link">Analisis IA</a>
+      <a href="analytics.html" class="sidebar-link">Analytics</a>
+      <a href="reports.html" class="sidebar-link">Reportes</a>
+      <a href="comparison.html" class="sidebar-link">Comparacion</a>
     </div>
-
     <div class="sidebar-section">
       <div class="sidebar-section-label">Operations</div>
-      <a class="sidebar-link" href="runbooks.html">Runbooks</a>
-      <a class="sidebar-link" href="approvals.html"><span class="es">Aprobaciones</span><span class="en">Approvals</span></a>
-      <a class="sidebar-link" href="operations.html"><span class="es">Operaciones</span><span class="en">Operations</span></a>
-      <a class="sidebar-link" href="jobs.html">Jobs SM37</a>
-      <a class="sidebar-link" href="transports.html"><span class="es">Transportes</span><span class="en">Transports</span></a>
-      <a class="sidebar-link active" href="sla.html">SLA</a>
-      <a class="sidebar-link" href="ha-control.html">HA Control</a>
-      <a class="sidebar-link" href="certificates.html"><span class="es">Certificados</span><span class="en">Certificates</span></a>
+      <a href="runbooks.html" class="sidebar-link">Runbooks</a>
+      <a href="approvals.html" class="sidebar-link">Aprobaciones</a>
+      <a href="operations.html" class="sidebar-link">Operaciones</a>
+      <a href="jobs.html" class="sidebar-link">Jobs (SM37)</a>
+      <a href="transports.html" class="sidebar-link">Transportes</a>
+      <a href="sla.html" class="sidebar-link active">SLA</a>
+      <a href="ha-control.html" class="sidebar-link">HA Control</a>
+      <a href="certificates.html" class="sidebar-link">Certificados</a>
     </div>
-
     <div class="sidebar-section">
       <div class="sidebar-section-label">Admin</div>
-      <a class="sidebar-link" href="admin.html"><span class="es">Gestion</span><span class="en">Management</span></a>
-      <a class="sidebar-link" href="settings.html"><span class="es">Configuracion</span><span class="en">Settings</span></a>
-      <a class="sidebar-link" href="connect-system.html"><span class="es">Conectar Sistema</span><span class="en">Connect System</span></a>
+      <a href="admin.html" class="sidebar-link">Gestion</a>
+      <a href="settings.html" class="sidebar-link">Configuracion</a>
+      <a href="connect-system.html" class="sidebar-link">Conectar Sistema</a>
     </div>
   </nav>
 
-  <!-- ══════════ Main Content ══════════ -->
   <main class="docs-main">
     <div class="breadcrumb">
-      <a href="index.html">Docs</a>
-      <span class="sep">/</span>
-      <span>Operations</span>
-      <span class="sep">/</span>
-      <span class="text-primary">SLA</span>
+      <a href="index.html">Docs</a> <span class="sep">/</span>
+      <span class="es">Operations</span><span class="en">Operations</span> <span class="sep">/</span>
+      <span class="es">SLA & Analytics</span><span class="en">SLA & Analytics</span>
     </div>
 
     <div class="page-header">
-      <h1>
-        <span class="es">Metricas SLA</span>
-        <span class="en">SLA Metrics</span>
-      </h1>
-      <div class="subtitle">
-        <span class="es">Seguimiento de acuerdos de nivel de servicio (SLA) por sistema: disponibilidad, MTTR, MTBF, health score, breaches y metricas de runbook. Identifique tendencias y actue antes de incumplir umbrales.</span>
-        <span class="en">Service Level Agreement (SLA) tracking per system: availability, MTTR, MTBF, health score, breaches, and runbook metrics. Identify trends and act before breaching thresholds.</span>
-      </div>
+      <h1><span class="es">SLA & Analytics</span><span class="en">SLA & Analytics</span></h1>
+      <p class="subtitle">
+        <span class="es">Metricas de SLA por sistema, indicadores de rendimiento operativo, y estadisticas consolidadas de alertas y runbooks</span>
+        <span class="en">SLA metrics per system, operational performance indicators, and consolidated alert and runbook statistics</span>
+      </p>
     </div>
 
-    <!-- KPI Grid: Landscape-wide -->
+    <!-- KPIs -->
     <div class="kpi-grid">
       <div class="kpi-card">
-        <div class="card-icon success">&#128200;</div>
+        <div class="card-icon success">&#128994;</div>
         <div>
-          <div class="kpi-value">99.87%</div>
-          <div class="kpi-label"><span class="es">Disponibilidad Landscape</span><span class="en">Landscape Availability</span></div>
+          <div class="kpi-value">99.95%</div>
+          <div class="kpi-label"><span class="es">Disponibilidad Objetivo</span><span class="en">Target Availability</span></div>
         </div>
       </div>
       <div class="kpi-card">
-        <div class="card-icon cyan">&#128337;</div>
+        <div class="card-icon cyan">&#128338;</div>
         <div>
-          <div class="kpi-value">12m</div>
-          <div class="kpi-label"><span class="es">MTTR Promedio</span><span class="en">Avg MTTR</span></div>
+          <div class="kpi-value">&lt;15min</div>
+          <div class="kpi-label"><span class="es">MTTR Objetivo</span><span class="en">Target MTTR</span></div>
         </div>
       </div>
       <div class="kpi-card">
-        <div class="card-icon violet">&#128736;</div>
+        <div class="card-icon violet">&#128200;</div>
         <div>
-          <div class="kpi-value">18.4d</div>
-          <div class="kpi-label"><span class="es">MTBF Promedio</span><span class="en">Avg MTBF</span></div>
+          <div class="kpi-value">&gt;720h</div>
+          <div class="kpi-label"><span class="es">MTBF Objetivo</span><span class="en">Target MTBF</span></div>
         </div>
       </div>
       <div class="kpi-card">
-        <div class="card-icon danger">&#128680;</div>
+        <div class="card-icon warning">&#127942;</div>
         <div>
-          <div class="kpi-value">7</div>
-          <div class="kpi-label"><span class="es">Breaches (30d)</span><span class="en">Breaches (30d)</span></div>
+          <div class="kpi-value">0-100</div>
+          <div class="kpi-label"><span class="es">Health Score</span><span class="en">Health Score</span></div>
         </div>
       </div>
     </div>
 
-    <!-- SLA Definitions -->
-    <h2><span class="es">Definiciones de Metricas SLA</span><span class="en">SLA Metric Definitions</span></h2>
-
-    <div class="grid-2">
-      <div class="card">
-        <h4>MTTR <span class="text-muted text-sm">(Mean Time To Repair)</span></h4>
-        <p class="text-sm">
-          <span class="es">Tiempo promedio desde que se detecta un incidente (alerta CRITICAL) hasta que se resuelve. Se calcula como <code>(resolvedAt - createdAt)</code> sobre todas las alertas resueltas en el periodo.</span>
-          <span class="en">Average time from incident detection (CRITICAL alert) to resolution. Calculated as <code>(resolvedAt - createdAt)</code> across all resolved alerts in the period.</span>
-        </p>
-        <div class="threshold-row"><span class="dot green"></span> <span class="es">&lt; 15 min &mdash; Excelente</span><span class="en">&lt; 15 min &mdash; Excellent</span></div>
-        <div class="threshold-row"><span class="dot yellow"></span> <span class="es">15-60 min &mdash; Aceptable</span><span class="en">15-60 min &mdash; Acceptable</span></div>
-        <div class="threshold-row"><span class="dot red"></span> <span class="es">&gt; 60 min &mdash; Breach</span><span class="en">&gt; 60 min &mdash; Breach</span></div>
-      </div>
-      <div class="card">
-        <h4>MTBF <span class="text-muted text-sm">(Mean Time Between Failures)</span></h4>
-        <p class="text-sm">
-          <span class="es">Tiempo promedio entre fallas consecutivas de un sistema. Se calcula dividiendo el tiempo total de operacion por el numero de incidentes. Mayor MTBF indica mayor estabilidad.</span>
-          <span class="en">Average time between consecutive system failures. Calculated by dividing total operation time by the number of incidents. Higher MTBF indicates greater stability.</span>
-        </p>
-        <div class="threshold-row"><span class="dot green"></span> <span class="es">&gt; 30 dias &mdash; Excelente</span><span class="en">&gt; 30 days &mdash; Excellent</span></div>
-        <div class="threshold-row"><span class="dot yellow"></span> <span class="es">7-30 dias &mdash; Aceptable</span><span class="en">7-30 days &mdash; Acceptable</span></div>
-        <div class="threshold-row"><span class="dot red"></span> <span class="es">&lt; 7 dias &mdash; Critico</span><span class="en">&lt; 7 days &mdash; Critical</span></div>
-      </div>
-      <div class="card">
-        <h4><span class="es">Disponibilidad %</span><span class="en">Availability %</span></h4>
-        <p class="text-sm">
-          <span class="es">Porcentaje de tiempo que el sistema estuvo operativo (status != critical/unreachable) durante el periodo de medicion. Se calcula a partir de los HealthSnapshots.</span>
-          <span class="en">Percentage of time the system was operational (status != critical/unreachable) during the measurement period. Calculated from HealthSnapshots.</span>
-        </p>
-        <div class="threshold-row"><span class="dot green"></span> <span class="es">&ge; 99.9% &mdash; Excelente (Three Nines)</span><span class="en">&ge; 99.9% &mdash; Excellent (Three Nines)</span></div>
-        <div class="threshold-row"><span class="dot yellow"></span> <span class="es">99.0-99.9% &mdash; Aceptable</span><span class="en">99.0-99.9% &mdash; Acceptable</span></div>
-        <div class="threshold-row"><span class="dot red"></span> <span class="es">&lt; 99.0% &mdash; Breach</span><span class="en">&lt; 99.0% &mdash; Breach</span></div>
-      </div>
-      <div class="card">
-        <h4>Health Score</h4>
-        <p class="text-sm">
-          <span class="es">Puntuacion compuesta 0-100 calculada a partir de CPU, memoria, disco, estado de componentes, alertas activas y breaches. Se registra periodicamente en HealthSnapshots.</span>
-          <span class="en">Composite score 0-100 calculated from CPU, memory, disk, component status, active alerts, and breaches. Recorded periodically in HealthSnapshots.</span>
-        </p>
-        <div class="threshold-row"><span class="dot green"></span> <span class="es">80-100 &mdash; Saludable</span><span class="en">80-100 &mdash; Healthy</span></div>
-        <div class="threshold-row"><span class="dot yellow"></span> <span class="es">50-79 &mdash; Degradado</span><span class="en">50-79 &mdash; Degraded</span></div>
-        <div class="threshold-row"><span class="dot red"></span> <span class="es">0-49 &mdash; Critico</span><span class="en">0-49 &mdash; Critical</span></div>
-      </div>
-    </div>
-
-    <!-- Per-System SLA Table -->
-    <h2><span class="es">SLA por Sistema</span><span class="en">SLA per System</span></h2>
-
-    <div class="table-wrap">
-      <table>
-        <thead>
-          <tr>
-            <th>SID</th>
-            <th><span class="es">Producto</span><span class="en">Product</span></th>
-            <th>Env</th>
-            <th><span class="es">Disponibilidad</span><span class="en">Availability</span></th>
-            <th>MTTR</th>
-            <th>MTBF</th>
-            <th>Health</th>
-            <th>Breaches</th>
-            <th><span class="es">Tendencia</span><span class="en">Trend</span></th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td><code>EP1</code></td>
-            <td>S/4HANA</td>
-            <td><span class="badge success">PRD</span></td>
-            <td>
-              <span class="sla-value green">99.94%</span>
-              <div class="sla-bar"><div class="sla-bar-fill green" style="width:99.94%"></div></div>
-            </td>
-            <td>8m</td>
-            <td>22.1d</td>
-            <td><span class="badge success">87</span></td>
-            <td><span class="badge success">1</span></td>
-            <td><span class="trend-up">&#9650; +2.1%</span></td>
-          </tr>
-          <tr>
-            <td><code>QP1</code></td>
-            <td>S/4HANA</td>
-            <td><span class="badge warning">QAS</span></td>
-            <td>
-              <span class="sla-value green">99.78%</span>
-              <div class="sla-bar"><div class="sla-bar-fill green" style="width:99.78%"></div></div>
-            </td>
-            <td>14m</td>
-            <td>15.3d</td>
-            <td><span class="badge success">82</span></td>
-            <td><span class="badge warning">2</span></td>
-            <td><span class="trend-flat">&#9654; 0%</span></td>
-          </tr>
-          <tr>
-            <td><code>DP1</code></td>
-            <td>S/4HANA</td>
-            <td><span class="badge cyan">DEV</span></td>
-            <td>
-              <span class="sla-value green">99.52%</span>
-              <div class="sla-bar"><div class="sla-bar-fill green" style="width:99.52%"></div></div>
-            </td>
-            <td>22m</td>
-            <td>10.8d</td>
-            <td><span class="badge warning">71</span></td>
-            <td><span class="badge warning">3</span></td>
-            <td><span class="trend-down">&#9660; -1.3%</span></td>
-          </tr>
-          <tr>
-            <td><code>FP1</code></td>
-            <td>ECC 6.0</td>
-            <td><span class="badge success">PRD</span></td>
-            <td>
-              <span class="sla-value yellow">99.21%</span>
-              <div class="sla-bar"><div class="sla-bar-fill yellow" style="width:99.21%"></div></div>
-            </td>
-            <td>35m</td>
-            <td>8.2d</td>
-            <td><span class="badge warning">64</span></td>
-            <td><span class="badge danger">4</span></td>
-            <td><span class="trend-down">&#9660; -3.7%</span></td>
-          </tr>
-          <tr>
-            <td><code>HP1</code></td>
-            <td>BW/4HANA</td>
-            <td><span class="badge success">PRD</span></td>
-            <td>
-              <span class="sla-value green">99.97%</span>
-              <div class="sla-bar"><div class="sla-bar-fill green" style="width:99.97%"></div></div>
-            </td>
-            <td>5m</td>
-            <td>45.0d</td>
-            <td><span class="badge success">94</span></td>
-            <td><span class="badge success">0</span></td>
-            <td><span class="trend-up">&#9650; +1.8%</span></td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-
-    <!-- Health Score History -->
-    <h2><span class="es">Historial de Health Score &mdash; EP1</span><span class="en">Health Score History &mdash; EP1</span></h2>
-
+    <!-- SLA Metrics -->
+    <h2><span class="es">Metricas SLA por Sistema</span><span class="en">SLA Metrics per System</span></h2>
     <div class="card">
-      <p class="text-sm text-muted mb-2"><span class="es">Ultimos 30 dias, un punto por dia. Altura representa el score (0-100).</span><span class="en">Last 30 days, one point per day. Height represents score (0-100).</span></p>
-
-      <div class="health-timeline">
-        <div class="health-bar high" style="height:88%"></div>
-        <div class="health-bar high" style="height:91%"></div>
-        <div class="health-bar high" style="height:89%"></div>
-        <div class="health-bar high" style="height:85%"></div>
-        <div class="health-bar high" style="height:87%"></div>
-        <div class="health-bar high" style="height:82%"></div>
-        <div class="health-bar high" style="height:80%"></div>
-        <div class="health-bar med" style="height:72%"></div>
-        <div class="health-bar med" style="height:68%"></div>
-        <div class="health-bar med" style="height:74%"></div>
-        <div class="health-bar high" style="height:81%"></div>
-        <div class="health-bar high" style="height:84%"></div>
-        <div class="health-bar high" style="height:86%"></div>
-        <div class="health-bar high" style="height:90%"></div>
-        <div class="health-bar high" style="height:92%"></div>
-        <div class="health-bar high" style="height:88%"></div>
-        <div class="health-bar high" style="height:85%"></div>
-        <div class="health-bar high" style="height:83%"></div>
-        <div class="health-bar med" style="height:76%"></div>
-        <div class="health-bar med" style="height:71%"></div>
-        <div class="health-bar low" style="height:45%"></div>
-        <div class="health-bar low" style="height:32%"></div>
-        <div class="health-bar med" style="height:58%"></div>
-        <div class="health-bar med" style="height:69%"></div>
-        <div class="health-bar high" style="height:80%"></div>
-        <div class="health-bar high" style="height:84%"></div>
-        <div class="health-bar high" style="height:86%"></div>
-        <div class="health-bar high" style="height:89%"></div>
-        <div class="health-bar high" style="height:87%"></div>
-        <div class="health-bar high" style="height:87%"></div>
-      </div>
-
-      <div class="grid-3 mt-2">
-        <div class="metric-card">
-          <div class="label"><span class="es">Promedio</span><span class="en">Average</span></div>
-          <div class="value">79.8</div>
-        </div>
-        <div class="metric-card">
-          <div class="label"><span class="es">Minimo</span><span class="en">Minimum</span></div>
-          <div class="value text-danger">32</div>
-        </div>
-        <div class="metric-card">
-          <div class="label"><span class="es">Actual</span><span class="en">Current</span></div>
-          <div class="value text-success">87</div>
-        </div>
-      </div>
-
-      <div class="callout warning mt-2">
-        <div class="callout-icon">&#9888;</div>
-        <div>
-          <span class="es"><strong>Incidente detectado:</strong> Caida de health score a 32 (dia 22). Causa: CPU al 98.5% por proceso de cierre mensual no optimizado. Se ejecuto runbook SAP Instance Restart. Recovery time: 18 minutos.</span>
-          <span class="en"><strong>Incident detected:</strong> Health score drop to 32 (day 22). Cause: CPU at 98.5% from unoptimized monthly closing process. SAP Instance Restart runbook executed. Recovery time: 18 minutes.</span>
-        </div>
-      </div>
-    </div>
-
-    <!-- Breach Analysis -->
-    <h2><span class="es">Analisis de Breaches</span><span class="en">Breach Analysis</span></h2>
-
-    <div class="table-wrap">
-      <table>
-        <thead>
-          <tr>
-            <th>SID</th>
-            <th><span class="es">Metrica</span><span class="en">Metric</span></th>
-            <th><span class="es">Valor</span><span class="en">Value</span></th>
-            <th><span class="es">Umbral</span><span class="en">Threshold</span></th>
-            <th><span class="es">Severidad</span><span class="en">Severity</span></th>
-            <th><span class="es">Fecha</span><span class="en">Date</span></th>
-            <th><span class="es">Resuelto</span><span class="en">Resolved</span></th>
-            <th><span class="es">Tiempo Resolucion</span><span class="en">Resolution Time</span></th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td><code>EP1</code></td>
-            <td>cpu_usage</td>
-            <td class="text-danger font-bold">98.5%</td>
-            <td>90%</td>
-            <td><span class="badge danger">CRITICAL</span></td>
-            <td class="text-muted">2026-03-12 09:42</td>
-            <td><span class="badge success">Si</span></td>
-            <td>18m</td>
-          </tr>
-          <tr>
-            <td><code>FP1</code></td>
-            <td>disk_usage</td>
-            <td class="text-danger font-bold">94.2%</td>
-            <td>85%</td>
-            <td><span class="badge danger">CRITICAL</span></td>
-            <td class="text-muted">2026-03-11 22:10</td>
-            <td><span class="badge warning">No</span></td>
-            <td>&mdash;</td>
-          </tr>
-          <tr>
-            <td><code>QP1</code></td>
-            <td>memory_usage</td>
-            <td class="text-warning font-bold">87.3%</td>
-            <td>80%</td>
-            <td><span class="badge warning">HIGH</span></td>
-            <td class="text-muted">2026-03-10 14:22</td>
-            <td><span class="badge success">Si</span></td>
-            <td>45m</td>
-          </tr>
-          <tr>
-            <td><code>FP1</code></td>
-            <td>disk_usage</td>
-            <td class="text-danger font-bold">92.1%</td>
-            <td>85%</td>
-            <td><span class="badge danger">CRITICAL</span></td>
-            <td class="text-muted">2026-03-08 03:15</td>
-            <td><span class="badge success">Si</span></td>
-            <td>2h 10m</td>
-          </tr>
-          <tr>
-            <td><code>DP1</code></td>
-            <td>cpu_usage</td>
-            <td class="text-warning font-bold">91.0%</td>
-            <td>90%</td>
-            <td><span class="badge warning">HIGH</span></td>
-            <td class="text-muted">2026-03-07 16:05</td>
-            <td><span class="badge success">Si</span></td>
-            <td>8m</td>
-          </tr>
-          <tr>
-            <td><code>FP1</code></td>
-            <td>memory_usage</td>
-            <td class="text-warning font-bold">83.7%</td>
-            <td>80%</td>
-            <td><span class="badge warning">HIGH</span></td>
-            <td class="text-muted">2026-03-05 11:30</td>
-            <td><span class="badge success">Si</span></td>
-            <td>1h 05m</td>
-          </tr>
-          <tr>
-            <td><code>DP1</code></td>
-            <td>disk_usage</td>
-            <td class="text-warning font-bold">88.4%</td>
-            <td>85%</td>
-            <td><span class="badge warning">MEDIUM</span></td>
-            <td class="text-muted">2026-03-03 08:00</td>
-            <td><span class="badge success">Si</span></td>
-            <td>35m</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-
-    <!-- Alert Statistics per System -->
-    <h2><span class="es">Estadisticas de Alertas por Sistema (30d)</span><span class="en">Alert Statistics per System (30d)</span></h2>
-
-    <div class="table-wrap">
-      <table>
-        <thead>
-          <tr>
-            <th>SID</th>
-            <th><span class="es">Total Alertas</span><span class="en">Total Alerts</span></th>
-            <th>Critical</th>
-            <th>Warning</th>
-            <th>Info</th>
-            <th><span class="es">Resueltas</span><span class="en">Resolved</span></th>
-            <th><span class="es">Activas</span><span class="en">Active</span></th>
-            <th><span class="es">MTTR Alertas</span><span class="en">Alerts MTTR</span></th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td><code>EP1</code></td>
-            <td class="font-bold">42</td>
-            <td><span class="text-danger font-bold">5</span></td>
-            <td><span class="text-warning">18</span></td>
-            <td><span class="text-muted">19</span></td>
-            <td><span class="badge success">40</span></td>
-            <td><span class="badge warning">2</span></td>
-            <td>11m</td>
-          </tr>
-          <tr>
-            <td><code>QP1</code></td>
-            <td class="font-bold">28</td>
-            <td><span class="text-danger font-bold">2</span></td>
-            <td><span class="text-warning">12</span></td>
-            <td><span class="text-muted">14</span></td>
-            <td><span class="badge success">27</span></td>
-            <td><span class="badge warning">1</span></td>
-            <td>17m</td>
-          </tr>
-          <tr>
-            <td><code>DP1</code></td>
-            <td class="font-bold">19</td>
-            <td><span class="text-danger font-bold">1</span></td>
-            <td><span class="text-warning">9</span></td>
-            <td><span class="text-muted">9</span></td>
-            <td><span class="badge success">19</span></td>
-            <td><span class="badge success">0</span></td>
-            <td>22m</td>
-          </tr>
-          <tr>
-            <td><code>FP1</code></td>
-            <td class="font-bold">56</td>
-            <td><span class="text-danger font-bold">9</span></td>
-            <td><span class="text-warning">24</span></td>
-            <td><span class="text-muted">23</span></td>
-            <td><span class="badge success">51</span></td>
-            <td><span class="badge danger">5</span></td>
-            <td>42m</td>
-          </tr>
-          <tr>
-            <td><code>HP1</code></td>
-            <td class="font-bold">8</td>
-            <td><span class="text-danger font-bold">0</span></td>
-            <td><span class="text-warning">3</span></td>
-            <td><span class="text-muted">5</span></td>
-            <td><span class="badge success">8</span></td>
-            <td><span class="badge success">0</span></td>
-            <td>6m</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-
-    <!-- Runbook Execution Metrics -->
-    <h2><span class="es">Metricas de Ejecucion de Runbooks</span><span class="en">Runbook Execution Metrics</span></h2>
-
-    <div class="table-wrap">
-      <table>
-        <thead>
-          <tr>
-            <th>SID</th>
-            <th><span class="es">Ejecuciones (30d)</span><span class="en">Executions (30d)</span></th>
-            <th>SUCCESS</th>
-            <th>FAILED</th>
-            <th>PENDING</th>
-            <th><span class="es">Tasa Exito</span><span class="en">Success Rate</span></th>
-            <th><span class="es">Duracion Prom.</span><span class="en">Avg Duration</span></th>
-            <th><span class="es">Runbook mas usado</span><span class="en">Most used Runbook</span></th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td><code>EP1</code></td>
-            <td class="font-bold">64</td>
-            <td><span class="text-success">58</span></td>
-            <td><span class="text-danger">4</span></td>
-            <td><span class="text-muted">2</span></td>
-            <td><span class="badge success">90.6%</span></td>
-            <td>15s</td>
-            <td>HANA Memory Reclaim</td>
-          </tr>
-          <tr>
-            <td><code>QP1</code></td>
-            <td class="font-bold">38</td>
-            <td><span class="text-success">35</span></td>
-            <td><span class="text-danger">2</span></td>
-            <td><span class="text-muted">1</span></td>
-            <td><span class="badge success">92.1%</span></td>
-            <td>21s</td>
-            <td>Log Cleanup</td>
-          </tr>
-          <tr>
-            <td><code>DP1</code></td>
-            <td class="font-bold">22</td>
-            <td><span class="text-success">21</span></td>
-            <td><span class="text-danger">1</span></td>
-            <td><span class="text-muted">0</span></td>
-            <td><span class="badge success">95.5%</span></td>
-            <td>18s</td>
-            <td>Log Cleanup</td>
-          </tr>
-          <tr>
-            <td><code>FP1</code></td>
-            <td class="font-bold">25</td>
-            <td><span class="text-success">18</span></td>
-            <td><span class="text-danger">5</span></td>
-            <td><span class="text-muted">2</span></td>
-            <td><span class="badge warning">72.0%</span></td>
-            <td>28s</td>
-            <td>Oracle RMAN Check</td>
-          </tr>
-          <tr>
-            <td><code>HP1</code></td>
-            <td class="font-bold">7</td>
-            <td><span class="text-success">7</span></td>
-            <td><span class="text-danger">0</span></td>
-            <td><span class="text-muted">0</span></td>
-            <td><span class="badge success">100%</span></td>
-            <td>12s</td>
-            <td>BI Process Monitor</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-
-    <!-- Analytics Thresholds Configuration -->
-    <h2><span class="es">Configuracion de Umbrales</span><span class="en">Threshold Configuration</span></h2>
-
-    <div class="card">
-      <p class="text-sm">
-        <span class="es">Los umbrales SLA se pueden configurar por sistema y metrica. Cuando un valor excede su umbral, se genera un Breach y se dispara una alerta. Los valores por defecto son:</span>
-        <span class="en">SLA thresholds can be configured per system and metric. When a value exceeds its threshold, a Breach is generated and an alert is triggered. Default values are:</span>
+      <p>
+        <span class="es">Spektra calcula metricas SLA en tiempo real para cada sistema del landscape. Las metricas se basan en los datos de heartbeat y alertas historicas.</span>
+        <span class="en">Spektra calculates SLA metrics in real time for each landscape system. Metrics are based on heartbeat data and historical alerts.</span>
       </p>
-
-      <div class="table-wrap mt-2">
+      <div class="table-wrap">
         <table>
           <thead>
             <tr>
-              <th><span class="es">Metrica</span><span class="en">Metric</span></th>
-              <th><span class="es">Umbral Warning</span><span class="en">Warning Threshold</span></th>
-              <th><span class="es">Umbral Critical</span><span class="en">Critical Threshold</span></th>
-              <th><span class="es">Unidad</span><span class="en">Unit</span></th>
-              <th><span class="es">Direccion</span><span class="en">Direction</span></th>
+              <th>SID</th>
+              <th><span class="es">Disponibilidad</span><span class="en">Availability</span></th>
+              <th>MTTR</th>
+              <th>MTBF</th>
+              <th>Health Score</th>
+              <th><span class="es">Incidentes (30d)</span><span class="en">Incidents (30d)</span></th>
+              <th><span class="es">SLA Status</span><span class="en">SLA Status</span></th>
             </tr>
           </thead>
           <tbody>
-            <tr><td>cpu_usage</td><td>80%</td><td>90%</td><td>%</td><td><span class="es">Mayor = peor</span><span class="en">Higher = worse</span></td></tr>
-            <tr><td>memory_usage</td><td>80%</td><td>90%</td><td>%</td><td><span class="es">Mayor = peor</span><span class="en">Higher = worse</span></td></tr>
-            <tr><td>disk_usage</td><td>85%</td><td>92%</td><td>%</td><td><span class="es">Mayor = peor</span><span class="en">Higher = worse</span></td></tr>
-            <tr><td>availability</td><td>99.5%</td><td>99.0%</td><td>%</td><td><span class="es">Menor = peor</span><span class="en">Lower = worse</span></td></tr>
-            <tr><td>mttr</td><td>30 min</td><td>60 min</td><td>min</td><td><span class="es">Mayor = peor</span><span class="en">Higher = worse</span></td></tr>
-            <tr><td>mtbf</td><td>14d</td><td>7d</td><td><span class="es">dias</span><span class="en">days</span></td><td><span class="es">Menor = peor</span><span class="en">Lower = worse</span></td></tr>
-            <tr><td>health_score</td><td>60</td><td>40</td><td>pts</td><td><span class="es">Menor = peor</span><span class="en">Lower = worse</span></td></tr>
+            <tr>
+              <td class="font-mono font-bold">PRD</td>
+              <td class="text-success font-bold">99.98%</td>
+              <td>8m 30s</td>
+              <td>892h</td>
+              <td><span class="badge success">96</span></td>
+              <td>2</td>
+              <td><span class="badge success">Compliant</span></td>
+            </tr>
+            <tr>
+              <td class="font-mono font-bold">QAS</td>
+              <td class="text-success font-bold">99.92%</td>
+              <td>12m 15s</td>
+              <td>645h</td>
+              <td><span class="badge success">91</span></td>
+              <td>4</td>
+              <td><span class="badge success">Compliant</span></td>
+            </tr>
+            <tr>
+              <td class="font-mono font-bold">ECP</td>
+              <td class="text-warning font-bold">99.85%</td>
+              <td>22m 40s</td>
+              <td>380h</td>
+              <td><span class="badge warning">62</span></td>
+              <td>8</td>
+              <td><span class="badge warning">At Risk</span></td>
+            </tr>
+            <tr>
+              <td class="font-mono font-bold">BW4</td>
+              <td class="text-success font-bold">99.96%</td>
+              <td>10m 05s</td>
+              <td>720h</td>
+              <td><span class="badge success">88</span></td>
+              <td>3</td>
+              <td><span class="badge success">Compliant</span></td>
+            </tr>
+            <tr>
+              <td class="font-mono font-bold">PIP</td>
+              <td class="text-danger font-bold">99.62%</td>
+              <td>45m 20s</td>
+              <td>190h</td>
+              <td><span class="badge danger">45</span></td>
+              <td>12</td>
+              <td><span class="badge danger">Breached</span></td>
+            </tr>
           </tbody>
         </table>
       </div>
     </div>
 
-    <!-- Callout -->
-    <div class="callout info mt-3">
-      <div class="callout-icon">&#128161;</div>
-      <div>
-        <span class="es"><strong>Consejo:</strong> El sistema FP1 (ECC/Oracle) muestra una tendencia descendente en disponibilidad y alto numero de breaches. Considere ejecutar una operacion HOUSEKEEPING para liberar espacio en disco y revisar los jobs fallidos que impactan los backups RMAN.</span>
-        <span class="en"><strong>Tip:</strong> System FP1 (ECC/Oracle) shows a declining availability trend and high breach count. Consider running a HOUSEKEEPING operation to free disk space and review failed jobs impacting RMAN backups.</span>
+    <!-- MTTR / MTBF / Availability -->
+    <h2><span class="es">Definiciones de Metricas</span><span class="en">Metric Definitions</span></h2>
+    <div class="grid-3">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title"><div class="card-icon cyan">&#128338;</div> MTTR</div>
+        </div>
+        <p>
+          <span class="es"><strong>Mean Time To Repair</strong> — Tiempo promedio para restaurar un sistema a operacion normal despues de un incidente. Se calcula como el promedio de <code>(resolvedAt - createdAt)</code> para todas las alertas criticas del periodo.</span>
+          <span class="en"><strong>Mean Time To Repair</strong> — Average time to restore a system to normal operation after an incident. Calculated as the average of <code>(resolvedAt - createdAt)</code> for all critical alerts in the period.</span>
+        </p>
+        <pre><code>MTTR = AVG(resolvedAt - createdAt)
+// WHERE severity = 'critical'
+// AND status = 'resolved'</code></pre>
+      </div>
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title"><div class="card-icon violet">&#128200;</div> MTBF</div>
+        </div>
+        <p>
+          <span class="es"><strong>Mean Time Between Failures</strong> — Tiempo promedio entre incidentes criticos. Un MTBF alto indica estabilidad del sistema. Se mide en horas.</span>
+          <span class="en"><strong>Mean Time Between Failures</strong> — Average time between critical incidents. A high MTBF indicates system stability. Measured in hours.</span>
+        </p>
+        <pre><code>MTBF = totalUptime / incidentCount
+// WHERE severity = 'critical'
+// Period: last 30 days</code></pre>
+      </div>
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title"><div class="card-icon success">&#128994;</div> <span class="es">Disponibilidad</span><span class="en">Availability</span></div>
+        </div>
+        <p>
+          <span class="es"><strong>Availability %</strong> — Porcentaje del tiempo que el sistema estuvo operativo (health score &gt;20) durante el periodo. Se excluyen ventanas de mantenimiento planificadas.</span>
+          <span class="en"><strong>Availability %</strong> — Percentage of time the system was operational (health score &gt;20) during the period. Planned maintenance windows are excluded.</span>
+        </p>
+        <pre><code>Availability = (uptime / (total - planned)) * 100
+// uptime: minutes with healthScore > 20
+// planned: maintenance window minutes</code></pre>
       </div>
     </div>
 
-    <div class="callout success">
-      <div class="callout-icon">&#9989;</div>
-      <div>
-        <span class="es"><strong>Destacado:</strong> HP1 (BW/4HANA) mantiene 99.97% de disponibilidad, 0 breaches y 100% tasa de exito en runbooks. Es el sistema mas estable del landscape.</span>
-        <span class="en"><strong>Highlight:</strong> HP1 (BW/4HANA) maintains 99.97% availability, 0 breaches, and 100% runbook success rate. It is the most stable system in the landscape.</span>
+    <!-- Health Scoring Detail -->
+    <h2><span class="es">Puntuacion de Salud (Health Score)</span><span class="en">Health Scoring</span></h2>
+    <div class="card">
+      <p>
+        <span class="es">El health score (0-100) es un indicador compuesto que refleja el estado general del sistema. Se calcula en tiempo real y se almacena historicamente para analisis de tendencias.</span>
+        <span class="en">The health score (0-100) is a composite indicator reflecting the overall system state. It is calculated in real time and stored historically for trend analysis.</span>
+      </p>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th><span class="es">Factor</span><span class="en">Factor</span></th>
+              <th><span class="es">Peso</span><span class="en">Weight</span></th>
+              <th><span class="es">Calculo</span><span class="en">Calculation</span></th>
+              <th><span class="es">Umbrales</span><span class="en">Thresholds</span></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>CPU</td>
+              <td>20%</td>
+              <td class="font-mono">100 - cpuPercent</td>
+              <td><span class="es">&lt;70 = OK, 70-85 = warn, &gt;85 = crit</span><span class="en">&lt;70 = OK, 70-85 = warn, &gt;85 = crit</span></td>
+            </tr>
+            <tr>
+              <td><span class="es">Memoria</span><span class="en">Memory</span></td>
+              <td>20%</td>
+              <td class="font-mono">100 - memPercent</td>
+              <td><span class="es">&lt;75 = OK, 75-90 = warn, &gt;90 = crit</span><span class="en">&lt;75 = OK, 75-90 = warn, &gt;90 = crit</span></td>
+            </tr>
+            <tr>
+              <td><span class="es">Disco</span><span class="en">Disk</span></td>
+              <td>15%</td>
+              <td class="font-mono">100 - diskPercent</td>
+              <td><span class="es">&lt;70 = OK, 70-85 = warn, &gt;85 = crit</span><span class="en">&lt;70 = OK, 70-85 = warn, &gt;85 = crit</span></td>
+            </tr>
+            <tr>
+              <td><span class="es">Base de Datos</span><span class="en">Database</span></td>
+              <td>20%</td>
+              <td class="font-mono"><span class="es">Metricas especificas del motor</span><span class="en">Engine-specific metrics</span></td>
+              <td><span class="es">HANA memory, replication lag, etc.</span><span class="en">HANA memory, replication lag, etc.</span></td>
+            </tr>
+            <tr>
+              <td><span class="es">Alertas</span><span class="en">Alerts</span></td>
+              <td>15%</td>
+              <td class="font-mono">100 - (critical*20 + warning*5)</td>
+              <td><span class="es">0 alertas = 100, cada critica -20pts</span><span class="en">0 alerts = 100, each critical -20pts</span></td>
+            </tr>
+            <tr>
+              <td><span class="es">Conectividad</span><span class="en">Connectivity</span></td>
+              <td>10%</td>
+              <td class="font-mono"><span class="es">connected=100, degraded=50, disc=0</span><span class="en">connected=100, degraded=50, disc=0</span></td>
+              <td><span class="es">Basado en estado del conector</span><span class="en">Based on connector status</span></td>
+            </tr>
+          </tbody>
+        </table>
       </div>
+      <pre><code>// Health score calculation
+const healthScore = Math.round(
+  (100 - cpu) * 0.20 +           // CPU factor
+  (100 - memory) * 0.20 +        // Memory factor
+  (100 - disk) * 0.15 +          // Disk factor
+  dbScore * 0.20 +               // Database factor
+  alertScore * 0.15 +            // Alert factor
+  connectivityScore * 0.10       // Connectivity factor
+);
+
+// Clamp to 0-100 range
+return Math.max(0, Math.min(100, healthScore));</code></pre>
+    </div>
+
+    <!-- Runbook Analytics -->
+    <h2><span class="es">Analytics de Runbooks</span><span class="en">Runbook Analytics</span></h2>
+    <div class="card">
+      <p>
+        <span class="es">Metricas operativas de ejecucion de runbooks que se muestran en el panel SLA de cada sistema.</span>
+        <span class="en">Operational runbook execution metrics displayed in each system's SLA panel.</span>
+      </p>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th><span class="es">Metrica</span><span class="en">Metric</span></th>
+              <th><span class="es">Descripcion</span><span class="en">Description</span></th>
+              <th><span class="es">Ejemplo PRD</span><span class="en">PRD Example</span></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="font-mono">todayCount</td>
+              <td><span class="es">Runbooks ejecutados hoy</span><span class="en">Runbooks executed today</span></td>
+              <td class="font-bold">7</td>
+            </tr>
+            <tr>
+              <td class="font-mono">successRate</td>
+              <td><span class="es">Porcentaje de exito (ultimos 30 dias)</span><span class="en">Success rate (last 30 days)</span></td>
+              <td class="text-success font-bold">94.4%</td>
+            </tr>
+            <tr>
+              <td class="font-mono">avgDuration</td>
+              <td><span class="es">Duracion promedio de ejecucion</span><span class="en">Average execution duration</span></td>
+              <td>5m 42s</td>
+            </tr>
+            <tr>
+              <td class="font-mono">failedLast7d</td>
+              <td><span class="es">Runbooks fallidos en los ultimos 7 dias</span><span class="en">Failed runbooks in last 7 days</span></td>
+              <td class="text-warning">1</td>
+            </tr>
+            <tr>
+              <td class="font-mono">mostExecuted</td>
+              <td><span class="es">Runbook mas ejecutado del mes</span><span class="en">Most executed runbook of the month</span></td>
+              <td class="font-mono">HANA Backup Full</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Alert Statistics -->
+    <h2><span class="es">Estadisticas de Alertas</span><span class="en">Alert Statistics</span></h2>
+    <div class="card">
+      <p>
+        <span class="es">Resumen de estadisticas de alertas que alimentan las metricas SLA de cada sistema.</span>
+        <span class="en">Summary of alert statistics that feed each system's SLA metrics.</span>
+      </p>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th><span class="es">Metrica</span><span class="en">Metric</span></th>
+              <th><span class="es">Descripcion</span><span class="en">Description</span></th>
+              <th><span class="es">Ejemplo PRD</span><span class="en">PRD Example</span></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="font-mono">totalAlerts</td>
+              <td><span class="es">Total de alertas generadas (30 dias)</span><span class="en">Total alerts generated (30 days)</span></td>
+              <td class="font-bold">23</td>
+            </tr>
+            <tr>
+              <td class="font-mono">criticalAlerts</td>
+              <td><span class="es">Alertas criticas</span><span class="en">Critical alerts</span></td>
+              <td class="text-danger font-bold">2</td>
+            </tr>
+            <tr>
+              <td class="font-mono">warningAlerts</td>
+              <td><span class="es">Alertas de advertencia</span><span class="en">Warning alerts</span></td>
+              <td class="text-warning font-bold">8</td>
+            </tr>
+            <tr>
+              <td class="font-mono">autoResolved</td>
+              <td><span class="es">Alertas resueltas automaticamente</span><span class="en">Auto-resolved alerts</span></td>
+              <td class="text-success font-bold">15</td>
+            </tr>
+            <tr>
+              <td class="font-mono">autoResolvedRate</td>
+              <td><span class="es">Tasa de auto-resolucion</span><span class="en">Auto-resolution rate</span></td>
+              <td class="text-success font-bold">65.2%</td>
+            </tr>
+            <tr>
+              <td class="font-mono">avgResolutionTime</td>
+              <td><span class="es">Tiempo promedio de resolucion</span><span class="en">Average resolution time</span></td>
+              <td>8m 30s</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- API Endpoints -->
+    <h2><span class="es">Endpoints de API</span><span class="en">API Endpoints</span></h2>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th><span class="es">Metodo</span><span class="en">Method</span></th>
+            <th>Endpoint</th>
+            <th><span class="es">Descripcion</span><span class="en">Description</span></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="badge cyan">GET</span></td>
+            <td class="font-mono">/api/sla</td>
+            <td><span class="es">Resumen SLA de todo el landscape</span><span class="en">Landscape SLA summary</span></td>
+          </tr>
+          <tr>
+            <td><span class="badge cyan">GET</span></td>
+            <td class="font-mono">/api/sla/:systemId</td>
+            <td><span class="es">SLA detallado de un sistema</span><span class="en">Detailed system SLA</span></td>
+          </tr>
+          <tr>
+            <td><span class="badge cyan">GET</span></td>
+            <td class="font-mono">/api/sla/:systemId/trends</td>
+            <td><span class="es">Tendencias SLA historicas</span><span class="en">Historical SLA trends</span></td>
+          </tr>
+          <tr>
+            <td><span class="badge cyan">GET</span></td>
+            <td class="font-mono">/api/sla/:systemId/alerts</td>
+            <td><span class="es">Estadisticas de alertas para SLA</span><span class="en">Alert statistics for SLA</span></td>
+          </tr>
+          <tr>
+            <td><span class="badge cyan">GET</span></td>
+            <td class="font-mono">/api/sla/:systemId/runbooks</td>
+            <td><span class="es">Metricas de runbooks para SLA</span><span class="en">Runbook metrics for SLA</span></td>
+          </tr>
+        </tbody>
+      </table>
     </div>
 
   </main>

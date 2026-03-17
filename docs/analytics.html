@@ -2,533 +2,473 @@
 <html lang="es" data-theme="dark" data-lang="es">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
   <title>Analytics — SAP Spektra Docs</title>
   <link rel="stylesheet" href="theme.css">
   <script src="theme-toggle.js"></script>
   <script src="lang-toggle.js"></script>
-  <style>
-    .chart-placeholder{background:var(--bg3);border:1px dashed var(--brd);border-radius:var(--radius);height:220px;display:flex;align-items:center;justify-content:center;color:var(--txt3);font-size:13px;position:relative;overflow:hidden}
-    .chart-placeholder::after{content:'';position:absolute;bottom:0;left:0;right:0;height:60%;background:linear-gradient(180deg,transparent,rgba(6,182,212,0.04));pointer-events:none}
-    .time-window{display:flex;gap:0;border:1px solid var(--brd);border-radius:8px;overflow:hidden;margin-bottom:16px;width:fit-content}
-    .time-btn{padding:6px 16px;font-size:12px;font-weight:600;color:var(--txt3);background:var(--card-bg);cursor:pointer;border:none;transition:all .15s}
-    .time-btn:not(:last-child){border-right:1px solid var(--brd)}
-    .time-btn.active{background:var(--cyan-dim);color:var(--cyan)}
-    .time-btn:hover:not(.active){background:var(--bg3);color:var(--txt1)}
-    .stat-highlight{display:flex;align-items:center;gap:8px;padding:12px 16px;background:var(--bg3);border-radius:8px;margin-bottom:8px}
-    .stat-highlight .stat-val{font-size:20px;font-weight:700;color:var(--txt1)}
-    .stat-highlight .stat-label{font-size:12px;color:var(--txt3)}
-    .stat-highlight .stat-change{font-size:11px;font-weight:600;padding:2px 8px;border-radius:100px}
-    .stat-highlight .stat-change.up{background:rgba(34,197,94,0.12);color:var(--success)}
-    .stat-highlight .stat-change.down{background:rgba(239,68,68,0.12);color:var(--danger)}
-    .stat-highlight .stat-change.neutral{background:var(--bg3);color:var(--txt3)}
-    .trend-bar{display:flex;align-items:flex-end;gap:3px;height:60px;margin-top:8px}
-    .trend-bar .bar{width:14px;border-radius:3px 3px 0 0;background:var(--cyan);transition:height .3s}
-    .trend-bar .bar.success{background:var(--success)}
-    .trend-bar .bar.warning{background:var(--warning)}
-    .trend-bar .bar.danger{background:var(--danger)}
-    .mini-sparkline{display:flex;align-items:flex-end;gap:1px;height:24px}
-    .mini-sparkline .dot{width:3px;border-radius:1px;background:var(--cyan)}
-  </style>
 </head>
 <body>
 <div class="docs-wrapper">
-
-  <!-- ═══ SIDEBAR ═══ -->
-  <aside class="docs-sidebar">
+  <nav class="docs-sidebar">
     <div class="sidebar-brand">
-      <div class="logo">S</div>
+      <div class="logo">&#9889;</div>
       <div class="brand-text">
         <div class="brand-name">SAP Spektra</div>
-        <div class="brand-sub"><span class="es">Documentacion v2.0</span><span class="en">Documentation v2.0</span></div>
+        <div class="brand-sub">Documentacion v2.0</div>
       </div>
     </div>
-    <nav>
-      <div class="sidebar-section">
-        <div class="sidebar-section-label"><span class="es">Inicio</span><span class="en">Home</span></div>
-        <a class="sidebar-link" href="index.html"><span class="es">Portal</span><span class="en">Portal</span></a>
-        <a class="sidebar-link" href="getting-started.html"><span class="es">Primeros Pasos</span><span class="en">Getting Started</span></a>
-      </div>
-      <div class="sidebar-section">
-        <div class="sidebar-section-label">Command</div>
-        <a class="sidebar-link" href="dashboard.html">Dashboard</a>
-        <a class="sidebar-link" href="landscape.html">Landscape</a>
-        <a class="sidebar-link" href="alerts.html"><span class="es">Alertas</span><span class="en">Alerts</span></a>
-      </div>
-      <div class="sidebar-section">
-        <div class="sidebar-section-label">Monitor</div>
-        <a class="sidebar-link" href="systems.html"><span class="es">Sistemas</span><span class="en">Systems</span></a>
-        <a class="sidebar-link" href="connectors.html"><span class="es">Conectores</span><span class="en">Connectors</span></a>
-        <a class="sidebar-link" href="events.html"><span class="es">Eventos</span><span class="en">Events</span></a>
-      </div>
-      <div class="sidebar-section">
-        <div class="sidebar-section-label">Intelligence</div>
-        <a class="sidebar-link" href="ai-analysis.html"><span class="es">Analisis IA</span><span class="en">AI Analysis</span></a>
-        <a class="sidebar-link active" href="analytics.html">Analytics</a>
-        <a class="sidebar-link" href="reports.html"><span class="es">Reportes</span><span class="en">Reports</span></a>
-        <a class="sidebar-link" href="comparison.html"><span class="es">Comparacion</span><span class="en">Comparison</span></a>
-      </div>
-      <div class="sidebar-section">
-        <div class="sidebar-section-label">Operations</div>
-        <a class="sidebar-link" href="runbooks.html">Runbooks</a>
-        <a class="sidebar-link" href="approvals.html"><span class="es">Aprobaciones</span><span class="en">Approvals</span></a>
-        <a class="sidebar-link" href="operations.html"><span class="es">Operaciones</span><span class="en">Operations</span></a>
-        <a class="sidebar-link" href="jobs.html">Jobs SM37</a>
-        <a class="sidebar-link" href="transports.html"><span class="es">Transportes</span><span class="en">Transports</span></a>
-        <a class="sidebar-link" href="sla.html">SLA</a>
-        <a class="sidebar-link" href="ha-control.html">HA Control</a>
-        <a class="sidebar-link" href="certificates.html"><span class="es">Certificados</span><span class="en">Certificates</span></a>
-      </div>
-      <div class="sidebar-section">
-        <div class="sidebar-section-label">Admin</div>
-        <a class="sidebar-link" href="admin.html"><span class="es">Gestion</span><span class="en">Management</span></a>
-        <a class="sidebar-link" href="settings.html"><span class="es">Configuracion</span><span class="en">Settings</span></a>
-        <a class="sidebar-link" href="connect-system.html"><span class="es">Conectar Sistema</span><span class="en">Connect System</span></a>
-      </div>
-    </nav>
-  </aside>
+    <div class="sidebar-section">
+      <div class="sidebar-section-label">Inicio</div>
+      <a href="index.html" class="sidebar-link">Portal</a>
+      <a href="getting-started.html" class="sidebar-link">Primeros Pasos</a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-section-label">Architecture</div>
+      <a href="architecture.html" class="sidebar-link">Arquitectura</a>
+      <a href="domain-model.html" class="sidebar-link">Modelo de Datos</a>
+      <a href="api-reference.html" class="sidebar-link">API Reference</a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-section-label">Command</div>
+      <a href="dashboard.html" class="sidebar-link">Dashboard</a>
+      <a href="landscape.html" class="sidebar-link">Landscape</a>
+      <a href="alerts.html" class="sidebar-link">Alertas</a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-section-label">Monitor</div>
+      <a href="systems.html" class="sidebar-link">Sistemas</a>
+      <a href="connectors.html" class="sidebar-link">Conectores</a>
+      <a href="events.html" class="sidebar-link">Eventos</a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-section-label">Intelligence</div>
+      <a href="ai-analysis.html" class="sidebar-link">Analisis IA</a>
+      <a href="analytics.html" class="sidebar-link active">Analytics</a>
+      <a href="reports.html" class="sidebar-link">Reportes</a>
+      <a href="comparison.html" class="sidebar-link">Comparacion</a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-section-label">Operations</div>
+      <a href="runbooks.html" class="sidebar-link">Runbooks</a>
+      <a href="approvals.html" class="sidebar-link">Aprobaciones</a>
+      <a href="operations.html" class="sidebar-link">Operaciones</a>
+      <a href="jobs.html" class="sidebar-link">Jobs (SM37)</a>
+      <a href="transports.html" class="sidebar-link">Transportes</a>
+      <a href="sla.html" class="sidebar-link">SLA</a>
+      <a href="ha-control.html" class="sidebar-link">HA Control</a>
+      <a href="certificates.html" class="sidebar-link">Certificados</a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-section-label">Admin</div>
+      <a href="admin.html" class="sidebar-link">Gestion</a>
+      <a href="settings.html" class="sidebar-link">Configuracion</a>
+      <a href="connect-system.html" class="sidebar-link">Conectar Sistema</a>
+    </div>
+  </nav>
 
-  <!-- ═══ MAIN ═══ -->
   <main class="docs-main">
     <div class="breadcrumb">
-      <a href="index.html">Spektra</a> <span class="sep">/</span> Intelligence <span class="sep">/</span> Analytics
+      <a href="index.html">Docs</a> <span class="sep">/</span>
+      <span class="es">Intelligence</span><span class="en">Intelligence</span> <span class="sep">/</span>
+      <span class="es">Analytics</span><span class="en">Analytics</span>
     </div>
 
     <div class="page-header">
-      <h1>Analytics</h1>
+      <h1><span class="es">Analytics</span><span class="en">Analytics</span></h1>
       <p class="subtitle">
-        <span class="es">Panel de analitica centralizado con KPIs del landscape, tendencias de salud, estadisticas de runbooks y metricas operacionales agregadas.</span>
-        <span class="en">Centralized analytics dashboard with landscape KPIs, health trends, runbook statistics, and aggregated operational metrics.</span>
+        <span class="es">Analisis avanzados, tendencias de salud, metricas de ejecucion y agregaciones del dashboard</span>
+        <span class="en">Advanced analytics, health trends, execution metrics, and dashboard aggregations</span>
       </p>
     </div>
 
-    <!-- Overview KPIs -->
-    <h2><span class="es">KPIs del Landscape</span><span class="en">Landscape KPIs</span></h2>
+    <!-- KPIs -->
     <div class="kpi-grid">
       <div class="kpi-card">
-        <div class="card-icon cyan">&#9641;</div>
+        <div class="card-icon cyan">&#128200;</div>
         <div>
-          <div class="kpi-value">24</div>
-          <div class="kpi-label"><span class="es">Sistemas Totales</span><span class="en">Total Systems</span></div>
+          <div class="kpi-value">5</div>
+          <div class="kpi-label"><span class="es">Modulos de Analytics</span><span class="en">Analytics Modules</span></div>
         </div>
       </div>
       <div class="kpi-card">
-        <div class="card-icon success">&#9829;</div>
+        <div class="card-icon violet">&#128201;</div>
         <div>
-          <div class="kpi-value">84.2</div>
-          <div class="kpi-label"><span class="es">Salud Promedio</span><span class="en">Avg Health</span></div>
+          <div class="kpi-value">90d</div>
+          <div class="kpi-label"><span class="es">Historial de Datos</span><span class="en">Data History</span></div>
         </div>
       </div>
       <div class="kpi-card">
-        <div class="card-icon warning">&#9888;</div>
+        <div class="card-icon success">&#128338;</div>
         <div>
-          <div class="kpi-value">47</div>
-          <div class="kpi-label"><span class="es">Alertas Totales (7d)</span><span class="en">Total Alerts (7d)</span></div>
-        </div>
-      </div>
-      <div class="kpi-card">
-        <div class="card-icon violet">&#9881;</div>
-        <div>
-          <div class="kpi-value">156</div>
-          <div class="kpi-label"><span class="es">Operaciones (30d)</span><span class="en">Operations (30d)</span></div>
+          <div class="kpi-value">5min</div>
+          <div class="kpi-label"><span class="es">Granularidad Minima</span><span class="en">Minimum Granularity</span></div>
         </div>
       </div>
     </div>
 
-    <!-- KPI Detail Cards -->
-    <div class="grid-2">
-      <div class="card">
-        <div class="card-header">
-          <div class="card-title"><span class="es">Sistemas por Entorno</span><span class="en">Systems by Environment</span></div>
-        </div>
-        <div class="stat-highlight">
-          <div><div class="stat-val">10</div><div class="stat-label">Production (PRD)</div></div>
-        </div>
-        <div class="stat-highlight">
-          <div><div class="stat-val">6</div><div class="stat-label">Quality (QAS)</div></div>
-        </div>
-        <div class="stat-highlight">
-          <div><div class="stat-val">5</div><div class="stat-label">Development (DEV)</div></div>
-        </div>
-        <div class="stat-highlight">
-          <div><div class="stat-val">3</div><div class="stat-label">Sandbox (SBX)</div></div>
-        </div>
-      </div>
-      <div class="card">
-        <div class="card-header">
-          <div class="card-title"><span class="es">Alertas por Severidad</span><span class="en">Alerts by Severity</span></div>
-        </div>
-        <div class="stat-highlight">
-          <div><div class="stat-val text-danger">8</div><div class="stat-label"><span class="es">Criticas</span><span class="en">Critical</span></div></div>
-          <span class="stat-change up">+3</span>
-        </div>
-        <div class="stat-highlight">
-          <div><div class="stat-val text-warning">15</div><div class="stat-label"><span class="es">Advertencias</span><span class="en">Warnings</span></div></div>
-          <span class="stat-change down">-2</span>
-        </div>
-        <div class="stat-highlight">
-          <div><div class="stat-val text-cyan">24</div><div class="stat-label"><span class="es">Informativas</span><span class="en">Informational</span></div></div>
-          <span class="stat-change neutral">0</span>
-        </div>
-      </div>
-    </div>
-
-    <!-- Runbook Analytics -->
-    <h2><span class="es">Analitica de Runbooks</span><span class="en">Runbook Analytics</span></h2>
-
-    <div class="kpi-grid">
-      <div class="kpi-card">
-        <div class="card-icon violet">&#9654;</div>
-        <div>
-          <div class="kpi-value">342</div>
-          <div class="kpi-label"><span class="es">Ejecuciones Totales (30d)</span><span class="en">Total Executions (30d)</span></div>
-        </div>
-      </div>
-      <div class="kpi-card">
-        <div class="card-icon success">&#10003;</div>
-        <div>
-          <div class="kpi-value">94.7%</div>
-          <div class="kpi-label"><span class="es">Tasa de Exito</span><span class="en">Success Rate</span></div>
-        </div>
-      </div>
-      <div class="kpi-card">
-        <div class="card-icon cyan">&#9202;</div>
-        <div>
-          <div class="kpi-value">2.4m</div>
-          <div class="kpi-label"><span class="es">Duracion Promedio</span><span class="en">Avg Duration</span></div>
-        </div>
-      </div>
-      <div class="kpi-card">
-        <div class="card-icon warning">&#9888;</div>
-        <div>
-          <div class="kpi-value">18</div>
-          <div class="kpi-label"><span class="es">Fallos (30d)</span><span class="en">Failures (30d)</span></div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Daily Execution Trend -->
+    <!-- Analytics Overview Endpoint -->
+    <h2><span class="es">Endpoint de Resumen de Analytics</span><span class="en">Analytics Overview Endpoint</span></h2>
     <div class="card">
-      <div class="card-header">
-        <div class="card-title"><span class="es">Tendencia Diaria de Ejecuciones</span><span class="en">Daily Execution Trend</span></div>
-        <div class="time-window">
-          <button class="time-btn">7d</button>
-          <button class="time-btn active">14d</button>
-          <button class="time-btn">30d</button>
-        </div>
-      </div>
-      <div class="chart-placeholder">
-        <span class="es">Grafico de barras — Ejecuciones diarias (exito vs fallo)</span>
-        <span class="en">Bar chart — Daily executions (success vs failure)</span>
-      </div>
-      <div class="trend-bar mt-2">
-        <div class="bar success" style="height:45px" title="Mar 1: 22 ok"></div>
-        <div class="bar success" style="height:38px" title="Mar 2: 19 ok"></div>
-        <div class="bar success" style="height:52px" title="Mar 3: 26 ok"></div>
-        <div class="bar success" style="height:40px" title="Mar 4: 20 ok"></div>
-        <div class="bar warning" style="height:30px" title="Mar 5: 15 ok, 2 fail"></div>
-        <div class="bar success" style="height:48px" title="Mar 6: 24 ok"></div>
-        <div class="bar success" style="height:35px" title="Mar 7: 18 ok"></div>
-        <div class="bar success" style="height:42px" title="Mar 8: 21 ok"></div>
-        <div class="bar danger" style="height:20px" title="Mar 9: 8 ok, 5 fail"></div>
-        <div class="bar success" style="height:55px" title="Mar 10: 28 ok"></div>
-        <div class="bar success" style="height:50px" title="Mar 11: 25 ok"></div>
-        <div class="bar success" style="height:36px" title="Mar 12: 18 ok"></div>
-        <div class="bar success" style="height:44px" title="Mar 13: 22 ok"></div>
-        <div class="bar success" style="height:46px" title="Mar 14: 23 ok"></div>
-      </div>
-      <p class="text-xs text-muted mt-1">
-        <span class="es">Cada barra representa ejecuciones diarias. Verde = exito, Amarillo = parcial, Rojo = fallo significativo.</span>
-        <span class="en">Each bar represents daily executions. Green = success, Yellow = partial, Red = significant failure.</span>
+      <p>
+        <span class="es">El endpoint <code>/api/analytics/overview</code> proporciona un resumen consolidado de todas las metricas del landscape en un solo llamado. Es el endpoint principal usado por el dashboard para renderizar los widgets de analytics.</span>
+        <span class="en">The <code>/api/analytics/overview</code> endpoint provides a consolidated summary of all landscape metrics in a single call. It is the main endpoint used by the dashboard to render analytics widgets.</span>
       </p>
+      <pre><code>GET /api/analytics/overview
+Authorization: Bearer &lt;jwt_token&gt;
+
+// Response
+{
+  "landscape": {
+    "totalSystems": 12,
+    "healthySystems": 8,
+    "warningSystems": 2,
+    "criticalSystems": 1,
+    "offlineSystems": 1,
+    "avgHealthScore": 82.4
+  },
+  "alerts": {
+    "totalActive": 15,
+    "critical": 3,
+    "warning": 8,
+    "info": 4,
+    "autoResolvedToday": 5,
+    "avgResolutionTimeMinutes": 23.5
+  },
+  "runbooks": {
+    "executedToday": 7,
+    "successRate": 85.7,
+    "avgDurationSeconds": 342,
+    "failedToday": 1,
+    "pendingApproval": 2
+  },
+  "operations": {
+    "scheduledToday": 3,
+    "completedToday": 2,
+    "runningNow": 1,
+    "failedToday": 0
+  },
+  "connectors": {
+    "connected": 10,
+    "degraded": 1,
+    "disconnected": 1,
+    "avgLatencyMs": 87
+  }
+}</code></pre>
+    </div>
+
+    <!-- Runbook Execution Analytics -->
+    <h2><span class="es">Analytics de Ejecucion de Runbooks</span><span class="en">Runbook Execution Analytics</span></h2>
+    <div class="card">
+      <p>
+        <span class="es">Metricas detalladas sobre la ejecucion de runbooks, incluyendo tasas de exito, tiempos de ejecucion, y tendencias por categoria y sistema.</span>
+        <span class="en">Detailed metrics on runbook execution, including success rates, execution times, and trends by category and system.</span>
+      </p>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th><span class="es">Metrica</span><span class="en">Metric</span></th>
+              <th><span class="es">Descripcion</span><span class="en">Description</span></th>
+              <th><span class="es">Calculo</span><span class="en">Calculation</span></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="font-mono">executionCount</td>
+              <td><span class="es">Numero total de ejecuciones en el periodo</span><span class="en">Total number of executions in the period</span></td>
+              <td><span class="es">COUNT de ejecuciones completadas</span><span class="en">COUNT of completed executions</span></td>
+            </tr>
+            <tr>
+              <td class="font-mono">successRate</td>
+              <td><span class="es">Porcentaje de ejecuciones exitosas</span><span class="en">Percentage of successful executions</span></td>
+              <td class="font-mono">(success / total) * 100</td>
+            </tr>
+            <tr>
+              <td class="font-mono">avgDuration</td>
+              <td><span class="es">Duracion promedio en segundos</span><span class="en">Average duration in seconds</span></td>
+              <td class="font-mono">AVG(endTime - startTime)</td>
+            </tr>
+            <tr>
+              <td class="font-mono">p95Duration</td>
+              <td><span class="es">Percentil 95 de duracion</span><span class="en">95th percentile duration</span></td>
+              <td class="font-mono">PERCENTILE_CONT(0.95)</td>
+            </tr>
+            <tr>
+              <td class="font-mono">failureReasons</td>
+              <td><span class="es">Top 5 razones de fallo mas frecuentes</span><span class="en">Top 5 most frequent failure reasons</span></td>
+              <td><span class="es">GROUP BY reason, ORDER BY count DESC</span><span class="en">GROUP BY reason, ORDER BY count DESC</span></td>
+            </tr>
+            <tr>
+              <td class="font-mono">byCategory</td>
+              <td><span class="es">Desglose por categoria de runbook</span><span class="en">Breakdown by runbook category</span></td>
+              <td><span class="es">GROUP BY category</span><span class="en">GROUP BY category</span></td>
+            </tr>
+            <tr>
+              <td class="font-mono">bySystem</td>
+              <td><span class="es">Desglose por sistema (SID)</span><span class="en">Breakdown by system (SID)</span></td>
+              <td><span class="es">GROUP BY systemId</span><span class="en">GROUP BY systemId</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <pre><code>GET /api/analytics/runbooks?period=7d
+Authorization: Bearer &lt;jwt_token&gt;
+
+// Response
+{
+  "period": "7d",
+  "executionCount": 45,
+  "successRate": 88.9,
+  "avgDurationSeconds": 287,
+  "p95DurationSeconds": 620,
+  "failedCount": 5,
+  "byCategory": [
+    { "category": "BACKUP", "count": 14, "successRate": 100.0 },
+    { "category": "MONITORING", "count": 12, "successRate": 91.7 },
+    { "category": "PERFORMANCE", "count": 8, "successRate": 87.5 },
+    { "category": "HOUSEKEEPING", "count": 6, "successRate": 83.3 },
+    { "category": "SECURITY", "count": 5, "successRate": 60.0 }
+  ],
+  "bySystem": [
+    { "sid": "PRD", "count": 18, "successRate": 94.4 },
+    { "sid": "QAS", "count": 12, "successRate": 83.3 },
+    { "sid": "ECP", "count": 8, "successRate": 75.0 },
+    { "sid": "BW4", "count": 7, "successRate": 100.0 }
+  ],
+  "failureReasons": [
+    { "reason": "Timeout exceeded (600s)", "count": 2 },
+    { "reason": "Insufficient authorization", "count": 1 },
+    { "reason": "Target system offline", "count": 1 },
+    { "reason": "HANA backup lock conflict", "count": 1 }
+  ]
+}</code></pre>
     </div>
 
     <!-- System Health Trends -->
     <h2><span class="es">Tendencias de Salud del Sistema</span><span class="en">System Health Trends</span></h2>
+    <div class="card">
+      <p>
+        <span class="es">Las tendencias de salud proporcionan datos de series temporales para visualizar la evolucion de las metricas de cada sistema a lo largo del tiempo. Se soportan multiples granularidades.</span>
+        <span class="en">Health trends provide time-series data to visualize the evolution of each system's metrics over time. Multiple granularities are supported.</span>
+      </p>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th><span class="es">Granularidad</span><span class="en">Granularity</span></th>
+              <th><span class="es">Intervalo</span><span class="en">Interval</span></th>
+              <th><span class="es">Rango Maximo</span><span class="en">Maximum Range</span></th>
+              <th><span class="es">Uso Recomendado</span><span class="en">Recommended Use</span></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="font-mono">5m</td>
+              <td><span class="es">5 minutos</span><span class="en">5 minutes</span></td>
+              <td>24h</td>
+              <td><span class="es">Investigacion de incidentes en tiempo real</span><span class="en">Real-time incident investigation</span></td>
+            </tr>
+            <tr>
+              <td class="font-mono">1h</td>
+              <td><span class="es">1 hora</span><span class="en">1 hour</span></td>
+              <td>7d</td>
+              <td><span class="es">Analisis de tendencias diarias</span><span class="en">Daily trend analysis</span></td>
+            </tr>
+            <tr>
+              <td class="font-mono">1d</td>
+              <td><span class="es">1 dia</span><span class="en">1 day</span></td>
+              <td>90d</td>
+              <td><span class="es">Reportes semanales/mensuales</span><span class="en">Weekly/monthly reports</span></td>
+            </tr>
+            <tr>
+              <td class="font-mono">1w</td>
+              <td><span class="es">1 semana</span><span class="en">1 week</span></td>
+              <td>365d</td>
+              <td><span class="es">Analisis de capacidad a largo plazo</span><span class="en">Long-term capacity analysis</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <pre><code>GET /api/analytics/health-trends?systemId=PRD_ID&period=24h&granularity=5m
+Authorization: Bearer &lt;jwt_token&gt;
 
-    <div class="time-window">
-      <button class="time-btn">7d</button>
-      <button class="time-btn active">14d</button>
-      <button class="time-btn">30d</button>
+// Response
+{
+  "systemId": "a1b2c3d4-...",
+  "sid": "PRD",
+  "period": "24h",
+  "granularity": "5m",
+  "dataPoints": [
+    {
+      "timestamp": "2025-01-15T00:00:00Z",
+      "healthScore": 96,
+      "cpu": 23.4,
+      "memory": 67.2,
+      "disk": 51.8,
+      "activeAlerts": 0,
+      "connectorStatus": "connected"
+    },
+    {
+      "timestamp": "2025-01-15T00:05:00Z",
+      "healthScore": 96,
+      "cpu": 24.1,
+      "memory": 67.5,
+      "disk": 51.8,
+      "activeAlerts": 0,
+      "connectorStatus": "connected"
+    },
+    // ... 286 more data points for 24h at 5m intervals
+  ],
+  "statistics": {
+    "avgHealthScore": 91.2,
+    "minHealthScore": 62,
+    "maxHealthScore": 98,
+    "avgCpu": 34.5,
+    "maxCpu": 95.2,
+    "avgMemory": 68.1,
+    "maxMemory": 89.3
+  }
+}</code></pre>
     </div>
 
-    <div class="grid-2">
-      <div class="card">
-        <div class="card-header">
-          <div class="card-title">S4P — S/4HANA Production</div>
-          <span class="badge success">96</span>
+    <!-- Time-Series Data -->
+    <h2><span class="es">Datos de Series Temporales</span><span class="en">Time-Series Data</span></h2>
+    <div class="card">
+      <p>
+        <span class="es">Spektra almacena datos de series temporales para las siguientes metricas. Cada metrica se almacena con su timestamp original y se agrega segun la granularidad solicitada.</span>
+        <span class="en">Spektra stores time-series data for the following metrics. Each metric is stored with its original timestamp and aggregated according to the requested granularity.</span>
+      </p>
+      <div class="grid-2">
+        <div>
+          <h4><span class="es">Metricas de Infraestructura</span><span class="en">Infrastructure Metrics</span></h4>
+          <ul class="feature-list">
+            <li><span class="es"><strong>CPU:</strong> Utilizacion total, por core, y por proceso SAP</span><span class="en"><strong>CPU:</strong> Total utilization, per core, and per SAP process</span></li>
+            <li><span class="es"><strong>Memoria:</strong> Uso fisico, swap, buffer/cache HANA</span><span class="en"><strong>Memory:</strong> Physical usage, swap, HANA buffer/cache</span></li>
+            <li><span class="es"><strong>Disco:</strong> Espacio usado/libre, I/O read/write, latencia I/O</span><span class="en"><strong>Disk:</strong> Used/free space, I/O read/write, I/O latency</span></li>
+            <li><span class="es"><strong>Red:</strong> Bytes in/out, paquetes, errores</span><span class="en"><strong>Network:</strong> Bytes in/out, packets, errors</span></li>
+          </ul>
         </div>
-        <div class="chart-placeholder" style="height:140px">
-          <span class="es">Tendencia salud 14 dias — Estable ~95-97</span>
-          <span class="en">Health trend 14 days — Stable ~95-97</span>
-        </div>
-        <div class="stat-highlight mt-1">
-          <div><div class="stat-label"><span class="es">Promedio 14d</span><span class="en">14d Average</span></div><div class="stat-val">95.8</div></div>
-          <span class="stat-change up">+0.4</span>
-        </div>
-      </div>
-      <div class="card">
-        <div class="card-header">
-          <div class="card-title">ECP — ECC Production</div>
-          <span class="badge success">82</span>
-        </div>
-        <div class="chart-placeholder" style="height:140px">
-          <span class="es">Tendencia salud 14 dias — Ligera mejora</span>
-          <span class="en">Health trend 14 days — Slight improvement</span>
-        </div>
-        <div class="stat-highlight mt-1">
-          <div><div class="stat-label"><span class="es">Promedio 14d</span><span class="en">14d Average</span></div><div class="stat-val">80.1</div></div>
-          <span class="stat-change up">+2.1</span>
-        </div>
-      </div>
-      <div class="card">
-        <div class="card-header">
-          <div class="card-title">BWP — BW/4HANA Production</div>
-          <span class="badge warning">64</span>
-        </div>
-        <div class="chart-placeholder" style="height:140px">
-          <span class="es">Tendencia salud 14 dias — Degradacion progresiva</span>
-          <span class="en">Health trend 14 days — Progressive degradation</span>
-        </div>
-        <div class="stat-highlight mt-1">
-          <div><div class="stat-label"><span class="es">Promedio 14d</span><span class="en">14d Average</span></div><div class="stat-val">71.3</div></div>
-          <span class="stat-change down">-8.2</span>
-        </div>
-      </div>
-      <div class="card">
-        <div class="card-header">
-          <div class="card-title">SLT — SLT Replication</div>
-          <span class="badge danger">38</span>
-        </div>
-        <div class="chart-placeholder" style="height:140px">
-          <span class="es">Tendencia salud 14 dias — Caida abrupta</span>
-          <span class="en">Health trend 14 days — Sharp decline</span>
-        </div>
-        <div class="stat-highlight mt-1">
-          <div><div class="stat-label"><span class="es">Promedio 14d</span><span class="en">14d Average</span></div><div class="stat-val">58.4</div></div>
-          <span class="stat-change down">-22.6</span>
+        <div>
+          <h4><span class="es">Metricas de Aplicacion SAP</span><span class="en">SAP Application Metrics</span></h4>
+          <ul class="feature-list">
+            <li><span class="es"><strong>Work Processes:</strong> Ocupados/libres por tipo (DIA, BTC, UPD)</span><span class="en"><strong>Work Processes:</strong> Busy/free by type (DIA, BTC, UPD)</span></li>
+            <li><span class="es"><strong>Response Time:</strong> Tiempo de respuesta del dialog</span><span class="en"><strong>Response Time:</strong> Dialog response time</span></li>
+            <li><span class="es"><strong>Users:</strong> Usuarios conectados activos</span><span class="en"><strong>Users:</strong> Active connected users</span></li>
+            <li><span class="es"><strong>HANA:</strong> Memory allocation, column store size, delta merges</span><span class="en"><strong>HANA:</strong> Memory allocation, column store size, delta merges</span></li>
+          </ul>
         </div>
       </div>
     </div>
 
-    <!-- Top Performing Runbooks -->
-    <h2><span class="es">Runbooks con Mejor Rendimiento</span><span class="en">Top Performing Runbooks</span></h2>
+    <!-- Dashboard Aggregation -->
+    <h2><span class="es">Agregacion del Dashboard</span><span class="en">Dashboard Aggregation</span></h2>
+    <div class="card">
+      <p>
+        <span class="es">El dashboard principal consume datos agregados de multiples fuentes para presentar una vista unificada del landscape. Las agregaciones se calculan en tiempo real o se cachean por periodos cortos (30-60 segundos) para optimizar rendimiento.</span>
+        <span class="en">The main dashboard consumes aggregated data from multiple sources to present a unified landscape view. Aggregations are calculated in real time or cached for short periods (30-60 seconds) to optimize performance.</span>
+      </p>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th><span class="es">Widget del Dashboard</span><span class="en">Dashboard Widget</span></th>
+              <th><span class="es">Endpoint Fuente</span><span class="en">Source Endpoint</span></th>
+              <th><span class="es">Cache TTL</span><span class="en">Cache TTL</span></th>
+              <th><span class="es">Refresh</span><span class="en">Refresh</span></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><span class="es">Resumen del Landscape</span><span class="en">Landscape Summary</span></td>
+              <td class="font-mono">/api/analytics/overview</td>
+              <td>30s</td>
+              <td><span class="es">Auto (polling)</span><span class="en">Auto (polling)</span></td>
+            </tr>
+            <tr>
+              <td><span class="es">Health Score Chart</span><span class="en">Health Score Chart</span></td>
+              <td class="font-mono">/api/analytics/health-trends</td>
+              <td>60s</td>
+              <td><span class="es">Auto (polling)</span><span class="en">Auto (polling)</span></td>
+            </tr>
+            <tr>
+              <td><span class="es">Alertas Activas</span><span class="en">Active Alerts</span></td>
+              <td class="font-mono">/api/alerts?status=active</td>
+              <td>15s</td>
+              <td><span class="es">Tiempo real</span><span class="en">Real time</span></td>
+            </tr>
+            <tr>
+              <td><span class="es">Runbooks Recientes</span><span class="en">Recent Runbooks</span></td>
+              <td class="font-mono">/api/analytics/runbooks</td>
+              <td>60s</td>
+              <td><span class="es">Auto (polling)</span><span class="en">Auto (polling)</span></td>
+            </tr>
+            <tr>
+              <td><span class="es">Eventos Timeline</span><span class="en">Events Timeline</span></td>
+              <td class="font-mono">/api/events?limit=20</td>
+              <td>15s</td>
+              <td><span class="es">Tiempo real</span><span class="en">Real time</span></td>
+            </tr>
+            <tr>
+              <td><span class="es">Estado de Conectores</span><span class="en">Connector Status</span></td>
+              <td class="font-mono">/api/analytics/overview</td>
+              <td>30s</td>
+              <td><span class="es">Auto (polling)</span><span class="en">Auto (polling)</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- API Endpoints -->
+    <h2><span class="es">Endpoints de API</span><span class="en">API Endpoints</span></h2>
     <div class="table-wrap">
       <table>
         <thead>
           <tr>
-            <th>#</th>
-            <th>Runbook</th>
-            <th><span class="es">Ejecuciones</span><span class="en">Executions</span></th>
-            <th><span class="es">Tasa Exito</span><span class="en">Success Rate</span></th>
-            <th><span class="es">Duracion Prom.</span><span class="en">Avg Duration</span></th>
-            <th><span class="es">Ultimo Uso</span><span class="en">Last Used</span></th>
-            <th>Trend</th>
+            <th><span class="es">Metodo</span><span class="en">Method</span></th>
+            <th>Endpoint</th>
+            <th><span class="es">Descripcion</span><span class="en">Description</span></th>
           </tr>
         </thead>
         <tbody>
           <tr>
-            <td class="text-cyan font-bold">1</td>
-            <td>
-              <div class="font-semibold text-primary">RB-HEALTH-CHECK</div>
-              <div class="text-xs text-muted"><span class="es">Verificacion de salud automatica</span><span class="en">Automated health check</span></div>
-            </td>
-            <td class="font-bold">89</td>
-            <td><span class="badge success">100%</span></td>
-            <td class="font-mono text-sm">45s</td>
-            <td class="text-sm">2h ago</td>
-            <td>
-              <div class="mini-sparkline">
-                <div class="dot" style="height:16px"></div><div class="dot" style="height:18px"></div>
-                <div class="dot" style="height:14px"></div><div class="dot" style="height:20px"></div>
-                <div class="dot" style="height:22px"></div><div class="dot" style="height:18px"></div>
-                <div class="dot" style="height:24px"></div>
-              </div>
-            </td>
+            <td><span class="badge cyan">GET</span></td>
+            <td class="font-mono">/api/analytics/overview</td>
+            <td><span class="es">Resumen consolidado de todo el landscape</span><span class="en">Consolidated landscape summary</span></td>
           </tr>
           <tr>
-            <td class="text-cyan font-bold">2</td>
-            <td>
-              <div class="font-semibold text-primary">RB-LOG-COLLECT</div>
-              <div class="text-xs text-muted"><span class="es">Recoleccion centralizada de logs</span><span class="en">Centralized log collection</span></div>
-            </td>
-            <td class="font-bold">67</td>
-            <td><span class="badge success">98.5%</span></td>
-            <td class="font-mono text-sm">1m 20s</td>
-            <td class="text-sm">30min ago</td>
-            <td>
-              <div class="mini-sparkline">
-                <div class="dot" style="height:12px"></div><div class="dot" style="height:16px"></div>
-                <div class="dot" style="height:14px"></div><div class="dot" style="height:18px"></div>
-                <div class="dot" style="height:16px"></div><div class="dot" style="height:20px"></div>
-                <div class="dot" style="height:18px"></div>
-              </div>
-            </td>
+            <td><span class="badge cyan">GET</span></td>
+            <td class="font-mono">/api/analytics/health-trends</td>
+            <td><span class="es">Series temporales de health score</span><span class="en">Health score time series</span></td>
           </tr>
           <tr>
-            <td class="text-cyan font-bold">3</td>
-            <td>
-              <div class="font-semibold text-primary">RB-CACHE-CLEAR</div>
-              <div class="text-xs text-muted"><span class="es">Limpieza de cache de aplicacion</span><span class="en">Application cache cleanup</span></div>
-            </td>
-            <td class="font-bold">52</td>
-            <td><span class="badge success">96.2%</span></td>
-            <td class="font-mono text-sm">2m 10s</td>
-            <td class="text-sm">4h ago</td>
-            <td>
-              <div class="mini-sparkline">
-                <div class="dot" style="height:18px"></div><div class="dot" style="height:14px"></div>
-                <div class="dot" style="height:16px"></div><div class="dot" style="height:12px"></div>
-                <div class="dot" style="height:18px"></div><div class="dot" style="height:16px"></div>
-                <div class="dot" style="height:14px"></div>
-              </div>
-            </td>
+            <td><span class="badge cyan">GET</span></td>
+            <td class="font-mono">/api/analytics/runbooks</td>
+            <td><span class="es">Metricas de ejecucion de runbooks</span><span class="en">Runbook execution metrics</span></td>
           </tr>
           <tr>
-            <td class="text-cyan font-bold">4</td>
-            <td>
-              <div class="font-semibold text-primary">RB-HANA-MEMORY-CLEANUP</div>
-              <div class="text-xs text-muted"><span class="es">Limpieza de memoria HANA</span><span class="en">HANA memory cleanup</span></div>
-            </td>
-            <td class="font-bold">38</td>
-            <td><span class="badge success">94.7%</span></td>
-            <td class="font-mono text-sm">3m 45s</td>
-            <td class="text-sm">1d ago</td>
-            <td>
-              <div class="mini-sparkline">
-                <div class="dot" style="height:10px"></div><div class="dot" style="height:14px"></div>
-                <div class="dot" style="height:12px"></div><div class="dot" style="height:16px"></div>
-                <div class="dot" style="height:14px"></div><div class="dot" style="height:10px"></div>
-                <div class="dot" style="height:12px"></div>
-              </div>
-            </td>
+            <td><span class="badge cyan">GET</span></td>
+            <td class="font-mono">/api/analytics/alerts</td>
+            <td><span class="es">Estadisticas de alertas por periodo</span><span class="en">Alert statistics by period</span></td>
           </tr>
           <tr>
-            <td class="text-cyan font-bold">5</td>
-            <td>
-              <div class="font-semibold text-primary">RB-JOB-RESTART-CHAIN</div>
-              <div class="text-xs text-muted"><span class="es">Reinicio de cadena de batch jobs</span><span class="en">Batch job chain restart</span></div>
-            </td>
-            <td class="font-bold">31</td>
-            <td><span class="badge warning">87.1%</span></td>
-            <td class="font-mono text-sm">5m 30s</td>
-            <td class="text-sm">6h ago</td>
-            <td>
-              <div class="mini-sparkline">
-                <div class="dot" style="height:16px"></div><div class="dot" style="height:12px"></div>
-                <div class="dot" style="height:8px"></div><div class="dot" style="height:14px"></div>
-                <div class="dot" style="height:10px"></div><div class="dot" style="height:16px"></div>
-                <div class="dot" style="height:12px"></div>
-              </div>
-            </td>
-          </tr>
-          <tr>
-            <td class="text-cyan font-bold">6</td>
-            <td>
-              <div class="font-semibold text-primary">RB-TRANSPORT-IMPORT</div>
-              <div class="text-xs text-muted"><span class="es">Importacion de transportes</span><span class="en">Transport import</span></div>
-            </td>
-            <td class="font-bold">28</td>
-            <td><span class="badge success">92.9%</span></td>
-            <td class="font-mono text-sm">4m 15s</td>
-            <td class="text-sm">3h ago</td>
-            <td>
-              <div class="mini-sparkline">
-                <div class="dot" style="height:8px"></div><div class="dot" style="height:12px"></div>
-                <div class="dot" style="height:10px"></div><div class="dot" style="height:14px"></div>
-                <div class="dot" style="height:12px"></div><div class="dot" style="height:10px"></div>
-                <div class="dot" style="height:8px"></div>
-              </div>
-            </td>
-          </tr>
-          <tr>
-            <td class="text-cyan font-bold">7</td>
-            <td>
-              <div class="font-semibold text-primary">RB-NETWORK-DIAG</div>
-              <div class="text-xs text-muted"><span class="es">Diagnostico de conectividad de red</span><span class="en">Network connectivity diagnostic</span></div>
-            </td>
-            <td class="font-bold">22</td>
-            <td><span class="badge success">100%</span></td>
-            <td class="font-mono text-sm">1m 50s</td>
-            <td class="text-sm">12h ago</td>
-            <td>
-              <div class="mini-sparkline">
-                <div class="dot" style="height:6px"></div><div class="dot" style="height:8px"></div>
-                <div class="dot" style="height:10px"></div><div class="dot" style="height:8px"></div>
-                <div class="dot" style="height:6px"></div><div class="dot" style="height:10px"></div>
-                <div class="dot" style="height:8px"></div>
-              </div>
-            </td>
+            <td><span class="badge cyan">GET</span></td>
+            <td class="font-mono">/api/analytics/capacity</td>
+            <td><span class="es">Proyeccion de capacidad (disco, memoria)</span><span class="en">Capacity projection (disk, memory)</span></td>
           </tr>
         </tbody>
       </table>
     </div>
 
-    <!-- Callout -->
-    <div class="callout info mt-2">
+    <div class="callout info">
       <div class="callout-icon">&#8505;</div>
       <div>
-        <span class="es"><strong>Nota:</strong> Los datos de analitica se actualizan cada 5 minutos. Las tendencias de salud se recalculan al cambiar la ventana de tiempo. Los runbooks se ordenan por ejecuciones totales en el periodo seleccionado.</span>
-        <span class="en"><strong>Note:</strong> Analytics data refreshes every 5 minutes. Health trends recalculate when the time window changes. Runbooks are sorted by total executions in the selected period.</span>
+        <span class="es"><strong>Nota:</strong> Todos los endpoints de analytics soportan el parametro <code>period</code> con valores: <code>1h</code>, <code>6h</code>, <code>24h</code>, <code>7d</code>, <code>30d</code>, <code>90d</code>. El valor por defecto es <code>24h</code>.</span>
+        <span class="en"><strong>Note:</strong> All analytics endpoints support the <code>period</code> parameter with values: <code>1h</code>, <code>6h</code>, <code>24h</code>, <code>7d</code>, <code>30d</code>, <code>90d</code>. The default value is <code>24h</code>.</span>
       </div>
     </div>
 
-    <!-- API Reference -->
-    <h2><span class="es">Referencia API</span><span class="en">API Reference</span></h2>
-    <div class="card">
-      <h4>GET /api/analytics/overview</h4>
-      <p class="text-sm text-muted">
-        <span class="es">Obtiene los KPIs agregados del landscape completo.</span>
-        <span class="en">Gets aggregated KPIs for the entire landscape.</span>
-      </p>
-      <pre><code>GET /api/analytics/overview
-
-Response: {
-  "totalSystems": 24,
-  "avgHealth": 84.2,
-  "totalAlerts7d": 47,
-  "totalOperations30d": 156,
-  "systemsByEnv": { "PRD": 10, "QAS": 6, "DEV": 5, "SBX": 3 }
-}</code></pre>
-    </div>
-    <div class="card">
-      <h4>GET /api/analytics/runbooks</h4>
-      <p class="text-sm text-muted">
-        <span class="es">Estadisticas detalladas de ejecucion de runbooks.</span>
-        <span class="en">Detailed runbook execution statistics.</span>
-      </p>
-      <pre><code>GET /api/analytics/runbooks?range=30d&amp;sort=executions
-
-Response: {
-  "totalExecutions": 342,
-  "successRate": 0.947,
-  "avgDuration": 144,
-  "runbooks": [
-    { "name": "RB-HEALTH-CHECK", "executions": 89, "successRate": 1.0 },
-    ...
-  ]
-}</code></pre>
-    </div>
-    <div class="card">
-      <h4>GET /api/analytics/health-trends</h4>
-      <p class="text-sm text-muted">
-        <span class="es">Tendencias de salud de sistemas en la ventana de tiempo seleccionada.</span>
-        <span class="en">System health trends in the selected time window.</span>
-      </p>
-      <pre><code>GET /api/analytics/health-trends?range=14d&amp;sid=S4P
-
-Response: {
-  "sid": "S4P",
-  "range": "14d",
-  "average": 95.8,
-  "change": +0.4,
-  "dataPoints": [
-    { "date": "2026-02-27", "healthScore": 95 },
-    { "date": "2026-02-28", "healthScore": 96 },
-    ...
-  ]
-}</code></pre>
-    </div>
   </main>
 </div>
 </body>

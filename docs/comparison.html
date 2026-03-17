@@ -2,484 +2,366 @@
 <html lang="es" data-theme="dark" data-lang="es">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
   <title>Comparacion — SAP Spektra Docs</title>
   <link rel="stylesheet" href="theme.css">
   <script src="theme-toggle.js"></script>
   <script src="lang-toggle.js"></script>
-  <style>
-    .system-selector{background:var(--card-bg);border:1px solid var(--card-border);border-radius:var(--radius);padding:20px;margin-bottom:24px}
-    .selector-row{display:flex;gap:12px;align-items:center;flex-wrap:wrap}
-    .system-chip{display:inline-flex;align-items:center;gap:6px;padding:6px 14px;border-radius:100px;font-size:12px;font-weight:600;cursor:pointer;transition:all .15s;border:1px solid var(--brd);background:var(--bg3);color:var(--txt2)}
-    .system-chip:hover{border-color:var(--cyan);color:var(--cyan)}
-    .system-chip.selected{background:var(--cyan-dim);border-color:var(--cyan);color:var(--cyan)}
-    .system-chip .chip-remove{width:14px;height:14px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:rgba(239,68,68,0.15);color:var(--danger);font-size:10px;font-weight:700;cursor:pointer}
-    .system-chip .chip-dot{width:8px;height:8px;border-radius:50%}
-    .chip-dot.prd{background:var(--cyan)}
-    .chip-dot.qas{background:var(--violet)}
-    .chip-dot.dev{background:var(--success)}
-    .chip-dot.sbx{background:var(--warning)}
-    .compare-btn{display:inline-flex;align-items:center;gap:6px;padding:8px 20px;border:none;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;background:var(--gradient-brand);color:#fff;transition:opacity .15s}
-    .compare-btn:hover{opacity:.85}
-    .compare-btn:disabled{opacity:.4;cursor:not-allowed}
-    .comparison-table th.system-col{text-align:center;min-width:140px}
-    .comparison-table td.system-val{text-align:center;font-weight:600}
-    .comparison-table td.metric-label{font-weight:600;color:var(--txt1);white-space:nowrap}
-    .comparison-table .best-val{background:rgba(34,197,94,0.06);color:var(--success)}
-    .comparison-table .worst-val{background:rgba(239,68,68,0.06);color:var(--danger)}
-    .env-badge{display:inline-flex;align-items:center;gap:4px;padding:2px 10px;border-radius:100px;font-size:11px;font-weight:600}
-    .env-badge.prd{background:var(--cyan-dim);color:var(--cyan)}
-    .env-badge.qas{background:var(--violet-dim);color:var(--violet)}
-    .env-badge.dev{background:rgba(34,197,94,0.12);color:var(--success)}
-    .env-badge.sbx{background:rgba(245,158,11,0.12);color:var(--warning)}
-    .consistency-card{background:var(--card-bg);border:1px solid var(--card-border);border-radius:var(--radius);padding:20px;margin-bottom:16px}
-    .consistency-row{display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--brd)}
-    .consistency-row:last-child{border-bottom:none}
-    .consistency-label{font-size:13px;color:var(--txt1);font-weight:600}
-    .consistency-status{display:flex;align-items:center;gap:6px}
-    .consistency-bar{width:120px;height:6px;background:var(--bg3);border-radius:3px;overflow:hidden}
-    .consistency-fill{height:100%;border-radius:3px}
-    .delta-badge{font-size:11px;font-weight:700;padding:2px 8px;border-radius:4px}
-    .delta-badge.good{background:rgba(34,197,94,0.12);color:var(--success)}
-    .delta-badge.warn{background:rgba(245,158,11,0.12);color:var(--warning)}
-    .delta-badge.bad{background:rgba(239,68,68,0.12);color:var(--danger)}
-  </style>
 </head>
 <body>
 <div class="docs-wrapper">
-
-  <!-- ═══ SIDEBAR ═══ -->
-  <aside class="docs-sidebar">
+  <nav class="docs-sidebar">
     <div class="sidebar-brand">
-      <div class="logo">S</div>
+      <div class="logo">&#9889;</div>
       <div class="brand-text">
         <div class="brand-name">SAP Spektra</div>
-        <div class="brand-sub"><span class="es">Documentacion v2.0</span><span class="en">Documentation v2.0</span></div>
+        <div class="brand-sub">Documentacion v2.0</div>
       </div>
     </div>
-    <nav>
-      <div class="sidebar-section">
-        <div class="sidebar-section-label"><span class="es">Inicio</span><span class="en">Home</span></div>
-        <a class="sidebar-link" href="index.html"><span class="es">Portal</span><span class="en">Portal</span></a>
-        <a class="sidebar-link" href="getting-started.html"><span class="es">Primeros Pasos</span><span class="en">Getting Started</span></a>
-      </div>
-      <div class="sidebar-section">
-        <div class="sidebar-section-label">Command</div>
-        <a class="sidebar-link" href="dashboard.html">Dashboard</a>
-        <a class="sidebar-link" href="landscape.html">Landscape</a>
-        <a class="sidebar-link" href="alerts.html"><span class="es">Alertas</span><span class="en">Alerts</span></a>
-      </div>
-      <div class="sidebar-section">
-        <div class="sidebar-section-label">Monitor</div>
-        <a class="sidebar-link" href="systems.html"><span class="es">Sistemas</span><span class="en">Systems</span></a>
-        <a class="sidebar-link" href="connectors.html"><span class="es">Conectores</span><span class="en">Connectors</span></a>
-        <a class="sidebar-link" href="events.html"><span class="es">Eventos</span><span class="en">Events</span></a>
-      </div>
-      <div class="sidebar-section">
-        <div class="sidebar-section-label">Intelligence</div>
-        <a class="sidebar-link" href="ai-analysis.html"><span class="es">Analisis IA</span><span class="en">AI Analysis</span></a>
-        <a class="sidebar-link" href="analytics.html">Analytics</a>
-        <a class="sidebar-link" href="reports.html"><span class="es">Reportes</span><span class="en">Reports</span></a>
-        <a class="sidebar-link active" href="comparison.html"><span class="es">Comparacion</span><span class="en">Comparison</span></a>
-      </div>
-      <div class="sidebar-section">
-        <div class="sidebar-section-label">Operations</div>
-        <a class="sidebar-link" href="runbooks.html">Runbooks</a>
-        <a class="sidebar-link" href="approvals.html"><span class="es">Aprobaciones</span><span class="en">Approvals</span></a>
-        <a class="sidebar-link" href="operations.html"><span class="es">Operaciones</span><span class="en">Operations</span></a>
-        <a class="sidebar-link" href="jobs.html">Jobs SM37</a>
-        <a class="sidebar-link" href="transports.html"><span class="es">Transportes</span><span class="en">Transports</span></a>
-        <a class="sidebar-link" href="sla.html">SLA</a>
-        <a class="sidebar-link" href="ha-control.html">HA Control</a>
-        <a class="sidebar-link" href="certificates.html"><span class="es">Certificados</span><span class="en">Certificates</span></a>
-      </div>
-      <div class="sidebar-section">
-        <div class="sidebar-section-label">Admin</div>
-        <a class="sidebar-link" href="admin.html"><span class="es">Gestion</span><span class="en">Management</span></a>
-        <a class="sidebar-link" href="settings.html"><span class="es">Configuracion</span><span class="en">Settings</span></a>
-        <a class="sidebar-link" href="connect-system.html"><span class="es">Conectar Sistema</span><span class="en">Connect System</span></a>
-      </div>
-    </nav>
-  </aside>
+    <div class="sidebar-section">
+      <div class="sidebar-section-label">Inicio</div>
+      <a href="index.html" class="sidebar-link">Portal</a>
+      <a href="getting-started.html" class="sidebar-link">Primeros Pasos</a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-section-label">Architecture</div>
+      <a href="architecture.html" class="sidebar-link">Arquitectura</a>
+      <a href="domain-model.html" class="sidebar-link">Modelo de Datos</a>
+      <a href="api-reference.html" class="sidebar-link">API Reference</a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-section-label">Command</div>
+      <a href="dashboard.html" class="sidebar-link">Dashboard</a>
+      <a href="landscape.html" class="sidebar-link">Landscape</a>
+      <a href="alerts.html" class="sidebar-link">Alertas</a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-section-label">Monitor</div>
+      <a href="systems.html" class="sidebar-link">Sistemas</a>
+      <a href="connectors.html" class="sidebar-link">Conectores</a>
+      <a href="events.html" class="sidebar-link">Eventos</a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-section-label">Intelligence</div>
+      <a href="ai-analysis.html" class="sidebar-link">Analisis IA</a>
+      <a href="analytics.html" class="sidebar-link">Analytics</a>
+      <a href="reports.html" class="sidebar-link">Reportes</a>
+      <a href="comparison.html" class="sidebar-link active">Comparacion</a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-section-label">Operations</div>
+      <a href="runbooks.html" class="sidebar-link">Runbooks</a>
+      <a href="approvals.html" class="sidebar-link">Aprobaciones</a>
+      <a href="operations.html" class="sidebar-link">Operaciones</a>
+      <a href="jobs.html" class="sidebar-link">Jobs (SM37)</a>
+      <a href="transports.html" class="sidebar-link">Transportes</a>
+      <a href="sla.html" class="sidebar-link">SLA</a>
+      <a href="ha-control.html" class="sidebar-link">HA Control</a>
+      <a href="certificates.html" class="sidebar-link">Certificados</a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-section-label">Admin</div>
+      <a href="admin.html" class="sidebar-link">Gestion</a>
+      <a href="settings.html" class="sidebar-link">Configuracion</a>
+      <a href="connect-system.html" class="sidebar-link">Conectar Sistema</a>
+    </div>
+  </nav>
 
-  <!-- ═══ MAIN ═══ -->
   <main class="docs-main">
     <div class="breadcrumb">
-      <a href="index.html">Spektra</a> <span class="sep">/</span> Intelligence <span class="sep">/</span>
+      <a href="index.html">Docs</a> <span class="sep">/</span>
+      <span class="es">Intelligence</span><span class="en">Intelligence</span> <span class="sep">/</span>
       <span class="es">Comparacion</span><span class="en">Comparison</span>
     </div>
 
     <div class="page-header">
       <h1><span class="es">Comparacion de Sistemas</span><span class="en">System Comparison</span></h1>
       <p class="subtitle">
-        <span class="es">Selecciona 2 o mas sistemas para comparar metricas lado a lado. Identifica diferencias de configuracion, rendimiento y salud entre sistemas del mismo tipo o entorno.</span>
-        <span class="en">Select 2 or more systems to compare metrics side by side. Identify configuration, performance, and health differences between systems of the same type or environment.</span>
+        <span class="es">Compara metricas lado a lado entre multiples sistemas SAP para identificar discrepancias y optimizar el landscape</span>
+        <span class="en">Compare metrics side by side across multiple SAP systems to identify discrepancies and optimize the landscape</span>
       </p>
     </div>
 
-    <!-- System Selector -->
-    <h2><span class="es">Seleccionar Sistemas</span><span class="en">Select Systems</span></h2>
-    <div class="system-selector">
-      <p class="text-sm text-muted mb-2">
-        <span class="es">Haz clic en los sistemas que deseas comparar (minimo 2, maximo 6):</span>
-        <span class="en">Click the systems you want to compare (minimum 2, maximum 6):</span>
-      </p>
-      <div class="selector-row">
-        <div class="system-chip selected"><span class="chip-dot prd"></span> S4P <span class="chip-remove">x</span></div>
-        <div class="system-chip selected"><span class="chip-dot prd"></span> ECP <span class="chip-remove">x</span></div>
-        <div class="system-chip selected"><span class="chip-dot prd"></span> BWP <span class="chip-remove">x</span></div>
-        <div class="system-chip"><span class="chip-dot qas"></span> S4Q</div>
-        <div class="system-chip selected"><span class="chip-dot prd"></span> SLT <span class="chip-remove">x</span></div>
-        <div class="system-chip"><span class="chip-dot prd"></span> RIS</div>
-        <div class="system-chip"><span class="chip-dot qas"></span> ECQ</div>
-        <div class="system-chip"><span class="chip-dot dev"></span> S4D</div>
-        <div class="system-chip"><span class="chip-dot dev"></span> ECD</div>
-        <div class="system-chip"><span class="chip-dot sbx"></span> SBX</div>
-        <div class="system-chip"><span class="chip-dot prd"></span> POP</div>
-        <div class="system-chip"><span class="chip-dot prd"></span> CRM</div>
+    <!-- KPIs -->
+    <div class="kpi-grid">
+      <div class="kpi-card">
+        <div class="card-icon cyan">&#8596;</div>
+        <div>
+          <div class="kpi-value">2-6</div>
+          <div class="kpi-label"><span class="es">Sistemas por Comparacion</span><span class="en">Systems per Comparison</span></div>
+        </div>
       </div>
-      <div style="margin-top:14px;display:flex;align-items:center;gap:12px">
-        <button class="compare-btn"><span class="es">Comparar 4 Sistemas</span><span class="en">Compare 4 Systems</span></button>
-        <span class="text-xs text-muted"><span class="es">4 de 6 seleccionados</span><span class="en">4 of 6 selected</span></span>
+      <div class="kpi-card">
+        <div class="card-icon violet">&#128202;</div>
+        <div>
+          <div class="kpi-value">12+</div>
+          <div class="kpi-label"><span class="es">Metricas Comparables</span><span class="en">Comparable Metrics</span></div>
+        </div>
+      </div>
+      <div class="kpi-card">
+        <div class="card-icon success">&#128200;</div>
+        <div>
+          <div class="kpi-value">Side-by-Side</div>
+          <div class="kpi-label"><span class="es">Vista</span><span class="en">View</span></div>
+        </div>
       </div>
     </div>
 
-    <!-- Comparison Table -->
-    <h2><span class="es">Tabla Comparativa</span><span class="en">Comparison Table</span></h2>
+    <!-- Overview -->
+    <h2><span class="es">Descripcion General</span><span class="en">Overview</span></h2>
+    <div class="card">
+      <p>
+        <span class="es">La funcion de comparacion de sistemas permite seleccionar entre 2 y 6 sistemas SAP para visualizar sus metricas lado a lado. Es especialmente util para:</span>
+        <span class="en">The system comparison feature allows selecting between 2 and 6 SAP systems to view their metrics side by side. It is especially useful for:</span>
+      </p>
+      <ul class="feature-list">
+        <li><span class="es"><strong>Comparar PRD vs QAS vs DEV:</strong> Verificar que los sistemas de un mismo track tengan configuraciones consistentes</span><span class="en"><strong>Compare PRD vs QAS vs DEV:</strong> Verify that systems in the same track have consistent configurations</span></li>
+        <li><span class="es"><strong>Detectar anomalias:</strong> Identificar un sistema que se comporta diferente al resto del landscape</span><span class="en"><strong>Detect anomalies:</strong> Identify a system behaving differently from the rest of the landscape</span></li>
+        <li><span class="es"><strong>Planificacion de capacidad:</strong> Comparar utilizacion de recursos entre sistemas similares</span><span class="en"><strong>Capacity planning:</strong> Compare resource utilization across similar systems</span></li>
+        <li><span class="es"><strong>Validacion post-migracion:</strong> Verificar que un sistema migrado funciona igual que el original</span><span class="en"><strong>Post-migration validation:</strong> Verify that a migrated system performs the same as the original</span></li>
+      </ul>
+    </div>
+
+    <!-- SID Line Validation -->
+    <h2><span class="es">Validacion de Linea de SIDs</span><span class="en">SID Line Validation</span></h2>
+    <div class="card">
+      <p>
+        <span class="es">Al seleccionar sistemas para comparacion, Spektra valida que los SIDs sean validos (3 caracteres, formato correcto) y que pertenezcan al tenant del usuario. La seleccion se puede hacer por SID o por UUID.</span>
+        <span class="en">When selecting systems for comparison, Spektra validates that the SIDs are valid (3 characters, correct format) and belong to the user's tenant. Selection can be done by SID or UUID.</span>
+      </p>
+      <pre><code>// SID validation in comparison
+const validateComparisonInput = (sids: string[]) => {
+  if (sids.length < 2) throw new Error('Minimum 2 systems required');
+  if (sids.length > 6) throw new Error('Maximum 6 systems allowed');
+
+  const SID_REGEX = /^[A-Z][A-Z0-9]{2}$/;
+  for (const sid of sids) {
+    if (!SID_REGEX.test(sid)) {
+      throw new Error(`Invalid SID format: ${sid}`);
+    }
+  }
+
+  // Check for duplicates
+  const unique = new Set(sids);
+  if (unique.size !== sids.length) {
+    throw new Error('Duplicate SIDs not allowed');
+  }
+
+  return true;
+};</code></pre>
+      <div class="callout warning">
+        <div class="callout-icon">&#9888;</div>
+        <div>
+          <span class="es"><strong>Limite:</strong> Se permite un maximo de 6 sistemas por comparacion para mantener la legibilidad de la vista y el rendimiento de las consultas.</span>
+          <span class="en"><strong>Limit:</strong> A maximum of 6 systems per comparison is allowed to maintain view readability and query performance.</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Side-by-Side Metrics -->
+    <h2><span class="es">Metricas Lado a Lado</span><span class="en">Side-by-Side Metrics</span></h2>
+    <p>
+      <span class="es">Ejemplo de comparacion entre tres sistemas S/4HANA (PRD, QAS, DEV):</span>
+      <span class="en">Example comparison between three S/4HANA systems (PRD, QAS, DEV):</span>
+    </p>
     <div class="table-wrap">
-      <table class="comparison-table">
+      <table>
         <thead>
           <tr>
             <th><span class="es">Metrica</span><span class="en">Metric</span></th>
-            <th class="system-col">S4P</th>
-            <th class="system-col">ECP</th>
-            <th class="system-col">BWP</th>
-            <th class="system-col">SLT</th>
+            <th class="text-cyan">PRD</th>
+            <th class="text-violet">QAS</th>
+            <th>DEV</th>
           </tr>
         </thead>
         <tbody>
           <tr>
-            <td class="metric-label"><span class="es">Descripcion</span><span class="en">Description</span></td>
-            <td class="system-val text-sm">S/4HANA Production</td>
-            <td class="system-val text-sm">ECC Production</td>
-            <td class="system-val text-sm">BW/4HANA Production</td>
-            <td class="system-val text-sm">SLT Replication</td>
+            <td><span class="es">Health Score</span><span class="en">Health Score</span></td>
+            <td><span class="badge success">96</span></td>
+            <td><span class="badge success">91</span></td>
+            <td><span class="badge cyan">78</span></td>
           </tr>
           <tr>
-            <td class="metric-label"><span class="es">Entorno</span><span class="en">Environment</span></td>
-            <td class="system-val"><span class="env-badge prd">PRD</span></td>
-            <td class="system-val"><span class="env-badge prd">PRD</span></td>
-            <td class="system-val"><span class="env-badge prd">PRD</span></td>
-            <td class="system-val"><span class="env-badge prd">PRD</span></td>
+            <td>CPU %</td>
+            <td>34.2%</td>
+            <td>22.8%</td>
+            <td>45.6%</td>
           </tr>
           <tr>
-            <td class="metric-label"><span class="es">Tipo</span><span class="en">Type</span></td>
-            <td class="system-val text-sm">S/4HANA</td>
-            <td class="system-val text-sm">ECC 6.0</td>
-            <td class="system-val text-sm">BW/4HANA</td>
-            <td class="system-val text-sm">SLT</td>
+            <td><span class="es">Memoria %</span><span class="en">Memory %</span></td>
+            <td>72.5%</td>
+            <td>58.3%</td>
+            <td>81.2%</td>
           </tr>
           <tr>
-            <td class="metric-label">Health Score</td>
-            <td class="system-val best-val">96</td>
-            <td class="system-val">82</td>
-            <td class="system-val">64</td>
-            <td class="system-val worst-val">38</td>
+            <td><span class="es">Disco %</span><span class="en">Disk %</span></td>
+            <td>52.1%</td>
+            <td>38.7%</td>
+            <td>67.9%</td>
           </tr>
           <tr>
-            <td class="metric-label">Status</td>
-            <td class="system-val"><span class="badge success">Healthy</span></td>
-            <td class="system-val"><span class="badge success">Healthy</span></td>
-            <td class="system-val"><span class="badge warning">Degraded</span></td>
-            <td class="system-val"><span class="badge danger">Critical</span></td>
+            <td>HANA Memory</td>
+            <td>256 / 512 GB</td>
+            <td>128 / 256 GB</td>
+            <td>96 / 128 GB</td>
           </tr>
           <tr>
-            <td class="metric-label">CPU (%)</td>
-            <td class="system-val best-val">32%</td>
-            <td class="system-val">58%</td>
-            <td class="system-val">71%</td>
-            <td class="system-val worst-val">85%</td>
+            <td><span class="es">Alertas Activas</span><span class="en">Active Alerts</span></td>
+            <td><span class="badge success">0</span></td>
+            <td><span class="badge success">1</span></td>
+            <td><span class="badge warning">3</span></td>
           </tr>
           <tr>
-            <td class="metric-label"><span class="es">Memoria</span><span class="en">Memory</span> (%)</td>
-            <td class="system-val best-val">54%</td>
-            <td class="system-val">67%</td>
-            <td class="system-val worst-val">89%</td>
-            <td class="system-val">76%</td>
+            <td>Uptime</td>
+            <td>45d 12h</td>
+            <td>23d 8h</td>
+            <td>7d 3h</td>
           </tr>
           <tr>
-            <td class="metric-label"><span class="es">Disco</span><span class="en">Disk</span> (%)</td>
-            <td class="system-val best-val">41%</td>
-            <td class="system-val">62%</td>
-            <td class="system-val">73%</td>
-            <td class="system-val worst-val">81%</td>
+            <td><span class="es">Conector</span><span class="en">Connector</span></td>
+            <td><span class="badge success">connected</span></td>
+            <td><span class="badge success">connected</span></td>
+            <td><span class="badge success">connected</span></td>
           </tr>
           <tr>
-            <td class="metric-label">Database</td>
-            <td class="system-val text-sm">HANA 2.0 SP07</td>
-            <td class="system-val text-sm">HANA 1.0 SP12</td>
-            <td class="system-val text-sm">HANA 2.0 SP06</td>
-            <td class="system-val text-sm">HANA 2.0 SP05</td>
+            <td><span class="es">Latencia</span><span class="en">Latency</span></td>
+            <td>45ms</td>
+            <td>52ms</td>
+            <td>78ms</td>
           </tr>
           <tr>
-            <td class="metric-label">DB <span class="es">Tamano</span><span class="en">Size</span></td>
-            <td class="system-val text-sm">1.2 TB</td>
-            <td class="system-val text-sm">2.8 TB</td>
-            <td class="system-val text-sm">3.4 TB</td>
-            <td class="system-val text-sm">0.8 TB</td>
+            <td>SAP Version</td>
+            <td>2023 FPS02</td>
+            <td>2023 FPS02</td>
+            <td>2023 FPS01</td>
           </tr>
           <tr>
-            <td class="metric-label"><span class="es">Instancias</span><span class="en">Instances</span></td>
-            <td class="system-val">3</td>
-            <td class="system-val">2</td>
-            <td class="system-val">2</td>
-            <td class="system-val">1</td>
+            <td>Kernel</td>
+            <td>793</td>
+            <td>793</td>
+            <td>789</td>
           </tr>
           <tr>
-            <td class="metric-label">Hosts</td>
-            <td class="system-val">2</td>
-            <td class="system-val">2</td>
-            <td class="system-val">1</td>
-            <td class="system-val">1</td>
-          </tr>
-          <tr>
-            <td class="metric-label">Kernel</td>
-            <td class="system-val text-sm font-mono">793 P3</td>
-            <td class="system-val text-sm font-mono">753 P28</td>
-            <td class="system-val text-sm font-mono">793 P2</td>
-            <td class="system-val text-sm font-mono">793 P1</td>
-          </tr>
-          <tr>
-            <td class="metric-label">SLA Breaches (30d)</td>
-            <td class="system-val best-val">0</td>
-            <td class="system-val">1</td>
-            <td class="system-val">3</td>
-            <td class="system-val worst-val">7</td>
-          </tr>
-          <tr>
-            <td class="metric-label">Availability (30d)</td>
-            <td class="system-val best-val">99.98%</td>
-            <td class="system-val">99.82%</td>
-            <td class="system-val">99.45%</td>
-            <td class="system-val worst-val">97.20%</td>
-          </tr>
-          <tr>
-            <td class="metric-label"><span class="es">Conector</span><span class="en">Connector</span></td>
-            <td class="system-val text-sm">Spektra Agent</td>
-            <td class="system-val text-sm">Cloud Connector</td>
-            <td class="system-val text-sm">RFC / BAPI</td>
-            <td class="system-val text-sm">Spektra Agent</td>
-          </tr>
-          <tr>
-            <td class="metric-label"><span class="es">Latencia</span><span class="en">Latency</span></td>
-            <td class="system-val best-val">12ms</td>
-            <td class="system-val">45ms</td>
-            <td class="system-val">320ms</td>
-            <td class="system-val worst-val">&#8212;</td>
+            <td><span class="es">Usuarios Activos</span><span class="en">Active Users</span></td>
+            <td>342</td>
+            <td>28</td>
+            <td>12</td>
           </tr>
         </tbody>
       </table>
     </div>
 
-    <!-- Landscape Consistency Analysis -->
-    <h2><span class="es">Analisis de Consistencia del Landscape</span><span class="en">Landscape Consistency Analysis</span></h2>
-    <p class="text-sm text-muted mb-2">
-      <span class="es">Evalua la uniformidad de configuracion y rendimiento entre los sistemas seleccionados. Las inconsistencias pueden indicar configuraciones desalineadas o problemas de infraestructura.</span>
-      <span class="en">Evaluates configuration and performance uniformity across selected systems. Inconsistencies may indicate misaligned configurations or infrastructure issues.</span>
-    </p>
-
-    <div class="consistency-card">
-      <h3><span class="es">Consistencia de Versiones</span><span class="en">Version Consistency</span></h3>
-      <div class="consistency-row">
-        <div class="consistency-label">HANA Version</div>
-        <div class="consistency-status">
-          <div class="consistency-bar"><div class="consistency-fill" style="width:50%;background:var(--warning)"></div></div>
-          <span class="delta-badge warn">3 <span class="es">versiones</span><span class="en">versions</span></span>
-        </div>
-      </div>
-      <div class="consistency-row">
-        <div class="consistency-label">SAP Kernel</div>
-        <div class="consistency-status">
-          <div class="consistency-bar"><div class="consistency-fill" style="width:50%;background:var(--warning)"></div></div>
-          <span class="delta-badge warn">2 <span class="es">versiones</span><span class="en">versions</span></span>
-        </div>
-      </div>
-      <div class="consistency-row">
-        <div class="consistency-label"><span class="es">Version Agente Spektra</span><span class="en">Spektra Agent Version</span></div>
-        <div class="consistency-status">
-          <div class="consistency-bar"><div class="consistency-fill" style="width:75%;background:var(--success)"></div></div>
-          <span class="delta-badge good"><span class="es">Consistente</span><span class="en">Consistent</span></span>
-        </div>
-      </div>
-    </div>
-
-    <div class="consistency-card">
-      <h3><span class="es">Consistencia de Rendimiento</span><span class="en">Performance Consistency</span></h3>
-      <div class="consistency-row">
-        <div class="consistency-label">Health Score Range</div>
-        <div class="consistency-status">
-          <div class="consistency-bar"><div class="consistency-fill" style="width:20%;background:var(--danger)"></div></div>
-          <span class="delta-badge bad">&#916; 58 <span class="es">puntos</span><span class="en">points</span></span>
-        </div>
-      </div>
-      <div class="consistency-row">
-        <div class="consistency-label">CPU Range</div>
-        <div class="consistency-status">
-          <div class="consistency-bar"><div class="consistency-fill" style="width:35%;background:var(--danger)"></div></div>
-          <span class="delta-badge bad">&#916; 53%</span>
-        </div>
-      </div>
-      <div class="consistency-row">
-        <div class="consistency-label"><span class="es">Memoria</span><span class="en">Memory</span> Range</div>
-        <div class="consistency-status">
-          <div class="consistency-bar"><div class="consistency-fill" style="width:40%;background:var(--warning)"></div></div>
-          <span class="delta-badge warn">&#916; 35%</span>
-        </div>
-      </div>
-      <div class="consistency-row">
-        <div class="consistency-label"><span class="es">Disco</span><span class="en">Disk</span> Range</div>
-        <div class="consistency-status">
-          <div class="consistency-bar"><div class="consistency-fill" style="width:30%;background:var(--warning)"></div></div>
-          <span class="delta-badge warn">&#916; 40%</span>
-        </div>
-      </div>
-      <div class="consistency-row">
-        <div class="consistency-label">Availability Range</div>
-        <div class="consistency-status">
-          <div class="consistency-bar"><div class="consistency-fill" style="width:30%;background:var(--danger)"></div></div>
-          <span class="delta-badge bad">&#916; 2.78%</span>
-        </div>
-      </div>
-    </div>
-
-    <div class="consistency-card">
-      <h3><span class="es">Consistencia de Configuracion</span><span class="en">Configuration Consistency</span></h3>
-      <div class="consistency-row">
-        <div class="consistency-label"><span class="es">Entorno</span><span class="en">Environment</span></div>
-        <div class="consistency-status">
-          <div class="consistency-bar"><div class="consistency-fill" style="width:100%;background:var(--success)"></div></div>
-          <span class="delta-badge good"><span class="es">Todos PRD</span><span class="en">All PRD</span></span>
-        </div>
-      </div>
-      <div class="consistency-row">
-        <div class="consistency-label"><span class="es">Metodo Conector</span><span class="en">Connector Method</span></div>
-        <div class="consistency-status">
-          <div class="consistency-bar"><div class="consistency-fill" style="width:33%;background:var(--warning)"></div></div>
-          <span class="delta-badge warn">3 <span class="es">metodos distintos</span><span class="en">different methods</span></span>
-        </div>
-      </div>
-      <div class="consistency-row">
-        <div class="consistency-label"><span class="es">Tipo Base de Datos</span><span class="en">Database Type</span></div>
-        <div class="consistency-status">
-          <div class="consistency-bar"><div class="consistency-fill" style="width:100%;background:var(--success)"></div></div>
-          <span class="delta-badge good"><span class="es">Todos HANA</span><span class="en">All HANA</span></span>
-        </div>
-      </div>
-    </div>
-
-    <!-- Callouts -->
-    <div class="callout warning mt-2">
-      <div class="callout-icon">&#9888;</div>
-      <div>
-        <span class="es"><strong>Inconsistencia detectada:</strong> El rango de health score entre los sistemas seleccionados es de 58 puntos (96 vs 38). El sistema SLT esta significativamente por debajo del promedio. Se recomienda investigar y ejecutar acciones correctivas de forma prioritaria.</span>
-        <span class="en"><strong>Inconsistency detected:</strong> The health score range across selected systems is 58 points (96 vs 38). The SLT system is significantly below average. Priority investigation and corrective actions are recommended.</span>
-      </div>
-    </div>
-    <div class="callout info">
-      <div class="callout-icon">&#8505;</div>
-      <div>
-        <span class="es"><strong>Recomendacion:</strong> Actualizar HANA en ECP de v1.0 SP12 a v2.0 para mantener consistencia con el resto del landscape. Considerar estandarizar el metodo de conexion a Spektra Agent para mejorar la latencia en BWP (actualmente 320ms via RFC).</span>
-        <span class="en"><strong>Recommendation:</strong> Upgrade HANA on ECP from v1.0 SP12 to v2.0 to maintain consistency with the rest of the landscape. Consider standardizing the connection method to Spektra Agent to improve latency on BWP (currently 320ms via RFC).</span>
-      </div>
-    </div>
-
-    <!-- Environment Badges Legend -->
-    <h2><span class="es">Leyenda de Entornos</span><span class="en">Environment Legend</span></h2>
+    <!-- Health Score Comparison -->
+    <h2><span class="es">Comparacion de Health Score</span><span class="en">Health Score Comparison</span></h2>
     <div class="card">
-      <div style="display:flex;gap:16px;flex-wrap:wrap;align-items:center">
-        <div style="display:flex;align-items:center;gap:6px">
-          <span class="env-badge prd">PRD</span>
-          <span class="text-sm">Production</span>
-        </div>
-        <div style="display:flex;align-items:center;gap:6px">
-          <span class="env-badge qas">QAS</span>
-          <span class="text-sm">Quality Assurance</span>
-        </div>
-        <div style="display:flex;align-items:center;gap:6px">
-          <span class="env-badge dev">DEV</span>
-          <span class="text-sm">Development</span>
-        </div>
-        <div style="display:flex;align-items:center;gap:6px">
-          <span class="env-badge sbx">SBX</span>
-          <span class="text-sm">Sandbox</span>
-        </div>
-      </div>
-      <p class="text-sm text-muted mt-2">
-        <span class="es">Los colores de entorno se utilizan consistentemente en todo Spektra. Al comparar sistemas de diferentes entornos, las metricas de rendimiento deben interpretarse teniendo en cuenta las diferencias de carga y dimensionamiento de hardware.</span>
-        <span class="en">Environment colors are used consistently throughout Spektra. When comparing systems from different environments, performance metrics should be interpreted considering differences in load and hardware sizing.</span>
+      <p>
+        <span class="es">La comparacion de health score muestra la evolucion historica del puntaje de salud de cada sistema seleccionado en el mismo grafico temporal, permitiendo identificar correlaciones y divergencias.</span>
+        <span class="en">The health score comparison shows the historical evolution of each selected system's health score on the same time chart, allowing identification of correlations and divergences.</span>
       </p>
-    </div>
+      <pre><code>GET /api/comparison?systems=PRD,QAS,DEV&metrics=healthScore,cpu,memory&period=7d
+Authorization: Bearer &lt;jwt_token&gt;
 
-    <!-- API Reference -->
-    <h2><span class="es">Referencia API</span><span class="en">API Reference</span></h2>
-    <div class="card">
-      <h4>GET /api/systems/compare</h4>
-      <p class="text-sm text-muted">
-        <span class="es">Compara metricas de multiples sistemas lado a lado.</span>
-        <span class="en">Compares metrics of multiple systems side by side.</span>
-      </p>
-      <pre><code>GET /api/systems/compare?sids=S4P,ECP,BWP,SLT
-
-Response: {
-  "systems": [
-    {
-      "sid": "S4P",
-      "healthScore": 96,
-      "cpu": 32,
-      "memory": 54,
-      "disk": 41,
-      "environment": "PRD",
-      "dbType": "HANA 2.0 SP07",
-      "availability30d": 99.98,
-      "slaBreaches30d": 0
+// Response
+{
+  "systems": ["PRD", "QAS", "DEV"],
+  "period": "7d",
+  "metrics": {
+    "healthScore": {
+      "PRD": { "current": 96, "avg": 94.2, "min": 82, "max": 98, "trend": "stable" },
+      "QAS": { "current": 91, "avg": 89.5, "min": 75, "max": 95, "trend": "improving" },
+      "DEV": { "current": 78, "avg": 76.1, "min": 62, "max": 85, "trend": "declining" }
     },
-    ...
-  ],
-  "consistency": {
-    "healthScoreRange": 58,
-    "cpuRange": 53,
-    "memoryRange": 35,
-    "versionConsistency": "partial",
-    "envConsistency": "full"
-  }
-}</code></pre>
-    </div>
-    <div class="card">
-      <h4>GET /api/systems/compare/consistency</h4>
-      <p class="text-sm text-muted">
-        <span class="es">Obtiene el analisis de consistencia del landscape para los sistemas seleccionados.</span>
-        <span class="en">Gets landscape consistency analysis for selected systems.</span>
-      </p>
-      <pre><code>GET /api/systems/compare/consistency?sids=S4P,ECP,BWP,SLT
-
-Response: {
-  "versions": {
-    "hana": { "unique": 3, "consistent": false },
-    "kernel": { "unique": 2, "consistent": false },
-    "agent": { "unique": 1, "consistent": true }
+    "cpu": {
+      "PRD": { "current": 34.2, "avg": 38.5, "min": 12.1, "max": 95.2, "trend": "stable" },
+      "QAS": { "current": 22.8, "avg": 25.3, "min": 8.4, "max": 67.8, "trend": "stable" },
+      "DEV": { "current": 45.6, "avg": 42.1, "min": 15.2, "max": 78.3, "trend": "increasing" }
+    },
+    "memory": {
+      "PRD": { "current": 72.5, "avg": 71.2, "min": 65.3, "max": 89.3, "trend": "stable" },
+      "QAS": { "current": 58.3, "avg": 56.8, "min": 48.2, "max": 72.1, "trend": "stable" },
+      "DEV": { "current": 81.2, "avg": 78.5, "min": 68.1, "max": 92.4, "trend": "increasing" }
+    }
   },
-  "performance": {
-    "healthRange": { "min": 38, "max": 96, "delta": 58 },
-    "cpuRange": { "min": 32, "max": 85, "delta": 53 },
-    "availabilityRange": { "min": 97.20, "max": 99.98, "delta": 2.78 }
-  },
-  "recommendations": [
-    "Upgrade HANA on ECP from v1.0 to v2.0",
-    "Investigate SLT critical health score (38)",
-    "Standardize connector method to reduce latency variance"
+  "anomalies": [
+    {
+      "system": "DEV",
+      "metric": "memory",
+      "description": "Memory usage 15% above landscape average — potential memory leak",
+      "severity": "warning"
+    },
+    {
+      "system": "DEV",
+      "metric": "healthScore",
+      "description": "Health score declining trend over 7 days — investigate disk and memory",
+      "severity": "warning"
+    }
   ]
 }</code></pre>
     </div>
+
+    <!-- Multi-System Selection -->
+    <h2><span class="es">Seleccion Multi-Sistema</span><span class="en">Multi-System Selection</span></h2>
+    <div class="card">
+      <p>
+        <span class="es">La interfaz de seleccion permite elegir sistemas de multiples formas:</span>
+        <span class="en">The selection interface allows choosing systems in multiple ways:</span>
+      </p>
+      <div class="grid-2">
+        <div>
+          <h4><span class="es">Por SID Individual</span><span class="en">By Individual SID</span></h4>
+          <p class="text-sm">
+            <span class="es">Seleccionar sistemas uno por uno desde un dropdown que muestra SID, producto, entorno, y health score actual.</span>
+            <span class="en">Select systems one by one from a dropdown showing SID, product, environment, and current health score.</span>
+          </p>
+        </div>
+        <div>
+          <h4><span class="es">Por Filtro Rapido</span><span class="en">By Quick Filter</span></h4>
+          <p class="text-sm">
+            <span class="es">Filtros predefinidos: "Todos los PRD", "Mismo producto", "Mismo track (PRD/QAS/DEV)", "Misma BD", "Mismo OS".</span>
+            <span class="en">Predefined filters: "All PRD", "Same product", "Same track (PRD/QAS/DEV)", "Same DB", "Same OS".</span>
+          </p>
+        </div>
+      </div>
+      <div class="callout info">
+        <div class="callout-icon">&#8505;</div>
+        <div>
+          <span class="es"><strong>Consejo:</strong> Para comparar el track completo de un producto, usa el filtro "Mismo track" que selecciona automaticamente PRD, QAS, DEV y SBX del mismo producto SAP.</span>
+          <span class="en"><strong>Tip:</strong> To compare the full track of a product, use the "Same track" filter which automatically selects PRD, QAS, DEV, and SBX of the same SAP product.</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- API Endpoint -->
+    <h2><span class="es">Endpoints de API</span><span class="en">API Endpoints</span></h2>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th><span class="es">Metodo</span><span class="en">Method</span></th>
+            <th>Endpoint</th>
+            <th><span class="es">Descripcion</span><span class="en">Description</span></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="badge cyan">GET</span></td>
+            <td class="font-mono">/api/comparison</td>
+            <td><span class="es">Obtener comparacion de sistemas (params: systems, metrics, period)</span><span class="en">Get system comparison (params: systems, metrics, period)</span></td>
+          </tr>
+          <tr>
+            <td><span class="badge cyan">GET</span></td>
+            <td class="font-mono">/api/comparison/matrix</td>
+            <td><span class="es">Obtener matriz de diferencias entre sistemas</span><span class="en">Get difference matrix between systems</span></td>
+          </tr>
+          <tr>
+            <td><span class="badge success">POST</span></td>
+            <td class="font-mono">/api/comparison/export</td>
+            <td><span class="es">Exportar comparacion como PDF/CSV</span><span class="en">Export comparison as PDF/CSV</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
   </main>
 </div>
 </body>

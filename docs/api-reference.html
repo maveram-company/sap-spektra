@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="dark" data-lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <title>API Reference — SAP Spektra Docs</title>
+  <link rel="stylesheet" href="theme.css">
+  <script src="theme-toggle.js"></script>
+  <script src="lang-toggle.js"></script>
+</head>
+<body>
+<div class="docs-wrapper">
+  <nav class="docs-sidebar">
+    <div class="sidebar-brand">
+      <div class="logo">&#9889;</div>
+      <div class="brand-text">
+        <div class="brand-name">SAP Spektra</div>
+        <div class="brand-sub">Documentacion v2.0</div>
+      </div>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-section-label">Inicio</div>
+      <a href="index.html" class="sidebar-link">Portal</a>
+      <a href="getting-started.html" class="sidebar-link">Primeros Pasos</a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-section-label">Architecture</div>
+      <a href="architecture.html" class="sidebar-link">Arquitectura</a>
+      <a href="domain-model.html" class="sidebar-link">Modelo de Datos</a>
+      <a href="api-reference.html" class="sidebar-link active">API Reference</a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-section-label">Command</div>
+      <a href="dashboard.html" class="sidebar-link">Dashboard</a>
+      <a href="landscape.html" class="sidebar-link">Landscape</a>
+      <a href="alerts.html" class="sidebar-link">Alertas</a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-section-label">Monitor</div>
+      <a href="systems.html" class="sidebar-link">Sistemas</a>
+      <a href="connectors.html" class="sidebar-link">Conectores</a>
+      <a href="events.html" class="sidebar-link">Eventos</a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-section-label">Intelligence</div>
+      <a href="ai-analysis.html" class="sidebar-link">Analisis IA</a>
+      <a href="analytics.html" class="sidebar-link">Analytics</a>
+      <a href="reports.html" class="sidebar-link">Reportes</a>
+      <a href="comparison.html" class="sidebar-link">Comparacion</a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-section-label">Operations</div>
+      <a href="runbooks.html" class="sidebar-link">Runbooks</a>
+      <a href="approvals.html" class="sidebar-link">Aprobaciones</a>
+      <a href="operations.html" class="sidebar-link">Operaciones</a>
+      <a href="jobs.html" class="sidebar-link">Jobs (SM37)</a>
+      <a href="transports.html" class="sidebar-link">Transportes</a>
+      <a href="sla.html" class="sidebar-link">SLA</a>
+      <a href="ha-control.html" class="sidebar-link">HA Control</a>
+      <a href="certificates.html" class="sidebar-link">Certificados</a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-section-label">Admin</div>
+      <a href="admin.html" class="sidebar-link">Gestion</a>
+      <a href="settings.html" class="sidebar-link">Configuracion</a>
+      <a href="connect-system.html" class="sidebar-link">Conectar Sistema</a>
+    </div>
+  </nav>
+
+  <main class="docs-main">
+    <div class="breadcrumb">
+      <a href="index.html">SAP Spektra</a>
+      <span class="sep">/</span>
+      <span>API Reference</span>
+    </div>
+
+    <div class="page-header">
+      <h1>API Reference</h1>
+      <div class="subtitle">
+        <span class="es">Todos los endpoints REST organizados por controlador — metodo, ruta, rol minimo y descripcion</span>
+        <span class="en">All REST endpoints organized by controller — method, path, minimum role and description</span>
+      </div>
+    </div>
+
+    <div class="callout info">
+      <div class="callout-icon">&#128161;</div>
+      <div>
+        <span class="es"><strong>Base URL:</strong> <code>http://localhost:3001</code> | <strong>Swagger UI:</strong> <code>http://localhost:3001/api</code> | Todas las rutas protegidas requieren <code>Authorization: Bearer &lt;token&gt;</code> y el header <code>x-organization-id</code> se extrae del JWT.</span>
+        <span class="en"><strong>Base URL:</strong> <code>http://localhost:3001</code> | <strong>Swagger UI:</strong> <code>http://localhost:3001/api</code> | All protected routes require <code>Authorization: Bearer &lt;token&gt;</code> and the <code>x-organization-id</code> header is extracted from the JWT.</span>
+      </div>
+    </div>
+
+    <!-- ═══ Auth ═══ -->
+    <h2>Auth <span class="badge neutral">Public + Protected</span></h2>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Method</th><th>Path</th><th>Rol</th><th>Rate Limit</th><th><span class="es">Descripcion</span><span class="en">Description</span></th></tr></thead>
+        <tbody>
+          <tr><td><span class="badge success">POST</span></td><td><code>/auth/login</code></td><td><span class="badge neutral">public</span></td><td>10/min</td><td><span class="es">Login con email y contrasena</span><span class="en">Login with email and password</span></td></tr>
+          <tr><td><span class="badge success">POST</span></td><td><code>/auth/register</code></td><td><span class="badge neutral">public</span></td><td>5/min</td><td><span class="es">Registrar nuevo usuario y organizacion</span><span class="en">Register new user and organization</span></td></tr>
+          <tr><td><span class="badge cyan">GET</span></td><td><code>/auth/me</code></td><td><span class="badge neutral">any</span></td><td>-</td><td><span class="es">Obtener perfil del usuario actual</span><span class="en">Get current user profile</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3>
+      <span class="es">Ejemplo: Login</span>
+      <span class="en">Example: Login</span>
+    </h3>
+    <div class="grid-2">
+      <div>
+        <h4>Request</h4>
+<pre><code>POST /auth/login
+Content-Type: application/json
+
+{
+  "email": "admin@acme-corp.com",
+  "password": "admin123"
+}</code></pre>
+      </div>
+      <div>
+        <h4>Response (200 OK)</h4>
+<pre><code>{
+  "token": "eyJhbGciOiJIUzI1NiIs...",
+  "user": {
+    "id": "uuid-...",
+    "email": "admin@acme-corp.com",
+    "name": "Carlos Admin",
+    "role": "admin",
+    "organizationId": "uuid-..."
+  }
+}</code></pre>
+      </div>
+    </div>
+
+    <!-- ═══ Dashboard ═══ -->
+    <h2>Dashboard <span class="badge cyan">viewer+</span></h2>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Method</th><th>Path</th><th>Rol</th><th><span class="es">Descripcion</span><span class="en">Description</span></th></tr></thead>
+        <tbody>
+          <tr><td><span class="badge cyan">GET</span></td><td><code>/dashboard</code></td><td><span class="badge neutral">viewer</span></td><td><span class="es">Resumen del dashboard (KPIs, salud de sistemas, alertas recientes)</span><span class="en">Dashboard summary (KPIs, system health, recent alerts)</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- ═══ Systems ═══ -->
+    <h2>Systems <span class="badge cyan">viewer+ / admin</span></h2>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Method</th><th>Path</th><th>Rol</th><th><span class="es">Descripcion</span><span class="en">Description</span></th></tr></thead>
+        <tbody>
+          <tr><td><span class="badge cyan">GET</span></td><td><code>/systems</code></td><td><span class="badge neutral">viewer</span></td><td><span class="es">Listar todos los sistemas SAP</span><span class="en">List all SAP systems</span></td></tr>
+          <tr><td><span class="badge cyan">GET</span></td><td><code>/systems/health-summary</code></td><td><span class="badge neutral">viewer</span></td><td><span class="es">Resumen de salud de todos los sistemas</span><span class="en">Health summary for all systems</span></td></tr>
+          <tr><td><span class="badge cyan">GET</span></td><td><code>/systems/:id</code></td><td><span class="badge neutral">viewer</span></td><td><span class="es">Detalle del sistema con relaciones</span><span class="en">System detail with relations</span></td></tr>
+          <tr><td><span class="badge success">POST</span></td><td><code>/systems</code></td><td><span class="badge danger">admin</span></td><td><span class="es">Registrar nuevo sistema SAP</span><span class="en">Register new SAP system</span></td></tr>
+          <tr><td><span class="badge warning">PATCH</span></td><td><code>/systems/:id</code></td><td><span class="badge cyan">operator</span></td><td><span class="es">Actualizar configuracion del sistema</span><span class="en">Update system configuration</span></td></tr>
+          <tr><td><span class="badge danger">DELETE</span></td><td><code>/systems/:id</code></td><td><span class="badge danger">admin</span></td><td><span class="es">Desregistrar un sistema (CASCADE)</span><span class="en">Deregister a system (CASCADE)</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3>
+      <span class="es">Ejemplo: Crear Sistema</span>
+      <span class="en">Example: Create System</span>
+    </h3>
+<pre><code>POST /systems
+Authorization: Bearer eyJhbGci...
+Content-Type: application/json
+
+{
+  "sid": "NW1",
+  "description": "NetWeaver Gateway Production",
+  "sapProduct": "SAP NW 7.5",
+  "productFamily": "ABAP_BUSINESS_SUITE",
+  "sapStackType": "ABAP",
+  "dbType": "SAP HANA 2.0",
+  "environment": "PRD",
+  "deploymentModel": "ON_PREMISE"
+}</code></pre>
+
+    <!-- ═══ Alerts ═══ -->
+    <h2>Alerts <span class="badge cyan">viewer+ / operator</span></h2>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Method</th><th>Path</th><th>Rol</th><th><span class="es">Descripcion</span><span class="en">Description</span></th></tr></thead>
+        <tbody>
+          <tr><td><span class="badge cyan">GET</span></td><td><code>/alerts</code></td><td><span class="badge neutral">viewer</span></td><td><span class="es">Listar alertas con filtros opcionales (?status, ?level, ?systemId)</span><span class="en">List alerts with optional filters (?status, ?level, ?systemId)</span></td></tr>
+          <tr><td><span class="badge cyan">GET</span></td><td><code>/alerts/stats</code></td><td><span class="badge neutral">viewer</span></td><td><span class="es">Estadisticas de alertas (conteo por nivel y estado)</span><span class="en">Alert statistics (count by level and status)</span></td></tr>
+          <tr><td><span class="badge warning">PATCH</span></td><td><code>/alerts/:id/acknowledge</code></td><td><span class="badge cyan">operator</span></td><td><span class="es">Reconocer una alerta</span><span class="en">Acknowledge an alert</span></td></tr>
+          <tr><td><span class="badge warning">PATCH</span></td><td><code>/alerts/:id/resolve</code></td><td><span class="badge cyan">operator</span></td><td><span class="es">Resolver una alerta (con categoria y nota)</span><span class="en">Resolve an alert (with category and note)</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- ═══ Events ═══ -->
+    <h2>Events <span class="badge cyan">viewer</span></h2>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Method</th><th>Path</th><th>Rol</th><th><span class="es">Descripcion</span><span class="en">Description</span></th></tr></thead>
+        <tbody>
+          <tr><td><span class="badge cyan">GET</span></td><td><code>/events</code></td><td><span class="badge neutral">viewer</span></td><td><span class="es">Listar eventos con filtros (?level, ?source, ?systemId, ?limit)</span><span class="en">List events with filters (?level, ?source, ?systemId, ?limit)</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- ═══ Metrics ═══ -->
+    <h2>Metrics <span class="badge cyan">viewer+ / operator</span></h2>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Method</th><th>Path</th><th>Rol</th><th><span class="es">Descripcion</span><span class="en">Description</span></th></tr></thead>
+        <tbody>
+          <tr><td><span class="badge success">POST</span></td><td><code>/metrics/ingest</code></td><td><span class="badge cyan">operator</span></td><td><span class="es">Ingestar metricas desde el agente</span><span class="en">Ingest metrics from agent</span></td></tr>
+          <tr><td><span class="badge cyan">GET</span></td><td><code>/metrics/hosts/:hostId</code></td><td><span class="badge neutral">viewer</span></td><td><span class="es">Series de tiempo de metricas del host (?hours=24)</span><span class="en">Host metrics time-series (?hours=24)</span></td></tr>
+          <tr><td><span class="badge cyan">GET</span></td><td><code>/metrics/systems/:systemId/hosts</code></td><td><span class="badge neutral">viewer</span></td><td><span class="es">Metricas de todos los hosts de un sistema</span><span class="en">All host metrics for a system</span></td></tr>
+          <tr><td><span class="badge cyan">GET</span></td><td><code>/metrics/systems/:systemId/health</code></td><td><span class="badge neutral">viewer</span></td><td><span class="es">Snapshots de salud del sistema</span><span class="en">System health snapshots</span></td></tr>
+          <tr><td><span class="badge cyan">GET</span></td><td><code>/metrics/breaches</code></td><td><span class="badge neutral">viewer</span></td><td><span class="es">Listar breaches de umbrales (?systemId, ?resolved)</span><span class="en">List threshold breaches (?systemId, ?resolved)</span></td></tr>
+          <tr><td><span class="badge cyan">GET</span></td><td><code>/metrics/systems/:systemId/dependencies</code></td><td><span class="badge neutral">viewer</span></td><td><span class="es">Dependencias del sistema</span><span class="en">System dependencies</span></td></tr>
+          <tr><td><span class="badge cyan">GET</span></td><td><code>/metrics/systems/:systemId/hosts-detail</code></td><td><span class="badge neutral">viewer</span></td><td><span class="es">Hosts con instancias asociadas</span><span class="en">Hosts with associated instances</span></td></tr>
+          <tr><td><span class="badge cyan">GET</span></td><td><code>/metrics/systems/:systemId/components</code></td><td><span class="badge neutral">viewer</span></td><td><span class="es">Componentes con instancias</span><span class="en">Components with instances</span></td></tr>
+          <tr><td><span class="badge cyan">GET</span></td><td><code>/metrics/system-meta</code></td><td><span class="badge neutral">viewer</span></td><td><span class="es">Metadatos del sistema (?systemId)</span><span class="en">System metadata (?systemId)</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- ═══ Landscape ═══ -->
+    <h2>Landscape <span class="badge cyan">viewer</span></h2>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Method</th><th>Path</th><th>Rol</th><th><span class="es">Descripcion</span><span class="en">Description</span></th></tr></thead>
+        <tbody>
+          <tr><td><span class="badge cyan">GET</span></td><td><code>/landscape/validation</code></td><td><span class="badge neutral">viewer</span></td><td><span class="es">Validacion del landscape — checks de todos los sistemas</span><span class="en">Landscape validation — checks for all systems</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- ═══ Runbooks ═══ -->
+    <h2>Runbooks <span class="badge cyan">viewer+ / operator</span></h2>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Method</th><th>Path</th><th>Rol</th><th>Rate Limit</th><th><span class="es">Descripcion</span><span class="en">Description</span></th></tr></thead>
+        <tbody>
+          <tr><td><span class="badge cyan">GET</span></td><td><code>/runbooks</code></td><td><span class="badge neutral">viewer</span></td><td>-</td><td><span class="es">Listar runbooks (?category)</span><span class="en">List runbooks (?category)</span></td></tr>
+          <tr><td><span class="badge cyan">GET</span></td><td><code>/runbooks/executions</code></td><td><span class="badge neutral">viewer</span></td><td>-</td><td><span class="es">Listar todas las ejecuciones</span><span class="en">List all executions</span></td></tr>
+          <tr><td><span class="badge cyan">GET</span></td><td><code>/runbooks/executions/:executionId</code></td><td><span class="badge neutral">viewer</span></td><td>-</td><td><span class="es">Detalle de ejecucion con pasos</span><span class="en">Execution detail with steps</span></td></tr>
+          <tr><td><span class="badge cyan">GET</span></td><td><code>/runbooks/:id</code></td><td><span class="badge neutral">viewer</span></td><td>-</td><td><span class="es">Detalle del runbook</span><span class="en">Runbook detail</span></td></tr>
+          <tr><td><span class="badge success">POST</span></td><td><code>/runbooks/:id/execute</code></td><td><span class="badge cyan">operator</span></td><td>10/min</td><td><span class="es">Ejecutar runbook en un sistema (202 Accepted)</span><span class="en">Execute runbook on a system (202 Accepted)</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3>
+      <span class="es">Ejemplo: Ejecutar Runbook</span>
+      <span class="en">Example: Execute Runbook</span>
+    </h3>
+<pre><code>POST /runbooks/:runbookId/execute
+Authorization: Bearer eyJhbGci...
+Content-Type: application/json
+
+{
+  "systemId": "uuid-of-ep1-system",
+  "dryRun": false
+}
+
+// Response 202 Accepted
+{
+  "executionId": "uuid-...",
+  "runbookId": "uuid-...",
+  "systemId": "uuid-...",
+  "gate": "SAFE",
+  "result": "RUNNING",
+  "totalSteps": 5,
+  "currentStep": 1
+}</code></pre>
+
+    <!-- ═══ Approvals ═══ -->
+    <h2>Approvals <span class="badge cyan">viewer+ / escalation</span></h2>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Method</th><th>Path</th><th>Rol</th><th><span class="es">Descripcion</span><span class="en">Description</span></th></tr></thead>
+        <tbody>
+          <tr><td><span class="badge cyan">GET</span></td><td><code>/approvals</code></td><td><span class="badge neutral">viewer</span></td><td><span class="es">Listar solicitudes de aprobacion (?status, ?systemId)</span><span class="en">List approval requests (?status, ?systemId)</span></td></tr>
+          <tr><td><span class="badge cyan">GET</span></td><td><code>/approvals/:id</code></td><td><span class="badge neutral">viewer</span></td><td><span class="es">Detalle de la solicitud</span><span class="en">Request detail</span></td></tr>
+          <tr><td><span class="badge success">POST</span></td><td><code>/approvals</code></td><td><span class="badge cyan">operator</span></td><td><span class="es">Crear solicitud de aprobacion</span><span class="en">Create approval request</span></td></tr>
+          <tr><td><span class="badge warning">PATCH</span></td><td><code>/approvals/:id/approve</code></td><td><span class="badge warning">escalation</span></td><td><span class="es">Aprobar solicitud</span><span class="en">Approve request</span></td></tr>
+          <tr><td><span class="badge warning">PATCH</span></td><td><code>/approvals/:id/reject</code></td><td><span class="badge warning">escalation</span></td><td><span class="es">Rechazar solicitud</span><span class="en">Reject request</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- ═══ Operations ═══ -->
+    <h2>Operations <span class="badge cyan">viewer+ / operator</span></h2>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Method</th><th>Path</th><th>Rol</th><th>Rate Limit</th><th><span class="es">Descripcion</span><span class="en">Description</span></th></tr></thead>
+        <tbody>
+          <tr><td><span class="badge cyan">GET</span></td><td><code>/operations</code></td><td><span class="badge neutral">viewer</span></td><td>-</td><td><span class="es">Listar operaciones (?status, ?type, ?systemId)</span><span class="en">List operations (?status, ?type, ?systemId)</span></td></tr>
+          <tr><td><span class="badge success">POST</span></td><td><code>/operations</code></td><td><span class="badge cyan">operator</span></td><td>10/min</td><td><span class="es">Programar nueva operacion</span><span class="en">Schedule new operation</span></td></tr>
+          <tr><td><span class="badge warning">PATCH</span></td><td><code>/operations/:id/status</code></td><td><span class="badge cyan">operator</span></td><td>-</td><td><span class="es">Actualizar estado de operacion</span><span class="en">Update operation status</span></td></tr>
+          <tr><td><span class="badge cyan">GET</span></td><td><code>/operations/jobs</code></td><td><span class="badge neutral">viewer</span></td><td>-</td><td><span class="es">Listar registros de jobs SM37 (?systemId)</span><span class="en">List SM37 job records (?systemId)</span></td></tr>
+          <tr><td><span class="badge cyan">GET</span></td><td><code>/operations/transports</code></td><td><span class="badge neutral">viewer</span></td><td>-</td><td><span class="es">Listar ordenes de transporte (?systemId)</span><span class="en">List transport orders (?systemId)</span></td></tr>
+          <tr><td><span class="badge cyan">GET</span></td><td><code>/operations/certificates</code></td><td><span class="badge neutral">viewer</span></td><td>-</td><td><span class="es">Listar certificados (?systemId)</span><span class="en">List certificates (?systemId)</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- ═══ Connectors ═══ -->
+    <h2>Connectors <span class="badge cyan">viewer+ / operator</span></h2>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Method</th><th>Path</th><th>Rol</th><th><span class="es">Descripcion</span><span class="en">Description</span></th></tr></thead>
+        <tbody>
+          <tr><td><span class="badge cyan">GET</span></td><td><code>/connectors</code></td><td><span class="badge neutral">viewer</span></td><td><span class="es">Listar conectores</span><span class="en">List connectors</span></td></tr>
+          <tr><td><span class="badge cyan">GET</span></td><td><code>/connectors/:id</code></td><td><span class="badge neutral">viewer</span></td><td><span class="es">Detalle del conector</span><span class="en">Connector detail</span></td></tr>
+          <tr><td><span class="badge warning">PATCH</span></td><td><code>/connectors/:id/heartbeat</code></td><td><span class="badge cyan">operator</span></td><td><span class="es">Actualizar heartbeat del conector</span><span class="en">Update connector heartbeat</span></td></tr>
+          <tr><td><span class="badge cyan">GET</span></td><td><code>/connectors/validate/all</code></td><td><span class="badge cyan">operator</span></td><td><span class="es">Validar conectividad de todos</span><span class="en">Validate all connectivity</span></td></tr>
+          <tr><td><span class="badge cyan">GET</span></td><td><code>/connectors/:id/validate</code></td><td><span class="badge cyan">operator</span></td><td><span class="es">Validar conectividad de un conector</span><span class="en">Validate single connector</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- ═══ HA/DR ═══ -->
+    <h2>HA/DR <span class="badge cyan">viewer+ / admin</span></h2>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Method</th><th>Path</th><th>Rol</th><th><span class="es">Descripcion</span><span class="en">Description</span></th></tr></thead>
+        <tbody>
+          <tr><td><span class="badge cyan">GET</span></td><td><code>/ha</code></td><td><span class="badge neutral">viewer</span></td><td><span class="es">Listar configuraciones HA</span><span class="en">List HA configurations</span></td></tr>
+          <tr><td><span class="badge cyan">GET</span></td><td><code>/ha/:systemId</code></td><td><span class="badge neutral">viewer</span></td><td><span class="es">Configuracion HA de un sistema</span><span class="en">HA config for a system</span></td></tr>
+          <tr><td><span class="badge warning">PATCH</span></td><td><code>/ha/:systemId/failover</code></td><td><span class="badge danger">admin</span></td><td><span class="es">Disparar failover (accion critica)</span><span class="en">Trigger failover (critical action)</span></td></tr>
+          <tr><td><span class="badge warning">PATCH</span></td><td><code>/ha/:systemId/status</code></td><td><span class="badge cyan">operator</span></td><td><span class="es">Actualizar estado HA</span><span class="en">Update HA status</span></td></tr>
+          <tr><td><span class="badge cyan">GET</span></td><td><code>/ha/:systemId/prereqs</code></td><td><span class="badge neutral">viewer</span></td><td><span class="es">Checklist de pre-requisitos HA</span><span class="en">HA prerequisites checklist</span></td></tr>
+          <tr><td><span class="badge cyan">GET</span></td><td><code>/ha/:systemId/ops-history</code></td><td><span class="badge neutral">viewer</span></td><td><span class="es">Historial de operaciones HA</span><span class="en">HA operations history</span></td></tr>
+          <tr><td><span class="badge cyan">GET</span></td><td><code>/ha/:systemId/drivers</code></td><td><span class="badge neutral">viewer</span></td><td><span class="es">Informacion de drivers HA</span><span class="en">HA driver information</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- ═══ Analytics ═══ -->
+    <h2>Analytics <span class="badge cyan">viewer</span></h2>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Method</th><th>Path</th><th>Rol</th><th><span class="es">Descripcion</span><span class="en">Description</span></th></tr></thead>
+        <tbody>
+          <tr><td><span class="badge cyan">GET</span></td><td><code>/analytics/overview</code></td><td><span class="badge neutral">viewer</span></td><td><span class="es">Vista general de analytics</span><span class="en">Analytics overview</span></td></tr>
+          <tr><td><span class="badge cyan">GET</span></td><td><code>/analytics/runbooks</code></td><td><span class="badge neutral">viewer</span></td><td><span class="es">Analytics de ejecuciones de runbooks</span><span class="en">Runbook execution analytics</span></td></tr>
+          <tr><td><span class="badge cyan">GET</span></td><td><code>/analytics/systems/:systemId/trends</code></td><td><span class="badge neutral">viewer</span></td><td><span class="es">Tendencias de salud del sistema (?days=7)</span><span class="en">System health trends (?days=7)</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- ═══ AI ═══ -->
+    <h2>AI <span class="badge cyan">viewer</span></h2>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Method</th><th>Path</th><th>Rol</th><th><span class="es">Descripcion</span><span class="en">Description</span></th></tr></thead>
+        <tbody>
+          <tr><td><span class="badge cyan">GET</span></td><td><code>/ai/use-cases</code></td><td><span class="badge neutral">viewer</span></td><td><span class="es">Casos de uso de IA disponibles</span><span class="en">Available AI use cases</span></td></tr>
+          <tr><td><span class="badge cyan">GET</span></td><td><code>/ai/responses</code></td><td><span class="badge neutral">viewer</span></td><td><span class="es">Respuestas y insights de IA recientes</span><span class="en">Recent AI responses and insights</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- ═══ Chat ═══ -->
+    <h2>Chat <span class="badge cyan">viewer+</span></h2>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Method</th><th>Path</th><th>Rol</th><th>Rate Limit</th><th><span class="es">Descripcion</span><span class="en">Description</span></th></tr></thead>
+        <tbody>
+          <tr><td><span class="badge success">POST</span></td><td><code>/chat</code></td><td><span class="badge neutral">viewer</span></td><td>20/min</td><td><span class="es">Enviar mensaje al asistente IA</span><span class="en">Send message to AI assistant</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- ═══ Users ═══ -->
+    <h2>Users <span class="badge cyan">viewer+ / admin</span></h2>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Method</th><th>Path</th><th>Rol</th><th><span class="es">Descripcion</span><span class="en">Description</span></th></tr></thead>
+        <tbody>
+          <tr><td><span class="badge cyan">GET</span></td><td><code>/users</code></td><td><span class="badge neutral">viewer</span></td><td><span class="es">Listar usuarios de la organizacion</span><span class="en">List organization users</span></td></tr>
+          <tr><td><span class="badge cyan">GET</span></td><td><code>/users/:id</code></td><td><span class="badge neutral">viewer</span></td><td><span class="es">Detalle del usuario</span><span class="en">User detail</span></td></tr>
+          <tr><td><span class="badge success">POST</span></td><td><code>/users</code></td><td><span class="badge danger">admin</span></td><td><span class="es">Crear o invitar usuario</span><span class="en">Create or invite user</span></td></tr>
+          <tr><td><span class="badge warning">PATCH</span></td><td><code>/users/:id</code></td><td><span class="badge danger">admin</span></td><td><span class="es">Actualizar rol o estado</span><span class="en">Update role or status</span></td></tr>
+          <tr><td><span class="badge danger">DELETE</span></td><td><code>/users/:id</code></td><td><span class="badge danger">admin</span></td><td><span class="es">Eliminar usuario de la organizacion</span><span class="en">Remove user from organization</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- ═══ Tenant ═══ -->
+    <h2>Tenant <span class="badge cyan">viewer+ / admin</span></h2>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Method</th><th>Path</th><th>Rol</th><th><span class="es">Descripcion</span><span class="en">Description</span></th></tr></thead>
+        <tbody>
+          <tr><td><span class="badge cyan">GET</span></td><td><code>/tenant</code></td><td><span class="badge neutral">viewer</span></td><td><span class="es">Datos de la organizacion actual</span><span class="en">Current organization data</span></td></tr>
+          <tr><td><span class="badge warning">PATCH</span></td><td><code>/tenant</code></td><td><span class="badge danger">admin</span></td><td><span class="es">Actualizar configuracion de la organizacion</span><span class="en">Update organization settings</span></td></tr>
+          <tr><td><span class="badge cyan">GET</span></td><td><code>/tenant/stats</code></td><td><span class="badge neutral">viewer</span></td><td><span class="es">Estadisticas de la organizacion</span><span class="en">Organization statistics</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- ═══ Settings ═══ -->
+    <h2>Settings <span class="badge danger">admin</span></h2>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Method</th><th>Path</th><th>Rol</th><th><span class="es">Descripcion</span><span class="en">Description</span></th></tr></thead>
+        <tbody>
+          <tr><td><span class="badge cyan">GET</span></td><td><code>/settings</code></td><td><span class="badge danger">admin</span></td><td><span class="es">Obtener configuracion de la organizacion</span><span class="en">Get organization settings</span></td></tr>
+          <tr><td><span class="badge warning">PATCH</span></td><td><code>/settings</code></td><td><span class="badge danger">admin</span></td><td><span class="es">Actualizar configuracion</span><span class="en">Update settings</span></td></tr>
+          <tr><td><span class="badge cyan">GET</span></td><td><code>/settings/api-keys</code></td><td><span class="badge danger">admin</span></td><td><span class="es">Listar API keys</span><span class="en">List API keys</span></td></tr>
+          <tr><td><span class="badge success">POST</span></td><td><code>/settings/api-keys</code></td><td><span class="badge danger">admin</span></td><td><span class="es">Crear nuevo API key</span><span class="en">Create new API key</span></td></tr>
+          <tr><td><span class="badge warning">PATCH</span></td><td><code>/settings/api-keys/:id/revoke</code></td><td><span class="badge danger">admin</span></td><td><span class="es">Revocar un API key</span><span class="en">Revoke an API key</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- ═══ Audit ═══ -->
+    <h2>Audit <span class="badge danger">admin</span></h2>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Method</th><th>Path</th><th>Rol</th><th><span class="es">Descripcion</span><span class="en">Description</span></th></tr></thead>
+        <tbody>
+          <tr><td><span class="badge cyan">GET</span></td><td><code>/audit</code></td><td><span class="badge danger">admin</span></td><td><span class="es">Listar entradas del log de auditoria (?severity, ?action, ?limit)</span><span class="en">List audit log entries (?severity, ?action, ?limit)</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- ═══ Plans ═══ -->
+    <h2>Plans <span class="badge neutral">public</span></h2>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Method</th><th>Path</th><th>Rol</th><th><span class="es">Descripcion</span><span class="en">Description</span></th></tr></thead>
+        <tbody>
+          <tr><td><span class="badge cyan">GET</span></td><td><code>/plans</code></td><td><span class="badge neutral">public</span></td><td><span class="es">Listar planes disponibles</span><span class="en">List available plans</span></td></tr>
+          <tr><td><span class="badge cyan">GET</span></td><td><code>/plans/:tier</code></td><td><span class="badge neutral">public</span></td><td><span class="es">Detalle de un plan por tier</span><span class="en">Plan detail by tier</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- ═══ Licenses ═══ -->
+    <h2>Licenses <span class="badge cyan">viewer</span></h2>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Method</th><th>Path</th><th>Rol</th><th><span class="es">Descripcion</span><span class="en">Description</span></th></tr></thead>
+        <tbody>
+          <tr><td><span class="badge cyan">GET</span></td><td><code>/licenses</code></td><td><span class="badge neutral">viewer</span></td><td><span class="es">Informacion de licencias de todos los sistemas</span><span class="en">License information for all systems</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- ═══ Health ═══ -->
+    <h2>Health <span class="badge neutral">public</span></h2>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Method</th><th>Path</th><th>Rol</th><th><span class="es">Descripcion</span><span class="en">Description</span></th></tr></thead>
+        <tbody>
+          <tr><td><span class="badge cyan">GET</span></td><td><code>/health</code></td><td><span class="badge neutral">public</span></td><td><span class="es">Health check completo (DB, memoria, disco)</span><span class="en">Full health check (DB, memory, disk)</span></td></tr>
+          <tr><td><span class="badge cyan">GET</span></td><td><code>/health/liveness</code></td><td><span class="badge neutral">public</span></td><td><span class="es">Liveness probe (siempre devuelve OK)</span><span class="en">Liveness probe (always returns OK)</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- ═══ Summary ═══ -->
+    <h2>
+      <span class="es">Resumen de Endpoints por Controlador</span>
+      <span class="en">Endpoint Summary by Controller</span>
+    </h2>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Controller</th><th>Endpoints</th><th>Auth</th></tr></thead>
+        <tbody>
+          <tr><td>Auth</td><td>3</td><td><span class="es">Mixto (publico + protegido)</span><span class="en">Mixed (public + protected)</span></td></tr>
+          <tr><td>Dashboard</td><td>1</td><td>JWT</td></tr>
+          <tr><td>Systems</td><td>6</td><td>JWT</td></tr>
+          <tr><td>Alerts</td><td>4</td><td>JWT</td></tr>
+          <tr><td>Events</td><td>1</td><td>JWT</td></tr>
+          <tr><td>Metrics</td><td>9</td><td>JWT</td></tr>
+          <tr><td>Landscape</td><td>1</td><td>JWT</td></tr>
+          <tr><td>Runbooks</td><td>5</td><td>JWT</td></tr>
+          <tr><td>Approvals</td><td>5</td><td>JWT</td></tr>
+          <tr><td>Operations</td><td>6</td><td>JWT</td></tr>
+          <tr><td>Connectors</td><td>5</td><td>JWT</td></tr>
+          <tr><td>HA/DR</td><td>7</td><td>JWT</td></tr>
+          <tr><td>Analytics</td><td>3</td><td>JWT</td></tr>
+          <tr><td>AI</td><td>2</td><td>JWT</td></tr>
+          <tr><td>Chat</td><td>1</td><td>JWT</td></tr>
+          <tr><td>Users</td><td>5</td><td>JWT</td></tr>
+          <tr><td>Tenant</td><td>3</td><td>JWT</td></tr>
+          <tr><td>Settings</td><td>5</td><td>JWT</td></tr>
+          <tr><td>Audit</td><td>1</td><td>JWT</td></tr>
+          <tr><td>Plans</td><td>2</td><td><span class="es">Publico</span><span class="en">Public</span></td></tr>
+          <tr><td>Licenses</td><td>1</td><td>JWT</td></tr>
+          <tr><td>Health</td><td>2</td><td><span class="es">Publico</span><span class="en">Public</span></td></tr>
+          <tr><td class="font-bold">Total</td><td class="font-bold">78</td><td>-</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+  </main>
+</div>
+</body>
+</html>

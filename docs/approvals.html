@@ -2,589 +2,412 @@
 <html lang="es" data-theme="dark" data-lang="es">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Aprobaciones - SAP Spektra Docs</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <title>Aprobaciones — SAP Spektra Docs</title>
   <link rel="stylesheet" href="theme.css">
   <script src="theme-toggle.js"></script>
   <script src="lang-toggle.js"></script>
-  <style>
-    .tabs{display:flex;gap:0;border-bottom:2px solid var(--brd);margin-bottom:24px}
-    .tab{padding:10px 20px;font-size:13px;font-weight:600;color:var(--txt3);cursor:pointer;
-      border-bottom:2px solid transparent;margin-bottom:-2px;transition:all .2s;background:none;border-top:none;border-left:none;border-right:none}
-    .tab:hover{color:var(--txt1)}
-    .tab.active{color:var(--cyan);border-bottom-color:var(--cyan)}
-    .tab-content{display:none}
-    .tab-content.active{display:block}
-    .tab-count{font-size:10px;background:var(--bg3);color:var(--txt3);padding:1px 7px;border-radius:10px;margin-left:6px}
-    .tab.active .tab-count{background:var(--cyan-dim);color:var(--cyan)}
-    .btn{padding:8px 18px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;border:none;transition:all .2s}
-    .btn-approve{background:rgba(34,197,94,0.15);color:var(--success);border:1px solid rgba(34,197,94,0.3)}
-    .btn-approve:hover{background:rgba(34,197,94,0.25)}
-    .btn-reject{background:rgba(239,68,68,0.1);color:var(--danger);border:1px solid rgba(239,68,68,0.25)}
-    .btn-reject:hover{background:rgba(239,68,68,0.2)}
-    .status-flow{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:12px 0}
-    .status-flow .arrow{color:var(--txt3);font-size:18px}
-    .token-box{background:var(--code-bg);border:1px solid var(--code-border);border-radius:8px;padding:10px 16px;font-family:'SF Mono',Monaco,Consolas,monospace;font-size:12px;color:var(--cyan);word-break:break-all}
-    .json-block{background:var(--code-bg);border:1px solid var(--code-border);border-radius:var(--radius);padding:14px;margin:8px 0;font-family:'SF Mono',Monaco,Consolas,monospace;font-size:12px;color:var(--txt2);overflow-x:auto;white-space:pre}
-    .detail-grid{display:grid;grid-template-columns:140px 1fr;gap:8px 16px;font-size:13px}
-    .detail-grid dt{color:var(--txt3);font-weight:600}
-    .detail-grid dd{color:var(--txt1)}
-  </style>
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+  <script src="mermaid-init.js"></script>
 </head>
 <body>
 <div class="docs-wrapper">
-
-  <!-- ══════════ Sidebar ══════════ -->
-  <nav class="docs-sidebar" aria-label="Documentation navigation">
+  <nav class="docs-sidebar">
     <div class="sidebar-brand">
-      <div class="logo">S</div>
+      <div class="logo">&#9889;</div>
       <div class="brand-text">
         <div class="brand-name">SAP Spektra</div>
         <div class="brand-sub">Documentacion v2.0</div>
       </div>
     </div>
-
     <div class="sidebar-section">
-      <div class="sidebar-section-label"><span class="es">Inicio</span><span class="en">Home</span></div>
-      <a class="sidebar-link" href="index.html"><span class="es">Portal</span><span class="en">Portal</span></a>
-      <a class="sidebar-link" href="getting-started.html"><span class="es">Primeros Pasos</span><span class="en">Getting Started</span></a>
+      <div class="sidebar-section-label">Inicio</div>
+      <a href="index.html" class="sidebar-link">Portal</a>
+      <a href="getting-started.html" class="sidebar-link">Primeros Pasos</a>
     </div>
-
+    <div class="sidebar-section">
+      <div class="sidebar-section-label">Architecture</div>
+      <a href="architecture.html" class="sidebar-link">Arquitectura</a>
+      <a href="domain-model.html" class="sidebar-link">Modelo de Datos</a>
+      <a href="api-reference.html" class="sidebar-link">API Reference</a>
+    </div>
     <div class="sidebar-section">
       <div class="sidebar-section-label">Command</div>
-      <a class="sidebar-link" href="dashboard.html">Dashboard</a>
-      <a class="sidebar-link" href="landscape.html">Landscape</a>
-      <a class="sidebar-link" href="alerts.html"><span class="es">Alertas</span><span class="en">Alerts</span></a>
+      <a href="dashboard.html" class="sidebar-link">Dashboard</a>
+      <a href="landscape.html" class="sidebar-link">Landscape</a>
+      <a href="alerts.html" class="sidebar-link">Alertas</a>
     </div>
-
     <div class="sidebar-section">
       <div class="sidebar-section-label">Monitor</div>
-      <a class="sidebar-link" href="systems.html"><span class="es">Sistemas</span><span class="en">Systems</span></a>
-      <a class="sidebar-link" href="connectors.html"><span class="es">Conectores</span><span class="en">Connectors</span></a>
-      <a class="sidebar-link" href="events.html"><span class="es">Eventos</span><span class="en">Events</span></a>
+      <a href="systems.html" class="sidebar-link">Sistemas</a>
+      <a href="connectors.html" class="sidebar-link">Conectores</a>
+      <a href="events.html" class="sidebar-link">Eventos</a>
     </div>
-
     <div class="sidebar-section">
       <div class="sidebar-section-label">Intelligence</div>
-      <a class="sidebar-link" href="ai-analysis.html"><span class="es">Analisis IA</span><span class="en">AI Analysis</span></a>
-      <a class="sidebar-link" href="analytics.html">Analytics</a>
-      <a class="sidebar-link" href="reports.html"><span class="es">Reportes</span><span class="en">Reports</span></a>
-      <a class="sidebar-link" href="comparison.html"><span class="es">Comparacion</span><span class="en">Comparison</span></a>
+      <a href="ai-analysis.html" class="sidebar-link">Analisis IA</a>
+      <a href="analytics.html" class="sidebar-link">Analytics</a>
+      <a href="reports.html" class="sidebar-link">Reportes</a>
+      <a href="comparison.html" class="sidebar-link">Comparacion</a>
     </div>
-
     <div class="sidebar-section">
       <div class="sidebar-section-label">Operations</div>
-      <a class="sidebar-link" href="runbooks.html">Runbooks</a>
-      <a class="sidebar-link active" href="approvals.html"><span class="es">Aprobaciones</span><span class="en">Approvals</span></a>
-      <a class="sidebar-link" href="operations.html"><span class="es">Operaciones</span><span class="en">Operations</span></a>
-      <a class="sidebar-link" href="jobs.html">Jobs SM37</a>
-      <a class="sidebar-link" href="transports.html"><span class="es">Transportes</span><span class="en">Transports</span></a>
-      <a class="sidebar-link" href="sla.html">SLA</a>
-      <a class="sidebar-link" href="ha-control.html">HA Control</a>
-      <a class="sidebar-link" href="certificates.html"><span class="es">Certificados</span><span class="en">Certificates</span></a>
+      <a href="runbooks.html" class="sidebar-link">Runbooks</a>
+      <a href="approvals.html" class="sidebar-link active">Aprobaciones</a>
+      <a href="operations.html" class="sidebar-link">Operaciones</a>
+      <a href="jobs.html" class="sidebar-link">Jobs (SM37)</a>
+      <a href="transports.html" class="sidebar-link">Transportes</a>
+      <a href="sla.html" class="sidebar-link">SLA</a>
+      <a href="ha-control.html" class="sidebar-link">HA Control</a>
+      <a href="certificates.html" class="sidebar-link">Certificados</a>
     </div>
-
     <div class="sidebar-section">
       <div class="sidebar-section-label">Admin</div>
-      <a class="sidebar-link" href="admin.html"><span class="es">Gestion</span><span class="en">Management</span></a>
-      <a class="sidebar-link" href="settings.html"><span class="es">Configuracion</span><span class="en">Settings</span></a>
-      <a class="sidebar-link" href="connect-system.html"><span class="es">Conectar Sistema</span><span class="en">Connect System</span></a>
+      <a href="admin.html" class="sidebar-link">Gestion</a>
+      <a href="settings.html" class="sidebar-link">Configuracion</a>
+      <a href="connect-system.html" class="sidebar-link">Conectar Sistema</a>
     </div>
   </nav>
 
-  <!-- ══════════ Main Content ══════════ -->
   <main class="docs-main">
     <div class="breadcrumb">
-      <a href="index.html">Docs</a>
-      <span class="sep">/</span>
-      <span>Operations</span>
-      <span class="sep">/</span>
-      <span class="text-primary"><span class="es">Aprobaciones</span><span class="en">Approvals</span></span>
+      <a href="index.html">Docs</a> <span class="sep">/</span>
+      <span class="es">Operations</span><span class="en">Operations</span> <span class="sep">/</span>
+      <span class="es">Aprobaciones</span><span class="en">Approvals</span>
     </div>
 
     <div class="page-header">
-      <h1>
-        <span class="es">Flujo de Aprobaciones</span>
-        <span class="en">Approval Workflow</span>
-      </h1>
-      <div class="subtitle">
-        <span class="es">Gestion de solicitudes de aprobacion para operaciones criticas en sistemas SAP. Cada solicitud esta protegida por un token unico y requiere revision por usuarios autorizados.</span>
-        <span class="en">Management of approval requests for critical operations on SAP systems. Each request is protected by a unique token and requires review by authorized users.</span>
-      </div>
-    </div>
-
-    <!-- KPI Grid -->
-    <div class="kpi-grid">
-      <div class="kpi-card">
-        <div class="card-icon warning">&#128337;</div>
-        <div>
-          <div class="kpi-value">5</div>
-          <div class="kpi-label"><span class="es">Pendientes</span><span class="en">Pending</span></div>
-        </div>
-      </div>
-      <div class="kpi-card">
-        <div class="card-icon success">&#9989;</div>
-        <div>
-          <div class="kpi-value">89</div>
-          <div class="kpi-label"><span class="es">Aprobadas (30d)</span><span class="en">Approved (30d)</span></div>
-        </div>
-      </div>
-      <div class="kpi-card">
-        <div class="card-icon danger">&#10060;</div>
-        <div>
-          <div class="kpi-value">12</div>
-          <div class="kpi-label"><span class="es">Rechazadas (30d)</span><span class="en">Rejected (30d)</span></div>
-        </div>
-      </div>
-      <div class="kpi-card">
-        <div class="card-icon violet">&#9203;</div>
-        <div>
-          <div class="kpi-value">3</div>
-          <div class="kpi-label"><span class="es">Expiradas (30d)</span><span class="en">Expired (30d)</span></div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Status Flow -->
-    <h2><span class="es">Flujo de Estados</span><span class="en">Status Flow</span></h2>
-    <div class="card">
-      <div class="status-flow">
-        <span class="badge warning">PENDING</span>
-        <span class="arrow">&rarr;</span>
-        <span class="badge success">APPROVED</span>
-        <span class="arrow">&rarr;</span>
-        <span class="badge cyan">EXECUTED</span>
-      </div>
-      <div class="status-flow">
-        <span class="badge warning">PENDING</span>
-        <span class="arrow">&rarr;</span>
-        <span class="badge danger">REJECTED</span>
-      </div>
-      <div class="status-flow">
-        <span class="badge warning">PENDING</span>
-        <span class="arrow">&rarr;</span>
-        <span class="badge neutral">EXPIRED</span>
-        <span class="text-xs text-muted" style="margin-left:8px"><span class="es">(si se alcanza expiresAt sin accion)</span><span class="en">(if expiresAt is reached without action)</span></span>
-      </div>
-      <p class="text-sm mt-2">
-        <span class="es">Una solicitud aprobada puede transicionar a <code>EXECUTED</code> cuando el runbook asociado se ejecuta exitosamente. Las solicitudes expiradas no pueden ser procesadas.</span>
-        <span class="en">An approved request can transition to <code>EXECUTED</code> when the associated runbook executes successfully. Expired requests cannot be processed.</span>
+      <h1><span class="es">Aprobaciones</span><span class="en">Approvals</span></h1>
+      <p class="subtitle">
+        <span class="es">Flujo de trabajo de aprobaciones para operaciones criticas con control de acceso basado en roles</span>
+        <span class="en">Approval workflow for critical operations with role-based access control</span>
       </p>
     </div>
 
-    <!-- Tabs -->
-    <div class="tabs">
-      <button class="tab active" onclick="switchTab('pending')">
-        <span class="es">Pendientes</span><span class="en">Pending</span><span class="tab-count">5</span>
-      </button>
-      <button class="tab" onclick="switchTab('approved')">
-        <span class="es">Aprobadas</span><span class="en">Approved</span><span class="tab-count">89</span>
-      </button>
-      <button class="tab" onclick="switchTab('rejected')">
-        <span class="es">Rechazadas</span><span class="en">Rejected</span><span class="tab-count">12</span>
-      </button>
-      <button class="tab" onclick="switchTab('expired')">
-        <span class="es">Expiradas</span><span class="en">Expired</span><span class="tab-count">3</span>
-      </button>
-    </div>
-
-    <!-- ── Tab: Pending ── -->
-    <div id="tab-pending" class="tab-content active">
-      <div class="table-wrap">
-        <table>
-          <thead>
-            <tr>
-              <th>SID</th>
-              <th>Runbook</th>
-              <th><span class="es">Metrica</span><span class="en">Metric</span></th>
-              <th><span class="es">Severidad</span><span class="en">Severity</span></th>
-              <th><span class="es">Solicitado por</span><span class="en">Requested by</span></th>
-              <th><span class="es">Fecha</span><span class="en">Date</span></th>
-              <th><span class="es">Acciones</span><span class="en">Actions</span></th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td><code>EP1</code></td>
-              <td class="font-semibold">SAP Instance Restart</td>
-              <td>cpu_usage</td>
-              <td><span class="badge danger">CRITICAL</span></td>
-              <td>ops@acme.com</td>
-              <td class="text-muted">2026-03-12 09:45</td>
-              <td>
-                <button class="btn btn-approve" style="padding:4px 12px;font-size:11px"><span class="es">Aprobar</span><span class="en">Approve</span></button>
-                <button class="btn btn-reject" style="padding:4px 12px;font-size:11px"><span class="es">Rechazar</span><span class="en">Reject</span></button>
-              </td>
-            </tr>
-            <tr>
-              <td><code>QP1</code></td>
-              <td class="font-semibold">HSR Takeover Drill</td>
-              <td>ha_failover</td>
-              <td><span class="badge warning">HIGH</span></td>
-              <td>ops@acme.com</td>
-              <td class="text-muted">2026-03-12 08:30</td>
-              <td>
-                <button class="btn btn-approve" style="padding:4px 12px;font-size:11px"><span class="es">Aprobar</span><span class="en">Approve</span></button>
-                <button class="btn btn-reject" style="padding:4px 12px;font-size:11px"><span class="es">Rechazar</span><span class="en">Reject</span></button>
-              </td>
-            </tr>
-            <tr>
-              <td><code>HP1</code></td>
-              <td class="font-semibold">HANA System Replication Reset</td>
-              <td>replication_lag</td>
-              <td><span class="badge danger">CRITICAL</span></td>
-              <td>admin@acme.com</td>
-              <td class="text-muted">2026-03-12 07:15</td>
-              <td>
-                <button class="btn btn-approve" style="padding:4px 12px;font-size:11px"><span class="es">Aprobar</span><span class="en">Approve</span></button>
-                <button class="btn btn-reject" style="padding:4px 12px;font-size:11px"><span class="es">Rechazar</span><span class="en">Reject</span></button>
-              </td>
-            </tr>
-            <tr>
-              <td><code>FP1</code></td>
-              <td class="font-semibold">Oracle Tablespace Extend</td>
-              <td>disk_usage</td>
-              <td><span class="badge warning">HIGH</span></td>
-              <td>ops@acme.com</td>
-              <td class="text-muted">2026-03-11 22:10</td>
-              <td>
-                <button class="btn btn-approve" style="padding:4px 12px;font-size:11px"><span class="es">Aprobar</span><span class="en">Approve</span></button>
-                <button class="btn btn-reject" style="padding:4px 12px;font-size:11px"><span class="es">Rechazar</span><span class="en">Reject</span></button>
-              </td>
-            </tr>
-            <tr>
-              <td><code>DP1</code></td>
-              <td class="font-semibold">Kernel Patch Application</td>
-              <td>&mdash;</td>
-              <td><span class="badge violet">MEDIUM</span></td>
-              <td>admin@acme.com</td>
-              <td class="text-muted">2026-03-11 18:00</td>
-              <td>
-                <button class="btn btn-approve" style="padding:4px 12px;font-size:11px"><span class="es">Aprobar</span><span class="en">Approve</span></button>
-                <button class="btn btn-reject" style="padding:4px 12px;font-size:11px"><span class="es">Rechazar</span><span class="en">Reject</span></button>
-              </td>
-            </tr>
-          </tbody>
-        </table>
+    <!-- KPIs -->
+    <div class="kpi-grid">
+      <div class="kpi-card">
+        <div class="card-icon cyan">&#128203;</div>
+        <div>
+          <div class="kpi-value">5</div>
+          <div class="kpi-label"><span class="es">Estados del Flujo</span><span class="en">Workflow States</span></div>
+        </div>
       </div>
-
-      <!-- Approval Detail -->
-      <h3><span class="es">Detalle de Solicitud</span><span class="en">Request Detail</span></h3>
-      <div class="card">
-        <div class="card-header">
-          <div class="card-title">
-            <div class="card-icon warning">&#128274;</div>
-            SAP Instance Restart &mdash; EP1
-          </div>
-          <span class="badge warning">PENDING</span>
+      <div class="kpi-card">
+        <div class="card-icon violet">&#128272;</div>
+        <div>
+          <div class="kpi-value">3</div>
+          <div class="kpi-label"><span class="es">Niveles de Severidad</span><span class="en">Severity Levels</span></div>
         </div>
-
-        <div class="detail-grid mt-2">
-          <dt><span class="es">Sistema</span><span class="en">System</span></dt>
-          <dd><code>EP1</code> &mdash; S/4HANA Production</dd>
-          <dt>Runbook</dt>
-          <dd>SAP Instance Restart</dd>
-          <dt><span class="es">Metrica</span><span class="en">Metric</span></dt>
-          <dd>cpu_usage <span class="text-muted">(98.5%)</span></dd>
-          <dt><span class="es">Severidad</span><span class="en">Severity</span></dt>
-          <dd><span class="badge danger">CRITICAL</span></dd>
-          <dt><span class="es">Descripcion</span><span class="en">Description</span></dt>
-          <dd>
-            <span class="es">CPU del servidor de aplicacion EP1 en 98.5%. Se requiere reinicio de la instancia PAS (00) para estabilizar la carga de trabajo. Batch jobs completados previamente.</span>
-            <span class="en">Application server CPU on EP1 at 98.5%. Instance PAS (00) restart required to stabilize workload. Batch jobs completed previously.</span>
-          </dd>
-          <dt><span class="es">Solicitado por</span><span class="en">Requested by</span></dt>
-          <dd>ops@acme.com</dd>
-          <dt><span class="es">Fecha solicitud</span><span class="en">Request date</span></dt>
-          <dd>2026-03-12 09:45:22</dd>
-          <dt><span class="es">Expira</span><span class="en">Expires</span></dt>
-          <dd>2026-03-12 21:45:22 <span class="text-muted">(12h window)</span></dd>
-        </div>
-
-        <h4><span class="es">Token de Aprobacion</span><span class="en">Approval Token</span></h4>
-        <div class="token-box">a3f8c1d2-9e47-4b6a-8f21-6c3d0e5a7b9f</div>
-        <p class="text-xs text-muted mt-1">
-          <span class="es">Cada solicitud tiene un token UUID unico. Se puede aprobar via API usando este token sin autenticacion de sesion.</span>
-          <span class="en">Each request has a unique UUID token. It can be approved via API using this token without session authentication.</span>
-        </p>
-
-        <div style="display:flex;gap:12px;margin-top:20px">
-          <button class="btn btn-approve"><span class="es">Aprobar Solicitud</span><span class="en">Approve Request</span></button>
-          <button class="btn btn-reject"><span class="es">Rechazar Solicitud</span><span class="en">Reject Request</span></button>
+      </div>
+      <div class="kpi-card">
+        <div class="card-icon warning">&#128338;</div>
+        <div>
+          <div class="kpi-value">24h</div>
+          <div class="kpi-label"><span class="es">Expiracion por Defecto</span><span class="en">Default Expiration</span></div>
         </div>
       </div>
     </div>
 
-    <!-- ── Tab: Approved ── -->
-    <div id="tab-approved" class="tab-content">
+    <!-- Status Lifecycle -->
+    <h2><span class="es">Ciclo de Vida del Estado</span><span class="en">Status Lifecycle</span></h2>
+    <div class="card">
+      <p>
+        <span class="es">Cada aprobacion sigue un ciclo de vida estricto con transiciones definidas. Una aprobacion no puede volver a un estado anterior.</span>
+        <span class="en">Each approval follows a strict lifecycle with defined transitions. An approval cannot return to a previous state.</span>
+      </p>
+      <div class="mermaid">
+graph LR
+    P["&lt;b&gt;PENDING&lt;/b&gt;"] -->|"approved"| A["&lt;b&gt;APPROVED&lt;/b&gt;"]
+    A --> E["&lt;b&gt;EXECUTED&lt;/b&gt;"]
+    P -->|"rejected"| R["&lt;b&gt;REJECTED&lt;/b&gt;"]
+    P -->|"timeout 24h"| X["&lt;b&gt;EXPIRED&lt;/b&gt;"]
+      </div>
       <div class="table-wrap">
         <table>
           <thead>
             <tr>
-              <th>SID</th>
-              <th>Runbook</th>
-              <th><span class="es">Severidad</span><span class="en">Severity</span></th>
-              <th><span class="es">Aprobado por</span><span class="en">Approved by</span></th>
-              <th><span class="es">Fecha aprobacion</span><span class="en">Approval date</span></th>
-              <th>Status</th>
+              <th><span class="es">Estado</span><span class="en">Status</span></th>
+              <th><span class="es">Descripcion</span><span class="en">Description</span></th>
+              <th><span class="es">Transiciones Posibles</span><span class="en">Possible Transitions</span></th>
+              <th><span class="es">Quien Actua</span><span class="en">Who Acts</span></th>
             </tr>
           </thead>
           <tbody>
             <tr>
-              <td><code>EP1</code></td>
-              <td>HANA Memory Reclaim</td>
-              <td><span class="badge warning">HIGH</span></td>
-              <td>escalation@acme.com</td>
-              <td class="text-muted">2026-03-12 08:22</td>
-              <td><span class="badge cyan">EXECUTED</span></td>
+              <td><span class="badge warning">PENDING</span></td>
+              <td>
+                <span class="es">La aprobacion ha sido creada y espera revision. Los aprobadores reciben notificaciones por todos los canales configurados (email, Slack, Teams).</span>
+                <span class="en">The approval has been created and awaits review. Approvers receive notifications through all configured channels (email, Slack, Teams).</span>
+              </td>
+              <td>APPROVED, REJECTED, EXPIRED</td>
+              <td><span class="es">Sistema / Operador</span><span class="en">System / Operator</span></td>
             </tr>
             <tr>
-              <td><code>QP1</code></td>
-              <td>Instance Restart (AAS 01)</td>
-              <td><span class="badge danger">CRITICAL</span></td>
-              <td>admin@acme.com</td>
-              <td class="text-muted">2026-03-11 14:10</td>
-              <td><span class="badge cyan">EXECUTED</span></td>
-            </tr>
-            <tr>
-              <td><code>HP1</code></td>
-              <td>DR Failover Drill</td>
-              <td><span class="badge violet">MEDIUM</span></td>
-              <td>escalation@acme.com</td>
-              <td class="text-muted">2026-03-10 10:05</td>
               <td><span class="badge success">APPROVED</span></td>
+              <td>
+                <span class="es">Un usuario con rol <code>escalation</code> o superior ha aprobado la operacion. La operacion asociada puede proceder a ejecutarse.</span>
+                <span class="en">A user with <code>escalation</code> role or higher has approved the operation. The associated operation can proceed to execute.</span>
+              </td>
+              <td>EXECUTED</td>
+              <td><span class="badge violet">escalation</span></td>
             </tr>
             <tr>
-              <td><code>FP1</code></td>
-              <td>Oracle RMAN Full Backup</td>
-              <td><span class="badge warning">HIGH</span></td>
-              <td>admin@acme.com</td>
-              <td class="text-muted">2026-03-09 22:30</td>
+              <td><span class="badge danger">REJECTED</span></td>
+              <td>
+                <span class="es">Un aprobador ha rechazado la operacion. Se registra el motivo del rechazo. La operacion asociada se cancela automaticamente.</span>
+                <span class="en">An approver has rejected the operation. The rejection reason is recorded. The associated operation is automatically cancelled.</span>
+              </td>
+              <td><span class="es">Terminal (fin)</span><span class="en">Terminal (end)</span></td>
+              <td><span class="badge violet">escalation</span></td>
+            </tr>
+            <tr>
               <td><span class="badge cyan">EXECUTED</span></td>
+              <td>
+                <span class="es">La operacion aprobada ha sido ejecutada exitosamente. Se almacena evidencia de ejecucion.</span>
+                <span class="en">The approved operation has been executed successfully. Execution evidence is stored.</span>
+              </td>
+              <td><span class="es">Terminal (fin)</span><span class="en">Terminal (end)</span></td>
+              <td><span class="es">Sistema</span><span class="en">System</span></td>
+            </tr>
+            <tr>
+              <td><span class="badge neutral">EXPIRED</span></td>
+              <td>
+                <span class="es">La aprobacion no fue revisada dentro del tiempo limite (24h por defecto). Se genera una alerta de expiracion.</span>
+                <span class="en">The approval was not reviewed within the time limit (24h by default). An expiration alert is generated.</span>
+              </td>
+              <td><span class="es">Terminal (fin)</span><span class="en">Terminal (end)</span></td>
+              <td><span class="es">Sistema (automatico)</span><span class="en">System (automatic)</span></td>
             </tr>
           </tbody>
         </table>
       </div>
     </div>
 
-    <!-- ── Tab: Rejected ── -->
-    <div id="tab-rejected" class="tab-content">
+    <!-- Severity Levels -->
+    <h2><span class="es">Niveles de Severidad</span><span class="en">Severity Levels</span></h2>
+    <div class="card">
+      <p>
+        <span class="es">Las aprobaciones se clasifican por severidad, lo cual determina el timeout y los requisitos de aprobacion.</span>
+        <span class="en">Approvals are classified by severity, which determines the timeout and approval requirements.</span>
+      </p>
       <div class="table-wrap">
         <table>
           <thead>
             <tr>
-              <th>SID</th>
-              <th>Runbook</th>
               <th><span class="es">Severidad</span><span class="en">Severity</span></th>
-              <th><span class="es">Rechazado por</span><span class="en">Rejected by</span></th>
-              <th><span class="es">Fecha</span><span class="en">Date</span></th>
+              <th><span class="es">Timeout</span><span class="en">Timeout</span></th>
+              <th><span class="es">Aprobadores Requeridos</span><span class="en">Required Approvers</span></th>
+              <th><span class="es">Ejemplo</span><span class="en">Example</span></th>
             </tr>
           </thead>
           <tbody>
             <tr>
-              <td><code>DP1</code></td>
-              <td>Kernel Upgrade (Dev)</td>
-              <td><span class="badge violet">MEDIUM</span></td>
-              <td>escalation@acme.com</td>
-              <td class="text-muted">2026-03-11 16:45</td>
+              <td><span class="badge danger">critical</span></td>
+              <td>4h</td>
+              <td><span class="es">2 (escalation + admin)</span><span class="en">2 (escalation + admin)</span></td>
+              <td><span class="es">Restart de sistema PRD, failover HA, delete de sistema</span><span class="en">PRD system restart, HA failover, system delete</span></td>
             </tr>
             <tr>
-              <td><code>EP1</code></td>
-              <td>Full System Restart</td>
-              <td><span class="badge danger">CRITICAL</span></td>
-              <td>admin@acme.com</td>
-              <td class="text-muted">2026-03-10 03:20</td>
+              <td><span class="badge warning">high</span></td>
+              <td>12h</td>
+              <td><span class="es">1 (escalation)</span><span class="en">1 (escalation)</span></td>
+              <td><span class="es">Deploy de transporte en PRD, backup restore, kernel patch</span><span class="en">Transport deploy in PRD, backup restore, kernel patch</span></td>
+            </tr>
+            <tr>
+              <td><span class="badge cyan">normal</span></td>
+              <td>24h</td>
+              <td><span class="es">1 (escalation)</span><span class="en">1 (escalation)</span></td>
+              <td><span class="es">Runbook de housekeeping en QAS, cambio de configuracion</span><span class="en">Housekeeping runbook in QAS, configuration change</span></td>
             </tr>
           </tbody>
         </table>
       </div>
     </div>
 
-    <!-- ── Tab: Expired ── -->
-    <div id="tab-expired" class="tab-content">
-      <div class="table-wrap">
-        <table>
-          <thead>
-            <tr>
-              <th>SID</th>
-              <th>Runbook</th>
-              <th><span class="es">Severidad</span><span class="en">Severity</span></th>
-              <th><span class="es">Solicitado por</span><span class="en">Requested by</span></th>
-              <th><span class="es">Expiro</span><span class="en">Expired</span></th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td><code>QP1</code></td>
-              <td>Transport Import (QAS)</td>
-              <td><span class="badge violet">MEDIUM</span></td>
-              <td>ops@acme.com</td>
-              <td class="text-muted">2026-03-08 18:00</td>
-            </tr>
-            <tr>
-              <td><code>FP1</code></td>
-              <td>Oracle Tablespace Shrink</td>
-              <td><span class="badge warning">HIGH</span></td>
-              <td>ops@acme.com</td>
-              <td class="text-muted">2026-03-06 12:00</td>
-            </tr>
-            <tr>
-              <td><code>EP1</code></td>
-              <td>ABAP Work Process Recycle</td>
-              <td><span class="badge warning">HIGH</span></td>
-              <td>admin@acme.com</td>
-              <td class="text-muted">2026-03-05 06:00</td>
-            </tr>
-          </tbody>
-        </table>
+    <!-- Role Requirements -->
+    <h2><span class="es">Requisitos de Rol</span><span class="en">Role Requirements</span></h2>
+    <div class="card">
+      <p>
+        <span class="es">El flujo de aprobaciones implementa separacion de funciones (SoD) para asegurar que quien solicita no es quien aprueba.</span>
+        <span class="en">The approval workflow implements separation of duties (SoD) to ensure that the requester is not the approver.</span>
+      </p>
+      <div class="grid-2">
+        <div>
+          <h4><span class="es">Quien Crea (Solicita)</span><span class="en">Who Creates (Requests)</span></h4>
+          <ul class="feature-list">
+            <li><span class="es"><strong>operator:</strong> Crea solicitudes de aprobacion para operaciones en sistemas asignados</span><span class="en"><strong>operator:</strong> Creates approval requests for operations on assigned systems</span></li>
+            <li><span class="es"><strong>Sistema (automatico):</strong> Genera aprobaciones cuando un runbook con HUMAN gate se ejecuta en PRD</span><span class="en"><strong>System (automatic):</strong> Generates approvals when a runbook with HUMAN gate runs on PRD</span></li>
+          </ul>
+        </div>
+        <div>
+          <h4><span class="es">Quien Aprueba/Rechaza</span><span class="en">Who Approves/Rejects</span></h4>
+          <ul class="feature-list">
+            <li><span class="es"><strong>escalation:</strong> Puede aprobar/rechazar aprobaciones de severidad normal y high</span><span class="en"><strong>escalation:</strong> Can approve/reject normal and high severity approvals</span></li>
+            <li><span class="es"><strong>admin:</strong> Puede aprobar/rechazar cualquier aprobacion, incluyendo critical</span><span class="en"><strong>admin:</strong> Can approve/reject any approval, including critical</span></li>
+          </ul>
+        </div>
       </div>
-
       <div class="callout warning">
         <div class="callout-icon">&#9888;</div>
         <div>
-          <span class="es">Las solicitudes expiradas no pueden ser re-procesadas. Se debe crear una nueva solicitud si la operacion sigue siendo necesaria.</span>
-          <span class="en">Expired requests cannot be re-processed. A new request must be created if the operation is still needed.</span>
+          <span class="es"><strong>Separacion de Funciones:</strong> Un usuario NO puede aprobar una solicitud que el mismo creo. Esto se valida en el backend y la API retorna <code>403 Forbidden</code> si se intenta.</span>
+          <span class="en"><strong>Separation of Duties:</strong> A user CANNOT approve a request they created themselves. This is validated on the backend and the API returns <code>403 Forbidden</code> if attempted.</span>
         </div>
       </div>
     </div>
 
-    <!-- Evidence Section -->
-    <h2><span class="es">Evidencia de Aprobacion</span><span class="en">Approval Evidence</span></h2>
-
+    <!-- Token-Based Approvals -->
+    <h2><span class="es">Aprobaciones Basadas en Token</span><span class="en">Token-Based Approvals</span></h2>
     <div class="card">
-      <p class="text-sm">
-        <span class="es">Cada solicitud de aprobacion puede contener un objeto JSON de evidencia que documenta el contexto de la solicitud: metricas del sistema, estado del landscape, y justificacion.</span>
-        <span class="en">Each approval request can contain a JSON evidence object documenting the request context: system metrics, landscape status, and justification.</span>
+      <p>
+        <span class="es">Para aprobaciones urgentes, Spektra soporta aprobacion via token unico enviado por email o Slack. El aprobador puede aprobar/rechazar sin necesidad de autenticarse en la plataforma.</span>
+        <span class="en">For urgent approvals, Spektra supports approval via unique token sent by email or Slack. The approver can approve/reject without needing to authenticate on the platform.</span>
       </p>
-
-      <h4><span class="es">Ejemplo de Evidencia</span><span class="en">Evidence Example</span></h4>
-      <div class="json-block">{
-  "triggerMetric": {
-    "name": "cpu_usage",
-    "value": 98.5,
-    "threshold": 90,
-    "severity": "CRITICAL"
-  },
-  "systemState": {
-    "sid": "EP1",
-    "healthScore": 32,
-    "status": "critical",
-    "activeAlerts": 3,
-    "activeUsers": 12
-  },
-  "runbookContext": {
-    "name": "SAP Instance Restart",
-    "gate": "HUMAN",
-    "costSafe": false,
-    "estimatedDowntime": "~45s"
-  },
-  "requestedAt": "2026-03-12T09:45:22Z",
-  "justification": "CPU saturado por proceso de cierre mensual. Se recomienda reinicio de la instancia PAS."
-}</div>
-    </div>
-
-    <!-- Token-Based Approval -->
-    <h2><span class="es">Aprobacion via Token</span><span class="en">Token-Based Approval</span></h2>
-
-    <div class="card">
-      <p class="text-sm">
-        <span class="es">Cada solicitud genera un token UUID unico almacenado en el campo <code>token</code>. Este token permite aprobar o rechazar la solicitud via API sin requerir sesion activa, util para integraciones con sistemas de ticketing o notificaciones por email.</span>
-        <span class="en">Each request generates a unique UUID token stored in the <code>token</code> field. This token allows approving or rejecting the request via API without requiring an active session, useful for integrations with ticketing systems or email notifications.</span>
-      </p>
-
-      <h4>API Endpoints</h4>
-      <div class="table-wrap">
-        <table>
-          <thead>
-            <tr><th><span class="es">Metodo</span><span class="en">Method</span></th><th>Endpoint</th><th><span class="es">Descripcion</span><span class="en">Description</span></th></tr>
-          </thead>
-          <tbody>
-            <tr><td><span class="badge cyan">GET</span></td><td><code>/api/approvals</code></td><td><span class="es">Listar solicitudes (filtros: status, systemId)</span><span class="en">List requests (filters: status, systemId)</span></td></tr>
-            <tr><td><span class="badge cyan">GET</span></td><td><code>/api/approvals/:id</code></td><td><span class="es">Detalle de solicitud</span><span class="en">Request detail</span></td></tr>
-            <tr><td><span class="badge success">POST</span></td><td><code>/api/approvals</code></td><td><span class="es">Crear solicitud</span><span class="en">Create request</span></td></tr>
-            <tr><td><span class="badge warning">PATCH</span></td><td><code>/api/approvals/:id/process</code></td><td><span class="es">Aprobar o rechazar</span><span class="en">Approve or reject</span></td></tr>
-          </tbody>
-        </table>
+      <div class="steps">
+        <div class="step">
+          <span class="es"><strong>Generacion de Token:</strong> Cuando se crea una aprobacion, el sistema genera un token JWT firmado con expiracion igual al timeout de la aprobacion.</span>
+          <span class="en"><strong>Token Generation:</strong> When an approval is created, the system generates a signed JWT token with expiration equal to the approval timeout.</span>
+        </div>
+        <div class="step">
+          <span class="es"><strong>Envio de Notificacion:</strong> El token se incluye en URLs de accion directa enviadas por email/Slack: <code>/approvals/action?token=xxx&action=approve</code></span>
+          <span class="en"><strong>Notification Send:</strong> The token is included in direct action URLs sent via email/Slack: <code>/approvals/action?token=xxx&action=approve</code></span>
+        </div>
+        <div class="step">
+          <span class="es"><strong>Validacion:</strong> El backend verifica la firma del token, la expiracion, y que el usuario asociado tiene el rol requerido. Tokens de un solo uso.</span>
+          <span class="en"><strong>Validation:</strong> The backend verifies the token signature, expiration, and that the associated user has the required role. Single-use tokens.</span>
+        </div>
       </div>
+      <pre><code>// Token-based approval URL
+https://spektra.company.com/api/approvals/action
+  ?token=eyJhbGciOiJIUzI1NiIs...
+  &action=approve
+  &comment=Approved+for+maintenance+window
 
-      <h4><span class="es">Ejemplo: Aprobar via API</span><span class="en">Example: Approve via API</span></h4>
-      <pre><code>PATCH /api/approvals/abc123/process
-Content-Type: application/json
-Authorization: Bearer &lt;jwt-token&gt;
-
+// Response
 {
-  "action": "APPROVED",
-  "processedBy": "escalation@acme.com"
+  "status": "APPROVED",
+  "approvedBy": "admin@company.com",
+  "approvedAt": "2025-01-15T16:30:00Z",
+  "comment": "Approved for maintenance window"
 }</code></pre>
     </div>
 
-    <!-- Role Access -->
-    <h2><span class="es">Control de Acceso por Rol</span><span class="en">Role-Based Access Control</span></h2>
+    <!-- Runbook-Triggered Approvals -->
+    <h2><span class="es">Aprobaciones Disparadas por Runbooks</span><span class="en">Runbook-Triggered Approvals</span></h2>
+    <div class="card">
+      <p>
+        <span class="es">Cuando un runbook con un HUMAN gate se ejecuta en un sistema productivo, el motor de ejecucion automaticamente crea una solicitud de aprobacion y pausa la ejecucion hasta que se resuelva.</span>
+        <span class="en">When a runbook with a HUMAN gate runs on a production system, the execution engine automatically creates an approval request and pauses execution until it is resolved.</span>
+      </p>
+      <pre><code>// Automatic approval creation during runbook execution
+{
+  "type": "RUNBOOK_GATE",
+  "runbookId": "rb-hana-restart",
+  "executionId": "exec-001",
+  "systemId": "PRD-uuid",
+  "gateStep": 3,
+  "severity": "critical",
+  "title": "Approve HANA Restart on PRD",
+  "description": "Runbook 'HANA Service Restart' requires human approval before step 4: Execute HDB stop/start on system PRD (S/4HANA Production, HANA 2.0 SPS07)",
+  "requestedBy": "operator@company.com",
+  "context": {
+    "currentCPU": 34.2,
+    "activeUsers": 342,
+    "runningJobs": 5,
+    "lastBackup": "2025-01-15T06:00:00Z"
+  }
+}</code></pre>
+    </div>
 
+    <!-- Approval Data Model -->
+    <h2><span class="es">Modelo de Datos</span><span class="en">Data Model</span></h2>
+    <div class="card">
+      <pre><code>interface Approval {
+  id:              string;         // UUID v4
+  title:           string;         // Short description
+  description:     string;         // Detailed description
+  type:            ApprovalType;   // RUNBOOK_GATE | OPERATION | MANUAL
+  severity:        Severity;       // critical | high | normal
+  status:          ApprovalStatus; // PENDING | APPROVED | REJECTED | EXECUTED | EXPIRED
+  systemId:        string;         // Target system UUID
+  sid:             string;         // SID shorthand
+  requestedBy:     string;         // User who created the request
+  approvedBy:      string | null;  // User who approved/rejected
+  comment:         string | null;  // Approver's comment
+  runbookId:       string | null;  // Associated runbook (if RUNBOOK_GATE)
+  executionId:     string | null;  // Associated execution (if RUNBOOK_GATE)
+  operationId:     string | null;  // Associated operation (if OPERATION)
+  token:           string;         // JWT for token-based approval
+  expiresAt:       ISO8601;        // When the approval expires
+  approvedAt:      ISO8601 | null; // When it was approved/rejected
+  executedAt:      ISO8601 | null; // When the operation was executed
+  organizationId:  string;         // Tenant isolation
+  createdAt:       ISO8601;
+  updatedAt:       ISO8601;
+}</code></pre>
+    </div>
+
+    <!-- API Endpoints -->
+    <h2><span class="es">Endpoints de API</span><span class="en">API Endpoints</span></h2>
     <div class="table-wrap">
       <table>
         <thead>
           <tr>
-            <th><span class="es">Accion</span><span class="en">Action</span></th>
-            <th>viewer</th>
-            <th>operator</th>
-            <th>escalation</th>
-            <th>admin</th>
+            <th><span class="es">Metodo</span><span class="en">Method</span></th>
+            <th>Endpoint</th>
+            <th><span class="es">Descripcion</span><span class="en">Description</span></th>
+            <th>Auth</th>
           </tr>
         </thead>
         <tbody>
-          <tr><td><span class="es">Ver solicitudes</span><span class="en">View requests</span></td><td><span class="badge success">&#10003;</span></td><td><span class="badge success">&#10003;</span></td><td><span class="badge success">&#10003;</span></td><td><span class="badge success">&#10003;</span></td></tr>
-          <tr><td><span class="es">Crear solicitud</span><span class="en">Create request</span></td><td><span class="badge danger">&#10007;</span></td><td><span class="badge success">&#10003;</span></td><td><span class="badge success">&#10003;</span></td><td><span class="badge success">&#10003;</span></td></tr>
-          <tr><td><span class="es">Aprobar / Rechazar</span><span class="en">Approve / Reject</span></td><td><span class="badge danger">&#10007;</span></td><td><span class="badge danger">&#10007;</span></td><td><span class="badge success">&#10003;</span></td><td><span class="badge success">&#10003;</span></td></tr>
-        </tbody>
-      </table>
-    </div>
-
-    <div class="callout info">
-      <div class="callout-icon">&#128274;</div>
-      <div>
-        <span class="es"><strong>Separacion de responsabilidades:</strong> Un operador solicita la ejecucion del runbook, y un usuario de escalacion o administrador aprueba o rechaza. Un operador no puede aprobar sus propias solicitudes.</span>
-        <span class="en"><strong>Separation of duties:</strong> An operator requests the runbook execution, and an escalation or admin user approves or rejects. An operator cannot approve their own requests.</span>
-      </div>
-    </div>
-
-    <!-- Data Model -->
-    <h2><span class="es">Modelo de Datos</span><span class="en">Data Model</span></h2>
-
-    <div class="table-wrap">
-      <table>
-        <thead>
-          <tr><th><span class="es">Campo</span><span class="en">Field</span></th><th><span class="es">Tipo</span><span class="en">Type</span></th><th><span class="es">Descripcion</span><span class="en">Description</span></th></tr>
-        </thead>
-        <tbody>
-          <tr><td><code>id</code></td><td>UUID</td><td><span class="es">Identificador unico</span><span class="en">Unique identifier</span></td></tr>
-          <tr><td><code>organizationId</code></td><td>UUID</td><td><span class="es">Tenant (multi-tenant)</span><span class="en">Tenant (multi-tenant)</span></td></tr>
-          <tr><td><code>systemId</code></td><td>UUID</td><td><span class="es">Sistema SAP asociado</span><span class="en">Associated SAP system</span></td></tr>
-          <tr><td><code>runbookId</code></td><td>UUID?</td><td><span class="es">Runbook asociado (opcional)</span><span class="en">Associated runbook (optional)</span></td></tr>
-          <tr><td><code>metric</code></td><td>string?</td><td><span class="es">Metrica que disparo la solicitud</span><span class="en">Metric that triggered the request</span></td></tr>
-          <tr><td><code>value</code></td><td>float?</td><td><span class="es">Valor de la metrica al momento de la solicitud</span><span class="en">Metric value at request time</span></td></tr>
-          <tr><td><code>severity</code></td><td>string</td><td>CRITICAL | HIGH | MEDIUM | LOW</td></tr>
-          <tr><td><code>status</code></td><td>string</td><td>PENDING | APPROVED | REJECTED | EXPIRED | EXECUTED</td></tr>
-          <tr><td><code>description</code></td><td>string</td><td><span class="es">Descripcion de la solicitud</span><span class="en">Request description</span></td></tr>
-          <tr><td><code>token</code></td><td>UUID</td><td><span class="es">Token unico para aprobacion via API</span><span class="en">Unique token for API approval</span></td></tr>
-          <tr><td><code>evidence</code></td><td>JSON?</td><td><span class="es">Evidencia contextual (metricas, estado)</span><span class="en">Contextual evidence (metrics, state)</span></td></tr>
-          <tr><td><code>requestedBy</code></td><td>string</td><td><span class="es">Email del solicitante</span><span class="en">Requester email</span></td></tr>
-          <tr><td><code>processedBy</code></td><td>string?</td><td><span class="es">Email del aprobador/rechazador</span><span class="en">Approver/rejector email</span></td></tr>
-          <tr><td><code>expiresAt</code></td><td>DateTime?</td><td><span class="es">Fecha de expiracion</span><span class="en">Expiration date</span></td></tr>
+          <tr>
+            <td><span class="badge cyan">GET</span></td>
+            <td class="font-mono">/api/approvals</td>
+            <td><span class="es">Listar aprobaciones (filtros: status, severity, system)</span><span class="en">List approvals (filters: status, severity, system)</span></td>
+            <td><span class="badge neutral">JWT</span></td>
+          </tr>
+          <tr>
+            <td><span class="badge cyan">GET</span></td>
+            <td class="font-mono">/api/approvals/:id</td>
+            <td><span class="es">Detalle de una aprobacion</span><span class="en">Approval detail</span></td>
+            <td><span class="badge neutral">JWT</span></td>
+          </tr>
+          <tr>
+            <td><span class="badge success">POST</span></td>
+            <td class="font-mono">/api/approvals</td>
+            <td><span class="es">Crear solicitud de aprobacion manual</span><span class="en">Create manual approval request</span></td>
+            <td><span class="badge neutral">JWT</span></td>
+          </tr>
+          <tr>
+            <td><span class="badge success">POST</span></td>
+            <td class="font-mono">/api/approvals/:id/approve</td>
+            <td><span class="es">Aprobar una solicitud</span><span class="en">Approve a request</span></td>
+            <td><span class="badge violet">escalation</span></td>
+          </tr>
+          <tr>
+            <td><span class="badge success">POST</span></td>
+            <td class="font-mono">/api/approvals/:id/reject</td>
+            <td><span class="es">Rechazar una solicitud</span><span class="en">Reject a request</span></td>
+            <td><span class="badge violet">escalation</span></td>
+          </tr>
+          <tr>
+            <td><span class="badge cyan">GET</span></td>
+            <td class="font-mono">/api/approvals/action</td>
+            <td><span class="es">Aprobar/rechazar via token (email/Slack link)</span><span class="en">Approve/reject via token (email/Slack link)</span></td>
+            <td><span class="badge warning">Token</span></td>
+          </tr>
+          <tr>
+            <td><span class="badge cyan">GET</span></td>
+            <td class="font-mono">/api/approvals/pending</td>
+            <td><span class="es">Listar aprobaciones pendientes del usuario actual</span><span class="en">List pending approvals for current user</span></td>
+            <td><span class="badge neutral">JWT</span></td>
+          </tr>
         </tbody>
       </table>
     </div>
 
   </main>
 </div>
-
-<script>
-function switchTab(name){
-  document.querySelectorAll('.tab').forEach(function(t){t.classList.remove('active')});
-  document.querySelectorAll('.tab-content').forEach(function(c){c.classList.remove('active')});
-  document.getElementById('tab-'+name).classList.add('active');
-  event.currentTarget.classList.add('active');
-}
-</script>
 </body>
 </html>
