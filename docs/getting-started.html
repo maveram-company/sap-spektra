@@ -104,9 +104,9 @@
         <tbody>
           <tr>
             <td><code>Node.js</code></td>
-            <td>20.x LTS</td>
-            <td>20.11+</td>
-            <td><span class="es">Runtime para API y Frontend</span><span class="en">Runtime for API and Frontend</span></td>
+            <td>20.19.0+</td>
+            <td>20.19+ LTS</td>
+            <td><span class="es">Runtime para API y Frontend (definido en engines)</span><span class="en">Runtime for API and Frontend (defined in engines)</span></td>
           </tr>
           <tr>
             <td><code>npm</code></td>
@@ -177,26 +177,27 @@ cd sap-spektra</code></pre>
         <strong><span class="es">Configurar variables de entorno</span><span class="en">Configure environment variables</span></strong>
 <pre><code>cp apps/api/.env.example apps/api/.env</code></pre>
         <p class="text-muted text-sm">
-          <span class="es">El archivo <code>.env.example</code> incluye valores por defecto que funcionan con Docker Compose.</span>
-          <span class="en">The <code>.env.example</code> file includes default values that work with Docker Compose.</span>
+          <span class="es">El archivo <code>.env.example</code> incluye valores por defecto que funcionan con Docker Compose. La URL de la base de datos apunta a <code>localhost:5433</code> (puerto externo mapeado por Docker).</span>
+          <span class="en">The <code>.env.example</code> file includes default values that work with Docker Compose. The database URL points to <code>localhost:5433</code> (external port mapped by Docker).</span>
         </p>
       </div>
       <div class="step">
         <strong><span class="es">Levantar los servicios</span><span class="en">Start the services</span></strong>
 <pre><code>docker-compose up -d</code></pre>
         <p class="text-muted text-sm">
-          <span class="es">Esto inicia PostgreSQL (puerto 5432), Redis (puerto 6379) y la API (puerto 3001).</span>
-          <span class="en">This starts PostgreSQL (port 5432), Redis (port 6379) and the API (port 3001).</span>
+          <span class="es">Esto inicia PostgreSQL (puerto externo 5433, interno 5432), Redis (puerto 6379), la API (puerto 3001) y el frontend (puerto 80). Las credenciales de la BD son <code>spektra/spektra_dev</code>, base de datos <code>spektra_dev</code>.</span>
+          <span class="en">This starts PostgreSQL (external port 5433, internal 5432), Redis (port 6379), the API (port 3001) and the frontend (port 80). DB credentials are <code>spektra/spektra_dev</code>, database <code>spektra_dev</code>.</span>
         </p>
       </div>
       <div class="step">
         <strong><span class="es">Ejecutar migraciones y seed</span><span class="en">Run migrations and seed</span></strong>
 <pre><code>cd apps/api
+npm install
 npx prisma migrate dev --name init
 npm run seed</code></pre>
       </div>
       <div class="step">
-        <strong><span class="es">Iniciar el frontend</span><span class="en">Start the frontend</span></strong>
+        <strong><span class="es">Iniciar el frontend (si no se usa Docker para el frontend)</span><span class="en">Start the frontend (if not using Docker for frontend)</span></strong>
 <pre><code>cd frontend
 npm install
 npm run dev</code></pre>
@@ -226,10 +227,11 @@ brew services start postgresql@16
 sudo systemctl start postgresql</code></pre>
       </div>
       <div class="step">
-        <strong><span class="es">Crear la base de datos</span><span class="en">Create the database</span></strong>
-<pre><code>createdb sap_spektra
-# o via psql:
-psql -c "CREATE DATABASE sap_spektra;"</code></pre>
+        <strong><span class="es">Crear la base de datos y el usuario</span><span class="en">Create the database and user</span></strong>
+<pre><code>psql -c "CREATE USER spektra WITH PASSWORD 'spektra_dev';"
+psql -c "CREATE DATABASE spektra_dev OWNER spektra;"
+# o mas simple si tu usuario postgres tiene permisos:
+createdb spektra_dev</code></pre>
       </div>
       <div class="step">
         <strong><span class="es">Iniciar Redis localmente</span><span class="en">Start Redis locally</span></strong>
@@ -241,11 +243,19 @@ sudo systemctl start redis-server</code></pre>
       </div>
       <div class="step">
         <strong><span class="es">Configurar la URL de la base de datos</span><span class="en">Configure the database URL</span></strong>
-<pre><code># apps/api/.env
-DATABASE_URL="postgresql://postgres:postgres@localhost:5432/sap_spektra"
+<pre><code># apps/api/.env (copiar de .env.example y ajustar)
+cp apps/api/.env.example apps/api/.env
+
+# Valores clave / Key values:
+DATABASE_URL="postgresql://spektra:spektra_dev@localhost:5432/spektra_dev?schema=public"
 REDIS_URL="redis://localhost:6379"
-JWT_SECRET="your-super-secret-key-change-in-production"
-RUNTIME_MODE="LOCAL_SIMULATED"</code></pre>
+JWT_SECRET="spektra-local-dev-secret-change-in-production"
+RUNTIME_MODE="LOCAL_SIMULATED"
+PORT=3001</code></pre>
+        <p class="text-muted text-sm">
+          <span class="es"><strong>Nota:</strong> Sin Docker, PostgreSQL escucha en el puerto estandar 5432. Con Docker Compose, el puerto externo es 5433.</span>
+          <span class="en"><strong>Note:</strong> Without Docker, PostgreSQL listens on the standard port 5432. With Docker Compose, the external port is 5433.</span>
+        </p>
       </div>
       <div class="step">
         <strong><span class="es">Instalar dependencias de la API</span><span class="en">Install API dependencies</span></strong>
@@ -263,7 +273,7 @@ npx prisma migrate dev --name init</code></pre>
       </div>
       <div class="step">
         <strong><span class="es">Iniciar la API</span><span class="en">Start the API</span></strong>
-<pre><code>npm run start:dev</code></pre>
+<pre><code>npm run dev</code></pre>
         <p class="text-muted text-sm">
           <span class="es">La API estara disponible en <code>http://localhost:3001</code></span>
           <span class="en">The API will be available at <code>http://localhost:3001</code></span>
@@ -300,11 +310,11 @@ npm run dev</code></pre>
           </tr>
         </thead>
         <tbody>
-          <tr><td><code>npm run start:dev</code></td><td><span class="es">Inicia la API en modo desarrollo con hot-reload</span><span class="en">Start API in development mode with hot-reload</span></td></tr>
-          <tr><td><code>npm run start:prod</code></td><td><span class="es">Inicia la API en modo produccion</span><span class="en">Start API in production mode</span></td></tr>
+          <tr><td><code>npm run dev</code></td><td><span class="es">Inicia la API en modo desarrollo con hot-reload (nest start --watch)</span><span class="en">Start API in development mode with hot-reload (nest start --watch)</span></td></tr>
+          <tr><td><code>npm run start:prod</code></td><td><span class="es">Inicia la API en modo produccion (node dist/main)</span><span class="en">Start API in production mode (node dist/main)</span></td></tr>
           <tr><td><code>npm run build</code></td><td><span class="es">Compila el proyecto TypeScript</span><span class="en">Build the TypeScript project</span></td></tr>
-          <tr><td><code>npm run seed</code></td><td><span class="es">Ejecuta el script de datos semilla (12 sistemas, 4 usuarios, runbooks, etc.)</span><span class="en">Run the seed data script (12 systems, 4 users, runbooks, etc.)</span></td></tr>
-          <tr><td><code>npm run test</code></td><td><span class="es">Ejecuta tests unitarios con Jest</span><span class="en">Run unit tests with Jest</span></td></tr>
+          <tr><td><code>npm run seed</code></td><td><span class="es">Ejecuta el script de datos semilla (12 sistemas SAP, 4 usuarios, runbooks, metricas, etc.)</span><span class="en">Run the seed data script (12 SAP systems, 4 users, runbooks, metrics, etc.)</span></td></tr>
+          <tr><td><code>npm run test</code></td><td><span class="es">Ejecuta tests unitarios con Jest (49 spec files, 392+ tests)</span><span class="en">Run unit tests with Jest (49 spec files, 392+ tests)</span></td></tr>
           <tr><td><code>npm run test:e2e</code></td><td><span class="es">Ejecuta tests end-to-end</span><span class="en">Run end-to-end tests</span></td></tr>
           <tr><td><code>npm run lint</code></td><td><span class="es">Ejecuta ESLint en el codigo fuente</span><span class="en">Run ESLint on source code</span></td></tr>
           <tr><td><code>npx prisma studio</code></td><td><span class="es">Abre Prisma Studio (GUI para la BD)</span><span class="en">Open Prisma Studio (DB GUI)</span></td></tr>
@@ -324,9 +334,10 @@ npm run dev</code></pre>
           </tr>
         </thead>
         <tbody>
-          <tr><td><code>npm run dev</code></td><td><span class="es">Inicia Vite dev server con hot-reload</span><span class="en">Start Vite dev server with hot-reload</span></td></tr>
+          <tr><td><code>npm run dev</code></td><td><span class="es">Inicia Vite 7 dev server con hot-reload (puerto 5173)</span><span class="en">Start Vite 7 dev server with hot-reload (port 5173)</span></td></tr>
           <tr><td><code>npm run build</code></td><td><span class="es">Genera build de produccion</span><span class="en">Generate production build</span></td></tr>
           <tr><td><code>npm run preview</code></td><td><span class="es">Previsualiza el build de produccion</span><span class="en">Preview production build</span></td></tr>
+          <tr><td><code>npm run test</code></td><td><span class="es">Ejecuta tests con Vitest (55 spec files, 690+ tests)</span><span class="en">Run tests with Vitest (55 spec files, 690+ tests)</span></td></tr>
           <tr><td><code>npm run lint</code></td><td><span class="es">Ejecuta ESLint</span><span class="en">Run ESLint</span></td></tr>
         </tbody>
       </table>
@@ -604,8 +615,8 @@ npm run dev</code></pre>
         <tbody>
           <tr>
             <td><code>DATABASE_URL</code></td>
-            <td><code>postgresql://postgres:postgres@localhost:5432/sap_spektra</code></td>
-            <td><span class="es">URL de conexion a PostgreSQL</span><span class="en">PostgreSQL connection URL</span></td>
+            <td><code>postgresql://spektra:spektra_dev@localhost:5433/spektra_dev?schema=public</code></td>
+            <td><span class="es">URL de conexion a PostgreSQL (puerto 5433 con Docker, 5432 sin Docker)</span><span class="en">PostgreSQL connection URL (port 5433 with Docker, 5432 without Docker)</span></td>
           </tr>
           <tr>
             <td><code>REDIS_URL</code></td>
@@ -614,13 +625,18 @@ npm run dev</code></pre>
           </tr>
           <tr>
             <td><code>JWT_SECRET</code></td>
-            <td><code>change-me-in-production</code></td>
+            <td><code>spektra-local-dev-secret-change-in-production</code></td>
             <td><span class="es">Clave secreta para firmar tokens JWT</span><span class="en">Secret key for signing JWT tokens</span></td>
           </tr>
           <tr>
-            <td><code>JWT_EXPIRY</code></td>
+            <td><code>JWT_EXPIRATION</code></td>
             <td><code>24h</code></td>
             <td><span class="es">Duracion del token JWT</span><span class="en">JWT token duration</span></td>
+          </tr>
+          <tr>
+            <td><code>JWT_REFRESH_EXPIRATION</code></td>
+            <td><code>7d</code></td>
+            <td><span class="es">Duracion del refresh token</span><span class="en">Refresh token duration</span></td>
           </tr>
           <tr>
             <td><code>RUNTIME_MODE</code></td>
@@ -634,8 +650,23 @@ npm run dev</code></pre>
           </tr>
           <tr>
             <td><code>CORS_ORIGIN</code></td>
-            <td><code>http://localhost:5173</code></td>
-            <td><span class="es">Origen permitido para CORS</span><span class="en">Allowed origin for CORS</span></td>
+            <td><code>http://localhost:5173,http://localhost:5174</code></td>
+            <td><span class="es">Origenes permitidos para CORS (separados por coma)</span><span class="en">Allowed origins for CORS (comma separated)</span></td>
+          </tr>
+          <tr>
+            <td><code>CACHE_TTL</code></td>
+            <td><code>30000</code></td>
+            <td><span class="es">TTL por defecto del cache en milisegundos</span><span class="en">Default cache TTL in milliseconds</span></td>
+          </tr>
+          <tr>
+            <td><code>LOG_LEVEL</code></td>
+            <td><code>debug</code></td>
+            <td><span class="es">Nivel de logging (debug, info, warn, error)</span><span class="en">Logging level (debug, info, warn, error)</span></td>
+          </tr>
+          <tr>
+            <td><code>SPEKTRA_AGENT_URL</code></td>
+            <td><code>http://localhost:9110</code></td>
+            <td><span class="es">URL del agente de metricas SAP</span><span class="en">SAP metrics agent URL</span></td>
           </tr>
         </tbody>
       </table>

@@ -85,8 +85,8 @@
     <div class="callout info">
       <div class="callout-icon">&#128161;</div>
       <div>
-        <span class="es"><strong>Base URL:</strong> <code>http://localhost:3001</code> | <strong>Swagger UI:</strong> <code>http://localhost:3001/api</code> | Todas las rutas protegidas requieren <code>Authorization: Bearer &lt;token&gt;</code> y el header <code>x-organization-id</code> se extrae del JWT.</span>
-        <span class="en"><strong>Base URL:</strong> <code>http://localhost:3001</code> | <strong>Swagger UI:</strong> <code>http://localhost:3001/api</code> | All protected routes require <code>Authorization: Bearer &lt;token&gt;</code> and the <code>x-organization-id</code> header is extracted from the JWT.</span>
+        <span class="es"><strong>Base URL:</strong> <code>http://localhost:3001</code> | <strong>Swagger UI:</strong> <code>http://localhost:3001/api</code> | Todas las rutas protegidas requieren <code>Authorization: Bearer &lt;token&gt;</code>. El <code>organizationId</code> se extrae automaticamente del JWT. <strong>Total: 78 endpoints en 22 controladores.</strong></span>
+        <span class="en"><strong>Base URL:</strong> <code>http://localhost:3001</code> | <strong>Swagger UI:</strong> <code>http://localhost:3001/api</code> | All protected routes require <code>Authorization: Bearer &lt;token&gt;</code>. The <code>organizationId</code> is automatically extracted from the JWT. <strong>Total: 78 endpoints across 22 controllers.</strong></span>
       </div>
     </div>
 
@@ -121,13 +121,14 @@ Content-Type: application/json
       <div>
         <h4>Response (200 OK)</h4>
 <pre><code>{
-  "token": "eyJhbGciOiJIUzI1NiIs...",
+  "accessToken": "eyJhbGciOiJIUzI1NiIs...",
   "user": {
     "id": "uuid-...",
     "email": "admin@acme-corp.com",
     "name": "Carlos Admin",
     "role": "admin",
-    "organizationId": "uuid-..."
+    "organizationId": "uuid-...",
+    "organizationName": "ACME Corp"
   }
 }</code></pre>
       </div>
@@ -320,7 +321,11 @@ Content-Type: application/json
     </div>
 
     <!-- ═══ HA/DR ═══ -->
-    <h2>HA/DR <span class="badge cyan">viewer+ / admin</span></h2>
+    <h2>HA/DR <span class="badge cyan">viewer+ / admin</span> <span class="badge warning">SIMULATED</span></h2>
+    <p class="text-muted text-sm">
+      <span class="es"><strong>Nota:</strong> El failover alterna estados en la BD pero no ejecuta failover SAP real (sapcontrol/pacemaker). La integracion real esta en el ROADMAP.</span>
+      <span class="en"><strong>Note:</strong> Failover toggles states in the DB but does not execute real SAP failover (sapcontrol/pacemaker). Real integration is on the ROADMAP.</span>
+    </p>
     <div class="table-wrap">
       <table>
         <thead><tr><th>Method</th><th>Path</th><th>Rol</th><th><span class="es">Descripcion</span><span class="en">Description</span></th></tr></thead>
@@ -350,7 +355,11 @@ Content-Type: application/json
     </div>
 
     <!-- ═══ AI ═══ -->
-    <h2>AI <span class="badge cyan">viewer</span></h2>
+    <h2>AI <span class="badge cyan">viewer</span> <span class="badge warning">SIMULATED</span></h2>
+    <p class="text-muted text-sm">
+      <span class="es"><strong>Nota:</strong> Los endpoints de IA retornan respuestas mock estructuradas. La integracion con un LLM real esta en el ROADMAP.</span>
+      <span class="en"><strong>Note:</strong> AI endpoints return structured mock responses. Real LLM integration is on the ROADMAP.</span>
+    </p>
     <div class="table-wrap">
       <table>
         <thead><tr><th>Method</th><th>Path</th><th>Rol</th><th><span class="es">Descripcion</span><span class="en">Description</span></th></tr></thead>
@@ -362,7 +371,11 @@ Content-Type: application/json
     </div>
 
     <!-- ═══ Chat ═══ -->
-    <h2>Chat <span class="badge cyan">viewer+</span></h2>
+    <h2>Chat <span class="badge cyan">viewer+</span> <span class="badge warning">SIMULATED</span></h2>
+    <p class="text-muted text-sm">
+      <span class="es"><strong>Nota:</strong> El chat retorna respuestas deterministas basadas en contexto del sistema. La integracion con un LLM real esta en el ROADMAP.</span>
+      <span class="en"><strong>Note:</strong> Chat returns deterministic responses based on system context. Real LLM integration is on the ROADMAP.</span>
+    </p>
     <div class="table-wrap">
       <table>
         <thead><tr><th>Method</th><th>Path</th><th>Rol</th><th>Rate Limit</th><th><span class="es">Descripcion</span><span class="en">Description</span></th></tr></thead>

@@ -102,14 +102,14 @@
       <div class="kpi-card">
         <div class="card-icon violet">&#8644;</div>
         <div>
-          <div class="kpi-value text-violet">97+</div>
-          <div class="kpi-label">Endpoints</div>
+          <div class="kpi-value text-violet">78</div>
+          <div class="kpi-label">REST Endpoints</div>
         </div>
       </div>
       <div class="kpi-card">
         <div class="card-icon success">&#9634;</div>
         <div>
-          <div class="kpi-value text-success">24</div>
+          <div class="kpi-value text-success">27</div>
           <div class="kpi-label">
             <span class="es">Modelos de Datos</span>
             <span class="en">Data Models</span>
@@ -131,13 +131,13 @@
       <span class="en">Technology Stack</span>
     </h2>
     <p style="margin-bottom:12px">
-      <span class="badge cyan">NestJS 10</span>
-      <span class="badge violet">React 18</span>
-      <span class="badge cyan">Prisma ORM</span>
+      <span class="badge cyan">NestJS 11</span>
+      <span class="badge violet">React 19</span>
+      <span class="badge cyan">Prisma 6</span>
       <span class="badge success">PostgreSQL 16</span>
       <span class="badge danger">Redis 7</span>
-      <span class="badge violet">Tailwind CSS</span>
-      <span class="badge cyan">Vite 5</span>
+      <span class="badge violet">Tailwind CSS 4</span>
+      <span class="badge cyan">Vite 7</span>
       <span class="badge warning">JWT + Passport</span>
       <span class="badge neutral">Docker</span>
       <span class="badge cyan">Swagger / OpenAPI</span>
@@ -148,8 +148,8 @@
     <div class="callout info">
       <div class="callout-icon">&#128161;</div>
       <div>
-        <span class="es"><strong>Demo lista para usar:</strong> SAP Spektra incluye datos semilla con 12 sistemas SAP, 4 usuarios, 123 runbooks y metricas realistas. Ejecuta <code>npm run seed</code> para poblar la base de datos.</span>
-        <span class="en"><strong>Ready-to-use demo:</strong> SAP Spektra includes seed data with 12 SAP systems, 4 users, 123 runbooks and realistic metrics. Run <code>npm run seed</code> to populate the database.</span>
+        <span class="es"><strong>Demo lista para usar:</strong> SAP Spektra incluye datos semilla con 12 sistemas SAP, 4 usuarios, runbooks y metricas realistas. Ejecuta <code>cd apps/api && npm run seed</code> para poblar la base de datos.</span>
+        <span class="en"><strong>Ready-to-use demo:</strong> SAP Spektra includes seed data with 12 SAP systems, 4 users, runbooks and realistic metrics. Run <code>cd apps/api && npm run seed</code> to populate the database.</span>
       </div>
     </div>
 
@@ -197,8 +197,8 @@
           </div>
         </div>
         <p class="text-muted text-sm">
-          <span class="es">24 modelos Prisma detallados: campos, tipos, restricciones, indices y reglas de cascade.</span>
-          <span class="en">24 detailed Prisma models: fields, types, constraints, indexes and cascade rules.</span>
+          <span class="es">27 modelos Prisma detallados: campos, tipos, restricciones, indices y reglas de cascade.</span>
+          <span class="en">27 detailed Prisma models: fields, types, constraints, indexes and cascade rules.</span>
         </p>
       </a>
 
@@ -211,8 +211,8 @@
           </div>
         </div>
         <p class="text-muted text-sm">
-          <span class="es">97+ endpoints REST documentados por controlador con metodo, ruta, rol y ejemplos.</span>
-          <span class="en">97+ REST endpoints documented by controller with method, path, role and examples.</span>
+          <span class="es">78 endpoints REST documentados por controlador con metodo, ruta, rol y ejemplos.</span>
+          <span class="en">78 REST endpoints documented by controller with method, path, role and examples.</span>
         </p>
       </a>
 
@@ -289,10 +289,10 @@
       <div class="mermaid">
 graph TB
     subgraph platform["SAP Spektra Platform"]
-        FE["&lt;b&gt;Frontend&lt;/b&gt;&lt;br/&gt;React 18 · Vite 5&lt;br/&gt;Tailwind · Port 5173"]
-        BE["&lt;b&gt;API Backend&lt;/b&gt;&lt;br/&gt;NestJS 10 · Prisma ORM&lt;br/&gt;Passport · Port 3001"]
-        AG["&lt;b&gt;Agent&lt;/b&gt;&lt;br/&gt;Collector · RFC/BAPI&lt;br/&gt;OS &amp; SAP Metrics"]
-        INF["&lt;b&gt;Infra&lt;/b&gt;&lt;br/&gt;Docker/AWS&lt;br/&gt;PostgreSQL · Redis · Swagger"]
+        FE["&lt;b&gt;Frontend&lt;/b&gt;&lt;br/&gt;React 19 · Vite 7&lt;br/&gt;Tailwind 4 · Port 5173"]
+        BE["&lt;b&gt;API Backend&lt;/b&gt;&lt;br/&gt;NestJS 11 · Prisma 6&lt;br/&gt;Passport · Port 3001"]
+        AG["&lt;b&gt;Agent&lt;/b&gt;&lt;br/&gt;Python Collector&lt;br/&gt;OS &amp; SAP Metrics"]
+        INF["&lt;b&gt;Infra&lt;/b&gt;&lt;br/&gt;Docker&lt;br/&gt;PostgreSQL 16 · Redis 7 · Swagger"]
     end
 
     FE -->|"REST / JWT"| BE
@@ -304,19 +304,19 @@ graph TB
         <div>
           <h4 class="text-cyan">Frontend</h4>
           <ul class="feature-list">
-            <li>React 18 + Vite 5</li>
-            <li>Tailwind CSS + Framer Motion</li>
-            <li>Recharts + Lucide Icons</li>
-            <li>React Router v6</li>
+            <li>React 19 + Vite 7</li>
+            <li>Tailwind CSS 4</li>
+            <li>Recharts 3 + Lucide Icons</li>
+            <li>React Router v7 + i18next</li>
             <li><span class="es">Puerto</span><span class="en">Port</span> 5173</li>
           </ul>
         </div>
         <div>
           <h4 class="text-violet">Backend API</h4>
           <ul class="feature-list">
-            <li>NestJS 10 + TypeScript</li>
-            <li>Prisma ORM + PostgreSQL</li>
-            <li>JWT + Passport + bcrypt</li>
+            <li>NestJS 11 + TypeScript 5</li>
+            <li>Prisma 6 + PostgreSQL 16</li>
+            <li>JWT + Passport + bcryptjs</li>
             <li>Swagger / OpenAPI</li>
             <li><span class="es">Puerto</span><span class="en">Port</span> 3001</li>
           </ul>
@@ -327,12 +327,12 @@ graph TB
             <span class="en">Infrastructure</span>
           </h4>
           <ul class="feature-list">
-            <li>PostgreSQL 16</li>
-            <li>Redis 7 (caching)</li>
+            <li>PostgreSQL 16 (Alpine)</li>
+            <li>Redis 7 (Alpine, caching)</li>
             <li>Docker Compose</li>
             <li>
-              <span class="es">Simulacion LOCAL / AWS REAL</span>
-              <span class="en">LOCAL Simulation / AWS REAL</span>
+              <span class="es">LOCAL_SIMULATED (default) / AWS_REAL (roadmap)</span>
+              <span class="en">LOCAL_SIMULATED (default) / AWS_REAL (roadmap)</span>
             </li>
             <li>Helmet + CORS + Rate Limiting</li>
           </ul>
@@ -401,6 +401,56 @@ graph TB
             </table>
           </div>
         </div>
+      </div>
+    </div>
+
+    <!-- ═══ Platform Status ═══ -->
+    <h2 id="platform-status">
+      <span class="es">Estado de la Plataforma</span>
+      <span class="en">Platform Status</span>
+    </h2>
+    <p>
+      <span class="es">SAP Spektra esta en desarrollo activo. Esta seccion muestra que esta completamente funcional y que esta planificado.</span>
+      <span class="en">SAP Spektra is under active development. This section shows what is fully functional and what is planned.</span>
+    </p>
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title"><div class="card-icon success">&#9989;</div>
+            <span class="es">Implementado y Funcional</span>
+            <span class="en">Implemented and Functional</span>
+          </div>
+        </div>
+        <ul class="feature-list">
+          <li><span class="es">Autenticacion JWT con 4 roles (admin, escalation, operator, viewer)</span><span class="en">JWT authentication with 4 roles (admin, escalation, operator, viewer)</span></li>
+          <li><span class="es">Multi-tenancy con aislamiento por organizationId</span><span class="en">Multi-tenancy with organizationId isolation</span></li>
+          <li><span class="es">78 endpoints REST en 22 modulos NestJS</span><span class="en">78 REST endpoints across 22 NestJS modules</span></li>
+          <li><span class="es">27 modelos Prisma con migraciones y seed</span><span class="en">27 Prisma models with migrations and seed</span></li>
+          <li><span class="es">Pipeline de metricas: ingesta, breaches, alertas</span><span class="en">Metrics pipeline: ingestion, breaches, alerts</span></li>
+          <li><span class="es">Cache Redis, auditoria, motor de runbooks</span><span class="en">Redis cache, audit logging, runbook engine</span></li>
+          <li><span class="es">Seguridad: Helmet, CORS, rate limiting, input validation</span><span class="en">Security: Helmet, CORS, rate limiting, input validation</span></li>
+          <li><span class="es">1,082+ tests (Jest + Vitest + Playwright)</span><span class="en">1,082+ tests (Jest + Vitest + Playwright)</span></li>
+        </ul>
+      </div>
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title"><div class="card-icon warning">&#9888;&#65039;</div>
+            <span class="es">Simulado o en Roadmap</span>
+            <span class="en">Simulated or on Roadmap</span>
+          </div>
+        </div>
+        <ul class="feature-list">
+          <li><span class="badge warning">SIM</span> <span class="es">HA failover — alterna estados, no ejecuta failover SAP real</span><span class="en">HA failover — toggles states, no real SAP failover</span></li>
+          <li><span class="badge warning">SIM</span> <span class="es">AI / Chat — respuestas mock, sin LLM real</span><span class="en">AI / Chat — mock responses, no real LLM</span></li>
+          <li><span class="badge warning">SIM</span> <span class="es">Colectores agente — stubs para HANA, Oracle, DB2, etc.</span><span class="en">Agent collectors — stubs for HANA, Oracle, DB2, etc.</span></li>
+          <li><span class="badge violet">ROAD</span> <span class="es">AWS Cognito, S3, SQS, EventBridge</span><span class="en">AWS Cognito, S3, SQS, EventBridge</span></li>
+          <li><span class="badge violet">ROAD</span> <span class="es">LLM real (OpenAI / Bedrock)</span><span class="en">Real LLM (OpenAI / Bedrock)</span></li>
+          <li><span class="badge violet">ROAD</span> <span class="es">Agente RFC/BAPI, notificaciones webhook</span><span class="en">RFC/BAPI agent, webhook notifications</span></li>
+        </ul>
+        <p class="text-muted text-sm" style="margin-top:8px">
+          <span class="es">Ver <a href="architecture.html#implementation-status">Arquitectura > Estado de Implementacion</a> para detalles.</span>
+          <span class="en">See <a href="architecture.html#implementation-status">Architecture > Implementation Status</a> for details.</span>
+        </p>
       </div>
     </div>
 
@@ -549,8 +599,9 @@ graph TB
 cd sap-spektra</code></pre>
       </div>
       <div class="step">
-        <strong><span class="es">Iniciar con Docker</span><span class="en">Start with Docker</span></strong>
-        <pre><code>docker-compose up -d</code></pre>
+        <strong><span class="es">Configurar e iniciar infraestructura</span><span class="en">Configure and start infrastructure</span></strong>
+        <pre><code>cp apps/api/.env.example apps/api/.env
+docker-compose up -d</code></pre>
       </div>
       <div class="step">
         <strong><span class="es">Instalar dependencias y poblar datos</span><span class="en">Install dependencies and seed data</span></strong>
@@ -560,7 +611,7 @@ cd ../../frontend && npm install</code></pre>
       <div class="step">
         <strong><span class="es">Iniciar la aplicacion</span><span class="en">Start the application</span></strong>
         <pre><code># Terminal 1: API
-cd apps/api && npm run start:dev
+cd apps/api && npm run dev
 
 # Terminal 2: Frontend
 cd frontend && npm run dev</code></pre>

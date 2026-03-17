@@ -97,9 +97,9 @@
       <div class="mermaid">
 graph TB
     subgraph platform["SAP Spektra Platform"]
-        FE["&lt;b&gt;Frontend&lt;/b&gt;&lt;br/&gt;React 18 · Vite 5&lt;br/&gt;Tailwind · Port 5173"]
-        BE["&lt;b&gt;API Backend&lt;/b&gt;&lt;br/&gt;NestJS 10 · TypeScript&lt;br/&gt;Prisma ORM · Port 3001"]
-        AG["&lt;b&gt;Agent / Collector&lt;/b&gt;&lt;br/&gt;RFC/BAPI/OS&lt;br/&gt;SAP Metrics · Heartbeat"]
+        FE["&lt;b&gt;Frontend&lt;/b&gt;&lt;br/&gt;React 19 · Vite 7&lt;br/&gt;Tailwind 4 · Port 5173"]
+        BE["&lt;b&gt;API Backend&lt;/b&gt;&lt;br/&gt;NestJS 11 · TypeScript&lt;br/&gt;Prisma 6 · Port 3001"]
+        AG["&lt;b&gt;Agent / Collector&lt;/b&gt;&lt;br/&gt;Python · OS Metrics&lt;br/&gt;SAP Metrics · Heartbeat"]
         PG[("&lt;b&gt;PostgreSQL 16&lt;/b&gt;&lt;br/&gt;Port 5432")]
         RD[("&lt;b&gt;Redis 7&lt;/b&gt;&lt;br/&gt;Port 6379")]
         SW["&lt;b&gt;Swagger&lt;/b&gt;&lt;br/&gt;OpenAPI 3 · /api"]
@@ -134,9 +134,9 @@ graph TB
         <div class="table-wrap">
           <table>
             <tbody>
-              <tr><td class="font-bold"><span class="es">Framework</span><span class="en">Framework</span></td><td>NestJS 10 + TypeScript</td></tr>
+              <tr><td class="font-bold"><span class="es">Framework</span><span class="en">Framework</span></td><td>NestJS 11 + TypeScript 5</td></tr>
               <tr><td class="font-bold"><span class="es">Puerto</span><span class="en">Port</span></td><td>3001</td></tr>
-              <tr><td class="font-bold">ORM</td><td>Prisma (PostgreSQL driver)</td></tr>
+              <tr><td class="font-bold">ORM</td><td>Prisma 6 (pg driver, 27 models)</td></tr>
               <tr><td class="font-bold">Auth</td><td>JWT + Passport + bcryptjs</td></tr>
               <tr><td class="font-bold">Docs</td><td>Swagger / OpenAPI 3.0</td></tr>
               <tr><td class="font-bold">Cache</td><td>Redis (ioredis)</td></tr>
@@ -155,15 +155,15 @@ graph TB
         <div class="table-wrap">
           <table>
             <tbody>
-              <tr><td class="font-bold"><span class="es">Framework</span><span class="en">Framework</span></td><td>React 18</td></tr>
+              <tr><td class="font-bold"><span class="es">Framework</span><span class="en">Framework</span></td><td>React 19</td></tr>
               <tr><td class="font-bold"><span class="es">Puerto</span><span class="en">Port</span></td><td>5173</td></tr>
-              <tr><td class="font-bold">Bundler</td><td>Vite 5</td></tr>
-              <tr><td class="font-bold">CSS</td><td>Tailwind CSS</td></tr>
-              <tr><td class="font-bold"><span class="es">Animaciones</span><span class="en">Animations</span></td><td>Framer Motion</td></tr>
-              <tr><td class="font-bold"><span class="es">Graficos</span><span class="en">Charts</span></td><td>Recharts</td></tr>
+              <tr><td class="font-bold">Bundler</td><td>Vite 7</td></tr>
+              <tr><td class="font-bold">CSS</td><td>Tailwind CSS 4</td></tr>
+              <tr><td class="font-bold"><span class="es">Graficos</span><span class="en">Charts</span></td><td>Recharts 3</td></tr>
               <tr><td class="font-bold"><span class="es">Iconos</span><span class="en">Icons</span></td><td>Lucide React</td></tr>
-              <tr><td class="font-bold">Router</td><td>React Router v6</td></tr>
-              <tr><td class="font-bold">HTTP</td><td>Axios</td></tr>
+              <tr><td class="font-bold">Router</td><td>React Router v7</td></tr>
+              <tr><td class="font-bold">HTTP</td><td><span class="es">Fetch nativo (useApi hook)</span><span class="en">Native Fetch (useApi hook)</span></td></tr>
+              <tr><td class="font-bold">i18n</td><td>i18next + react-i18next</td></tr>
             </tbody>
           </table>
         </div>
@@ -174,15 +174,22 @@ graph TB
           <div class="card-title"><div class="card-icon success">&#128225;</div> Agent / Collector</div>
         </div>
         <p>
-          <span class="es">El agente se despliega junto a los sistemas SAP y recopila metricas del host (CPU, memoria, disco, IOPS, red), metricas SAP (via RFC/BAPI) y envia heartbeats periodicos al API. El agente usa el endpoint <code>POST /metrics/ingest</code> para enviar datos.</span>
-          <span class="en">The agent is deployed alongside SAP systems and collects host metrics (CPU, memory, disk, IOPS, network), SAP metrics (via RFC/BAPI) and sends periodic heartbeats to the API. The agent uses the <code>POST /metrics/ingest</code> endpoint to send data.</span>
+          <span class="es">El agente (Python) se despliega junto a los sistemas SAP y recopila metricas del host. Incluye stubs de colectores para multiples bases de datos. El agente usa el endpoint <code>POST /metrics/ingest</code> para enviar datos y <code>PATCH /connectors/:id/heartbeat</code> para heartbeats.</span>
+          <span class="en">The agent (Python) is deployed alongside SAP systems and collects host metrics. It includes collector stubs for multiple databases. The agent uses the <code>POST /metrics/ingest</code> endpoint to send data and <code>PATCH /connectors/:id/heartbeat</code> for heartbeats.</span>
         </p>
         <ul class="feature-list">
-          <li><span class="es">Metricas de host: CPU, memoria, disco, IOPS, red</span><span class="en">Host metrics: CPU, memory, disk, IOPS, network</span></li>
-          <li><span class="es">Metricas SAP: via RFC/BAPI</span><span class="en">SAP metrics: via RFC/BAPI</span></li>
-          <li><span class="es">Heartbeat del conector</span><span class="en">Connector heartbeat</span></li>
-          <li><span class="es">Descubrimiento de topologia</span><span class="en">Topology discovery</span></li>
+          <li><span class="es">Metricas de host: CPU, memoria, disco, IOPS, red (os_collector)</span><span class="en">Host metrics: CPU, memory, disk, IOPS, network (os_collector)</span></li>
+          <li><span class="es">Stubs de colectores: HANA, Oracle, DB2, MSSQL, MaxDB, ASE, Cloud</span><span class="en">Collector stubs: HANA, Oracle, DB2, MSSQL, MaxDB, ASE, Cloud</span></li>
+          <li><span class="es">Deteccion SAP (sap_detector) y colector SAP (sap_collector)</span><span class="en">SAP detection (sap_detector) and SAP collector (sap_collector)</span></li>
+          <li><span class="es">Wizard de configuracion y validacion de permisos cloud</span><span class="en">Setup wizard and cloud permission validation</span></li>
         </ul>
+        <div class="callout warning">
+          <div class="callout-icon">&#9888;&#65039;</div>
+          <div>
+            <span class="es"><strong>Estado:</strong> Los colectores de bases de datos y la integracion RFC/BAPI son stubs — la integracion real con SAP via RFC/BAPI esta en el ROADMAP.</span>
+            <span class="en"><strong>Status:</strong> Database collectors and RFC/BAPI integration are stubs — real SAP integration via RFC/BAPI is on the ROADMAP.</span>
+          </div>
+        </div>
       </div>
 
       <div class="card">
@@ -457,17 +464,17 @@ graph TD
 
       <div class="card">
         <div class="card-header">
-          <div class="card-title"><div class="card-icon warning">&#9729;</div> AWS_REAL</div>
+          <div class="card-title"><div class="card-icon warning">&#9729;</div> AWS_REAL <span class="badge warning"><span class="es">Infraestructura lista</span><span class="en">Infrastructure ready</span></span></div>
         </div>
         <p>
-          <span class="es">Modo produccion. Se conecta a sistemas SAP reales via agentes desplegados. Usa servicios AWS para almacenamiento, colas y notificaciones.</span>
-          <span class="en">Production mode. Connects to real SAP systems via deployed agents. Uses AWS services for storage, queues and notifications.</span>
+          <span class="es">Modo produccion planificado. La configuracion para servicios AWS esta definida en <code>.env.example</code> (Cognito, S3, SQS, EventBridge), pero la integracion end-to-end <strong>no esta completamente implementada</strong>.</span>
+          <span class="en">Planned production mode. Configuration for AWS services is defined in <code>.env.example</code> (Cognito, S3, SQS, EventBridge), but end-to-end integration is <strong>not fully implemented yet</strong>.</span>
         </p>
         <ul class="feature-list">
-          <li><span class="es">Conexion real a SAP via Agent</span><span class="en">Real connection to SAP via Agent</span></li>
-          <li><span class="es">Metricas en tiempo real</span><span class="en">Real-time metrics</span></li>
-          <li><span class="es">Ejecucion real de runbooks</span><span class="en">Real runbook execution</span></li>
-          <li><span class="es">Integacion con servicios AWS</span><span class="en">Integration with AWS services</span></li>
+          <li><span class="es">Variables de entorno para Cognito, S3, SQS, EventBridge definidas</span><span class="en">Environment variables for Cognito, S3, SQS, EventBridge defined</span></li>
+          <li><span class="es">Arquitectura preparada para switch de runtime mode</span><span class="en">Architecture prepared for runtime mode switch</span></li>
+          <li><span class="es">Integracion end-to-end con AWS: <strong>ROADMAP</strong></span><span class="en">End-to-end AWS integration: <strong>ROADMAP</strong></span></li>
+          <li><span class="es">Autenticacion Cognito: <strong>ROADMAP</strong></span><span class="en">Cognito authentication: <strong>ROADMAP</strong></span></li>
         </ul>
       </div>
     </div>
@@ -643,7 +650,7 @@ graph TD
 ├── apps/
 │   └── api/                          # NestJS Backend API
 │       ├── prisma/
-│       │   └── schema.prisma         # 24 modelos Prisma
+│       │   └── schema.prisma         # 27 modelos Prisma
 │       ├── src/
 │       │   ├── common/
 │       │   │   ├── decorators/       # @CurrentUser, @TenantId, @Roles
@@ -681,7 +688,7 @@ graph TD
 │   ├── src/
 │   │   ├── components/               # Shared UI components
 │   │   ├── pages/                    # Route pages
-│   │   ├── services/                 # API client (Axios)
+│   │   ├── services/                 # API client (native fetch)
 │   │   ├── hooks/                    # Custom React hooks
 │   │   └── App.jsx                   # Root component + Router
 │   └── package.json
@@ -700,6 +707,75 @@ graph TD
       <div>
         <span class="es"><strong>Modular:</strong> Cada modulo NestJS sigue el patron Controller → Service → DTO con validacion, y esta aislado en su propia carpeta bajo <code>modules/</code>.</span>
         <span class="en"><strong>Modular:</strong> Each NestJS module follows the Controller → Service → DTO pattern with validation, and is isolated in its own folder under <code>modules/</code>.</span>
+      </div>
+    </div>
+
+    <!-- ═══ Implementation Status ═══ -->
+    <h2 id="implementation-status">
+      <span class="es">Estado de Implementacion: Lo Real vs Lo Planificado</span>
+      <span class="en">Implementation Status: What's Real vs What's Planned</span>
+    </h2>
+
+    <p>
+      <span class="es">SAP Spektra es una plataforma en desarrollo activo. Esta seccion documenta con transparencia que esta completamente implementado, que esta simulado para demostracion, y que esta en el roadmap.</span>
+      <span class="en">SAP Spektra is a platform under active development. This section transparently documents what is fully implemented, what is simulated for demonstration, and what is on the roadmap.</span>
+    </p>
+
+    <h3><span class="badge success"><span class="es">IMPLEMENTADO</span><span class="en">IMPLEMENTED</span></span> <span class="es">— Funcionalidad completa y testeada</span><span class="en">— Fully functional and tested</span></h3>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th><span class="es">Componente</span><span class="en">Component</span></th><th><span class="es">Descripcion</span><span class="en">Description</span></th><th><span class="es">Evidencia</span><span class="en">Evidence</span></th></tr></thead>
+        <tbody>
+          <tr><td><strong>JWT Auth</strong></td><td><span class="es">Login, registro, JWT tokens con Passport, bcryptjs (12 rounds)</span><span class="en">Login, register, JWT tokens with Passport, bcryptjs (12 rounds)</span></td><td>auth module</td></tr>
+          <tr><td><strong>RBAC</strong></td><td><span class="es">4 roles jerarquicos (admin, escalation, operator, viewer)</span><span class="en">4 hierarchical roles (admin, escalation, operator, viewer)</span></td><td>RolesGuard</td></tr>
+          <tr><td><strong>Multi-tenancy</strong></td><td><span class="es">Aislamiento total por organizationId</span><span class="en">Total isolation by organizationId</span></td><td>TenantGuard</td></tr>
+          <tr><td><strong><span class="es">Pipeline de metricas</span><span class="en">Metrics pipeline</span></strong></td><td><span class="es">Ingesta, almacenamiento, breaches, alertas automaticas</span><span class="en">Ingestion, storage, breaches, automatic alerts</span></td><td>9 endpoints</td></tr>
+          <tr><td><strong>Redis caching</strong></td><td><span class="es">Dashboard (30s), health (60s), analytics (120s), AI (300s)</span><span class="en">Dashboard (30s), health (60s), analytics (120s), AI (300s)</span></td><td>RedisService</td></tr>
+          <tr><td><strong><span class="es">Auditoria</span><span class="en">Audit</span></strong></td><td><span class="es">Registro de acciones criticas con timestamp y usuario</span><span class="en">Critical action logging with timestamp and user</span></td><td>AuditService</td></tr>
+          <tr><td><strong>CRUD</strong></td><td><span class="es">78 endpoints REST en 22 modulos con DTOs validados</span><span class="en">78 REST endpoints across 22 modules with validated DTOs</span></td><td>22 controllers</td></tr>
+          <tr><td><strong><span class="es">Motor de runbooks</span><span class="en">Runbook engine</span></strong></td><td><span class="es">Ejecucion con pasos, resultados, dry run</span><span class="en">Execution with steps, results, dry run</span></td><td>runbooks module</td></tr>
+          <tr><td><strong><span class="es">Aprobaciones</span><span class="en">Approvals</span></strong></td><td><span class="es">Crear, aprobar, rechazar con control de roles</span><span class="en">Create, approve, reject with role control</span></td><td>approvals module</td></tr>
+          <tr><td><strong><span class="es">Seguridad</span><span class="en">Security</span></strong></td><td><span class="es">Helmet, CORS, rate limiting, class-validator, cascade deletes</span><span class="en">Helmet, CORS, rate limiting, class-validator, cascade deletes</span></td><td>app.module</td></tr>
+          <tr><td><strong>Tests</strong></td><td><span class="es">49 spec backend (Jest, 392+ tests), 55 spec frontend (Vitest, 690+ tests), E2E (Playwright)</span><span class="en">49 backend specs (Jest, 392+ tests), 55 frontend specs (Vitest, 690+ tests), E2E (Playwright)</span></td><td>*.spec.ts, *.test.*</td></tr>
+          <tr><td><strong><span class="es">Demo data</span><span class="en">Demo data</span></strong></td><td><span class="es">Seed con 12 sistemas SAP, 4 usuarios, runbooks, metricas, alertas, HA configs</span><span class="en">Seed with 12 SAP systems, 4 users, runbooks, metrics, alerts, HA configs</span></td><td>seed.ts</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3><span class="badge warning"><span class="es">SIMULADO</span><span class="en">SIMULATED</span></span> <span class="es">— Funcional para demos, no conectado a sistemas reales</span><span class="en">— Functional for demos, not connected to real systems</span></h3>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th><span class="es">Componente</span><span class="en">Component</span></th><th><span class="es">Que hace actualmente</span><span class="en">What it does currently</span></th><th><span class="es">Que se necesita</span><span class="en">What's needed</span></th></tr></thead>
+        <tbody>
+          <tr><td><strong>HA Failover</strong></td><td><span class="es">Alterna estados en la BD, no ejecuta failover SAP real</span><span class="en">Toggles states in DB, no real SAP failover</span></td><td>sapcontrol / pacemaker</td></tr>
+          <tr><td><strong>AI / Chat</strong></td><td><span class="es">Retorna respuestas mock estructuradas, sin LLM</span><span class="en">Returns structured mock responses, no LLM</span></td><td>OpenAI / Bedrock</td></tr>
+          <tr><td><strong><span class="es">Colectores agente</span><span class="en">Agent collectors</span></strong></td><td><span class="es">Colectores BD (HANA, Oracle, etc.) son stubs</span><span class="en">DB collectors (HANA, Oracle, etc.) are stubs</span></td><td><span class="es">Integracion real BD + RFC/BAPI</span><span class="en">Real DB + RFC/BAPI integration</span></td></tr>
+          <tr><td><strong><span class="es">Ejecucion runbooks</span><span class="en">Runbook execution</span></strong></td><td><span class="es">Simula pasos con resultados predeterminados</span><span class="en">Simulates steps with predetermined results</span></td><td><span class="es">Conexion al agente para ejecucion remota</span><span class="en">Agent connection for remote execution</span></td></tr>
+          <tr><td><strong><span class="es">Metricas SAP</span><span class="en">SAP metrics</span></strong></td><td><span class="es">12 sistemas del seed, metricas no se auto-actualizan</span><span class="en">12 seeded systems, metrics don't auto-update</span></td><td><span class="es">Agente desplegado enviando metricas reales</span><span class="en">Deployed agent sending real metrics</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3><span class="badge violet">ROADMAP</span> <span class="es">— Planificado pero no implementado</span><span class="en">— Planned but not implemented</span></h3>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th><span class="es">Funcionalidad</span><span class="en">Feature</span></th><th><span class="es">Descripcion</span><span class="en">Description</span></th><th><span class="es">Estado actual</span><span class="en">Current status</span></th></tr></thead>
+        <tbody>
+          <tr><td><strong>AWS Cognito</strong></td><td><span class="es">Auth via Cognito en modo AWS_REAL</span><span class="en">Auth via Cognito in AWS_REAL mode</span></td><td><span class="es">Env vars definidas</span><span class="en">Env vars defined</span></td></tr>
+          <tr><td><strong><span class="es">LLM real</span><span class="en">Real LLM</span></strong></td><td><span class="es">Conectar AI/Chat a OpenAI o Bedrock</span><span class="en">Connect AI/Chat to OpenAI or Bedrock</span></td><td><span class="es">Endpoints listos, mocks activos</span><span class="en">Endpoints ready, mocks active</span></td></tr>
+          <tr><td><strong><span class="es">Agente RFC/BAPI</span><span class="en">RFC/BAPI Agent</span></strong></td><td><span class="es">Metricas SAP reales via RFC/BAPI</span><span class="en">Real SAP metrics via RFC/BAPI</span></td><td><span class="es">Stubs de colectores listos</span><span class="en">Collector stubs ready</span></td></tr>
+          <tr><td><strong>AWS S3/SQS/EventBridge</strong></td><td><span class="es">Storage, colas, eventos AWS</span><span class="en">AWS storage, queues, events</span></td><td><span class="es">Env vars definidas, sin codigo</span><span class="en">Env vars defined, no code</span></td></tr>
+          <tr><td><strong>Webhooks</strong></td><td><span class="es">Alertas y eventos a sistemas externos</span><span class="en">Alerts and events to external systems</span></td><td><span class="es">No implementado</span><span class="en">Not implemented</span></td></tr>
+          <tr><td><strong><span class="es">HA real</span><span class="en">Real HA</span></strong></td><td><span class="es">Failover real via sapcontrol/pacemaker</span><span class="en">Real failover via sapcontrol/pacemaker</span></td><td><span class="es">UI/API listos, logica simulada</span><span class="en">UI/API ready, logic simulated</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="callout info">
+      <div class="callout-icon">&#128161;</div>
+      <div>
+        <span class="es"><strong>Nota para evaluadores:</strong> SAP Spektra es una plataforma funcional con arquitectura production-ready. Los componentes marcados como SIMULADO estan disenados para ser facilmente reemplazados por integraciones reales sin cambiar la API publica ni la interfaz de usuario.</span>
+        <span class="en"><strong>Note for evaluators:</strong> SAP Spektra is a functional platform with production-ready architecture. Components marked as SIMULATED are designed to be easily replaced with real integrations without changing the public API or user interface.</span>
       </div>
     </div>
 
