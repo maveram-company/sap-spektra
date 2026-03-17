@@ -48,7 +48,8 @@ export default function ReportsPage() {
       if (!mounted) return;
       setEvents(evts);
       setAlerts(alts);
-    }).catch(() => {
+    }).catch((err) => {
+      console.warn('[ReportsPage] fetch failed:', err);
       if (!mounted) return;
       setError('Error al cargar datos. Intenta de nuevo.');
     });

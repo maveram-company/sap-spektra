@@ -150,7 +150,6 @@ export enum RunbookCategory {
   WINDOWS_OS = 'WINDOWS_OS',
   AIX_OS = 'AIX_OS',
   SOLARIS_OS = 'SOLARIS_OS',
-  SAP_KERNEL_PATCHING = 'SAP_KERNEL_PATCHING',
 }
 
 export const RUNBOOK_CATEGORY_LABELS: Record<RunbookCategory, string> = {
@@ -169,7 +168,6 @@ export const RUNBOOK_CATEGORY_LABELS: Record<RunbookCategory, string> = {
   [RunbookCategory.WINDOWS_OS]: 'Windows Server',
   [RunbookCategory.AIX_OS]: 'AIX',
   [RunbookCategory.SOLARIS_OS]: 'Solaris',
-  [RunbookCategory.SAP_KERNEL_PATCHING]: 'SAP Kernel Patching',
 };
 
 // ── Audit ──

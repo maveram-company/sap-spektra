@@ -418,7 +418,7 @@ export class OperationsService {
         return features.agentUrl;
       }
     }
-    return process.env.SPEKTRA_AGENT_URL || 'http://localhost:9110';
+    return this.config.get<string>('spektraAgentUrl', 'http://localhost:9110');
   }
 
   async getJobs(organizationId: string, systemId?: string) {

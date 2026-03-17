@@ -78,7 +78,8 @@ export default function EventsPage() {
       setEvents(evts);
       setSystems(sys);
       setLoading(false);
-    }).catch(() => {
+    }).catch((err) => {
+      console.warn('[EventsPage] fetch failed:', err);
       setError('Error al cargar datos. Intenta de nuevo.');
       setLoading(false);
     });

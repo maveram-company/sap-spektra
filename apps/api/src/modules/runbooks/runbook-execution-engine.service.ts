@@ -553,6 +553,6 @@ export class RunbookExecutionEngineService {
       }
     }
     // Fallback: construir desde la IP/hostname del sistema
-    return process.env.SPEKTRA_AGENT_URL || 'http://localhost:9110';
+    return this.config.get<string>('spektraAgentUrl', 'http://localhost:9110');
   }
 }

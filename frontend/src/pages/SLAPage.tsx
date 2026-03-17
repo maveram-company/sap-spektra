@@ -74,7 +74,8 @@ export default function SLAPage() {
       setSystems(sys);
       setAnalytics(anl);
       setLoading(false);
-    }).catch(() => {
+    }).catch((err) => {
+      console.warn('[SLAPage] fetch failed:', err);
       setError('Error al cargar datos. Intenta de nuevo.');
       setLoading(false);
     });

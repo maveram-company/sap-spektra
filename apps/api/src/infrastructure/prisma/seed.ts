@@ -528,9 +528,9 @@ async function main() {
       osVersion: '15 SP5',
       region: 'us-east-1',
       zone: 'us-east-1a',
-      cpu: 32,
-      memory: 128,
-      disk: 500,
+      cpu: 45,
+      memory: 62,
+      disk: 58,
       status: 'active',
     },
   });
@@ -543,9 +543,9 @@ async function main() {
       osVersion: '15 SP5',
       region: 'us-east-1',
       zone: 'us-east-1a',
-      cpu: 64,
-      memory: 512,
-      disk: 2000,
+      cpu: 38,
+      memory: 71,
+      disk: 54,
       status: 'active',
     },
   });
@@ -558,9 +558,9 @@ async function main() {
       osVersion: '15 SP5',
       region: 'us-east-1',
       zone: 'us-east-1a',
-      cpu: 16,
-      memory: 64,
-      disk: 250,
+      cpu: 55,
+      memory: 68,
+      disk: 62,
       status: 'active',
     },
   });
@@ -573,9 +573,9 @@ async function main() {
       osVersion: '15 SP4',
       region: 'us-east-1',
       zone: 'us-east-1b',
-      cpu: 32,
-      memory: 256,
-      disk: 1000,
+      cpu: 42,
+      memory: 58,
+      disk: 51,
       status: 'active',
     },
   });
@@ -588,9 +588,9 @@ async function main() {
       osVersion: '8.9',
       region: 'us-east-1',
       zone: 'us-east-1b',
-      cpu: 16,
-      memory: 64,
-      disk: 250,
+      cpu: 78,
+      memory: 85,
+      disk: 72,
       status: 'active',
     },
   });
@@ -603,9 +603,9 @@ async function main() {
       osVersion: '15 SP5',
       region: 'us-east-1',
       zone: 'us-east-1a',
-      cpu: 16,
-      memory: 64,
-      disk: 300,
+      cpu: 25,
+      memory: 40,
+      disk: 35,
       status: 'active',
     },
   });
@@ -618,9 +618,9 @@ async function main() {
       osVersion: '15 SP5',
       region: 'us-east-1',
       zone: 'us-east-1a',
-      cpu: 8,
-      memory: 32,
-      disk: 200,
+      cpu: 30,
+      memory: 45,
+      disk: 38,
       status: 'active',
     },
   });
@@ -633,9 +633,9 @@ async function main() {
       osVersion: 'Server 2022',
       region: 'us-east-1',
       zone: 'us-east-1a',
-      cpu: 16,
-      memory: 64,
-      disk: 500,
+      cpu: 35,
+      memory: 52,
+      disk: 44,
       status: 'active',
     },
   });
@@ -648,9 +648,9 @@ async function main() {
       osVersion: '8.8',
       region: 'us-east-1',
       zone: 'us-east-1b',
-      cpu: 16,
-      memory: 64,
-      disk: 400,
+      cpu: 40,
+      memory: 55,
+      disk: 48,
       status: 'active',
     },
   });
@@ -663,9 +663,9 @@ async function main() {
       osVersion: '7.3',
       region: 'us-east-1',
       zone: 'us-east-1a',
-      cpu: 24,
-      memory: 128,
-      disk: 600,
+      cpu: 52,
+      memory: 65,
+      disk: 58,
       status: 'active',
     },
   });
@@ -678,9 +678,9 @@ async function main() {
       osVersion: '15 SP3',
       region: 'us-east-1',
       zone: 'us-east-1b',
-      cpu: 8,
-      memory: 32,
-      disk: 300,
+      cpu: 58,
+      memory: 72,
+      disk: 65,
       status: 'active',
     },
   });
@@ -693,9 +693,9 @@ async function main() {
       osVersion: '11.4',
       region: 'us-west-2',
       zone: 'us-west-2a',
-      cpu: 16,
-      memory: 64,
-      disk: 400,
+      cpu: 48,
+      memory: 60,
+      disk: 55,
       status: 'active',
     },
   });
@@ -3760,521 +3760,6 @@ async function main() {
         },
       ]),
     },
-    // ── Reclasificado: estos son OS kernel, no SAP kernel ──
-    {
-      organizationId: org.id,
-      category: 'LINUX_OS',
-      name: 'Linux OS Kernel Patch — Verify',
-      description:
-        'Verifica estado de parchado del kernel del SO y si requiere reboot',
-      costSafe: true,
-      autoExecute: true,
-      dbType: 'ALL',
-      parameters: JSON.stringify({ osType: 'LINUX' }),
-      steps: JSON.stringify([
-        {
-          order: 1,
-          action: 'Verificar kernel corriendo vs instalado',
-          command: 'rpm -q kernel | tail -1 && uname -r',
-        },
-        {
-          order: 2,
-          action: 'Verificar si hay reboot pendiente',
-          command:
-            'test -f /var/run/reboot-required && echo REBOOT_NEEDED || needs-restarting -r',
-        },
-        {
-          order: 3,
-          action: 'Reportar estado de parchado',
-          command:
-            'echo "OS Kernel: $(uname -r) | Installed: $(rpm -q kernel | tail -1)"',
-        },
-      ]),
-    },
-    {
-      organizationId: org.id,
-      category: 'LINUX_OS',
-      name: 'Linux OS Kernel Patch — Prepare',
-      description:
-        'Descarga patches del kernel del SO y prepara snapshot para rollback',
-      costSafe: true,
-      autoExecute: false,
-      dbType: 'ALL',
-      parameters: JSON.stringify({ osType: 'LINUX' }),
-      prereqs: JSON.stringify([
-        'Ventana de mantenimiento planificada',
-        'Espacio en disco suficiente',
-        'LVM o ZFS configurado para snapshots',
-      ]),
-      steps: JSON.stringify([
-        {
-          order: 1,
-          action: 'Descargar patches sin instalar',
-          command: 'zypper download-only kernel || yum download kernel',
-        },
-        {
-          order: 2,
-          action: 'Crear snapshot LVM pre-parche',
-          command: 'lvcreate -s -n pre_patch_snap -L 10G /dev/vg_sap/lv_root',
-        },
-        {
-          order: 3,
-          action: 'Verificar espacio y snapshot OK',
-          command: 'lvs && df -h',
-        },
-      ]),
-    },
-    {
-      organizationId: org.id,
-      category: 'LINUX_OS',
-      name: 'Linux OS Kernel Patch — Apply',
-      description:
-        'Aplica parche del kernel del SO con parada controlada de SAP y reboot',
-      costSafe: false,
-      autoExecute: false,
-      dbType: 'ALL',
-      parameters: JSON.stringify({ osType: 'LINUX' }),
-      prereqs: JSON.stringify([
-        'Ventana de mantenimiento activa',
-        'Snapshot pre-parche creado',
-        'No hay jobs SAP batch activos',
-        'FULL_STACK_AGENT monitoreo activo',
-      ]),
-      steps: JSON.stringify([
-        {
-          order: 1,
-          action: 'Parar servicios SAP',
-          command:
-            'sapcontrol -nr $SAPSYSTEMINSTANCENR -function StopSystem ALL',
-        },
-        {
-          order: 2,
-          action: 'Parar base de datos',
-          command:
-            'su - ${SAPSID,,}adm -c "HDB stop" || su - oracle -c "sqlplus / as sysdba <<< shutdown immediate"',
-        },
-        {
-          order: 3,
-          action: 'Aplicar parche del kernel del SO',
-          command: 'zypper up kernel || yum update kernel',
-        },
-        { order: 4, action: 'Reboot del servidor', command: 'shutdown -r now' },
-        {
-          order: 5,
-          action: 'Verificar kernel nuevo del SO',
-          command: 'uname -r',
-        },
-        {
-          order: 6,
-          action: 'Arrancar base de datos',
-          command:
-            'su - ${SAPSID,,}adm -c "HDB start" || su - oracle -c "sqlplus / as sysdba <<< startup"',
-        },
-        {
-          order: 7,
-          action: 'Arrancar servicios SAP',
-          command:
-            'sapcontrol -nr $SAPSYSTEMINSTANCENR -function StartSystem ALL',
-        },
-        {
-          order: 8,
-          action: 'Smoke test — verificar SAP responde',
-          command:
-            'sapcontrol -nr $SAPSYSTEMINSTANCENR -function GetProcessList',
-        },
-      ]),
-    },
-    {
-      organizationId: org.id,
-      category: 'LINUX_OS',
-      name: 'Linux OS Kernel Patch — Rollback',
-      description:
-        'Rollback a kernel anterior del SO si el parche causó problemas',
-      costSafe: false,
-      autoExecute: false,
-      dbType: 'ALL',
-      parameters: JSON.stringify({ osType: 'LINUX' }),
-      prereqs: JSON.stringify([
-        'Parche de kernel del SO aplicado',
-        'Snapshot pre-parche disponible',
-        'Problema detectado post-parche',
-      ]),
-      steps: JSON.stringify([
-        {
-          order: 1,
-          action: 'Verificar kernels del SO disponibles',
-          command: 'grubby --info=ALL || grep menuentry /boot/grub2/grub.cfg',
-        },
-        {
-          order: 2,
-          action: 'Setear kernel anterior como default',
-          command: 'grubby --set-default=$(rpm -q kernel | head -1)',
-        },
-        {
-          order: 3,
-          action: 'Parar servicios SAP y BD',
-          command:
-            'sapcontrol -nr $SAPSYSTEMINSTANCENR -function StopSystem ALL && su - ${SAPSID,,}adm -c "HDB stop"',
-        },
-        {
-          order: 4,
-          action: 'Reboot con kernel anterior',
-          command: 'shutdown -r now',
-        },
-        { order: 5, action: 'Verificar kernel correcto', command: 'uname -r' },
-        {
-          order: 6,
-          action: 'Restaurar snapshot si necesario',
-          command: 'lvconvert --merge /dev/vg_sap/pre_patch_snap',
-        },
-        {
-          order: 7,
-          action: 'Arrancar BD y SAP',
-          command:
-            'su - ${SAPSID,,}adm -c "HDB start" && sapcontrol -nr $SAPSYSTEMINSTANCENR -function StartSystem ALL',
-        },
-      ]),
-    },
-
-    // ═══ SAP Kernel Patching (REAL — disp+work / SAPEXE.SAR) ═══
-    {
-      organizationId: org.id,
-      category: 'SAP_KERNEL_PATCHING',
-      name: 'SAP Kernel Version Check',
-      description:
-        'Verifica la versión actual del kernel SAP (disp+work) y patch level en todos los application servers',
-      costSafe: true,
-      autoExecute: true,
-      dbType: 'ALL',
-      txCode: 'SM51',
-      steps: JSON.stringify([
-        {
-          order: 1,
-          action: 'Verificar versión de disp+work',
-          command:
-            'su - ${SAPSID,,}adm -c "disp+work --version" | grep -E "kernel release|patch number|compilation"',
-        },
-        {
-          order: 2,
-          action: 'Verificar versión en todos los app servers',
-          command:
-            'su - ${SAPSID,,}adm -c "sapcontrol -nr $SAPSYSTEMINSTANCENR -function GetVersionInfo"',
-        },
-        {
-          order: 3,
-          action: 'Comparar con SAP Kernel central note',
-          command:
-            'su - ${SAPSID,,}adm -c "disp+work --version" | grep "patch number" | awk \'{print "Current patch: "$3}\'',
-        },
-        {
-          order: 4,
-          action: 'Reportar estado del kernel SAP',
-          command:
-            'echo "SAP Kernel: $(su - ${SAPSID,,}adm -c "disp+work --version" | grep "kernel release" | awk \'{print $3}\')" && echo "Patch: $(su - ${SAPSID,,}adm -c "disp+work --version" | grep "patch number" | awk \'{print $3}\')"',
-        },
-      ]),
-    },
-    {
-      organizationId: org.id,
-      category: 'SAP_KERNEL_PATCHING',
-      name: 'SAP Kernel Download & Verify',
-      description:
-        'Descarga SAPEXE.SAR y SAPEXEDB.SAR desde SAP Support y verifica checksums',
-      costSafe: true,
-      autoExecute: false,
-      dbType: 'ALL',
-      prereqs: JSON.stringify([
-        'Credenciales SAP Marketplace válidas',
-        'Espacio en /usr/sap/trans/tmp suficiente (>500MB)',
-        'SAPCAR disponible en el sistema',
-      ]),
-      steps: JSON.stringify([
-        {
-          order: 1,
-          action: 'Verificar espacio disponible',
-          command:
-            'df -h /usr/sap/trans/tmp && du -sh /usr/sap/${SAPSID}/SYS/exe/uc',
-        },
-        {
-          order: 2,
-          action: 'Crear directorio de staging',
-          command:
-            'mkdir -p /usr/sap/trans/tmp/kernel_upgrade && cd /usr/sap/trans/tmp/kernel_upgrade',
-        },
-        {
-          order: 3,
-          action: 'Descargar SAPEXE.SAR (kernel independiente de BD)',
-          command:
-            'echo "[MANUAL] Descargar SAPEXE.SAR desde https://me.sap.com/softwarecenter → SAP KERNEL 64-BIT UNICODE → seleccionar versión target"',
-        },
-        {
-          order: 4,
-          action: 'Descargar SAPEXEDB.SAR (kernel específico de BD)',
-          command:
-            'echo "[MANUAL] Descargar SAPEXEDB.SAR correspondiente al tipo de BD del sistema"',
-        },
-        {
-          order: 5,
-          action: 'Verificar integridad de archivos SAR',
-          command:
-            'SAPCAR -tvf /usr/sap/trans/tmp/kernel_upgrade/SAPEXE.SAR > /dev/null && echo "SAPEXE.SAR OK" && SAPCAR -tvf /usr/sap/trans/tmp/kernel_upgrade/SAPEXEDB.SAR > /dev/null && echo "SAPEXEDB.SAR OK"',
-        },
-        {
-          order: 6,
-          action: 'Listar contenido para verificación visual',
-          command:
-            'SAPCAR -tvf /usr/sap/trans/tmp/kernel_upgrade/SAPEXE.SAR | head -20',
-        },
-      ]),
-    },
-    {
-      organizationId: org.id,
-      category: 'SAP_KERNEL_PATCHING',
-      name: 'SAP Kernel Upgrade — Prepare',
-      description:
-        'Backup del kernel SAP actual y extrae los nuevos binarios en directorio staging',
-      costSafe: true,
-      autoExecute: false,
-      dbType: 'ALL',
-      prereqs: JSON.stringify([
-        'SAPEXE.SAR y SAPEXEDB.SAR descargados y verificados',
-        'Backup de sistema reciente',
-        'FULL_STACK_AGENT activo',
-      ]),
-      steps: JSON.stringify([
-        {
-          order: 1,
-          action: 'Backup del kernel actual',
-          command:
-            'KERNEL_DIR="/usr/sap/${SAPSID}/SYS/exe/uc/linuxx86_64" && tar czf /usr/sap/trans/tmp/kernel_backup_$(date +%Y%m%d_%H%M%S).tar.gz -C $(dirname $KERNEL_DIR) $(basename $KERNEL_DIR)',
-        },
-        {
-          order: 2,
-          action: 'Crear directorio staging para nuevo kernel',
-          command:
-            'mkdir -p /usr/sap/trans/tmp/kernel_new && cd /usr/sap/trans/tmp/kernel_new',
-        },
-        {
-          order: 3,
-          action: 'Extraer SAPEXE.SAR en staging',
-          command:
-            'cd /usr/sap/trans/tmp/kernel_new && SAPCAR -xvf /usr/sap/trans/tmp/kernel_upgrade/SAPEXE.SAR',
-        },
-        {
-          order: 4,
-          action: 'Extraer SAPEXEDB.SAR en staging',
-          command:
-            'cd /usr/sap/trans/tmp/kernel_new && SAPCAR -xvf /usr/sap/trans/tmp/kernel_upgrade/SAPEXEDB.SAR',
-        },
-        {
-          order: 5,
-          action: 'Verificar nuevo disp+work en staging',
-          command:
-            '/usr/sap/trans/tmp/kernel_new/disp+work --version | grep -E "kernel release|patch number"',
-        },
-        {
-          order: 6,
-          action: 'Comparar versiones vieja vs nueva',
-          command:
-            'echo "ACTUAL:" && su - ${SAPSID,,}adm -c "disp+work --version" | grep "patch number" && echo "NUEVA:" && /usr/sap/trans/tmp/kernel_new/disp+work --version | grep "patch number"',
-        },
-      ]),
-    },
-    {
-      organizationId: org.id,
-      category: 'SAP_KERNEL_PATCHING',
-      name: 'SAP Kernel Upgrade — Apply',
-      description:
-        'Aplica upgrade del kernel SAP: para instancia, reemplaza binarios con SAPEXE/SAPEXEDB, reinicia',
-      costSafe: false,
-      autoExecute: false,
-      dbType: 'ALL',
-      prereqs: JSON.stringify([
-        'Ventana de mantenimiento activa',
-        'Backup del kernel actual creado',
-        'Nuevo kernel extraído en staging',
-        'No hay jobs SAP batch activos',
-        'No hay usuarios conectados (o notificados)',
-        'FULL_STACK_AGENT activo',
-      ]),
-      steps: JSON.stringify([
-        {
-          order: 1,
-          action: 'Verificar que no hay jobs batch corriendo',
-          command:
-            'su - ${SAPSID,,}adm -c "sapcontrol -nr $SAPSYSTEMINSTANCENR -function ABAPGetWPTable" | grep -c "Run" || echo "0 jobs activos"',
-        },
-        {
-          order: 2,
-          action: 'Parar instancia SAP',
-          command:
-            'su - ${SAPSID,,}adm -c "sapcontrol -nr $SAPSYSTEMINSTANCENR -function StopSystem ALL" && su - ${SAPSID,,}adm -c "sapcontrol -nr $SAPSYSTEMINSTANCENR -function WaitforStopped 300 5"',
-        },
-        {
-          order: 3,
-          action: 'Reemplazar binarios del kernel SAP',
-          command:
-            'KERNEL_DIR="/usr/sap/${SAPSID}/SYS/exe/uc/linuxx86_64" && cp -p /usr/sap/trans/tmp/kernel_new/* $KERNEL_DIR/',
-        },
-        {
-          order: 4,
-          action: 'Ajustar permisos',
-          command:
-            'KERNEL_DIR="/usr/sap/${SAPSID}/SYS/exe/uc/linuxx86_64" && chown ${SAPSID,,}adm:sapsys $KERNEL_DIR/* && chmod 755 $KERNEL_DIR/disp+work $KERNEL_DIR/sapstartsrv $KERNEL_DIR/sapstart',
-        },
-        {
-          order: 5,
-          action: 'Arrancar instancia SAP',
-          command:
-            'su - ${SAPSID,,}adm -c "sapcontrol -nr $SAPSYSTEMINSTANCENR -function StartSystem ALL" && su - ${SAPSID,,}adm -c "sapcontrol -nr $SAPSYSTEMINSTANCENR -function WaitforStarted 300 5"',
-        },
-        {
-          order: 6,
-          action: 'Verificar nueva versión del kernel SAP',
-          command:
-            'su - ${SAPSID,,}adm -c "disp+work --version" | grep -E "kernel release|patch number|compilation"',
-        },
-        {
-          order: 7,
-          action: 'Verificar todos los procesos SAP activos',
-          command:
-            'su - ${SAPSID,,}adm -c "sapcontrol -nr $SAPSYSTEMINSTANCENR -function GetProcessList"',
-        },
-        {
-          order: 8,
-          action: 'Smoke test — verificar login SAPGUI/RFC',
-          command:
-            'su - ${SAPSID,,}adm -c "sapcontrol -nr $SAPSYSTEMINSTANCENR -function ABAPGetWPTable" | head -5',
-        },
-      ]),
-    },
-    {
-      organizationId: org.id,
-      category: 'SAP_KERNEL_PATCHING',
-      name: 'SAP Kernel Upgrade — Rollback',
-      description:
-        'Rollback del kernel SAP al backup anterior si el upgrade causó problemas',
-      costSafe: false,
-      autoExecute: false,
-      dbType: 'ALL',
-      prereqs: JSON.stringify([
-        'Kernel SAP upgrade aplicado',
-        'Backup del kernel anterior disponible en /usr/sap/trans/tmp/',
-        'Problema detectado post-upgrade',
-      ]),
-      steps: JSON.stringify([
-        {
-          order: 1,
-          action: 'Identificar backup del kernel anterior',
-          command: 'ls -lt /usr/sap/trans/tmp/kernel_backup_*.tar.gz | head -1',
-        },
-        {
-          order: 2,
-          action: 'Parar instancia SAP',
-          command:
-            'su - ${SAPSID,,}adm -c "sapcontrol -nr $SAPSYSTEMINSTANCENR -function StopSystem ALL" && su - ${SAPSID,,}adm -c "sapcontrol -nr $SAPSYSTEMINSTANCENR -function WaitforStopped 300 5"',
-        },
-        {
-          order: 3,
-          action: 'Restaurar kernel anterior desde backup',
-          command:
-            'KERNEL_DIR="/usr/sap/${SAPSID}/SYS/exe/uc/linuxx86_64" && BACKUP=$(ls -t /usr/sap/trans/tmp/kernel_backup_*.tar.gz | head -1) && tar xzf $BACKUP -C $(dirname $KERNEL_DIR)',
-        },
-        {
-          order: 4,
-          action: 'Verificar versión restaurada',
-          command:
-            'su - ${SAPSID,,}adm -c "disp+work --version" | grep -E "kernel release|patch number"',
-        },
-        {
-          order: 5,
-          action: 'Arrancar instancia SAP',
-          command:
-            'su - ${SAPSID,,}adm -c "sapcontrol -nr $SAPSYSTEMINSTANCENR -function StartSystem ALL" && su - ${SAPSID,,}adm -c "sapcontrol -nr $SAPSYSTEMINSTANCENR -function WaitforStarted 300 5"',
-        },
-        {
-          order: 6,
-          action: 'Verificar procesos SAP activos',
-          command:
-            'su - ${SAPSID,,}adm -c "sapcontrol -nr $SAPSYSTEMINSTANCENR -function GetProcessList"',
-        },
-      ]),
-    },
-    {
-      organizationId: org.id,
-      category: 'SAP_KERNEL_PATCHING',
-      name: 'SAP Kernel Patch Level Comparison',
-      description:
-        'Compara el patch level del kernel SAP entre todos los sistemas del landscape (DEV → QAS → PRD)',
-      costSafe: true,
-      autoExecute: true,
-      dbType: 'ALL',
-      txCode: 'SM51',
-      steps: JSON.stringify([
-        {
-          order: 1,
-          action: 'Obtener versión del kernel SAP',
-          command:
-            'su - ${SAPSID,,}adm -c "disp+work --version" | grep -E "kernel release|patch number"',
-        },
-        {
-          order: 2,
-          action: 'Obtener compilación y fecha',
-          command:
-            'su - ${SAPSID,,}adm -c "disp+work --version" | grep -E "compilation|source id"',
-        },
-        {
-          order: 3,
-          action: 'Verificar kernel en instancias adicionales (AAS)',
-          command:
-            'su - ${SAPSID,,}adm -c "sapcontrol -nr $SAPSYSTEMINSTANCENR -function GetVersionInfo" | grep -A2 "disp+work"',
-        },
-        {
-          order: 4,
-          action: 'Generar reporte de comparación',
-          command:
-            'echo "Sistema: ${SAPSID} | Kernel: $(su - ${SAPSID,,}adm -c "disp+work --version" | grep "kernel release" | awk \'{print $3}\') | Patch: $(su - ${SAPSID,,}adm -c "disp+work --version" | grep "patch number" | awk \'{print $3}\')"',
-        },
-      ]),
-    },
-    {
-      organizationId: org.id,
-      category: 'SAP_KERNEL_PATCHING',
-      name: 'SAP Kernel Compatibility Check',
-      description:
-        'Verifica compatibilidad del kernel SAP actual con las SAP Notes más recientes y la versión del ABAP stack',
-      costSafe: true,
-      autoExecute: true,
-      dbType: 'ALL',
-      txCode: 'SNOTE',
-      steps: JSON.stringify([
-        {
-          order: 1,
-          action: 'Obtener versión y release del kernel actual',
-          command:
-            'su - ${SAPSID,,}adm -c "disp+work --version" | grep -E "kernel release|patch number|compilation"',
-        },
-        {
-          order: 2,
-          action: 'Verificar DLL versions del kernel',
-          command:
-            'su - ${SAPSID,,}adm -c "sapcontrol -nr $SAPSYSTEMINSTANCENR -function GetVersionInfo" | grep -E "disp+work|sapstartsrv|gwrd|icman"',
-        },
-        {
-          order: 3,
-          action: 'Verificar compatibilidad con librería de BD',
-          command:
-            'su - ${SAPSID,,}adm -c "disp+work --version" | grep -E "database library|DBSL"',
-        },
-        {
-          order: 4,
-          action: 'Verificar mínimo kernel requerido por SAP Notes activas',
-          command:
-            'su - ${SAPSID,,}adm -c "disp+work --version" | grep "patch number" | awk \'{if($3 < 100) print "WARNING: Patch level bajo, verificar SAP Note 2917037"; else print "Patch level OK: "$3}\'',
-        },
-      ]),
-    },
-
     // ═══ Windows Server ═══
     {
       organizationId: org.id,

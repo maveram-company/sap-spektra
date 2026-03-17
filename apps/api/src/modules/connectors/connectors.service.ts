@@ -22,6 +22,7 @@ export class ConnectorsService {
         system: { select: { sid: true, description: true, environment: true } },
       },
       orderBy: { status: 'asc' },
+      take: 500,
     });
   }
 
@@ -82,14 +83,22 @@ export class ConnectorsService {
       include: { system: { select: { sid: true } } },
     });
 
-    const results = [];
-    for (const connector of connectors) {
-      const result =
+    const settled = await Promise.allSettled(
+      connectors.map((connector) =>
         this.runtime === 'LOCAL_SIMULATED'
-          ? await this.simulateValidation(connector)
-          : await this.probeConnector(connector);
-      results.push(result);
-    }
+          ? this.simulateValidation(connector)
+          : this.probeConnector(connector),
+      ),
+    );
+    const results = settled
+      .filter(
+        (
+          r,
+        ): r is PromiseFulfilledResult<
+          Awaited<ReturnType<typeof this.probeConnector>>
+        > => r.status === 'fulfilled',
+      )
+      .map((r) => r.value);
 
     const connected = results.filter((r) => r.status === 'connected').length;
     const degraded = results.filter((r) => r.status === 'degraded').length;
@@ -211,6 +220,6 @@ export class ConnectorsService {
         return features.agentUrl;
       }
     }
-    return process.env.SPEKTRA_AGENT_URL || 'http://localhost:9110';
+    return this.config.get<string>('spektraAgentUrl', 'http://localhost:9110');
   }
 }

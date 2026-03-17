@@ -107,7 +107,8 @@ export default function AIAnalysisPage() {
       setAiUseCases(uc);
       setAiResponses(resp);
       setLoading(false);
-    }).catch(() => {
+    }).catch((err) => {
+      console.warn('[AIAnalysisPage] fetch failed:', err);
       setError('Error al cargar datos. Intenta de nuevo.');
       setLoading(false);
     });

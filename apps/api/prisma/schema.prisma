@@ -242,6 +242,7 @@ model Dependency {
 
   system System @relation(fields: [systemId], references: [id], onDelete: Cascade)
 
+  @@index([systemId])
   @@map("dependencies")
 }
 
@@ -340,9 +341,10 @@ model Event {
   timestamp      DateTime @default(now())
 
   organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
-  system       System?      @relation(fields: [systemId], references: [id])
+  system       System?      @relation(fields: [systemId], references: [id], onDelete: Cascade)
 
   @@index([organizationId, timestamp])
+  @@index([systemId])
   @@map("events")
 }
 
@@ -393,6 +395,7 @@ model Runbook {
   organization Organization     @relation(fields: [organizationId], references: [id], onDelete: Cascade)
   executions   RunbookExecution[]
 
+  @@index([organizationId])
   @@map("runbooks")
 }
 
@@ -574,5 +577,6 @@ model ApiKey {
 
   organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
 
+  @@index([organizationId])
   @@map("api_keys")
 }

@@ -71,6 +71,7 @@ export class SettingsService {
         lastUsedAt: true,
       },
       orderBy: { createdAt: 'desc' },
+      take: 100,
     });
   }
 

@@ -14,8 +14,10 @@ import Table, { TableHeader, TableBody, TableRow, TableHead, TableCell } from '.
 import EmptyState from '../components/ui/EmptyState';
 import PageLoading from '../components/ui/PageLoading';
 import { dataService } from '../services/dataService';
+import { useAuth } from '../contexts/AuthContext';
 
 export default function OperationsPage() {
+  const { user } = useAuth();
   const [operations, setOperations] = useState([]);
   const [systems, setSystems] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -69,7 +71,7 @@ export default function OperationsPage() {
         scheduledTime: newOp.scheduledTime || new Date(Date.now() + 86400000).toISOString(),
         status: 'SCHEDULED',
         riskLevel: newOp.riskLevel,
-        requestedBy: 'demo@empresa.com',
+        requestedBy: user?.email || user?.username || 'unknown',
         description: newOp.description,
       }]);
       setShowNewModal(false);

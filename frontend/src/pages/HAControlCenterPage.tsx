@@ -108,7 +108,8 @@ export default function HAControlCenterPage() {
       setHaDrivers(drivers);
       setHaPrereqs(prereqs);
       setLoading(false);
-    }).catch(() => {
+    }).catch((err) => {
+      console.warn('[HAControlCenterPage] fetch failed:', err);
       setError('Error al cargar datos. Intenta de nuevo.');
       setLoading(false);
     });

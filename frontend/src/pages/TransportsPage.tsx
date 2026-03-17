@@ -44,7 +44,8 @@ export default function TransportsPage() {
       setTransports(t);
       setSystems(s);
       setLoading(false);
-    }).catch(() => {
+    }).catch((err) => {
+      console.warn('[TransportsPage] fetch failed:', err);
       setError('Error al cargar datos. Intenta de nuevo.');
       setLoading(false);
     });

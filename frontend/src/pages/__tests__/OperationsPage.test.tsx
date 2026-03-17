@@ -3,6 +3,10 @@ import { render, screen, waitFor } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 import OperationsPage from '../OperationsPage';
 
+vi.mock('../../contexts/AuthContext', () => ({
+  useAuth: () => ({ user: { name: 'Test User', username: 'admin', email: 'admin@test.com' } }),
+}));
+
 vi.mock('../../services/dataService', () => ({
   dataService: {
     getOperations: vi.fn().mockResolvedValue([

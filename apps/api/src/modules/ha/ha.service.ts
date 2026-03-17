@@ -317,7 +317,7 @@ export class HAService {
       if (features.agentUrl && typeof features.agentUrl === 'string')
         return features.agentUrl;
     }
-    return process.env.SPEKTRA_AGENT_URL || 'http://localhost:9110';
+    return this.config.get<string>('spektraAgentUrl', 'http://localhost:9110');
   }
 
   async updateStatus(organizationId: string, systemId: string, status: string) {

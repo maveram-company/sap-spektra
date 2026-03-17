@@ -33,7 +33,8 @@ export default function CertificatesPage() {
       setCertificates(certs);
       setLicenses(lics);
       setLoading(false);
-    }).catch(() => {
+    }).catch((err) => {
+      console.warn('[CertificatesPage] fetch failed:', err);
       setError('Error al cargar datos. Intenta de nuevo.');
       setLoading(false);
     });

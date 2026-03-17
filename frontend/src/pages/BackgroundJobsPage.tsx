@@ -44,7 +44,8 @@ export default function BackgroundJobsPage() {
       setJobs(j);
       setSystems(s);
       setLoading(false);
-    }).catch(() => {
+    }).catch((err) => {
+      console.warn('[BackgroundJobsPage] fetch failed:', err);
       setError('Error al cargar datos. Intenta de nuevo.');
       setLoading(false);
     });

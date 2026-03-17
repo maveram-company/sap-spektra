@@ -32,7 +32,6 @@ const CATEGORY_LABELS = {
   WINDOWS_OS: 'Windows',
   AIX_OS: 'AIX',
   SOLARIS_OS: 'Solaris',
-  SAP_KERNEL_PATCHING: 'SAP Kernel Patching',
 };
 
 // Step status icon component

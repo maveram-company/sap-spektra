@@ -56,7 +56,7 @@ function pctColor(val, warnAt = 70, dangerAt = 85) {
 
 function calcUptime(startedAt) {
   if (!startedAt) return 'N/A';
-  const diffMs = new Date('2026-03-10T10:00:00Z') - new Date(startedAt);
+  const diffMs = new Date() - new Date(startedAt);
   if (diffMs <= 0) return '< 1m';
   const days = Math.floor(diffMs / 86400000);
   const hours = Math.floor((diffMs % 86400000) / 3600000);
@@ -135,7 +135,8 @@ export default function SystemDetailPage() {
         });
       }
       setLoading(false);
-    }).catch(() => {
+    }).catch((err) => {
+      console.warn('[SystemDetailPage] fetch failed:', err);
       if (!mounted) return;
       setError('Error al cargar datos. Intenta de nuevo.');
       setLoading(false);
@@ -1293,7 +1294,7 @@ export default function SystemDetailPage() {
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3 mb-4">
             <MetricCard label="Total Locks" value={sm12.totalLocks} />
             <MetricCard label="Old Locks" value={sm12.oldLocks} warn={sm12.oldLocks > 5} danger={sm12.oldLocks > 20} />
-            <MetricCard label="Max Age" value={sm12.maxAge} warn={parseFloat(sm12.maxAge) > 2} danger={parseFloat(sm12.maxAge) > 6} />
+            <MetricCard label="Max Age" value={sm12.maxAge} warn={parseFloat(sm12?.maxAge || '0') > 2} danger={parseFloat(sm12?.maxAge || '0') > 6} />
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
@@ -1333,7 +1334,7 @@ export default function SystemDetailPage() {
             <MetricCard label="Pending"   value={sm13.pending}  warn={sm13.pending > 5}  danger={sm13.pending > 20} />
             <MetricCard label="Failed"    value={sm13.failed}   warn={sm13.failed > 0}   danger={sm13.failed > 5} />
             <MetricCard label="Active"    value={sm13.active} />
-            <MetricCard label="Avg Delay" value={sm13.avgDelay} warn={parseFloat(sm13.avgDelay) > 3} danger={parseFloat(sm13.avgDelay) > 10} />
+            <MetricCard label="Avg Delay" value={sm13.avgDelay} warn={parseFloat(sm13?.avgDelay || '0') > 3} danger={parseFloat(sm13?.avgDelay || '0') > 10} />
             <MetricCard
               label="Last Failed"
               value={
