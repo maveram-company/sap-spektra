@@ -39,7 +39,7 @@ services:
     environment:
       DATABASE_URL: postgresql://spektra:spektra_dev@postgres:5432/spektra_dev
       REDIS_URL: redis://redis:6379
-      JWT_SECRET: spektra-dev-secret
+      JWT_SECRET: spektra-local-dev-secret-change-in-production
       CORS_ORIGIN: http://localhost:5173,http://localhost
       NODE_ENV: development
     depends_on:
