@@ -1,34 +1,45 @@
 // ══════════════════════════════════════════════════════════════
 // SAP Spektra — Data Service Layer
-// Capa intermedia entre páginas y fuente de datos.
-// En demoMode: retorna mocks con delay simulado.
-// En producción: llama a la API real y transforma al formato del frontend.
+// ══════════════════════════════════════════════════════════════
 //
-// DATA SOURCE STATUS (updated 2026-03-12):
+// Architecture:
+//   Page → dataService → api (useApi.ts) → NestJS Backend
+//                ↓ (if demoMode or API failure)
+//            mockData → static mock constants
 //
-// BACKEND-DRIVEN (API real en modo producción):
-//   getSystems, getSystemById, getSystemMetrics, getSystemBreaches,
-//   getSystemSla, getServerDeps, getSystemMeta, getUsers, getApprovals,
-//   approveAction, rejectAction, getOperations, getAuditLog, getAlerts,
-//   getEvents, getRunbooks, getRunbookExecutions, executeRunbook,
-//   getDiscovery, getSIDLines, getConnectors, getHASystems, getAnalytics,
-//   getRunbookAnalytics, getBackgroundJobs, getTransports, getCertificates,
-//   getPlans, getApiKeys, chat
+// Modes:
+//   - PRODUCTION (config.features.demoMode=false):
+//     Calls real API endpoints. All data comes from PostgreSQL via Prisma.
+//     If an API call fails, some functions gracefully fallback to mock data
+//     (logged as warnings). This fallback is EXPLICIT and TRACEABLE.
 //
-// BACKEND-DRIVEN (uses real Host model metrics from metrics pipeline):
-//   getServerMetrics — DB-specific metrics (dbInfo) remain derived from system metadata
-//   getSystemInstances — CPU/mem/disk from real Host model (updated by MetricsPipelineService)
-//   getSystemHosts — CPU/mem/disk from real Host model (updated by MetricsPipelineService)
-//   transformSystem — CPU/mem/disk aggregated from real Host data; MTTR/MTBF derived from healthScore
+//   - DEMO (config.features.demoMode=true):
+//     Returns mock data with simulated latency. No backend required.
+//     Controlled by config.features.demoMode flag.
 //
-// BACKEND-DRIVEN (derived from real system health/host metrics):
-//   getSAPMonitoring — SAP monitoring (sm12/sm13/sm37/sm21) derived from healthScore + host CPU
-//   getMetricHistory — Time-series from real host metrics via api.getHostMetrics()
+// Data Source Classification (updated 2026-03-17):
 //
-// BACKEND-DRIVEN (previously stubs, now connected):
-//   getLandscapeValidation, getAIUseCases, getAIResponses,
-//   getHAPrereqs, getHAOpsHistory, getHADrivers, getLicenses
-//   (fallback to mock data if API call fails)
+//   REAL (backend API, database-driven):
+//     Systems CRUD, Alerts CRUD, Events, Approvals, Operations,
+//     Runbooks, Users, Audit Log, Connectors, Metrics Pipeline,
+//     Health Snapshots, Breaches, Dashboard aggregation, Analytics,
+//     Background Jobs, Transports, Certificates, Plans, API Keys, Chat
+//
+//   DERIVED (computed from real data in transform functions):
+//     CPU/Memory/Disk usage — aggregated from real Host model metrics
+//     MTTR/MTBF — derived from healthScore
+//     SAP Monitoring (SM12/SM13/SM37/SM21) — derived from healthScore + CPU
+//     DB-specific metrics — derived from system metadata (sapProduct, dbType)
+//
+//   FALLBACK-TO-MOCK (real API with graceful degradation):
+//     Landscape Validation, AI Use Cases, AI Responses,
+//     HA Prerequisites, HA Ops History, HA Drivers, Licenses
+//     → Calls real API first; falls back to mock if endpoint fails
+//     → Fallback is logged with createLogger('DataService')
+//
+//   SIMULATED (always mock, regardless of mode):
+//     None — all functions attempt real API first when not in demoMode
+//
 // ══════════════════════════════════════════════════════════════
 
 import config from '../config';
