@@ -1,7 +1,8 @@
-# DEPRECATED — Legacy Lambda Tests
+# Legacy Tests — REMOVED
 
-These tests were written for the **original serverless Lambda functions** (classifier, circuit breaker, HA drivers, etc.).
+All 23 legacy test files were removed. They referenced deleted serverless Lambda functions (commit b19cb97).
 
-The active test suite is in **`apps/api/src/**/*.spec.ts`** using Jest + NestJS testing utilities.
-
-These test files are kept for reference but are **not maintained or executed**. Run `npm test` inside `apps/api/` for current tests.
+Active test suites:
+- Backend: `apps/api/src/**/*.spec.ts` (Jest, 49 suites, 392 tests)
+- Frontend: `frontend/src/**/*.test.*` (Vitest, 55 suites, 690 tests)
+- E2E: `e2e/**/*.spec.ts` (Playwright)
