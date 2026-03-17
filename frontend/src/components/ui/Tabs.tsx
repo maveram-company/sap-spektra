@@ -1,9 +1,22 @@
-import { useRef, useCallback } from 'react';
+import { useRef, useCallback, type KeyboardEvent } from 'react';
 
-export default function Tabs({ tabs, activeTab, onChange, className = '' }) {
-  const tabsRef = useRef([]);
+interface Tab {
+  value: string;
+  label: string;
+  count?: number;
+}
 
-  const handleKeyDown = useCallback((e) => {
+interface TabsProps {
+  tabs: Tab[];
+  activeTab: string;
+  onChange: (value: string) => void;
+  className?: string;
+}
+
+export default function Tabs({ tabs, activeTab, onChange, className = '' }: TabsProps) {
+  const tabsRef = useRef<(HTMLButtonElement | null)[]>([]);
+
+  const handleKeyDown = useCallback((e: KeyboardEvent) => {
     const currentIndex = tabs.findIndex(t => t.value === activeTab);
     let nextIndex = -1;
 

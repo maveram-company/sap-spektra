@@ -92,7 +92,7 @@ import {
   mockApiKeys,
 } from '../../lib/mockData';
 
-const mockedApi = api as Record<string, ReturnType<typeof vi.fn>>;
+const mockedApi = api as any as Record<string, ReturnType<typeof vi.fn>>;
 
 function setDemoMode(value: boolean) {
   (config as any).features.demoMode = value;
@@ -612,7 +612,7 @@ describe('dataService', () => {
     it('executeRunbook returns simulated result in demo mode', async () => {
       const promise = dataService.executeRunbook('RB-1', 'SYS-1', false);
       vi.advanceTimersByTime(2000);
-      const result = await promise;
+      const result = await promise as any;
       expect(result.result).toBe('RUNNING');
       expect(result.runbookId).toBe('RB-1');
       expect(result.systemId).toBe('SYS-1');
@@ -621,7 +621,7 @@ describe('dataService', () => {
     it('executeRunbook returns dry-run result in demo mode', async () => {
       const promise = dataService.executeRunbook('RB-1', 'SYS-1', true);
       vi.advanceTimersByTime(2000);
-      const result = await promise;
+      const result = await promise as any;
       expect(result.dryRun).toBe(true);
       expect(result.runbookId).toBe('RB-1');
     });

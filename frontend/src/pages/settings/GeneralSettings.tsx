@@ -12,9 +12,9 @@ import Table, { TableHeader, TableBody, TableRow, TableHead, TableCell } from '.
 export default function GeneralSettings() {
   const { organization, updateSettings } = useTenant();
   const [thresholds, setThresholds] = useState([]);
-  const [escalationPolicy, setEscalationPolicy] = useState([]);
-  const [maintenanceWindows, setMaintenanceWindows] = useState([]);
-  const [apiKeys, setApiKeys] = useState([]);
+  const [escalationPolicy, setEscalationPolicy] = useState<any[]>([]);
+  const [maintenanceWindows, setMaintenanceWindows] = useState<any[]>([]);
+  const [apiKeys, setApiKeys] = useState<any[]>([]);
   const [saving, setSaving] = useState(false);
   const [saveError, setSaveError] = useState(null);
   const [nameError, setNameError] = useState('');
@@ -25,7 +25,7 @@ export default function GeneralSettings() {
       dataService.getEscalationPolicy(),
       dataService.getMaintenanceWindows(),
       dataService.getApiKeys(),
-    ]).then(([t, e, m, a]) => {
+    ]).then(([t, e, m, a]: any[]) => {
       setThresholds(t);
       setEscalationPolicy(e);
       setMaintenanceWindows(m);

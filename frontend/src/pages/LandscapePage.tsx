@@ -28,7 +28,7 @@ const envColors = {
 };
 
 export default function LandscapePage() {
-  const [discovery, setDiscovery] = useState([]);
+  const [discovery, setDiscovery] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
 
@@ -38,7 +38,7 @@ export default function LandscapePage() {
 
   // Agrupar instancias por SID para la topología
   const sidGroups = useMemo(() => {
-    const groups = {};
+    const groups: Record<string, any> = {};
     discovery.forEach((inst) => {
       if (!groups[inst.sid]) {
         groups[inst.sid] = {

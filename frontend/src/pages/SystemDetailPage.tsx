@@ -32,7 +32,7 @@ function colorDot(color) {
   return <span className={`inline-block w-2.5 h-2.5 rounded-full ${bg}`} />;
 }
 
-function MetricCard({ label, value, sub, warn, danger }) {
+function MetricCard({ label, value, sub, warn, danger }: { label: any; value: any; sub?: any; warn?: any; danger?: any }) {
   let textColor = 'text-text-primary';
   if (danger) textColor = 'text-danger-600';
   else if (warn) textColor = 'text-warning-600';
@@ -59,7 +59,7 @@ function pctColor(val, warnAt = 70, dangerAt = 85) {
 
 function calcUptime(startedAt) {
   if (!startedAt) return 'N/A';
-  const diffMs = new Date() - new Date(startedAt);
+  const diffMs = (new Date() as any) - (new Date(startedAt) as any);
   if (diffMs <= 0) return '< 1m';
   const days = Math.floor(diffMs / 86400000);
   const hours = Math.floor((diffMs % 86400000) / 3600000);
@@ -363,7 +363,7 @@ export default function SystemDetailPage() {
               <span className="text-xs text-text-tertiary">{((sm.respDist?.Dialog ?? 0) + (sm.respDist?.Update ?? 0) + (sm.respDist?.Background ?? 0) + (sm.respDist?.RFC ?? 0)).toLocaleString()} dialog steps</span>
             </CardHeader>
             <div className="space-y-3">
-              {Object.entries(sm.respDist ?? {}).map(([key, val]) => {
+              {Object.entries(sm.respDist ?? {}).map(([key, val]: [string, any]) => {
                 const rdTotal = (sm.respDist?.Dialog ?? 0) + (sm.respDist?.Update ?? 0) + (sm.respDist?.Background ?? 0) + (sm.respDist?.RFC ?? 0);
                 const pct = rdTotal > 0 ? ((val / rdTotal) * 100).toFixed(1) : '0.0';
                 const colors = {

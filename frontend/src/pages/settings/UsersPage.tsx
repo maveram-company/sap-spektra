@@ -32,9 +32,9 @@ export default function UsersPage() {
   const [inviteForm, setInviteForm] = useState({ email: '', role: 'viewer', name: '' });
   const [sending, setSending] = useState(false);
   const [deleteConfirm, setDeleteConfirm] = useState(null);
-  const [fieldErrors, setFieldErrors] = useState({});
+  const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
   const [actionError, setActionError] = useState(null);
-  const deleteTimerRef = useRef<ReturnType<typeof setTimeout>>();
+  const deleteTimerRef = useRef<ReturnType<typeof setTimeout>>(undefined);
   const { organization } = useTenant();
 
   useEffect(() => {
@@ -65,7 +65,7 @@ export default function UsersPage() {
   };
 
   const validateForm = (form) => {
-    const errors = {};
+    const errors: Record<string, string> = {};
     const emailErr = validateField('email', form.email);
     if (emailErr) errors.email = emailErr;
     const nameErr = validateField('name', form.name);

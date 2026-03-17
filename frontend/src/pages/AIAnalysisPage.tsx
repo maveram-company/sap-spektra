@@ -106,8 +106,8 @@ export default function AIAnalysisPage() {
 
   useEffect(() => {
     Promise.all([dataService.getAIUseCases(), dataService.getAIResponses()]).then(([uc, resp]) => {
-      setAiUseCases(uc);
-      setAiResponses(resp);
+      setAiUseCases(uc as any[]);
+      setAiResponses(resp as any);
       setLoading(false);
     }).catch((err) => {
       log.warn('Fetch failed', { error: err.message });

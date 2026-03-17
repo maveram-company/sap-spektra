@@ -171,7 +171,7 @@ export default function RunbooksPage() {
     stopPolling();
     pollingRef.current = setInterval(async () => {
       try {
-        const detail = await dataService.getExecutionDetail(executionId);
+        const detail = await dataService.getExecutionDetail(executionId) as any;
         if (!detail) return;
 
         setExecutionProgress({
@@ -241,7 +241,7 @@ export default function RunbooksPage() {
 
     try {
       // Paso 1: validar compatibilidad via dry-run
-      const check = await dataService.executeRunbook(selectedRunbook.id, selectedSystemId, true);
+      const check = await dataService.executeRunbook(selectedRunbook.id, selectedSystemId, true) as any;
       if (check.compatible === false) {
         setExecutionResult({
           result: 'BLOCKED',
@@ -253,7 +253,7 @@ export default function RunbooksPage() {
       }
 
       // Paso 2: ejecutar realmente — el backend responde inmediatamente con RUNNING
-      const result = await dataService.executeRunbook(selectedRunbook.id, selectedSystemId, false);
+      const result = await dataService.executeRunbook(selectedRunbook.id, selectedSystemId, false) as any;
 
       if (result.id) {
         // Inicializar step results desde la definicion del runbook

@@ -5,19 +5,24 @@ const log = createLogger('API');
 
 const getApiUrl = () => import.meta.env.VITE_API_URL || 'http://localhost:3001/api';
 
+interface FetchOptions extends Omit<RequestInit, 'body'> {
+  body?: unknown;
+}
+
 export function useApi() {
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState<string | null>(null);
 
-  const request = useCallback(async (endpoint, options = {}) => {
+  const request = useCallback(async (endpoint: string, options: FetchOptions = {}) => {
     setLoading(true);
     setError(null);
     try {
       const result = await fetchApi(endpoint, options);
       return result;
-    } catch (err) {
-      log.warn('Request failed', { error: err.message });
-      setError(err.message);
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : 'Unknown error';
+      log.warn('Request failed', { error: message });
+      setError(message);
       throw err;
     } finally {
       setLoading(false);
@@ -27,11 +32,16 @@ export function useApi() {
   return { request, loading, error, setError };
 }
 
+interface AlertFilters { status?: string; level?: string; systemId?: string }
+interface EventFilters { level?: string; source?: string; systemId?: string; limit?: number }
+interface OperationFilters { status?: string; type?: string; systemId?: string }
+interface AuditFilters { severity?: string; action?: string; limit?: number }
+
 // Pre-built API functions — aligned with NestJS backend routes
 export const api = {
   // Auth
-  login: (email, password) => fetchApi('/auth/login', { method: 'POST', body: { email, password } }),
-  register: (data) => fetchApi('/auth/register', { method: 'POST', body: data }),
+  login: (email: string, password: string) => fetchApi('/auth/login', { method: 'POST', body: { email, password } }),
+  register: (data: unknown) => fetchApi('/auth/register', { method: 'POST', body: data }),
   me: () => fetchApi('/auth/me'),
 
   // Health
@@ -42,24 +52,24 @@ export const api = {
 
   // Systems
   getSystems: () => fetchApi('/systems'),
-  getSystemById: (id) => fetchApi(`/systems/${id}`),
+  getSystemById: (id: string) => fetchApi(`/systems/${id}`),
   getSystemHealthSummary: () => fetchApi('/systems/health-summary'),
-  createSystem: (data) => fetchApi('/systems', { method: 'POST', body: data }),
-  updateSystem: (id, data) => fetchApi(`/systems/${id}`, { method: 'PATCH', body: data }),
-  deleteSystem: (id) => fetchApi(`/systems/${id}`, { method: 'DELETE' }),
+  createSystem: (data: unknown) => fetchApi('/systems', { method: 'POST', body: data }),
+  updateSystem: (id: string, data: unknown) => fetchApi(`/systems/${id}`, { method: 'PATCH', body: data }),
+  deleteSystem: (id: string) => fetchApi(`/systems/${id}`, { method: 'DELETE' }),
 
   // Metrics & Monitoring
-  getHostMetrics: (hostId, hours) => fetchApi(`/metrics/hosts/${hostId}?hours=${hours || 24}`),
-  getSystemHostMetrics: (systemId, hours) => fetchApi(`/metrics/systems/${systemId}/hosts?hours=${hours || 24}`),
-  getHealthSnapshots: (systemId, hours) => fetchApi(`/metrics/systems/${systemId}/health?hours=${hours || 24}`),
-  getBreaches: (systemId) => fetchApi(`/metrics/breaches${systemId ? `?systemId=${systemId}` : ''}`),
-  getDependencies: (systemId) => fetchApi(`/metrics/systems/${systemId}/dependencies`),
-  getHosts: (systemId) => fetchApi(`/metrics/systems/${systemId}/hosts-detail`),
-  getComponents: (systemId) => fetchApi(`/metrics/systems/${systemId}/components`),
-  getSystemMeta: (systemId) => fetchApi(`/metrics/system-meta${systemId ? `?systemId=${systemId}` : ''}`),
+  getHostMetrics: (hostId: string, hours?: number) => fetchApi(`/metrics/hosts/${hostId}?hours=${hours || 24}`),
+  getSystemHostMetrics: (systemId: string, hours?: number) => fetchApi(`/metrics/systems/${systemId}/hosts?hours=${hours || 24}`),
+  getHealthSnapshots: (systemId: string, hours?: number) => fetchApi(`/metrics/systems/${systemId}/health?hours=${hours || 24}`),
+  getBreaches: (systemId?: string) => fetchApi(`/metrics/breaches${systemId ? `?systemId=${systemId}` : ''}`),
+  getDependencies: (systemId: string) => fetchApi(`/metrics/systems/${systemId}/dependencies`),
+  getHosts: (systemId: string) => fetchApi(`/metrics/systems/${systemId}/hosts-detail`),
+  getComponents: (systemId: string) => fetchApi(`/metrics/systems/${systemId}/components`),
+  getSystemMeta: (systemId?: string) => fetchApi(`/metrics/system-meta${systemId ? `?systemId=${systemId}` : ''}`),
 
   // Alerts
-  getAlerts: (filters) => {
+  getAlerts: (filters?: AlertFilters) => {
     const params = new URLSearchParams();
     if (filters?.status) params.set('status', filters.status);
     if (filters?.level) params.set('level', filters.level);
@@ -68,11 +78,11 @@ export const api = {
     return fetchApi(`/alerts${qs ? `?${qs}` : ''}`);
   },
   getAlertStats: () => fetchApi('/alerts/stats'),
-  acknowledgeAlert: (id) => fetchApi(`/alerts/${id}/acknowledge`, { method: 'PATCH' }),
-  resolveAlert: (id, data) => fetchApi(`/alerts/${id}/resolve`, { method: 'PATCH', body: data }),
+  acknowledgeAlert: (id: string) => fetchApi(`/alerts/${id}/acknowledge`, { method: 'PATCH' }),
+  resolveAlert: (id: string, data?: unknown) => fetchApi(`/alerts/${id}/resolve`, { method: 'PATCH', body: data }),
 
   // Events
-  getEvents: (filters) => {
+  getEvents: (filters?: EventFilters) => {
     const params = new URLSearchParams();
     if (filters?.level) params.set('level', filters.level);
     if (filters?.source) params.set('source', filters.source);
@@ -83,21 +93,21 @@ export const api = {
   },
 
   // Approvals
-  getApprovals: (status) => fetchApi(`/approvals${status ? `?status=${status}` : ''}`),
-  getApprovalById: (id) => fetchApi(`/approvals/${id}`),
-  createApproval: (data) => fetchApi('/approvals', { method: 'POST', body: data }),
-  approveAction: (id) => fetchApi(`/approvals/${id}/approve`, { method: 'PATCH' }),
-  rejectAction: (id) => fetchApi(`/approvals/${id}/reject`, { method: 'PATCH' }),
+  getApprovals: (status?: string) => fetchApi(`/approvals${status ? `?status=${status}` : ''}`),
+  getApprovalById: (id: string) => fetchApi(`/approvals/${id}`),
+  createApproval: (data: unknown) => fetchApi('/approvals', { method: 'POST', body: data }),
+  approveAction: (id: string) => fetchApi(`/approvals/${id}/approve`, { method: 'PATCH' }),
+  rejectAction: (id: string) => fetchApi(`/approvals/${id}/reject`, { method: 'PATCH' }),
 
   // Runbooks
   getRunbooks: () => fetchApi('/runbooks'),
-  getRunbookById: (id) => fetchApi(`/runbooks/${id}`),
+  getRunbookById: (id: string) => fetchApi(`/runbooks/${id}`),
   getRunbookExecutions: () => fetchApi('/runbooks/executions'),
-  getExecutionDetail: (executionId) => fetchApi(`/runbooks/executions/${executionId}`),
-  executeRunbook: (id, systemId, dryRun = false) => fetchApi(`/runbooks/${id}/execute`, { method: 'POST', body: { systemId, dryRun } }),
+  getExecutionDetail: (executionId: string) => fetchApi(`/runbooks/executions/${executionId}`),
+  executeRunbook: (id: string, systemId: string, dryRun = false) => fetchApi(`/runbooks/${id}/execute`, { method: 'POST', body: { systemId, dryRun } }),
 
   // Operations
-  getOperations: (filters) => {
+  getOperations: (filters?: OperationFilters) => {
     const params = new URLSearchParams();
     if (filters?.status) params.set('status', filters.status);
     if (filters?.type) params.set('type', filters.type);
@@ -105,19 +115,19 @@ export const api = {
     const qs = params.toString();
     return fetchApi(`/operations${qs ? `?${qs}` : ''}`);
   },
-  createOperation: (data) => fetchApi('/operations', { method: 'POST', body: data }),
-  updateOperationStatus: (id, status) => fetchApi(`/operations/${id}/status`, { method: 'PATCH', body: { status } }),
-  getJobs: (systemId) => fetchApi(`/operations/jobs${systemId ? `?systemId=${systemId}` : ''}`),
-  getTransports: (systemId) => fetchApi(`/operations/transports${systemId ? `?systemId=${systemId}` : ''}`),
-  getCertificates: (systemId) => fetchApi(`/operations/certificates${systemId ? `?systemId=${systemId}` : ''}`),
+  createOperation: (data: unknown) => fetchApi('/operations', { method: 'POST', body: data }),
+  updateOperationStatus: (id: string, status: string) => fetchApi(`/operations/${id}/status`, { method: 'PATCH', body: { status } }),
+  getJobs: (systemId?: string) => fetchApi(`/operations/jobs${systemId ? `?systemId=${systemId}` : ''}`),
+  getTransports: (systemId?: string) => fetchApi(`/operations/transports${systemId ? `?systemId=${systemId}` : ''}`),
+  getCertificates: (systemId?: string) => fetchApi(`/operations/certificates${systemId ? `?systemId=${systemId}` : ''}`),
 
   // HA/DR
   getHAConfigs: () => fetchApi('/ha'),
-  getHAConfig: (systemId) => fetchApi(`/ha/${systemId}`),
-  triggerFailover: (systemId) => fetchApi(`/ha/${systemId}/failover`, { method: 'PATCH' }),
-  getHAPrereqs: (systemId) => fetchApi(`/ha/${systemId}/prereqs`),
-  getHAOpsHistory: (systemId) => fetchApi(`/ha/${systemId}/ops-history`),
-  getHADrivers: (systemId) => fetchApi(`/ha/${systemId}/drivers`),
+  getHAConfig: (systemId: string) => fetchApi(`/ha/${systemId}`),
+  triggerFailover: (systemId: string) => fetchApi(`/ha/${systemId}/failover`, { method: 'PATCH' }),
+  getHAPrereqs: (systemId: string) => fetchApi(`/ha/${systemId}/prereqs`),
+  getHAOpsHistory: (systemId: string) => fetchApi(`/ha/${systemId}/ops-history`),
+  getHADrivers: (systemId: string) => fetchApi(`/ha/${systemId}/drivers`),
 
   // Landscape
   getLandscapeValidation: () => fetchApi('/landscape/validation'),
@@ -131,41 +141,41 @@ export const api = {
 
   // Connectors
   getConnectors: () => fetchApi('/connectors'),
-  getConnectorById: (id) => fetchApi(`/connectors/${id}`),
+  getConnectorById: (id: string) => fetchApi(`/connectors/${id}`),
 
   // Users
   getUsers: () => fetchApi('/users'),
-  getUserById: (id) => fetchApi(`/users/${id}`),
-  createUser: (data) => fetchApi('/users', { method: 'POST', body: data }),
-  updateUser: (id, data) => fetchApi(`/users/${id}`, { method: 'PATCH', body: data }),
-  deleteUser: (id) => fetchApi(`/users/${id}`, { method: 'DELETE' }),
+  getUserById: (id: string) => fetchApi(`/users/${id}`),
+  createUser: (data: unknown) => fetchApi('/users', { method: 'POST', body: data }),
+  updateUser: (id: string, data: unknown) => fetchApi(`/users/${id}`, { method: 'PATCH', body: data }),
+  deleteUser: (id: string) => fetchApi(`/users/${id}`, { method: 'DELETE' }),
 
   // Tenant
   getTenant: () => fetchApi('/tenant'),
-  updateTenant: (data) => fetchApi('/tenant', { method: 'PATCH', body: data }),
+  updateTenant: (data: unknown) => fetchApi('/tenant', { method: 'PATCH', body: data }),
   getTenantStats: () => fetchApi('/tenant/stats'),
 
   // Analytics
   getAnalyticsOverview: () => fetchApi('/analytics/overview'),
   getRunbookAnalytics: () => fetchApi('/analytics/runbooks'),
-  getSystemTrends: (systemId, days) => fetchApi(`/analytics/systems/${systemId}/trends?days=${days || 7}`),
+  getSystemTrends: (systemId: string, days?: number) => fetchApi(`/analytics/systems/${systemId}/trends?days=${days || 7}`),
 
   // Chat / AI
-  chat: (message, context) => fetchApi('/chat', { method: 'POST', body: { message, context } }),
+  chat: (message: string, context?: unknown) => fetchApi('/chat', { method: 'POST', body: { message, context } }),
 
   // Plans
   getPlans: () => fetchApi('/plans'),
-  getPlanByTier: (tier) => fetchApi(`/plans/${tier}`),
+  getPlanByTier: (tier: string) => fetchApi(`/plans/${tier}`),
 
   // Settings
   getSettings: () => fetchApi('/settings'),
-  updateSettings: (data) => fetchApi('/settings', { method: 'PATCH', body: data }),
+  updateSettings: (data: unknown) => fetchApi('/settings', { method: 'PATCH', body: data }),
   getApiKeys: () => fetchApi('/settings/api-keys'),
-  createApiKey: (name) => fetchApi('/settings/api-keys', { method: 'POST', body: { name } }),
-  revokeApiKey: (id) => fetchApi(`/settings/api-keys/${id}/revoke`, { method: 'PATCH' }),
+  createApiKey: (name: string) => fetchApi('/settings/api-keys', { method: 'POST', body: { name } }),
+  revokeApiKey: (id: string) => fetchApi(`/settings/api-keys/${id}/revoke`, { method: 'PATCH' }),
 
   // Audit
-  getAuditLog: (filters) => {
+  getAuditLog: (filters?: AuditFilters) => {
     const params = new URLSearchParams();
     if (filters?.severity) params.set('severity', filters.severity);
     if (filters?.action) params.set('action', filters.action);
@@ -175,11 +185,11 @@ export const api = {
   },
 };
 
-async function fetchApi(endpoint, options = {}) {
+async function fetchApi(endpoint: string, options: FetchOptions = {}): Promise<unknown> {
   const baseUrl = getApiUrl();
   const url = `${baseUrl}${endpoint}`;
   const stored = localStorage.getItem('sap-spektra-auth');
-  let auth = null;
+  let auth: { token?: string } | null = null;
   if (stored) {
     try { auth = JSON.parse(stored); } catch { localStorage.removeItem('sap-spektra-auth'); }
   }
@@ -189,7 +199,7 @@ async function fetchApi(endpoint, options = {}) {
     headers: {
       'Content-Type': 'application/json',
       ...(auth?.token ? { Authorization: `Bearer ${auth.token}` } : {}),
-      ...(options.headers || {}),
+      ...(options.headers as Record<string, string> || {}),
     },
     body: options.body ? (typeof options.body === 'string' ? options.body : JSON.stringify(options.body)) : undefined,
   });

@@ -1,6 +1,14 @@
-import { forwardRef, useId } from 'react';
+import { forwardRef, useId, type InputHTMLAttributes, type ComponentType } from 'react';
 
-const Input = forwardRef(({ label, error, hint, icon: Icon, className = '', id: externalId, ...props }, ref) => {
+interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
+  label?: string;
+  error?: string;
+  hint?: string;
+  icon?: ComponentType<{ size: number }>;
+  className?: string;
+}
+
+const Input = forwardRef<HTMLInputElement, InputProps>(({ label, error, hint, icon: Icon, className = '', id: externalId, ...props }, ref) => {
   const autoId = useId();
   const inputId = externalId || autoId;
   const errorId = `${inputId}-error`;

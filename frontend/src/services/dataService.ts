@@ -400,7 +400,7 @@ function transformAnalytics(apiData) {
   // Las paginas AnalyticsPage y SLAPage esperan: { totalExecutions, successRate, failedCount, avgPerDay, topRunbooks, dailyTrend, alertStats, slaMetrics }
 
   const alertsByLevel = apiData.alertsByLevel || {};
-  const totalAlerts = Object.values(alertsByLevel).reduce((s, v) => s + (v || 0), 0);
+  const totalAlerts = Object.values(alertsByLevel).reduce((s: any, v: any) => s + (v || 0), 0);
 
   return {
     totalExecutions: apiData.totalExecutions || 0,
@@ -430,7 +430,7 @@ export const dataService = {
   // ── Sistemas SAP ──
   getSystems: async () => {
     if (isDemoMode()) { await delay(); return mockSystems; }
-    const systems = await api.getSystems();
+    const systems = await api.getSystems() as any[];
     return systems.map(transformSystem);
   },
 
@@ -452,7 +452,7 @@ export const dataService = {
         ? mockBreaches.filter(b => b.systemId === id).slice(0, limit)
         : mockBreaches.slice(0, limit);
     }
-    const breaches = await api.getBreaches(id);
+    const breaches = await api.getBreaches(id) as any[];
     return breaches.map(b => ({
       ...b,
       sid: b.system?.sid || '',
@@ -472,8 +472,8 @@ export const dataService = {
     if (isDemoMode()) { await delay(300); return mockServerMetrics[id] || null; }
     try {
       const [hosts, sys] = await Promise.all([
-        api.getHosts(id),
-        api.getSystemById(id),
+        api.getHosts(id) as Promise<any[]>,
+        api.getSystemById(id) as Promise<any>,
       ]);
       if (!hosts || !hosts.length) return null;
       const h = hosts[0];
@@ -570,7 +570,7 @@ export const dataService = {
   getServerDeps: async (id) => {
     if (isDemoMode()) { await delay(300); return mockServerDeps[id] || null; }
     try {
-      const deps = await api.getDependencies(id);
+      const deps = await api.getDependencies(id) as any[];
       return (deps || []).map(d => ({
         name: d.name,
         status: d.status,
@@ -586,9 +586,9 @@ export const dataService = {
     if (isDemoMode()) { await delay(300); return mockSystemInstances[id] || []; }
     try {
       const [components, hosts, sys] = await Promise.all([
-        api.getComponents(id),
-        api.getHosts(id),
-        api.getSystemById(id),
+        api.getComponents(id) as Promise<any[]>,
+        api.getHosts(id) as Promise<any[]>,
+        api.getSystemById(id) as Promise<any>,
       ]);
       // RISE_RESTRICTED systems have no OS-level metrics
       const isRise = sys?.monitoringCapabilityProfile === 'RISE_RESTRICTED' || sys?.supportsOsMetrics === false;
@@ -640,15 +640,15 @@ export const dataService = {
     if (isDemoMode()) { await delay(300); return mockMetricHistory[hostname] || []; }
     try {
       // Resolve hostname to hostId by searching system hosts
-      const systems = await api.getSystems();
+      const systems = await api.getSystems() as any[];
       let hostId = null;
       for (const sys of systems) {
-        const hosts = await api.getHosts(sys.id);
+        const hosts = await api.getHosts(sys.id) as any[];
         const match = hosts?.find(h => h.hostname === hostname);
         if (match) { hostId = match.id; break; }
       }
       if (!hostId) return [];
-      const metrics = await api.getHostMetrics(hostId, 6);
+      const metrics = await api.getHostMetrics(hostId, 6) as any[];
       if (!metrics || !metrics.length) return [];
       return metrics.map(m => ({
         cpu: Math.round(m.cpu ?? 0),
@@ -665,8 +665,8 @@ export const dataService = {
     if (isDemoMode()) { await delay(200); return getSystemHosts(id); }
     try {
       const [hosts, sys] = await Promise.all([
-        api.getHosts(id),
-        api.getSystemById(id),
+        api.getHosts(id) as Promise<any[]>,
+        api.getSystemById(id) as Promise<any>,
       ]);
       // RISE_RESTRICTED systems have no OS-level metrics
       const isRise = sys?.monitoringCapabilityProfile === 'RISE_RESTRICTED' || sys?.supportsOsMetrics === false;
@@ -699,7 +699,7 @@ export const dataService = {
     }
   },
 
-  getSystemMeta: async (id) => {
+  getSystemMeta: async (id?) => {
     if (isDemoMode()) { await delay(200); return id ? (mockSystemMeta[id] || null) : mockSystemMeta; }
     if (id) return api.getSystemMeta(id);
     // Sin ID: retornar mapa { systemId: meta } para ComparisonPage
@@ -720,8 +720,8 @@ export const dataService = {
     if (isDemoMode()) { await delay(300); return mockSAPMonitoring[id] || null; }
     try {
       const [sys, hosts] = await Promise.all([
-        api.getSystemById(id),
-        api.getHosts(id),
+        api.getSystemById(id) as Promise<any>,
+        api.getHosts(id) as Promise<any[]>,
       ]);
       if (!sys) return null;
       const isJava = sys.sapStackType === 'JAVA' || sys.sapStackType === 'DUAL_STACK';
@@ -825,7 +825,7 @@ export const dataService = {
   // ── Usuarios ──
   getUsers: async () => {
     if (isDemoMode()) { await delay(); return mockUsers; }
-    const users = await api.getUsers();
+    const users = await api.getUsers() as any[];
     return users.map(u => ({
       ...u,
       lastLogin: u.lastLoginAt || u.lastLogin,
@@ -835,12 +835,12 @@ export const dataService = {
   },
 
   // ── Aprobaciones ──
-  getApprovals: async (status) => {
+  getApprovals: async (status?) => {
     if (isDemoMode()) {
       await delay();
       return status ? mockApprovals.filter(a => a.status === status) : mockApprovals;
     }
-    const approvals = await api.getApprovals(status);
+    const approvals = await api.getApprovals(status) as any[];
     return approvals.map(transformApproval);
   },
 
@@ -857,41 +857,41 @@ export const dataService = {
   // ── Operaciones ──
   getOperations: async () => {
     if (isDemoMode()) { await delay(); return mockOperations; }
-    const operations = await api.getOperations();
+    const operations = await api.getOperations() as any[];
     return operations.map(transformOperation);
   },
 
   // ── Audit Log ──
   getAuditLog: async () => {
     if (isDemoMode()) { await delay(); return mockAuditLog; }
-    const entries = await api.getAuditLog();
+    const entries = await api.getAuditLog() as any[];
     return entries.map(transformAudit);
   },
 
   // ── Alertas ──
-  getAlerts: async () => {
+  getAlerts: async (_filters?: any) => {
     if (isDemoMode()) { await delay(); return mockAlerts; }
-    const alerts = await api.getAlerts();
+    const alerts = await api.getAlerts(_filters) as any[];
     return alerts.map(transformAlert);
   },
 
   // ── Eventos ──
   getEvents: async () => {
     if (isDemoMode()) { await delay(); return mockEvents; }
-    const events = await api.getEvents();
+    const events = await api.getEvents() as any[];
     return events.map(transformEvent);
   },
 
   // ── Runbooks ──
   getRunbooks: async () => {
     if (isDemoMode()) { await delay(); return mockRunbooks; }
-    const runbooks = await api.getRunbooks();
+    const runbooks = await api.getRunbooks() as any[];
     return runbooks.map(transformRunbook);
   },
 
   getRunbookExecutions: async () => {
     if (isDemoMode()) { await delay(300); return mockRunbookExecutions; }
-    const execs = await api.getRunbookExecutions();
+    const execs = await api.getRunbookExecutions() as any[];
     return execs.map(transformRunbookExecution);
   },
 
@@ -920,9 +920,9 @@ export const dataService = {
   getSIDLines: async () => {
     if (isDemoMode()) { await delay(300); return mockSIDLines; }
     try {
-      const systems = await api.getSystems();
+      const systems = await api.getSystems() as any[];
       // Agrupar por producto/familia como SID lines
-      const byProduct = {};
+      const byProduct: Record<string, any> = {};
       for (const sys of systems) {
         // Simplificar nombre del producto para la linea
         let lineName = 'Other';
@@ -973,28 +973,28 @@ export const dataService = {
   // ── Conectores ──
   getConnectors: async () => {
     if (isDemoMode()) { await delay(); return mockConnectors; }
-    const connectors = await api.getConnectors();
+    const connectors = await api.getConnectors() as any[];
     return connectors.map(transformConnector);
   },
 
   // ── HA / DR ──
   getHASystems: async () => {
     if (isDemoMode()) { await delay(); return mockHASystems; }
-    const configs = await api.getHAConfigs();
+    const configs = await api.getHAConfigs() as any[];
     return configs.map(transformHAConfig);
   },
 
-  getHAPrereqs: async (systemId) => {
+  getHAPrereqs: async (systemId?) => {
     if (isDemoMode()) { await delay(300); return mockHAPrereqs; }
     try { return await api.getHAPrereqs(systemId); } catch (err) { log.error('Failed to fetch HA prereqs', { systemId, error: (err as Error).message }); return mockHAPrereqs; }
   },
 
-  getHAOpsHistory: async (systemId) => {
+  getHAOpsHistory: async (systemId?) => {
     if (isDemoMode()) { await delay(300); return mockHAOpsHistory; }
     try { return await api.getHAOpsHistory(systemId); } catch (err) { log.error('Failed to fetch HA ops history', { systemId, error: (err as Error).message }); return mockHAOpsHistory; }
   },
 
-  getHADrivers: async (systemId) => {
+  getHADrivers: async (systemId?) => {
     if (isDemoMode()) { await delay(300); return mockHADrivers; }
     try { return await api.getHADrivers(systemId); } catch (err) { log.error('Failed to fetch HA drivers', { systemId, error: (err as Error).message }); return mockHADrivers; }
   },
@@ -1005,12 +1005,12 @@ export const dataService = {
     try {
       // Combinar datos de overview y runbook analytics
       const [overview, rbAnalytics] = await Promise.all([
-        api.getAnalyticsOverview(),
-        api.getRunbookAnalytics(),
+        api.getAnalyticsOverview() as Promise<any>,
+        api.getRunbookAnalytics() as Promise<any>,
       ]);
 
       // Construir topRunbooks desde rbAnalytics.byRunbook
-      const topRunbooks = Object.entries(rbAnalytics.byRunbook || {}).map(([name, stats]) => ({
+      const topRunbooks = Object.entries(rbAnalytics.byRunbook || {}).map(([name, stats]: [string, any]) => ({
         id: name,
         name,
         executions: stats.total,
@@ -1063,21 +1063,21 @@ export const dataService = {
   // ── Background Jobs ──
   getBackgroundJobs: async () => {
     if (isDemoMode()) { await delay(); return mockBackgroundJobs; }
-    const jobs = await api.getJobs();
+    const jobs = await api.getJobs() as any[];
     return jobs.map(transformJob);
   },
 
   // ── Transports ──
   getTransports: async () => {
     if (isDemoMode()) { await delay(); return mockTransports; }
-    const transports = await api.getTransports();
+    const transports = await api.getTransports() as any[];
     return transports.map(transformTransport);
   },
 
   // ── Certificados y Licencias ──
   getCertificates: async () => {
     if (isDemoMode()) { await delay(); return mockCertificates; }
-    const certs = await api.getCertificates();
+    const certs = await api.getCertificates() as any[];
     return certs.map(transformCertificate);
   },
 
@@ -1096,7 +1096,7 @@ export const dataService = {
   getThresholds: async () => {
     if (isDemoMode()) { await delay(300); return mockThresholds; }
     try {
-      const settings = await api.getSettings();
+      const settings = await api.getSettings() as any;
       return settings?.settings?.thresholds || mockThresholds;
     } catch (err) {
       log.error('Failed to fetch thresholds', { error: (err as Error).message });
@@ -1107,7 +1107,7 @@ export const dataService = {
   getEscalationPolicy: async () => {
     if (isDemoMode()) { await delay(300); return mockEscalationPolicy; }
     try {
-      const settings = await api.getSettings();
+      const settings = await api.getSettings() as any;
       return settings?.settings?.escalation || mockEscalationPolicy;
     } catch (err) {
       log.error('Failed to fetch escalation policy', { error: (err as Error).message });
@@ -1118,7 +1118,7 @@ export const dataService = {
   getMaintenanceWindows: async () => {
     if (isDemoMode()) { await delay(300); return mockMaintenanceWindows; }
     try {
-      const settings = await api.getSettings();
+      const settings = await api.getSettings() as any;
       return settings?.settings?.maintenanceWindows || mockMaintenanceWindows;
     } catch (err) {
       log.error('Failed to fetch maintenance windows', { error: (err as Error).message });

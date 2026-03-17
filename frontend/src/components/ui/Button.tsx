@@ -1,7 +1,19 @@
+import type { ComponentType, ButtonHTMLAttributes, ReactNode } from 'react';
+
+interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
+  children: ReactNode;
+  variant?: 'primary' | 'secondary' | 'outline' | 'ghost' | 'danger' | 'success';
+  size?: 'sm' | 'md' | 'lg';
+  loading?: boolean;
+  icon?: ComponentType<{ size: number }>;
+  fullWidth?: boolean;
+  className?: string;
+}
+
 export default function Button({
   children, variant = 'primary', size = 'md', loading = false,
   disabled = false, icon: Icon, fullWidth = false, className = '', ...props
-}) {
+}: ButtonProps) {
   const baseClasses = 'inline-flex items-center justify-center font-medium rounded-lg transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-0 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer';
 
   const variants = {
