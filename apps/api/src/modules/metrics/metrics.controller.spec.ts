@@ -47,7 +47,7 @@ describe('MetricsController', () => {
       const expected = [{ timestamp: '2026-01-01', cpu: 50 }];
       mockService.getHostMetrics.mockResolvedValue(expected);
 
-      const result = await controller.hostMetrics('host-1', { hours: '12' });
+      const result = await controller.hostMetrics('host-1', { hours: 12 });
 
       expect(result).toEqual(expected);
       expect(service.getHostMetrics).toHaveBeenCalledWith('host-1', 12);
@@ -70,7 +70,7 @@ describe('MetricsController', () => {
       mockService.getHostMetricsBySystem.mockResolvedValue(expected);
 
       const result = await controller.systemHostMetrics('org-1', 'sys-1', {
-        hours: '6',
+        hours: 6,
       });
 
       expect(result).toEqual(expected);
@@ -102,7 +102,7 @@ describe('MetricsController', () => {
       mockService.getHealthSnapshots.mockResolvedValue(expected);
 
       const result = await controller.healthSnapshots('org-1', 'sys-1', {
-        hours: '48',
+        hours: 48,
       });
 
       expect(result).toEqual(expected);

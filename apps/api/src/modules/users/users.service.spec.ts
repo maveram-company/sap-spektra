@@ -121,13 +121,13 @@ describe('UsersService', () => {
     it('creates a new user with transaction', async () => {
       const newUser = mockUser({ id: 'user-new' });
 
-      // User does not exist yet
-      prisma.user.findUnique.mockResolvedValue(null);
-
       // Mock $transaction to call the callback with a tx mock
       prisma.$transaction.mockImplementation(async (cb: Function) => {
         const tx = {
-          user: { create: jest.fn().mockResolvedValue(newUser) },
+          user: {
+            findUnique: jest.fn().mockResolvedValue(null),
+            create: jest.fn().mockResolvedValue(newUser),
+          },
           membership: { create: jest.fn().mockResolvedValue({}) },
         };
         return cb(tx);
@@ -152,12 +152,22 @@ describe('UsersService', () => {
 
     it('adds existing user to org via membership', async () => {
       const existingUser = mockUser({ id: 'user-existing' });
+      let txMembershipCreate: jest.Mock;
 
-      // User already exists
-      prisma.user.findUnique.mockResolvedValue(existingUser);
-      // But no membership in this org
-      prisma.membership.findUnique.mockResolvedValue(null);
-      prisma.membership.create.mockResolvedValue({});
+      // Mock $transaction to call the callback with a tx mock
+      prisma.$transaction.mockImplementation(async (cb: Function) => {
+        txMembershipCreate = jest.fn().mockResolvedValue({});
+        const tx = {
+          user: {
+            findUnique: jest.fn().mockResolvedValue(existingUser),
+          },
+          membership: {
+            findUnique: jest.fn().mockResolvedValue(null),
+            create: txMembershipCreate,
+          },
+        };
+        return cb(tx);
+      });
 
       // findOne called at end
       prisma.membership.findFirst.mockResolvedValue(
@@ -171,7 +181,7 @@ describe('UsersService', () => {
       };
       const result = await service.create(ORG_ID, dto as any);
 
-      expect(prisma.membership.create).toHaveBeenCalledWith({
+      expect(txMembershipCreate!).toHaveBeenCalledWith({
         data: {
           userId: 'user-existing',
           organizationId: ORG_ID,
@@ -183,8 +193,19 @@ describe('UsersService', () => {
 
     it('throws ConflictException if user already in org', async () => {
       const existingUser = mockUser();
-      prisma.user.findUnique.mockResolvedValue(existingUser);
-      prisma.membership.findUnique.mockResolvedValue(mockMembership());
+
+      // Mock $transaction to call the callback with a tx mock
+      prisma.$transaction.mockImplementation(async (cb: Function) => {
+        const tx = {
+          user: {
+            findUnique: jest.fn().mockResolvedValue(existingUser),
+          },
+          membership: {
+            findUnique: jest.fn().mockResolvedValue(mockMembership()),
+          },
+        };
+        return cb(tx);
+      });
 
       const dto = {
         email: 'john@acme.com',

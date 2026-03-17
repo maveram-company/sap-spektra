@@ -160,7 +160,7 @@ export default function UsersPage() {
         <div className="mb-4 px-4 py-3 rounded-lg bg-danger-50 border border-danger-200 text-danger-700 text-sm flex items-center gap-2">
           <AlertTriangle size={14} className="flex-shrink-0" />
           {actionError}
-          <button onClick={() => setActionError(null)} className="ml-auto opacity-60 hover:opacity-100">×</button>
+          <button type="button" onClick={() => setActionError(null)} className="ml-auto opacity-60 hover:opacity-100">×</button>
         </div>
       )}
       <div className="flex items-center justify-between mb-6">
@@ -208,10 +208,10 @@ export default function UsersPage() {
               </TableCell>
               <TableCell>
                 <div className="flex items-center gap-1">
-                  <button onClick={() => handleEdit(user)} className="p-1.5 rounded-lg hover:bg-surface-tertiary text-text-tertiary hover:text-text-primary transition-colors" title="Editar">
+                  <button type="button" onClick={() => handleEdit(user)} className="p-1.5 rounded-lg hover:bg-surface-tertiary text-text-tertiary hover:text-text-primary transition-colors" title="Editar">
                     <Edit size={14} />
                   </button>
-                  <button onClick={() => handleDelete(user.id)} className={`p-1.5 rounded-lg transition-colors ${deleteConfirm === user.id ? 'bg-danger-100 text-danger-600' : 'hover:bg-danger-50 text-text-tertiary hover:text-danger-600'}`} title={deleteConfirm === user.id ? 'Confirmar eliminación' : 'Eliminar'}>
+                  <button type="button" onClick={() => handleDelete(user.id)} className={`p-1.5 rounded-lg transition-colors ${deleteConfirm === user.id ? 'bg-danger-100 text-danger-600' : 'hover:bg-danger-50 text-text-tertiary hover:text-danger-600'}`} title={deleteConfirm === user.id ? 'Confirmar eliminación' : 'Eliminar'}>
                     <Trash2 size={14} />
                   </button>
                 </div>

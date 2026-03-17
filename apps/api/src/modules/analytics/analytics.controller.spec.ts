@@ -62,7 +62,7 @@ describe('AnalyticsController', () => {
       const expected = [{ date: '2024-01-01', health: 95 }];
       mockService.getSystemTrends.mockResolvedValue(expected);
 
-      const query = { days: '14' } as any;
+      const query = { days: 14 } as any;
       const result = await controller.systemTrends('org-1', 'sys-1', query);
 
       expect(result).toEqual(expected);

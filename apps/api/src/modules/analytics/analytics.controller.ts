@@ -40,7 +40,7 @@ export class AnalyticsController {
     return this.analyticsService.getSystemTrends(
       orgId,
       systemId,
-      query.days ? parseInt(query.days, 10) : 7,
+      query.days || 7,
     );
   }
 }

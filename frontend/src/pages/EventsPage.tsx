@@ -74,15 +74,17 @@ export default function EventsPage() {
   const [sourceFilter, setSourceFilter] = useState('all'); // P2.4: SAP vs Platform
 
   useEffect(() => {
+    let mounted = true;
     Promise.all([dataService.getEvents(), dataService.getSystems()]).then(([evts, sys]) => {
-      setEvents(evts);
-      setSystems(sys);
-      setLoading(false);
+      if (mounted) { setEvents(evts); setSystems(sys); setLoading(false); }
     }).catch((err) => {
-      console.warn('[EventsPage] fetch failed:', err);
-      setError('Error al cargar datos. Intenta de nuevo.');
-      setLoading(false);
+      if (mounted) {
+        console.warn('[EventsPage] fetch failed:', err);
+        setError('Error al cargar datos. Intenta de nuevo.');
+        setLoading(false);
+      }
     });
+    return () => { mounted = false; };
   }, []);
 
   const filtered = useMemo(() => {

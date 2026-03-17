@@ -32,7 +32,7 @@ describe('AuditController', () => {
       const expected = [{ id: 'log-1', action: 'LOGIN' }];
       mockService.findAll.mockResolvedValue(expected);
 
-      const filters = { severity: 'high', action: 'LOGIN', limit: '50' } as any;
+      const filters = { severity: 'high', action: 'LOGIN', limit: 50 } as any;
       const result = await controller.findAll('org-1', filters);
 
       expect(result).toEqual(expected);

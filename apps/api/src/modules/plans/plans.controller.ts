@@ -3,6 +3,7 @@ import { ApiTags, ApiOperation } from '@nestjs/swagger';
 import { PlansService } from './plans.service';
 
 @ApiTags('Plans')
+// Public endpoint — no auth required
 @Controller('plans')
 export class PlansController {
   constructor(private readonly plansService: PlansService) {}

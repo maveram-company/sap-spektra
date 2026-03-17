@@ -238,6 +238,7 @@ function AlertsPage() {
             {statusFilterOptions.map((opt) => (
               <button
                 key={opt.value}
+                type="button"
                 onClick={() => setStatusFilter(opt.value)}
                 className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
                   statusFilter === opt.value
@@ -362,6 +363,7 @@ function AlertsPage() {
                 <div className="flex items-center gap-2 pt-1 flex-wrap">
                   {!alert.acknowledged && hasRole('operator') && (
                     <button
+                      type="button"
                       onClick={() => handleAcknowledge(alert.id)}
                       className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium bg-primary-600 text-white hover:bg-primary-700 transition-colors"
                     >
@@ -371,6 +373,7 @@ function AlertsPage() {
                   )}
                   {hasRole('operator') && (
                     <button
+                      type="button"
                       onClick={() => openResolveModal(alert.id)}
                       className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium border border-border dark:border-border text-text-secondary dark:text-text-secondary hover:bg-primary-50 dark:hover:bg-primary-950 transition-colors"
                     >
@@ -380,6 +383,7 @@ function AlertsPage() {
                   )}
                   {alert.runbookId && (
                     <button
+                      type="button"
                       className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium border border-border dark:border-border text-text-secondary dark:text-text-secondary hover:bg-primary-50 dark:hover:bg-primary-950 transition-colors"
                     >
                       <Play className="w-3.5 h-3.5" />
@@ -403,6 +407,7 @@ function AlertsPage() {
                 Resolver Alerta
               </h3>
               <button
+                type="button"
                 onClick={closeResolveModal}
                 className="p-1 rounded-lg text-text-tertiary dark:text-text-tertiary hover:bg-primary-50 dark:hover:bg-primary-950 transition-colors"
               >
@@ -445,12 +450,14 @@ function AlertsPage() {
 
             <div className="flex items-center justify-end gap-2 pt-2">
               <button
+                type="button"
                 onClick={closeResolveModal}
                 className="px-4 py-2 rounded-lg text-sm font-medium border border-border dark:border-border text-text-secondary dark:text-text-secondary hover:bg-primary-50 dark:hover:bg-primary-950 transition-colors"
               >
                 Cancelar
               </button>
               <button
+                type="button"
                 onClick={handleResolve}
                 disabled={!resolutionCategory || !resolutionNote}
                 className="px-4 py-2 rounded-lg text-sm font-medium bg-primary-600 text-white hover:bg-primary-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"

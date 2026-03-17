@@ -468,6 +468,14 @@ async function main() {
         dbVersion: 'Oracle 19.22.0',
       },
       {
+        systemId: rs1.id,
+        sapRelease: '2023',
+        kernelVersion: '793',
+        kernelPatch: '200',
+        osVersion: 'SUSE Linux Enterprise 15 SP5',
+        dbVersion: 'HANA Cloud 2023.Q4',
+      },
+      {
         systemId: gr1.id,
         sapRelease: '7.50 SP20',
         kernelVersion: '753',
@@ -514,7 +522,7 @@ async function main() {
       },
     ],
   });
-  logger.log('  ✓ 11 system meta records');
+  logger.log('  ✓ 12 system meta records');
 
   // ══════════════════════════════════════════════
   // HOSTS

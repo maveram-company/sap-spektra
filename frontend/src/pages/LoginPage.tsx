@@ -212,6 +212,7 @@ export default function LoginPage() {
             {demoAccounts.map((acc) => (
               <button
                 key={acc.label}
+                type="button"
                 onClick={() => { setUsername(acc.email); setPassword(acc.password); }}
                 className="px-2.5 py-1 text-[11px] font-mono rounded-lg transition-all login-demo-btn"
               >

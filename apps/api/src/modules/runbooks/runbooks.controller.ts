@@ -6,6 +6,8 @@ import {
   Body,
   Query,
   UseGuards,
+  HttpCode,
+  HttpStatus,
 } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiBearerAuth } from '@nestjs/swagger';
 import { RunbooksService } from './runbooks.service';
@@ -59,6 +61,7 @@ export class RunbooksController {
   }
 
   @Post(':id/execute')
+  @HttpCode(HttpStatus.ACCEPTED)
   @Roles('operator')
   @ApiOperation({ summary: 'Execute a runbook on a system' })
   execute(

@@ -28,13 +28,6 @@ function matchResponse(text, aiResponses) {
   return aiResponses.estado;
 }
 
-// Contador global para IDs únicos de mensajes
-let msgIdCounter = 0;
-function nextMsgId(prefix) {
-  msgIdCounter += 1;
-  return `${prefix}-${msgIdCounter}`;
-}
-
 // Mapa de colores para el borde izquierdo de las tarjetas UC
 const COLOR_BORDER = {
   danger: 'border-l-danger-500',
@@ -86,6 +79,11 @@ function renderMarkdown(text) {
 
 export default function AIAnalysisPage() {
   const { hasFeature } = usePlan();
+  const msgIdRef = useRef(0);
+  const nextMsgId = (prefix: string) => {
+    msgIdRef.current += 1;
+    return `${prefix}-${msgIdRef.current}`;
+  };
   const [aiUseCases, setAiUseCases] = useState([]);
   const [aiResponses, setAiResponses] = useState({});
   const [loading, setLoading] = useState(true);

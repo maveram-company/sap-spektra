@@ -1,4 +1,4 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable, Logger, ForbiddenException } from '@nestjs/common';
 import { PrismaService } from '../../infrastructure/prisma/prisma.service';
 
 /** Default thresholds for SAP system metrics */
@@ -33,6 +33,7 @@ export class MetricsPipelineService {
    */
   async ingest(
     payload: MetricPayload,
+    orgId: string,
   ): Promise<{ breaches: number; alerts: number }> {
     const host = await this.prisma.host.findUnique({
       where: { id: payload.hostId },
@@ -43,6 +44,10 @@ export class MetricsPipelineService {
     if (!host) {
       this.logger.warn(`Ignoring metric for unknown host ${payload.hostId}`);
       return { breaches: 0, alerts: 0 };
+    }
+
+    if (host.system.organizationId !== orgId) {
+      throw new ForbiddenException('Host does not belong to your organization');
     }
 
     const now = new Date();
@@ -207,6 +212,12 @@ export class MetricsPipelineService {
     systemId: string,
     _organizationId?: string,
   ): Promise<void> {
+    const recent = await this.prisma.healthSnapshot.findFirst({
+      where: { systemId },
+      orderBy: { timestamp: 'desc' },
+    });
+    if (recent && Date.now() - recent.timestamp.getTime() < 60_000) return;
+
     const hosts = await this.prisma.host.findMany({
       where: { systemId },
     });

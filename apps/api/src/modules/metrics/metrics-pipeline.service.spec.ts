@@ -26,6 +26,7 @@ describe('MetricsPipelineService', () => {
         create: jest.fn(),
       },
       healthSnapshot: {
+        findFirst: jest.fn(),
         create: jest.fn(),
       },
     };
@@ -47,12 +48,15 @@ describe('MetricsPipelineService', () => {
   it('ignores metrics for unknown hosts', async () => {
     prisma.host.findUnique.mockResolvedValue(null);
 
-    const result = await service.ingest({
-      hostId: 'unknown',
-      cpu: 50,
-      memory: 60,
-      disk: 40,
-    });
+    const result = await service.ingest(
+      {
+        hostId: 'unknown',
+        cpu: 50,
+        memory: 60,
+        disk: 40,
+      },
+      'org-1',
+    );
 
     expect(result).toEqual({ breaches: 0, alerts: 0 });
     expect(prisma.hostMetric.create).not.toHaveBeenCalled();
@@ -69,14 +73,18 @@ describe('MetricsPipelineService', () => {
     prisma.breach.findFirst.mockResolvedValue(null);
     prisma.breach.findMany.mockResolvedValue([]);
     prisma.host.findMany.mockResolvedValue([{ cpu: 50, memory: 60, disk: 40 }]);
+    prisma.healthSnapshot.findFirst.mockResolvedValue(null);
     prisma.healthSnapshot.create.mockResolvedValue({});
 
-    const result = await service.ingest({
-      hostId: 'h1',
-      cpu: 50,
-      memory: 60,
-      disk: 40,
-    });
+    const result = await service.ingest(
+      {
+        hostId: 'h1',
+        cpu: 50,
+        memory: 60,
+        disk: 40,
+      },
+      'org-1',
+    );
 
     expect(result).toEqual({ breaches: 0, alerts: 0 });
     expect(prisma.hostMetric.create).toHaveBeenCalledWith(
@@ -105,14 +113,18 @@ describe('MetricsPipelineService', () => {
     prisma.breach.create.mockResolvedValue({});
     prisma.alert.create.mockResolvedValue({});
     prisma.host.findMany.mockResolvedValue([{ cpu: 97, memory: 60, disk: 40 }]);
+    prisma.healthSnapshot.findFirst.mockResolvedValue(null);
     prisma.healthSnapshot.create.mockResolvedValue({});
 
-    const result = await service.ingest({
-      hostId: 'h1',
-      cpu: 97,
-      memory: 60,
-      disk: 40,
-    });
+    const result = await service.ingest(
+      {
+        hostId: 'h1',
+        cpu: 97,
+        memory: 60,
+        disk: 40,
+      },
+      'org-1',
+    );
 
     expect(result.breaches).toBe(1);
     expect(result.alerts).toBe(1);
@@ -150,14 +162,18 @@ describe('MetricsPipelineService', () => {
     prisma.breach.create.mockResolvedValue({});
     prisma.alert.create.mockResolvedValue({});
     prisma.host.findMany.mockResolvedValue([{ cpu: 50, memory: 88, disk: 40 }]);
+    prisma.healthSnapshot.findFirst.mockResolvedValue(null);
     prisma.healthSnapshot.create.mockResolvedValue({});
 
-    const result = await service.ingest({
-      hostId: 'h1',
-      cpu: 50,
-      memory: 88,
-      disk: 40,
-    });
+    const result = await service.ingest(
+      {
+        hostId: 'h1',
+        cpu: 50,
+        memory: 88,
+        disk: 40,
+      },
+      'org-1',
+    );
 
     expect(result.breaches).toBe(1);
     expect(prisma.breach.create).toHaveBeenCalledWith(
@@ -200,14 +216,18 @@ describe('MetricsPipelineService', () => {
       .mockResolvedValueOnce([]); // disk breaches
     prisma.breach.update.mockResolvedValue({});
     prisma.host.findMany.mockResolvedValue([{ cpu: 50, memory: 60, disk: 40 }]);
+    prisma.healthSnapshot.findFirst.mockResolvedValue(null);
     prisma.healthSnapshot.create.mockResolvedValue({});
 
-    await service.ingest({
-      hostId: 'h1',
-      cpu: 50,
-      memory: 60,
-      disk: 40,
-    });
+    await service.ingest(
+      {
+        hostId: 'h1',
+        cpu: 50,
+        memory: 60,
+        disk: 40,
+      },
+      'org-1',
+    );
 
     expect(prisma.breach.update).toHaveBeenCalledWith(
       expect.objectContaining({
@@ -231,9 +251,13 @@ describe('MetricsPipelineService', () => {
       { cpu: 50, memory: 60, disk: 40 },
       { cpu: 70, memory: 80, disk: 50 },
     ]);
+    prisma.healthSnapshot.findFirst.mockResolvedValue(null);
     prisma.healthSnapshot.create.mockResolvedValue({});
 
-    await service.ingest({ hostId: 'h1', cpu: 50, memory: 60, disk: 40 });
+    await service.ingest(
+      { hostId: 'h1', cpu: 50, memory: 60, disk: 40 },
+      'org-1',
+    );
 
     expect(prisma.healthSnapshot.create).toHaveBeenCalledWith(
       expect.objectContaining({

@@ -22,7 +22,7 @@ export class AuditController {
     return this.auditService.findAll(orgId, {
       severity: filters.severity,
       action: filters.action,
-      limit: filters.limit ? parseInt(filters.limit, 10) : undefined,
+      limit: filters.limit,
     });
   }
 }

@@ -55,38 +55,38 @@ export class UsersService {
   }
 
   async create(organizationId: string, dto: CreateUserDto) {
-    const existing = await this.prisma.user.findUnique({
-      where: { email: dto.email },
-    });
-
-    if (existing) {
-      const existingMembership = await this.prisma.membership.findUnique({
-        where: {
-          userId_organizationId: {
-            userId: existing.id,
-            organizationId,
-          },
-        },
-      });
-
-      if (existingMembership) {
-        throw new ConflictException('User already in this organization');
-      }
-
-      await this.prisma.membership.create({
-        data: {
-          userId: existing.id,
-          organizationId,
-          role: dto.role || 'viewer',
-        },
-      });
-
-      return this.findOne(organizationId, existing.id);
-    }
-
     const passwordHash = await bcrypt.hash(dto.password, 12);
 
     const result = await this.prisma.$transaction(async (tx) => {
+      const existing = await tx.user.findUnique({
+        where: { email: dto.email },
+      });
+
+      if (existing) {
+        const existingMembership = await tx.membership.findUnique({
+          where: {
+            userId_organizationId: {
+              userId: existing.id,
+              organizationId,
+            },
+          },
+        });
+
+        if (existingMembership) {
+          throw new ConflictException('User already in this organization');
+        }
+
+        await tx.membership.create({
+          data: {
+            userId: existing.id,
+            organizationId,
+            role: dto.role || 'viewer',
+          },
+        });
+
+        return existing;
+      }
+
       const user = await tx.user.create({
         data: {
           email: dto.email,

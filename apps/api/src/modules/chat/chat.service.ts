@@ -104,10 +104,19 @@ export class ChatService {
         return this.simulateResponse(organizationId, message);
       }
 
-      const data = (await response.json()) as {
+      let data: {
         content: Array<{ type: string; text: string }>;
         usage: { input_tokens: number; output_tokens: number };
       };
+      try {
+        data = await response.json();
+      } catch {
+        throw new Error('Invalid response from AI service');
+      }
+
+      if (!Array.isArray(data.content)) {
+        throw new Error('Invalid response from AI service');
+      }
 
       const aiMessage = data.content
         .filter((block) => block.type === 'text')

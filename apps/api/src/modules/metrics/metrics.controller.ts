@@ -35,6 +35,7 @@ export class MetricsController {
   @Roles('operator')
   @ApiOperation({ summary: 'Ingest metric data point from agent' })
   ingest(
+    @TenantId() orgId: string,
     @Body()
     data: {
       hostId: string;
@@ -46,7 +47,7 @@ export class MetricsController {
       networkOut?: number;
     },
   ) {
-    return this.pipeline.ingest(data);
+    return this.pipeline.ingest(data, orgId);
   }
 
   @Get('hosts/:hostId')
@@ -56,7 +57,7 @@ export class MetricsController {
     @Param('hostId') hostId: string,
     @Query() query: MetricsHoursQueryDto,
   ) {
-    const h = Math.min(Math.max(Number(query.hours) || 24, 1), 8760);
+    const h = Math.min(Math.max(query.hours || 24, 1), 8760);
     return this.metricsService.getHostMetrics(hostId, h);
   }
 
@@ -68,7 +69,7 @@ export class MetricsController {
     @Param('systemId') systemId: string,
     @Query() query: MetricsHoursQueryDto,
   ) {
-    const h = Math.min(Math.max(Number(query.hours) || 24, 1), 8760);
+    const h = Math.min(Math.max(query.hours || 24, 1), 8760);
     return this.metricsService.getHostMetricsBySystem(orgId, systemId, h);
   }
 
@@ -80,7 +81,7 @@ export class MetricsController {
     @Param('systemId') systemId: string,
     @Query() query: MetricsHoursQueryDto,
   ) {
-    const h = Math.min(Math.max(Number(query.hours) || 24, 1), 8760);
+    const h = Math.min(Math.max(query.hours || 24, 1), 8760);
     return this.metricsService.getHealthSnapshots(orgId, systemId, h);
   }
 

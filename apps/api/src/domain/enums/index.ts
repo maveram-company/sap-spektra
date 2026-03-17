@@ -91,6 +91,14 @@ export enum AlertStatus {
   RESOLVED = 'resolved',
 }
 
+// ── Breach Severity ──
+export enum BreachSeverity {
+  CRITICAL = 'CRITICAL',
+  HIGH = 'HIGH',
+  MEDIUM = 'MEDIUM',
+  LOW = 'LOW',
+}
+
 // ── Approvals ──
 export enum ApprovalStatus {
   PENDING = 'PENDING',

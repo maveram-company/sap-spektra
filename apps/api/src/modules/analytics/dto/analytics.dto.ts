@@ -1,7 +1,9 @@
-import { IsOptional, IsString } from 'class-validator';
+import { IsOptional, IsNumber } from 'class-validator';
+import { Type } from 'class-transformer';
 
 export class SystemTrendsQueryDto {
   @IsOptional()
-  @IsString()
-  days?: string;
+  @IsNumber()
+  @Type(() => Number)
+  days?: number;
 }

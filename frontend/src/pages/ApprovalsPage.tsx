@@ -22,7 +22,15 @@ export default function ApprovalsPage() {
   const canApprove = hasRole('escalation');
 
   useEffect(() => {
-    dataService.getApprovals().then(data => { setApprovals(data); setLoading(false); });
+    let mounted = true;
+    dataService.getApprovals()
+      .then(data => {
+        if (mounted) { setApprovals(data); setLoading(false); }
+      })
+      .catch(err => {
+        if (mounted) { console.warn('[ApprovalsPage] fetch failed:', err); setLoading(false); }
+      });
+    return () => { mounted = false; };
   }, []);
 
   const filtered = approvals.filter(a => a.status === activeTab);

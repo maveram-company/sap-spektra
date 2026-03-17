@@ -1,9 +1,11 @@
-import { IsOptional, IsString } from 'class-validator';
+import { IsOptional, IsString, IsNumber } from 'class-validator';
+import { Type } from 'class-transformer';
 
 export class MetricsHoursQueryDto {
   @IsOptional()
-  @IsString()
-  hours?: string;
+  @IsNumber()
+  @Type(() => Number)
+  hours?: number;
 }
 
 export class BreachesQueryDto {
