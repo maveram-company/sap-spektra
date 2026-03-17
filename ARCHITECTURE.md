@@ -6,7 +6,7 @@
 graph TB
     subgraph platform["SAP Spektra Platform"]
         FE["<b>Frontend</b><br/>React 19 · Vite 7<br/>Tailwind 4 · Port 5173"]
-        BE["<b>Backend API</b><br/>NestJS 11 · Port 3001<br/>22 Modules · 97+ Endpoints<br/>24 Prisma Models"]
+        BE["<b>Backend API</b><br/>NestJS 11 · Port 3001<br/>22 Modules · 78 Endpoints<br/>24 Prisma Models"]
         AG["<b>On-Premise Agent</b><br/>Python Collector<br/>SAP Host Metrics"]
         INF["<b>Infrastructure</b><br/>AWS Terraform (infra/)"]
         PG[("<b>PostgreSQL 16</b><br/>Prisma 6 ORM")]
@@ -35,7 +35,7 @@ graph TB
 | Port | 3001 |
 | Global prefix | `/api` |
 
-22 feature modules, 97+ REST endpoints, 24 Prisma models. The API enforces multi-tenant isolation, role-based access control, rate limiting, and structured audit logging.
+22 feature modules, 78 REST endpoints, 24 Prisma models. The API enforces multi-tenant isolation, role-based access control, rate limiting, and structured audit logging.
 
 ### Frontend (`frontend/`)
 
@@ -64,9 +64,9 @@ Deployed on-premise alongside SAP systems. Collects host-level metrics (CPU, mem
 |-----------|-------|
 | IaC | Terraform |
 | Cloud | AWS |
-| Services | S3, SQS, EventBridge, Cognito (AWS_REAL mode) |
+| Services | S3, SQS, EventBridge, Cognito (AWS_REAL mode) — Terraform templates only |
 
-Defines cloud infrastructure for production deployments. Used only when `RUNTIME_MODE=AWS_REAL`.
+Defines cloud infrastructure for production deployments via Terraform. **Note:** The Terraform templates provision Cognito, S3, SQS, and EventBridge resources, but the NestJS application does not yet import or use any `@aws-sdk` clients. In `AWS_REAL` mode, command execution is sent to on-premise Spektra Agents via HTTP; AWS service integration is on the roadmap.
 
 ## Data Flow
 
@@ -117,7 +117,7 @@ interface JwtPayload {
 }
 ```
 
-**LOCAL_SIMULATED mode** uses local JWT signing with `JWT_SECRET`. **AWS_REAL mode** can integrate with AWS Cognito for production authentication.
+**LOCAL_SIMULATED mode** uses local JWT signing with `JWT_SECRET`. **AWS_REAL mode** is designed to integrate with AWS Cognito for production authentication, but the Cognito integration is not yet implemented in application code — auth currently uses local JWT in both modes. The Cognito user pool is provisioned by Terraform (`infra/aws/main.tf`).
 
 ## Multi-Tenancy Model
 
@@ -163,10 +163,12 @@ The cache module is registered globally and uses `cache-manager-ioredis-yet` to 
 
 | Mode | `RUNTIME_MODE` | Description |
 |------|----------------|-------------|
-| **LOCAL_SIMULATED** | Default | Local PostgreSQL + Redis, JWT auth with local secret, seeded demo data, no AWS services |
-| **AWS_REAL** | Production | AWS Cognito auth, S3 storage, SQS queues, EventBridge events, full cloud infrastructure |
+| **LOCAL_SIMULATED** | Default | Local PostgreSQL + Redis, JWT auth with local secret, seeded demo data, simulated command execution |
+| **AWS_REAL** | Production (partial) | Same JWT auth, real command execution via Spektra Agent HTTP, AI chat via Claude API |
 
-The runtime mode is set via the `RUNTIME_MODE` environment variable. In `LOCAL_SIMULATED` mode, the API runs with a local JWT secret and seeded demo data. In `AWS_REAL` mode, AWS Cognito handles authentication and AWS services are used for storage, queuing, and event processing.
+The runtime mode is set via the `RUNTIME_MODE` environment variable. In `LOCAL_SIMULATED` mode, the API runs with a local JWT secret, seeded demo data, and simulated command execution (runbooks, failover, connectors). In `AWS_REAL` mode, commands are sent to on-premise Spektra Agents via HTTP, and the chat module calls the Claude API (with `ANTHROPIC_API_KEY`).
+
+> **Roadmap:** AWS service integration (Cognito auth, S3 storage, SQS queues, EventBridge events) is defined in Terraform (`infra/aws/main.tf`) but not yet consumed by the NestJS application. Config placeholders exist in `configuration.ts` for future implementation.
 
 ## Directory Structure
 
@@ -208,12 +210,12 @@ sap-spektra/
 │   │       ├── ha/              HA/DR configuration & failover
 │   │       ├── connectors/      System connector management
 │   │       ├── analytics/       Overview, runbook, system analytics
-│   │       ├── chat/            AI assistant
+│   │       ├── chat/            AI assistant (Claude API in AWS_REAL, simulated in LOCAL_SIMULATED)
 │   │       ├── audit/           Audit log
 │   │       ├── plans/           Subscription plans (public)
 │   │       ├── settings/        Org settings, API key management
 │   │       ├── landscape/       Landscape validation
-│   │       ├── ai/              AI use cases & responses
+│   │       ├── ai/              AI use cases & responses (hardcoded catalog, no ML model)
 │   │       └── licenses/        SAP license information
 │   ├── .env.example             Environment variable reference
 │   └── package.json             Dependencies & scripts
