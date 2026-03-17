@@ -18,6 +18,9 @@ import Table, { TableHeader, TableBody, TableRow, TableHead, TableCell } from '.
 import PageLoading from '../components/ui/PageLoading';
 import { depRemediation, backupRunbooks } from '../lib/constants';
 import { dataService } from '../services/dataService';
+import { createLogger } from '../lib/logger';
+
+const log = createLogger('SystemDetailPage');
 
 // ── Local Helpers ──
 
@@ -132,11 +135,11 @@ export default function SystemDetailPage() {
             historyMap[hostname] = hist;
           }
           setMetricHistoryData(historyMap);
-        });
+        }).catch(err => log.warn('Metric history fetch failed', { error: err.message }));
       }
       setLoading(false);
     }).catch((err) => {
-      console.warn('[SystemDetailPage] fetch failed:', err);
+      log.warn('Fetch failed', { error: err.message });
       if (!mounted) return;
       setError('Error al cargar datos. Intenta de nuevo.');
       setLoading(false);

@@ -37,12 +37,11 @@ describe('OperationsController', () => {
       const expected = [{ id: 'op-1' }];
       mockService.findAll.mockResolvedValue(expected);
 
-      const result = await controller.findAll(
-        'org-1',
-        'RUNNING',
-        'PATCH',
-        'sys-1',
-      );
+      const result = await controller.findAll('org-1', {
+        status: 'RUNNING',
+        type: 'PATCH',
+        systemId: 'sys-1',
+      });
 
       expect(result).toEqual(expected);
       expect(service.findAll).toHaveBeenCalledWith('org-1', {

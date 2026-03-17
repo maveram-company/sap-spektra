@@ -122,23 +122,24 @@ export class RunbookExecutionEngineService {
         // Ejecutar el comando
         const result = await this.executeStep(step, system, runbook);
 
-        // Actualizar step result
-        await this.prisma.runbookStepResult.update({
-          where: { id: stepResult.id },
-          data: {
-            status: result.exitCode === 0 ? 'SUCCESS' : 'FAILED',
-            exitCode: result.exitCode,
-            stdout: result.stdout,
-            stderr: result.stderr,
-            duration: result.duration,
-            completedAt: new Date(),
-          },
-        });
-
-        await this.prisma.runbookExecution.update({
-          where: { id: executionId },
-          data: { completedSteps: { increment: 1 } },
-        });
+        // Actualizar step result y progreso atómicamente
+        await this.prisma.$transaction([
+          this.prisma.runbookStepResult.update({
+            where: { id: stepResult.id },
+            data: {
+              status: result.exitCode === 0 ? 'SUCCESS' : 'FAILED',
+              exitCode: result.exitCode,
+              stdout: result.stdout,
+              stderr: result.stderr,
+              duration: result.duration,
+              completedAt: new Date(),
+            },
+          }),
+          this.prisma.runbookExecution.update({
+            where: { id: executionId },
+            data: { completedSteps: { increment: 1 } },
+          }),
+        ]);
 
         if (result.exitCode !== 0) {
           this.logger.warn(
@@ -153,20 +154,21 @@ export class RunbookExecutionEngineService {
         const errorMsg = error instanceof Error ? error.message : String(error);
         this.logger.error(`Step ${step.order} threw error: ${errorMsg}`);
 
-        await this.prisma.runbookStepResult.update({
-          where: { id: stepResult.id },
-          data: {
-            status: 'FAILED',
-            stderr: errorMsg,
-            exitCode: -1,
-            completedAt: new Date(),
-          },
-        });
-
-        await this.prisma.runbookExecution.update({
-          where: { id: executionId },
-          data: { completedSteps: { increment: 1 } },
-        });
+        await this.prisma.$transaction([
+          this.prisma.runbookStepResult.update({
+            where: { id: stepResult.id },
+            data: {
+              status: 'FAILED',
+              stderr: errorMsg,
+              exitCode: -1,
+              completedAt: new Date(),
+            },
+          }),
+          this.prisma.runbookExecution.update({
+            where: { id: executionId },
+            data: { completedSteps: { increment: 1 } },
+          }),
+        ]);
 
         allSucceeded = false;
         await this.skipRemainingSteps(executionId, step.order, steps.length);
@@ -483,19 +485,16 @@ export class RunbookExecutionEngineService {
   private async skipRemainingSteps(
     executionId: string,
     failedStep: number,
-    totalSteps: number,
+    _totalSteps: number,
   ): Promise<void> {
-    for (let i = failedStep + 1; i <= totalSteps; i++) {
-      const step = await this.prisma.runbookStepResult.findFirst({
-        where: { executionId, stepOrder: i },
-      });
-      if (step) {
-        await this.prisma.runbookStepResult.update({
-          where: { id: step.id },
-          data: { status: 'SKIPPED' },
-        });
-      }
-    }
+    await this.prisma.runbookStepResult.updateMany({
+      where: {
+        executionId,
+        stepOrder: { gt: failedStep },
+        status: 'PENDING',
+      },
+      data: { status: 'SKIPPED' },
+    });
   }
 
   private async completeExecution(

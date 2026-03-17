@@ -260,6 +260,7 @@ model Breach {
   system System @relation(fields: [systemId], references: [id], onDelete: Cascade)
 
   @@index([systemId, timestamp])
+  @@index([systemId, resolved])
   @@map("breaches")
 }
 
@@ -326,6 +327,7 @@ model Alert {
   system       System       @relation(fields: [systemId], references: [id], onDelete: Cascade)
 
   @@index([organizationId, status])
+  @@index([organizationId, level])
   @@map("alerts")
 }
 

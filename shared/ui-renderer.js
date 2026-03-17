@@ -11,11 +11,23 @@
 
 /* global document */
 
+/** Escape HTML special characters to prevent XSS */
+function esc(str) {
+  if (str == null) return '';
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
 class SpektraRenderer {
   constructor(schema) {
     this.schema = schema;
     this.values = {};
     this.listeners = {};
+    this._boundHandlers = [];
   }
 
   // ═══════════════════════════════════════════════════════════════
@@ -25,16 +37,16 @@ class SpektraRenderer {
   renderStep(container, stepId, currentValues) {
     const step = this._findStep(stepId);
     if (!step) {
-      container.innerHTML = `<p class="error">Paso ${stepId} no encontrado en schema</p>`;
+      container.innerHTML = `<p class="error">Paso ${esc(stepId)} no encontrado en schema</p>`;
       return;
     }
 
     this.values = { ...this.values, ...currentValues };
 
-    let html = `<div class="ssot-step" data-step="${step.id}">`;
-    html += `<h3 class="ssot-step-title">${step.label}</h3>`;
+    let html = `<div class="ssot-step" data-step="${esc(step.id)}">`;
+    html += `<h3 class="ssot-step-title">${esc(step.label)}</h3>`;
     if (step.description) {
-      html += `<p class="ssot-step-desc">${step.description}</p>`;
+      html += `<p class="ssot-step-desc">${esc(step.description)}</p>`;
     }
 
     html += `<div class="ssot-fields">`;
@@ -56,8 +68,8 @@ class SpektraRenderer {
     const required = field.required ? 'required' : '';
     const readonly = field.readonly ? 'disabled' : '';
 
-    let html = `<div class="ssot-field" data-field="${field.id}">`;
-    html += `<label class="ssot-label" for="ssot-${field.id}">${field.label}`;
+    let html = `<div class="ssot-field" data-field="${esc(field.id)}">`;
+    html += `<label class="ssot-label" for="ssot-${esc(field.id)}">${esc(field.label)}`;
     if (field.required) html += ' <span class="ssot-required">*</span>';
     html += `</label>`;
 
@@ -65,22 +77,22 @@ class SpektraRenderer {
       case 'text':
       case 'email':
       case 'url':
-        html += `<input type="${field.type}" id="ssot-${field.id}" name="${field.id}" value="${value}" placeholder="${field.placeholder || ''}" ${required} ${readonly} class="ssot-input" />`;
+        html += `<input type="${esc(field.type)}" id="ssot-${esc(field.id)}" name="${esc(field.id)}" value="${esc(value)}" placeholder="${esc(field.placeholder || '')}" ${required} ${readonly} class="ssot-input" />`;
         break;
 
       case 'select':
-        html += `<select id="ssot-${field.id}" name="${field.id}" ${required} ${readonly} class="ssot-select">`;
+        html += `<select id="ssot-${esc(field.id)}" name="${esc(field.id)}" ${required} ${readonly} class="ssot-select">`;
         for (const opt of (field.options || [])) {
           const optVal = typeof opt === 'string' ? opt : opt.value;
           const optLabel = typeof opt === 'string' ? opt : opt.label;
           const selected = optVal === value ? 'selected' : '';
-          html += `<option value="${optVal}" ${selected}>${optLabel}</option>`;
+          html += `<option value="${esc(optVal)}" ${selected}>${esc(optLabel)}</option>`;
         }
         html += `</select>`;
         break;
 
       case 'check':
-        html += `<span class="ssot-check ${value ? 'ssot-check-pass' : 'ssot-check-pending'}" id="ssot-${field.id}">`;
+        html += `<span class="ssot-check ${value ? 'ssot-check-pass' : 'ssot-check-pending'}" id="ssot-${esc(field.id)}">`;
         html += value ? '&#10004; OK' : '&#8943; Pendiente';
         html += `</span>`;
         break;
@@ -98,13 +110,13 @@ class SpektraRenderer {
         break;
 
       case 'instance-selector':
-        html += `<div id="ssot-${field.id}" class="ssot-instance-selector">`;
+        html += `<div id="ssot-${esc(field.id)}" class="ssot-instance-selector">`;
         html += `<p class="ssot-hint">Cargando instancias...</p>`;
         html += `</div>`;
         break;
 
       case 'health-results':
-        html += `<div id="ssot-${field.id}" class="ssot-health-results">`;
+        html += `<div id="ssot-${esc(field.id)}" class="ssot-health-results">`;
         html += `<p class="ssot-hint">Ejecutando health checks...</p>`;
         html += `</div>`;
         break;
@@ -114,25 +126,25 @@ class SpektraRenderer {
         break;
 
       case 'dry-run-results':
-        html += `<div id="ssot-${field.id}" class="ssot-dry-run-results">`;
+        html += `<div id="ssot-${esc(field.id)}" class="ssot-dry-run-results">`;
         html += `<p class="ssot-hint">Ejecutando dry-run de conectividad...</p>`;
         html += `</div>`;
         break;
 
       case 'policy-check-results':
-        html += `<div id="ssot-${field.id}" class="ssot-policy-check">`;
+        html += `<div id="ssot-${esc(field.id)}" class="ssot-policy-check">`;
         html += `<p class="ssot-hint">Validando politicas...</p>`;
         html += `</div>`;
         break;
 
       case 'evidence-pack-summary':
-        html += `<div id="ssot-${field.id}" class="ssot-evidence-pack">`;
+        html += `<div id="ssot-${esc(field.id)}" class="ssot-evidence-pack">`;
         html += `<p class="ssot-hint">Evidence pack se genera despues del deploy</p>`;
         html += `</div>`;
         break;
 
       default:
-        html += `<input type="text" id="ssot-${field.id}" name="${field.id}" value="${value}" ${required} ${readonly} class="ssot-input" />`;
+        html += `<input type="text" id="ssot-${esc(field.id)}" name="${esc(field.id)}" value="${esc(value)}" ${required} ${readonly} class="ssot-input" />`;
     }
 
     html += `</div>`;
@@ -151,7 +163,7 @@ class SpektraRenderer {
     const columns = this.schema.discovery?.instanceTable?.columns || [];
     let html = '<table class="ssot-table"><thead><tr>';
     for (const col of columns) {
-      html += `<th style="width:${col.width || 'auto'}">${col.label}</th>`;
+      html += `<th style="width:${esc(col.width || 'auto')}">${esc(col.label)}</th>`;
     }
     html += '</tr></thead><tbody>';
 
@@ -166,7 +178,7 @@ class SpektraRenderer {
         if (col.key === 'haStatus') {
           val = inst.haCluster ? (inst.haCluster.localRole || 'cluster') : '-';
         }
-        html += `<td>${val || '-'}</td>`;
+        html += `<td>${esc(val || '-')}</td>`;
       }
       html += '</tr>';
     }
@@ -203,11 +215,11 @@ class SpektraRenderer {
         .replace('{nodeCount}', nodeCount);
 
       html += `<div class="ssot-landscape-group">`;
-      html += `<h4 class="ssot-landscape-title">${title}</h4>`;
+      html += `<h4 class="ssot-landscape-title">${esc(title)}</h4>`;
       html += `<ul class="ssot-landscape-nodes">`;
       for (const inst of instances) {
         const icon = inst.role.includes('Primary') ? '&#9733;' : (inst.role.includes('Secondary') ? '&#9734;' : '&#8226;');
-        html += `<li>${icon} <strong>${inst.role}</strong> — ${inst.instanceId}</li>`;
+        html += `<li>${icon} <strong>${esc(inst.role)}</strong> — ${esc(inst.instanceId)}</li>`;
       }
       html += `</ul></div>`;
     }
@@ -233,10 +245,10 @@ class SpektraRenderer {
       if (!cap) continue;
       const icon = cap.enabled ? '&#10004;' : '&#10008;';
       const cls = cap.enabled ? 'ssot-check-pass' : 'ssot-check-fail';
-      html += `<tr><td>${labels[key] || key}</td><td><span class="${cls}">${icon} ${cap.reasonCode || ''}</span></td><td>${cap.howToFix || '-'}</td></tr>`;
+      html += `<tr><td>${esc(labels[key] || key)}</td><td><span class="${cls}">${icon} ${esc(cap.reasonCode || '')}</span></td><td>${esc(cap.howToFix || '-')}</td></tr>`;
     }
     html += '</tbody></table>';
-    if (capabilities.dbType) html += `<p class="ssot-hint">DB: ${capabilities.dbType} | OS: ${capabilities.osType || '?'} | Product: ${capabilities.product || '?'} | HA: ${capabilities.haEnabled ? 'Si' : 'No'}</p>`;
+    if (capabilities.dbType) html += `<p class="ssot-hint">DB: ${esc(capabilities.dbType)} | OS: ${esc(capabilities.osType || '?')} | Product: ${esc(capabilities.product || '?')} | HA: ${capabilities.haEnabled ? 'Si' : 'No'}</p>`;
     return html;
   }
 
@@ -249,7 +261,7 @@ class SpektraRenderer {
     const entries = Object.entries(this.values).filter(([k, v]) => v && !k.startsWith('_'));
     for (const [key, value] of entries) {
       const display = typeof value === 'object' ? JSON.stringify(value).substring(0, 100) : String(value);
-      html += `<div class="ssot-summary-row"><span class="ssot-summary-key">${key}</span><span class="ssot-summary-val">${display}</span></div>`;
+      html += `<div class="ssot-summary-row"><span class="ssot-summary-key">${esc(key)}</span><span class="ssot-summary-val">${esc(display)}</span></div>`;
     }
     html += '</div>';
     return html;
@@ -303,13 +315,29 @@ class SpektraRenderer {
   }
 
   _bindFieldEvents(container) {
+    this._unbindFieldEvents();
     const inputs = container.querySelectorAll('.ssot-input, .ssot-select');
     inputs.forEach(input => {
-      input.addEventListener('change', (e) => {
+      const handler = (e) => {
         this.values[e.target.name] = e.target.value;
         this._emit('change', { field: e.target.name, value: e.target.value });
-      });
+      };
+      input.addEventListener('change', handler);
+      this._boundHandlers.push({ element: input, event: 'change', handler });
     });
+  }
+
+  _unbindFieldEvents() {
+    for (const { element, event, handler } of this._boundHandlers) {
+      element.removeEventListener(event, handler);
+    }
+    this._boundHandlers = [];
+  }
+
+  destroy() {
+    this._unbindFieldEvents();
+    this.listeners = {};
+    this.values = {};
   }
 
   setValue(fieldId, value) {

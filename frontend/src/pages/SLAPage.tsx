@@ -3,6 +3,9 @@ import { BarChart3, AlertTriangle } from 'lucide-react';
 import Header from '../components/layout/Header';
 import PageLoading from '../components/ui/PageLoading';
 import { dataService } from '../services/dataService';
+import { createLogger } from '../lib/logger';
+
+const log = createLogger('SLAPage');
 
 function getHealthColor(score) {
   if (score >= 85) return { border: 'border-success-500', text: 'text-success-600', bg: 'bg-success-50 dark:bg-success-500/10' };
@@ -75,7 +78,7 @@ export default function SLAPage() {
       setAnalytics(anl);
       setLoading(false);
     }).catch((err) => {
-      console.warn('[SLAPage] fetch failed:', err);
+      log.warn('Fetch failed', { error: err.message });
       setError('Error al cargar datos. Intenta de nuevo.');
       setLoading(false);
     });

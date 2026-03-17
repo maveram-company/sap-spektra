@@ -3,6 +3,9 @@ import { Network, CheckCircle, XCircle, Shield, Server, Monitor } from 'lucide-r
 import Header from '../components/layout/Header';
 import PageLoading from '../components/ui/PageLoading';
 import { dataService } from '../services/dataService';
+import { createLogger } from '../lib/logger';
+
+const log = createLogger('LandscapePage');
 
 // Colores para la columna de confianza
 const confidenceColors = {
@@ -30,7 +33,7 @@ export default function LandscapePage() {
   const [search, setSearch] = useState('');
 
   useEffect(() => {
-    dataService.getDiscovery().then(data => { setDiscovery(data); setLoading(false); });
+    dataService.getDiscovery().then(data => { setDiscovery(data); setLoading(false); }).catch(err => log.warn('Fetch failed', { error: err.message }));
   }, []);
 
   // Agrupar instancias por SID para la topología

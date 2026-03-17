@@ -74,6 +74,9 @@ export class ChatService {
       'Si no tienes suficiente información, indica qué datos adicionales necesitas.',
     ].join('\n');
 
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 60_000);
+
     try {
       const response = await fetch('https://api.anthropic.com/v1/messages', {
         method: 'POST',
@@ -96,6 +99,7 @@ export class ChatService {
             { role: 'user', content: message },
           ],
         }),
+        signal: controller.signal,
       });
 
       if (!response.ok) {
@@ -134,9 +138,15 @@ export class ChatService {
         suggestions: this.extractSuggestions(aiMessage, message),
       };
     } catch (error) {
-      const msg = error instanceof Error ? error.message : String(error);
-      this.logger.error(`Claude API call failed: ${msg}`);
+      if (error instanceof Error && error.name === 'AbortError') {
+        this.logger.error('Claude API call timed out after 60s');
+      } else {
+        const msg = error instanceof Error ? error.message : String(error);
+        this.logger.error(`Claude API call failed: ${msg}`);
+      }
       return this.simulateResponse(organizationId, message);
+    } finally {
+      clearTimeout(timeout);
     }
   }
 

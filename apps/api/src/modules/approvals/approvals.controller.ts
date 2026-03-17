@@ -19,7 +19,7 @@ import {
   CurrentUser,
   JwtPayload,
 } from '../../common/decorators/current-user.decorator';
-import { CreateApprovalDto } from './dto/approval.dto';
+import { ApprovalFiltersDto, CreateApprovalDto } from './dto/approval.dto';
 
 @ApiTags('Approvals')
 @ApiBearerAuth()
@@ -31,12 +31,8 @@ export class ApprovalsController {
   @Get()
   @Roles('viewer')
   @ApiOperation({ summary: 'List approval requests' })
-  findAll(
-    @TenantId() orgId: string,
-    @Query('status') status?: string,
-    @Query('systemId') systemId?: string,
-  ) {
-    return this.approvalsService.findAll(orgId, { status, systemId });
+  findAll(@TenantId() orgId: string, @Query() filters: ApprovalFiltersDto) {
+    return this.approvalsService.findAll(orgId, filters);
   }
 
   @Get(':id')

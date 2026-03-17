@@ -8,6 +8,10 @@ import Button from '../components/ui/Button';
 import Table, { TableHeader, TableBody, TableRow, TableHead, TableCell } from '../components/ui/Table';
 import EmptyState from '../components/ui/EmptyState';
 import { dataService } from '../services/dataService';
+import { useToast } from '../hooks/useToast';
+import { createLogger } from '../lib/logger';
+
+const log = createLogger('ReportsPage');
 
 // Tipos de reporte disponibles
 const reportTypes = [
@@ -37,9 +41,8 @@ export default function ReportsPage() {
   const [events, setEvents] = useState([]);
   const [alerts, setAlerts] = useState([]);
   const [generating, setGenerating] = useState(null);
-  const [toast, setToast] = useState(null);
+  const { toast, showToast, dismissToast } = useToast(3000);
   const [error, setError] = useState<string | null>(null);
-  const toastTimerRef = useRef<ReturnType<typeof setTimeout>>(null);
   const generateTimerRef = useRef<ReturnType<typeof setTimeout>>(null);
 
   useEffect(() => {
@@ -49,23 +52,15 @@ export default function ReportsPage() {
       setEvents(evts);
       setAlerts(alts);
     }).catch((err) => {
-      console.warn('[ReportsPage] fetch failed:', err);
+      log.warn('Fetch failed', { error: err.message });
       if (!mounted) return;
       setError('Error al cargar datos. Intenta de nuevo.');
     });
     return () => {
       mounted = false;
-      clearTimeout(toastTimerRef.current);
       clearTimeout(generateTimerRef.current);
     };
   }, []);
-
-  // Mostrar notificación temporal
-  const showToast = (message, type = 'info') => {
-    clearTimeout(toastTimerRef.current);
-    setToast({ message, type });
-    toastTimerRef.current = setTimeout(() => setToast(null), 3000);
-  };
 
   // Generar reporte
   const handleGenerate = async (typeKey) => {
@@ -245,7 +240,7 @@ export default function ReportsPage() {
             )}
             <p className="text-sm font-medium">{toast.message}</p>
             <button
-              onClick={() => setToast(null)}
+              onClick={dismissToast}
               className="ml-auto flex-shrink-0 opacity-60 hover:opacity-100 transition-opacity"
             >
               <X size={14} />

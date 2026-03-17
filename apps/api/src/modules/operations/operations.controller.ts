@@ -9,6 +9,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiBearerAuth } from '@nestjs/swagger';
+import { Throttle } from '@nestjs/throttler';
 import { OperationsService } from './operations.service';
 import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
 import { TenantGuard } from '../../common/guards/tenant.guard';
@@ -21,6 +22,7 @@ import {
 } from '../../common/decorators/current-user.decorator';
 import {
   CreateOperationDto,
+  OperationFiltersDto,
   UpdateOperationStatusDto,
 } from './dto/operation.dto';
 
@@ -34,17 +36,13 @@ export class OperationsController {
   @Get()
   @Roles('viewer')
   @ApiOperation({ summary: 'List operations' })
-  findAll(
-    @TenantId() orgId: string,
-    @Query('status') status?: string,
-    @Query('type') type?: string,
-    @Query('systemId') systemId?: string,
-  ) {
-    return this.operationsService.findAll(orgId, { status, type, systemId });
+  findAll(@TenantId() orgId: string, @Query() filters: OperationFiltersDto) {
+    return this.operationsService.findAll(orgId, filters);
   }
 
   @Post()
   @Roles('operator')
+  @Throttle({ default: { ttl: 60000, limit: 10 } })
   @ApiOperation({ summary: 'Schedule a new operation' })
   create(
     @TenantId() orgId: string,

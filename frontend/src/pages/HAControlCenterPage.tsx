@@ -8,6 +8,9 @@ import {
   PILOT_LIGHT_ACTIVATION_STEPS, CROSS_REGION_DR_STEPS, BACKUP_RESTORE_STEPS,
 } from '../lib/constants';
 import { dataService } from '../services/dataService';
+import { createLogger } from '../lib/logger';
+
+const log = createLogger('HAControlCenterPage');
 import { useAuth } from '../contexts/AuthContext';
 import {
   ArrowLeftRight,
@@ -109,7 +112,7 @@ export default function HAControlCenterPage() {
       setHaPrereqs(prereqs);
       setLoading(false);
     }).catch((err) => {
-      console.warn('[HAControlCenterPage] fetch failed:', err);
+      log.warn('Fetch failed', { error: err.message });
       setError('Error al cargar datos. Intenta de nuevo.');
       setLoading(false);
     });

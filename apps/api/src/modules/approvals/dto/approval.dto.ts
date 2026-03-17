@@ -6,6 +6,16 @@ import {
   IsIn,
 } from 'class-validator';
 
+export class ApprovalFiltersDto {
+  @IsOptional()
+  @IsString()
+  status?: string;
+
+  @IsOptional()
+  @IsString()
+  systemId?: string;
+}
+
 export class CreateApprovalDto {
   @IsString()
   @IsNotEmpty()

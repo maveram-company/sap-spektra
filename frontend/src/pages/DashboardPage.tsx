@@ -87,11 +87,15 @@ function KPICard({ icon: Icon, label, value, change, variant = 'default' }) {
 function SystemCard({ system, onClick }) {
   return (
     <div
+      role="button"
+      tabIndex={0}
       onClick={onClick}
+      onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onClick(); } }}
       className="
         bg-white/[0.03] backdrop-blur-sm border border-white/10 rounded-xl p-5
         cursor-pointer transition-all duration-300 animate-fade-in
         hover:border-primary-500/30 hover:shadow-[0_0_20px_rgba(6,182,212,0.10)]
+        focus:outline-none focus:ring-2 focus:ring-primary-500/50
       "
     >
       {/* Cabecera: SID + badge de estado */}

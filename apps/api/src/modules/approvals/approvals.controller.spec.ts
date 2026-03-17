@@ -35,7 +35,10 @@ describe('ApprovalsController', () => {
       const expected = [{ id: 'appr-1' }];
       mockService.findAll.mockResolvedValue(expected);
 
-      const result = await controller.findAll('org-1', 'PENDING', 'sys-1');
+      const result = await controller.findAll('org-1', {
+        status: 'PENDING',
+        systemId: 'sys-1',
+      });
 
       expect(result).toEqual(expected);
       expect(service.findAll).toHaveBeenCalledWith('org-1', {
@@ -47,12 +50,9 @@ describe('ApprovalsController', () => {
     it('passes undefined when no query params are provided', async () => {
       mockService.findAll.mockResolvedValue([]);
 
-      await controller.findAll('org-1', undefined, undefined);
+      await controller.findAll('org-1', {});
 
-      expect(service.findAll).toHaveBeenCalledWith('org-1', {
-        status: undefined,
-        systemId: undefined,
-      });
+      expect(service.findAll).toHaveBeenCalledWith('org-1', {});
     });
   });
 

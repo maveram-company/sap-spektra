@@ -13,6 +13,9 @@ import { usePlan } from '../../hooks/usePlan';
 import { useTenant } from '../../contexts/TenantContext';
 import { useSidebar } from '../../contexts/SidebarContext';
 import { dataService } from '../../services/dataService';
+import { createLogger } from '../../lib/logger';
+
+const log = createLogger('Sidebar');
 
 const navigation = [
   { section: 'Command Center' },
@@ -59,8 +62,8 @@ export default function Sidebar() {
   const [pendingApprovals, setPendingApprovals] = useState(0);
   const [activeAlerts, setActiveAlerts] = useState(0);
   useEffect(() => {
-    dataService.getApprovals('PENDING').then(a => setPendingApprovals(a?.length || 0)).catch((err) => console.warn('[Sidebar] approvals fetch failed:', err));
-    dataService.getAlerts({ status: 'active' }).then(a => setActiveAlerts(a?.length || 0)).catch((err) => console.warn('[Sidebar] alerts fetch failed:', err));
+    dataService.getApprovals('PENDING').then(a => setPendingApprovals(a?.length || 0)).catch((err) => log.warn('Approvals fetch failed', { error: err.message }));
+    dataService.getAlerts({ status: 'active' }).then(a => setActiveAlerts(a?.length || 0)).catch((err) => log.warn('Alerts fetch failed', { error: err.message }));
   }, []);
 
   const usagePercent = Math.round(
@@ -141,14 +144,14 @@ export default function Sidebar() {
         {/* ── Navigation ────────────────────────────────────────── */}
         <nav aria-label="Main navigation" className="flex-1 overflow-y-auto py-3 px-2" style={{ scrollbarWidth: 'none' }}>
           <ul className="list-none m-0 p-0">
-          {navigation.map((item, i) => {
+          {navigation.map((item) => {
             /* ── Section header ── */
             if (item.section) {
               if (item.adminOnly && !hasRole('admin')) return null;
 
               if (collapsed) {
                 return (
-                  <li key={i} role="presentation">
+                  <li key={`section-${item.section}`} role="presentation">
                   <div
                     className="mx-auto mt-4 mb-2"
                     style={{
@@ -162,7 +165,7 @@ export default function Sidebar() {
               }
 
               return (
-                <li key={i} role="presentation" className="mt-5 mb-1 first:mt-2">
+                <li key={`section-${item.section}`} role="presentation" className="mt-5 mb-1 first:mt-2">
                   <span
                     className="px-2 text-[9px] font-bold uppercase tracking-[0.18em]"
                     style={{ color: 'rgba(6,182,212,0.55)' }}

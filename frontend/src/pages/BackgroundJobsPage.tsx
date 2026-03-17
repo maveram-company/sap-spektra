@@ -7,6 +7,9 @@ import Badge from '../components/ui/Badge';
 import Table, { TableHeader, TableBody, TableRow, TableHead, TableCell } from '../components/ui/Table';
 import PageLoading from '../components/ui/PageLoading';
 import { dataService } from '../services/dataService';
+import { createLogger } from '../lib/logger';
+
+const log = createLogger('BackgroundJobsPage');
 
 const statusConfig = {
   running: { icon: Play, labelKey: 'backgroundJobs.statusRunning', color: 'bg-primary-100 dark:bg-primary-900/30 text-primary-700 dark:text-primary-400', dot: 'bg-primary-500 animate-pulse' },
@@ -45,7 +48,7 @@ export default function BackgroundJobsPage() {
       setSystems(s);
       setLoading(false);
     }).catch((err) => {
-      console.warn('[BackgroundJobsPage] fetch failed:', err);
+      log.warn('Fetch failed', { error: err.message });
       setError('Error al cargar datos. Intenta de nuevo.');
       setLoading(false);
     });

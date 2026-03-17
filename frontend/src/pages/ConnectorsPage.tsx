@@ -8,6 +8,9 @@ import Badge from '../components/ui/Badge';
 import Table, { TableHeader, TableBody, TableRow, TableHead, TableCell } from '../components/ui/Table';
 import PageLoading from '../components/ui/PageLoading';
 import { dataService } from '../services/dataService';
+import { createLogger } from '../lib/logger';
+
+const log = createLogger('ConnectorsPage');
 
 // ── Helpers ──
 
@@ -55,7 +58,7 @@ export default function ConnectorsPage() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    dataService.getConnectors().then(data => { setConnectors(data); setLoading(false); });
+    dataService.getConnectors().then(data => { setConnectors(data); setLoading(false); }).catch(err => log.warn('Fetch failed', { error: err.message }));
   }, []);
 
   const connected = connectors.filter(c => c.status === 'connected').length;

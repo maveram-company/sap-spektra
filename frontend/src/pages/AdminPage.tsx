@@ -10,6 +10,9 @@ import StatusBadge from '../components/ui/StatusBadge';
 import Table, { TableHeader, TableBody, TableRow, TableHead, TableCell } from '../components/ui/Table';
 import PageLoading from '../components/ui/PageLoading';
 import { dataService } from '../services/dataService';
+import { createLogger } from '../lib/logger';
+
+const log = createLogger('AdminPage');
 
 export default function AdminPage() {
   const [systems, setSystems] = useState([]);
@@ -21,7 +24,7 @@ export default function AdminPage() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    dataService.getSystems().then(data => { setSystems(data); setLoading(false); });
+    dataService.getSystems().then(data => { setSystems(data); setLoading(false); }).catch(err => log.warn('Fetch failed', { error: err.message }));
     return () => {
       if (deleteTimerRef.current) clearTimeout(deleteTimerRef.current);
     };

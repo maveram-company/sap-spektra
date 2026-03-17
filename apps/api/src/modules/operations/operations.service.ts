@@ -210,7 +210,7 @@ export class OperationsService {
       userEmail: userEmail || op.requestedBy,
       action: `operation.${status.toLowerCase()}`,
       resource: `operation/${id}`,
-      details: `Operation ${op.type} status → ${status} (system: ${(op as any).system?.sid || op.systemId})`,
+      details: `Operation ${op.type} status → ${status} (system: ${op.system?.sid || op.systemId})`,
       severity: status === 'FAILED' ? 'warning' : 'info',
     });
 

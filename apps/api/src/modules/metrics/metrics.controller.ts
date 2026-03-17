@@ -21,6 +21,11 @@ import {
   SystemMetaQueryDto,
 } from './dto/metrics.dto';
 
+/** Clamp hours to [1, 8760] with default 24 */
+function clampHours(query: MetricsHoursQueryDto): number {
+  return Math.min(Math.max(query.hours || 24, 1), 8760);
+}
+
 @ApiTags('Metrics')
 @ApiBearerAuth()
 @UseGuards(JwtAuthGuard, TenantGuard, RolesGuard)
@@ -57,7 +62,7 @@ export class MetricsController {
     @Param('hostId') hostId: string,
     @Query() query: MetricsHoursQueryDto,
   ) {
-    const h = Math.min(Math.max(query.hours || 24, 1), 8760);
+    const h = clampHours(query);
     return this.metricsService.getHostMetrics(hostId, h);
   }
 
@@ -69,7 +74,7 @@ export class MetricsController {
     @Param('systemId') systemId: string,
     @Query() query: MetricsHoursQueryDto,
   ) {
-    const h = Math.min(Math.max(query.hours || 24, 1), 8760);
+    const h = clampHours(query);
     return this.metricsService.getHostMetricsBySystem(orgId, systemId, h);
   }
 
@@ -81,7 +86,7 @@ export class MetricsController {
     @Param('systemId') systemId: string,
     @Query() query: MetricsHoursQueryDto,
   ) {
-    const h = Math.min(Math.max(query.hours || 24, 1), 8760);
+    const h = clampHours(query);
     return this.metricsService.getHealthSnapshots(orgId, systemId, h);
   }
 

@@ -8,7 +8,9 @@ import { randomUUID } from 'node:crypto';
 const logger = new Logger('Seed');
 
 const pool = new pg.Pool({ connectionString: process.env.DATABASE_URL });
-const adapter = new PrismaPg(pool as any);
+const adapter = new PrismaPg(
+  pool as unknown as ConstructorParameters<typeof PrismaPg>[0],
+);
 const prisma = new PrismaClient({ adapter });
 
 // Helper: past date

@@ -6,6 +6,9 @@ import Badge from '../components/ui/Badge';
 import Table, { TableHeader, TableBody, TableRow, TableHead, TableCell } from '../components/ui/Table';
 import PageLoading from '../components/ui/PageLoading';
 import { dataService } from '../services/dataService';
+import { createLogger } from '../lib/logger';
+
+const log = createLogger('TransportsPage');
 
 const transportStatus = {
   released: { label: 'Liberado', color: 'bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400', icon: ArrowRight },
@@ -45,7 +48,7 @@ export default function TransportsPage() {
       setSystems(s);
       setLoading(false);
     }).catch((err) => {
-      console.warn('[TransportsPage] fetch failed:', err);
+      log.warn('Fetch failed', { error: err.message });
       setError('Error al cargar datos. Intenta de nuevo.');
       setLoading(false);
     });

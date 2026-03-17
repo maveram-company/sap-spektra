@@ -14,6 +14,9 @@ import { usePlan } from '../../hooks/usePlan';
 import { useTenant } from '../../contexts/TenantContext';
 import { useTheme } from '../../contexts/ThemeContext';
 import { dataService } from '../../services/dataService';
+import { createLogger } from '../../lib/logger';
+
+const log = createLogger('TopNav');
 
 // ── Estructura de navegación por secciones ──
 const sections = [
@@ -116,8 +119,8 @@ export default function TopNav({ topOffset = 0 }) {
         warning: systems.filter(s => s.healthScore >= 70 && s.healthScore < 90).length,
         critical: systems.filter(s => s.healthScore < 70).length,
       });
-    });
-    dataService.getApprovals('PENDING').then(approvals => setPendingApprovals(approvals?.length || 0)).catch((err) => console.warn('[TopNav] approvals fetch failed:', err));
+    }).catch(err => log.warn('Systems fetch failed', { error: err.message }));
+    dataService.getApprovals('PENDING').then(approvals => setPendingApprovals(approvals?.length || 0)).catch((err) => log.warn('Approvals fetch failed', { error: err.message }));
     dataService.getAlerts({ status: 'active' }).then(alerts => {
       setActiveAlerts(alerts?.length || 0);
       const recent = (alerts || []).slice(0, 5).map((a, i) => ({
@@ -128,7 +131,7 @@ export default function TopNav({ topOffset = 0 }) {
         type: a.level === 'critical' ? 'danger' : a.level === 'warning' ? 'warning' : 'info',
       }));
       setNotifications(recent);
-    }).catch((err) => console.warn('[TopNav] alerts fetch failed:', err));
+    }).catch((err) => log.warn('Alerts fetch failed', { error: err.message }));
   }, []);
   const { healthy, warning, critical } = systemCounts;
 

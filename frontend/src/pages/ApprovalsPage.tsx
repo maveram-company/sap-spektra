@@ -12,6 +12,9 @@ import EmptyState from '../components/ui/EmptyState';
 import PageLoading from '../components/ui/PageLoading';
 import { useAuth } from '../contexts/AuthContext';
 import { dataService } from '../services/dataService';
+import { createLogger } from '../lib/logger';
+
+const log = createLogger('ApprovalsPage');
 
 export default function ApprovalsPage() {
   const [approvals, setApprovals] = useState([]);
@@ -28,7 +31,7 @@ export default function ApprovalsPage() {
         if (mounted) { setApprovals(data); setLoading(false); }
       })
       .catch(err => {
-        if (mounted) { console.warn('[ApprovalsPage] fetch failed:', err); setLoading(false); }
+        if (mounted) { log.warn('Fetch failed', { error: err.message }); setLoading(false); }
       });
     return () => { mounted = false; };
   }, []);

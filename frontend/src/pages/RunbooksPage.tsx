@@ -12,6 +12,7 @@ import EmptyState from '../components/ui/EmptyState';
 import { useAuth } from '../contexts/AuthContext';
 import PageLoading from '../components/ui/PageLoading';
 import { dataService } from '../services/dataService';
+import { useToast } from '../hooks/useToast';
 import { createLogger } from '../lib/logger';
 
 const log = createLogger('RunbooksPage');
@@ -125,10 +126,9 @@ export default function RunbooksPage() {
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState('catalog');
   const [categoryFilter, setCategoryFilter] = useState('');
-  const [toast, setToast] = useState(null);
+  const { toast, showToast, dismissToast } = useToast();
   const { hasRole } = useAuth();
   const canExecute = hasRole('operator');
-  const toastTimerRef = useRef(null);
 
   // Estado de modales
   const [showExecuteModal, setShowExecuteModal] = useState(false);
@@ -156,15 +156,8 @@ export default function RunbooksPage() {
       })
       .catch((err) => { if (mounted) log.error('Failed to load runbooks data', { error: err.message }); })
       .finally(() => { if (mounted) setLoading(false); });
-    return () => { mounted = false; clearTimeout(toastTimerRef.current); stopPolling(); };
+    return () => { mounted = false; stopPolling(); };
   }, []);
-
-  // Mostrar notificación temporal
-  const showToast = (message, type = 'info') => {
-    clearTimeout(toastTimerRef.current);
-    setToast({ message, type });
-    toastTimerRef.current = setTimeout(() => setToast(null), 4000);
-  };
 
   // Polling para obtener el progreso de la ejecución
   const stopPolling = useCallback(() => {
@@ -946,7 +939,7 @@ export default function RunbooksPage() {
             )}
             <p className="text-sm font-medium">{toast.message}</p>
             <button
-              onClick={() => setToast(null)}
+              onClick={dismissToast}
               className="ml-auto flex-shrink-0 opacity-60 hover:opacity-100 transition-opacity"
             >
               <X size={14} />

@@ -16,7 +16,7 @@ export function useApi() {
       const result = await fetchApi(endpoint, options);
       return result;
     } catch (err) {
-      console.warn('[useApi]', err);
+      log.warn('Request failed', { error: err.message });
       setError(err.message);
       throw err;
     } finally {

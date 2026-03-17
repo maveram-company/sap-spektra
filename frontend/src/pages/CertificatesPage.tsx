@@ -6,6 +6,9 @@ import Badge from '../components/ui/Badge';
 import Table, { TableHeader, TableBody, TableRow, TableHead, TableCell } from '../components/ui/Table';
 import PageLoading from '../components/ui/PageLoading';
 import { dataService } from '../services/dataService';
+import { createLogger } from '../lib/logger';
+
+const log = createLogger('CertificatesPage');
 
 function StatusIcon({ status }) {
   if (status === 'ok') return <ShieldCheck size={16} className="text-success-500" />;
@@ -34,7 +37,7 @@ export default function CertificatesPage() {
       setLicenses(lics);
       setLoading(false);
     }).catch((err) => {
-      console.warn('[CertificatesPage] fetch failed:', err);
+      log.warn('Fetch failed', { error: err.message });
       setError('Error al cargar datos. Intenta de nuevo.');
       setLoading(false);
     });

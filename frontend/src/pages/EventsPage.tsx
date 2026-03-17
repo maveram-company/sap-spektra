@@ -4,6 +4,9 @@ import PageLoading from '../components/ui/PageLoading';
 import Pagination from '../components/ui/Pagination';
 import usePagination from '../hooks/usePagination';
 import { dataService } from '../services/dataService';
+import { createLogger } from '../lib/logger';
+
+const log = createLogger('EventsPage');
 import { Search, Filter, ChevronDown, AlertCircle, AlertTriangle, Info, CheckCircle } from 'lucide-react';
 
 const levelConfig = {
@@ -79,7 +82,7 @@ export default function EventsPage() {
       if (mounted) { setEvents(evts); setSystems(sys); setLoading(false); }
     }).catch((err) => {
       if (mounted) {
-        console.warn('[EventsPage] fetch failed:', err);
+        log.warn('Fetch failed', { error: err.message });
         setError('Error al cargar datos. Intenta de nuevo.');
         setLoading(false);
       }

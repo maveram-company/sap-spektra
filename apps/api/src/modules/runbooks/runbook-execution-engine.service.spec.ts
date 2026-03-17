@@ -9,6 +9,7 @@ describe('RunbookExecutionEngineService', () => {
 
   beforeEach(async () => {
     prisma = {
+      $transaction: jest.fn((args) => Promise.all(args)),
       runbook: {
         findUnique: jest.fn(),
       },

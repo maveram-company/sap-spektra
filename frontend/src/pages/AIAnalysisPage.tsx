@@ -1,8 +1,11 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useCallback } from 'react';
 import { Brain, Send, Sparkles, Bot } from 'lucide-react';
 import Header from '../components/layout/Header';
 import PageLoading from '../components/ui/PageLoading';
 import { dataService } from '../services/dataService';
+import { createLogger } from '../lib/logger';
+
+const log = createLogger('AIAnalysisPage');
 import { UpgradeBanner } from '../components/ui/FeatureGate';
 import { usePlan } from '../hooks/usePlan';
 
@@ -99,6 +102,7 @@ export default function AIAnalysisPage() {
   const [isTyping, setIsTyping] = useState(false);
   const chatEndRef = useRef(null);
   const inputRef = useRef(null);
+  const typingTimerRef = useRef<ReturnType<typeof setTimeout>>(null);
 
   useEffect(() => {
     Promise.all([dataService.getAIUseCases(), dataService.getAIResponses()]).then(([uc, resp]) => {
@@ -106,10 +110,11 @@ export default function AIAnalysisPage() {
       setAiResponses(resp);
       setLoading(false);
     }).catch((err) => {
-      console.warn('[AIAnalysisPage] fetch failed:', err);
+      log.warn('Fetch failed', { error: err.message });
       setError('Error al cargar datos. Intenta de nuevo.');
       setLoading(false);
     });
+    return () => { clearTimeout(typingTimerRef.current); };
   }, []);
 
   // Auto-scroll al final cuando llegan nuevos mensajes
@@ -118,9 +123,10 @@ export default function AIAnalysisPage() {
   }, [messages, isTyping]);
 
   // Genera una respuesta IA con delay simulado
-  const generateResponse = (userText) => {
+  const generateResponse = useCallback((userText) => {
     setIsTyping(true);
-    setTimeout(() => {
+    clearTimeout(typingTimerRef.current);
+    typingTimerRef.current = setTimeout(() => {
       const responseText = matchResponse(userText, aiResponses);
       setMessages((prev) => [
         ...prev,
@@ -132,7 +138,7 @@ export default function AIAnalysisPage() {
       ]);
       setIsTyping(false);
     }, 1200);
-  };
+  }, [aiResponses]);
 
   // Envía un mensaje del usuario
   const handleSend = () => {

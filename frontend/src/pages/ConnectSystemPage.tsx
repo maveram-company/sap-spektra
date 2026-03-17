@@ -11,6 +11,7 @@ import Input from '../components/ui/Input';
 import Select from '../components/ui/Select';
 import Button from '../components/ui/Button';
 import Badge from '../components/ui/Badge';
+import config from '../config';
 
 // ── Constantes ──
 
@@ -176,10 +177,11 @@ const SCC_STEPS = [
 // ── Generador de comandos de instalación ──
 
 function getInstallCommands(os) {
+  const baseUrl = config.agentReleasesBaseUrl;
   if (os === 'windows') {
     return {
       download: `# Descargar el instalador de Spektra Agent
-Invoke-WebRequest -Uri "https://releases.spektra.maveram.com/agent/latest/install.ps1" -OutFile install.ps1`,
+Invoke-WebRequest -Uri "${baseUrl}/install.ps1" -OutFile install.ps1`,
       install: `# Ejecutar como Administrador
 Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
 .\\install.ps1`,
@@ -194,7 +196,7 @@ Get-Service SpektraAgent`,
   const sudoPrefix = os === 'linux' ? 'sudo ' : '';
   return {
     download: `# Descargar el instalador
-curl -fsSL https://releases.spektra.maveram.com/agent/latest/install.sh -o install.sh
+curl -fsSL ${baseUrl}/install.sh -o install.sh
 chmod +x install.sh`,
     install: `# Ejecutar como root
 ${sudoPrefix}./install.sh`,

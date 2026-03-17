@@ -42,6 +42,20 @@ export class CreateOperationDto {
   schedule?: string;
 }
 
+export class OperationFiltersDto {
+  @IsOptional()
+  @IsString()
+  status?: string;
+
+  @IsOptional()
+  @IsString()
+  type?: string;
+
+  @IsOptional()
+  @IsString()
+  systemId?: string;
+}
+
 export class UpdateOperationStatusDto {
   @IsEnum(OperationStatus)
   status!: OperationStatus;

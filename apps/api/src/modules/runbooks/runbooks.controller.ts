@@ -10,6 +10,7 @@ import {
   HttpStatus,
 } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiBearerAuth } from '@nestjs/swagger';
+import { Throttle } from '@nestjs/throttler';
 import { RunbooksService } from './runbooks.service';
 import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
 import { TenantGuard } from '../../common/guards/tenant.guard';
@@ -63,6 +64,7 @@ export class RunbooksController {
   @Post(':id/execute')
   @HttpCode(HttpStatus.ACCEPTED)
   @Roles('operator')
+  @Throttle({ default: { ttl: 60000, limit: 10 } })
   @ApiOperation({ summary: 'Execute a runbook on a system' })
   execute(
     @TenantId() orgId: string,

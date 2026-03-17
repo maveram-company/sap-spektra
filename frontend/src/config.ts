@@ -1,5 +1,6 @@
 const config = {
   apiUrl: import.meta.env.VITE_API_URL || 'http://localhost:3001/api',
+  agentReleasesBaseUrl: import.meta.env.VITE_AGENT_RELEASES_URL || 'https://releases.spektra.maveram.com/agent/latest',
   appName: 'SAP Spektra',
   appVersion: '1.5.0',
   company: 'Maveram',
