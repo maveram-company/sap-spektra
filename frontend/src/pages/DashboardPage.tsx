@@ -40,7 +40,7 @@ const variantIconGradient = {
 // Icon is used as a JSX component (<Icon />) below; ESLint's no-unused-vars
 // does not detect JSX usage of destructured-and-renamed props.
 // eslint-disable-next-line no-unused-vars
-function KPICard({ icon: Icon, label, value, change, variant = 'default' }) {
+function KPICard({ icon: Icon, label, value, change, variant = 'default' }: { icon: any; label: any; value: any; change?: any; variant?: string }) {
   const valueColor   = variantValueColors[variant];
   const glowClass    = variantGlowClass[variant];
   const [gradFrom, gradTo] = variantIconGradient[variant];

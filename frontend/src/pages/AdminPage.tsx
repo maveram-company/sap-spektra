@@ -20,7 +20,7 @@ export default function AdminPage() {
   const [checking, setChecking] = useState(null);
   const [deleteConfirm, setDeleteConfirm] = useState(null);
   const [actionError, setActionError] = useState(null);
-  const deleteTimerRef = useRef<ReturnType<typeof setTimeout>>();
+  const deleteTimerRef = useRef<ReturnType<typeof setTimeout>>(undefined);
   const navigate = useNavigate();
 
   useEffect(() => {

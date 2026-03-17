@@ -115,7 +115,7 @@ describe('AuthProvider – login (demo mode)', () => {
   it('creates a demo user with correct properties', async () => {
     const { result } = renderHook(() => useAuth(), { wrapper });
 
-    let user: Record<string, unknown> | undefined;
+    let user: any;
     await act(async () => {
       user = await result.current.login('testuser', 'password');
     });

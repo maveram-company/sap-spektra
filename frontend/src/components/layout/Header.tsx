@@ -1,7 +1,16 @@
+import type { ReactNode } from 'react';
 import { RefreshCw } from 'lucide-react';
 
+interface HeaderProps {
+  title: string;
+  subtitle?: string;
+  onRefresh?: () => void;
+  refreshing?: boolean;
+  actions?: ReactNode;
+}
+
 // Cabecera de página — solo título, subtítulo y botón de refresco opcional
-export default function Header({ title, subtitle, onRefresh, refreshing = false, actions }) {
+export default function Header({ title, subtitle, onRefresh, refreshing = false, actions }: HeaderProps) {
   return (
     <div className="flex items-center justify-between px-6 pt-6 pb-2">
       <div>

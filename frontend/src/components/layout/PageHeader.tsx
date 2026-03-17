@@ -1,4 +1,18 @@
-export default function PageHeader({ title, description, actions, breadcrumb }) {
+import type { ReactNode } from 'react';
+
+interface BreadcrumbItem {
+  label: string;
+  href?: string;
+}
+
+interface PageHeaderProps {
+  title: string;
+  description?: string;
+  actions?: ReactNode;
+  breadcrumb?: BreadcrumbItem[];
+}
+
+export default function PageHeader({ title, description, actions, breadcrumb }: PageHeaderProps) {
   return (
     <div className="mb-6">
       {breadcrumb && (

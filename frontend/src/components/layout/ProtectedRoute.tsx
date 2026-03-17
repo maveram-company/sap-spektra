@@ -2,7 +2,14 @@ import { Navigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import PageLoading from '../ui/PageLoading';
 
-export default function ProtectedRoute({ children, requiredRole }) {
+import type { ReactNode } from 'react';
+
+interface ProtectedRouteProps {
+  children: ReactNode;
+  requiredRole?: string;
+}
+
+export default function ProtectedRoute({ children, requiredRole }: ProtectedRouteProps) {
   const { isAuthenticated, loading, hasRole } = useAuth();
   const location = useLocation();
 

@@ -91,10 +91,10 @@ const getOpLabels = (sys) => {
 export default function HAControlCenterPage() {
   const { user } = useAuth();
   const [activeTab, setActiveTab] = useState('systems');
-  const [systems, setSystems] = useState([]);
-  const [opsHistory, setOpsHistory] = useState([]);
-  const [haDrivers, setHaDrivers] = useState([]);
-  const [haPrereqs, setHaPrereqs] = useState({});
+  const [systems, setSystems] = useState<any[]>([]);
+  const [opsHistory, setOpsHistory] = useState<any[]>([]);
+  const [haDrivers, setHaDrivers] = useState<any[]>([]);
+  const [haPrereqs, setHaPrereqs] = useState<Record<string, any[]>>({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [selectedStrategy, setSelectedStrategy] = useState('ALL');
@@ -105,7 +105,7 @@ export default function HAControlCenterPage() {
       dataService.getHAOpsHistory(),
       dataService.getHADrivers(),
       dataService.getHAPrereqs(),
-    ]).then(([sys, history, drivers, prereqs]) => {
+    ]).then(([sys, history, drivers, prereqs]: any[]) => {
       setSystems(sys);
       setOpsHistory(history);
       setHaDrivers(drivers);

@@ -1,17 +1,27 @@
-import { useEffect, useRef, useId } from 'react';
+import { useEffect, useRef, useId, type ReactNode } from 'react';
 import { X } from 'lucide-react';
 
-export default function Modal({ isOpen, onClose, title, description, children, size = 'md', footer }) {
+interface ModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  title: string;
+  description?: string;
+  children?: ReactNode;
+  size?: 'sm' | 'md' | 'lg' | 'xl';
+  footer?: ReactNode;
+}
+
+export default function Modal({ isOpen, onClose, title, description, children, size = 'md', footer }: ModalProps) {
   const titleId = useId();
   const descId = useId();
-  const previousFocusRef = useRef(null);
-  const dialogRef = useRef(null);
+  const previousFocusRef = useRef<HTMLElement | null>(null);
+  const dialogRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     if (isOpen) {
-      previousFocusRef.current = document.activeElement;
+      previousFocusRef.current = document.activeElement as HTMLElement;
       document.body.style.overflow = 'hidden';
-      const handleEsc = (e) => e.key === 'Escape' && onClose();
+      const handleEsc = (e: KeyboardEvent) => e.key === 'Escape' && onClose();
       window.addEventListener('keydown', handleEsc);
       // Focus the dialog container
       requestAnimationFrame(() => dialogRef.current?.focus());
@@ -25,7 +35,7 @@ export default function Modal({ isOpen, onClose, title, description, children, s
 
   if (!isOpen) return null;
 
-  const sizes = { sm: 'max-w-md', md: 'max-w-lg', lg: 'max-w-2xl', xl: 'max-w-4xl' };
+  const sizes: Record<string, string> = { sm: 'max-w-md', md: 'max-w-lg', lg: 'max-w-2xl', xl: 'max-w-4xl' };
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">

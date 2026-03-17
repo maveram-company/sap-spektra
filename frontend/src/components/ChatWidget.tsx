@@ -35,7 +35,7 @@ export default function ChatWidget() {
       const history = messages.map(m => ({ role: m.role, content: m.content }));
       const response = await dataService.chat(userMessage, { history });
       if (!mountedRef.current) return;
-      const aiText = response?.message || response?.data?.message || 'No pude procesar tu consulta. Intenta de nuevo.';
+      const aiText = (response as any)?.message || (response as any)?.data?.message || 'No pude procesar tu consulta. Intenta de nuevo.';
       setMessages(prev => [...prev, { role: 'assistant', content: aiText }]);
     } catch {
       if (!mountedRef.current) return;

@@ -119,7 +119,7 @@ function StepIndicator({ steps, current }) {
   );
 }
 
-function CodeBlock({ title, code, onCopy }) {
+function CodeBlock({ title, code, onCopy }: { title: any; code: any; onCopy?: any }) {
   const [copied, setCopied] = useState(false);
   const handleCopy = () => {
     navigator.clipboard.writeText(code);
@@ -218,7 +218,7 @@ export default function ConnectSystemPage() {
   const [submitting, setSubmitting] = useState(false);
   const [success, setSuccess] = useState(false);
   const [connectionTest, setConnectionTest] = useState({ testing: false, result: null });
-  const [fieldErrors, setFieldErrors] = useState({});
+  const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
 
   // Campos Agent
   const [agentForm, setAgentForm] = useState({
@@ -253,7 +253,7 @@ export default function ConnectSystemPage() {
 
   // Validación de paso actual antes de avanzar
   const validateAgentStep = useCallback((currentStep) => {
-    const errors = {};
+    const errors: Record<string, string> = {};
     if (currentStep === 3) {
       if (!agentForm.sid.trim()) errors.sid = 'SID es requerido';
       else if (!SID_PATTERN.test(agentForm.sid)) errors.sid = 'SID: 3 caracteres, primera letra A-Z';
@@ -267,7 +267,7 @@ export default function ConnectSystemPage() {
   }, [agentForm]);
 
   const validateSccStep = useCallback((currentStep) => {
-    const errors = {};
+    const errors: Record<string, string> = {};
     if (currentStep === 1) {
       if (!sccForm.locationId.trim()) errors.locationId = 'Location ID es requerido';
       if (!sccForm.subaccount.trim()) errors.subaccount = 'Subaccount es requerido';

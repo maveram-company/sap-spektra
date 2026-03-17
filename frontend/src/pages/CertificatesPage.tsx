@@ -26,13 +26,13 @@ function DaysLeftBadge({ days, status }) {
 }
 
 export default function CertificatesPage() {
-  const [certificates, setCertificates] = useState([]);
-  const [licenses, setLicenses] = useState([]);
+  const [certificates, setCertificates] = useState<any[]>([]);
+  const [licenses, setLicenses] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    Promise.all([dataService.getCertificates(), dataService.getLicenses()]).then(([certs, lics]) => {
+    Promise.all([dataService.getCertificates(), dataService.getLicenses()]).then(([certs, lics]: any[]) => {
       setCertificates(certs);
       setLicenses(lics);
       setLoading(false);

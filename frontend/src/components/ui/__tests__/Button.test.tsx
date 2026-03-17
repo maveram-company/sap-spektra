@@ -26,7 +26,7 @@ describe('Button', () => {
 
   Object.entries(variantKeywords).forEach(([variant, keyword]) => {
     it(`applies ${variant} variant classes`, () => {
-      render(<Button variant={variant}>{variant}</Button>);
+      render(<Button variant={variant as any}>{variant}</Button>);
       expect(screen.getByRole('button').className).toContain(keyword);
     });
   });
