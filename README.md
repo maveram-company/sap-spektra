@@ -73,7 +73,7 @@ Operating systems: SLES, RHEL, Windows, AIX, Solaris.
 
 ## Runbooks
 
-123 runbooks with compatibility validation — execution is blocked if the system doesn't meet prerequisites (database type, SAP stack, OS, HA config).
+119 runbooks with compatibility validation — execution is blocked if the system doesn't meet prerequisites (database type, SAP stack, OS, HA config). In `LOCAL_SIMULATED` mode, runbook execution produces simulated output; in `AWS_REAL` mode, commands are sent to the on-premise Spektra Agent via HTTP.
 
 Categories: HANA, Oracle, MSSQL, DB2, ASE, MaxDB, Linux, Windows, AIX, Solaris, ABAP, BW, PO.
 
@@ -86,6 +86,8 @@ Categories: HANA, Oracle, MSSQL, DB2, ASE, MaxDB, Linux, Windows, AIX, Solaris, 
 - **Monitoring** — health snapshots, host metrics, breaches, dependency tracking
 - **Operations** — jobs, transports, certificates, approval workflows
 - **Analytics** — system trends, runbook analytics, overview dashboards
+
+> **Note:** The default runtime mode is `LOCAL_SIMULATED`, which uses local JWT auth, seeded demo data, and simulated command execution. The `AWS_REAL` mode is defined in Terraform (`infra/aws/`) and sets up Cognito, S3, SQS, and EventBridge, but the NestJS application does not yet consume these AWS services at runtime. In `AWS_REAL` mode, the API communicates with on-premise Spektra Agents via HTTP for real command execution. The AI chat assistant calls the Claude API when `ANTHROPIC_API_KEY` is configured; otherwise it falls back to keyword-matched responses using real database context.
 
 ## Documentation
 
