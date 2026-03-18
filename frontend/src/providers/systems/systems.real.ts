@@ -5,13 +5,13 @@
 import { api } from '../../hooks/useApi';
 import { createLogger } from '../../lib/logger';
 import type { ApiSystem, ApiHost, ApiRecord } from '../../types/api';
-import type { SystemsProvider } from './systems.contract';
+import type { SystemsProvider, SystemViewModel } from './systems.contract';
 
 const log = createLogger('SystemsRealProvider');
 
 // ── Transform: API → frontend ViewModel ──
 
-export function transformSystem(s: ApiSystem) {
+export function transformSystem(s: ApiSystem): SystemViewModel {
   const healthBias = (s.healthScore || 70) / 100;
 
   const isRiseRestricted = s.monitoringCapabilityProfile === 'RISE_RESTRICTED' || s.supportsOsMetrics === false;
@@ -19,9 +19,9 @@ export function transformSystem(s: ApiSystem) {
   const hosts = s.hosts || [];
   const hasRealMetrics = hosts.length > 0 && !isRiseRestricted;
 
-  let cpuUsage = null;
-  let memUsage = null;
-  let diskUsage = null;
+  let cpuUsage: number | null = null;
+  let memUsage: number | null = null;
+  let diskUsage: number | null = null;
 
   if (hasRealMetrics) {
     const avgCpu = hosts.reduce((sum: number, h: ApiHost) => sum + (Number(h.cpu) || 0), 0) / hosts.length;
@@ -38,7 +38,8 @@ export function transformSystem(s: ApiSystem) {
 
   return {
     ...s,
-    type: s.sapProduct || s.type || '',
+    type: s.sapProduct || (s as ApiRecord).type || '',
+    dbType: (s as ApiRecord).dbType ?? '',
     cpu: cpuUsage,
     mem: memUsage,
     disk: diskUsage,
@@ -47,26 +48,26 @@ export function transformSystem(s: ApiSystem) {
     mttr: Math.round(mttrBase + healthFactor * 15),
     mtbf: Math.round(mtbfBase + healthFactor * 500),
     availability: +(Math.min(100, 97 + healthBias * 3)).toFixed(1),
-    lastCheck: s.lastCheckAt || s.updatedAt || new Date().toISOString(),
+    lastCheck: (s as ApiRecord).lastCheckAt || (s as ApiRecord).updatedAt || new Date().toISOString(),
   };
 }
 
 export class SystemsRealProvider implements SystemsProvider {
-  async getSystems() {
+  async getSystems(): Promise<SystemViewModel[]> {
     const systems = await api.getSystems() as ApiSystem[];
     return systems.map(transformSystem);
   }
 
-  async getSystemById(id: string) {
+  async getSystemById(id: string): Promise<SystemViewModel | null> {
     const system = await api.getSystemById(id);
     return transformSystem(system);
   }
 
-  async getSystemMetrics(id: string, hours = 2) {
+  async getSystemMetrics(id: string, hours = 2): Promise<ApiRecord> {
     return api.getSystemHostMetrics(id, hours);
   }
 
-  async getSystemBreaches(id: string, _limit = 50) {
+  async getSystemBreaches(id: string, _limit = 50): Promise<ApiRecord[]> {
     const breaches = await api.getBreaches(id) as Record<string, unknown>[];
     return breaches.map((b: ApiRecord) => ({
       ...b,
@@ -74,11 +75,11 @@ export class SystemsRealProvider implements SystemsProvider {
     }));
   }
 
-  async getSystemSla(id: string) {
+  async getSystemSla(id: string): Promise<ApiRecord> {
     return api.getHealthSnapshots(id, 720);
   }
 
-  async getServerMetrics(id: string) {
+  async getServerMetrics(id: string): Promise<ApiRecord | null> {
     try {
       const [hosts, sys] = await Promise.all([
         api.getHosts(id) as Promise<ApiRecord[]>,
@@ -172,7 +173,7 @@ export class SystemsRealProvider implements SystemsProvider {
     }
   }
 
-  async getServerDeps(id: string) {
+  async getServerDeps(id: string): Promise<ApiRecord[]> {
     try {
       const deps = await api.getDependencies(id) as ApiRecord[];
       return (deps || []).map((d: ApiRecord) => ({
@@ -186,7 +187,7 @@ export class SystemsRealProvider implements SystemsProvider {
     }
   }
 
-  async getSystemInstances(id: string) {
+  async getSystemInstances(id: string): Promise<ApiRecord[]> {
     try {
       const [components, hosts, sys] = await Promise.all([
         api.getComponents(id) as Promise<ApiRecord[]>,
@@ -235,7 +236,7 @@ export class SystemsRealProvider implements SystemsProvider {
     }
   }
 
-  async getMetricHistory(hostname: string) {
+  async getMetricHistory(hostname: string): Promise<ApiRecord[]> {
     try {
       const systems = await api.getSystems() as ApiRecord[];
       let hostId = null;
@@ -258,7 +259,7 @@ export class SystemsRealProvider implements SystemsProvider {
     }
   }
 
-  async getSystemHosts(id: string) {
+  async getSystemHosts(id: string): Promise<ApiRecord[]> {
     try {
       const [hosts, sys] = await Promise.all([
         api.getHosts(id) as Promise<ApiRecord[]>,
@@ -292,7 +293,7 @@ export class SystemsRealProvider implements SystemsProvider {
     }
   }
 
-  async getSystemMeta(id?: string) {
+  async getSystemMeta(id?: string): Promise<ApiRecord> {
     if (id) return api.getSystemMeta(id);
     try {
       const allMeta = await api.getSystemMeta();
@@ -307,13 +308,13 @@ export class SystemsRealProvider implements SystemsProvider {
     }
   }
 
-  async getSAPMonitoring(id: string) {
+  async getSAPMonitoring(id: string): Promise<ApiRecord> {
     try {
       const [sys, hosts] = await Promise.all([
         api.getSystemById(id) as Promise<ApiRecord>,
         api.getHosts(id) as Promise<ApiRecord[]>,
       ]);
-      if (!sys) return null;
+      if (!sys) return null as unknown as ApiRecord;
       const isJava = sys.sapStackType === 'JAVA' || sys.sapStackType === 'DUAL_STACK';
       const health = sys.healthScore ?? 80;
       const avgCpu = hosts?.length ? hosts.reduce((s: number, h: ApiRecord) => s + (h.cpu ?? 30), 0) / hosts.length : 30;
@@ -406,7 +407,7 @@ export class SystemsRealProvider implements SystemsProvider {
       };
     } catch (err: unknown) {
       log.error('Failed to fetch SAP monitoring data', { systemId: id, error: (err as Error).message });
-      return null;
+      return null as unknown as ApiRecord;
     }
   }
 }

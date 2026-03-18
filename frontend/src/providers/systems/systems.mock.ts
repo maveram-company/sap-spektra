@@ -15,70 +15,70 @@ import {
   mockSystemMeta,
   mockSAPMonitoring,
 } from '../../lib/mockData';
-import type { SystemsProvider } from './systems.contract';
+import type { SystemsProvider, SystemViewModel } from './systems.contract';
 
 const delay = (ms = 400) => new Promise(r => setTimeout(r, ms));
 
 export class SystemsMockProvider implements SystemsProvider {
-  async getSystems() {
+  async getSystems(): Promise<SystemViewModel[]> {
     await delay();
-    return mockSystems;
+    return mockSystems as unknown as SystemViewModel[];
   }
 
-  async getSystemById(id: string) {
+  async getSystemById(id: string): Promise<SystemViewModel | null> {
     await delay();
-    return mockSystems.find((s: ApiRecord) => s.id === id) || null;
+    return (mockSystems.find((s: ApiRecord) => s.id === id) as unknown as SystemViewModel) || null;
   }
 
-  async getSystemMetrics(_id: string, _hours = 2) {
+  async getSystemMetrics(_id: string, _hours = 2): Promise<ApiRecord> {
     await delay(300);
     return mockMetrics();
   }
 
-  async getSystemBreaches(id: string, limit = 50) {
+  async getSystemBreaches(id: string, limit = 50): Promise<ApiRecord[]> {
     await delay(300);
     return id
       ? mockBreaches.filter((b: ApiRecord) => b.systemId === id).slice(0, limit)
       : mockBreaches.slice(0, limit);
   }
 
-  async getSystemSla(id: string) {
+  async getSystemSla(id: string): Promise<ApiRecord> {
     await delay(300);
     const sys = mockSystems.find((s: ApiRecord) => s.id === id);
-    return sys ? { mttr: sys.mttr, mtbf: sys.mtbf, availability: sys.availability } : null;
+    return sys ? { mttr: sys.mttr, mtbf: sys.mtbf, availability: sys.availability } : null as unknown as ApiRecord;
   }
 
-  async getServerMetrics(id: string) {
+  async getServerMetrics(id: string): Promise<ApiRecord | null> {
     await delay(300);
     return (mockServerMetrics as Record<string, ApiRecord>)[id] || null;
   }
 
-  async getServerDeps(id: string) {
+  async getServerDeps(id: string): Promise<ApiRecord[]> {
     await delay(300);
-    return (mockServerDeps as Record<string, ApiRecord[]>)[id] || null;
+    return (mockServerDeps as Record<string, ApiRecord[]>)[id] || [];
   }
 
-  async getSystemInstances(id: string) {
+  async getSystemInstances(id: string): Promise<ApiRecord[]> {
     await delay(300);
     return (mockSystemInstances as Record<string, ApiRecord[]>)[id] || [];
   }
 
-  async getSystemHosts(id: string) {
+  async getSystemHosts(id: string): Promise<ApiRecord[]> {
     await delay(200);
     return getSystemHostsMock(id);
   }
 
-  async getSystemMeta(id?: string) {
+  async getSystemMeta(id?: string): Promise<ApiRecord> {
     await delay(200);
-    return id ? ((mockSystemMeta as Record<string, ApiRecord>)[id] || null) : mockSystemMeta;
+    return id ? ((mockSystemMeta as Record<string, ApiRecord>)[id] || null as unknown as ApiRecord) : mockSystemMeta;
   }
 
-  async getSAPMonitoring(id: string) {
+  async getSAPMonitoring(id: string): Promise<ApiRecord> {
     await delay(300);
-    return (mockSAPMonitoring as Record<string, ApiRecord>)[id] || null;
+    return (mockSAPMonitoring as Record<string, ApiRecord>)[id] || null as unknown as ApiRecord;
   }
 
-  async getMetricHistory(hostname: string) {
+  async getMetricHistory(hostname: string): Promise<ApiRecord[]> {
     await delay(300);
     return (mockMetricHistory as Record<string, ApiRecord[]>)[hostname] || [];
   }

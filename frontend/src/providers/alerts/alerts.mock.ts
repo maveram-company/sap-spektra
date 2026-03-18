@@ -4,17 +4,27 @@
 
 import type { ApiRecord } from '../../types/api';
 import { mockAlerts } from '../../lib/mockData';
-import type { AlertsProvider } from './alerts.contract';
+import type { AlertsProvider, AlertViewModel, AlertStats } from './alerts.contract';
 
 const delay = (ms = 400) => new Promise(r => setTimeout(r, ms));
 
 export class AlertsMockProvider implements AlertsProvider {
-  async getAlerts() {
+  async getAlerts(filters?: { status?: string; level?: string; systemId?: string }): Promise<AlertViewModel[]> {
     await delay();
-    return mockAlerts;
+    let result = mockAlerts as unknown as AlertViewModel[];
+    if (filters?.status) {
+      result = result.filter((a: ApiRecord) => a.status === filters.status);
+    }
+    if (filters?.level) {
+      result = result.filter((a: ApiRecord) => a.level === filters.level);
+    }
+    if (filters?.systemId) {
+      result = result.filter((a: ApiRecord) => a.systemId === filters.systemId);
+    }
+    return result;
   }
 
-  async getAlertStats() {
+  async getAlertStats(): Promise<AlertStats> {
     await delay();
     const total = mockAlerts.length;
     const critical = mockAlerts.filter((a: ApiRecord) => a.level === 'critical').length;

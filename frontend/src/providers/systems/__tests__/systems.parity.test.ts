@@ -8,6 +8,7 @@ vi.mock('../../../hooks/useApi', () => ({
         sid: 'EP1',
         sapProduct: 'S/4HANA',
         dbType: 'SAP HANA 2.0',
+        description: 'Production ERP',
         environment: 'PRD',
         status: 'healthy',
         healthScore: 94,
@@ -21,6 +22,7 @@ vi.mock('../../../hooks/useApi', () => ({
       sid: 'EP1',
       sapProduct: 'S/4HANA',
       dbType: 'SAP HANA 2.0',
+      description: 'Production ERP',
       environment: 'PRD',
       status: 'healthy',
       healthScore: 94,
@@ -49,7 +51,12 @@ vi.mock('../../../lib/logger', () => ({
 
 vi.mock('../../../lib/mockData', () => ({
   mockSystems: [
-    { id: 'sys-1', sid: 'EP1', type: 'S/4HANA', status: 'healthy', cpu: 42, mem: 65, disk: 58, mttr: 25, mtbf: 1440, availability: 99.8 },
+    {
+      id: 'sys-1', sid: 'EP1', type: 'S/4HANA', dbType: 'SAP HANA 2.0', description: 'Production ERP',
+      environment: 'PRD', status: 'healthy', healthScore: 94,
+      cpu: 42, mem: 65, disk: 58, isRiseRestricted: false,
+      mttr: 25, mtbf: 1440, availability: 99.8,
+    },
   ],
   mockBreaches: [
     { id: 'mock-b-1', systemId: 'sys-1', metric: 'cpu', value: 95, sid: 'EP1' },
@@ -66,10 +73,13 @@ vi.mock('../../../lib/mockData', () => ({
 
 import { SystemsRealProvider } from '../systems.real';
 import { SystemsMockProvider } from '../systems.mock';
+import type { SystemViewModel } from '../systems.contract';
 
 describe('SystemsProvider parity tests', () => {
   const real = new SystemsRealProvider();
   const mock = new SystemsMockProvider();
+
+  // ── A) Shape parity ──
 
   describe.each([
     ['real', real],
@@ -124,6 +134,56 @@ describe('SystemsProvider parity tests', () => {
     it('getMetricHistory() returns an array', async () => {
       const result = await provider.getMetricHistory('sap-ep1-01');
       expect(Array.isArray(result)).toBe(true);
+    });
+  });
+
+  // ── B) Semantic parity — SystemViewModel fields ──
+
+  describe.each([
+    ['real', real],
+    ['mock', mock],
+  ])('%s provider — semantic assertions', (_name, provider) => {
+    it('getSystems returns SystemViewModel[] with required fields', async () => {
+      const result = await provider.getSystems();
+      for (const sys of result) {
+        expect(typeof sys.id).toBe('string');
+        expect(typeof sys.sid).toBe('string');
+        expect(typeof sys.type).toBe('string');
+        expect(typeof sys.environment).toBe('string');
+        expect(typeof sys.healthScore).toBe('number');
+        expect(typeof sys.status).toBe('string');
+        expect(sys.cpu === null || typeof sys.cpu === 'number').toBe(true);
+        expect(sys.mem === null || typeof sys.mem === 'number').toBe(true);
+        expect(sys.disk === null || typeof sys.disk === 'number').toBe(true);
+        expect(typeof sys.isRiseRestricted).toBe('boolean');
+        expect(typeof sys.description).toBe('string');
+      }
+    });
+
+    it('getSystemById returns SystemViewModel with required fields', async () => {
+      const sys = await provider.getSystemById('sys-1') as SystemViewModel;
+      expect(sys).not.toBeNull();
+      expect(typeof sys.id).toBe('string');
+      expect(typeof sys.sid).toBe('string');
+      expect(typeof sys.status).toBe('string');
+      expect(typeof sys.healthScore).toBe('number');
+    });
+  });
+
+  // ── D) Permission parity — mock still exposes all methods ──
+
+  describe('permission parity', () => {
+    it('mock provider exposes the same method set as real', () => {
+      const realMethods = Object.getOwnPropertyNames(Object.getPrototypeOf(real)).filter(m => m !== 'constructor');
+      const mockMethods = Object.getOwnPropertyNames(Object.getPrototypeOf(mock)).filter(m => m !== 'constructor');
+      expect(mockMethods.sort()).toEqual(realMethods.sort());
+    });
+
+    it('mock readOnly still returns data (not errors)', async () => {
+      const systems = await mock.getSystems();
+      expect(Array.isArray(systems)).toBe(true);
+      const metrics = await mock.getSystemMetrics('sys-1');
+      expect(metrics).toBeDefined();
     });
   });
 });
