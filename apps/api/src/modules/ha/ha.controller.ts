@@ -1,4 +1,5 @@
 import { Controller, Get, Patch, Param, Body, UseGuards } from '@nestjs/common';
+import { Throttle } from '@nestjs/throttler';
 import { ApiTags, ApiOperation, ApiBearerAuth } from '@nestjs/swagger';
 import { HAService } from './ha.service';
 import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
@@ -34,6 +35,7 @@ export class HAController {
   }
 
   @Patch(':systemId/failover')
+  @Throttle({ default: { ttl: 60000, limit: 5 } })
   @Roles('admin')
   @ApiOperation({ summary: 'Trigger failover for a system' })
   triggerFailover(

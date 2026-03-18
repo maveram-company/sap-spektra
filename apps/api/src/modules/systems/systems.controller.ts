@@ -8,6 +8,7 @@ import {
   Param,
   UseGuards,
 } from '@nestjs/common';
+import { Throttle } from '@nestjs/throttler';
 import { ApiTags, ApiOperation, ApiBearerAuth } from '@nestjs/swagger';
 import { SystemsService } from './systems.service';
 import { CreateSystemDto, UpdateSystemDto } from './dto/system.dto';
@@ -46,6 +47,7 @@ export class SystemsController {
   }
 
   @Post()
+  @Throttle({ default: { ttl: 60000, limit: 10 } })
   @Roles('admin')
   @ApiOperation({ summary: 'Register a new SAP system' })
   create(@TenantId() orgId: string, @Body() dto: CreateSystemDto) {
@@ -53,6 +55,7 @@ export class SystemsController {
   }
 
   @Patch(':id')
+  @Throttle({ default: { ttl: 60000, limit: 10 } })
   @Roles('operator')
   @ApiOperation({ summary: 'Update system configuration' })
   update(
@@ -64,6 +67,7 @@ export class SystemsController {
   }
 
   @Delete(':id')
+  @Throttle({ default: { ttl: 60000, limit: 10 } })
   @Roles('admin')
   @ApiOperation({ summary: 'Deregister a system' })
   remove(@TenantId() orgId: string, @Param('id') id: string) {

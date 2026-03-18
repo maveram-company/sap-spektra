@@ -6,6 +6,7 @@ import {
 } from '@nestjs/common';
 import { Runbook } from '@prisma/client';
 import { PrismaService } from '../../infrastructure/prisma/prisma.service';
+import { AuditService } from '../audit/audit.service';
 import { RunbookExecutionEngineService } from './runbook-execution-engine.service';
 
 @Injectable()
@@ -15,6 +16,7 @@ export class RunbooksService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly engine: RunbookExecutionEngineService,
+    private readonly audit: AuditService,
   ) {}
 
   async findAll(organizationId: string, category?: string) {
@@ -345,6 +347,19 @@ export class RunbooksService {
     this.logger.log(
       `Execution created: id=${execution.id} gate=${gate} result=${execution.result}`,
     );
+
+    // Audit log (fire and forget)
+    this.audit
+      .log(organizationId, {
+        userEmail: executedBy,
+        action: 'runbook.executed',
+        resource: `runbook/${runbookId}/execution/${execution.id}`,
+        details: `Runbook executed: "${runbook.name}" on system ${systemId}, gate=${gate}`,
+        severity: 'info',
+      })
+      .catch((err) =>
+        this.logger.warn('Audit log failed', { error: err?.message }),
+      );
 
     // Gate HUMAN: queda en PENDING para aprobación
     if (gate === 'HUMAN') {

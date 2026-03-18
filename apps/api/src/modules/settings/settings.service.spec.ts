@@ -2,6 +2,7 @@ import { NotFoundException, BadRequestException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { SettingsService } from './settings.service';
 import { PrismaService } from '../../infrastructure/prisma/prisma.service';
+import { AuditService } from '../audit/audit.service';
 
 jest.mock('bcryptjs', () => ({
   hash: jest.fn().mockResolvedValue('hashed-key-value'),
@@ -39,6 +40,10 @@ describe('SettingsService', () => {
       providers: [
         SettingsService,
         { provide: PrismaService, useValue: prisma },
+        {
+          provide: AuditService,
+          useValue: { log: jest.fn().mockResolvedValue(undefined) },
+        },
       ],
     }).compile();
 

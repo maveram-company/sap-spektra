@@ -1,11 +1,15 @@
 import { Injectable, NotFoundException, Logger } from '@nestjs/common';
 import { PrismaService } from '../../infrastructure/prisma/prisma.service';
+import { AuditService } from '../audit/audit.service';
 
 @Injectable()
 export class AlertsService {
   private readonly logger = new Logger(AlertsService.name);
 
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly audit: AuditService,
+  ) {}
 
   async findAll(
     organizationId: string,
@@ -34,7 +38,7 @@ export class AlertsService {
     });
     if (!alert) throw new NotFoundException('Alert not found');
 
-    return this.prisma.alert.update({
+    const updated = await this.prisma.alert.update({
       where: { id: alertId },
       data: {
         status: 'acknowledged',
@@ -43,6 +47,21 @@ export class AlertsService {
         ackAt: new Date(),
       },
     });
+
+    // Audit log (fire and forget)
+    this.audit
+      .log(organizationId, {
+        userEmail,
+        action: 'alert.acknowledged',
+        resource: `alert/${alertId}`,
+        details: `Alert acknowledged: ${alert.level} - ${alert.message || alertId}`,
+        severity: 'info',
+      })
+      .catch((err) =>
+        this.logger.warn('Audit log failed', { error: err?.message }),
+      );
+
+    return updated;
   }
 
   async resolve(
@@ -56,7 +75,7 @@ export class AlertsService {
     });
     if (!alert) throw new NotFoundException('Alert not found');
 
-    return this.prisma.alert.update({
+    const resolved = await this.prisma.alert.update({
       where: { id: alertId },
       data: {
         status: 'resolved',
@@ -67,6 +86,21 @@ export class AlertsService {
         resolutionNote: data.note,
       },
     });
+
+    // Audit log (fire and forget)
+    this.audit
+      .log(organizationId, {
+        userEmail,
+        action: 'alert.resolved',
+        resource: `alert/${alertId}`,
+        details: `Alert resolved: ${alert.level} - ${alert.message || alertId}`,
+        severity: 'info',
+      })
+      .catch((err) =>
+        this.logger.warn('Audit log failed', { error: err?.message }),
+      );
+
+    return resolved;
   }
 
   async getStats(organizationId: string) {
