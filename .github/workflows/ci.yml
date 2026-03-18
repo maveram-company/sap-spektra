@@ -39,6 +39,9 @@ jobs:
       - run: npm run lint
       - run: npm test
       - run: npm run build
+      - name: Security audit
+        run: npm audit --audit-level=high
+        continue-on-error: true
 
   frontend:
     name: Frontend
@@ -54,6 +57,15 @@ jobs:
           cache: npm
           cache-dependency-path: frontend/package-lock.json
       - run: npm ci
+      - run: npx tsc --noEmit
       - run: npm run lint
       - run: npx vitest run
       - run: npm run build
+      - name: Security audit
+        run: npm audit --audit-level=high
+        continue-on-error: true
+
+  # TODO: Add Playwright E2E job. Requires running backend + frontend servers
+  # before test execution (e.g. via `npm run dev &` or a docker-compose setup).
+  # Recommended approach: use a dedicated docker-compose.ci.yml that starts
+  # all services, then run `npx playwright test` against them.

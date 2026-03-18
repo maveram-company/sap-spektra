@@ -59,6 +59,13 @@ dashboard/*
 tmp/
 temp/
 
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.pytest_cache/
+*.egg-info/
+
 # ── Terraform (infra/aws) ──
 *.tfstate
 *.tfstate.backup
