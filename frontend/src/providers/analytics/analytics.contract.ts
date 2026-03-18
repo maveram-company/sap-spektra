@@ -2,10 +2,10 @@
 // SAP Spektra — Analytics Provider Contract
 // ══════════════════════════════════════════════════════════════
 
- 
-type Any = any;
+import type { ApiRecord } from '../../types/api';
+import type { ProviderResult } from '../types';
 
 export interface AnalyticsProvider {
-  getAnalytics(): Promise<Any>;
-  getRunbookAnalytics(): Promise<Any>;
+  getAnalytics(): Promise<ProviderResult<ApiRecord>>;
+  getRunbookAnalytics(): Promise<ProviderResult<ApiRecord>>;
 }

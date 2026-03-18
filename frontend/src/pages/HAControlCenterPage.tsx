@@ -95,8 +95,11 @@ export default function HAControlCenterPage() {
   const { user } = useAuth();
   const [activeTab, setActiveTab] = useState('systems');
   const [systems, setSystems] = useState<any[]>([]);
+   
   const [opsHistory, setOpsHistory] = useState<any[]>([]);
+   
   const [haDrivers, setHaDrivers] = useState<any[]>([]);
+   
   const [haPrereqs, setHaPrereqs] = useState<Record<string, any[]>>({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -109,10 +112,10 @@ export default function HAControlCenterPage() {
       dataService.getHADrivers(),
       dataService.getHAPrereqs(),
     ]).then(([sys, history, drivers, prereqs]) => {
-      setSystems(sys);
-      setOpsHistory(history);
-      setHaDrivers(drivers);
-      setHaPrereqs(prereqs);
+      setSystems(sys as any[]);
+      setOpsHistory(history as any[]);
+      setHaDrivers(drivers as any[]);
+      setHaPrereqs(prereqs as Record<string, any[]>);
       setLoading(false);
     }).catch((err: unknown) => {
       log.warn('Fetch failed', { error: (err as Error).message });

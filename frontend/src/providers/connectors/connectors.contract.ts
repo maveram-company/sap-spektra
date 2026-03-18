@@ -2,9 +2,18 @@
 // SAP Spektra — Connectors Provider Contract
 // ══════════════════════════════════════════════════════════════
 
- 
-type Any = any;
+import type { ProviderResult } from '../types';
+
+export interface ConnectorViewModel {
+  id: string;
+  method: string;
+  status: string;
+  systemId: string;
+  sid: string;
+  lastHeartbeat: string;
+  [key: string]: unknown;
+}
 
 export interface ConnectorsProvider {
-  getConnectors(): Promise<Any[]>;
+  getConnectors(): Promise<ProviderResult<ConnectorViewModel[]>>;
 }

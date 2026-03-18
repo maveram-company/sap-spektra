@@ -2,11 +2,11 @@
 // SAP Spektra — Landscape Provider Contract
 // ══════════════════════════════════════════════════════════════
 
- 
-type Any = any;
+import type { ApiRecord } from '../../types/api';
+import type { ProviderResult } from '../types';
 
 export interface LandscapeProvider {
-  getDiscovery(): Promise<Any[]>;
-  getSIDLines(): Promise<Any[]>;
-  getLandscapeValidation(): Promise<Any>;
+  getDiscovery(): Promise<ProviderResult<ApiRecord[]>>;
+  getSIDLines(): Promise<ProviderResult<ApiRecord[]>>;
+  getLandscapeValidation(): Promise<ProviderResult<ApiRecord>>;
 }

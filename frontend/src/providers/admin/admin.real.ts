@@ -5,74 +5,84 @@
 import { api } from '../../hooks/useApi';
 import { createLogger } from '../../lib/logger';
 import type { ApiAuditEntry, ApiRecord } from '../../types/api';
-import type { AdminProvider } from './admin.contract';
+import type { AdminProvider, AuditEntryViewModel, UserViewModel } from './admin.contract';
 import {
   mockThresholds,
   mockEscalationPolicy,
   mockMaintenanceWindows,
 } from '../../lib/mockData';
+import { providerResult } from '../types';
 
 const log = createLogger('AdminRealProvider');
 
-export function transformAudit(a: ApiAuditEntry) {
+export function transformAudit(a: ApiAuditEntry): AuditEntryViewModel {
   return {
     ...a,
-    user: a.userEmail || a.user || '',
-    timestamp: a.timestamp || a.createdAt,
+    userEmail: a.userEmail || (a as ApiRecord).user || '',
+    time: (a as ApiRecord).timestamp || a.createdAt || '',
+    user: a.userEmail || (a as ApiRecord).user || '',
+    timestamp: (a as ApiRecord).timestamp || a.createdAt,
   };
 }
 
 export class AdminRealProvider implements AdminProvider {
   async getUsers() {
     const users = await api.getUsers() as Record<string, unknown>[];
-    return users.map((u: ApiRecord) => ({
+    return providerResult(users.map((u: ApiRecord) => ({
       ...u,
+      id: u.id || '',
+      email: u.email || '',
+      name: u.name || '',
+      role: u.role || '',
+      status: u.status || '',
       lastLogin: u.lastLoginAt || u.lastLogin,
       mfa: u.mfaEnabled ?? u.mfa ?? false,
       avatar: null,
-    }));
+    } as UserViewModel)), 'real');
   }
 
   async getAuditLog() {
     const entries = await api.getAuditLog() as ApiAuditEntry[];
-    return entries.map(transformAudit);
+    return providerResult(entries.map(transformAudit), 'real');
   }
 
   async getPlans() {
-    return api.getPlans();
+    const data = await api.getPlans();
+    return providerResult(data as ApiRecord, 'real');
   }
 
   async getApiKeys() {
-    return api.getApiKeys();
+    const data = await api.getApiKeys();
+    return providerResult(data as ApiRecord, 'real');
   }
 
   async getThresholds() {
     try {
       const settings = await api.getSettings() as ApiRecord;
-      return settings?.settings?.thresholds || mockThresholds;
+      return providerResult((settings?.settings?.thresholds || mockThresholds) as ApiRecord, 'real');
     } catch (err: unknown) {
       log.error('Failed to fetch thresholds', { error: (err as Error).message });
-      return mockThresholds;
+      return providerResult(mockThresholds as ApiRecord, 'real', { degraded: true, reason: (err as Error).message });
     }
   }
 
   async getEscalationPolicy() {
     try {
       const settings = await api.getSettings() as ApiRecord;
-      return settings?.settings?.escalation || mockEscalationPolicy;
+      return providerResult((settings?.settings?.escalation || mockEscalationPolicy) as ApiRecord, 'real');
     } catch (err: unknown) {
       log.error('Failed to fetch escalation policy', { error: (err as Error).message });
-      return mockEscalationPolicy;
+      return providerResult(mockEscalationPolicy as ApiRecord, 'real', { degraded: true, reason: (err as Error).message });
     }
   }
 
   async getMaintenanceWindows() {
     try {
       const settings = await api.getSettings() as ApiRecord;
-      return settings?.settings?.maintenanceWindows || mockMaintenanceWindows;
+      return providerResult((settings?.settings?.maintenanceWindows || mockMaintenanceWindows) as ApiRecord, 'real');
     } catch (err: unknown) {
       log.error('Failed to fetch maintenance windows', { error: (err as Error).message });
-      return mockMaintenanceWindows;
+      return providerResult(mockMaintenanceWindows as ApiRecord, 'real', { degraded: true, reason: (err as Error).message });
     }
   }
 }

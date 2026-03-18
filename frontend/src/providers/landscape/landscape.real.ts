@@ -7,6 +7,7 @@ import { createLogger } from '../../lib/logger';
 import type { ApiSystem, ApiHost, ApiRecord } from '../../types/api';
 import { mockSIDLines, mockLandscapeValidation } from '../../lib/mockData';
 import type { LandscapeProvider } from './landscape.contract';
+import { providerResult } from '../types';
 
 const log = createLogger('LandscapeRealProvider');
 
@@ -64,7 +65,7 @@ export function transformDiscovery(systems: ApiSystem[]) {
 export class LandscapeRealProvider implements LandscapeProvider {
   async getDiscovery() {
     const systems = await api.getSystems();
-    return transformDiscovery(systems);
+    return providerResult(transformDiscovery(systems) as ApiRecord[], 'real');
   }
 
   async getSIDLines() {
@@ -85,18 +86,24 @@ export class LandscapeRealProvider implements LandscapeProvider {
         if (!byProduct[lineName]) byProduct[lineName] = { ids: [], desc: sys.sapProduct || lineName };
         byProduct[lineName].ids.push(sys.id);
       }
-      return Object.entries(byProduct).map(([line, data]: [string, ApiRecord]) => ({
+      return providerResult(Object.entries(byProduct).map(([line, data]: [string, ApiRecord]) => ({
         line,
         description: data.desc,
         systems: data.ids,
-      }));
+      })) as ApiRecord[], 'real');
     } catch (err: unknown) {
       log.error('Failed to fetch SID lines, using mock data', { error: (err as Error).message });
-      return mockSIDLines;
+      return providerResult(mockSIDLines as unknown as ApiRecord[], 'real', { degraded: true, reason: (err as Error).message });
     }
   }
 
   async getLandscapeValidation() {
-    try { return await api.getLandscapeValidation(); } catch (err: unknown) { log.error('Failed to fetch landscape validation', { error: (err as Error).message }); return mockLandscapeValidation; }
+    try {
+      const data = await api.getLandscapeValidation();
+      return providerResult(data as ApiRecord, 'real');
+    } catch (err: unknown) {
+      log.error('Failed to fetch landscape validation', { error: (err as Error).message });
+      return providerResult(mockLandscapeValidation as ApiRecord, 'real', { degraded: true, reason: (err as Error).message });
+    }
   }
 }

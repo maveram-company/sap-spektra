@@ -8,28 +8,30 @@ import {
   mockHAOpsHistory,
   mockHADrivers,
 } from '../../lib/mockData';
-import type { HAProvider } from './ha.contract';
+import type { ApiRecord } from '../../types/api';
+import type { HAProvider, HAConfigViewModel } from './ha.contract';
+import { providerResult } from '../types';
 
 const delay = (ms = 400) => new Promise(r => setTimeout(r, ms));
 
 export class HAMockProvider implements HAProvider {
   async getHASystems() {
     await delay();
-    return mockHASystems;
+    return providerResult(mockHASystems as unknown as HAConfigViewModel[], 'mock');
   }
 
   async getHAPrereqs(_systemId?: string) {
     await delay(300);
-    return mockHAPrereqs;
+    return providerResult(mockHAPrereqs as ApiRecord, 'mock');
   }
 
   async getHAOpsHistory(_systemId?: string) {
     await delay(300);
-    return mockHAOpsHistory;
+    return providerResult(mockHAOpsHistory as ApiRecord, 'mock');
   }
 
   async getHADrivers(_systemId?: string) {
     await delay(300);
-    return mockHADrivers;
+    return providerResult(mockHADrivers as ApiRecord, 'mock');
   }
 }

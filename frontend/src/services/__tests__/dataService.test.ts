@@ -1345,7 +1345,7 @@ describe('dataService', () => {
           system: { sid: 'X5', environment: 'PRD' },
         },
       ]);
-      const [ha] = await dataService.getHASystems();
+      const [ha] = await dataService.getHASystems() as Record<string, any>[];
       expect(ha.secondary).not.toBeNull();
       expect(ha.secondary!.state).toBe('stopped');
     });
@@ -1358,7 +1358,7 @@ describe('dataService', () => {
           system: { sid: 'X6', environment: 'QAS' },
         },
       ]);
-      const [ha] = await dataService.getHASystems();
+      const [ha] = await dataService.getHASystems() as Record<string, any>[];
       expect(ha.warmStandbyDetails).toBeDefined();
       expect(ha.warmStandbyDetails!.costSavingsPercent).toBe(75);
       expect(ha.warmStandbyDetails!.scaleUpRequired).toBe(true);

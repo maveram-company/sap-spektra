@@ -6,20 +6,25 @@ import { api } from '../../hooks/useApi';
 import { createLogger } from '../../lib/logger';
 import type { ApiOperation, ApiRecord } from '../../types/api';
 import { mockLicenses } from '../../lib/mockData';
-import type { OperationsProvider } from './operations.contract';
+import type { OperationsProvider, OperationViewModel } from './operations.contract';
+import { providerResult } from '../types';
 
 const log = createLogger('OperationsRealProvider');
 
-export function transformOperation(op: ApiOperation) {
+export function transformOperation(op: ApiOperation): OperationViewModel {
   return {
     ...op,
-    sid: op.system?.sid || op.sid || '',
-    sched: op.schedule || 'Manual',
-    next: op.status === 'SCHEDULED' ? op.scheduledTime : null,
-    last: op.completedAt
+    sid: op.system?.sid || (op as ApiRecord).sid as string || '',
+    riskLevel: op.riskLevel || '',
+    time: op.createdAt
+      ? new Date(op.createdAt).toLocaleTimeString('es-CO', { hour12: false, hour: '2-digit', minute: '2-digit' })
+      : '',
+    sched: (op as ApiRecord).schedule || 'Manual',
+    next: op.status === 'SCHEDULED' ? (op as ApiRecord).scheduledTime : null,
+    last: (op as ApiRecord).completedAt
       ? (op.status === 'FAILED'
-        ? `\u2717 ${op.error || 'Error'}`
-        : `\u2713 ${new Date(op.completedAt as string).toISOString().slice(0, 10)}`)
+        ? `\u2717 ${(op as ApiRecord).error || 'Error'}`
+        : `\u2713 ${new Date((op as ApiRecord).completedAt as string).toISOString().slice(0, 10)}`)
       : null,
   };
 }
@@ -64,25 +69,31 @@ export function transformCertificate(c: ApiRecord) {
 export class OperationsRealProvider implements OperationsProvider {
   async getOperations() {
     const operations = await api.getOperations() as ApiOperation[];
-    return operations.map(transformOperation);
+    return providerResult(operations.map(transformOperation), 'real');
   }
 
   async getBackgroundJobs() {
     const jobs = await api.getJobs() as Record<string, unknown>[];
-    return jobs.map(transformJob);
+    return providerResult(jobs.map(transformJob), 'real');
   }
 
   async getTransports() {
     const transports = await api.getTransports() as Record<string, unknown>[];
-    return transports.map(transformTransport);
+    return providerResult(transports.map(transformTransport), 'real');
   }
 
   async getCertificates() {
     const certs = await api.getCertificates() as Record<string, unknown>[];
-    return certs.map(transformCertificate);
+    return providerResult(certs.map(transformCertificate), 'real');
   }
 
   async getLicenses() {
-    try { return await api.getLicenses(); } catch (err: unknown) { log.error('Failed to fetch licenses', { error: (err as Error).message }); return mockLicenses; }
+    try {
+      const data = await api.getLicenses();
+      return providerResult(data as ApiRecord, 'real');
+    } catch (err: unknown) {
+      log.error('Failed to fetch licenses', { error: (err as Error).message });
+      return providerResult(mockLicenses as ApiRecord, 'real', { degraded: true, reason: (err as Error).message });
+    }
   }
 }

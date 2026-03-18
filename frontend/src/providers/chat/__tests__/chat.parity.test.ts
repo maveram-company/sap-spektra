@@ -38,19 +38,41 @@ describe('ChatProvider parity tests', () => {
   ])('%s provider', (_name, provider) => {
     it('chat() returns an object', async () => {
       const result = await provider.chat('Hello', {});
-      expect(result).toBeDefined();
-      expect(typeof result).toBe('object');
+      expect(result.data).toBeDefined();
+      expect(typeof result.data).toBe('object');
     });
 
     it('getAIUseCases() returns data', async () => {
       const result = await provider.getAIUseCases();
-      expect(result).toBeDefined();
+      expect(result.data).toBeDefined();
     });
 
     it('getAIResponses() returns data', async () => {
       const result = await provider.getAIResponses();
-      expect(result).toBeDefined();
-      expect(typeof result).toBe('object');
+      expect(result.data).toBeDefined();
+      expect(typeof result.data).toBe('object');
+    });
+  });
+
+  // ── ProviderResult metadata ──
+
+  describe('ProviderResult metadata', () => {
+    it('real provider returns ProviderResult with source=real and confidence=high', async () => {
+      const result = await real.chat('Hello', {});
+      expect(result).toHaveProperty('data');
+      expect(result).toHaveProperty('source', 'real');
+      expect(result).toHaveProperty('confidence', 'high');
+      expect(result).toHaveProperty('timestamp');
+      expect(result).toHaveProperty('degraded', false);
+    });
+
+    it('mock provider returns ProviderResult with source=mock and confidence=low', async () => {
+      const result = await mock.chat('Hello', {});
+      expect(result).toHaveProperty('data');
+      expect(result).toHaveProperty('source', 'mock');
+      expect(result).toHaveProperty('confidence', 'low');
+      expect(result).toHaveProperty('timestamp');
+      expect(result).toHaveProperty('degraded', false);
     });
   });
 });

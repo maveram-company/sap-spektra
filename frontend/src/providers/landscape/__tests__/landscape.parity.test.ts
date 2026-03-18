@@ -48,20 +48,44 @@ describe('LandscapeProvider parity tests', () => {
   ])('%s provider', (_name, provider) => {
     it('getDiscovery() returns an array', async () => {
       const result = await provider.getDiscovery();
-      expect(Array.isArray(result)).toBe(true);
-      expect(result.length).toBeGreaterThan(0);
+      expect(Array.isArray(result.data)).toBe(true);
+      expect(result.data.length).toBeGreaterThan(0);
     });
 
     it('getSIDLines() returns an array', async () => {
       const result = await provider.getSIDLines();
-      expect(Array.isArray(result)).toBe(true);
-      expect(result.length).toBeGreaterThan(0);
+      expect(Array.isArray(result.data)).toBe(true);
+      expect(result.data.length).toBeGreaterThan(0);
     });
 
     it('getLandscapeValidation() returns an object', async () => {
       const result = await provider.getLandscapeValidation();
-      expect(result).toBeDefined();
-      expect(typeof result).toBe('object');
+      expect(result.data).toBeDefined();
+      expect(typeof result.data).toBe('object');
+    });
+  });
+
+  // ── ProviderResult metadata ──
+
+  describe('ProviderResult metadata', () => {
+    it('real provider returns ProviderResult with source=real and confidence=high', async () => {
+      const result = await real.getDiscovery();
+      expect(result).toHaveProperty('data');
+      expect(result).toHaveProperty('source', 'real');
+      expect(result).toHaveProperty('confidence', 'high');
+      expect(result).toHaveProperty('timestamp');
+      expect(result).toHaveProperty('degraded', false);
+      expect(Array.isArray(result.data)).toBe(true);
+    });
+
+    it('mock provider returns ProviderResult with source=mock and confidence=low', async () => {
+      const result = await mock.getDiscovery();
+      expect(result).toHaveProperty('data');
+      expect(result).toHaveProperty('source', 'mock');
+      expect(result).toHaveProperty('confidence', 'low');
+      expect(result).toHaveProperty('timestamp');
+      expect(result).toHaveProperty('degraded', false);
+      expect(Array.isArray(result.data)).toBe(true);
     });
   });
 });

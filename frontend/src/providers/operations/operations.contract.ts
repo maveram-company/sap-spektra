@@ -2,13 +2,24 @@
 // SAP Spektra — Operations Provider Contract
 // ══════════════════════════════════════════════════════════════
 
- 
-type Any = any;
+import type { ApiRecord } from '../../types/api';
+import type { ProviderResult } from '../types';
+
+export interface OperationViewModel {
+  id: string;
+  type: string;
+  status: string;
+  description: string;
+  riskLevel: string;
+  sid: string;
+  time: string;
+  [key: string]: unknown;
+}
 
 export interface OperationsProvider {
-  getOperations(): Promise<Any[]>;
-  getBackgroundJobs(): Promise<Any[]>;
-  getTransports(): Promise<Any[]>;
-  getCertificates(): Promise<Any[]>;
-  getLicenses(): Promise<Any>;
+  getOperations(): Promise<ProviderResult<OperationViewModel[]>>;
+  getBackgroundJobs(): Promise<ProviderResult<ApiRecord[]>>;
+  getTransports(): Promise<ProviderResult<ApiRecord[]>>;
+  getCertificates(): Promise<ProviderResult<ApiRecord[]>>;
+  getLicenses(): Promise<ProviderResult<ApiRecord>>;
 }

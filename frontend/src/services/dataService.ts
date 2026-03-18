@@ -72,17 +72,17 @@ export const getMetricHistory = async (hostname: string) => (await registry().sy
 export const getAlerts = async (filters?: { status?: string; level?: string; systemId?: string }) => (await registry().alerts.getAlerts(filters)).data;
 export const getAlertStats = async () => (await registry().alerts.getAlertStats()).data;
 
-// ── Events ──
+// ── Events (unwrap .data for backward compat) ──
 
-export const getEvents = async () => registry().events.getEvents();
+export const getEvents = async () => (await registry().events.getEvents()).data;
 
-// ── Operations ──
+// ── Operations (unwrap .data for backward compat) ──
 
-export const getOperations = async () => registry().operations.getOperations();
-export const getBackgroundJobs = async () => registry().operations.getBackgroundJobs();
-export const getTransports = async () => registry().operations.getTransports();
-export const getCertificates = async () => registry().operations.getCertificates();
-export const getLicenses = async () => registry().operations.getLicenses();
+export const getOperations = async () => (await registry().operations.getOperations()).data;
+export const getBackgroundJobs = async () => (await registry().operations.getBackgroundJobs()).data;
+export const getTransports = async () => (await registry().operations.getTransports()).data;
+export const getCertificates = async () => (await registry().operations.getCertificates()).data;
+export const getLicenses = async () => (await registry().operations.getLicenses()).data;
 
 // ── Runbooks (unwrap .data for backward compat) ──
 
@@ -97,50 +97,58 @@ export const getApprovals = async (status?: string) => (await registry().approva
 export const approveAction = async (id: string) => (await registry().approvals.approveAction(id)).data;
 export const rejectAction = async (id: string) => (await registry().approvals.rejectAction(id)).data;
 
-// ── Full ProviderResult accessors for core domains ──
+// ── Analytics (unwrap .data for backward compat) ──
+
+export const getAnalytics = async () => (await registry().analytics.getAnalytics()).data;
+export const getRunbookAnalytics = async () => (await registry().analytics.getRunbookAnalytics()).data;
+
+// ── HA / DR (unwrap .data for backward compat) ──
+
+export const getHASystems = async () => (await registry().ha.getHASystems()).data;
+export const getHAPrereqs = async (systemId?: string) => (await registry().ha.getHAPrereqs(systemId)).data;
+export const getHAOpsHistory = async (systemId?: string) => (await registry().ha.getHAOpsHistory(systemId)).data;
+export const getHADrivers = async (systemId?: string) => (await registry().ha.getHADrivers(systemId)).data;
+
+// ── Admin (unwrap .data for backward compat) ──
+
+export const getUsers = async () => (await registry().admin.getUsers()).data;
+export const getAuditLog = async () => (await registry().admin.getAuditLog()).data;
+export const getPlans = async () => (await registry().admin.getPlans()).data;
+export const getApiKeys = async () => (await registry().admin.getApiKeys()).data;
+export const getThresholds = async () => (await registry().admin.getThresholds()).data;
+export const getEscalationPolicy = async () => (await registry().admin.getEscalationPolicy()).data;
+export const getMaintenanceWindows = async () => (await registry().admin.getMaintenanceWindows()).data;
+
+// ── Landscape (unwrap .data for backward compat) ──
+
+export const getDiscovery = async () => (await registry().landscape.getDiscovery()).data;
+export const getSIDLines = async () => (await registry().landscape.getSIDLines()).data;
+export const getLandscapeValidation = async () => (await registry().landscape.getLandscapeValidation()).data;
+
+// ── Connectors (unwrap .data for backward compat) ──
+
+export const getConnectors = async () => (await registry().connectors.getConnectors()).data;
+
+// ── Chat / AI (unwrap .data for backward compat) ──
+
+export const chat = async (message: string, context: unknown) => (await registry().chat.chat(message, context)).data;
+export const getAIUseCases = async () => (await registry().chat.getAIUseCases()).data;
+export const getAIResponses = async () => (await registry().chat.getAIResponses()).data;
+
+// ── Full ProviderResult accessors for all domains ──
 
 export const getSystemsResult = async () => registry().systems.getSystems();
 export const getAlertsResult = async (filters?: { status?: string; level?: string; systemId?: string }) => registry().alerts.getAlerts(filters);
 export const getRunbooksResult = async () => registry().runbooks.getRunbooks();
 export const getApprovalsResult = async (status?: string) => registry().approvals.getApprovals(status);
-
-// ── Analytics ──
-
-export const getAnalytics = async () => registry().analytics.getAnalytics();
-export const getRunbookAnalytics = async () => registry().analytics.getRunbookAnalytics();
-
-// ── HA / DR ──
-
-export const getHASystems = async () => registry().ha.getHASystems();
-export const getHAPrereqs = async (systemId?: string) => registry().ha.getHAPrereqs(systemId);
-export const getHAOpsHistory = async (systemId?: string) => registry().ha.getHAOpsHistory(systemId);
-export const getHADrivers = async (systemId?: string) => registry().ha.getHADrivers(systemId);
-
-// ── Admin ──
-
-export const getUsers = async () => registry().admin.getUsers();
-export const getAuditLog = async () => registry().admin.getAuditLog();
-export const getPlans = async () => registry().admin.getPlans();
-export const getApiKeys = async () => registry().admin.getApiKeys();
-export const getThresholds = async () => registry().admin.getThresholds();
-export const getEscalationPolicy = async () => registry().admin.getEscalationPolicy();
-export const getMaintenanceWindows = async () => registry().admin.getMaintenanceWindows();
-
-// ── Landscape ──
-
-export const getDiscovery = async () => registry().landscape.getDiscovery();
-export const getSIDLines = async () => registry().landscape.getSIDLines();
-export const getLandscapeValidation = async () => registry().landscape.getLandscapeValidation();
-
-// ── Connectors ──
-
-export const getConnectors = async () => registry().connectors.getConnectors();
-
-// ── Chat / AI ──
-
-export const chat = async (message: string, context: unknown) => registry().chat.chat(message, context);
-export const getAIUseCases = async () => registry().chat.getAIUseCases();
-export const getAIResponses = async () => registry().chat.getAIResponses();
+export const getEventsResult = async () => registry().events.getEvents();
+export const getOperationsResult = async () => registry().operations.getOperations();
+export const getHASystemsResult = async () => registry().ha.getHASystems();
+export const getConnectorsResult = async () => registry().connectors.getConnectors();
+export const getUsersResult = async () => registry().admin.getUsers();
+export const getDiscoveryResult = async () => registry().landscape.getDiscovery();
+export const getAnalyticsResult = async () => registry().analytics.getAnalytics();
+export const chatResult = async (message: string, context: unknown) => registry().chat.chat(message, context);
 
 // ── Backward-compatible dataService object ──
 // All pages import { dataService } and call dataService.getSystems(), etc.
@@ -216,4 +224,18 @@ export const dataService = {
   chat,
   getAIUseCases,
   getAIResponses,
+
+  // Full ProviderResult accessors
+  getSystemsResult,
+  getAlertsResult,
+  getRunbooksResult,
+  getApprovalsResult,
+  getEventsResult,
+  getOperationsResult,
+  getHASystemsResult,
+  getConnectorsResult,
+  getUsersResult,
+  getDiscoveryResult,
+  getAnalyticsResult,
+  chatResult,
 };

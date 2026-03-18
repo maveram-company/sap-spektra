@@ -10,43 +10,45 @@ import {
   mockMaintenanceWindows,
   mockApiKeys,
 } from '../../lib/mockData';
-import type { AdminProvider } from './admin.contract';
+import type { ApiRecord } from '../../types/api';
+import type { AdminProvider, AuditEntryViewModel, UserViewModel } from './admin.contract';
+import { providerResult } from '../types';
 
 const delay = (ms = 400) => new Promise(r => setTimeout(r, ms));
 
 export class AdminMockProvider implements AdminProvider {
   async getUsers() {
     await delay();
-    return mockUsers;
+    return providerResult(mockUsers as unknown as UserViewModel[], 'mock');
   }
 
   async getAuditLog() {
     await delay();
-    return mockAuditLog;
+    return providerResult(mockAuditLog as unknown as AuditEntryViewModel[], 'mock');
   }
 
   async getPlans() {
     await delay(300);
-    return [];
+    return providerResult([] as ApiRecord, 'mock');
   }
 
   async getApiKeys() {
     await delay(300);
-    return mockApiKeys;
+    return providerResult(mockApiKeys as ApiRecord, 'mock');
   }
 
   async getThresholds() {
     await delay(300);
-    return mockThresholds;
+    return providerResult(mockThresholds as ApiRecord, 'mock');
   }
 
   async getEscalationPolicy() {
     await delay(300);
-    return mockEscalationPolicy;
+    return providerResult(mockEscalationPolicy as ApiRecord, 'mock');
   }
 
   async getMaintenanceWindows() {
     await delay(300);
-    return mockMaintenanceWindows;
+    return providerResult(mockMaintenanceWindows as ApiRecord, 'mock');
   }
 }

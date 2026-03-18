@@ -30,7 +30,8 @@ function DaysLeftBadge({ days, status }: { days: number; status: string }) {
 export default function CertificatesPage() {
   const { t } = useTranslation();
   const [certificates, setCertificates] = useState<ApiRecord[]>([]);
-  const [licenses, setLicenses] = useState<ApiRecord[]>([]);
+   
+  const [licenses, setLicenses] = useState<any>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 

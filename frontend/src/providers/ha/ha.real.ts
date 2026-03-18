@@ -6,11 +6,12 @@ import { api } from '../../hooks/useApi';
 import { createLogger } from '../../lib/logger';
 import type { ApiRecord } from '../../types/api';
 import { mockHAPrereqs, mockHAOpsHistory, mockHADrivers } from '../../lib/mockData';
-import type { HAProvider } from './ha.contract';
+import type { HAProvider, HAConfigViewModel } from './ha.contract';
+import { providerResult } from '../types';
 
 const log = createLogger('HARealProvider');
 
-export function transformHAConfig(h: ApiRecord) {
+export function transformHAConfig(h: ApiRecord): HAConfigViewModel {
   const sid = h.system?.sid || '';
   const env = h.system?.environment || 'PRD';
   const strategy = h.haStrategy || 'HOT_STANDBY';
@@ -60,6 +61,12 @@ export function transformHAConfig(h: ApiRecord) {
 
   return {
     ...h,
+    id: h.id || '',
+    systemId: h.systemId || '',
+    strategy,
+    status: haStatus,
+    primaryNode: primaryHost,
+    secondaryNode: secondaryHost || '',
     sid,
     systemName: h.system?.description || '',
     haStatus,
@@ -91,18 +98,36 @@ export function transformHAConfig(h: ApiRecord) {
 export class HARealProvider implements HAProvider {
   async getHASystems() {
     const configs = await api.getHAConfigs() as Record<string, unknown>[];
-    return configs.map(transformHAConfig);
+    return providerResult(configs.map(transformHAConfig), 'real');
   }
 
   async getHAPrereqs(systemId?: string) {
-    try { return await api.getHAPrereqs(systemId!); } catch (err: unknown) { log.error('Failed to fetch HA prereqs', { systemId, error: (err as Error).message }); return mockHAPrereqs; }
+    try {
+      const data = await api.getHAPrereqs(systemId!);
+      return providerResult(data as ApiRecord, 'real');
+    } catch (err: unknown) {
+      log.error('Failed to fetch HA prereqs', { systemId, error: (err as Error).message });
+      return providerResult(mockHAPrereqs as ApiRecord, 'real', { degraded: true, reason: (err as Error).message });
+    }
   }
 
   async getHAOpsHistory(systemId?: string) {
-    try { return await api.getHAOpsHistory(systemId!); } catch (err: unknown) { log.error('Failed to fetch HA ops history', { systemId, error: (err as Error).message }); return mockHAOpsHistory; }
+    try {
+      const data = await api.getHAOpsHistory(systemId!);
+      return providerResult(data as ApiRecord, 'real');
+    } catch (err: unknown) {
+      log.error('Failed to fetch HA ops history', { systemId, error: (err as Error).message });
+      return providerResult(mockHAOpsHistory as ApiRecord, 'real', { degraded: true, reason: (err as Error).message });
+    }
   }
 
   async getHADrivers(systemId?: string) {
-    try { return await api.getHADrivers(systemId!); } catch (err: unknown) { log.error('Failed to fetch HA drivers', { systemId, error: (err as Error).message }); return mockHADrivers; }
+    try {
+      const data = await api.getHADrivers(systemId!);
+      return providerResult(data as ApiRecord, 'real');
+    } catch (err: unknown) {
+      log.error('Failed to fetch HA drivers', { systemId, error: (err as Error).message });
+      return providerResult(mockHADrivers as ApiRecord, 'real', { degraded: true, reason: (err as Error).message });
+    }
   }
 }

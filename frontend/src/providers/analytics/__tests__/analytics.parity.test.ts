@@ -47,16 +47,38 @@ describe('AnalyticsProvider parity tests', () => {
   ])('%s provider', (_name, provider) => {
     it('getAnalytics() returns an object', async () => {
       const result = await provider.getAnalytics();
-      expect(result).toBeDefined();
-      expect(typeof result).toBe('object');
-      expect(result).not.toBeNull();
+      expect(result.data).toBeDefined();
+      expect(typeof result.data).toBe('object');
+      expect(result.data).not.toBeNull();
     });
 
     it('getRunbookAnalytics() returns an object', async () => {
       const result = await provider.getRunbookAnalytics();
-      expect(result).toBeDefined();
-      expect(typeof result).toBe('object');
-      expect(result).not.toBeNull();
+      expect(result.data).toBeDefined();
+      expect(typeof result.data).toBe('object');
+      expect(result.data).not.toBeNull();
+    });
+  });
+
+  // ── ProviderResult metadata ──
+
+  describe('ProviderResult metadata', () => {
+    it('real provider returns ProviderResult with source=real and confidence=high', async () => {
+      const result = await real.getAnalytics();
+      expect(result).toHaveProperty('data');
+      expect(result).toHaveProperty('source', 'real');
+      expect(result).toHaveProperty('confidence', 'high');
+      expect(result).toHaveProperty('timestamp');
+      expect(result).toHaveProperty('degraded', false);
+    });
+
+    it('mock provider returns ProviderResult with source=mock and confidence=low', async () => {
+      const result = await mock.getAnalytics();
+      expect(result).toHaveProperty('data');
+      expect(result).toHaveProperty('source', 'mock');
+      expect(result).toHaveProperty('confidence', 'low');
+      expect(result).toHaveProperty('timestamp');
+      expect(result).toHaveProperty('degraded', false);
     });
   });
 });

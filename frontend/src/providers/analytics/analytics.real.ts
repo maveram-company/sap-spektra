@@ -7,6 +7,7 @@ import { createLogger } from '../../lib/logger';
 import type { ApiRecord } from '../../types/api';
 import { mockAnalytics } from '../../lib/mockData';
 import type { AnalyticsProvider } from './analytics.contract';
+import { providerResult } from '../types';
 
 const log = createLogger('AnalyticsRealProvider');
 
@@ -72,7 +73,7 @@ export class AnalyticsRealProvider implements AnalyticsProvider {
       const failedCount = byResult.FAILED || 0;
       const successRate = totalExec > 0 ? Math.round(((totalExec - failedCount) / totalExec) * 100 * 10) / 10 : 100;
 
-      return transformAnalytics({
+      return providerResult(transformAnalytics({
         ...overview,
         totalExecutions: totalExec,
         successRate,
@@ -82,14 +83,15 @@ export class AnalyticsRealProvider implements AnalyticsProvider {
         dailyTrend,
         avgDuration: '—',
         mostExecuted: topRunbooks.length > 0 ? `${topRunbooks[0].name} (${topRunbooks[0].executions}x)` : '—',
-      });
+      }), 'real');
     } catch (err: unknown) {
       log.error('Failed to fetch analytics, using mock data', { error: (err as Error).message });
-      return mockAnalytics;
+      return providerResult(mockAnalytics as ApiRecord, 'real', { degraded: true, reason: (err as Error).message });
     }
   }
 
   async getRunbookAnalytics() {
-    return api.getRunbookAnalytics();
+    const data = await api.getRunbookAnalytics();
+    return providerResult(data as ApiRecord, 'real');
   }
 }

@@ -12,10 +12,14 @@ import type { ApiRecord } from '../../types';
 
 export default function GeneralSettings() {
   const { organization, updateSettings } = useTenant();
-  const [thresholds, setThresholds] = useState<ApiRecord[]>([]);
-  const [escalationPolicy, setEscalationPolicy] = useState<any[]>([]);
-  const [maintenanceWindows, setMaintenanceWindows] = useState<any[]>([]);
-  const [apiKeys, setApiKeys] = useState<any[]>([]);
+   
+  const [thresholds, setThresholds] = useState<any>([]);
+   
+  const [escalationPolicy, setEscalationPolicy] = useState<any>([]);
+   
+  const [maintenanceWindows, setMaintenanceWindows] = useState<any>([]);
+   
+  const [apiKeys, setApiKeys] = useState<any>([]);
   const [saving, setSaving] = useState(false);
   const [saveError, setSaveError] = useState<string | null>(null);
   const [nameError, setNameError] = useState('');
