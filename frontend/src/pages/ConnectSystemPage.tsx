@@ -12,6 +12,7 @@ import Select from '../components/ui/Select';
 import Button from '../components/ui/Button';
 import Badge from '../components/ui/Badge';
 import config from '../config';
+import type { ApiRecord } from '../types';
 
 // ── Constantes ──
 
@@ -92,10 +93,10 @@ const SID_PATTERN = /^[A-Z][A-Z0-9]{2}$/;
 
 // ── Componentes auxiliares ──
 
-function StepIndicator({ steps, current }) {
+function StepIndicator({ steps, current }: { steps: any; current: any }) {
   return (
     <div className="flex items-center mb-8">
-      {steps.map((s, i) => (
+      {steps.map((s: any, i: any) => (
         <div key={s.id} className="flex items-center flex-1">
           <div className="flex items-center gap-2 flex-shrink-0">
             <div className={`w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold transition-all ${
@@ -146,10 +147,10 @@ function CodeBlock({ title, code, onCopy }: { title: any; code: any; onCopy?: an
   );
 }
 
-function FeatureList({ features }) {
+function FeatureList({ features }: { features: any }) {
   return (
     <ul className="space-y-2">
-      {features.map((f, i) => (
+      {features.map((f: any, i: any) => (
         <li key={i} className="flex items-start gap-2 text-sm text-text-secondary">
           <CheckCircle size={16} className="text-success-500 flex-shrink-0 mt-0.5" />
           {f}
@@ -176,7 +177,7 @@ const SCC_STEPS = [
 
 // ── Generador de comandos de instalación ──
 
-function getInstallCommands(os) {
+function getInstallCommands(os: any) {
   const baseUrl = config.agentReleasesBaseUrl;
   if (os === 'windows') {
     return {
@@ -213,11 +214,11 @@ export default function ConnectSystemPage() {
   const navigate = useNavigate();
 
   // Estado global
-  const [method, setMethod] = useState(null); // 'AGENT' | 'CLOUD_CONNECTOR'
+  const [method, setMethod] = useState<string | null>(null); // 'AGENT' | 'CLOUD_CONNECTOR'
   const [step, setStep] = useState(1);
   const [submitting, setSubmitting] = useState(false);
   const [success, setSuccess] = useState(false);
-  const [connectionTest, setConnectionTest] = useState({ testing: false, result: null });
+  const [connectionTest, setConnectionTest] = useState<{ testing: boolean; result: string | null }>({ testing: false, result: null });
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
 
   // Campos Agent
@@ -246,13 +247,13 @@ export default function ConnectSystemPage() {
     description: '',
   });
 
-  const updateAgent = useCallback((field, value) =>
+  const updateAgent = useCallback((field: any, value: any) =>
     setAgentForm(prev => ({ ...prev, [field]: value })), []);
-  const updateScc = useCallback((field, value) =>
+  const updateScc = useCallback((field: any, value: any) =>
     setSccForm(prev => ({ ...prev, [field]: value })), []);
 
   // Validación de paso actual antes de avanzar
-  const validateAgentStep = useCallback((currentStep) => {
+  const validateAgentStep = useCallback((currentStep: any) => {
     const errors: Record<string, string> = {};
     if (currentStep === 3) {
       if (!agentForm.sid.trim()) errors.sid = 'SID es requerido';
@@ -266,7 +267,7 @@ export default function ConnectSystemPage() {
     return Object.keys(errors).length === 0;
   }, [agentForm]);
 
-  const validateSccStep = useCallback((currentStep) => {
+  const validateSccStep = useCallback((currentStep: any) => {
     const errors: Record<string, string> = {};
     if (currentStep === 1) {
       if (!sccForm.locationId.trim()) errors.locationId = 'Location ID es requerido';
@@ -348,7 +349,7 @@ export default function ConnectSystemPage() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {Object.values(CONNECTION_METHODS).map((m) => {
+            {Object.values(CONNECTION_METHODS).map((m: any) => {
               const Icon = m.icon;
               return (
                 <Card
@@ -374,7 +375,7 @@ export default function ConnectSystemPage() {
                   <div className="mt-4 pt-4 border-t border-border">
                     <p className="text-[10px] text-text-tertiary uppercase tracking-wider mb-2">Entornos compatibles</p>
                     <div className="flex flex-wrap gap-1.5">
-                      {m.environments.map(env => (
+                      {m.environments.map((env: any) => (
                         <Badge key={env} variant="outline" size="sm">{env}</Badge>
                       ))}
                     </div>
@@ -425,7 +426,7 @@ export default function ConnectSystemPage() {
                 <div>
                   <label className="text-sm font-medium text-text-primary mb-3 block">Sistema Operativo</label>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                    {OS_OPTIONS.map(opt => (
+                    {OS_OPTIONS.map((opt: any) => (
                       <button
                         key={opt.value}
                         type="button"
@@ -484,10 +485,10 @@ export default function ConnectSystemPage() {
 
                 <div className="flex items-center gap-2 mb-2">
                   <Badge variant="primary" size="sm">
-                    {OS_OPTIONS.find(o => o.value === agentForm.os)?.label}
+                    {OS_OPTIONS.find((o: any) => o.value === agentForm.os)?.label}
                   </Badge>
                   <Badge variant="outline" size="sm">
-                    {CLOUD_PROVIDER_OPTIONS.find(o => o.value === agentForm.provider)?.label}
+                    {CLOUD_PROVIDER_OPTIONS.find((o: any) => o.value === agentForm.provider)?.label}
                   </Badge>
                 </div>
 
@@ -618,16 +619,16 @@ export default function ConnectSystemPage() {
 
                 {/* Resumen */}
                 <div className="bg-surface-tertiary rounded-lg p-4 space-y-2 text-sm">
-                  {[
+                  {([
                     ['SID', agentForm.sid || '—'],
                     ['Tipo', agentForm.type],
                     ['Ambiente', agentForm.environment],
                     ['Base de Datos', agentForm.dbType],
                     ['Host', agentForm.host || '—'],
-                    ['OS', OS_OPTIONS.find(o => o.value === agentForm.os)?.label || '—'],
-                    ['Infraestructura', CLOUD_PROVIDER_OPTIONS.find(o => o.value === agentForm.provider)?.label || '—'],
+                    ['OS', OS_OPTIONS.find((o: any) => o.value === agentForm.os)?.label || '—'],
+                    ['Infraestructura', CLOUD_PROVIDER_OPTIONS.find((o: any) => o.value === agentForm.provider)?.label || '—'],
                     ['Método', 'Spektra Agent'],
-                  ].map(([label, value]) => (
+                  ] as [string, string][]).map(([label, value]) => (
                     <div key={label} className="flex justify-between">
                       <span className="text-text-secondary">{label}:</span>
                       <span className="font-medium text-text-primary">{value}</span>
@@ -890,7 +891,7 @@ export default function ConnectSystemPage() {
 
                 {/* Resumen */}
                 <div className="bg-surface-tertiary rounded-lg p-4 space-y-2 text-sm">
-                  {[
+                  {([
                     ['SID', sccForm.sid || '—'],
                     ['Tipo', sccForm.type],
                     ['Ambiente', sccForm.environment],
@@ -900,7 +901,7 @@ export default function ConnectSystemPage() {
                     ['Virtual Host', sccForm.virtualHost || '—'],
                     ['Protocolo', sccForm.protocol],
                     ['Método', 'SAP Cloud Connector'],
-                  ].map(([label, value]) => (
+                  ] as [string, string][]).map(([label, value]) => (
                     <div key={label} className="flex justify-between">
                       <span className="text-text-secondary">{label}:</span>
                       <span className="font-medium text-text-primary">{value}</span>

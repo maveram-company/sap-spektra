@@ -15,11 +15,25 @@ import { useTenant } from '../../contexts/TenantContext';
 import { useTheme } from '../../contexts/ThemeContext';
 import { dataService } from '../../services/dataService';
 import { createLogger } from '../../lib/logger';
+import type { ApiRecord } from '../../types';
 
 const log = createLogger('TopNav');
 
 // ── Estructura de navegación por secciones ──
-const sections = [
+interface NavSection {
+  label: string;
+  adminOnly?: boolean;
+  items: Array<{
+    name: string;
+    href: string;
+    icon: any;
+    alertBadge?: boolean;
+    badge?: boolean;
+    roles?: string[];
+  }>;
+}
+
+const sections: NavSection[] = [
   {
     label: 'Command',
     items: [
@@ -72,18 +86,18 @@ const sections = [
 const NAV_HEIGHT = 52;
 
 export default function TopNav({ topOffset = 0 }) {
-  const [activeDropdown, setActiveDropdown] = useState(null);
+  const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [navVisible, setNavVisible] = useState(true);
-  const [openPanel, setOpenPanel] = useState(null); // 'user' | 'notifications' | null
+  const [openPanel, setOpenPanel] = useState<string | null>(null); // 'user' | 'notifications' | null
 
   const [time, setTime] = useState(() =>
     new Date().toLocaleTimeString('es-CO', { hour: '2-digit', minute: '2-digit', second: '2-digit' })
   );
 
-  const navRef = useRef(null);
+  const navRef = useRef<HTMLElement>(null);
   const lastScrollY = useRef(0);
-  const closeTimeout = useRef(null);
+  const closeTimeout = useRef<ReturnType<typeof setTimeout>>(undefined);
 
   const location = useLocation();
   const navigate = useNavigate();
@@ -115,15 +129,15 @@ export default function TopNav({ topOffset = 0 }) {
   useEffect(() => {
     dataService.getSystems().then(systems => {
       setSystemCounts({
-        healthy: systems.filter(s => s.healthScore >= 90).length,
-        warning: systems.filter(s => s.healthScore >= 70 && s.healthScore < 90).length,
-        critical: systems.filter(s => s.healthScore < 70).length,
+        healthy: systems.filter((s: any) => s.healthScore >= 90).length,
+        warning: systems.filter((s: any) => s.healthScore >= 70 && s.healthScore < 90).length,
+        critical: systems.filter((s: any) => s.healthScore < 70).length,
       });
-    }).catch(err => log.warn('Systems fetch failed', { error: err.message }));
-    dataService.getApprovals('PENDING').then(approvals => setPendingApprovals(approvals?.length || 0)).catch((err) => log.warn('Approvals fetch failed', { error: err.message }));
+    }).catch((err: any) => log.warn('Systems fetch failed', { error: err.message }));
+    dataService.getApprovals('PENDING').then(approvals => setPendingApprovals(approvals?.length || 0)).catch((err: any) => log.warn('Approvals fetch failed', { error: err.message }));
     dataService.getAlerts({ status: 'active' }).then(alerts => {
       setActiveAlerts(alerts?.length || 0);
-      const recent = (alerts || []).slice(0, 5).map((a, i) => ({
+      const recent = (alerts || []).slice(0, 5).map((a: any, i: any) => ({
         id: a.id || String(i),
         title: a.title || 'Alerta',
         message: `${a.systemSid || a.system?.sid || ''}: ${a.metric || a.title || ''}`,
@@ -131,7 +145,7 @@ export default function TopNav({ topOffset = 0 }) {
         type: a.level === 'critical' ? 'danger' : a.level === 'warning' ? 'warning' : 'info',
       }));
       setNotifications(recent);
-    }).catch((err) => log.warn('Alerts fetch failed', { error: err.message }));
+    }).catch((err: any) => log.warn('Alerts fetch failed', { error: err.message }));
   }, []);
   const { healthy, warning, critical } = systemCounts;
 
@@ -156,7 +170,7 @@ export default function TopNav({ topOffset = 0 }) {
 
   // Cerrar con Escape
   useEffect(() => {
-    const handleKey = (e) => {
+    const handleKey = (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
         setActiveDropdown(null);
         setMobileOpen(false);
@@ -169,8 +183,8 @@ export default function TopNav({ topOffset = 0 }) {
 
   // Clic fuera
   useEffect(() => {
-    const handleClick = (e) => {
-      if (navRef.current && !navRef.current.contains(e.target)) {
+    const handleClick = (e: MouseEvent) => {
+      if (navRef.current && !navRef.current.contains(e.target as Node)) {
         setActiveDropdown(null);
         setOpenPanel(null);
       }
@@ -180,7 +194,7 @@ export default function TopNav({ topOffset = 0 }) {
   }, []);
 
   // Hover handlers para dropdowns
-  const openDropdown = useCallback((label) => {
+  const openDropdown = useCallback((label: string) => {
     clearTimeout(closeTimeout.current);
     setActiveDropdown(label);
     setOpenPanel(null);
@@ -195,13 +209,13 @@ export default function TopNav({ topOffset = 0 }) {
   }, []);
 
   // Detección de ruta activa
-  const isItemActive = useCallback((href) => {
+  const isItemActive = useCallback((href: string) => {
     return location.pathname === href || (href !== '/' && location.pathname.startsWith(href));
   }, [location.pathname]);
 
   const activeSectionLabel = useMemo(() => {
     for (const section of sections) {
-      if (section.items.some(item => isItemActive(item.href))) {
+      if (section.items.some((item: any) => isItemActive(item.href))) {
         return section.label;
       }
     }
@@ -276,7 +290,7 @@ export default function TopNav({ topOffset = 0 }) {
 
           {/* ── Desktop: secciones con dropdown ── */}
           <div className="hidden lg:flex items-center gap-0.5 flex-1">
-            {sections.map(section => {
+            {sections.map((section: any) => {
               if (section.adminOnly && !hasRole('admin')) return null;
               const isSectionActive = activeSectionLabel === section.label;
               const isOpen = activeDropdown === section.label;
@@ -344,8 +358,8 @@ export default function TopNav({ topOffset = 0 }) {
                       onMouseLeave={startClose}
                     >
                       <div className="py-1.5">
-                        {section.items.map(item => {
-                          if (item.roles && !item.roles.some(r => hasRole(r))) return null;
+                        {section.items.map((item: any) => {
+                          if (item.roles && !item.roles.some((r: any) => hasRole(r))) return null;
                           const active = isItemActive(item.href);
 
                           return (
@@ -519,7 +533,7 @@ export default function TopNav({ topOffset = 0 }) {
                     </h3>
                   </div>
                   <div className="max-h-64 overflow-y-auto">
-                    {notifications.map(n => (
+                    {notifications.map((n: any) => (
                       <div
                         key={n.id}
                         className="px-4 py-3 cursor-pointer transition-colors"
@@ -679,7 +693,7 @@ export default function TopNav({ topOffset = 0 }) {
             }}
           >
             <div className="p-4 grid grid-cols-2 gap-6">
-              {sections.map(section => {
+              {sections.map((section: any) => {
                 if (section.adminOnly && !hasRole('admin')) return null;
                 return (
                   <div key={section.label}>
@@ -690,8 +704,8 @@ export default function TopNav({ topOffset = 0 }) {
                       {section.label}
                     </p>
                     <div className="space-y-0.5">
-                      {section.items.map(item => {
-                        if (item.roles && !item.roles.some(r => hasRole(r))) return null;
+                      {section.items.map((item: any) => {
+                        if (item.roles && !item.roles.some((r: any) => hasRole(r))) return null;
                         const active = isItemActive(item.href);
                         return (
                           <NavLink

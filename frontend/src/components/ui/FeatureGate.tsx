@@ -1,7 +1,8 @@
+import { type ReactNode } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { usePlan } from '../../hooks/usePlan';
 
-export default function FeatureGate({ feature, fallback = null, children }) {
+export default function FeatureGate({ feature, fallback = null, children }: { feature: string; fallback?: ReactNode; children: ReactNode }) {
   const { hasFeature } = usePlan();
 
   if (!hasFeature(feature)) {
@@ -11,7 +12,7 @@ export default function FeatureGate({ feature, fallback = null, children }) {
   return children;
 }
 
-export function UpgradeBanner({ feature, className = '' }) {
+export function UpgradeBanner({ feature, className = '' }: { feature: string; className?: string }) {
   const navigate = useNavigate();
 
   return (

@@ -63,7 +63,7 @@ export default function BillingPage() {
       {/* Plan Cards */}
       <h3 className="text-lg font-semibold text-text-primary mb-4">Planes Disponibles</h3>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-        {allPlans.map(plan => (
+        {allPlans.map((plan: any) => (
           <Card
             key={plan.id}
             className={`relative ${plan.popular ? 'border-primary-500 dark:border-primary-500 ring-1 ring-primary-500' : ''}`}
@@ -115,16 +115,16 @@ export default function BillingPage() {
             <thead>
               <tr className="border-b border-border">
                 <th className="text-left py-3 px-4 text-xs font-semibold text-text-secondary uppercase">Funcionalidad</th>
-                {allPlans.map(p => (
+                {allPlans.map((p: any) => (
                   <th key={p.id} className="text-center py-3 px-4 text-xs font-semibold text-text-secondary uppercase">{p.name}</th>
                 ))}
               </tr>
             </thead>
             <tbody>
-              {Object.entries(featureLabels).map(([key, label]) => (
+              {Object.entries(featureLabels).map(([key, label]: [string, any]) => (
                 <tr key={key} className="border-b border-border last:border-0">
                   <td className="py-2.5 px-4 text-text-primary">{label}</td>
-                  {allPlans.map(p => (
+                  {allPlans.map((p: any) => (
                     <td key={p.id} className="text-center py-2.5 px-4">
                       {p.features.includes(key) ? (
                         <Check size={16} className="inline text-success-600" />

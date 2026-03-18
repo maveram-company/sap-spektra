@@ -18,8 +18,8 @@ const statusConfig = {
   production: { label: 'Producci\u00f3n', variant: 'success' },
 };
 
-export default function StatusBadge({ status, size = 'md', className = '' }) {
-  const config = statusConfig[status?.toLowerCase()] || { label: status, variant: 'default' };
+export default function StatusBadge({ status, size = 'md', className = '' }: { status: string; size?: string; className?: string }) {
+  const config = (statusConfig as Record<string, any>)[status?.toLowerCase()] || { label: status, variant: 'default' };
   return (
     <span role="status" aria-label={`Estado: ${config.label}`}>
       <Badge variant={config.variant} size={size} dot={config.dot} className={className}>{config.label}</Badge>

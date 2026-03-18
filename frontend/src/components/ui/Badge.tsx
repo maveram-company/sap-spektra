@@ -13,9 +13,9 @@ const sizes = {
   lg: 'px-2.5 py-1 text-sm',
 };
 
-export default function Badge({ children, variant = 'default', size = 'md', dot = false, className = '' }) {
+export default function Badge({ children, variant = 'default', size = 'md', dot = false, className = '' }: { children: any; variant?: string; size?: string; dot?: boolean; className?: string }) {
   return (
-    <span className={`inline-flex items-center gap-1 font-medium rounded-full ${variants[variant]} ${sizes[size]} ${className}`}>
+    <span className={`inline-flex items-center gap-1 font-medium rounded-full ${(variants as Record<string, string>)[variant]} ${(sizes as Record<string, string>)[size]} ${className}`}>
       {dot && <span className={`w-1.5 h-1.5 rounded-full bg-current`} />}
       {children}
     </span>

@@ -12,28 +12,29 @@ import EmptyState from '../../components/ui/EmptyState';
 import PageLoading from '../../components/ui/PageLoading';
 import { dataService } from '../../services/dataService';
 import { useTenant } from '../../contexts/TenantContext';
+import type { ApiRecord } from '../../types';
 
 export default function UsersPage() {
-  const [users, setUsers] = useState([]);
+  const [users, setUsers] = useState<ApiRecord[]>([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     let mounted = true;
     dataService.getUsers()
       .then(data => { if (mounted) setUsers(data); })
-      .catch(err => { if (mounted) setError(err.message); })
+      .catch((err: any) => { if (mounted) setError(err.message); })
       .finally(() => { if (mounted) setLoading(false); });
     return () => { mounted = false; };
   }, []);
   const [showInviteModal, setShowInviteModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
-  const [editingUser, setEditingUser] = useState(null);
+  const [editingUser, setEditingUser] = useState<Record<string, any> | null>(null);
   const [inviteForm, setInviteForm] = useState({ email: '', role: 'viewer', name: '' });
   const [sending, setSending] = useState(false);
-  const [deleteConfirm, setDeleteConfirm] = useState(null);
+  const [deleteConfirm, setDeleteConfirm] = useState<string | null>(null);
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
-  const [actionError, setActionError] = useState(null);
+  const [actionError, setActionError] = useState<string | null>(null);
   const deleteTimerRef = useRef<ReturnType<typeof setTimeout>>(undefined);
   const { organization } = useTenant();
 
@@ -46,7 +47,7 @@ export default function UsersPage() {
   const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   const VALID_ROLES = ['admin', 'operator', 'escalation', 'viewer'];
 
-  const validateField = (name, value) => {
+  const validateField = (name: any, value: any) => {
     switch (name) {
       case 'email':
         if (!value.trim()) return 'Email es requerido';
@@ -64,7 +65,7 @@ export default function UsersPage() {
     }
   };
 
-  const validateForm = (form) => {
+  const validateForm = (form: any) => {
     const errors: Record<string, string> = {};
     const emailErr = validateField('email', form.email);
     if (emailErr) errors.email = emailErr;
@@ -94,14 +95,14 @@ export default function UsersPage() {
       setShowInviteModal(false);
       setInviteForm({ email: '', role: 'viewer', name: '' });
       setFieldErrors({});
-    } catch (err) {
+    } catch (err: any) {
       setActionError(err instanceof Error ? err.message : 'Error al enviar invitación');
     } finally {
       setSending(false);
     }
   };
 
-  const handleEdit = (user) => {
+  const handleEdit = (user: any) => {
     setEditingUser({ ...user });
     setShowEditModal(true);
   };
@@ -113,26 +114,26 @@ export default function UsersPage() {
     try {
       // Demo mode: simulated delay — connect to real API when available
       await new Promise(r => setTimeout(r, 600));
-      setUsers(prev => prev.map(u => u.id === editingUser.id ? editingUser : u));
+      setUsers(prev => prev.map((u: any) => u.id === editingUser!.id ? editingUser : u));
       setShowEditModal(false);
       setEditingUser(null);
       setFieldErrors({});
-    } catch (err) {
+    } catch (err: any) {
       setActionError(err instanceof Error ? err.message : 'Error al guardar cambios');
     } finally {
       setSending(false);
     }
   };
 
-  const handleDelete = async (id) => {
+  const handleDelete = async (id: any) => {
     if (deleteConfirm === id) {
       setActionError(null);
       try {
         // Demo mode: simulated delay — connect to real API when available
         await new Promise(r => setTimeout(r, 500));
-        setUsers(prev => prev.filter(u => u.id !== id));
+        setUsers(prev => prev.filter((u: any) => u.id !== id));
         setDeleteConfirm(null);
-      } catch (err) {
+      } catch (err: any) {
         setActionError(err instanceof Error ? err.message : 'Error al eliminar usuario');
       }
     } else {
@@ -141,9 +142,9 @@ export default function UsersPage() {
     }
   };
 
-  const roleVariant = (role) => {
+  const roleVariant = (role: any) => {
     const map = { admin: 'danger', operator: 'primary', escalation: 'warning', viewer: 'default' };
-    return map[role] || 'default';
+    return (map as Record<string, string>)[role] || 'default';
   };
 
   if (loading) return <PageLoading message="Cargando usuarios..." />;
@@ -184,7 +185,7 @@ export default function UsersPage() {
           </tr>
         </TableHeader>
         <TableBody>
-          {users.map(user => (
+          {users.map((user: any) => (
             <TableRow key={user.id}>
               <TableCell>
                 <div className="flex items-center gap-3">

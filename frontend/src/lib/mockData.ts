@@ -2,7 +2,7 @@
 // SAP Spektra v1.4 — Mock Data completo
 // ══════════════════════════════════════════════════════════════
 
-function seeded(seed) {
+function seeded(seed: any) {
   const x = Math.sin(seed) * 10000;
   return x - Math.floor(x);
 }
@@ -176,7 +176,7 @@ export const mockEvents = (() => {
   const levels = ['info', 'info', 'info', 'info', 'warning', 'warning', 'success', 'critical'];
   for (let i = 0; i < 300; i++) {
     const lv = levels[Math.floor(seeded(i * 3) * levels.length)];
-    const msgs = eventTemplates[lv];
+    const msgs = (eventTemplates as Record<string, string[]>)[lv];
     const sys = mockSystems[Math.floor(seeded(i * 7) * mockSystems.length)];
     const comp = eventComponents[Math.floor(seeded(i * 11) * eventComponents.length)];
     const t = new Date(now - i * 300000 - seeded(i * 13) * 240000);
@@ -493,7 +493,7 @@ export const mockAnalytics = {
     { id: 'RB-ASE-001', name: 'Dump tran log + kill old tx', executions: 112, successRate: 97.3 },
     { id: 'RB-WP-001', name: 'Clean PRIV/Hold WPs', executions: 98, successRate: 96.9 },
   ],
-  dailyTrend: Array.from({ length: 14 }, (_, i) => ({
+  dailyTrend: Array.from({ length: 14 }, (_: any, i: any) => ({
     date: new Date(Date.now() - (13 - i) * 86400000).toISOString().split('T')[0],
     success: Math.round(8 + seeded(i * 7) * 8),
     failed: Math.round(seeded(i * 11) * 3),
@@ -852,9 +852,9 @@ export const mockSystemInstances = {
 
 // ── Per-host metric history (72 points = 6h at 5min intervals) ──
 export const mockMetricHistory = (() => {
-  const hist = {};
-  Object.values(mockSystemInstances).forEach((instances) => {
-    instances.forEach((inst) => {
+  const hist: Record<string, any> = {};
+  Object.values(mockSystemInstances).forEach((instances: any) => {
+    instances.forEach((inst: any) => {
       if (hist[inst.hostname]) return;
       const h = [];
       let cpu = inst.cpu, mem = inst.mem, disk = inst.disk;
@@ -872,12 +872,12 @@ export const mockMetricHistory = (() => {
 })();
 
 // Helper: aggregate instance metrics to system level
-export function getSystemHosts(systemId) {
-  const instances = mockSystemInstances[systemId] || [];
-  const hostMap = {};
-  instances.forEach(inst => {
-    if (!hostMap[inst.hostname]) {
-      hostMap[inst.hostname] = {
+export function getSystemHosts(systemId: any) {
+  const instances = (mockSystemInstances as Record<string, any>)[systemId] || [];
+  const hostMap: Record<string, any> = {};
+  instances.forEach((inst: any) => {
+    if (!(hostMap as Record<string, any>)[inst.hostname]) {
+      (hostMap as Record<string, any>)[inst.hostname] = {
         hostname: inst.hostname,
         ip: inst.ip,
         os: inst.os,
@@ -891,7 +891,7 @@ export function getSystemHosts(systemId) {
         instances: []
       };
     }
-    hostMap[inst.hostname].instances.push(inst);
+    (hostMap as Record<string, any>)[inst.hostname].instances.push(inst);
   });
   return Object.values(hostMap);
 }

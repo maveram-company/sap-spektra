@@ -19,12 +19,13 @@ import PageLoading from '../components/ui/PageLoading';
 import { depRemediation, backupRunbooks } from '../lib/constants';
 import { dataService } from '../services/dataService';
 import { createLogger } from '../lib/logger';
+import type { ApiRecord } from '../types';
 
 const log = createLogger('SystemDetailPage');
 
 // ── Local Helpers ──
 
-function colorDot(color) {
+function colorDot(color: any) {
   const bg =
     color === 'green' ? 'bg-success-500' :
     color === 'yellow' ? 'bg-warning-500' :
@@ -45,19 +46,19 @@ function MetricCard({ label, value, sub, warn, danger }: { label: any; value: an
   );
 }
 
-function DepStatusIcon({ status }) {
+function DepStatusIcon({ status }: { status: any }) {
   if (status === 'ok') return <CheckCircle size={16} className="text-success-500" />;
   if (status === 'warn') return <AlertTriangle size={16} className="text-warning-500" />;
   return <XCircle size={16} className="text-danger-500" />;
 }
 
-function pctColor(val, warnAt = 70, dangerAt = 85) {
+function pctColor(val: any, warnAt = 70, dangerAt = 85) {
   if (val >= dangerAt) return { warn: false, danger: true };
   if (val >= warnAt) return { warn: true, danger: false };
   return { warn: false, danger: false };
 }
 
-function calcUptime(startedAt) {
+function calcUptime(startedAt: any) {
   if (!startedAt) return 'N/A';
   const diffMs = (new Date() as any) - (new Date(startedAt) as any);
   if (diffMs <= 0) return '< 1m';
@@ -70,7 +71,7 @@ function calcUptime(startedAt) {
 }
 
 // Color classes for a percentage bar fill
-function barColor(val, warnAt = 70, dangerAt = 85) {
+function barColor(val: any, warnAt = 70, dangerAt = 85) {
   if (val >= dangerAt) return 'bg-danger-500';
   if (val >= warnAt) return 'bg-warning-500';
   return 'bg-success-500';
@@ -81,15 +82,15 @@ function barColor(val, warnAt = 70, dangerAt = 85) {
 export default function SystemDetailPage() {
   const { systemId } = useParams();
   const navigate = useNavigate();
-  const [system, setSystem] = useState(null);
-  const [sm, setSm] = useState(null);
-  const [deps, setDeps] = useState([]);
-  const [sapMon, setSapMon] = useState(null);
-  const [instancesData, setInstancesData] = useState([]);
-  const [sysMeta, setSysMeta] = useState(null);
-  const [breachesData, setBreachesData] = useState([]);
-  const [hostsData, setHostsData] = useState([]);
-  const [metricHistoryData, setMetricHistoryData] = useState({});
+  const [system, setSystem] = useState<Record<string, any> | null>(null);
+  const [sm, setSm] = useState<Record<string, any> | null>(null);
+  const [deps, setDeps] = useState<ApiRecord[]>([]);
+  const [sapMon, setSapMon] = useState<Record<string, any> | null>(null);
+  const [instancesData, setInstancesData] = useState<ApiRecord[]>([]);
+  const [sysMeta, setSysMeta] = useState<Record<string, any> | null>(null);
+  const [breachesData, setBreachesData] = useState<ApiRecord[]>([]);
+  const [hostsData, setHostsData] = useState<ApiRecord[]>([]);
+  const [metricHistoryData, setMetricHistoryData] = useState<Record<string, any>>({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState('overview');
@@ -120,7 +121,7 @@ export default function SystemDetailPage() {
       if (hosts && hosts.length) {
         // Fetch metric history for all hosts concurrently (bounded by Promise.all)
         Promise.all(
-          hosts.map(async (h) => {
+          hosts.map(async (h: any) => {
             try {
               const hist = await dataService.getMetricHistory(h.hostname);
               return [h.hostname, hist] as const;
@@ -135,10 +136,10 @@ export default function SystemDetailPage() {
             historyMap[hostname] = hist;
           }
           setMetricHistoryData(historyMap);
-        }).catch(err => log.warn('Metric history fetch failed', { error: err.message }));
+        }).catch((err: any) => log.warn('Metric history fetch failed', { error: err.message }));
       }
       setLoading(false);
-    }).catch((err) => {
+    }).catch((err: any) => {
       log.warn('Fetch failed', { error: err.message });
       if (!mounted) return;
       setError('Error al cargar datos. Intenta de nuevo.');
@@ -158,7 +159,7 @@ export default function SystemDetailPage() {
 
   // Unique host count
   const uniqueHostCount = useMemo(() => {
-    const names = new Set(instances.map(i => i.hostname));
+    const names = new Set(instances.map((i: any) => i.hostname));
     return names.size;
   }, [instances]);
 
@@ -174,7 +175,7 @@ export default function SystemDetailPage() {
     const rangeMinutes = chartRange === '1h' ? 60 : chartRange === '3h' ? 180 : 360;
     const pointsToShow = Math.min(history.length, Math.ceil(rangeMinutes / 5));
     const slice = history.slice(history.length - pointsToShow);
-    return slice.map((p, i) => ({
+    return slice.map((p: any, i: any) => ({
       time: new Date(now - (pointsToShow - 1 - i) * 5 * 60000).toLocaleTimeString('es-CO', {
         hour: '2-digit',
         minute: '2-digit',
@@ -201,7 +202,7 @@ export default function SystemDetailPage() {
   if (!system) return <div className="p-6 text-text-secondary">Sistema no encontrado</div>;
 
   const db = sm?.dbInfo;
-  const backupRb = db ? backupRunbooks[db.type] : null;
+  const backupRb = db ? (backupRunbooks as Record<string, any>)[db.type] : null;
 
   // ── Tab definitions (new order with hosts + topology) ──
   const tabs = [
@@ -211,7 +212,7 @@ export default function SystemDetailPage() {
     { value: 'sapmonitor',    label: 'SAP Monitor' },
     { value: 'database',      label: 'Database' },
     { value: 'instances',     label: 'Components',   count: instances.length || undefined },
-    { value: 'dependencies',  label: 'Dependencies', count: deps.filter(d => d.status !== 'ok').length || undefined },
+    { value: 'dependencies',  label: 'Dependencies', count: deps.filter((d: any) => d.status !== 'ok').length || undefined },
     { value: 'breaches',      label: 'Breaches',     count: systemBreaches.length || undefined },
   ];
 
@@ -227,7 +228,7 @@ export default function SystemDetailPage() {
         <Card>
           <CardHeader>
             <CardTitle>SAP Application Layer</CardTitle>
-            <Badge variant="primary" size="sm">{system.type}</Badge>
+            <Badge variant="primary" size="sm">{system!.type}</Badge>
           </CardHeader>
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
             <MetricCard label="Availability" value={`${sm.avail}%`} {...pctColor(sm.avail, 99.0, 98.0)} />
@@ -310,7 +311,7 @@ export default function SystemDetailPage() {
                 {[
                   { label: 'Pending', value: sm.msgQueue?.pending ?? 0, color: 'bg-warning-500', max: 100 },
                   { label: 'Failed', value: sm.msgQueue?.failed ?? 0, color: 'bg-danger-500', max: 50 },
-                ].map(({ label, value, color, max }) => (
+                ].map(({ label, value, color, max }: any) => (
                   <div key={label}>
                     <div className="flex justify-between text-xs mb-1">
                       <span className="text-text-secondary font-medium flex items-center gap-1.5">
@@ -336,7 +337,7 @@ export default function SystemDetailPage() {
                   { label: 'Active', value: sm.channels?.active ?? 0, color: 'bg-success-500' },
                   { label: 'Inactive', value: sm.channels?.inactive ?? 0, color: 'bg-warning-500' },
                   { label: 'Error', value: sm.channels?.error ?? 0, color: 'bg-danger-500' },
-                ].map(({ label, value, color }) => {
+                ].map(({ label, value, color }: any) => {
                   const total = (sm.channels?.active ?? 0) + (sm.channels?.inactive ?? 0) + (sm.channels?.error ?? 0);
                   return (
                     <div key={label}>
@@ -376,14 +377,14 @@ export default function SystemDetailPage() {
                   <div key={key}>
                     <div className="flex justify-between text-xs mb-1">
                       <span className="text-text-secondary font-medium flex items-center gap-1.5">
-                        <span className={`inline-block w-2.5 h-2.5 rounded-full ${colors[key] || 'bg-primary-500'}`} />
+                        <span className={`inline-block w-2.5 h-2.5 rounded-full ${(colors as Record<string, string>)[key] || 'bg-primary-500'}`} />
                         {key}
                       </span>
                       <span className="text-text-tertiary">{val} ({pct}%)</span>
                     </div>
                     <div className="h-2.5 bg-surface-tertiary rounded-full overflow-hidden">
                       <div
-                        className={`h-full rounded-full ${colors[key] || 'bg-primary-500'}`}
+                        className={`h-full rounded-full ${(colors as Record<string, string>)[key] || 'bg-primary-500'}`}
                         style={{ width: `${pct}%` }}
                       />
                     </div>
@@ -489,7 +490,7 @@ export default function SystemDetailPage() {
         </div>
 
         {/* Metric History chart — hidden for RISE_RESTRICTED (no OS-level metrics) */}
-        {system.isRiseRestricted ? (
+        {system!.isRiseRestricted ? (
           <Card>
             <div className="flex flex-col items-center gap-2 py-6">
               <ShieldAlert size={24} className="text-text-tertiary" />
@@ -511,7 +512,7 @@ export default function SystemDetailPage() {
               <Select
                 value={effectiveHost}
                 onChange={(e) => setSelectedHost(e.target.value)}
-                options={hosts.map(h => ({ value: h.hostname, label: h.hostname }))}
+                options={hosts.map((h: any) => ({ value: h.hostname, label: h.hostname }))}
               />
               <Select
                 value={chartRange}
@@ -575,14 +576,14 @@ export default function SystemDetailPage() {
         </Card>
         )}
 
-        {hosts.map((host) => {
+        {hosts.map((host: any) => {
           // Determine card header accent based on worst metric (skip for RISE)
-          const cpuDanger  = !system.isRiseRestricted && host.cpu  >= 85;
-          const cpuWarn    = !system.isRiseRestricted && host.cpu  >= 70;
-          const memDanger  = !system.isRiseRestricted && host.mem  >= 85;
-          const memWarn    = !system.isRiseRestricted && host.mem  >= 70;
-          const diskDanger = !system.isRiseRestricted && host.disk >= 85;
-          const diskWarn   = !system.isRiseRestricted && host.disk >= 70;
+          const cpuDanger  = !system!.isRiseRestricted && host.cpu  >= 85;
+          const cpuWarn    = !system!.isRiseRestricted && host.cpu  >= 70;
+          const memDanger  = !system!.isRiseRestricted && host.mem  >= 85;
+          const memWarn    = !system!.isRiseRestricted && host.mem  >= 70;
+          const diskDanger = !system!.isRiseRestricted && host.disk >= 85;
+          const diskWarn   = !system!.isRiseRestricted && host.disk >= 70;
           const anyDanger  = cpuDanger || memDanger || diskDanger;
           const anyWarn    = cpuWarn   || memWarn   || diskWarn;
 
@@ -616,7 +617,7 @@ export default function SystemDetailPage() {
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {/* Metric bars — hidden for RISE_RESTRICTED */}
-                {system.isRiseRestricted ? (
+                {system!.isRiseRestricted ? (
                 <div className="flex items-center justify-center text-xs text-text-tertiary py-4">
                   Metricas OS no disponibles (SAP RISE)
                 </div>
@@ -626,7 +627,7 @@ export default function SystemDetailPage() {
                     { label: 'CPU', value: host.cpu, icon: <Cpu size={12} /> },
                     { label: 'Memory', value: host.mem, icon: <MemoryStick size={12} /> },
                     { label: 'Disk', value: host.disk, icon: <HardDrive size={12} /> },
-                  ].map(({ label, value, icon }) => (
+                  ].map(({ label, value, icon }: any) => (
                     <div key={label}>
                       <div className="flex justify-between items-center text-xs mb-1">
                         <span className="flex items-center gap-1 text-text-secondary font-medium">
@@ -665,7 +666,7 @@ export default function SystemDetailPage() {
                     Instances on this host
                   </p>
                   <div className="space-y-1.5">
-                    {(host.instances || []).map((inst, idx) => (
+                    {(host.instances || []).map((inst: any, idx: any) => (
                       <div
                         key={idx}
                         className="flex items-center justify-between rounded-md px-3 py-2 bg-surface-secondary border border-border"
@@ -706,12 +707,12 @@ export default function SystemDetailPage() {
     const appRoles  = ['ASCS', 'ERS', 'PAS', 'AAS'];
     const dbRoles   = ['HANA Primary', 'HANA Secondary', 'HANA', 'DB2', 'Oracle', 'MSSQL', 'ASE', 'MaxDB'];
 
-    const appLayer = instances.filter(i => appRoles.includes(i.role));
+    const appLayer = instances.filter((i: any) => appRoles.includes(i.role));
     const knownRoles = new Set([...appRoles, ...dbRoles]);
-    const otherLayer = instances.filter(i => !knownRoles.has(i.role));
-    const actualDbLayer = instances.filter(i => dbRoles.includes(i.role));
+    const otherLayer = instances.filter((i: any) => !knownRoles.has(i.role));
+    const actualDbLayer = instances.filter((i: any) => dbRoles.includes(i.role));
 
-    function InstanceBox({ inst }) {
+    function InstanceBox({ inst }: { inst: any }) {
       const isRunning = inst.status === 'running';
       return (
         <div className={`
@@ -741,7 +742,7 @@ export default function SystemDetailPage() {
       );
     }
 
-    function LayerSection({ title, layerInstances, colorClass, icon }) {
+    function LayerSection({ title, layerInstances, colorClass, icon }: { title: any; layerInstances: any; colorClass: any; icon: any }) {
       if (!layerInstances.length) return null;
       return (
         <div className={`rounded-xl border-2 ${colorClass} p-4`}>
@@ -751,7 +752,7 @@ export default function SystemDetailPage() {
             <Badge variant="primary" size="sm">{layerInstances.length} instance{layerInstances.length !== 1 ? 's' : ''}</Badge>
           </div>
           <div className="flex flex-wrap gap-3">
-            {layerInstances.map((inst, idx) => (
+            {layerInstances.map((inst: any, idx: any) => (
               <InstanceBox key={idx} inst={inst} />
             ))}
           </div>
@@ -832,15 +833,15 @@ export default function SystemDetailPage() {
             <div>
               <p className="text-[10px] text-text-tertiary uppercase tracking-wider">Running</p>
               <p className="text-lg font-bold text-success-600">
-                {instances.filter(i => i.status === 'running').length}
+                {instances.filter((i: any) => i.status === 'running').length}
               </p>
             </div>
             <div>
               <p className="text-[10px] text-text-tertiary uppercase tracking-wider">Stopped</p>
               <p className={`text-lg font-bold ${
-                instances.filter(i => i.status !== 'running').length > 0 ? 'text-danger-600' : 'text-text-primary'
+                instances.filter((i: any) => i.status !== 'running').length > 0 ? 'text-danger-600' : 'text-text-primary'
               }`}>
-                {instances.filter(i => i.status !== 'running').length}
+                {instances.filter((i: any) => i.status !== 'running').length}
               </p>
             </div>
           </div>
@@ -1004,7 +1005,7 @@ export default function SystemDetailPage() {
   function renderDependencies() {
     if (!deps.length) return <p className="text-text-secondary p-4">No hay datos de dependencias.</p>;
 
-    const hasIssues = deps.some(d => d.status !== 'ok');
+    const hasIssues = deps.some((d: any) => d.status !== 'ok');
 
     return (
       <div className="space-y-6">
@@ -1018,7 +1019,7 @@ export default function SystemDetailPage() {
               </tr>
             </TableHeader>
             <TableBody>
-              {deps.map((dep, i) => (
+              {deps.map((dep: any, i: any) => (
                 <TableRow key={i}>
                   <TableCell>
                     <div className="flex items-center gap-2">
@@ -1055,9 +1056,9 @@ export default function SystemDetailPage() {
             </CardHeader>
             <div className="space-y-4">
               {deps
-                .filter(d => d.status === 'err' || d.status === 'warn')
-                .map((dep, i) => {
-                  const remediation = depRemediation[dep.name];
+                .filter((d: any) => d.status === 'err' || d.status === 'warn')
+                .map((dep: any, i: any) => {
+                  const remediation = (depRemediation as Record<string, any>)[dep.name];
                   return (
                     <div key={i} className="border border-border rounded-lg p-4">
                       <div className="flex items-center gap-2 mb-2">
@@ -1126,7 +1127,7 @@ export default function SystemDetailPage() {
                   </tr>
                 </TableHeader>
                 <TableBody>
-                  {(mm.topInterfaces || []).map((iface, i) => (
+                  {(mm.topInterfaces || []).map((iface: any, i: any) => (
                     <TableRow key={i}>
                       <TableCell className="font-mono text-sm">{iface.name}</TableCell>
                       <TableCell className="text-xs text-text-tertiary truncate max-w-[200px]">{iface.namespace}</TableCell>
@@ -1153,7 +1154,7 @@ export default function SystemDetailPage() {
                     </tr>
                   </TableHeader>
                   <TableBody>
-                    {(mm.topErrors || []).map((err, i) => (
+                    {(mm.topErrors || []).map((err: any, i: any) => (
                       <TableRow key={i}>
                         <TableCell className="font-mono text-sm">{err.interface}</TableCell>
                         <TableCell className="text-sm text-danger-600 max-w-[300px] truncate">{err.error}</TableCell>
@@ -1194,7 +1195,7 @@ export default function SystemDetailPage() {
                 </tr>
               </TableHeader>
               <TableBody>
-                {(cm.channels || []).map((ch, i) => (
+                {(cm.channels || []).map((ch: any, i: any) => (
                   <TableRow key={i}>
                     <TableCell className="font-mono text-sm">{ch.name}</TableCell>
                     <TableCell><Badge variant="outline" size="sm">{ch.adapter}</Badge></TableCell>
@@ -1228,7 +1229,7 @@ export default function SystemDetailPage() {
               <MetricCard label="Info" value={ai.info} />
             </div>
             <div className="space-y-2">
-              {(ai.alerts || []).map((alert, i) => (
+              {(ai.alerts || []).map((alert: any, i: any) => (
                 <div key={i} className={`flex items-start gap-3 p-3 rounded-lg border ${
                   alert.severity === 'critical' ? 'border-danger-300 bg-danger-50' :
                   alert.severity === 'warning' ? 'border-warning-300 bg-warning-50' :
@@ -1303,7 +1304,7 @@ export default function SystemDetailPage() {
             <div>
               <p className="text-xs text-text-tertiary uppercase tracking-wider mb-2">Top Users</p>
               <ul className="space-y-1">
-                {(sm12.topUsers || []).map((user, i) => (
+                {(sm12.topUsers || []).map((user: any, i: any) => (
                   <li key={i} className="text-sm text-text-secondary flex items-center gap-2">
                     <Users size={12} className="text-text-tertiary" />
                     <span className="font-mono">{user}</span>
@@ -1314,7 +1315,7 @@ export default function SystemDetailPage() {
             <div>
               <p className="text-xs text-text-tertiary uppercase tracking-wider mb-2">Top Tables</p>
               <ul className="space-y-1">
-                {(sm12.topTables || []).map((table, i) => (
+                {(sm12.topTables || []).map((table: any, i: any) => (
                   <li key={i} className="text-sm text-text-secondary flex items-center gap-2">
                     <Database size={12} className="text-text-tertiary" />
                     <span className="font-mono">{table}</span>
@@ -1379,7 +1380,7 @@ export default function SystemDetailPage() {
                   </tr>
                 </TableHeader>
                 <TableBody>
-                  {(sm37.longRunning || []).map((job, i) => (
+                  {(sm37.longRunning || []).map((job: any, i: any) => (
                     <TableRow key={i}>
                       <TableCell className="font-mono text-sm">{job.name}</TableCell>
                       <TableCell className="text-sm">{job.runtime}</TableCell>
@@ -1426,7 +1427,7 @@ export default function SystemDetailPage() {
               </CardTitle>
             </CardHeader>
             <div className="flex flex-wrap gap-2">
-              {st22TopPrograms.map((prog, i) => (
+              {st22TopPrograms.map((prog: any, i: any) => (
                 <Badge key={i} variant="danger" size="sm">{prog}</Badge>
               ))}
             </div>
@@ -1459,11 +1460,11 @@ export default function SystemDetailPage() {
             <div className="flex gap-4 text-xs text-text-secondary">
               <span className="flex items-center gap-1">
                 <span className="inline-block w-2 h-2 rounded-full bg-success-500" />
-                {instances.filter(i => i.status === 'running').length} running
+                {instances.filter((i: any) => i.status === 'running').length} running
               </span>
               <span className="flex items-center gap-1">
                 <span className="inline-block w-2 h-2 rounded-full bg-danger-500" />
-                {instances.filter(i => i.status !== 'running').length} stopped
+                {instances.filter((i: any) => i.status !== 'running').length} stopped
               </span>
             </div>
           </div>
@@ -1494,7 +1495,7 @@ export default function SystemDetailPage() {
                 </tr>
               </TableHeader>
               <TableBody>
-                {instances.map((inst, i) => {
+                {instances.map((inst: any, i: any) => {
                   const isDb   = DB_ROLES.includes(inst.role);
 
                   return (
@@ -1542,7 +1543,7 @@ export default function SystemDetailPage() {
 
                       {/* CPU% — hidden for RISE_RESTRICTED */}
                       <TableCell>
-                        {system.isRiseRestricted ? (
+                        {system!.isRiseRestricted ? (
                           <span className="text-sm text-text-tertiary">—</span>
                         ) : (
                         <span className={`text-sm font-medium ${
@@ -1557,7 +1558,7 @@ export default function SystemDetailPage() {
 
                       {/* Mem% — hidden for RISE_RESTRICTED */}
                       <TableCell>
-                        {system.isRiseRestricted ? (
+                        {system!.isRiseRestricted ? (
                           <span className="text-sm text-text-tertiary">—</span>
                         ) : (
                         <span className={`text-sm font-medium ${
@@ -1572,7 +1573,7 @@ export default function SystemDetailPage() {
 
                       {/* Disk% — hidden for RISE_RESTRICTED */}
                       <TableCell>
-                        {system.isRiseRestricted ? (
+                        {system!.isRiseRestricted ? (
                           <span className="text-sm text-text-tertiary">—</span>
                         ) : (
                         <span className={`text-sm font-medium ${
@@ -1630,7 +1631,7 @@ export default function SystemDetailPage() {
         </Card>
 
         {/* Work Process details for app-layer instances */}
-        {instances.some(i => i.dialogWP) && (
+        {instances.some((i: any) => i.dialogWP) && (
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
@@ -1640,8 +1641,8 @@ export default function SystemDetailPage() {
             </CardHeader>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
               {instances
-                .filter(i => i.dialogWP)
-                .map((inst, idx) => {
+                .filter((i: any) => i.dialogWP)
+                .map((inst: any, idx: any) => {
                   const wp = inst.dialogWP;
                   const bp = inst.batchWP;
                   return (
@@ -1688,7 +1689,7 @@ export default function SystemDetailPage() {
         )}
 
         {/* HANA instance DB metrics */}
-        {instances.some(i => i.dbCpu !== undefined) && (
+        {instances.some((i: any) => i.dbCpu !== undefined) && (
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
@@ -1698,8 +1699,8 @@ export default function SystemDetailPage() {
             </CardHeader>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               {instances
-                .filter(i => i.dbCpu !== undefined)
-                .map((inst, idx) => (
+                .filter((i: any) => i.dbCpu !== undefined)
+                .map((inst: any, idx: any) => (
                   <div key={idx} className="border border-border rounded-lg p-4 bg-surface-secondary">
                     <div className="flex items-center gap-2 mb-3">
                       <span className={`inline-block w-2 h-2 rounded-full ${
@@ -1781,7 +1782,7 @@ export default function SystemDetailPage() {
             </tr>
           </TableHeader>
           <TableBody>
-            {systemBreaches.map(b => (
+            {systemBreaches.map((b: any) => (
               <TableRow key={b.id}>
                 <TableCell className="font-mono text-xs">{b.id}</TableCell>
                 <TableCell>{b.metric === 'response_time' ? 'Response Time' : b.metric}</TableCell>

@@ -9,19 +9,20 @@ import Table, { TableHeader, TableBody, TableRow, TableHead, TableCell } from '.
 import PageLoading from '../components/ui/PageLoading';
 import { dataService } from '../services/dataService';
 import { createLogger } from '../lib/logger';
+import type { ApiRecord } from '../types';
 
 const log = createLogger('ConnectorsPage');
 
 // ── Helpers ──
 
-function ConnectionStatusIcon({ status }) {
+function ConnectionStatusIcon({ status }: { status: any }) {
   if (status === 'connected') return <CheckCircle size={16} className="text-success-500" />;
   if (status === 'degraded') return <AlertTriangle size={16} className="text-warning-500" />;
   return <XCircle size={16} className="text-danger-500" />;
 }
 
-function ConnectionMethodBadge({ method }) {
-  const variants = {
+function ConnectionMethodBadge({ method }: { method: any }) {
+  const variants: Record<string, any> = {
     'SAP Cloud Connector': 'primary',
     'Spektra Agent': 'info',
     'RFC/BAPI': 'warning',
@@ -30,7 +31,7 @@ function ConnectionMethodBadge({ method }) {
   return <Badge variant={variants[method] || 'outline'} size="sm">{method}</Badge>;
 }
 
-function formatHeartbeat(iso) {
+function formatHeartbeat(iso: any) {
   if (!iso) return '—';
   const diff = Date.now() - new Date(iso).getTime();
   const mins = Math.floor(diff / 60000);
@@ -43,31 +44,31 @@ function formatHeartbeat(iso) {
   return `Hace ${days}d ${hrs % 24}h`;
 }
 
-function LatencyCell({ ms }) {
+function LatencyCell({ ms }: { ms: any }) {
   if (ms == null) return <span className="text-text-tertiary">—</span>;
   const color = ms < 100 ? 'text-success-600' : ms < 250 ? 'text-warning-600' : 'text-danger-600';
   return <span className={`font-mono font-semibold ${color}`}>{ms} ms</span>;
 }
 
 // ── Orden: desconectados → degradados → conectados ──
-const STATUS_ORDER = { disconnected: 0, degraded: 1, connected: 2 };
+const STATUS_ORDER: Record<string, any> = { disconnected: 0, degraded: 1, connected: 2 };
 
 export default function ConnectorsPage() {
   const navigate = useNavigate();
-  const [connectors, setConnectors] = useState([]);
+  const [connectors, setConnectors] = useState<ApiRecord[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    dataService.getConnectors().then(data => { setConnectors(data); setLoading(false); }).catch(err => log.warn('Fetch failed', { error: err.message }));
+    dataService.getConnectors().then(data => { setConnectors(data); setLoading(false); }).catch((err: any) => log.warn('Fetch failed', { error: err.message }));
   }, []);
 
-  const connected = connectors.filter(c => c.status === 'connected').length;
-  const degraded = connectors.filter(c => c.status === 'degraded').length;
-  const disconnected = connectors.filter(c => c.status === 'disconnected').length;
+  const connected = connectors.filter((c: any) => c.status === 'connected').length;
+  const degraded = connectors.filter((c: any) => c.status === 'degraded').length;
+  const disconnected = connectors.filter((c: any) => c.status === 'disconnected').length;
   const total = connectors.length;
 
   const sorted = useMemo(() =>
-    [...connectors].sort((a, b) => (STATUS_ORDER[a.status] ?? 1) - (STATUS_ORDER[b.status] ?? 1)),
+    [...connectors].sort((a: any, b: any) => ((STATUS_ORDER as Record<string, any>)[a.status] ?? 1) - ((STATUS_ORDER as Record<string, any>)[b.status] ?? 1)),
   [connectors]);
 
   if (loading) return <PageLoading message="Cargando conectores..." />;
@@ -175,7 +176,7 @@ export default function ConnectorsPage() {
               </tr>
             </TableHeader>
             <TableBody>
-              {sorted.map(conn => (
+              {sorted.map((conn: any) => (
                 <TableRow key={conn.id}>
                   <TableCell>
                     <div className="flex items-center gap-2">

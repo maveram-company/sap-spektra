@@ -11,51 +11,52 @@ import Table, { TableHeader, TableBody, TableRow, TableHead, TableCell } from '.
 import PageLoading from '../components/ui/PageLoading';
 import { dataService } from '../services/dataService';
 import { createLogger } from '../lib/logger';
+import type { ApiRecord } from '../types';
 
 const log = createLogger('AdminPage');
 
 export default function AdminPage() {
-  const [systems, setSystems] = useState([]);
+  const [systems, setSystems] = useState<ApiRecord[]>([]);
   const [loading, setLoading] = useState(true);
-  const [checking, setChecking] = useState(null);
-  const [deleteConfirm, setDeleteConfirm] = useState(null);
-  const [actionError, setActionError] = useState(null);
+  const [checking, setChecking] = useState<string | null>(null);
+  const [deleteConfirm, setDeleteConfirm] = useState<string | null>(null);
+  const [actionError, setActionError] = useState<string | null>(null);
   const deleteTimerRef = useRef<ReturnType<typeof setTimeout>>(undefined);
   const navigate = useNavigate();
 
   useEffect(() => {
-    dataService.getSystems().then(data => { setSystems(data); setLoading(false); }).catch(err => log.warn('Fetch failed', { error: err.message }));
+    dataService.getSystems().then(data => { setSystems(data); setLoading(false); }).catch((err: any) => log.warn('Fetch failed', { error: err.message }));
     return () => {
       if (deleteTimerRef.current) clearTimeout(deleteTimerRef.current);
     };
   }, []);
 
-  const handleHealthCheck = async (id) => {
+  const handleHealthCheck = async (id: any) => {
     setChecking(id);
     setActionError(null);
     try {
       // Demo mode: simulated delay — connect to real API when available
       await new Promise(r => setTimeout(r, 1500));
-    } catch (err) {
+    } catch (err: any) {
       setActionError(err instanceof Error ? err.message : 'Error al ejecutar health check');
     } finally {
       setChecking(null);
     }
   };
 
-  const handleEdit = (sys) => {
+  const handleEdit = (sys: any) => {
     navigate(`/systems/${sys.id}`);
   };
 
-  const handleDelete = async (id) => {
+  const handleDelete = async (id: any) => {
     if (deleteConfirm === id) {
       setActionError(null);
       try {
         // Demo mode: simulated delay — connect to real API when available
         await new Promise(r => setTimeout(r, 500));
-        setSystems(prev => prev.filter(s => s.id !== id));
+        setSystems(prev => prev.filter((s: any) => s.id !== id));
         setDeleteConfirm(null);
-      } catch (err) {
+      } catch (err: any) {
         setActionError(err instanceof Error ? err.message : 'Error al eliminar sistema');
       }
     } else {
@@ -101,7 +102,7 @@ export default function AdminPage() {
             </tr>
           </TableHeader>
           <TableBody>
-            {systems.map(sys => (
+            {systems.map((sys: any) => (
               <TableRow key={sys.id} onClick={() => navigate(`/systems/${sys.id}`)}>
                 <TableCell>
                   <div className="flex items-center gap-2">

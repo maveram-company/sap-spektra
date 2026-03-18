@@ -12,6 +12,7 @@ import { createLogger } from '../lib/logger';
 
 const log = createLogger('HAControlCenterPage');
 import { useAuth } from '../contexts/AuthContext';
+import type { ApiRecord } from '../types';
 import {
   ArrowLeftRight,
   CheckCircle2,
@@ -47,8 +48,8 @@ import {
 } from 'lucide-react';
 
 // ── Helper: pick the correct step list ──
-const getStepsForOp = (systems, systemId, opType) => {
-  const sys = systems.find(s => s.systemId === systemId);
+const getStepsForOp = (systems: any[], systemId: any, opType: any) => {
+  const sys = systems.find((s: any) => s.systemId === systemId);
   if (!sys) return HANA_TAKEOVER_STEPS;
 
   // Por estrategia
@@ -64,7 +65,7 @@ const getStepsForOp = (systems, systemId, opType) => {
 };
 
 // ── Strategy icon ──
-const StrategyIcon = ({ strategy, className = 'w-4 h-4' }) => {
+const StrategyIcon = ({ strategy, className = 'w-4 h-4' }: any) => {
   const map = {
     HOT_STANDBY: Flame,
     WARM_STANDBY: Thermometer,
@@ -72,12 +73,12 @@ const StrategyIcon = ({ strategy, className = 'w-4 h-4' }) => {
     BACKUP_RESTORE: Archive,
     CROSS_REGION_DR: Globe,
   };
-  const Icon = map[strategy] || Activity;
+  const Icon = (map as Record<string, any>)[strategy] || Activity;
   return <Icon className={className} />;
 };
 
 // ── Get operation label by strategy ──
-const getOpLabels = (sys) => {
+const getOpLabels = (sys: any) => {
   if (!sys) return { primary: 'Failover', secondary: null, drTest: null };
   const s = sys.haStrategy;
   if (s === 'HOT_STANDBY') return { primary: 'Takeover', secondary: 'Failover', drTest: null };
@@ -111,7 +112,7 @@ export default function HAControlCenterPage() {
       setHaDrivers(drivers);
       setHaPrereqs(prereqs);
       setLoading(false);
-    }).catch((err) => {
+    }).catch((err: any) => {
       log.warn('Fetch failed', { error: err.message });
       setError('Error al cargar datos. Intenta de nuevo.');
       setLoading(false);
@@ -119,16 +120,16 @@ export default function HAControlCenterPage() {
   }, []);
 
   // Simulation state
-  const [runningOp, setRunningOp] = useState(null);
-  const [confirmDialog, setConfirmDialog] = useState(null);
+  const [runningOp, setRunningOp] = useState<Record<string, any> | null>(null);
+  const [confirmDialog, setConfirmDialog] = useState<Record<string, any> | null>(null);
 
   // Filtered systems
   const filteredSystems = selectedStrategy === 'ALL'
     ? systems
-    : systems.filter(s => s.haStrategy === selectedStrategy);
+    : systems.filter((s: any) => s.haStrategy === selectedStrategy);
 
   // ── Completion handler ──
-  const completeOperation = useCallback((op) => {
+  const completeOperation = useCallback((op: any) => {
     const endTime = new Date().toISOString();
     setOpsHistory(prev => {
       const newEntry = {
@@ -170,13 +171,13 @@ export default function HAControlCenterPage() {
   }, [runningOp, completeOperation]);
 
   // ── Handlers ──
-  const handleStartOp = useCallback((systemId, type) => {
+  const handleStartOp = useCallback((systemId: any, type: any) => {
     setConfirmDialog({ systemId, type });
   }, []);
 
   const handleConfirmOp = useCallback(() => {
     if (!confirmDialog) return;
-    const sys = systems.find(s => s.systemId === confirmDialog.systemId);
+    const sys = systems.find((s: any) => s.systemId === confirmDialog.systemId);
     const steps = getStepsForOp(systems, confirmDialog.systemId, confirmDialog.type);
     setRunningOp({
       systemId: confirmDialog.systemId,
@@ -204,15 +205,15 @@ export default function HAControlCenterPage() {
   ];
 
   // ── Status helpers ──
-  const statusColor = (status) => ({
+  const statusColor = (status: any) => (({
     HEALTHY: 'border-l-success-500',
     DEGRADED: 'border-l-warning-500',
     STANDBY: 'border-l-primary-500',
     PROTECTED: 'border-l-accent-500',
     NOT_CONFIGURED: 'border-l-gray-400',
-  }[status] || 'border-l-gray-400');
+  } as Record<string, string>)[status] || 'border-l-gray-400');
 
-  const statusBadge = (status) => {
+  const statusBadge = (status: any) => {
     const map = {
       HEALTHY: { bg: 'bg-success-50 dark:bg-success-950', text: 'text-success-700 dark:text-success-300', label: 'Healthy', Icon: CheckCircle2 },
       DEGRADED: { bg: 'bg-warning-50 dark:bg-warning-950', text: 'text-warning-700 dark:text-warning-300', label: 'Degraded', Icon: AlertTriangle },
@@ -220,7 +221,7 @@ export default function HAControlCenterPage() {
       PROTECTED: { bg: 'bg-accent-50 dark:bg-accent-950', text: 'text-accent-700 dark:text-accent-300', label: 'Protected', Icon: ShieldCheck },
       NOT_CONFIGURED: { bg: 'bg-gray-100 dark:bg-gray-800', text: 'text-gray-600 dark:text-gray-400', label: 'Not Configured', Icon: Info },
     };
-    const c = map[status] || map.NOT_CONFIGURED;
+    const c = (map as Record<string, any>)[status] || map.NOT_CONFIGURED;
     return (
       <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-semibold ${c.bg} ${c.text}`}>
         <c.Icon className="w-3 h-3" />
@@ -229,8 +230,8 @@ export default function HAControlCenterPage() {
     );
   };
 
-  const strategyBadge = (strategy) => {
-    const meta = HA_STRATEGY_META[strategy];
+  const strategyBadge = (strategy: any) => {
+    const meta = (HA_STRATEGY_META as Record<string, any>)[strategy];
     if (!meta) return null;
     const colorMap = {
       success: 'bg-success-50 dark:bg-success-950 text-success-700 dark:text-success-300',
@@ -240,14 +241,14 @@ export default function HAControlCenterPage() {
       accent: 'bg-accent-50 dark:bg-accent-950 text-accent-700 dark:text-accent-300',
     };
     return (
-      <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-semibold ${colorMap[meta.color] || colorMap.primary}`}>
+      <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-semibold ${(colorMap as Record<string, string>)[meta.color] || colorMap.primary}`}>
         <StrategyIcon strategy={strategy} className="w-3 h-3" />
         {meta.label}
       </span>
     );
   };
 
-  const replStatusBadge = (replStatus) => {
+  const replStatusBadge = (replStatus: any) => {
     if (!replStatus) return null;
     if (replStatus === 'SOK') {
       return (
@@ -263,7 +264,7 @@ export default function HAControlCenterPage() {
     );
   };
 
-  const opTypeBadge = (type) => {
+  const opTypeBadge = (type: any) => {
     const map = {
       TAKEOVER: { bg: 'bg-primary-50 dark:bg-primary-950', text: 'text-primary-700 dark:text-primary-300' },
       FAILOVER: { bg: 'bg-warning-50 dark:bg-warning-950', text: 'text-warning-700 dark:text-warning-300' },
@@ -273,7 +274,7 @@ export default function HAControlCenterPage() {
       DR_SWITCHOVER: { bg: 'bg-warning-50 dark:bg-warning-950', text: 'text-warning-700 dark:text-warning-300' },
       RESTORE: { bg: 'bg-danger-50 dark:bg-danger-950', text: 'text-danger-700 dark:text-danger-300' },
     };
-    const c = map[type] || map.TAKEOVER;
+    const c = (map as Record<string, any>)[type] || map.TAKEOVER;
     return (
       <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold ${c.bg} ${c.text}`}>
         {type.replace('_', ' ')}
@@ -281,7 +282,7 @@ export default function HAControlCenterPage() {
     );
   };
 
-  const opStatusBadge = (status) => {
+  const opStatusBadge = (status: any) => {
     if (status === 'COMPLETED') {
       return (
         <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-semibold bg-success-50 dark:bg-success-950 text-success-700 dark:text-success-300">
@@ -296,19 +297,19 @@ export default function HAControlCenterPage() {
     );
   };
 
-  const prereqIcon = (status) => {
+  const prereqIcon = (status: any) => {
     if (status === 'PASS') return <CheckCircle2 className="w-5 h-5 text-success-500" />;
     if (status === 'WARN') return <AlertTriangle className="w-5 h-5 text-warning-500" />;
     return <XCircle className="w-5 h-5 text-danger-500" />;
   };
 
-  const prereqStatusBadge = (status) => {
+  const prereqStatusBadge = (status: any) => {
     const map = {
       PASS: { bg: 'bg-success-50 dark:bg-success-950', text: 'text-success-700 dark:text-success-300' },
       WARN: { bg: 'bg-warning-50 dark:bg-warning-950', text: 'text-warning-700 dark:text-warning-300' },
       FAIL: { bg: 'bg-danger-50 dark:bg-danger-950', text: 'text-danger-700 dark:text-danger-300' },
     };
-    const c = map[status] || map.FAIL;
+    const c = (map as Record<string, any>)[status] || map.FAIL;
     return (
       <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold ${c.bg} ${c.text}`}>
         {status}
@@ -316,7 +317,7 @@ export default function HAControlCenterPage() {
     );
   };
 
-  const generateEvidenceHash = (id) => {
+  const generateEvidenceHash = (id: any) => {
     const base = `${id}-evidence-hash`;
     let hash = '';
     for (let i = 0; i < 64; i++) {
@@ -328,14 +329,14 @@ export default function HAControlCenterPage() {
   // ── Strategy overview cards ──
   const renderStrategyOverview = () => {
     const strategies = Object.entries(HA_STRATEGY_META);
-    const counts = {};
-    systems.forEach(s => {
-      if (s.haStrategy) counts[s.haStrategy] = (counts[s.haStrategy] || 0) + 1;
+    const counts: Record<string, number> = {};
+    systems.forEach((s: any) => {
+      if (s.haStrategy) (counts as any)[s.haStrategy] = ((counts as any)[s.haStrategy] || 0) + 1;
     });
 
     return (
       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
-        {strategies.map(([key, meta]) => (
+        {strategies.map(([key, meta]: [string, any]) => (
           <button
             key={key}
             onClick={() => setSelectedStrategy(prev => prev === key ? 'ALL' : key)}
@@ -363,7 +364,7 @@ export default function HAControlCenterPage() {
   };
 
   // ── Render: node pair for any strategy ──
-  const renderNodePair = (sys) => {
+  const renderNodePair = (sys: any) => {
     const isPilotLight = sys.haStrategy === 'PILOT_LIGHT';
     const isBackupOnly = sys.haStrategy === 'BACKUP_RESTORE';
     const isCrossRegion = sys.haStrategy === 'CROSS_REGION_DR';
@@ -571,7 +572,7 @@ export default function HAControlCenterPage() {
 
       {/* System cards grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
-        {filteredSystems.map((sys) => (
+        {filteredSystems.map((sys: any) => (
           <div
             key={sys.systemId}
             className={`bg-surface rounded-xl border border-border border-l-4 ${statusColor(sys.haStatus)} p-4 space-y-3`}
@@ -637,15 +638,15 @@ export default function HAControlCenterPage() {
                 </div>
 
                 {/* RTO/RPO for the strategy */}
-                {sys.haStrategy && HA_STRATEGY_META[sys.haStrategy] && (
+                {sys.haStrategy && (HA_STRATEGY_META as Record<string, any>)[sys.haStrategy] && (
                   <div className="flex items-center gap-4 text-[10px] text-text-tertiary">
                     <span className="flex items-center gap-1">
                       <Zap className="w-3 h-3" />
-                      RTO: <span className="font-semibold text-text-secondary">{HA_STRATEGY_META[sys.haStrategy].rto}</span>
+                      RTO: <span className="font-semibold text-text-secondary">{(HA_STRATEGY_META as Record<string, any>)[sys.haStrategy].rto}</span>
                     </span>
                     <span className="flex items-center gap-1">
                       <Database className="w-3 h-3" />
-                      RPO: <span className="font-semibold text-text-secondary">{HA_STRATEGY_META[sys.haStrategy].rpo}</span>
+                      RPO: <span className="font-semibold text-text-secondary">{(HA_STRATEGY_META as Record<string, any>)[sys.haStrategy].rpo}</span>
                     </span>
                   </div>
                 )}
@@ -740,7 +741,7 @@ export default function HAControlCenterPage() {
           Drivers Registrados
         </h3>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-          {haDrivers.map((drv, i) => (
+          {haDrivers.map((drv: any, i: any) => (
             <div key={i} className="flex items-center justify-between p-3 rounded-lg border border-border bg-surface-secondary">
               <div>
                 <p className="text-sm font-medium text-text-primary">{drv.name}</p>
@@ -788,7 +789,7 @@ export default function HAControlCenterPage() {
           </div>
 
           <div className="space-y-1.5">
-            {runningOp.steps.map((step, idx) => {
+            {runningOp.steps.map((step: any, idx: any) => {
               let icon, textClass;
               if (idx < runningOp.currentStep) {
                 icon = <CheckCircle2 className="w-4 h-4 text-success-500 flex-shrink-0" />;
@@ -859,7 +860,7 @@ export default function HAControlCenterPage() {
               </tr>
             </thead>
             <tbody className="divide-y divide-border">
-              {opsHistory.map((op) => (
+              {opsHistory.map((op: any) => (
                 <tr key={op.id} className="hover:bg-surface-secondary transition-colors">
                   <td className="px-4 py-3 text-xs font-mono text-text-primary">{op.id}</td>
                   <td className="px-4 py-3 text-xs font-medium text-text-primary">{op.systemId}</td>
@@ -889,14 +890,14 @@ export default function HAControlCenterPage() {
   );
 
   // ── Render: Prerequisites tab ──
-  const categoryBadge = (cat) => {
+  const categoryBadge = (cat: any) => {
     const map = {
       cloud: { bg: 'bg-accent-50 dark:bg-accent-950', text: 'text-accent-700 dark:text-accent-300', label: 'CLOUD' },
       sap: { bg: 'bg-primary-50 dark:bg-primary-950', text: 'text-primary-700 dark:text-primary-300', label: 'SAP' },
       infra: { bg: 'bg-gray-100 dark:bg-gray-800', text: 'text-gray-600 dark:text-gray-400', label: 'INFRA' },
       system: { bg: 'bg-gray-100 dark:bg-gray-800', text: 'text-gray-600 dark:text-gray-400', label: 'SYSTEM' },
     };
-    const c = map[cat];
+    const c = (map as Record<string, any>)[cat];
     if (!c) return null;
     return (
       <span className={`inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-semibold uppercase ${c.bg} ${c.text}`}>
@@ -919,12 +920,12 @@ export default function HAControlCenterPage() {
           <span className="flex items-center gap-1">{categoryBadge('system')} Sistema</span>
         </div>
 
-        {strategiesWithPrereqs.map(([strategy, prereqs]) => {
-          const meta = HA_STRATEGY_META[strategy];
+        {strategiesWithPrereqs.map(([strategy, prereqs]: [string, any[]]) => {
+          const meta = (HA_STRATEGY_META as Record<string, any>)[strategy];
           if (!meta) return null;
-          const allRequiredPass = prereqs.filter(p => p.required).every(p => p.status === 'PASS');
-          const cloudPrereqs = prereqs.filter(p => p.category === 'cloud');
-          const cloudOk = cloudPrereqs.every(p => p.status === 'PASS');
+          const allRequiredPass = prereqs.filter((p: any) => p.required).every((p: any) => p.status === 'PASS');
+          const cloudPrereqs = prereqs.filter((p: any) => p.category === 'cloud');
+          const cloudOk = cloudPrereqs.every((p: any) => p.status === 'PASS');
 
           return (
             <div key={strategy} className="space-y-3">
@@ -942,13 +943,13 @@ export default function HAControlCenterPage() {
                 {cloudPrereqs.length > 0 && (
                   <span className={`inline-flex items-center gap-1 text-xs ${cloudOk ? 'text-success-600 dark:text-success-400' : 'text-danger-600 dark:text-danger-400'}`}>
                     <Globe className="w-3.5 h-3.5" />
-                    Cloud: {cloudOk ? 'OK' : `${cloudPrereqs.filter(p => p.status !== 'PASS').length} pendientes`}
+                    Cloud: {cloudOk ? 'OK' : `${cloudPrereqs.filter((p: any) => p.status !== 'PASS').length} pendientes`}
                   </span>
                 )}
               </div>
 
               <div className="bg-surface rounded-xl border border-border divide-y divide-border">
-                {prereqs.map((prereq, idx) => (
+                {prereqs.map((prereq: any, idx: any) => (
                   <div key={idx} className={`flex items-center gap-4 px-5 py-3 ${
                     prereq.category === 'cloud' ? 'bg-accent-50/30 dark:bg-accent-950/20' : ''
                   }`}>
@@ -979,7 +980,7 @@ export default function HAControlCenterPage() {
   // ── Render: Evidence tab ──
   const renderEvidenceTab = () => (
     <div className="space-y-4">
-      {opsHistory.map((op) => (
+      {opsHistory.map((op: any) => (
         <div key={op.id} className="bg-surface rounded-xl border border-border p-5 space-y-3">
           <div className="flex items-center justify-between">
             <div>
@@ -1053,7 +1054,7 @@ export default function HAControlCenterPage() {
         {/* Tabs */}
         <div className="border-b border-border">
           <nav className="flex gap-6 -mb-px">
-            {tabs.map((tab) => (
+            {tabs.map((tab: any) => (
               <button
                 key={tab.key}
                 onClick={() => setActiveTab(tab.key)}
@@ -1077,9 +1078,9 @@ export default function HAControlCenterPage() {
 
       {/* Confirm dialog overlay */}
       {confirmDialog && (() => {
-        const sys = systems.find(s => s.systemId === confirmDialog.systemId);
+        const sys = systems.find((s: any) => s.systemId === confirmDialog.systemId);
         const strategy = sys?.haStrategy;
-        const meta = strategy ? HA_STRATEGY_META[strategy] : null;
+        const meta = strategy ? (HA_STRATEGY_META as Record<string, any>)[strategy] : null;
         const descriptions = {
           TAKEOVER: 'Se ejecutará un Takeover planificado. SAP será detenido en el nodo primario y reiniciado en el secundario.',
           FAILOVER: strategy === 'WARM_STANDBY'
@@ -1111,7 +1112,7 @@ export default function HAControlCenterPage() {
                 </div>
               )}
               <p className="text-sm text-text-secondary">
-                {descriptions[confirmDialog.type] || 'Se ejecutará la operación seleccionada.'}
+                {(descriptions as Record<string, string>)[confirmDialog.type] || 'Se ejecutará la operación seleccionada.'}
               </p>
               <p className="text-xs text-text-tertiary italic">
                 Operación simulada — En producción, esta acción ejecutaría un failover real en su sistema SAP.

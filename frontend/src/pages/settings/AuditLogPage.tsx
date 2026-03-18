@@ -10,23 +10,24 @@ import PageLoading from '../../components/ui/PageLoading';
 import Pagination from '../../components/ui/Pagination';
 import usePagination from '../../hooks/usePagination';
 import { dataService } from '../../services/dataService';
+import type { ApiRecord } from '../../types';
 
 export default function AuditLogPage() {
   const [search, setSearch] = useState('');
-  const [events, setEvents] = useState([]);
+  const [events, setEvents] = useState<ApiRecord[]>([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     let mounted = true;
     dataService.getAuditLog()
       .then(data => { if (mounted) setEvents(data); })
-      .catch(err => { if (mounted) setError(err.message); })
+      .catch((err: any) => { if (mounted) setError(err.message); })
       .finally(() => { if (mounted) setLoading(false); });
     return () => { mounted = false; };
   }, []);
 
-  const filtered = events.filter(e =>
+  const filtered = events.filter((e: any) =>
     e.action.toLowerCase().includes(search.toLowerCase()) ||
     e.user.toLowerCase().includes(search.toLowerCase()) ||
     e.details.toLowerCase().includes(search.toLowerCase())
@@ -42,9 +43,9 @@ export default function AuditLogPage() {
     </div>
   );
 
-  const severityVariant = (s) => ({ critical: 'danger', warning: 'warning', info: 'default' }[s] || 'default');
+  const severityVariant = (s: any) => (({ critical: 'danger', warning: 'warning', info: 'default' } as Record<string, string>)[s] || 'default');
 
-  const actionLabels = {
+  const actionLabels: Record<string, string> = {
     'system.register': 'Sistema registrado',
     'approval.approve': 'Aprobación procesada',
     'breach.detected': 'Breach detectado',
@@ -86,7 +87,7 @@ export default function AuditLogPage() {
           </tr>
         </TableHeader>
         <TableBody>
-          {paginatedAudit.map(event => (
+          {paginatedAudit.map((event: any) => (
             <TableRow key={event.id}>
               <TableCell className="text-xs text-text-secondary whitespace-nowrap">
                 {new Date(event.timestamp).toLocaleString('es-CO', { hour12: false })}
@@ -94,7 +95,7 @@ export default function AuditLogPage() {
               <TableCell className="text-xs">{event.user}</TableCell>
               <TableCell>
                 <code className="text-xs bg-surface-tertiary px-1.5 py-0.5 rounded">
-                  {actionLabels[event.action] || event.action}
+                  {(actionLabels as Record<string, any>)[event.action] || event.action}
                 </code>
               </TableCell>
               <TableCell className="text-xs font-mono text-text-secondary">{event.resource}</TableCell>

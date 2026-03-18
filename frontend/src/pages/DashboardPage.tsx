@@ -9,6 +9,7 @@ import HealthGauge from '../components/ui/HealthGauge';
 import Button from '../components/ui/Button';
 import PageLoading from '../components/ui/PageLoading';
 import { dataService } from '../services/dataService';
+import type { ApiRecord } from '../types';
 
 // Mapa de colores por variante — solo colorea el valor y el icono, sin fondos de color
 const variantValueColors = {
@@ -41,9 +42,9 @@ const variantIconGradient = {
 // does not detect JSX usage of destructured-and-renamed props.
 // eslint-disable-next-line no-unused-vars
 function KPICard({ icon: Icon, label, value, change, variant = 'default' }: { icon: any; label: any; value: any; change?: any; variant?: string }) {
-  const valueColor   = variantValueColors[variant];
-  const glowClass    = variantGlowClass[variant];
-  const [gradFrom, gradTo] = variantIconGradient[variant];
+  const valueColor   = (variantValueColors as Record<string, string>)[variant];
+  const glowClass    = (variantGlowClass as Record<string, string>)[variant];
+  const [gradFrom, gradTo] = (variantIconGradient as Record<string, string[]>)[variant];
 
   return (
     <div className="bg-white/[0.03] backdrop-blur-sm border border-white/10 rounded-xl p-5 transition-all duration-300 hover:border-primary-500/20 hover:shadow-[0_0_20px_rgba(6,182,212,0.06)]">
@@ -84,7 +85,7 @@ function KPICard({ icon: Icon, label, value, change, variant = 'default' }: { ic
   );
 }
 
-function SystemCard({ system, onClick }) {
+function SystemCard({ system, onClick }: { system: any; onClick: any }) {
   return (
     <div
       role="button"
@@ -148,8 +149,8 @@ function SystemCard({ system, onClick }) {
 }
 
 export default function DashboardPage() {
-  const [systems, setSystems] = useState([]);
-  const [approvals, setApprovals] = useState([]);
+  const [systems, setSystems] = useState<ApiRecord[]>([]);
+  const [approvals, setApprovals] = useState<ApiRecord[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [refreshing, setRefreshing] = useState(false);
@@ -205,9 +206,9 @@ export default function DashboardPage() {
   );
 
   // Cálculo de KPIs
-  const healthySystems    = systems.filter(s => s.healthScore >= 90).length;
-  const totalBreaches     = systems.reduce((sum, s) => sum + s.breaches, 0);
-  const pendingApprovals  = approvals.filter(a => a.status === 'PENDING').length;
+  const healthySystems    = systems.filter((s: any) => s.healthScore >= 90).length;
+  const totalBreaches     = systems.reduce((sum: any, s: any) => sum + s.breaches, 0);
+  const pendingApprovals  = approvals.filter((a: any) => a.status === 'PENDING').length;
 
   return (
     <div>
@@ -275,7 +276,7 @@ export default function DashboardPage() {
             Grid de SystemCards
         ══════════════════════════════════════ */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-          {systems.map(system => (
+          {systems.map((system: any) => (
             <SystemCard
               key={system.id}
               system={system}

@@ -10,7 +10,7 @@ export default function ChatWidget() {
   ]);
   const [input, setInput] = useState('');
   const [isTyping, setIsTyping] = useState(false);
-  const messagesEndRef = useRef(null);
+  const messagesEndRef = useRef<HTMLDivElement>(null);
   const mountedRef = useRef(true);
   const { hasFeature } = usePlan();
 
@@ -32,7 +32,7 @@ export default function ChatWidget() {
     setIsTyping(true);
 
     try {
-      const history = messages.map(m => ({ role: m.role, content: m.content }));
+      const history = messages.map((m: any) => ({ role: m.role, content: m.content }));
       const response = await dataService.chat(userMessage, { history });
       if (!mountedRef.current) return;
       const aiText = (response as any)?.message || (response as any)?.data?.message || 'No pude procesar tu consulta. Intenta de nuevo.';
@@ -45,7 +45,7 @@ export default function ChatWidget() {
     }
   }, [input, messages]);
 
-  const handleKeyDown = (e) => {
+  const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
       handleSend();
@@ -91,7 +91,7 @@ export default function ChatWidget() {
 
           {/* Messages */}
           <div className="flex-1 overflow-y-auto p-4 space-y-3">
-            {messages.map((msg, i) => (
+            {messages.map((msg: any, i: any) => (
               <div key={i} className={`flex gap-2 ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
                 {msg.role === 'assistant' && (
                   <div className="w-6 h-6 rounded-full bg-gradient-to-br from-primary-500 to-accent-500 flex items-center justify-center flex-shrink-0 mt-0.5">

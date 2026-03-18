@@ -13,6 +13,7 @@ import EmptyState from '../components/ui/EmptyState';
 import FeatureGate, { UpgradeBanner } from '../components/ui/FeatureGate';
 import PageLoading from '../components/ui/PageLoading';
 import { dataService } from '../services/dataService';
+import type { ApiRecord } from '../types';
 
 // Mapeo de entorno a variante de Badge
 const envBadgeVariant = {
@@ -25,16 +26,16 @@ const envBadgeVariant = {
 const envOrder = { DEV: 0, QAS: 1, PRD: 2 };
 
 // Determina si un valor difiere del mayoritario en un conjunto
-function hasDifference(values) {
+function hasDifference(values: any[]) {
   const unique = [...new Set(values)];
   return unique.length > 1;
 }
 
 export default function ComparisonPage() {
-  const [systems, setSystems] = useState([]);
-  const [sidLines, setSidLines] = useState([]);
-  const [systemMeta, setSystemMeta] = useState({});
-  const [landscapeValidation, setLandscapeValidation] = useState({});
+  const [systems, setSystems] = useState<ApiRecord[]>([]);
+  const [sidLines, setSidLines] = useState<ApiRecord[]>([]);
+  const [systemMeta, setSystemMeta] = useState<Record<string, any>>({});
+  const [landscapeValidation, setLandscapeValidation] = useState<Record<string, any>>({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [selectedLine, setSelectedLine] = useState('ERP');
@@ -45,7 +46,7 @@ export default function ComparisonPage() {
       dataService.getSIDLines(),
       dataService.getSystemMeta(),
       dataService.getLandscapeValidation(),
-    ]).then(([sys, lines, meta, validation]) => {
+    ]).then(([sys, lines, meta, validation]: any[]) => {
       setSystems(sys);
       setSidLines(lines);
       setSystemMeta(meta);
@@ -58,49 +59,49 @@ export default function ComparisonPage() {
   }, []);
 
   // Opciones del selector de SID Lines
-  const lineOptions = sidLines.map(l => ({
+  const lineOptions = sidLines.map((l: any) => ({
     value: l.line,
     label: `${l.line} — ${l.description}`,
   }));
 
   // Datos de la linea seleccionada
-  const currentLine = sidLines.find(l => l.line === selectedLine);
+  const currentLine = sidLines.find((l: any) => l.line === selectedLine);
 
   // Sistemas de la linea seleccionada, ordenados DEV -> QAS -> PRD
   const lineSystems = useMemo(() => {
     if (!currentLine) return [];
     return currentLine.systems
-      .map(id => systems.find(s => s.id === id))
+      .map((id: any) => systems.find((s: any) => s.id === id))
       .filter(Boolean)
-      .sort((a, b) => (envOrder[a.environment] ?? 99) - (envOrder[b.environment] ?? 99));
+      .sort((a: any, b: any) => ((envOrder as Record<string, number>)[a.environment] ?? 99) - ((envOrder as Record<string, number>)[b.environment] ?? 99));
   }, [currentLine, systems]);
 
   // Meta de cada sistema
   const lineSystemsMeta = useMemo(() => {
-    const map = {};
-    lineSystems.forEach(s => {
-      map[s.id] = systemMeta[s.id] || {};
+    const map: Record<string, any> = {};
+    lineSystems.forEach((s: any) => {
+      (map as Record<string, any>)[s.id] = (systemMeta as Record<string, any>)[s.id] || {};
     });
     return map;
   }, [lineSystems, systemMeta]);
 
   // Algún sistema en la linea es RISE_RESTRICTED (sin metricas OS)
   const hasRiseSystem = useMemo(() =>
-    lineSystems.some(s => s.isRiseRestricted),
+    lineSystems.some((s: any) => s.isRiseRestricted),
   [lineSystems]);
 
   // Datos de comparacion para el grafico de barras
   const comparisonData = useMemo(() => {
     if (lineSystems.length === 0) return [];
     const data = [
-      { metric: 'Health Score', ...Object.fromEntries(lineSystems.map(s => [s.sid, s.healthScore])) },
+      { metric: 'Health Score', ...Object.fromEntries(lineSystems.map((s: any) => [s.sid, s.healthScore])) },
     ];
     // Omitir metricas OS si algún sistema es RISE_RESTRICTED
     if (!hasRiseSystem) {
       data.push(
-        { metric: 'CPU (%)', ...Object.fromEntries(lineSystems.map(s => [s.sid, s.cpu])) },
-        { metric: 'Memoria (%)', ...Object.fromEntries(lineSystems.map(s => [s.sid, s.mem])) },
-        { metric: 'Disco (%)', ...Object.fromEntries(lineSystems.map(s => [s.sid, s.disk])) },
+        { metric: 'CPU (%)', ...Object.fromEntries(lineSystems.map((s: any) => [s.sid, s.cpu])) },
+        { metric: 'Memoria (%)', ...Object.fromEntries(lineSystems.map((s: any) => [s.sid, s.mem])) },
+        { metric: 'Disco (%)', ...Object.fromEntries(lineSystems.map((s: any) => [s.sid, s.disk])) },
       );
     }
     return data;
@@ -109,24 +110,24 @@ export default function ComparisonPage() {
   const colors = ['#3b82f6', '#f59e0b', '#8b5cf6'];
 
   // Validacion de landscape (solo disponible para ERP)
-  const landscapeData = landscapeValidation[selectedLine] || null;
+  const landscapeData = (landscapeValidation as Record<string, any>)[selectedLine] || null;
 
   // Helper: color de fila segun status de check
-  function checkStatusColor(status) {
+  function checkStatusColor(status: any) {
     if (status === 'ok') return 'text-success-600 dark:text-success-400';
     if (status === 'warning') return 'text-warning-600 dark:text-warning-400';
     if (status === 'info') return 'text-blue-600 dark:text-blue-400';
     return 'text-danger-600 dark:text-danger-400';
   }
 
-  function checkStatusIcon(status) {
+  function checkStatusIcon(status: any) {
     if (status === 'ok') return <CheckCircle size={14} className="text-success-500" />;
     if (status === 'warning') return <AlertTriangle size={14} className="text-warning-500" />;
     return <Info size={14} className="text-blue-500" />;
   }
 
   // Determina si un valor de metrica es el peor (mas alto para CPU/Mem/Disk, mas bajo para Health)
-  function isMetricOutlier(metric, value, allValues) {
+  function isMetricOutlier(metric: any, value: any, allValues: any[]) {
     if (!hasDifference(allValues)) return false;
     if (metric === 'healthScore') return value === Math.min(...allValues);
     return value === Math.max(...allValues);
@@ -180,11 +181,11 @@ export default function ComparisonPage() {
                   lineSystems.length === 2 ? 'md:grid-cols-2' :
                   'md:grid-cols-3'
                 }`}>
-                  {lineSystems.map((sys, i) => {
-                    const meta = lineSystemsMeta[sys.id] || {};
-                    const cpuValues = lineSystems.map(s => s.cpu);
-                    const memValues = lineSystems.map(s => s.mem);
-                    const diskValues = lineSystems.map(s => s.disk);
+                  {lineSystems.map((sys: any, i: any) => {
+                    const meta = (lineSystemsMeta as Record<string, any>)[sys.id] || {};
+                    const cpuValues = lineSystems.map((s: any) => s.cpu);
+                    const memValues = lineSystems.map((s: any) => s.mem);
+                    const diskValues = lineSystems.map((s: any) => s.disk);
 
                     return (
                       <Card
@@ -198,7 +199,7 @@ export default function ComparisonPage() {
                             <Server size={16} className="text-text-tertiary" />
                             <span className="text-sm font-semibold text-text-primary">{sys.sid}</span>
                           </div>
-                          <Badge variant={envBadgeVariant[sys.environment] || 'default'} size="md">
+                          <Badge variant={(envBadgeVariant as Record<string, string>)[sys.environment] || 'default'} size="md">
                             {sys.environment}
                           </Badge>
                         </div>
@@ -259,7 +260,7 @@ export default function ComparisonPage() {
                           <div className="flex justify-between text-xs">
                             <span className="text-text-tertiary">SAP Release</span>
                             <span className={`font-medium ${
-                              hasDifference(lineSystems.map(s => (lineSystemsMeta[s.id] || {}).sapRelease))
+                              hasDifference(lineSystems.map((s: any) => (lineSystemsMeta[s.id] || {}).sapRelease))
                                 ? 'text-warning-600 dark:text-warning-400'
                                 : 'text-text-primary'
                             }`}>
@@ -269,7 +270,7 @@ export default function ComparisonPage() {
                           <div className="flex justify-between text-xs">
                             <span className="text-text-tertiary">Kernel</span>
                             <span className={`font-medium ${
-                              hasDifference(lineSystems.map(s => (lineSystemsMeta[s.id] || {}).kernelRelease))
+                              hasDifference(lineSystems.map((s: any) => (lineSystemsMeta[s.id] || {}).kernelRelease))
                                 ? 'text-warning-600 dark:text-warning-400'
                                 : 'text-text-primary'
                             }`}>
@@ -279,7 +280,7 @@ export default function ComparisonPage() {
                           <div className="flex justify-between text-xs">
                             <span className="text-text-tertiary">SAP Notes</span>
                             <span className={`font-medium ${
-                              hasDifference(lineSystems.map(s => (lineSystemsMeta[s.id] || {}).sapNotes))
+                              hasDifference(lineSystems.map((s: any) => (lineSystemsMeta[s.id] || {}).sapNotes))
                                 ? 'text-warning-600 dark:text-warning-400'
                                 : 'text-text-primary'
                             }`}>
@@ -319,7 +320,7 @@ export default function ComparisonPage() {
                             }}
                           />
                           <Legend />
-                          {lineSystems.map((s, i) => (
+                          {lineSystems.map((s: any, i: any) => (
                             <Bar
                               key={s.id}
                               dataKey={s.sid}
@@ -364,7 +365,7 @@ export default function ComparisonPage() {
                         </TableRow>
                       </TableHeader>
                       <TableBody>
-                        {landscapeData.checks.map((check, idx) => (
+                        {landscapeData.checks.map((check: any, idx: any) => (
                           <TableRow key={idx}>
                             <TableCell>
                               <div>

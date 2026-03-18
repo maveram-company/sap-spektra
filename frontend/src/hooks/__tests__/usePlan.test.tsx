@@ -119,8 +119,8 @@ describe('usePlan – getPlan', () => {
 
     const starter = result.current.getPlan('starter');
     expect(starter).toBeDefined();
-    expect(starter.id).toBe('starter');
-    expect(starter.limits.maxSystems).toBe(3);
+    expect(starter!.id).toBe('starter');
+    expect(starter!.limits.maxSystems).toBe(3);
   });
 
   it('returns undefined for unknown plan id', () => {
@@ -133,9 +133,9 @@ describe('usePlan – getPlan', () => {
     const { result } = renderHook(() => usePlan(), { wrapper });
 
     const enterprise = result.current.getPlan('enterprise');
-    expect(enterprise.limits.maxSystems).toBe(Infinity);
-    expect(enterprise.limits.maxUsers).toBe(Infinity);
-    expect(enterprise.limits.maxIntegrations).toBe(Infinity);
+    expect(enterprise!.limits.maxSystems).toBe(Infinity);
+    expect(enterprise!.limits.maxUsers).toBe(Infinity);
+    expect(enterprise!.limits.maxIntegrations).toBe(Infinity);
   });
 });
 
@@ -146,7 +146,7 @@ describe('usePlan – getAllPlans', () => {
     const allPlans = result.current.getAllPlans();
     expect(allPlans).toHaveLength(3);
 
-    const ids = allPlans.map((p: { id: string }) => p.id);
+    const ids = allPlans.map((p: any) => p.id);
     expect(ids).toContain('starter');
     expect(ids).toContain('professional');
     expect(ids).toContain('enterprise');

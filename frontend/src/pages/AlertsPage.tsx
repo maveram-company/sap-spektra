@@ -7,6 +7,7 @@ import usePagination from '../hooks/usePagination';
 import { alertResolutionCategories } from '../lib/constants';
 import { dataService } from '../services/dataService';
 import { useAuth } from '../contexts/AuthContext';
+import type { ApiRecord } from '../types';
 import {
   AlertTriangle,
   AlertCircle,
@@ -26,12 +27,12 @@ import {
 function AlertsPage() {
   const { user, hasRole } = useAuth();
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const [alerts, setAlerts] = useState([]);
-  const [systems, setSystems] = useState([]);
+  const [error, setError] = useState<string | null>(null);
+  const [alerts, setAlerts] = useState<ApiRecord[]>([]);
+  const [systems, setSystems] = useState<ApiRecord[]>([]);
   const [statusFilter, setStatusFilter] = useState('active');
   const [systemFilter, setSystemFilter] = useState('all');
-  const [resolveModalAlertId, setResolveModalAlertId] = useState(null);
+  const [resolveModalAlertId, setResolveModalAlertId] = useState<string | null>(null);
   const [resolutionCategory, setResolutionCategory] = useState('');
   const [resolutionNote, setResolutionNote] = useState('');
 
@@ -41,13 +42,13 @@ function AlertsPage() {
       .then(([alts, sys]) => {
         if (mounted) { setAlerts(alts); setSystems(sys); }
       })
-      .catch(err => { if (mounted) setError(err.message); })
+      .catch((err: any) => { if (mounted) setError(err.message); })
       .finally(() => { if (mounted) setLoading(false); });
     return () => { mounted = false; };
   }, []);
 
   // Filtrado de alertas
-  const filteredAlerts = alerts.filter((alert) => {
+  const filteredAlerts = alerts.filter((alert: any) => {
     // Filtro por estado
     if (statusFilter === 'active' && alert.status !== 'active') return false;
     if (statusFilter === 'resolved' && alert.status !== 'resolved') return false;
@@ -63,9 +64,9 @@ function AlertsPage() {
   const { items: paginatedAlerts, page: alertPage, totalPages: alertTotalPages, total: alertTotal, setPage: setAlertPage } = usePagination(filteredAlerts, 20);
 
   // Tomar en gestión
-  const handleAcknowledge = (alertId) => {
+  const handleAcknowledge = (alertId: any) => {
     setAlerts((prev) =>
-      prev.map((a) =>
+      prev.map((a: any) =>
         a.id === alertId
           ? {
               ...a,
@@ -79,7 +80,7 @@ function AlertsPage() {
   };
 
   // Abrir modal de resolución
-  const openResolveModal = (alertId) => {
+  const openResolveModal = (alertId: any) => {
     setResolveModalAlertId(alertId);
     setResolutionCategory('');
     setResolutionNote('');
@@ -97,7 +98,7 @@ function AlertsPage() {
     if (!resolutionCategory || !resolutionNote) return;
 
     setAlerts((prev) =>
-      prev.map((a) =>
+      prev.map((a: any) =>
         a.id === resolveModalAlertId
           ? {
               ...a,
@@ -114,7 +115,7 @@ function AlertsPage() {
   };
 
   // Badge de nivel
-  const getLevelBadge = (level) => {
+  const getLevelBadge = (level: any) => {
     const config = {
       critical: {
         bg: 'bg-danger-50 dark:bg-danger-950',
@@ -135,7 +136,7 @@ function AlertsPage() {
         label: 'Informativa',
       },
     };
-    const c = config[level] || config.info;
+    const c = (config as Record<string, any>)[level] || config.info;
     return (
       <span
         className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-semibold ${c.bg} ${c.text}`}
@@ -147,7 +148,7 @@ function AlertsPage() {
   };
 
   // Badge de escalamiento
-  const getEscalationBadge = (escalation) => {
+  const getEscalationBadge = (escalation: any) => {
     if (!escalation || escalation === '-') return null;
     const config = {
       L1: {
@@ -161,7 +162,7 @@ function AlertsPage() {
         icon: <ShieldAlert className="w-3.5 h-3.5" />,
       },
     };
-    const c = config[escalation] || config.L1;
+    const c = (config as Record<string, any>)[escalation] || config.L1;
     return (
       <span
         className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-semibold ${c.bg} ${c.text}`}
@@ -235,7 +236,7 @@ function AlertsPage() {
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div className="flex items-center gap-2 flex-wrap">
             <Filter className="w-4 h-4 text-text-tertiary dark:text-text-tertiary" />
-            {statusFilterOptions.map((opt) => (
+            {statusFilterOptions.map((opt: any) => (
               <button
                 key={opt.value}
                 type="button"
@@ -258,7 +259,7 @@ function AlertsPage() {
               className="px-3 py-1.5 rounded-lg text-sm border border-border dark:border-border bg-surface dark:bg-surface text-text-primary dark:text-text-primary focus:outline-none focus:ring-2 focus:ring-primary-500"
             >
               <option value="all">Todos los sistemas</option>
-              {systems.map((sys) => (
+              {systems.map((sys: any) => (
                 <option key={sys.id} value={sys.id}>
                   {sys.sid} - {sys.description}
                 </option>
@@ -282,7 +283,7 @@ function AlertsPage() {
             </div>
           )}
 
-          {paginatedAlerts.map((alert) => (
+          {paginatedAlerts.map((alert: any) => (
             <div
               key={alert.id}
               className="bg-surface dark:bg-surface border border-border dark:border-border rounded-xl p-5 space-y-3"
@@ -426,7 +427,7 @@ function AlertsPage() {
                   className="w-full px-3 py-2 rounded-lg text-sm border border-border dark:border-border bg-surface dark:bg-surface text-text-primary dark:text-text-primary focus:outline-none focus:ring-2 focus:ring-primary-500"
                 >
                   <option value="">Seleccionar categor&iacute;a...</option>
-                  {alertResolutionCategories.map((cat) => (
+                  {alertResolutionCategories.map((cat: any) => (
                     <option key={cat.value} value={cat.value}>
                       {cat.label}
                     </option>

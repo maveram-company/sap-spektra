@@ -11,13 +11,14 @@ import FeatureGate, { UpgradeBanner } from '../components/ui/FeatureGate';
 import EmptyState from '../components/ui/EmptyState';
 import PageLoading from '../components/ui/PageLoading';
 import { dataService } from '../services/dataService';
+import type { ApiRecord } from '../types';
 
 export default function AnalyticsPage() {
   const [selectedSystem, setSelectedSystem] = useState('all');
-  const [data, setData] = useState(null);
-  const [systems, setSystems] = useState([]);
+  const [data, setData] = useState<Record<string, any> | null>(null);
+  const [systems, setSystems] = useState<ApiRecord[]>([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     let mounted = true;
@@ -25,7 +26,7 @@ export default function AnalyticsPage() {
       .then(([anl, sys]) => {
         if (mounted) { setData(anl); setSystems(sys); }
       })
-      .catch(err => { if (mounted) setError(err.message); })
+      .catch((err: any) => { if (mounted) setError(err.message); })
       .finally(() => { if (mounted) setLoading(false); });
     return () => { mounted = false; };
   }, []);
@@ -42,8 +43,8 @@ export default function AnalyticsPage() {
   );
 
   const pieData = [
-    { name: 'Exitosos', value: data.totalExecutions - data.failedCount, color: '#22c55e' },
-    { name: 'Fallidos', value: data.failedCount, color: '#ef4444' },
+    { name: 'Exitosos', value: data!.totalExecutions - data!.failedCount, color: '#22c55e' },
+    { name: 'Fallidos', value: data!.failedCount, color: '#ef4444' },
   ];
 
   return (
@@ -59,7 +60,7 @@ export default function AnalyticsPage() {
               onChange={(e) => setSelectedSystem(e.target.value)}
               options={[
                 { value: 'all', label: 'Todos los sistemas' },
-                ...systems.map(s => ({ value: s.id, label: `${s.sid} - ${s.type}` }))
+                ...systems.map((s: any) => ({ value: s.id, label: `${s.sid} - ${s.type}` }))
               ]}
             />
           }
@@ -70,11 +71,11 @@ export default function AnalyticsPage() {
             {/* KPI Row */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
               {[
-                { icon: Activity, label: 'Total Ejecuciones', value: data.totalExecutions, color: 'text-primary-600' },
-                { icon: CheckCircle, label: 'Tasa de Éxito', value: `${data.successRate}%`, color: 'text-success-600' },
-                { icon: AlertTriangle, label: 'Fallidas', value: data.failedCount, color: 'text-danger-600' },
-                { icon: TrendingUp, label: 'Promedio/Día', value: data.avgPerDay, color: 'text-accent-600' },
-              ].map((kpi, i) => (
+                { icon: Activity, label: 'Total Ejecuciones', value: data!.totalExecutions, color: 'text-primary-600' },
+                { icon: CheckCircle, label: 'Tasa de Éxito', value: `${data!.successRate}%`, color: 'text-success-600' },
+                { icon: AlertTriangle, label: 'Fallidas', value: data!.failedCount, color: 'text-danger-600' },
+                { icon: TrendingUp, label: 'Promedio/Día', value: data!.avgPerDay, color: 'text-accent-600' },
+              ].map((kpi: any, i: any) => (
                 <Card key={i}>
                   <div className="flex items-center gap-3">
                     <div className="w-10 h-10 rounded-lg bg-surface-tertiary flex items-center justify-center">
@@ -95,7 +96,7 @@ export default function AnalyticsPage() {
                 <CardHeader><CardTitle>Tendencia Diaria</CardTitle></CardHeader>
                 <div className="h-72">
                   <ResponsiveContainer width="100%" height="100%">
-                    <BarChart data={data.dailyTrend}>
+                    <BarChart data={data!.dailyTrend}>
                       <CartesianGrid strokeDasharray="3 3" stroke="var(--color-border)" />
                       <XAxis dataKey="date" tickFormatter={(v) => v.slice(5)} stroke="var(--color-text-tertiary)" fontSize={11} />
                       <YAxis stroke="var(--color-text-tertiary)" fontSize={11} />
@@ -113,8 +114,8 @@ export default function AnalyticsPage() {
                 <div className="h-72 flex items-center justify-center">
                   <ResponsiveContainer width="100%" height="100%">
                     <PieChart>
-                      <Pie data={pieData} cx="50%" cy="50%" innerRadius={60} outerRadius={90} dataKey="value" label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}>
-                        {pieData.map((entry, i) => <Cell key={i} fill={entry.color} />)}
+                      <Pie data={pieData} cx="50%" cy="50%" innerRadius={60} outerRadius={90} dataKey="value" label={({ name, percent }: any) => `${name} ${(percent * 100).toFixed(0)}%`}>
+                        {pieData.map((entry: any, i: any) => <Cell key={i} fill={entry.color} />)}
                       </Pie>
                       <Tooltip />
                     </PieChart>
@@ -136,7 +137,7 @@ export default function AnalyticsPage() {
                   </tr>
                 </TableHeader>
                 <TableBody>
-                  {(data.topRunbooks || []).map(rb => (
+                  {(data!.topRunbooks || []).map((rb: any) => (
                     <TableRow key={rb.id}>
                       <TableCell><code className="text-xs bg-surface-tertiary px-1.5 py-0.5 rounded">{rb.id}</code></TableCell>
                       <TableCell className="font-medium">{rb.name}</TableCell>

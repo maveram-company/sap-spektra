@@ -19,7 +19,7 @@ export default function LoginPage() {
 
   const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: any) => {
     e.preventDefault();
     const trimmedUsername = username.trim();
     const trimmedPassword = password.trim();
@@ -39,7 +39,7 @@ export default function LoginPage() {
     try {
       await login(trimmedUsername, trimmedPassword);
       navigate(from, { replace: true });
-    } catch (err) {
+    } catch (err: any) {
       setError(err.message || t('login.errorAuth'));
     } finally {
       setLoading(false);

@@ -4,6 +4,7 @@ import Card from '../../components/ui/Card';
 import Button from '../../components/ui/Button';
 import Badge from '../../components/ui/Badge';
 import { usePlan } from '../../hooks/usePlan';
+import type { ApiRecord } from '../../types';
 
 const integrations = [
   { id: 'slack', name: 'Slack', description: 'Notificaciones en canales de Slack', icon: '💬', connected: true, plan: 'integrations_basic' },
@@ -16,16 +17,16 @@ const integrations = [
 
 export default function IntegrationsPage() {
   const { hasFeature } = usePlan();
-  const [connecting, setConnecting] = useState(null);
-  const [connectError, setConnectError] = useState(null);
+  const [connecting, setConnecting] = useState<string | null>(null);
+  const [connectError, setConnectError] = useState<string | null>(null);
 
-  const handleConnect = async (id) => {
+  const handleConnect = async (id: any) => {
     setConnecting(id);
     setConnectError(null);
     try {
       // Demo mode: simulated delay — connect to real API when available
       await new Promise(r => setTimeout(r, 1000));
-    } catch (err) {
+    } catch (err: any) {
       setConnectError(err instanceof Error ? err.message : 'Error al conectar integración');
     } finally {
       setConnecting(null);
@@ -47,7 +48,7 @@ export default function IntegrationsPage() {
         </div>
       )}
       <div className="space-y-4">
-        {integrations.map(integration => {
+        {integrations.map((integration: any) => {
           const available = hasFeature(integration.plan);
           return (
             <Card key={integration.id} className={!available ? 'opacity-60' : ''}>

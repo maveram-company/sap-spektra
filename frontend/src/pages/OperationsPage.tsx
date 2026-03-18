@@ -15,17 +15,18 @@ import EmptyState from '../components/ui/EmptyState';
 import PageLoading from '../components/ui/PageLoading';
 import { dataService } from '../services/dataService';
 import { useAuth } from '../contexts/AuthContext';
+import type { ApiRecord } from '../types';
 
 export default function OperationsPage() {
   const { user } = useAuth();
-  const [operations, setOperations] = useState([]);
-  const [systems, setSystems] = useState([]);
+  const [operations, setOperations] = useState<ApiRecord[]>([]);
+  const [systems, setSystems] = useState<ApiRecord[]>([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState('all');
   const [showNewModal, setShowNewModal] = useState(false);
   const [saving, setSaving] = useState(false);
-  const [saveError, setSaveError] = useState(null);
+  const [saveError, setSaveError] = useState<string | null>(null);
   const [formErrors, setFormErrors] = useState<{ systemId?: string; description?: string }>({});
   const [newOp, setNewOp] = useState({ systemId: '', type: 'BACKUP', description: '', riskLevel: 'LOW', scheduledTime: '' });
 
@@ -35,7 +36,7 @@ export default function OperationsPage() {
       .then(([ops, sys]) => {
         if (mounted) { setOperations(ops); setSystems(sys); }
       })
-      .catch(err => { if (mounted) setError(err.message); })
+      .catch((err: any) => { if (mounted) setError(err.message); })
       .finally(() => { if (mounted) setLoading(false); });
     return () => { mounted = false; };
   }, []);
@@ -62,7 +63,7 @@ export default function OperationsPage() {
     try {
       // Demo mode: simulated delay — connect to real API when available
       await new Promise(r => setTimeout(r, 800));
-      const sys = systems.find(s => s.id === newOp.systemId);
+      const sys = systems.find((s: any) => s.id === newOp.systemId);
       setOperations(prev => [...prev, {
         id: `OP-${String(prev.length + 1).padStart(3, '0')}`,
         systemId: newOp.systemId,
@@ -76,25 +77,25 @@ export default function OperationsPage() {
       }]);
       setShowNewModal(false);
       setNewOp({ systemId: '', type: 'BACKUP', description: '', riskLevel: 'LOW', scheduledTime: '' });
-    } catch (err) {
+    } catch (err: any) {
       setSaveError(err instanceof Error ? err.message : 'Error al crear operación');
     } finally {
       setSaving(false);
     }
   };
 
-  const filtered = activeTab === 'all' ? operations : operations.filter(o => o.status === activeTab);
+  const filtered = activeTab === 'all' ? operations : operations.filter((o: any) => o.status === activeTab);
 
-  const riskVariant = (r) => {
-    const map = { HIGH: 'danger', MEDIUM: 'warning', LOW: 'success', CRITICAL: 'danger' };
+  const riskVariant = (r: any) => {
+    const map: Record<string, string> = { HIGH: 'danger', MEDIUM: 'warning', LOW: 'success', CRITICAL: 'danger' };
     return map[r] || 'default';
   };
 
   const tabs = [
     { value: 'all', label: 'Todas', count: operations.length },
-    { value: 'SCHEDULED', label: 'Programadas', count: operations.filter(o => o.status === 'SCHEDULED').length },
-    { value: 'COMPLETED', label: 'Completadas', count: operations.filter(o => o.status === 'COMPLETED').length },
-    { value: 'FAILED', label: 'Fallidas', count: operations.filter(o => o.status === 'FAILED').length },
+    { value: 'SCHEDULED', label: 'Programadas', count: operations.filter((o: any) => o.status === 'SCHEDULED').length },
+    { value: 'COMPLETED', label: 'Completadas', count: operations.filter((o: any) => o.status === 'COMPLETED').length },
+    { value: 'FAILED', label: 'Fallidas', count: operations.filter((o: any) => o.status === 'FAILED').length },
   ];
 
   return (
@@ -129,7 +130,7 @@ export default function OperationsPage() {
               </tr>
             </TableHeader>
             <TableBody>
-              {filtered.map(op => (
+              {filtered.map((op: any) => (
                 <TableRow key={op.id}>
                   <TableCell className="font-mono text-xs">{op.id}</TableCell>
                   <TableCell><span className="font-medium">{op.sid}</span></TableCell>
@@ -182,7 +183,7 @@ export default function OperationsPage() {
                 onChange={(e) => { setNewOp({ ...newOp, systemId: e.target.value }); if (formErrors.systemId) setFormErrors(prev => ({ ...prev, systemId: undefined })); }}
                 options={[
                   { value: '', label: 'Seleccionar sistema...' },
-                  ...systems.map(s => ({ value: s.id, label: `${s.sid} — ${s.type} (${s.environment})` }))
+                  ...systems.map((s: any) => ({ value: s.id, label: `${s.sid} — ${s.type} (${s.environment})` }))
                 ]}
               />
               {formErrors.systemId && <p className="mt-1 text-xs text-danger-600">{formErrors.systemId}</p>}

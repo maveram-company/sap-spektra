@@ -1,7 +1,16 @@
-import { createContext, useContext, useMemo } from 'react';
+import { createContext, useContext, useMemo, type ReactNode } from 'react';
 import { useTenant } from '../contexts/TenantContext';
 
-const PlanContext = createContext(null);
+interface PlanContextValue {
+  currentPlan: Record<string, any>;
+  hasFeature: (feature: string) => boolean;
+  canUpgrade: boolean;
+  getPlan: (planId: string) => Record<string, any> | undefined;
+  getAllPlans: () => Record<string, any>[];
+  PLANS: Record<string, any>;
+}
+
+const PlanContext = createContext<PlanContextValue | null>(null);
 
 const PLANS = {
   starter: {
@@ -34,15 +43,15 @@ const PLANS = {
   },
 };
 
-export function PlanProvider({ children }) {
+export function PlanProvider({ children }: { children: ReactNode }) {
   const { organization } = useTenant();
-  const currentPlan = PLANS[organization?.plan] || PLANS.starter;
+  const currentPlan = (PLANS as Record<string, any>)[organization?.plan] || PLANS.starter;
 
-  const value = useMemo(() => ({
+  const value = useMemo((): PlanContextValue => ({
     currentPlan,
-    hasFeature: (feature) => currentPlan.features.includes(feature),
+    hasFeature: (feature: string) => currentPlan.features.includes(feature),
     canUpgrade: currentPlan.id !== 'enterprise',
-    getPlan: (planId) => PLANS[planId],
+    getPlan: (planId: string) => (PLANS as Record<string, any>)[planId],
     getAllPlans: () => Object.values(PLANS),
     PLANS,
   }), [currentPlan]);
@@ -58,7 +67,7 @@ export function PlanProvider({ children }) {
 // triggers react-refresh/only-export-components. The disable is necessary because
 // the hook must live alongside its context provider for encapsulation.
 // eslint-disable-next-line react-refresh/only-export-components
-export function usePlan() {
+export function usePlan(): PlanContextValue {
   const ctx = useContext(PlanContext);
   if (!ctx) throw new Error('usePlan must be used within PlanProvider');
   return ctx;

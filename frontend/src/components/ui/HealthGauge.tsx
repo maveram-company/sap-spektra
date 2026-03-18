@@ -4,21 +4,21 @@ export default function HealthGauge({ score = 0, size = 120, strokeWidth = 8 }) 
   const circumference = radius * Math.PI;
   const progress = (clampedScore / 100) * circumference;
 
-  const getColor = (s) => {
+  const getColor = (s: number) => {
     if (s >= 90) return '#22c55e';
     if (s >= 70) return '#f59e0b';
     if (s >= 50) return '#f97316';
     return '#ef4444';
   };
 
-  const getLabel = (s) => {
+  const getLabel = (s: number) => {
     if (s >= 90) return 'Saludable';
     if (s >= 70) return 'Advertencia';
     if (s >= 50) return 'Degradado';
     return 'Crítico';
   };
 
-  const getGlowConfig = (s) => {
+  const getGlowConfig = (s: number) => {
     if (s >= 90) return { color: '#22c55e', stdDeviation: 4, animate: false };
     if (s >= 70) return { color: '#f59e0b', stdDeviation: 4, animate: false };
     if (s >= 50) return { color: '#f97316', stdDeviation: 5, animate: false };

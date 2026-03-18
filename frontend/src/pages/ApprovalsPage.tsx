@@ -13,14 +13,15 @@ import PageLoading from '../components/ui/PageLoading';
 import { useAuth } from '../contexts/AuthContext';
 import { dataService } from '../services/dataService';
 import { createLogger } from '../lib/logger';
+import type { ApiRecord } from '../types';
 
 const log = createLogger('ApprovalsPage');
 
 export default function ApprovalsPage() {
-  const [approvals, setApprovals] = useState([]);
+  const [approvals, setApprovals] = useState<ApiRecord[]>([]);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState('PENDING');
-  const [processing, setProcessing] = useState(null);
+  const [processing, setProcessing] = useState<string | null>(null);
   const { hasRole } = useAuth();
   const canApprove = hasRole('escalation');
 
@@ -30,41 +31,41 @@ export default function ApprovalsPage() {
       .then(data => {
         if (mounted) { setApprovals(data); setLoading(false); }
       })
-      .catch(err => {
+      .catch((err: any) => {
         if (mounted) { log.warn('Fetch failed', { error: err.message }); setLoading(false); }
       });
     return () => { mounted = false; };
   }, []);
 
-  const filtered = approvals.filter(a => a.status === activeTab);
+  const filtered = approvals.filter((a: any) => a.status === activeTab);
 
-  const handleApprove = async (id) => {
+  const handleApprove = async (id: any) => {
     if (!canApprove) return;
     setProcessing(id);
     await new Promise(r => setTimeout(r, 800));
-    setApprovals(prev => prev.map(a => a.id === id ? { ...a, status: 'APPROVED', processedAt: new Date().toISOString() } : a));
+    setApprovals(prev => prev.map((a: any) => a.id === id ? { ...a, status: 'APPROVED', processedAt: new Date().toISOString() } : a));
     setProcessing(null);
   };
 
-  const handleReject = async (id) => {
+  const handleReject = async (id: any) => {
     if (!canApprove) return;
     setProcessing(id);
     await new Promise(r => setTimeout(r, 800));
-    setApprovals(prev => prev.map(a => a.id === id ? { ...a, status: 'REJECTED', processedAt: new Date().toISOString() } : a));
+    setApprovals(prev => prev.map((a: any) => a.id === id ? { ...a, status: 'REJECTED', processedAt: new Date().toISOString() } : a));
     setProcessing(null);
   };
 
   const tabs = [
-    { value: 'PENDING', label: 'Pendientes', count: approvals.filter(a => a.status === 'PENDING').length },
-    { value: 'APPROVED', label: 'Aprobadas', count: approvals.filter(a => a.status === 'APPROVED').length },
-    { value: 'REJECTED', label: 'Rechazadas', count: approvals.filter(a => a.status === 'REJECTED').length },
-    { value: 'EXPIRED', label: 'Expiradas', count: approvals.filter(a => a.status === 'EXPIRED').length },
+    { value: 'PENDING', label: 'Pendientes', count: approvals.filter((a: any) => a.status === 'PENDING').length },
+    { value: 'APPROVED', label: 'Aprobadas', count: approvals.filter((a: any) => a.status === 'APPROVED').length },
+    { value: 'REJECTED', label: 'Rechazadas', count: approvals.filter((a: any) => a.status === 'REJECTED').length },
+    { value: 'EXPIRED', label: 'Expiradas', count: approvals.filter((a: any) => a.status === 'EXPIRED').length },
   ];
 
   if (loading) return <PageLoading message="Cargando aprobaciones..." />;
 
-  const severityVariant = (s) => {
-    const map = { CRITICAL: 'danger', HIGH: 'danger', MEDIUM: 'warning', LOW: 'default' };
+  const severityVariant = (s: any) => {
+    const map: Record<string, string> = { CRITICAL: 'danger', HIGH: 'danger', MEDIUM: 'warning', LOW: 'default' };
     return map[s] || 'default';
   };
 
@@ -97,7 +98,7 @@ export default function ApprovalsPage() {
               </tr>
             </TableHeader>
             <TableBody>
-              {filtered.map(approval => (
+              {filtered.map((approval: any) => (
                 <TableRow key={approval.id}>
                   <TableCell>
                     <div>

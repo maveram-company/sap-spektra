@@ -10,6 +10,7 @@ import EmptyState from '../components/ui/EmptyState';
 import { dataService } from '../services/dataService';
 import { useToast } from '../hooks/useToast';
 import { createLogger } from '../lib/logger';
+import type { ApiRecord } from '../types';
 
 const log = createLogger('ReportsPage');
 
@@ -37,13 +38,13 @@ const iconColors = {
 };
 
 export default function ReportsPage() {
-  const [reports, setReports] = useState([]);
-  const [events, setEvents] = useState([]);
-  const [alerts, setAlerts] = useState([]);
-  const [generating, setGenerating] = useState(null);
+  const [reports, setReports] = useState<ApiRecord[]>([]);
+  const [events, setEvents] = useState<ApiRecord[]>([]);
+  const [alerts, setAlerts] = useState<ApiRecord[]>([]);
+  const [generating, setGenerating] = useState<string | null>(null);
   const { toast, showToast, dismissToast } = useToast(3000);
   const [error, setError] = useState<string | null>(null);
-  const generateTimerRef = useRef<ReturnType<typeof setTimeout>>(null);
+  const generateTimerRef = useRef<ReturnType<typeof setTimeout>>(undefined);
 
   useEffect(() => {
     let mounted = true;
@@ -51,7 +52,7 @@ export default function ReportsPage() {
       if (!mounted) return;
       setEvents(evts);
       setAlerts(alts);
-    }).catch((err) => {
+    }).catch((err: any) => {
       log.warn('Fetch failed', { error: err.message });
       if (!mounted) return;
       setError('Error al cargar datos. Intenta de nuevo.');
@@ -63,12 +64,12 @@ export default function ReportsPage() {
   }, []);
 
   // Generar reporte
-  const handleGenerate = async (typeKey) => {
+  const handleGenerate = async (typeKey: any) => {
     if (generating) return;
     setGenerating(typeKey);
     try {
       // Demo mode: simulated delay — connect to real API when available
-      await new Promise<void>((resolve, reject) => {
+      await new Promise<void>((resolve: any, reject: any) => {
         generateTimerRef.current = setTimeout(() => resolve(), 1500);
       });
       const now = new Date();
@@ -80,7 +81,7 @@ export default function ReportsPage() {
       };
       setReports((prev) => [newReport, ...prev]);
       showToast(`Reporte ${typeKey} generado exitosamente`, 'success');
-    } catch (err) {
+    } catch (err: any) {
       showToast(err instanceof Error ? err.message : 'Error al generar reporte', 'error');
     } finally {
       setGenerating(null);
@@ -88,7 +89,7 @@ export default function ReportsPage() {
   };
 
   // Descargar reporte como JSON
-  const handleDownload = (report) => {
+  const handleDownload = (report: any) => {
     const reportData = {
       id: report.id,
       type: report.tipo,
@@ -97,8 +98,8 @@ export default function ReportsPage() {
         systemsCount: 9,
         eventsCount: events.length,
         alertsCount: alerts.length,
-        activeAlerts: alerts.filter((a) => a.status === 'active').length,
-        resolvedAlerts: alerts.filter((a) => a.status === 'resolved').length,
+        activeAlerts: alerts.filter((a: any) => a.status === 'active').length,
+        resolvedAlerts: alerts.filter((a: any) => a.status === 'resolved').length,
       },
       status: report.estado,
     };
@@ -115,8 +116,8 @@ export default function ReportsPage() {
   };
 
   // Etiqueta legible del tipo
-  const tipoLabel = (key) => {
-    const found = reportTypes.find((r) => r.key === key);
+  const tipoLabel = (key: any) => {
+    const found = reportTypes.find((r: any) => r.key === key);
     return found ? found.label : key;
   };
 
@@ -142,13 +143,13 @@ export default function ReportsPage() {
 
         {/* ── Grid de tipos de reporte ── */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-          {reportTypes.map((rt) => {
+          {reportTypes.map((rt: any) => {
             const Icon = rt.icon;
             const isGenerating = generating === rt.key;
             return (
               <Card key={rt.key} padding="md" className="flex flex-col items-center text-center">
-                <div className={`w-12 h-12 rounded-xl flex items-center justify-center mb-3 ${cardColors[rt.color]}`}>
-                  <Icon size={24} className={iconColors[rt.color]} />
+                <div className={`w-12 h-12 rounded-xl flex items-center justify-center mb-3 ${(cardColors as Record<string, string>)[rt.color]}`}>
+                  <Icon size={24} className={(iconColors as Record<string, string>)[rt.color]} />
                 </div>
                 <h3 className="text-base font-semibold text-text-primary">{rt.label}</h3>
                 <p className="text-xs text-text-secondary mt-1 mb-4">{rt.description}</p>
@@ -189,7 +190,7 @@ export default function ReportsPage() {
                 </tr>
               </TableHeader>
               <TableBody>
-                {reports.map((rpt) => (
+                {reports.map((rpt: any) => (
                   <TableRow key={rpt.id}>
                     {/* Fecha */}
                     <TableCell className="text-xs text-text-secondary whitespace-nowrap">

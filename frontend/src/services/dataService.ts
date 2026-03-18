@@ -96,7 +96,7 @@ const isDemoMode = () => config.features.demoMode;
 
 // ── Transformadores: API → formato frontend ──
 
-function transformSystem(s) {
+function transformSystem(s: any) {
   const healthBias = (s.healthScore || 70) / 100;
 
   // RISE_RESTRICTED systems have no OS-level metrics — SAP manages the infra
@@ -111,9 +111,9 @@ function transformSystem(s) {
   let diskUsage = null;
 
   if (hasRealMetrics) {
-    const avgCpu = hosts.reduce((sum, h) => sum + (h.cpu || 0), 0) / hosts.length;
-    const avgMem = hosts.reduce((sum, h) => sum + (h.memory || 0), 0) / hosts.length;
-    const avgDisk = hosts.reduce((sum, h) => sum + (h.disk || 0), 0) / hosts.length;
+    const avgCpu = hosts.reduce((sum: any, h: any) => sum + (h.cpu || 0), 0) / hosts.length;
+    const avgMem = hosts.reduce((sum: any, h: any) => sum + (h.memory || 0), 0) / hosts.length;
+    const avgDisk = hosts.reduce((sum: any, h: any) => sum + (h.disk || 0), 0) / hosts.length;
     cpuUsage = Math.round(avgCpu);
     memUsage = Math.round(avgMem);
     diskUsage = Math.round(avgDisk);
@@ -139,7 +139,7 @@ function transformSystem(s) {
   };
 }
 
-function transformAlert(a) {
+function transformAlert(a: any) {
   return {
     ...a,
     sid: a.system?.sid || a.sid || '',
@@ -150,21 +150,21 @@ function transformAlert(a) {
   };
 }
 
-function transformEvent(e) {
+function transformEvent(e: any) {
   return {
     ...e,
     sid: e.system?.sid || e.sid || '',
   };
 }
 
-function transformApproval(a) {
+function transformApproval(a: any) {
   return {
     ...a,
     sid: a.system?.sid || a.sid || '',
   };
 }
 
-function transformOperation(op) {
+function transformOperation(op: any) {
   return {
     ...op,
     sid: op.system?.sid || op.sid || '',
@@ -178,7 +178,7 @@ function transformOperation(op) {
   };
 }
 
-function transformAudit(a) {
+function transformAudit(a: any) {
   return {
     ...a,
     user: a.userEmail || a.user || '',
@@ -186,12 +186,12 @@ function transformAudit(a) {
   };
 }
 
-function transformDiscovery(systems) {
+function transformDiscovery(systems: any) {
   const instances = [];
   for (const sys of systems) {
     if (sys.instances?.length) {
       for (const inst of sys.instances) {
-        const host = sys.hosts?.find(h => h.id === inst.hostId);
+        const host = sys.hosts?.find((h: any) => h.id === inst.hostId);
         instances.push({
           instanceId: `${sys.sid}_${inst.instanceNr}`,
           hostname: host?.hostname || inst.hostId || '',
@@ -234,7 +234,7 @@ function transformDiscovery(systems) {
   return instances;
 }
 
-function transformConnector(c) {
+function transformConnector(c: any) {
   return {
     ...c,
     sid: c.system?.sid || c.sid || '',
@@ -242,17 +242,17 @@ function transformConnector(c) {
   };
 }
 
-function transformRunbook(r) {
+function transformRunbook(r: any) {
   // Computar stats desde las ejecuciones incluidas por la API
   const execs = r.executions || [];
   const totalRuns = execs.length;
-  const successCount = execs.filter(e => e.result === 'SUCCESS').length;
+  const successCount = execs.filter((e: any) => e.result === 'SUCCESS').length;
   const successRate = totalRuns > 0 ? Math.round((successCount / totalRuns) * 100) : 0;
 
   // Parsear durations para calcular promedio
   let avgDuration = '—';
   if (totalRuns > 0) {
-    const durations = execs.filter(e => e.duration).map(e => e.duration);
+    const durations = execs.filter((e: any) => e.duration).map((e: any) => e.duration);
     avgDuration = durations.length > 0 ? durations[0] : '—';
   }
 
@@ -278,7 +278,7 @@ function transformRunbook(r) {
   };
 }
 
-function transformRunbookExecution(exec) {
+function transformRunbookExecution(exec: any) {
   return {
     ...exec,
     sid: exec.system?.sid || '',
@@ -288,7 +288,7 @@ function transformRunbookExecution(exec) {
   };
 }
 
-function transformJob(j) {
+function transformJob(j: any) {
   // Parsear details JSON si existe
   let errorMsg = null;
   if (j.details) {
@@ -311,7 +311,7 @@ function transformJob(j) {
   };
 }
 
-function transformTransport(t) {
+function transformTransport(t: any) {
   return {
     ...t,
     sid: t.system?.sid || t.sid || '',
@@ -319,14 +319,14 @@ function transformTransport(t) {
   };
 }
 
-function transformCertificate(c) {
+function transformCertificate(c: any) {
   return {
     ...c,
     sid: c.system?.sid || c.sid || '',
   };
 }
 
-function transformHAConfig(h) {
+function transformHAConfig(h: any) {
   const sid = h.system?.sid || '';
   const env = h.system?.environment || 'PRD';
   const strategy = h.haStrategy || 'HOT_STANDBY';
@@ -406,7 +406,7 @@ function transformHAConfig(h) {
 }
 
 // Transforma la respuesta del API de analytics al formato que las paginas esperan
-function transformAnalytics(apiData) {
+function transformAnalytics(apiData: any) {
   // El backend getOverview retorna: { systemCount, alertsByLevel, operationsByStatus, recentBreaches, healthTrend }
   // Las paginas AnalyticsPage y SLAPage esperan: { totalExecutions, successRate, failedCount, avgPerDay, topRunbooks, dailyTrend, alertStats, slaMetrics }
 
@@ -445,42 +445,42 @@ export const dataService = {
     return systems.map(transformSystem);
   },
 
-  getSystemById: async (id) => {
-    if (isDemoMode()) { await delay(); return mockSystems.find(s => s.id === id) || null; }
+  getSystemById: async (id: any) => {
+    if (isDemoMode()) { await delay(); return mockSystems.find((s: any) => s.id === id) || null; }
     const system = await api.getSystemById(id);
     return transformSystem(system);
   },
 
-  getSystemMetrics: async (id, hours = 2) => {
+  getSystemMetrics: async (id: any, hours = 2) => {
     if (isDemoMode()) { await delay(300); return mockMetrics(); }
     return api.getSystemHostMetrics(id, hours);
   },
 
-  getSystemBreaches: async (id, limit = 50) => {
+  getSystemBreaches: async (id: any, limit = 50) => {
     if (isDemoMode()) {
       await delay(300);
       return id
-        ? mockBreaches.filter(b => b.systemId === id).slice(0, limit)
+        ? mockBreaches.filter((b: any) => b.systemId === id).slice(0, limit)
         : mockBreaches.slice(0, limit);
     }
     const breaches = await api.getBreaches(id) as any[];
-    return breaches.map(b => ({
+    return breaches.map((b: any) => ({
       ...b,
       sid: b.system?.sid || '',
     }));
   },
 
-  getSystemSla: async (id) => {
+  getSystemSla: async (id: any) => {
     if (isDemoMode()) {
       await delay(300);
-      const sys = mockSystems.find(s => s.id === id);
+      const sys = mockSystems.find((s: any) => s.id === id);
       return sys ? { mttr: sys.mttr, mtbf: sys.mtbf, availability: sys.availability } : null;
     }
     return api.getHealthSnapshots(id, 720);
   },
 
-  getServerMetrics: async (id) => {
-    if (isDemoMode()) { await delay(300); return mockServerMetrics[id] || null; }
+  getServerMetrics: async (id: any) => {
+    if (isDemoMode()) { await delay(300); return (mockServerMetrics as Record<string, any>)[id] || null; }
     try {
       const [hosts, sys] = await Promise.all([
         api.getHosts(id) as Promise<any[]>,
@@ -572,29 +572,29 @@ export const dataService = {
         ping: true,
         dbInfo,
       };
-    } catch (err) {
+    } catch (err: any) {
       log.error('Failed to fetch server metrics', { systemId: id, error: (err as Error).message });
       return null;
     }
   },
 
-  getServerDeps: async (id) => {
-    if (isDemoMode()) { await delay(300); return mockServerDeps[id] || null; }
+  getServerDeps: async (id: any) => {
+    if (isDemoMode()) { await delay(300); return (mockServerDeps as Record<string, any>)[id] || null; }
     try {
       const deps = await api.getDependencies(id) as any[];
-      return (deps || []).map(d => ({
+      return (deps || []).map((d: any) => ({
         name: d.name,
         status: d.status,
         detail: d.details ? (typeof d.details === 'string' ? d.details : JSON.stringify(d.details)) : `Latency: ${d.latencyMs ?? '—'}ms`,
       }));
-    } catch (err) {
+    } catch (err: any) {
       log.error('Failed to fetch server dependencies', { systemId: id, error: (err as Error).message });
       return [];
     }
   },
 
-  getSystemInstances: async (id) => {
-    if (isDemoMode()) { await delay(300); return mockSystemInstances[id] || []; }
+  getSystemInstances: async (id: any) => {
+    if (isDemoMode()) { await delay(300); return (mockSystemInstances as Record<string, any>)[id] || []; }
     try {
       const [components, hosts, sys] = await Promise.all([
         api.getComponents(id) as Promise<any[]>,
@@ -604,7 +604,7 @@ export const dataService = {
       // RISE_RESTRICTED systems have no OS-level metrics
       const isRise = sys?.monitoringCapabilityProfile === 'RISE_RESTRICTED' || sys?.supportsOsMetrics === false;
       // Construir mapa hostId → host para enriquecer instancias
-      const hostMap = {};
+      const hostMap: Record<string, any> = {};
       for (const h of (hosts || [])) {
         hostMap[h.id] = h;
       }
@@ -641,38 +641,38 @@ export const dataService = {
         }
       }
       return flat;
-    } catch (err) {
+    } catch (err: any) {
       log.error('Failed to fetch system instances', { systemId: id, error: (err as Error).message });
       return [];
     }
   },
 
-  getMetricHistory: async (hostname) => {
-    if (isDemoMode()) { await delay(300); return mockMetricHistory[hostname] || []; }
+  getMetricHistory: async (hostname: any) => {
+    if (isDemoMode()) { await delay(300); return (mockMetricHistory as Record<string, any>)[hostname] || []; }
     try {
       // Resolve hostname to hostId by searching system hosts
       const systems = await api.getSystems() as any[];
       let hostId = null;
       for (const sys of systems) {
         const hosts = await api.getHosts(sys.id) as any[];
-        const match = hosts?.find(h => h.hostname === hostname);
+        const match = hosts?.find((h: any) => h.hostname === hostname);
         if (match) { hostId = match.id; break; }
       }
       if (!hostId) return [];
       const metrics = await api.getHostMetrics(hostId, 6) as any[];
       if (!metrics || !metrics.length) return [];
-      return metrics.map(m => ({
+      return metrics.map((m: any) => ({
         cpu: Math.round(m.cpu ?? 0),
         mem: Math.round(m.memory ?? 0),
         disk: Math.round(m.disk ?? 0),
       }));
-    } catch (err) {
+    } catch (err: any) {
       log.error('Failed to fetch metric history', { hostname, error: (err as Error).message });
       return [];
     }
   },
 
-  getSystemHosts: async (id) => {
+  getSystemHosts: async (id: any) => {
     if (isDemoMode()) { await delay(200); return getSystemHosts(id); }
     try {
       const [hosts, sys] = await Promise.all([
@@ -681,7 +681,7 @@ export const dataService = {
       ]);
       // RISE_RESTRICTED systems have no OS-level metrics
       const isRise = sys?.monitoringCapabilityProfile === 'RISE_RESTRICTED' || sys?.supportsOsMetrics === false;
-      return (hosts || []).map(h => {
+      return (hosts || []).map((h: any) => {
         // Use real metrics from Host model (updated by metrics pipeline)
         const cpuPct = isRise ? null : Math.round(h.cpu || 0);
         const memPct = isRise ? null : Math.round(h.memory || 0);
@@ -696,7 +696,7 @@ export const dataService = {
           ec2Id: null,
           ec2Type: null,
           // Transformar instancias anidadas al formato esperado por el hosts tab
-          instances: (h.instances || []).map(inst => ({
+          instances: (h.instances || []).map((inst: any) => ({
             ...inst,
             nr: inst.instanceNr || '00',
             role: inst.type || inst.role || '',
@@ -704,31 +704,31 @@ export const dataService = {
           })),
         };
       });
-    } catch (err) {
+    } catch (err: any) {
       log.error('Failed to fetch system hosts', { systemId: id, error: (err as Error).message });
       return [];
     }
   },
 
-  getSystemMeta: async (id?) => {
-    if (isDemoMode()) { await delay(200); return id ? (mockSystemMeta[id] || null) : mockSystemMeta; }
+  getSystemMeta: async (id?: any) => {
+    if (isDemoMode()) { await delay(200); return id ? ((mockSystemMeta as Record<string, any>)[id] || null) : mockSystemMeta; }
     if (id) return api.getSystemMeta(id);
     // Sin ID: retornar mapa { systemId: meta } para ComparisonPage
     try {
       const allMeta = await api.getSystemMeta();
-      const map = {};
+      const map: Record<string, any> = {};
       for (const m of (Array.isArray(allMeta) ? allMeta : [])) {
         map[m.systemId] = m;
       }
       return map;
-    } catch (err) {
+    } catch (err: any) {
       log.error('Failed to fetch system meta', { error: (err as Error).message });
       return {};
     }
   },
 
-  getSAPMonitoring: async (id) => {
-    if (isDemoMode()) { await delay(300); return mockSAPMonitoring[id] || null; }
+  getSAPMonitoring: async (id: any) => {
+    if (isDemoMode()) { await delay(300); return (mockSAPMonitoring as Record<string, any>)[id] || null; }
     try {
       const [sys, hosts] = await Promise.all([
         api.getSystemById(id) as Promise<any>,
@@ -738,7 +738,7 @@ export const dataService = {
       const isJava = sys.sapStackType === 'JAVA' || sys.sapStackType === 'DUAL_STACK';
       // Use real health score and host metrics to derive monitoring values
       const health = sys.healthScore ?? 80;
-      const avgCpu = hosts?.length ? hosts.reduce((s, h) => s + (h.cpu ?? 30), 0) / hosts.length : 30;
+      const avgCpu = hosts?.length ? hosts.reduce((s: any, h: any) => s + (h.cpu ?? 30), 0) / hosts.length : 30;
       const load = Math.round(avgCpu); // 0-100 scale factor
 
       if (isJava) {
@@ -827,7 +827,7 @@ export const dataService = {
           ? ['ZREP_MATERIAL_REVAL', 'SAPLSDTX', 'CL_GUI_ALV_GRID'].slice(0, Math.min(3, failedJobs))
           : [],
       };
-    } catch (err) {
+    } catch (err: any) {
       log.error('Failed to fetch SAP monitoring data', { systemId: id, error: (err as Error).message });
       return null;
     }
@@ -837,7 +837,7 @@ export const dataService = {
   getUsers: async () => {
     if (isDemoMode()) { await delay(); return mockUsers; }
     const users = await api.getUsers() as any[];
-    return users.map(u => ({
+    return users.map((u: any) => ({
       ...u,
       lastLogin: u.lastLoginAt || u.lastLogin,
       mfa: u.mfaEnabled ?? u.mfa ?? false,
@@ -846,21 +846,21 @@ export const dataService = {
   },
 
   // ── Aprobaciones ──
-  getApprovals: async (status?) => {
+  getApprovals: async (status?: any) => {
     if (isDemoMode()) {
       await delay();
-      return status ? mockApprovals.filter(a => a.status === status) : mockApprovals;
+      return status ? mockApprovals.filter((a: any) => a.status === status) : mockApprovals;
     }
     const approvals = await api.getApprovals(status) as any[];
     return approvals.map(transformApproval);
   },
 
-  approveAction: async (id) => {
+  approveAction: async (id: any) => {
     if (isDemoMode()) { await delay(300); return { success: true }; }
     return api.approveAction(id);
   },
 
-  rejectAction: async (id) => {
+  rejectAction: async (id: any) => {
     if (isDemoMode()) { await delay(300); return { success: true }; }
     return api.rejectAction(id);
   },
@@ -906,7 +906,7 @@ export const dataService = {
     return execs.map(transformRunbookExecution);
   },
 
-  executeRunbook: async (runbookId, systemId, dryRun = false) => {
+  executeRunbook: async (runbookId: any, systemId: any, dryRun = false) => {
     if (isDemoMode()) {
       await delay(1500);
       return dryRun
@@ -916,7 +916,7 @@ export const dataService = {
     return api.executeRunbook(runbookId, systemId, dryRun);
   },
 
-  getExecutionDetail: async (executionId) => {
+  getExecutionDetail: async (executionId: any) => {
     if (isDemoMode()) { await delay(300); return null; }
     return api.getExecutionDetail(executionId);
   },
@@ -949,12 +949,12 @@ export const dataService = {
         if (!byProduct[lineName]) byProduct[lineName] = { ids: [], desc: sys.sapProduct || lineName };
         byProduct[lineName].ids.push(sys.id);
       }
-      return Object.entries(byProduct).map(([line, data]) => ({
+      return Object.entries(byProduct).map(([line, data]: [string, any]) => ({
         line,
         description: data.desc,
         systems: data.ids,
       }));
-    } catch (err) {
+    } catch (err: any) {
       log.error('Failed to fetch SID lines, using mock data', { error: (err as Error).message });
       return mockSIDLines;
     }
@@ -962,21 +962,21 @@ export const dataService = {
 
   getLandscapeValidation: async () => {
     if (isDemoMode()) { await delay(300); return mockLandscapeValidation; }
-    try { return await api.getLandscapeValidation(); } catch (err) { log.error('Failed to fetch landscape validation', { error: (err as Error).message }); return mockLandscapeValidation; }
+    try { return await api.getLandscapeValidation(); } catch (err: any) { log.error('Failed to fetch landscape validation', { error: (err as Error).message }); return mockLandscapeValidation; }
   },
 
   // ── AI / Chat ──
   getAIUseCases: async () => {
     if (isDemoMode()) { await delay(300); return mockAIUseCases; }
-    try { return await api.getAIUseCases(); } catch (err) { log.error('Failed to fetch AI use cases', { error: (err as Error).message }); return mockAIUseCases; }
+    try { return await api.getAIUseCases(); } catch (err: any) { log.error('Failed to fetch AI use cases', { error: (err as Error).message }); return mockAIUseCases; }
   },
 
   getAIResponses: async () => {
     if (isDemoMode()) { await delay(300); return mockAIResponses; }
-    try { return await api.getAIResponses(); } catch (err) { log.error('Failed to fetch AI responses', { error: (err as Error).message }); return mockAIResponses; }
+    try { return await api.getAIResponses(); } catch (err: any) { log.error('Failed to fetch AI responses', { error: (err as Error).message }); return mockAIResponses; }
   },
 
-  chat: async (message, context) => {
+  chat: async (message: any, context: any) => {
     if (isDemoMode()) { await delay(800); return mockAIResponses.estado; }
     return api.chat(message, context);
   },
@@ -995,19 +995,19 @@ export const dataService = {
     return configs.map(transformHAConfig);
   },
 
-  getHAPrereqs: async (systemId?) => {
+  getHAPrereqs: async (systemId?: any) => {
     if (isDemoMode()) { await delay(300); return mockHAPrereqs; }
-    try { return await api.getHAPrereqs(systemId); } catch (err) { log.error('Failed to fetch HA prereqs', { systemId, error: (err as Error).message }); return mockHAPrereqs; }
+    try { return await api.getHAPrereqs(systemId); } catch (err: any) { log.error('Failed to fetch HA prereqs', { systemId, error: (err as Error).message }); return mockHAPrereqs; }
   },
 
-  getHAOpsHistory: async (systemId?) => {
+  getHAOpsHistory: async (systemId?: any) => {
     if (isDemoMode()) { await delay(300); return mockHAOpsHistory; }
-    try { return await api.getHAOpsHistory(systemId); } catch (err) { log.error('Failed to fetch HA ops history', { systemId, error: (err as Error).message }); return mockHAOpsHistory; }
+    try { return await api.getHAOpsHistory(systemId); } catch (err: any) { log.error('Failed to fetch HA ops history', { systemId, error: (err as Error).message }); return mockHAOpsHistory; }
   },
 
-  getHADrivers: async (systemId?) => {
+  getHADrivers: async (systemId?: any) => {
     if (isDemoMode()) { await delay(300); return mockHADrivers; }
-    try { return await api.getHADrivers(systemId); } catch (err) { log.error('Failed to fetch HA drivers', { systemId, error: (err as Error).message }); return mockHADrivers; }
+    try { return await api.getHADrivers(systemId); } catch (err: any) { log.error('Failed to fetch HA drivers', { systemId, error: (err as Error).message }); return mockHADrivers; }
   },
 
   // ── Analytics ──
@@ -1026,14 +1026,14 @@ export const dataService = {
         name,
         executions: stats.total,
         successRate: stats.total > 0 ? Math.round((stats.success / stats.total) * 100) : 0,
-      })).sort((a, b) => b.executions - a.executions).slice(0, 5);
+      })).sort((a: any, b: any) => b.executions - a.executions).slice(0, 5);
 
       // Generate dailyTrend from real execution data, distributed evenly across days
       const totalExecForTrend = rbAnalytics.totalExecutions || 0;
       const totalFailed = rbAnalytics.byResult?.FAILED || 0;
       const avgDaySuccess = totalExecForTrend > 0 ? Math.round((totalExecForTrend - totalFailed) / 14) : 0;
       const avgDayFailed = totalFailed > 0 ? Math.round(totalFailed / 14) : 0;
-      const dailyTrend = Array.from({ length: 14 }, (_, i) => {
+      const dailyTrend = Array.from({ length: 14 }, (_: any, i: any) => {
         const date = new Date(Date.now() - (13 - i) * 86400000).toISOString().split('T')[0];
         // Slight variation per day using day-of-week pattern (no hashSeed)
         const dayVariation = (i % 7) / 7;
@@ -1060,7 +1060,7 @@ export const dataService = {
         avgDuration: '—',
         mostExecuted: topRunbooks.length > 0 ? `${topRunbooks[0].name} (${topRunbooks[0].executions}x)` : '—',
       });
-    } catch (err) {
+    } catch (err: any) {
       log.error('Failed to fetch analytics, using mock data', { error: (err as Error).message });
       return mockAnalytics;
     }
@@ -1094,7 +1094,7 @@ export const dataService = {
 
   getLicenses: async () => {
     if (isDemoMode()) { await delay(300); return mockLicenses; }
-    try { return await api.getLicenses(); } catch (err) { log.error('Failed to fetch licenses', { error: (err as Error).message }); return mockLicenses; }
+    try { return await api.getLicenses(); } catch (err: any) { log.error('Failed to fetch licenses', { error: (err as Error).message }); return mockLicenses; }
   },
 
   // ── Plans ──
@@ -1109,7 +1109,7 @@ export const dataService = {
     try {
       const settings = await api.getSettings() as any;
       return settings?.settings?.thresholds || mockThresholds;
-    } catch (err) {
+    } catch (err: any) {
       log.error('Failed to fetch thresholds', { error: (err as Error).message });
       return mockThresholds;
     }
@@ -1120,7 +1120,7 @@ export const dataService = {
     try {
       const settings = await api.getSettings() as any;
       return settings?.settings?.escalation || mockEscalationPolicy;
-    } catch (err) {
+    } catch (err: any) {
       log.error('Failed to fetch escalation policy', { error: (err as Error).message });
       return mockEscalationPolicy;
     }
@@ -1131,7 +1131,7 @@ export const dataService = {
     try {
       const settings = await api.getSettings() as any;
       return settings?.settings?.maintenanceWindows || mockMaintenanceWindows;
-    } catch (err) {
+    } catch (err: any) {
       log.error('Failed to fetch maintenance windows', { error: (err as Error).message });
       return mockMaintenanceWindows;
     }

@@ -10,13 +10,13 @@ import { createLogger } from '../lib/logger';
 
 const log = createLogger('CertificatesPage');
 
-function StatusIcon({ status }) {
+function StatusIcon({ status }: { status: any }) {
   if (status === 'ok') return <ShieldCheck size={16} className="text-success-500" />;
   if (status === 'warning') return <AlertTriangle size={16} className="text-warning-500" />;
   return <XCircle size={16} className="text-danger-500" />;
 }
 
-function DaysLeftBadge({ days, status }) {
+function DaysLeftBadge({ days, status }: { days: any; status: any }) {
   const variant = status === 'critical' ? 'danger' : status === 'warning' ? 'warning' : 'success';
   return (
     <Badge variant={variant} size="sm" dot>
@@ -36,17 +36,17 @@ export default function CertificatesPage() {
       setCertificates(certs);
       setLicenses(lics);
       setLoading(false);
-    }).catch((err) => {
+    }).catch((err: any) => {
       log.warn('Fetch failed', { error: err.message });
       setError('Error al cargar datos. Intenta de nuevo.');
       setLoading(false);
     });
   }, []);
 
-  const criticalCerts = useMemo(() => certificates.filter(c => c.status === 'critical').length, [certificates]);
-  const warningCerts = useMemo(() => certificates.filter(c => c.status === 'warning').length, [certificates]);
-  const okCerts = useMemo(() => certificates.filter(c => c.status === 'ok').length, [certificates]);
-  const warningLics = useMemo(() => licenses.filter(l => l.status === 'warning').length, [licenses]);
+  const criticalCerts = useMemo(() => certificates.filter((c: any) => c.status === 'critical').length, [certificates]);
+  const warningCerts = useMemo(() => certificates.filter((c: any) => c.status === 'warning').length, [certificates]);
+  const okCerts = useMemo(() => certificates.filter((c: any) => c.status === 'ok').length, [certificates]);
+  const warningLics = useMemo(() => licenses.filter((l: any) => l.status === 'warning').length, [licenses]);
 
   if (loading) return <PageLoading message="Cargando certificados..." />;
 
@@ -136,8 +136,8 @@ export default function CertificatesPage() {
             </TableHeader>
             <TableBody>
               {certificates
-                .sort((a, b) => a.daysLeft - b.daysLeft)
-                .map(cert => (
+                .sort((a: any, b: any) => a.daysLeft - b.daysLeft)
+                .map((cert: any) => (
                 <TableRow key={cert.id}>
                   <TableCell>
                     <StatusIcon status={cert.status} />
@@ -189,8 +189,8 @@ export default function CertificatesPage() {
             </TableHeader>
             <TableBody>
               {licenses
-                .sort((a, b) => a.daysLeft - b.daysLeft)
-                .map(lic => (
+                .sort((a: any, b: any) => a.daysLeft - b.daysLeft)
+                .map((lic: any) => (
                 <TableRow key={lic.id}>
                   <TableCell>
                     <StatusIcon status={lic.status} />

@@ -33,13 +33,13 @@ export default function LandscapePage() {
   const [search, setSearch] = useState('');
 
   useEffect(() => {
-    dataService.getDiscovery().then(data => { setDiscovery(data); setLoading(false); }).catch(err => log.warn('Fetch failed', { error: err.message }));
+    dataService.getDiscovery().then(data => { setDiscovery(data); setLoading(false); }).catch((err: any) => log.warn('Fetch failed', { error: err.message }));
   }, []);
 
   // Agrupar instancias por SID para la topología
   const sidGroups = useMemo(() => {
     const groups: Record<string, any> = {};
-    discovery.forEach((inst) => {
+    discovery.forEach((inst: any) => {
       if (!groups[inst.sid]) {
         groups[inst.sid] = {
           sid: inst.sid,
@@ -61,9 +61,9 @@ export default function LandscapePage() {
 
   // Métricas del resumen
   const totalInstances = discovery.length;
-  const successScans = discovery.filter((d) => d.scanStatus === 'success').length;
-  const failScans = discovery.filter((d) => d.scanStatus === 'fail').length;
-  const haClusters = sidGroups.filter((g) => g.haEnabled).length;
+  const successScans = discovery.filter((d: any) => d.scanStatus === 'success').length;
+  const failScans = discovery.filter((d: any) => d.scanStatus === 'fail').length;
+  const haClusters = sidGroups.filter((g: any) => g.haEnabled).length;
 
   // Filtrar instancias para la tabla
   const filteredInstances = useMemo(() => {
@@ -104,10 +104,10 @@ export default function LandscapePage() {
       <div className="p-6">
         {/* Summary Cards */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-          {summaryCards.map((card) => (
+          {summaryCards.map((card: any) => (
             <div
               key={card.label}
-              className={`rounded-xl border p-5 ${cardVariants[card.color]}`}
+              className={`rounded-xl border p-5 ${(cardVariants as Record<string, string>)[card.color]}`}
             >
               <div className="flex items-center justify-between mb-3">
                 <div className="w-10 h-10 rounded-lg bg-surface flex items-center justify-center border border-border">
@@ -127,7 +127,7 @@ export default function LandscapePage() {
             <h2 className="text-lg font-semibold text-text-primary">Topología por SID</h2>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-            {sidGroups.map((group) => (
+            {sidGroups.map((group: any) => (
               <div
                 key={group.sid}
                 className="bg-surface rounded-xl border border-border p-5"
@@ -137,7 +137,7 @@ export default function LandscapePage() {
                     <h3 className="text-base font-semibold text-text-primary">{group.sid}</h3>
                     <p className="text-xs text-text-secondary mt-0.5">{group.product}</p>
                   </div>
-                  <span className={`rounded-full px-2 py-0.5 text-xs font-medium ${envColors[group.env] || 'bg-surface-secondary text-text-secondary'}`}>
+                  <span className={`rounded-full px-2 py-0.5 text-xs font-medium ${(envColors as Record<string, string>)[group.env] || 'bg-surface-secondary text-text-secondary'}`}>
                     {group.env}
                   </span>
                 </div>
@@ -158,7 +158,7 @@ export default function LandscapePage() {
 
                 {/* Nodes List */}
                 <div className="space-y-2 pt-3 border-t border-border">
-                  {group.nodes.map((node) => (
+                  {group.nodes.map((node: any) => (
                     <div key={node.instanceId} className="flex items-center gap-2">
                       <Server size={14} className="text-text-tertiary flex-shrink-0" />
                       <div className="min-w-0">
@@ -203,12 +203,12 @@ export default function LandscapePage() {
                   </tr>
                 </thead>
                 <tbody>
-                  {filteredInstances.map((inst) => (
+                  {filteredInstances.map((inst: any) => (
                     <tr key={inst.instanceId} className="border-b border-border last:border-0 hover:bg-surface-secondary transition-colors">
                       <td className="px-4 py-3 font-mono text-xs text-text-primary">{inst.instanceId}</td>
                       <td className="px-4 py-3 text-text-primary">{inst.hostname}</td>
                       <td className="px-4 py-3">
-                        <span className={`rounded-full px-2 py-0.5 text-xs font-medium ${scanStatusColors[inst.scanStatus]}`}>
+                        <span className={`rounded-full px-2 py-0.5 text-xs font-medium ${(scanStatusColors as Record<string, string>)[inst.scanStatus]}`}>
                           {inst.scanStatus === 'success' ? 'OK' : 'FAIL'}
                         </span>
                       </td>
@@ -226,7 +226,7 @@ export default function LandscapePage() {
                         )}
                       </td>
                       <td className="px-4 py-3">
-                        <span className={`rounded-full px-2 py-0.5 text-xs font-medium ${confidenceColors[inst.confidence]}`}>
+                        <span className={`rounded-full px-2 py-0.5 text-xs font-medium ${(confidenceColors as Record<string, string>)[inst.confidence]}`}>
                           {inst.confidence}
                         </span>
                       </td>
