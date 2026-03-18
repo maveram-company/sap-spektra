@@ -6,13 +6,17 @@ import {
 } from '@nestjs/common';
 import * as bcrypt from 'bcryptjs';
 import { PrismaService } from '../../infrastructure/prisma/prisma.service';
+import { AuditService } from '../audit/audit.service';
 import { CreateUserDto, UpdateUserDto } from './dto/user.dto';
 
 @Injectable()
 export class UsersService {
   private readonly logger = new Logger(UsersService.name);
 
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly audit: AuditService,
+  ) {}
 
   async findAll(organizationId: string) {
     const memberships = await this.prisma.membership.findMany({
@@ -108,6 +112,20 @@ export class UsersService {
     });
 
     this.logger.log(`User created: ${dto.email} → org ${organizationId}`);
+
+    // Audit log (fire and forget)
+    this.audit
+      .log(organizationId, {
+        userEmail: dto.email,
+        action: 'user.created',
+        resource: `user/${result.id}`,
+        details: `User created: ${dto.email}`,
+        severity: 'info',
+      })
+      .catch((err) =>
+        this.logger.warn('Audit log failed', { error: err?.message }),
+      );
+
     return this.findOne(organizationId, result.id);
   }
 
@@ -139,6 +157,19 @@ export class UsersService {
       }
     });
 
+    // Audit log (fire and forget)
+    this.audit
+      .log(organizationId, {
+        userEmail: 'system',
+        action: 'user.updated',
+        resource: `user/${userId}`,
+        details: `User updated: ${userId}`,
+        severity: 'info',
+      })
+      .catch((err) =>
+        this.logger.warn('Audit log failed', { error: err?.message }),
+      );
+
     return this.findOne(organizationId, userId);
   }
 
@@ -156,6 +187,20 @@ export class UsersService {
     });
 
     this.logger.log(`User ${userId} removed from org ${organizationId}`);
+
+    // Audit log (fire and forget)
+    this.audit
+      .log(organizationId, {
+        userEmail: 'system',
+        action: 'user.deleted',
+        resource: `user/${userId}`,
+        details: `User removed from organization`,
+        severity: 'warning',
+      })
+      .catch((err) =>
+        this.logger.warn('Audit log failed', { error: err?.message }),
+      );
+
     return { deleted: true };
   }
 }

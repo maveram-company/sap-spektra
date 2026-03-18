@@ -8,6 +8,7 @@ import {
   Param,
   UseGuards,
 } from '@nestjs/common';
+import { Throttle } from '@nestjs/throttler';
 import { ApiTags, ApiOperation, ApiBearerAuth } from '@nestjs/swagger';
 import { UsersService } from './users.service';
 import { CreateUserDto, UpdateUserDto } from './dto/user.dto';
@@ -39,6 +40,7 @@ export class UsersController {
   }
 
   @Post()
+  @Throttle({ default: { ttl: 60000, limit: 10 } })
   @Roles('admin')
   @ApiOperation({ summary: 'Create or invite a user' })
   create(@TenantId() orgId: string, @Body() dto: CreateUserDto) {
@@ -46,6 +48,7 @@ export class UsersController {
   }
 
   @Patch(':id')
+  @Throttle({ default: { ttl: 60000, limit: 10 } })
   @Roles('admin')
   @ApiOperation({ summary: 'Update user role or status' })
   update(

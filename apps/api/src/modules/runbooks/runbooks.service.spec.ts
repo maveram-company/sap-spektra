@@ -3,6 +3,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { RunbooksService } from './runbooks.service';
 import { RunbookExecutionEngineService } from './runbook-execution-engine.service';
 import { PrismaService } from '../../infrastructure/prisma/prisma.service';
+import { AuditService } from '../audit/audit.service';
 
 const ORG_ID = 'org-test-1';
 
@@ -74,6 +75,10 @@ describe('RunbooksService', () => {
         RunbooksService,
         { provide: PrismaService, useValue: prisma },
         { provide: RunbookExecutionEngineService, useValue: engine },
+        {
+          provide: AuditService,
+          useValue: { log: jest.fn().mockResolvedValue(undefined) },
+        },
       ],
     }).compile();
 

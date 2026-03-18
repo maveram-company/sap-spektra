@@ -7,6 +7,7 @@ import {
   Query,
   UseGuards,
 } from '@nestjs/common';
+import { Throttle } from '@nestjs/throttler';
 import { ApiTags, ApiOperation, ApiBearerAuth } from '@nestjs/swagger';
 import { MetricsService } from './metrics.service';
 import { MetricsPipelineService } from './metrics-pipeline.service';
@@ -37,6 +38,7 @@ export class MetricsController {
   ) {}
 
   @Post('ingest')
+  @Throttle({ default: { ttl: 60000, limit: 100 } })
   @Roles('operator')
   @ApiOperation({ summary: 'Ingest metric data point from agent' })
   ingest(

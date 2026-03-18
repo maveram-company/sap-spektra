@@ -8,6 +8,7 @@ import {
   Body,
   UseGuards,
 } from '@nestjs/common';
+import { Throttle } from '@nestjs/throttler';
 import { ApiTags, ApiOperation, ApiBearerAuth } from '@nestjs/swagger';
 import { ApprovalsService } from './approvals.service';
 import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
@@ -57,6 +58,7 @@ export class ApprovalsController {
   }
 
   @Patch(':id/approve')
+  @Throttle({ default: { ttl: 60000, limit: 10 } })
   @Roles('escalation')
   @ApiOperation({ summary: 'Approve a request' })
   approve(
@@ -68,6 +70,7 @@ export class ApprovalsController {
   }
 
   @Patch(':id/reject')
+  @Throttle({ default: { ttl: 60000, limit: 10 } })
   @Roles('escalation')
   @ApiOperation({ summary: 'Reject a request' })
   reject(

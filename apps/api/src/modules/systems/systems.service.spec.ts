@@ -3,6 +3,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import { SystemsService } from './systems.service';
 import { PrismaService } from '../../infrastructure/prisma/prisma.service';
+import { AuditService } from '../audit/audit.service';
 
 const ORG_ID = 'org-test-1';
 
@@ -56,6 +57,10 @@ describe('SystemsService', () => {
         SystemsService,
         { provide: PrismaService, useValue: prisma },
         { provide: CACHE_MANAGER, useValue: mockCacheManager() },
+        {
+          provide: AuditService,
+          useValue: { log: jest.fn().mockResolvedValue(undefined) },
+        },
       ],
     }).compile();
 

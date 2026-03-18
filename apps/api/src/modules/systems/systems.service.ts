@@ -8,6 +8,7 @@ import {
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import { Cache } from 'cache-manager';
 import { PrismaService } from '../../infrastructure/prisma/prisma.service';
+import { AuditService } from '../audit/audit.service';
 import { CreateSystemDto, UpdateSystemDto } from './dto/system.dto';
 
 @Injectable()
@@ -17,6 +18,7 @@ export class SystemsService {
   constructor(
     private readonly prisma: PrismaService,
     @Inject(CACHE_MANAGER) private readonly cache: Cache,
+    private readonly audit: AuditService,
   ) {}
 
   async findAll(organizationId: string) {
@@ -114,6 +116,19 @@ export class SystemsService {
 
     this.logger.log(`System created: ${dto.sid} -> org ${organizationId}`);
 
+    // Audit log (fire and forget)
+    this.audit
+      .log(organizationId, {
+        userEmail: 'system',
+        action: 'system.created',
+        resource: `system/${system.id}`,
+        details: `System created: ${dto.sid}`,
+        severity: 'info',
+      })
+      .catch((err) =>
+        this.logger.warn('Audit log failed', { error: err?.message }),
+      );
+
     // Invalidate systems cache for this organization
     await this.invalidateCache(organizationId);
 
@@ -141,6 +156,19 @@ export class SystemsService {
 
     this.logger.log(`System updated: ${system.sid} (${systemId})`);
 
+    // Audit log (fire and forget)
+    this.audit
+      .log(organizationId, {
+        userEmail: 'system',
+        action: 'system.updated',
+        resource: `system/${systemId}`,
+        details: `System updated: ${system.sid}`,
+        severity: 'info',
+      })
+      .catch((err) =>
+        this.logger.warn('Audit log failed', { error: err?.message }),
+      );
+
     // Invalidate systems cache for this organization
     await this.invalidateCache(organizationId);
 
@@ -158,6 +186,19 @@ export class SystemsService {
 
     await this.prisma.system.delete({ where: { id: systemId } });
     this.logger.log(`System deleted: ${system.sid} -> org ${organizationId}`);
+
+    // Audit log (fire and forget)
+    this.audit
+      .log(organizationId, {
+        userEmail: 'system',
+        action: 'system.deleted',
+        resource: `system/${systemId}`,
+        details: `System deleted: ${system.sid}`,
+        severity: 'warning',
+      })
+      .catch((err) =>
+        this.logger.warn('Audit log failed', { error: err?.message }),
+      );
 
     // Invalidate systems cache for this organization
     await this.invalidateCache(organizationId);

@@ -7,6 +7,7 @@ import {
   Body,
   UseGuards,
 } from '@nestjs/common';
+import { Throttle } from '@nestjs/throttler';
 import { ApiTags, ApiOperation, ApiBearerAuth } from '@nestjs/swagger';
 import { SettingsService } from './settings.service';
 import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
@@ -48,6 +49,7 @@ export class SettingsController {
   }
 
   @Post('api-keys')
+  @Throttle({ default: { ttl: 60000, limit: 10 } })
   @Roles('admin')
   @ApiOperation({ summary: 'Create a new API key' })
   createApiKey(@TenantId() orgId: string, @Body() data: CreateApiKeyDto) {

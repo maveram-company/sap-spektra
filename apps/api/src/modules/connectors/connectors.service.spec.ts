@@ -3,6 +3,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { ConfigService } from '@nestjs/config';
 import { ConnectorsService } from './connectors.service';
 import { PrismaService } from '../../infrastructure/prisma/prisma.service';
+import { AuditService } from '../audit/audit.service';
 
 const ORG_ID = 'org-test-1';
 
@@ -36,6 +37,10 @@ describe('ConnectorsService', () => {
       providers: [
         ConnectorsService,
         { provide: PrismaService, useValue: prisma },
+        {
+          provide: AuditService,
+          useValue: { log: jest.fn().mockResolvedValue(undefined) },
+        },
         {
           provide: ConfigService,
           useValue: {

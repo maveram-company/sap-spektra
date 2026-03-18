@@ -1,6 +1,7 @@
 import { Injectable, NotFoundException, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { PrismaService } from '../../infrastructure/prisma/prisma.service';
+import { AuditService } from '../audit/audit.service';
 import { ConnectorEntity } from '../../common/types/sap-system.types';
 
 @Injectable()
@@ -11,6 +12,7 @@ export class ConnectorsService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly config: ConfigService,
+    private readonly audit: AuditService,
   ) {
     this.runtime = this.config.get<string>('RUNTIME_MODE', 'LOCAL_SIMULATED');
   }
@@ -66,11 +68,27 @@ export class ConnectorsService {
     });
     if (!connector) throw new NotFoundException('Connector not found');
 
+    let result;
     if (this.runtime === 'LOCAL_SIMULATED') {
-      return this.simulateValidation(connector);
+      result = await this.simulateValidation(connector);
+    } else {
+      result = await this.probeConnector(connector);
     }
 
-    return this.probeConnector(connector);
+    // Audit log (fire and forget)
+    this.audit
+      .log(organizationId, {
+        userEmail: 'system',
+        action: 'connector.validated',
+        resource: `connector/${id}`,
+        details: `Connector validated: ${connector.method} → ${result.status}`,
+        severity: 'info',
+      })
+      .catch((err) =>
+        this.logger.warn('Audit log failed', { error: err?.message }),
+      );
+
+    return result;
   }
 
   /**

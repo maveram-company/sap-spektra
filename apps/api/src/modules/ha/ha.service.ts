@@ -326,10 +326,25 @@ export class HAService {
     });
     if (!config) throw new NotFoundException('HA config not found');
 
-    return this.prisma.hAConfig.update({
+    const updated = await this.prisma.hAConfig.update({
       where: { id: config.id },
       data: { status },
     });
+
+    // Audit log (fire and forget)
+    this.audit
+      .log(organizationId, {
+        userEmail: 'system',
+        action: 'ha.status.updated',
+        resource: `system/${systemId}/ha`,
+        details: `HA status updated to: ${status}`,
+        severity: 'info',
+      })
+      .catch((err) =>
+        this.logger.warn('Audit log failed', { error: err?.message }),
+      );
+
+    return updated;
   }
 
   async getPrereqs(organizationId: string, systemId: string) {
