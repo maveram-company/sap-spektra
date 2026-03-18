@@ -8,9 +8,19 @@
     "test": "tests"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "npm run test:backend && npm run test:frontend",
+    "test:frontend": "cd frontend && npm test",
+    "test:backend": "cd apps/api && npm test",
     "test:e2e": "npx playwright test",
     "test:e2e:ui": "npx playwright test --ui",
+    "build": "npm run build:backend && npm run build:frontend",
+    "build:frontend": "cd frontend && npm run build",
+    "build:backend": "cd apps/api && npm run build",
+    "typecheck": "npm run typecheck:backend && npm run typecheck:frontend",
+    "typecheck:frontend": "cd frontend && npx tsc --noEmit",
+    "typecheck:backend": "cd apps/api && npx tsc --noEmit",
+    "lint": "cd apps/api && npm run lint && cd ../../frontend && npm run lint",
+    "verify": "npm run typecheck && npm run lint && npm run test && npm run build",
     "prepare": "husky"
   },
   "repository": {
