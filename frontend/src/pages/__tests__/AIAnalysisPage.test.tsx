@@ -3,6 +3,14 @@ import { render, screen, waitFor } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 import AIAnalysisPage from '../AIAnalysisPage';
 
+vi.mock('../../components/mode', () => ({
+  ModeBadge: () => <span data-testid="mode-badge">Mode</span>,
+  SourceIndicator: () => <span data-testid="source-indicator">Source</span>,
+  EvidencePanel: () => null,
+  CapabilityBadge: () => null,
+  GovernanceContext: () => null,
+}));
+
 vi.mock('../../hooks/usePlan', () => ({
   usePlan: () => ({
     hasFeature: () => true,

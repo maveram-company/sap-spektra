@@ -7,9 +7,10 @@ import { useMode } from '../../mode/ModeContext';
 import type { OperationalMode } from '../../mode/types';
 
 const MODE_CONFIG: Record<OperationalMode, { dot: string; bg: string; text: string; label: string }> = {
-  REAL:     { dot: 'bg-emerald-500', bg: 'bg-emerald-500/10', text: 'text-emerald-400', label: 'Live' },
-  FALLBACK: { dot: 'bg-amber-500',   bg: 'bg-amber-500/10',   text: 'text-amber-400',   label: 'Fallback' },
-  MOCK:     { dot: 'bg-blue-500',    bg: 'bg-blue-500/10',    text: 'text-blue-400',    label: 'Demo' },
+  REAL:       { dot: 'bg-emerald-500', bg: 'bg-emerald-500/10', text: 'text-emerald-400', label: 'Live' },
+  FALLBACK:   { dot: 'bg-amber-500',   bg: 'bg-amber-500/10',   text: 'text-amber-400',   label: 'Fallback' },
+  MOCK:       { dot: 'bg-blue-500',    bg: 'bg-blue-500/10',    text: 'text-blue-400',    label: 'Demo' },
+  RESTRICTED: { dot: 'bg-red-500',     bg: 'bg-red-500/10',     text: 'text-red-400',     label: 'Restricted' },
 };
 
 export default function ModeBadge() {

@@ -13,9 +13,10 @@ export interface CapabilityBadgeProps {
 }
 
 const TIER_CONFIG: Record<ProviderTier, { bg: string; text: string; label: string }> = {
-  real:     { bg: 'bg-emerald-500/10', text: 'text-emerald-400', label: 'Live' },
-  fallback: { bg: 'bg-amber-500/10',   text: 'text-amber-400',   label: 'Fallback' },
-  mock:     { bg: 'bg-blue-500/10',    text: 'text-blue-400',    label: 'Demo' },
+  real:       { bg: 'bg-emerald-500/10', text: 'text-emerald-400', label: 'Live' },
+  fallback:   { bg: 'bg-amber-500/10',   text: 'text-amber-400',   label: 'Fallback' },
+  mock:       { bg: 'bg-blue-500/10',    text: 'text-blue-400',    label: 'Demo' },
+  restricted: { bg: 'bg-red-500/10',     text: 'text-red-400',     label: 'Restricted' },
 };
 
 export default function CapabilityBadge({ action, tier, readOnly = false, restricted = false }: CapabilityBadgeProps) {

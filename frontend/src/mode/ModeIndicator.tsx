@@ -7,9 +7,10 @@ import { useMode } from './ModeContext';
 import type { OperationalMode } from './types';
 
 const MODE_STYLES: Record<OperationalMode, { bg: string; text: string; label: string }> = {
-  REAL:     { bg: 'rgba(34, 197, 94, 0.15)', text: 'rgb(34, 197, 94)',  label: 'REAL' },
-  FALLBACK: { bg: 'rgba(245, 158, 11, 0.15)', text: 'rgb(245, 158, 11)', label: 'FALLBACK' },
-  MOCK:     { bg: 'rgba(59, 130, 246, 0.15)', text: 'rgb(59, 130, 246)', label: 'MOCK' },
+  REAL:       { bg: 'rgba(34, 197, 94, 0.15)',  text: 'rgb(34, 197, 94)',  label: 'REAL' },
+  FALLBACK:   { bg: 'rgba(245, 158, 11, 0.15)', text: 'rgb(245, 158, 11)', label: 'FALLBACK' },
+  MOCK:       { bg: 'rgba(59, 130, 246, 0.15)', text: 'rgb(59, 130, 246)', label: 'MOCK' },
+  RESTRICTED: { bg: 'rgba(239, 68, 68, 0.15)',  text: 'rgb(239, 68, 68)',  label: 'RESTRICTED' },
 };
 
 export default function ModeIndicator() {

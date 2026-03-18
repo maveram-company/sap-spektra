@@ -58,6 +58,17 @@ export function resolveCapabilities(
           source: 'simulation',
         });
         break;
+
+      case 'RESTRICTED':
+        caps.set(domain, {
+          domain,
+          tier: 'restricted',
+          readOnly: true,
+          degraded: false,
+          confidence: 'low',
+          source: 'rules',
+        });
+        break;
     }
   }
 

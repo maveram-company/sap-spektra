@@ -90,4 +90,88 @@ describe('HAProvider parity tests', () => {
       expect(Array.isArray(result.data)).toBe(true);
     });
   });
+
+  // ── Restriction parity ──
+
+  describe('restriction parity', () => {
+    it('in MOCK mode, getHASystems still returns data (readOnly context)', async () => {
+      const result = await mock.getHASystems();
+      expect(Array.isArray(result.data)).toBe(true);
+      expect(result.data.length).toBeGreaterThan(0);
+      // Mock provider source is 'mock' — in RESTRICTED mode the registry also uses mock providers
+      expect(result.source).toBe('mock');
+      expect(result.confidence).toBe('low');
+    });
+
+    it('mock getHAPrereqs returns data even without systemId', async () => {
+      const result = await mock.getHAPrereqs();
+      expect(result.data).toBeDefined();
+      expect(typeof result.data).toBe('object');
+    });
+
+    it('mock getHAOpsHistory returns data even without systemId', async () => {
+      const result = await mock.getHAOpsHistory();
+      expect(result.data).toBeDefined();
+    });
+  });
+
+  // ── Error parity ──
+
+  describe('error parity', () => {
+    it('real provider handles missing systemId gracefully for getHAPrereqs', async () => {
+      const { api } = await import('../../../hooks/useApi');
+      (api.getHAPrereqs as ReturnType<typeof vi.fn>).mockRejectedValueOnce(new Error('Not found'));
+      // Real HA provider catches errors and returns degraded data
+      const result = await real.getHAPrereqs('missing-sys');
+      expect(result.data).toBeDefined();
+      expect(result.degraded).toBe(true);
+    });
+
+    it('real provider handles missing systemId gracefully for getHAOpsHistory', async () => {
+      const { api } = await import('../../../hooks/useApi');
+      (api.getHAOpsHistory as ReturnType<typeof vi.fn>).mockRejectedValueOnce(new Error('Not found'));
+      const result = await real.getHAOpsHistory('missing-sys');
+      expect(result.data).toBeDefined();
+      expect(result.degraded).toBe(true);
+    });
+
+    it('mock provider handles missing systemId gracefully', async () => {
+      const prereqs = await mock.getHAPrereqs(undefined);
+      expect(prereqs.data).toBeDefined();
+      const history = await mock.getHAOpsHistory(undefined);
+      expect(history.data).toBeDefined();
+    });
+  });
+
+  // ── Evidence parity ──
+
+  describe('evidence parity', () => {
+    it('both real and mock return ProviderResult with consistent metadata', async () => {
+      const realResult = await real.getHASystems();
+      const mockResult = await mock.getHASystems();
+
+      for (const result of [realResult, mockResult]) {
+        expect(result).toHaveProperty('timestamp');
+        expect(typeof result.timestamp).toBe('string');
+        expect(new Date(result.timestamp).getTime()).not.toBeNaN();
+        expect(result).toHaveProperty('source');
+        expect(['real', 'mock', 'fallback', 'restricted']).toContain(result.source);
+        expect(result).toHaveProperty('confidence');
+        expect(['high', 'medium', 'low']).toContain(result.confidence);
+        expect(typeof result.degraded).toBe('boolean');
+      }
+    });
+
+    it('getHAPrereqs returns ProviderResult with evidence metadata', async () => {
+      const realResult = await real.getHAPrereqs('sys-1');
+      const mockResult = await mock.getHAPrereqs('sys-1');
+
+      for (const result of [realResult, mockResult]) {
+        expect(result).toHaveProperty('timestamp');
+        expect(result).toHaveProperty('source');
+        expect(result).toHaveProperty('confidence');
+        expect(typeof result.degraded).toBe('boolean');
+      }
+    });
+  });
 });

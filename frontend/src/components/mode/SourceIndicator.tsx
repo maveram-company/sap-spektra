@@ -15,9 +15,10 @@ export interface SourceIndicatorProps {
 }
 
 const SOURCE_CONFIG: Record<ProviderTier, { Icon: typeof Database; label: string; color: string }> = {
-  real:     { Icon: Database,     label: 'API',        color: 'text-emerald-400' },
-  fallback: { Icon: HardDrive,    label: 'Cache',      color: 'text-amber-400' },
-  mock:     { Icon: FlaskConical, label: 'Simulation', color: 'text-blue-400' },
+  real:       { Icon: Database,     label: 'API',        color: 'text-emerald-400' },
+  fallback:   { Icon: HardDrive,    label: 'Cache',      color: 'text-amber-400' },
+  mock:       { Icon: FlaskConical, label: 'Simulation', color: 'text-blue-400' },
+  restricted: { Icon: AlertTriangle, label: 'Restricted', color: 'text-red-400' },
 };
 
 const CONFIDENCE_CONFIG: Record<string, { bar: string; label: string }> = {

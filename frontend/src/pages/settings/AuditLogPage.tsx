@@ -10,6 +10,7 @@ import PageLoading from '../../components/ui/PageLoading';
 import Pagination from '../../components/ui/Pagination';
 import usePagination from '../../hooks/usePagination';
 import { dataService } from '../../services/dataService';
+import { ModeBadge } from '../../components/mode';
 import type { ApiRecord } from '../../types';
 
 export default function AuditLogPage() {
@@ -63,7 +64,10 @@ export default function AuditLogPage() {
           <h2 className="text-xl font-bold text-text-primary">Log de Auditoría</h2>
           <p className="text-sm text-text-secondary mt-1">Registro de todas las acciones en la plataforma</p>
         </div>
-        <Button variant="outline" icon={Download} size="sm">Exportar CSV</Button>
+        <div className="flex items-center gap-2">
+          <ModeBadge />
+          <Button variant="outline" icon={Download} size="sm">Exportar CSV</Button>
+        </div>
       </div>
 
       <div className="mb-4">

@@ -24,28 +24,46 @@ vi.mock('../../components/ui/FeatureGate', () => ({
   UpgradeBanner: () => null,
 }));
 
-vi.mock('../../services/dataService', () => ({
-  dataService: {
-    getAnalytics: vi.fn().mockResolvedValue({
-      totalExecutions: 156,
-      successRate: 94,
-      failedCount: 10,
-      avgPerDay: 22,
-      dailyTrend: [
-        { date: '2026-03-04', success: 18, failed: 2 },
-        { date: '2026-03-05', success: 20, failed: 1 },
-      ],
-      topRunbooks: [
-        { id: 'rb-001', name: 'Restart Dispatcher', executions: 45, successRate: 98 },
-        { id: 'rb-002', name: 'Clear SM12 Locks', executions: 32, successRate: 95 },
-      ],
-    }),
-    getSystems: vi.fn().mockResolvedValue([
-      { id: 'sys-1', sid: 'EP1', type: 'S/4HANA' },
-      { id: 'sys-2', sid: 'QP1', type: 'S/4HANA' },
-    ]),
-  },
+vi.mock('../../components/mode', () => ({
+  ModeBadge: () => <span data-testid="mode-badge">Mode</span>,
+  SourceIndicator: () => <span data-testid="source-indicator">Source</span>,
+  EvidencePanel: () => null,
+  CapabilityBadge: () => null,
+  GovernanceContext: () => null,
 }));
+
+vi.mock('../../services/dataService', () => {
+  const mockAnalyticsData = {
+    totalExecutions: 156,
+    successRate: 94,
+    failedCount: 10,
+    avgPerDay: 22,
+    dailyTrend: [
+      { date: '2026-03-04', success: 18, failed: 2 },
+      { date: '2026-03-05', success: 20, failed: 1 },
+    ],
+    topRunbooks: [
+      { id: 'rb-001', name: 'Restart Dispatcher', executions: 45, successRate: 98 },
+      { id: 'rb-002', name: 'Clear SM12 Locks', executions: 32, successRate: 95 },
+    ],
+  };
+  return {
+    getAnalyticsResult: vi.fn().mockResolvedValue({
+      data: mockAnalyticsData,
+      source: 'mock',
+      confidence: 'low',
+      timestamp: new Date().toISOString(),
+      degraded: false,
+    }),
+    dataService: {
+      getAnalytics: vi.fn().mockResolvedValue(mockAnalyticsData),
+      getSystems: vi.fn().mockResolvedValue([
+        { id: 'sys-1', sid: 'EP1', type: 'S/4HANA' },
+        { id: 'sys-2', sid: 'QP1', type: 'S/4HANA' },
+      ]),
+    },
+  };
+});
 
 describe('AnalyticsPage', () => {
   beforeEach(() => {
@@ -101,9 +119,8 @@ describe('AnalyticsPage', () => {
   });
 
   it('handles error state', async () => {
-    const { dataService } = await import('../../services/dataService');
-    (dataService.getAnalytics as any).mockRejectedValueOnce(new Error('API error'));
-    (dataService.getSystems as any).mockRejectedValueOnce(new Error('API error'));
+    const { getAnalyticsResult } = await import('../../services/dataService');
+    (getAnalyticsResult as any).mockRejectedValueOnce(new Error('API error'));
 
     render(
       <MemoryRouter>

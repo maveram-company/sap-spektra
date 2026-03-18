@@ -10,21 +10,36 @@ import Badge from '../components/ui/Badge';
 import FeatureGate, { UpgradeBanner } from '../components/ui/FeatureGate';
 import EmptyState from '../components/ui/EmptyState';
 import PageLoading from '../components/ui/PageLoading';
-import { dataService } from '../services/dataService';
+import { dataService, getAnalyticsResult } from '../services/dataService';
+import { ModeBadge, SourceIndicator } from '../components/mode';
+import type { ProviderTier } from '../mode/types';
 import type { ApiRecord } from '../types';
+
+interface SourceInfo {
+  source: ProviderTier;
+  confidence: 'high' | 'medium' | 'low';
+  degraded: boolean;
+  reason?: string;
+  timestamp: string;
+}
 
 export default function AnalyticsPage() {
   const [selectedSystem, setSelectedSystem] = useState('all');
   const [data, setData] = useState<Record<string, any> | null>(null);
   const [systems, setSystems] = useState<ApiRecord[]>([]);
+  const [sourceInfo, setSourceInfo] = useState<SourceInfo | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     let mounted = true;
-    Promise.all([dataService.getAnalytics(), dataService.getSystems()])
-      .then(([anl, sys]) => {
-        if (mounted) { setData(anl); setSystems(sys); }
+    Promise.all([getAnalyticsResult(), dataService.getSystems()])
+      .then(([anlResult, sys]) => {
+        if (mounted) {
+          setData(anlResult.data);
+          setSourceInfo({ source: anlResult.source, confidence: anlResult.confidence, degraded: anlResult.degraded, reason: anlResult.reason, timestamp: anlResult.timestamp });
+          setSystems(sys);
+        }
       })
       .catch((err: unknown) => { if (mounted) setError((err as Error).message); })
       .finally(() => { if (mounted) setLoading(false); });
@@ -49,8 +64,13 @@ export default function AnalyticsPage() {
 
   return (
     <div>
-      <Header title="Analytics" subtitle="Métricas de ejecución de runbooks" />
+      <Header title="Analytics" subtitle="Métricas de ejecución de runbooks" actions={<ModeBadge />} />
       <div className="p-6">
+        {sourceInfo && (
+          <div className="mb-4">
+            <SourceIndicator {...sourceInfo} />
+          </div>
+        )}
         <PageHeader
           title="Analytics de Runbooks"
           description="Análisis de rendimiento y tendencias de automatización"

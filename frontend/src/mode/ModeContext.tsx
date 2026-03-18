@@ -25,12 +25,12 @@ const ModeContext = createContext<ModeContextValue | null>(null);
 function getInitialMode(): OperationalMode {
   // 1. Check environment variable
   const envMode = import.meta.env.VITE_OPERATIONAL_MODE as string | undefined;
-  if (envMode === 'REAL' || envMode === 'FALLBACK' || envMode === 'MOCK') return envMode;
+  if (envMode === 'REAL' || envMode === 'FALLBACK' || envMode === 'MOCK' || envMode === 'RESTRICTED') return envMode;
 
   // 2. Check localStorage
   try {
     const stored = localStorage.getItem(STORAGE_KEY);
-    if (stored === 'REAL' || stored === 'FALLBACK' || stored === 'MOCK') return stored;
+    if (stored === 'REAL' || stored === 'FALLBACK' || stored === 'MOCK' || stored === 'RESTRICTED') return stored;
   } catch { /* ignore */ }
 
   // 3. Default

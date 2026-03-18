@@ -3,51 +3,69 @@ import { render, screen, waitFor } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 import LandscapePage from '../LandscapePage';
 
-vi.mock('../../services/dataService', () => ({
-  dataService: {
-    getDiscovery: vi.fn().mockResolvedValue([
-      {
-        instanceId: 'i-001',
-        hostname: 'sap-ep1-ci',
-        scanStatus: 'success',
-        sid: 'EP1',
-        role: 'CI',
-        product: 'S/4HANA',
-        kernel: '7.93',
-        haEnabled: true,
-        haType: 'HSR',
-        confidence: 'high',
-        env: 'PRD',
-      },
-      {
-        instanceId: 'i-002',
-        hostname: 'sap-ep1-db',
-        scanStatus: 'success',
-        sid: 'EP1',
-        role: 'DB',
-        product: 'HANA',
-        kernel: '2.0',
-        haEnabled: true,
-        haType: 'HSR',
-        confidence: 'high',
-        env: 'PRD',
-      },
-      {
-        instanceId: 'i-003',
-        hostname: 'sap-qp1-ci',
-        scanStatus: 'fail',
-        sid: 'QP1',
-        role: 'CI',
-        product: 'S/4HANA',
-        kernel: '7.93',
-        haEnabled: false,
-        haType: null,
-        confidence: 'medium',
-        env: 'QAS',
-      },
-    ]),
-  },
+vi.mock('../../components/mode', () => ({
+  ModeBadge: () => <span data-testid="mode-badge">Mode</span>,
+  SourceIndicator: () => <span data-testid="source-indicator">Source</span>,
+  EvidencePanel: () => null,
+  CapabilityBadge: () => null,
+  GovernanceContext: () => null,
 }));
+
+vi.mock('../../services/dataService', () => {
+  const mockDiscoveryData = [
+    {
+      instanceId: 'i-001',
+      hostname: 'sap-ep1-ci',
+      scanStatus: 'success',
+      sid: 'EP1',
+      role: 'CI',
+      product: 'S/4HANA',
+      kernel: '7.93',
+      haEnabled: true,
+      haType: 'HSR',
+      confidence: 'high',
+      env: 'PRD',
+    },
+    {
+      instanceId: 'i-002',
+      hostname: 'sap-ep1-db',
+      scanStatus: 'success',
+      sid: 'EP1',
+      role: 'DB',
+      product: 'HANA',
+      kernel: '2.0',
+      haEnabled: true,
+      haType: 'HSR',
+      confidence: 'high',
+      env: 'PRD',
+    },
+    {
+      instanceId: 'i-003',
+      hostname: 'sap-qp1-ci',
+      scanStatus: 'fail',
+      sid: 'QP1',
+      role: 'CI',
+      product: 'S/4HANA',
+      kernel: '7.93',
+      haEnabled: false,
+      haType: null,
+      confidence: 'medium',
+      env: 'QAS',
+    },
+  ];
+  return {
+    getDiscoveryResult: vi.fn().mockResolvedValue({
+      data: mockDiscoveryData,
+      source: 'mock',
+      confidence: 'low',
+      timestamp: new Date().toISOString(),
+      degraded: false,
+    }),
+    dataService: {
+      getDiscovery: vi.fn().mockResolvedValue(mockDiscoveryData),
+    },
+  };
+});
 
 describe('LandscapePage', () => {
   beforeEach(() => {

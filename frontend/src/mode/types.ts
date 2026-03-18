@@ -2,11 +2,11 @@
 // SAP Spektra — Canonical Multi-Mode Architecture: Types
 // ══════════════════════════════════════════════════════════════
 
-/** The three operational modes of the platform */
-export type OperationalMode = 'REAL' | 'FALLBACK' | 'MOCK';
+/** The four operational modes of the platform */
+export type OperationalMode = 'REAL' | 'FALLBACK' | 'MOCK' | 'RESTRICTED';
 
 /** Which provider implementation is active for a domain */
-export type ProviderTier = 'real' | 'mock' | 'fallback';
+export type ProviderTier = 'real' | 'mock' | 'fallback' | 'restricted';
 
 /** All functional domains in the platform */
 export type DomainName =

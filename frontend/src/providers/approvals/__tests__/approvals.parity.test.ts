@@ -152,4 +152,96 @@ describe('ApprovalsProvider parity tests', () => {
       expect(Array.isArray(result.data)).toBe(true);
     });
   });
+
+  // ── F) Error parity ──
+
+  describe('error parity', () => {
+    it('real provider rejects when api.approveAction throws on invalid id', async () => {
+      const { api } = await import('../../../hooks/useApi');
+      (api.approveAction as ReturnType<typeof vi.fn>).mockRejectedValueOnce(new Error('Approval not found'));
+      await expect(real.approveAction('invalid-id')).rejects.toThrow('Approval not found');
+    });
+
+    it('real provider rejects when api.rejectAction throws on invalid id', async () => {
+      const { api } = await import('../../../hooks/useApi');
+      (api.rejectAction as ReturnType<typeof vi.fn>).mockRejectedValueOnce(new Error('Approval not found'));
+      await expect(real.rejectAction('invalid-id')).rejects.toThrow('Approval not found');
+    });
+
+    it('mock provider handles invalid id gracefully for approveAction', async () => {
+      const result = await mock.approveAction('nonexistent');
+      expect(result.data).toBeDefined();
+      expect(typeof result.data).toBe('object');
+    });
+
+    it('mock provider handles invalid id gracefully for rejectAction', async () => {
+      const result = await mock.rejectAction('nonexistent');
+      expect(result.data).toBeDefined();
+      expect(typeof result.data).toBe('object');
+    });
+  });
+
+  // ── G) Approval state parity ──
+
+  describe('approval state parity', () => {
+    it('mock approveAction returns an object with success indication', async () => {
+      const result = await mock.approveAction('apr-1');
+      expect(result.data).toBeDefined();
+      expect(typeof result.data).toBe('object');
+      expect(result.source).toBe('mock');
+    });
+
+    it('mock rejectAction returns an object with success indication', async () => {
+      const result = await mock.rejectAction('apr-1');
+      expect(result.data).toBeDefined();
+      expect(typeof result.data).toBe('object');
+      expect(result.source).toBe('mock');
+    });
+
+    it('real approveAction returns an object', async () => {
+      const result = await real.approveAction('apr-1');
+      expect(result.data).toBeDefined();
+      expect(typeof result.data).toBe('object');
+      expect(result.source).toBe('real');
+    });
+
+    it('real rejectAction returns an object', async () => {
+      const result = await real.rejectAction('apr-1');
+      expect(result.data).toBeDefined();
+      expect(typeof result.data).toBe('object');
+      expect(result.source).toBe('real');
+    });
+  });
+
+  // ── H) Evidence parity ──
+
+  describe('evidence parity', () => {
+    it('both real and mock return ProviderResult with consistent metadata', async () => {
+      const realResult = await real.getApprovals();
+      const mockResult = await mock.getApprovals();
+
+      for (const result of [realResult, mockResult]) {
+        expect(result).toHaveProperty('timestamp');
+        expect(typeof result.timestamp).toBe('string');
+        expect(new Date(result.timestamp).getTime()).not.toBeNaN();
+        expect(result).toHaveProperty('source');
+        expect(['real', 'mock', 'fallback', 'restricted']).toContain(result.source);
+        expect(result).toHaveProperty('confidence');
+        expect(['high', 'medium', 'low']).toContain(result.confidence);
+        expect(typeof result.degraded).toBe('boolean');
+      }
+    });
+
+    it('approveAction returns ProviderResult with evidence metadata', async () => {
+      const realResult = await real.approveAction('apr-1');
+      const mockResult = await mock.approveAction('apr-1');
+
+      for (const result of [realResult, mockResult]) {
+        expect(result).toHaveProperty('timestamp');
+        expect(result).toHaveProperty('source');
+        expect(result).toHaveProperty('confidence');
+        expect(typeof result.degraded).toBe('boolean');
+      }
+    });
+  });
 });

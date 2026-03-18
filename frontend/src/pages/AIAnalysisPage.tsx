@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { Brain, Send, Sparkles, Bot } from 'lucide-react';
 import Header from '../components/layout/Header';
 import PageLoading from '../components/ui/PageLoading';
+import { ModeBadge } from '../components/mode';
 import { dataService } from '../services/dataService';
 import { createLogger } from '../lib/logger';
 
@@ -118,7 +119,7 @@ export default function AIAnalysisPage() {
       setLoading(false);
     });
     return () => { clearTimeout(typingTimerRef.current); };
-  }, []);
+  }, [t]);
 
   // Auto-scroll al final cuando llegan nuevos mensajes
   useEffect(() => {
@@ -176,6 +177,7 @@ export default function AIAnalysisPage() {
         <Header
           title="Analisis IA"
           subtitle="Amazon Bedrock (Claude) — 7 casos de uso — Respuestas de demostración"
+          actions={<ModeBadge />}
         />
         <div className="flex-1 p-6 flex items-center justify-center">
           <UpgradeBanner feature="Analisis IA con Bedrock" />
@@ -202,6 +204,7 @@ export default function AIAnalysisPage() {
       <Header
         title="Analisis IA"
         subtitle="Amazon Bedrock (Claude) — 7 casos de uso — Respuestas de demostración"
+        actions={<ModeBadge />}
       />
 
       <div className="flex-1 overflow-y-auto p-6 space-y-6">

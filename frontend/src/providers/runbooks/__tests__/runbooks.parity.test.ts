@@ -164,4 +164,73 @@ describe('RunbooksProvider parity tests', () => {
       expect(Array.isArray(result.data)).toBe(true);
     });
   });
+
+  // ── F) Error parity ──
+
+  describe('error parity', () => {
+    it('real provider rejects when api.executeRunbook throws on empty runbookId', async () => {
+      const { api } = await import('../../../hooks/useApi');
+      (api.executeRunbook as ReturnType<typeof vi.fn>).mockRejectedValueOnce(new Error('Invalid runbookId'));
+      await expect(real.executeRunbook('', 'sys-1', false)).rejects.toThrow('Invalid runbookId');
+    });
+
+    it('mock provider still returns data for empty runbookId (graceful)', async () => {
+      const result = await mock.executeRunbook('', 'sys-1', false);
+      expect(result.data).toBeDefined();
+      expect(typeof result.data).toBe('object');
+    });
+  });
+
+  // ── G) Fallback behavior ──
+
+  describe('fallback behavior', () => {
+    it('fallback provider returns mock data with degraded=true when real throws', async () => {
+      const { api } = await import('../../../hooks/useApi');
+      (api.getRunbooks as ReturnType<typeof vi.fn>).mockRejectedValueOnce(new Error('Network error'));
+
+      const { createFallbackProvider } = await import('../../create-fallback');
+      const fallback = createFallbackProvider(
+        real,
+        mock,
+        'Runbooks',
+      );
+      const result = await fallback.getRunbooks();
+      expect(result.source).toBe('fallback');
+      expect(result.degraded).toBe(true);
+      expect(Array.isArray(result.data)).toBe(true);
+      expect(result.data.length).toBeGreaterThan(0);
+    });
+  });
+
+  // ── H) Evidence parity ──
+
+  describe('evidence parity', () => {
+    it('both real and mock return ProviderResult with timestamp and source', async () => {
+      const realResult = await real.getRunbooks();
+      const mockResult = await mock.getRunbooks();
+
+      for (const result of [realResult, mockResult]) {
+        expect(result).toHaveProperty('timestamp');
+        expect(typeof result.timestamp).toBe('string');
+        expect(new Date(result.timestamp).getTime()).not.toBeNaN();
+        expect(result).toHaveProperty('source');
+        expect(['real', 'mock', 'fallback', 'restricted']).toContain(result.source);
+        expect(result).toHaveProperty('confidence');
+        expect(['high', 'medium', 'low']).toContain(result.confidence);
+        expect(typeof result.degraded).toBe('boolean');
+      }
+    });
+
+    it('executeRunbook returns ProviderResult with evidence metadata', async () => {
+      const realResult = await real.executeRunbook('rb-1', 'sys-1', false);
+      const mockResult = await mock.executeRunbook('rb-1', 'sys-1', false);
+
+      for (const result of [realResult, mockResult]) {
+        expect(result).toHaveProperty('timestamp');
+        expect(result).toHaveProperty('source');
+        expect(result).toHaveProperty('confidence');
+        expect(typeof result.degraded).toBe('boolean');
+      }
+    });
+  });
 });

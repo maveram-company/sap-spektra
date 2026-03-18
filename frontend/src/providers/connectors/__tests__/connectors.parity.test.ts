@@ -56,4 +56,46 @@ describe('ConnectorsProvider parity tests', () => {
       expect(Array.isArray(result.data)).toBe(true);
     });
   });
+
+  // ── Degraded parity ──
+
+  describe('degraded parity', () => {
+    it('fallback returns connectors with degraded=true when real fails', async () => {
+      const { api } = await import('../../../hooks/useApi');
+      (api.getConnectors as ReturnType<typeof vi.fn>).mockRejectedValueOnce(new Error('Network error'));
+
+      const { createFallbackProvider } = await import('../../create-fallback');
+      const fallback = createFallbackProvider(
+        real,
+        mock,
+        'Connectors',
+      );
+      const result = await fallback.getConnectors();
+      expect(result.source).toBe('fallback');
+      expect(result.degraded).toBe(true);
+      expect(Array.isArray(result.data)).toBe(true);
+      expect(result.data.length).toBeGreaterThan(0);
+      expect(result.confidence).toBe('medium');
+    });
+  });
+
+  // ── Evidence parity ──
+
+  describe('evidence parity', () => {
+    it('both real and mock return ProviderResult with consistent metadata', async () => {
+      const realResult = await real.getConnectors();
+      const mockResult = await mock.getConnectors();
+
+      for (const result of [realResult, mockResult]) {
+        expect(result).toHaveProperty('timestamp');
+        expect(typeof result.timestamp).toBe('string');
+        expect(new Date(result.timestamp).getTime()).not.toBeNaN();
+        expect(result).toHaveProperty('source');
+        expect(['real', 'mock', 'fallback', 'restricted']).toContain(result.source);
+        expect(result).toHaveProperty('confidence');
+        expect(['high', 'medium', 'low']).toContain(result.confidence);
+        expect(typeof result.degraded).toBe('boolean');
+      }
+    });
+  });
 });

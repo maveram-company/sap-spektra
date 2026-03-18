@@ -126,6 +126,22 @@ function createRegistry(mode: OperationalMode): ProviderRegistry {
         chat: new ChatMockProvider(),
       };
 
+    case 'RESTRICTED':
+      return {
+        systems: new SystemsMockProvider(),
+        alerts: new AlertsMockProvider(),
+        events: new EventsMockProvider(),
+        operations: new OperationsMockProvider(),
+        runbooks: new RunbooksMockProvider(),
+        approvals: new ApprovalsMockProvider(),
+        analytics: new AnalyticsMockProvider(),
+        ha: new HAMockProvider(),
+        admin: new AdminMockProvider(),
+        landscape: new LandscapeMockProvider(),
+        connectors: new ConnectorsMockProvider(),
+        chat: new ChatMockProvider(),
+      };
+
     case 'FALLBACK':
     default:
       return {

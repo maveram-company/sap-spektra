@@ -35,6 +35,7 @@ function resolveMode(): OperationalMode {
   // If config.features.demoMode is true (set by tests or config),
   // treat it as MOCK mode for backward compatibility
   if (config.features.demoMode) return 'MOCK';
+  // RESTRICTED is a valid mode — pass through to registry
   return currentMode;
 }
 

@@ -7,9 +7,19 @@ import Button from '../components/ui/Button';
 import Badge from '../components/ui/Badge';
 import Table, { TableHeader, TableBody, TableRow, TableHead, TableCell } from '../components/ui/Table';
 import PageLoading from '../components/ui/PageLoading';
-import { dataService } from '../services/dataService';
+import { getConnectorsResult } from '../services/dataService';
+import { ModeBadge, SourceIndicator } from '../components/mode';
 import { createLogger } from '../lib/logger';
+import type { ProviderTier } from '../mode/types';
 import type { ApiRecord } from '../types';
+
+interface SourceInfo {
+  source: ProviderTier;
+  confidence: 'high' | 'medium' | 'low';
+  degraded: boolean;
+  reason?: string;
+  timestamp: string;
+}
 
 const log = createLogger('ConnectorsPage');
 
@@ -56,10 +66,15 @@ const STATUS_ORDER: Record<string, any> = { disconnected: 0, degraded: 1, connec
 export default function ConnectorsPage() {
   const navigate = useNavigate();
   const [connectors, setConnectors] = useState<ApiRecord[]>([]);
+  const [sourceInfo, setSourceInfo] = useState<SourceInfo | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    dataService.getConnectors().then(data => { setConnectors(data); setLoading(false); }).catch((err: unknown) => log.warn('Fetch failed', { error: (err as Error).message }));
+    getConnectorsResult().then(result => {
+      setConnectors(result.data);
+      setSourceInfo({ source: result.source, confidence: result.confidence, degraded: result.degraded, reason: result.reason, timestamp: result.timestamp });
+      setLoading(false);
+    }).catch((err: unknown) => log.warn('Fetch failed', { error: (err as Error).message }));
   }, []);
 
   const connected = connectors.filter((c: ApiRecord) => c.status === 'connected').length;
@@ -79,12 +94,20 @@ export default function ConnectorsPage() {
         title="Conectores"
         subtitle="Conexiones de tus sistemas SAP con Spektra (datos de demostración)"
         actions={
-          <Button icon={Plus} onClick={() => navigate('/connect')}>
-            Conectar Sistema
-          </Button>
+          <div className="flex items-center gap-2">
+            <ModeBadge />
+            <Button icon={Plus} onClick={() => navigate('/connect')}>
+              Conectar Sistema
+            </Button>
+          </div>
         }
       />
       <div className="p-6 space-y-6">
+        {sourceInfo && (
+          <div className="mb-0">
+            <SourceIndicator {...sourceInfo} />
+          </div>
+        )}
 
         {/* KPI Summary */}
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">

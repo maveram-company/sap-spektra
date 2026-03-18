@@ -2,9 +2,19 @@ import { useState, useEffect, useMemo } from 'react';
 import { Network, CheckCircle, XCircle, Shield, Server, Monitor } from 'lucide-react';
 import Header from '../components/layout/Header';
 import PageLoading from '../components/ui/PageLoading';
-import { dataService } from '../services/dataService';
+import { getDiscoveryResult } from '../services/dataService';
+import { ModeBadge, SourceIndicator } from '../components/mode';
 import { createLogger } from '../lib/logger';
+import type { ProviderTier } from '../mode/types';
 import type { ApiRecord } from '../types';
+
+interface SourceInfo {
+  source: ProviderTier;
+  confidence: 'high' | 'medium' | 'low';
+  degraded: boolean;
+  reason?: string;
+  timestamp: string;
+}
 
 const log = createLogger('LandscapePage');
 
@@ -30,11 +40,16 @@ const envColors = {
 
 export default function LandscapePage() {
   const [discovery, setDiscovery] = useState<ApiRecord[]>([]);
+  const [sourceInfo, setSourceInfo] = useState<SourceInfo | null>(null);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
 
   useEffect(() => {
-    dataService.getDiscovery().then(data => { setDiscovery(data); setLoading(false); }).catch((err: unknown) => log.warn('Fetch failed', { error: (err as Error).message }));
+    getDiscoveryResult().then(result => {
+      setDiscovery(result.data);
+      setSourceInfo({ source: result.source, confidence: result.confidence, degraded: result.degraded, reason: result.reason, timestamp: result.timestamp });
+      setLoading(false);
+    }).catch((err: unknown) => log.warn('Fetch failed', { error: (err as Error).message }));
   }, []);
 
   // Agrupar instancias por SID para la topología
@@ -100,9 +115,15 @@ export default function LandscapePage() {
       <Header
         title="Landscape SAP"
         subtitle="Topología descubierta — instancias, roles y alta disponibilidad"
+        actions={<ModeBadge />}
       />
 
       <div className="p-6">
+        {sourceInfo && (
+          <div className="mb-4">
+            <SourceIndicator {...sourceInfo} />
+          </div>
+        )}
         {/* Summary Cards */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
           {summaryCards.map((card: ApiRecord) => (
