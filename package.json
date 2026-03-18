@@ -19,7 +19,7 @@
     "typecheck": "npm run typecheck:backend && npm run typecheck:frontend",
     "typecheck:frontend": "cd frontend && npx tsc --noEmit",
     "typecheck:backend": "cd apps/api && npx tsc --noEmit",
-    "lint": "cd apps/api && npm run lint && cd ../../frontend && npm run lint",
+    "lint": "cd apps/api && npm run lint ; cd ../../frontend && npm run lint",
     "verify": "npm run typecheck && npm run lint && npm run test && npm run build",
     "prepare": "husky"
   },
@@ -44,7 +44,7 @@
     "apps/api/src/**/*.ts": [
       "eslint --config apps/api/eslint.config.mjs --fix"
     ],
-    "frontend/src/**/*.{js,jsx}": [
+    "frontend/src/**/*.{js,jsx,ts,tsx}": [
       "eslint --config frontend/eslint.config.js --fix"
     ]
   }

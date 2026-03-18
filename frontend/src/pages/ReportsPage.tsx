@@ -71,7 +71,7 @@ export default function ReportsPage() {
     setGenerating(typeKey);
     try {
       // Demo mode: simulated delay — connect to real API when available
-      await new Promise<void>((resolve: () => void, reject: (err: Error) => void) => {
+      await new Promise<void>((resolve: () => void) => {
         generateTimerRef.current = setTimeout(() => resolve(), 1500);
       });
       const now = new Date();
