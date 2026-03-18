@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { Monitor, AlertTriangle, ShieldAlert, ShieldCheck, TrendingUp, ArrowRight } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { useTenant } from '../contexts/TenantContext';
@@ -149,6 +150,7 @@ function SystemCard({ system, onClick }: { system: any; onClick: any }) {
 }
 
 export default function DashboardPage() {
+  const { t } = useTranslation();
   const [systems, setSystems] = useState<ApiRecord[]>([]);
   const [approvals, setApprovals] = useState<ApiRecord[]>([]);
   const [loading, setLoading] = useState(true);
@@ -173,7 +175,7 @@ export default function DashboardPage() {
         }
       } catch {
         if (mounted) {
-          setError('Error al cargar datos. Intenta de nuevo.');
+          setError(t('common.error.loadData'));
           setLoading(false);
         }
       }

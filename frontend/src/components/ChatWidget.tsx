@@ -1,11 +1,18 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
 import { MessageSquare, X, Send, Bot, User, Sparkles } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import { usePlan } from '../hooks/usePlan';
 import { dataService } from '../services/dataService';
 
+interface ChatMessage {
+  role: 'user' | 'assistant';
+  content: string;
+}
+
 export default function ChatWidget() {
+  const { t } = useTranslation();
   const [isOpen, setIsOpen] = useState(false);
-  const [messages, setMessages] = useState([
+  const [messages, setMessages] = useState<ChatMessage[]>([
     { role: 'assistant', content: '¡Hola! Soy el asistente IA de SAP Spektra. Puedo ayudarte con información sobre tus sistemas SAP, breaches, runbooks y más. ¿En qué te puedo ayudar?' }
   ]);
   const [input, setInput] = useState('');
@@ -32,14 +39,15 @@ export default function ChatWidget() {
     setIsTyping(true);
 
     try {
-      const history = messages.map((m: any) => ({ role: m.role, content: m.content }));
-      const response = await dataService.chat(userMessage, { history });
+      const history = messages.map((m) => ({ role: m.role, content: m.content }));
+      const response = await dataService.chat(userMessage, { history }) as Record<string, unknown> | undefined;
       if (!mountedRef.current) return;
-      const aiText = (response as any)?.message || (response as any)?.data?.message || 'No pude procesar tu consulta. Intenta de nuevo.';
+      const data = response?.data as Record<string, unknown> | undefined;
+      const aiText = (response?.message as string) || (data?.message as string) || t('chat.error.process');
       setMessages(prev => [...prev, { role: 'assistant', content: aiText }]);
     } catch {
       if (!mountedRef.current) return;
-      setMessages(prev => [...prev, { role: 'assistant', content: 'Error al conectar con el asistente. Intenta de nuevo.' }]);
+      setMessages(prev => [...prev, { role: 'assistant', content: t('chat.error.connect') }]);
     } finally {
       if (mountedRef.current) setIsTyping(false);
     }
@@ -61,6 +69,7 @@ export default function ChatWidget() {
       {!isOpen && (
         <button
           onClick={() => setIsOpen(true)}
+          aria-label="Abrir chat"
           className="fixed bottom-6 right-6 w-14 h-14 rounded-full bg-gradient-to-br from-primary-600 to-accent-600 text-white shadow-lg hover:shadow-xl transition-all duration-300 flex items-center justify-center z-50 hover:scale-105"
         >
           <MessageSquare size={24} />
@@ -83,6 +92,7 @@ export default function ChatWidget() {
             </div>
             <button
               onClick={() => setIsOpen(false)}
+              aria-label="Cerrar chat"
               className="p-1.5 rounded-lg hover:bg-surface-tertiary text-text-tertiary hover:text-text-primary transition-colors"
             >
               <X size={16} />
@@ -91,7 +101,7 @@ export default function ChatWidget() {
 
           {/* Messages */}
           <div className="flex-1 overflow-y-auto p-4 space-y-3">
-            {messages.map((msg: any, i: any) => (
+            {messages.map((msg, i) => (
               <div key={i} className={`flex gap-2 ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
                 {msg.role === 'assistant' && (
                   <div className="w-6 h-6 rounded-full bg-gradient-to-br from-primary-500 to-accent-500 flex items-center justify-center flex-shrink-0 mt-0.5">
@@ -143,6 +153,7 @@ export default function ChatWidget() {
               <button
                 onClick={handleSend}
                 disabled={!input.trim() || isTyping}
+                aria-label="Enviar mensaje"
                 className="p-2 rounded-lg bg-primary-600 text-white hover:bg-primary-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
               >
                 <Send size={16} />

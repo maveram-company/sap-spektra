@@ -14,7 +14,17 @@
     "next": "Next",
     "previous": "Previous",
     "close": "Close",
-    "retry": "Retry"
+    "retry": "Retry",
+    "error": {
+      "loadData": "Error loading data. Please try again.",
+      "generic": "An unexpected error occurred"
+    }
+  },
+  "chat": {
+    "error": {
+      "process": "Could not process your query. Please try again.",
+      "connect": "Error connecting to the assistant. Please try again."
+    }
   },
   "nav": {
     "dashboard": "Dashboard",

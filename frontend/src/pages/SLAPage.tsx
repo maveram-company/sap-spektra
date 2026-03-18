@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { BarChart3, AlertTriangle } from 'lucide-react';
 import Header from '../components/layout/Header';
 import PageLoading from '../components/ui/PageLoading';
@@ -68,6 +69,7 @@ function SimpleTable({ title, icon: Icon, rows }: { title: any; icon: any; rows:
 }
 
 export default function SLAPage() {
+  const { t } = useTranslation();
   const [systems, setSystems] = useState<ApiRecord[]>([]);
   const [analytics, setAnalytics] = useState<Record<string, any> | null>(null);
   const [loading, setLoading] = useState(true);
@@ -80,7 +82,7 @@ export default function SLAPage() {
       setLoading(false);
     }).catch((err: any) => {
       log.warn('Fetch failed', { error: err.message });
-      setError('Error al cargar datos. Intenta de nuevo.');
+      setError(t('common.error.loadData'));
       setLoading(false);
     });
   }, []);

@@ -2,6 +2,7 @@ import { NotFoundException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { TenantsService } from './tenants.service';
 import { PrismaService } from '../../infrastructure/prisma/prisma.service';
+import { AuditService } from '../audit/audit.service';
 
 const ORG_ID = 'org-test-1';
 
@@ -37,8 +38,14 @@ describe('TenantsService', () => {
       },
     };
 
+    const mockAudit = { log: jest.fn().mockResolvedValue({}) };
+
     const module: TestingModule = await Test.createTestingModule({
-      providers: [TenantsService, { provide: PrismaService, useValue: prisma }],
+      providers: [
+        TenantsService,
+        { provide: PrismaService, useValue: prisma },
+        { provide: AuditService, useValue: mockAudit },
+      ],
     }).compile();
 
     service = module.get<TenantsService>(TenantsService);

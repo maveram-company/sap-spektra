@@ -45,6 +45,10 @@
 import config from '../config';
 import { api } from '../hooks/useApi';
 import { createLogger } from '../lib/logger';
+import type {
+  ApiSystem, ApiAlert, ApiEvent, ApiApproval, ApiOperation,
+  ApiRunbook, ApiAuditEntry, ApiConnector,
+} from '../types/api';
 
 const log = createLogger('DataService');
 import {
@@ -96,7 +100,7 @@ const isDemoMode = () => config.features.demoMode;
 
 // ── Transformadores: API → formato frontend ──
 
-function transformSystem(s: any) {
+function transformSystem(s: ApiSystem) {
   const healthBias = (s.healthScore || 70) / 100;
 
   // RISE_RESTRICTED systems have no OS-level metrics — SAP manages the infra
@@ -131,7 +135,7 @@ function transformSystem(s: any) {
     mem: memUsage,
     disk: diskUsage,
     isRiseRestricted,
-    breaches: s._count?.breaches ?? (s.breaches || 0),
+    breaches: (s._count as Record<string, number> | undefined)?.breaches ?? (s.breaches as number || 0),
     mttr: Math.round(mttrBase + healthFactor * 15),
     mtbf: Math.round(mtbfBase + healthFactor * 500),
     availability: +(Math.min(100, 97 + healthBias * 3)).toFixed(1),
@@ -139,7 +143,7 @@ function transformSystem(s: any) {
   };
 }
 
-function transformAlert(a: any) {
+function transformAlert(a: ApiAlert) {
   return {
     ...a,
     sid: a.system?.sid || a.sid || '',
@@ -150,21 +154,21 @@ function transformAlert(a: any) {
   };
 }
 
-function transformEvent(e: any) {
+function transformEvent(e: ApiEvent) {
   return {
     ...e,
     sid: e.system?.sid || e.sid || '',
   };
 }
 
-function transformApproval(a: any) {
+function transformApproval(a: ApiApproval) {
   return {
     ...a,
     sid: a.system?.sid || a.sid || '',
   };
 }
 
-function transformOperation(op: any) {
+function transformOperation(op: ApiOperation) {
   return {
     ...op,
     sid: op.system?.sid || op.sid || '',
@@ -173,12 +177,12 @@ function transformOperation(op: any) {
     last: op.completedAt
       ? (op.status === 'FAILED'
         ? `\u2717 ${op.error || 'Error'}`
-        : `\u2713 ${new Date(op.completedAt).toISOString().slice(0, 10)}`)
+        : `\u2713 ${new Date(op.completedAt as string).toISOString().slice(0, 10)}`)
       : null,
   };
 }
 
-function transformAudit(a: any) {
+function transformAudit(a: ApiAuditEntry) {
   return {
     ...a,
     user: a.userEmail || a.user || '',
@@ -234,7 +238,7 @@ function transformDiscovery(systems: any) {
   return instances;
 }
 
-function transformConnector(c: any) {
+function transformConnector(c: ApiConnector) {
   return {
     ...c,
     sid: c.system?.sid || c.sid || '',
@@ -242,7 +246,7 @@ function transformConnector(c: any) {
   };
 }
 
-function transformRunbook(r: any) {
+function transformRunbook(r: ApiRunbook) {
   // Computar stats desde las ejecuciones incluidas por la API
   const execs = r.executions || [];
   const totalRuns = execs.length;
@@ -441,7 +445,7 @@ export const dataService = {
   // ── Sistemas SAP ──
   getSystems: async () => {
     if (isDemoMode()) { await delay(); return mockSystems; }
-    const systems = await api.getSystems() as any[];
+    const systems = await api.getSystems() as ApiSystem[];
     return systems.map(transformSystem);
   },
 
@@ -463,7 +467,7 @@ export const dataService = {
         ? mockBreaches.filter((b: any) => b.systemId === id).slice(0, limit)
         : mockBreaches.slice(0, limit);
     }
-    const breaches = await api.getBreaches(id) as any[];
+    const breaches = await api.getBreaches(id) as Record<string, unknown>[];
     return breaches.map((b: any) => ({
       ...b,
       sid: b.system?.sid || '',
@@ -836,7 +840,7 @@ export const dataService = {
   // ── Usuarios ──
   getUsers: async () => {
     if (isDemoMode()) { await delay(); return mockUsers; }
-    const users = await api.getUsers() as any[];
+    const users = await api.getUsers() as Record<string, unknown>[];
     return users.map((u: any) => ({
       ...u,
       lastLogin: u.lastLoginAt || u.lastLogin,
@@ -851,7 +855,7 @@ export const dataService = {
       await delay();
       return status ? mockApprovals.filter((a: any) => a.status === status) : mockApprovals;
     }
-    const approvals = await api.getApprovals(status) as any[];
+    const approvals = await api.getApprovals(status) as ApiApproval[];
     return approvals.map(transformApproval);
   },
 
@@ -868,41 +872,41 @@ export const dataService = {
   // ── Operaciones ──
   getOperations: async () => {
     if (isDemoMode()) { await delay(); return mockOperations; }
-    const operations = await api.getOperations() as any[];
+    const operations = await api.getOperations() as ApiOperation[];
     return operations.map(transformOperation);
   },
 
   // ── Audit Log ──
   getAuditLog: async () => {
     if (isDemoMode()) { await delay(); return mockAuditLog; }
-    const entries = await api.getAuditLog() as any[];
+    const entries = await api.getAuditLog() as ApiAuditEntry[];
     return entries.map(transformAudit);
   },
 
   // ── Alertas ──
   getAlerts: async (_filters?: any) => {
     if (isDemoMode()) { await delay(); return mockAlerts; }
-    const alerts = await api.getAlerts(_filters) as any[];
+    const alerts = await api.getAlerts(_filters) as ApiAlert[];
     return alerts.map(transformAlert);
   },
 
   // ── Eventos ──
   getEvents: async () => {
     if (isDemoMode()) { await delay(); return mockEvents; }
-    const events = await api.getEvents() as any[];
+    const events = await api.getEvents() as ApiEvent[];
     return events.map(transformEvent);
   },
 
   // ── Runbooks ──
   getRunbooks: async () => {
     if (isDemoMode()) { await delay(); return mockRunbooks; }
-    const runbooks = await api.getRunbooks() as any[];
+    const runbooks = await api.getRunbooks() as ApiRunbook[];
     return runbooks.map(transformRunbook);
   },
 
   getRunbookExecutions: async () => {
     if (isDemoMode()) { await delay(300); return mockRunbookExecutions; }
-    const execs = await api.getRunbookExecutions() as any[];
+    const execs = await api.getRunbookExecutions() as Record<string, unknown>[];
     return execs.map(transformRunbookExecution);
   },
 
@@ -984,14 +988,14 @@ export const dataService = {
   // ── Conectores ──
   getConnectors: async () => {
     if (isDemoMode()) { await delay(); return mockConnectors; }
-    const connectors = await api.getConnectors() as any[];
+    const connectors = await api.getConnectors() as ApiConnector[];
     return connectors.map(transformConnector);
   },
 
   // ── HA / DR ──
   getHASystems: async () => {
     if (isDemoMode()) { await delay(); return mockHASystems; }
-    const configs = await api.getHAConfigs() as any[];
+    const configs = await api.getHAConfigs() as Record<string, unknown>[];
     return configs.map(transformHAConfig);
   },
 
@@ -1074,21 +1078,21 @@ export const dataService = {
   // ── Background Jobs ──
   getBackgroundJobs: async () => {
     if (isDemoMode()) { await delay(); return mockBackgroundJobs; }
-    const jobs = await api.getJobs() as any[];
+    const jobs = await api.getJobs() as Record<string, unknown>[];
     return jobs.map(transformJob);
   },
 
   // ── Transports ──
   getTransports: async () => {
     if (isDemoMode()) { await delay(); return mockTransports; }
-    const transports = await api.getTransports() as any[];
+    const transports = await api.getTransports() as Record<string, unknown>[];
     return transports.map(transformTransport);
   },
 
   // ── Certificados y Licencias ──
   getCertificates: async () => {
     if (isDemoMode()) { await delay(); return mockCertificates; }
-    const certs = await api.getCertificates() as any[];
+    const certs = await api.getCertificates() as Record<string, unknown>[];
     return certs.map(transformCertificate);
   },
 

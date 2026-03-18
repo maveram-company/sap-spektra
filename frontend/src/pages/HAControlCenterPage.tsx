@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
+import { useTranslation } from 'react-i18next';
 import Header from '../components/layout/Header';
 import PageLoading from '../components/ui/PageLoading';
 import {
@@ -90,6 +91,7 @@ const getOpLabels = (sys: any) => {
 };
 
 export default function HAControlCenterPage() {
+  const { t } = useTranslation();
   const { user } = useAuth();
   const [activeTab, setActiveTab] = useState('systems');
   const [systems, setSystems] = useState<any[]>([]);
@@ -114,7 +116,7 @@ export default function HAControlCenterPage() {
       setLoading(false);
     }).catch((err: any) => {
       log.warn('Fetch failed', { error: err.message });
-      setError('Error al cargar datos. Intenta de nuevo.');
+      setError(t('common.error.loadData'));
       setLoading(false);
     });
   }, []);
@@ -331,7 +333,7 @@ export default function HAControlCenterPage() {
     const strategies = Object.entries(HA_STRATEGY_META);
     const counts: Record<string, number> = {};
     systems.forEach((s: any) => {
-      if (s.haStrategy) (counts as any)[s.haStrategy] = ((counts as any)[s.haStrategy] || 0) + 1;
+      if (s.haStrategy) counts[s.haStrategy] = (counts[s.haStrategy] || 0) + 1;
     });
 
     return (

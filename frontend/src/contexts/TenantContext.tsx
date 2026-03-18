@@ -1,17 +1,48 @@
 import { createContext, useContext, useState, useMemo, useCallback, type ReactNode } from 'react';
 import { useAuth } from './AuthContext';
 
+interface OrgLimits {
+  maxSystems: number;
+  maxUsers: number;
+  maxIntegrations: number;
+  aiCallsPerDay: number;
+  retentionDays: number;
+  [key: string]: number;
+}
+
+interface OrgUsage {
+  systems: number;
+  users: number;
+  integrations: number;
+  aiCallsToday: number;
+  [key: string]: number;
+}
+
+interface Organization {
+  id: string;
+  name: string;
+  slug: string;
+  plan: string;
+  logo: string | null;
+  settings: Record<string, any>;  // eslint-disable-line @typescript-eslint/no-explicit-any
+  limits: OrgLimits;
+  usage: OrgUsage;
+  createdAt: string;
+  owner: string;
+  [key: string]: unknown;
+}
+
 interface TenantContextValue {
-  organization: Record<string, any>;
+  organization: Organization;
   loading: boolean;
-  updateSettings: (newSettings: Record<string, any>) => void;
+  updateSettings: (newSettings: Record<string, unknown>) => void;
   isWithinLimits: (resource: string) => boolean;
   getUsagePercent: (resource: string) => number;
 }
 
 const TenantContext = createContext<TenantContextValue | null>(null);
 
-const defaultOrg = {
+const defaultOrg: Organization = {
   id: 'org-demo',
   name: 'Demo Organization',
   slug: 'demo-org',
@@ -52,12 +83,12 @@ export function useTenant(): TenantContextValue {
 
 export function TenantProvider({ children }: { children: ReactNode }) {
   const { user } = useAuth();
-  const [organization, setOrganization] = useState(() => {
-    if (user?.organization) return { ...defaultOrg, ...user.organization };
+  const [organization, setOrganization] = useState<Organization>(() => {
+    if (user?.organization) return { ...defaultOrg, ...user.organization } as Organization;
     return defaultOrg;
   });
 
-  const updateSettings = useCallback((newSettings: Record<string, any>) => {
+  const updateSettings = useCallback((newSettings: Record<string, unknown>) => {
     setOrganization(prev => ({
       ...prev,
       settings: { ...prev.settings, ...newSettings },
@@ -79,13 +110,13 @@ export function TenantProvider({ children }: { children: ReactNode }) {
       loading: false,
       updateSettings,
       isWithinLimits: (resource: string) => {
-        const { limits, usage } = organization as any;
-        return ((usage[resource] as number) || 0) < ((limits[getLimitKey(resource)] as number) || Infinity);
+        const { limits, usage } = organization;
+        return (usage[resource] || 0) < (limits[getLimitKey(resource)] || Infinity);
       },
       getUsagePercent: (resource: string) => {
-        const { limits, usage } = organization as any;
-        const max = (limits[getLimitKey(resource)] as number) || 1;
-        return Math.round((((usage[resource] as number) || 0) / max) * 100);
+        const { limits, usage } = organization;
+        const max = limits[getLimitKey(resource)] || 1;
+        return Math.round(((usage[resource] || 0) / max) * 100);
       },
     };
   }, [organization, updateSettings]);

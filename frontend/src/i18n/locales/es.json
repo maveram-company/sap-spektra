@@ -14,7 +14,17 @@
     "next": "Siguiente",
     "previous": "Anterior",
     "close": "Cerrar",
-    "retry": "Reintentar"
+    "retry": "Reintentar",
+    "error": {
+      "loadData": "Error al cargar datos. Intenta de nuevo.",
+      "generic": "Ocurri\u00f3 un error inesperado"
+    }
+  },
+  "chat": {
+    "error": {
+      "process": "No pude procesar tu consulta. Intenta de nuevo.",
+      "connect": "Error al conectar con el asistente. Intenta de nuevo."
+    }
   },
   "nav": {
     "dashboard": "Dashboard",

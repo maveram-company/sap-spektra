@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { FileText, Download, Calendar, TrendingUp, HeartPulse, ShieldCheck, Loader2, CheckCircle, X } from 'lucide-react';
 import Header from '../components/layout/Header';
 import PageHeader from '../components/layout/PageHeader';
@@ -38,6 +39,7 @@ const iconColors = {
 };
 
 export default function ReportsPage() {
+  const { t } = useTranslation();
   const [reports, setReports] = useState<ApiRecord[]>([]);
   const [events, setEvents] = useState<ApiRecord[]>([]);
   const [alerts, setAlerts] = useState<ApiRecord[]>([]);
@@ -55,7 +57,7 @@ export default function ReportsPage() {
     }).catch((err: any) => {
       log.warn('Fetch failed', { error: err.message });
       if (!mounted) return;
-      setError('Error al cargar datos. Intenta de nuevo.');
+      setError(t('common.error.loadData'));
     });
     return () => {
       mounted = false;

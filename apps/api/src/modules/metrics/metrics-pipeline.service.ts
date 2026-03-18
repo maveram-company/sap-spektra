@@ -1,5 +1,6 @@
 import { Injectable, Logger, ForbiddenException } from '@nestjs/common';
 import { PrismaService } from '../../infrastructure/prisma/prisma.service';
+import { AuditService } from '../audit/audit.service';
 
 /** Default thresholds for SAP system metrics */
 const DEFAULT_THRESHOLDS: Record<
@@ -25,7 +26,10 @@ interface MetricPayload {
 export class MetricsPipelineService {
   private readonly logger = new Logger(MetricsPipelineService.name);
 
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly audit: AuditService,
+  ) {}
 
   /**
    * Ingests a metric data point from a host agent.
@@ -145,6 +149,15 @@ export class MetricsPipelineService {
         },
       });
       breachCount++;
+
+      // Audit log for breach creation (high-value event, not per-metric-ingest)
+      await this.audit.log(organizationId, {
+        userEmail: 'system',
+        action: 'metrics.breach',
+        resource: `system:${systemId}`,
+        details: `${metric}=${value.toFixed(1)}% (${severity})`,
+        severity: severity === 'CRITICAL' ? 'critical' : 'warning',
+      });
 
       // Create corresponding alert
       const level = severity === 'CRITICAL' ? 'critical' : 'warning';

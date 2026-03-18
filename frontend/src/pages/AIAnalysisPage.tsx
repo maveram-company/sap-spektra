@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Brain, Send, Sparkles, Bot } from 'lucide-react';
 import Header from '../components/layout/Header';
 import PageLoading from '../components/ui/PageLoading';
@@ -82,6 +83,7 @@ function renderMarkdown(text: any) {
 }
 
 export default function AIAnalysisPage() {
+  const { t } = useTranslation();
   const { hasFeature } = usePlan();
   const msgIdRef = useRef(0);
   const nextMsgId = (prefix: string) => {
@@ -89,7 +91,7 @@ export default function AIAnalysisPage() {
     return `${prefix}-${msgIdRef.current}`;
   };
   const [aiUseCases, setAiUseCases] = useState<ApiRecord[]>([]);
-  const [aiResponses, setAiResponses] = useState<Record<string, any>>({});
+  const [aiResponses, setAiResponses] = useState<Record<string, unknown>>({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [messages, setMessages] = useState([
@@ -107,12 +109,12 @@ export default function AIAnalysisPage() {
 
   useEffect(() => {
     Promise.all([dataService.getAIUseCases(), dataService.getAIResponses()]).then(([uc, resp]) => {
-      setAiUseCases(uc as any[]);
-      setAiResponses(resp as any);
+      setAiUseCases(uc as Record<string, unknown>[]);
+      setAiResponses(resp as Record<string, unknown>);
       setLoading(false);
     }).catch((err: any) => {
       log.warn('Fetch failed', { error: err.message });
-      setError('Error al cargar datos. Intenta de nuevo.');
+      setError(t('common.error.loadData'));
       setLoading(false);
     });
     return () => { clearTimeout(typingTimerRef.current); };

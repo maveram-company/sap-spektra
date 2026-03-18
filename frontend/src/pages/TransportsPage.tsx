@@ -1,4 +1,5 @@
 import { useMemo, useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Package, ArrowRight, CheckCircle, XCircle, Clock, AlertTriangle, Filter } from 'lucide-react';
 import Header from '../components/layout/Header';
 import Card, { CardHeader, CardTitle } from '../components/ui/Card';
@@ -37,6 +38,7 @@ function RCBadge({ rc }: { rc: any }) {
 }
 
 export default function TransportsPage() {
+  const { t } = useTranslation();
   const [transports, setTransports] = useState<ApiRecord[]>([]);
   const [systems, setSystems] = useState<ApiRecord[]>([]);
   const [loading, setLoading] = useState(true);
@@ -50,7 +52,7 @@ export default function TransportsPage() {
       setLoading(false);
     }).catch((err: any) => {
       log.warn('Fetch failed', { error: err.message });
-      setError('Error al cargar datos. Intenta de nuevo.');
+      setError(t('common.error.loadData'));
       setLoading(false);
     });
   }, []);

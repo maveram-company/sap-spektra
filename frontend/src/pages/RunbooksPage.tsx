@@ -164,7 +164,7 @@ export default function RunbooksPage() {
   const stopPolling = useCallback(() => {
     if (pollingRef.current) {
       clearInterval(pollingRef.current);
-      pollingRef.current = undefined as any;
+      pollingRef.current = undefined;
     }
   }, []);
 
@@ -172,7 +172,7 @@ export default function RunbooksPage() {
     stopPolling();
     pollingRef.current = setInterval(async () => {
       try {
-        const detail = await dataService.getExecutionDetail(executionId) as any;
+        const detail = await dataService.getExecutionDetail(executionId) as Record<string, any>;
         if (!detail) return;
 
         setExecutionProgress({
@@ -242,7 +242,7 @@ export default function RunbooksPage() {
 
     try {
       // Paso 1: validar compatibilidad via dry-run
-      const check = await dataService.executeRunbook(selectedRunbook.id, selectedSystemId, true) as any;
+      const check = await dataService.executeRunbook(selectedRunbook.id, selectedSystemId, true) as Record<string, any>;
       if (check.compatible === false) {
         setExecutionResult({
           result: 'BLOCKED',
@@ -254,7 +254,7 @@ export default function RunbooksPage() {
       }
 
       // Paso 2: ejecutar realmente — el backend responde inmediatamente con RUNNING
-      const result = await dataService.executeRunbook(selectedRunbook.id, selectedSystemId, false) as any;
+      const result = await dataService.executeRunbook(selectedRunbook.id, selectedSystemId, false) as Record<string, any>;
 
       if (result.id) {
         // Inicializar step results desde la definicion del runbook
@@ -301,7 +301,7 @@ export default function RunbooksPage() {
       const result = await dataService.executeRunbook(selectedRunbook.id, selectedSystemId, true);
       setExecutionResult(result as Record<string, any>);
     } catch (err: any) {
-      setExecutionResult({ dryRun: true, error: (err as any).message } as any);
+      setExecutionResult({ dryRun: true, error: (err as Error).message });
     } finally {
       setExecuting(false);
     }

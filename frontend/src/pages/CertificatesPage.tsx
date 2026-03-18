@@ -1,4 +1,5 @@
 import { useState, useEffect, useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { ShieldCheck, AlertTriangle, XCircle, Clock, Key, FileText } from 'lucide-react';
 import Header from '../components/layout/Header';
 import Card, { CardHeader, CardTitle } from '../components/ui/Card';
@@ -26,6 +27,7 @@ function DaysLeftBadge({ days, status }: { days: any; status: any }) {
 }
 
 export default function CertificatesPage() {
+  const { t } = useTranslation();
   const [certificates, setCertificates] = useState<any[]>([]);
   const [licenses, setLicenses] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
@@ -38,7 +40,7 @@ export default function CertificatesPage() {
       setLoading(false);
     }).catch((err: any) => {
       log.warn('Fetch failed', { error: err.message });
-      setError('Error al cargar datos. Intenta de nuevo.');
+      setError(t('common.error.loadData'));
       setLoading(false);
     });
   }, []);

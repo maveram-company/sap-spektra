@@ -1,4 +1,5 @@
 import { useState, useEffect, useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 import Header from '../components/layout/Header';
 import PageLoading from '../components/ui/PageLoading';
 import Pagination from '../components/ui/Pagination';
@@ -68,6 +69,7 @@ function formatTimestamp(iso: any) {
 }
 
 export default function EventsPage() {
+  const { t } = useTranslation();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [events, setEvents] = useState<ApiRecord[]>([]);
@@ -84,7 +86,7 @@ export default function EventsPage() {
     }).catch((err: any) => {
       if (mounted) {
         log.warn('Fetch failed', { error: err.message });
-        setError('Error al cargar datos. Intenta de nuevo.');
+        setError(t('common.error.loadData'));
         setLoading(false);
       }
     });

@@ -1,5 +1,6 @@
 import { useState, useEffect, useMemo } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import {
   ArrowLeft, Activity, Clock, Shield, ShieldAlert, AlertTriangle, TrendingUp, Server,
   CheckCircle, XCircle, Database, Cpu, HardDrive, MemoryStick, Users, Zap, Terminal,
@@ -60,7 +61,7 @@ function pctColor(val: any, warnAt = 70, dangerAt = 85) {
 
 function calcUptime(startedAt: any) {
   if (!startedAt) return 'N/A';
-  const diffMs = (new Date() as any) - (new Date(startedAt) as any);
+  const diffMs = new Date().getTime() - new Date(startedAt).getTime();
   if (diffMs <= 0) return '< 1m';
   const days = Math.floor(diffMs / 86400000);
   const hours = Math.floor((diffMs % 86400000) / 3600000);
@@ -80,6 +81,7 @@ function barColor(val: any, warnAt = 70, dangerAt = 85) {
 // ── Main Component ──
 
 export default function SystemDetailPage() {
+  const { t } = useTranslation();
   const { systemId } = useParams();
   const navigate = useNavigate();
   const [system, setSystem] = useState<Record<string, any> | null>(null);
@@ -142,7 +144,7 @@ export default function SystemDetailPage() {
     }).catch((err: any) => {
       log.warn('Fetch failed', { error: err.message });
       if (!mounted) return;
-      setError('Error al cargar datos. Intenta de nuevo.');
+      setError(t('common.error.loadData'));
       setLoading(false);
     });
     return () => { mounted = false; };

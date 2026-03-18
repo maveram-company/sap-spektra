@@ -185,7 +185,8 @@ export const api = {
   },
 };
 
-async function fetchApi(endpoint: string, options: FetchOptions = {}): Promise<unknown> {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+async function fetchApi(endpoint: string, options: FetchOptions = {}): Promise<any> {
   const baseUrl = getApiUrl();
   const url = `${baseUrl}${endpoint}`;
   const stored = localStorage.getItem('sap-spektra-auth');

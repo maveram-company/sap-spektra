@@ -1,4 +1,5 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import type { ApiRecord } from '../../types';
 
 // ── Mock the api module before importing dataService ──
 vi.mock('../../hooks/useApi', () => ({
@@ -234,7 +235,7 @@ describe('dataService', () => {
         monitoringCapabilityProfile: 'RISE_RESTRICTED',
       };
       mockedApi.getSystems.mockResolvedValue([riseSystem]);
-      const [sys] = await dataService.getSystems();
+      const [sys] = await dataService.getSystems() as ApiRecord[];
       expect(sys.cpu).toBeNull();
       expect(sys.mem).toBeNull();
       expect(sys.disk).toBeNull();
@@ -250,7 +251,7 @@ describe('dataService', () => {
         supportsOsMetrics: false,
       };
       mockedApi.getSystems.mockResolvedValue([riseSystem]);
-      const [sys] = await dataService.getSystems();
+      const [sys] = await dataService.getSystems() as ApiRecord[];
       expect(sys.cpu).toBeNull();
       expect(sys.mem).toBeNull();
       expect(sys.disk).toBeNull();
@@ -266,7 +267,7 @@ describe('dataService', () => {
         hosts: [{ cpu: 40, memory: 55, disk: 35 }],
       };
       mockedApi.getSystems.mockResolvedValue([normalSystem]);
-      const [sys] = await dataService.getSystems();
+      const [sys] = await dataService.getSystems() as ApiRecord[];
       expect(sys.cpu).toBeTypeOf('number');
       expect(sys.mem).toBeTypeOf('number');
       expect(sys.disk).toBeTypeOf('number');
@@ -282,7 +283,7 @@ describe('dataService', () => {
       mockedApi.getAlerts.mockResolvedValue([
         { id: 1, system: { sid: 'EP1' }, createdAt: '2026-03-10T14:32:00Z', status: 'active' },
       ]);
-      const [alert] = await dataService.getAlerts();
+      const [alert] = await dataService.getAlerts() as ApiRecord[];
       expect(alert.sid).toBe('EP1');
       expect(alert.resolved).toBe(false);
     });
@@ -291,7 +292,7 @@ describe('dataService', () => {
       mockedApi.getAlerts.mockResolvedValue([
         { id: 2, sid: 'EQ1', status: 'resolved' },
       ]);
-      const [alert] = await dataService.getAlerts();
+      const [alert] = await dataService.getAlerts() as ApiRecord[];
       expect(alert.sid).toBe('EQ1');
       expect(alert.resolved).toBe(true);
     });
@@ -393,7 +394,7 @@ describe('dataService', () => {
           ],
         },
       ]);
-      const [rb] = await dataService.getRunbooks();
+      const [rb] = await dataService.getRunbooks() as ApiRecord[];
       expect(rb.totalRuns).toBe(3);
       expect(rb.successRate).toBe(67); // 2/3 = 66.67 rounded to 67
       expect(rb.avgDuration).toBe('12s');
@@ -405,7 +406,7 @@ describe('dataService', () => {
       mockedApi.getRunbooks.mockResolvedValue([
         { id: 'RB-2', name: 'Empty', costSafe: false, executions: [] },
       ]);
-      const [rb] = await dataService.getRunbooks();
+      const [rb] = await dataService.getRunbooks() as ApiRecord[];
       expect(rb.totalRuns).toBe(0);
       expect(rb.successRate).toBe(0);
       expect(rb.avgDuration).toBe('—');
@@ -421,7 +422,7 @@ describe('dataService', () => {
           executions: [],
         },
       ]);
-      const [rb] = await dataService.getRunbooks();
+      const [rb] = await dataService.getRunbooks() as ApiRecord[];
       expect(rb.prereqs).toEqual(['cond1', 'cond2']);
       expect(rb.steps).toEqual([{ name: 'step1' }]);
     });
@@ -435,7 +436,7 @@ describe('dataService', () => {
           executions: [],
         },
       ]);
-      const [rb] = await dataService.getRunbooks();
+      const [rb] = await dataService.getRunbooks() as ApiRecord[];
       expect(rb.prereqs).toBeNull();
       expect(rb.steps).toEqual([]);
     });
@@ -528,7 +529,7 @@ describe('dataService', () => {
       vi.advanceTimersByTime(500);
       const result = await promise;
       expect(result).toBeDefined();
-      expect(result.sid).toBe('EP1');
+      expect(result!.sid).toBe('EP1');
     });
 
     it('getSystemById returns null for unknown id', async () => {
@@ -763,7 +764,7 @@ describe('dataService', () => {
       });
       const result = await dataService.getSystemById('S1');
       expect(mockedApi.getSystemById).toHaveBeenCalledWith('S1');
-      expect(result.mttr).toBeDefined();
+      expect(result!.mttr).toBeDefined();
     });
 
     it('getSystemMetrics calls api.getSystemHostMetrics with hours param', async () => {

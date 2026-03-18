@@ -1,4 +1,5 @@
 import { useState, useEffect, useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { GitCompare, CheckCircle, AlertTriangle, Info, Server } from 'lucide-react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts';
 import Header from '../components/layout/Header';
@@ -32,6 +33,7 @@ function hasDifference(values: any[]) {
 }
 
 export default function ComparisonPage() {
+  const { t } = useTranslation();
   const [systems, setSystems] = useState<ApiRecord[]>([]);
   const [sidLines, setSidLines] = useState<ApiRecord[]>([]);
   const [systemMeta, setSystemMeta] = useState<Record<string, any>>({});
@@ -53,7 +55,7 @@ export default function ComparisonPage() {
       setLandscapeValidation(validation);
       setLoading(false);
     }).catch(() => {
-      setError('Error al cargar datos. Intenta de nuevo.');
+      setError(t('common.error.loadData'));
       setLoading(false);
     });
   }, []);
