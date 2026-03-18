@@ -7,6 +7,7 @@ import Table, { TableHeader, TableBody, TableRow, TableHead, TableCell } from '.
 import PageLoading from '../components/ui/PageLoading';
 import { dataService } from '../services/dataService';
 import { createLogger } from '../lib/logger';
+import type { ApiRecord } from '../types';
 
 const log = createLogger('TransportsPage');
 
@@ -17,8 +18,8 @@ const transportStatus = {
   modifiable: { label: 'Modificable', color: 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-400', icon: Clock },
 };
 
-function TransportStatusBadge({ status }) {
-  const cfg = transportStatus[status] || transportStatus.modifiable;
+function TransportStatusBadge({ status }: { status: any }) {
+  const cfg = (transportStatus as Record<string, any>)[status] || transportStatus.modifiable;
   const Icon = cfg.icon;
   return (
     <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium ${cfg.color}`}>
@@ -28,7 +29,7 @@ function TransportStatusBadge({ status }) {
   );
 }
 
-function RCBadge({ rc }) {
+function RCBadge({ rc }: { rc: any }) {
   if (rc === null || rc === undefined) return <span className="text-text-tertiary text-xs">—</span>;
   if (rc === 0) return <Badge variant="success" size="sm">RC=0</Badge>;
   if (rc <= 4) return <Badge variant="warning" size="sm">RC={rc}</Badge>;
@@ -36,8 +37,8 @@ function RCBadge({ rc }) {
 }
 
 export default function TransportsPage() {
-  const [transports, setTransports] = useState([]);
-  const [systems, setSystems] = useState([]);
+  const [transports, setTransports] = useState<ApiRecord[]>([]);
+  const [systems, setSystems] = useState<ApiRecord[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [statusFilter, setStatusFilter] = useState('all');
@@ -47,7 +48,7 @@ export default function TransportsPage() {
       setTransports(t);
       setSystems(s);
       setLoading(false);
-    }).catch((err) => {
+    }).catch((err: any) => {
       log.warn('Fetch failed', { error: err.message });
       setError('Error al cargar datos. Intenta de nuevo.');
       setLoading(false);
@@ -56,12 +57,12 @@ export default function TransportsPage() {
 
   const filtered = useMemo(() => {
     if (statusFilter === 'all') return transports;
-    return transports.filter(t => t.status === statusFilter);
+    return transports.filter((t: any) => t.status === statusFilter);
   }, [statusFilter, transports]);
 
-  const released = transports.filter(t => t.status === 'released').length;
-  const imported = transports.filter(t => t.status === 'imported').length;
-  const errors = transports.filter(t => t.status === 'error').length;
+  const released = transports.filter((t: any) => t.status === 'released').length;
+  const imported = transports.filter((t: any) => t.status === 'imported').length;
+  const errors = transports.filter((t: any) => t.status === 'error').length;
 
   if (loading) return <PageLoading message="Cargando transportes..." />;
 
@@ -135,8 +136,8 @@ export default function TransportsPage() {
           </CardHeader>
           <div className="flex items-center justify-center gap-4 py-4">
             {/* Find ERP line systems */}
-            {['DEV', 'QAS', 'PRD'].map((env, idx) => {
-              const sys = systems.find(s => s.environment === env && s.type === 'S/4HANA');
+            {['DEV', 'QAS', 'PRD'].map((env: any, idx: any) => {
+              const sys = systems.find((s: any) => s.environment === env && s.type === 'S/4HANA');
               return (
                 <div key={env} className="flex items-center gap-4">
                   <div className={`px-6 py-4 rounded-xl border-2 text-center ${
@@ -188,7 +189,7 @@ export default function TransportsPage() {
               </tr>
             </TableHeader>
             <TableBody>
-              {filtered.map(t => (
+              {filtered.map((t: any) => (
                 <TableRow key={t.id}>
                   <TableCell className="font-mono text-sm font-bold text-text-primary">
                     {t.transportId || t.id}
@@ -235,7 +236,7 @@ export default function TransportsPage() {
               </CardTitle>
             </CardHeader>
             <div className="space-y-3">
-              {transports.filter(t => t.status === 'error').map(t => (
+              {transports.filter((t: any) => t.status === 'error').map((t: any) => (
                 <div key={t.id} className="border border-danger-200 dark:border-danger-800 rounded-lg p-3 bg-surface">
                   <div className="flex items-center gap-2 mb-1">
                     <span className="font-mono text-sm font-bold text-text-primary">{t.transportId || t.id}</span>

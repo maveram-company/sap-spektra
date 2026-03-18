@@ -1,8 +1,15 @@
-import { createContext, useContext, useState, useEffect, useCallback, useMemo } from 'react';
+import { createContext, useContext, useState, useEffect, useCallback, useMemo, type ReactNode } from 'react';
 
-const ThemeContext = createContext(null);
+interface ThemeContextValue {
+  theme: string;
+  setTheme: (theme: string) => void;
+  toggleTheme: () => void;
+  isDark: boolean;
+}
 
-export function ThemeProvider({ children }) {
+const ThemeContext = createContext<ThemeContextValue | null>(null);
+
+export function ThemeProvider({ children }: { children: ReactNode }) {
   const [theme, setTheme] = useState(() => {
     const stored = localStorage.getItem('sap-spektra-theme');
     if (stored) return stored;

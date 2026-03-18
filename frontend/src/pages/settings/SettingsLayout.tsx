@@ -19,12 +19,12 @@ export default function SettingsLayout() {
       <div className="flex">
         <nav className="w-56 min-h-[calc(100vh-4rem)] border-r border-border bg-surface p-4 flex-shrink-0">
           <div className="space-y-0.5">
-            {settingsNav.map(item => (
+            {settingsNav.map((item: any) => (
               <NavLink
                 key={item.href}
                 to={item.href}
                 end={item.end}
-                className={({ isActive }) => `flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
+                className={({ isActive }: any) => `flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
                   isActive ? 'bg-primary-50 text-primary-700 dark:bg-primary-900/30 dark:text-primary-300' : 'text-text-secondary hover:bg-surface-tertiary hover:text-text-primary'
                 }`}
               >

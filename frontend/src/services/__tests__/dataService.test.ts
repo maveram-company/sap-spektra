@@ -556,7 +556,7 @@ describe('dataService', () => {
       const promise = dataService.getApprovals('PENDING');
       vi.advanceTimersByTime(500);
       const result = await promise;
-      expect(result.every(a => a.status === 'PENDING')).toBe(true);
+      expect(result.every((a: any) => a.status === 'PENDING')).toBe(true);
       expect(result.length).toBeGreaterThan(0);
     });
 
@@ -700,7 +700,7 @@ describe('dataService', () => {
       const promise = dataService.getSystemBreaches('SAP-SOL-P01', 50);
       vi.advanceTimersByTime(500);
       const result = await promise;
-      expect(result.every(b => b.systemId === 'SAP-SOL-P01')).toBe(true);
+      expect(result.every((b: any) => b.systemId === 'SAP-SOL-P01')).toBe(true);
     });
 
     it('getSystemBreaches returns all breaches when no systemId', async () => {
@@ -716,7 +716,7 @@ describe('dataService', () => {
       const promise = dataService.getServerMetrics(knownId);
       vi.advanceTimersByTime(500);
       const result = await promise;
-      expect(result).toBe(mockServerMetrics[knownId]);
+      expect(result).toBe((mockServerMetrics as Record<string, any>)[knownId]);
     });
 
     it('getServerMetrics returns null for unknown id', async () => {
@@ -732,7 +732,7 @@ describe('dataService', () => {
       const promise = dataService.getSystemMeta(knownId);
       vi.advanceTimersByTime(500);
       const result = await promise;
-      expect(result).toBe(mockSystemMeta[knownId]);
+      expect(result).toBe((mockSystemMeta as Record<string, any>)[knownId]);
     });
 
     it('getSystemMeta without id returns full meta map', async () => {
@@ -1492,12 +1492,12 @@ describe('dataService', () => {
         { id: 'S4', sid: 'P1', sapProduct: 'PI/PO 7.5' },
       ]);
       const result = await dataService.getSIDLines();
-      const erpLine = result.find(l => l.line === 'ERP');
+      const erpLine = result.find((l: any) => l.line === 'ERP');
       expect(erpLine).toBeDefined();
-      expect(erpLine.systems).toEqual(['S1', 'S2']);
-      const bwLine = result.find(l => l.line === 'BW');
+      expect(erpLine!.systems).toEqual(['S1', 'S2']);
+      const bwLine = result.find((l: any) => l.line === 'BW');
       expect(bwLine).toBeDefined();
-      expect(bwLine.systems).toEqual(['S3']);
+      expect(bwLine!.systems).toEqual(['S3']);
     });
 
     it('getSystemMeta with id delegates directly to api', async () => {

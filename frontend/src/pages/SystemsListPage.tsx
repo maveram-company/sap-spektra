@@ -12,11 +12,12 @@ import Button from '../components/ui/Button';
 import EmptyState from '../components/ui/EmptyState';
 import PageLoading from '../components/ui/PageLoading';
 import { dataService } from '../services/dataService';
+import type { ApiRecord } from '../types';
 
 export default function SystemsListPage() {
-  const [systems, setSystems] = useState([]);
+  const [systems, setSystems] = useState<ApiRecord[]>([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState<string | null>(null);
   const [search, setSearch] = useState('');
   const [envFilter, setEnvFilter] = useState('ALL');
   const [statusFilter, setStatusFilter] = useState('ALL');
@@ -26,7 +27,7 @@ export default function SystemsListPage() {
     let mounted = true;
     dataService.getSystems()
       .then(data => { if (mounted) setSystems(data); })
-      .catch(err => { if (mounted) setError(err.message); })
+      .catch((err: any) => { if (mounted) setError(err.message); })
       .finally(() => { if (mounted) setLoading(false); });
     return () => { mounted = false; };
   }, []);
@@ -42,7 +43,7 @@ export default function SystemsListPage() {
     </div>
   );
 
-  const filtered = systems.filter(s => {
+  const filtered = systems.filter((s: any) => {
     const matchesSearch = !search || s.sid.toLowerCase().includes(search.toLowerCase()) || s.id.toLowerCase().includes(search.toLowerCase()) || s.description.toLowerCase().includes(search.toLowerCase());
     const matchesEnv = envFilter === 'ALL' || s.environment === envFilter;
     const matchesStatus = statusFilter === 'ALL' || s.status === statusFilter;
@@ -101,7 +102,7 @@ export default function SystemsListPage() {
           />
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-            {filtered.map(system => (
+            {filtered.map((system: any) => (
               <Card key={system.id} hover onClick={() => navigate(`/systems/${system.id}`)} className="animate-fade-in">
                 <div className="flex items-start justify-between mb-4">
                   <div>

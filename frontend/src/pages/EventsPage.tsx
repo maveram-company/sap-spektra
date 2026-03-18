@@ -8,6 +8,7 @@ import { createLogger } from '../lib/logger';
 
 const log = createLogger('EventsPage');
 import { Search, Filter, ChevronDown, AlertCircle, AlertTriangle, Info, CheckCircle } from 'lucide-react';
+import type { ApiRecord } from '../types';
 
 const levelConfig = {
   critical: {
@@ -40,8 +41,8 @@ const levelConfig = {
   },
 };
 
-function LevelBadge({ level }) {
-  const config = levelConfig[level];
+function LevelBadge({ level }: { level: any }) {
+  const config = (levelConfig as Record<string, any>)[level];
   if (!config) return null;
   const Icon = config.icon;
 
@@ -53,7 +54,7 @@ function LevelBadge({ level }) {
   );
 }
 
-function formatTimestamp(iso) {
+function formatTimestamp(iso: any) {
   const date = new Date(iso);
   return date.toLocaleString('es-CO', {
     day: '2-digit',
@@ -69,8 +70,8 @@ function formatTimestamp(iso) {
 export default function EventsPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [events, setEvents] = useState([]);
-  const [systems, setSystems] = useState([]);
+  const [events, setEvents] = useState<ApiRecord[]>([]);
+  const [systems, setSystems] = useState<ApiRecord[]>([]);
   const [search, setSearch] = useState('');
   const [levelFilter, setLevelFilter] = useState('all');
   const [systemFilter, setSystemFilter] = useState('all');
@@ -80,7 +81,7 @@ export default function EventsPage() {
     let mounted = true;
     Promise.all([dataService.getEvents(), dataService.getSystems()]).then(([evts, sys]) => {
       if (mounted) { setEvents(evts); setSystems(sys); setLoading(false); }
-    }).catch((err) => {
+    }).catch((err: any) => {
       if (mounted) {
         log.warn('Fetch failed', { error: err.message });
         setError('Error al cargar datos. Intenta de nuevo.');
@@ -91,7 +92,7 @@ export default function EventsPage() {
   }, []);
 
   const filtered = useMemo(() => {
-    return events.filter((evt) => {
+    return events.filter((evt: any) => {
       if (levelFilter !== 'all' && evt.level !== levelFilter) return false;
       if (systemFilter !== 'all' && evt.systemId !== systemFilter) return false;
       if (sourceFilter !== 'all' && evt.source !== sourceFilter) return false; // P2.4
@@ -194,7 +195,7 @@ export default function EventsPage() {
                 className="appearance-none bg-surface border border-border rounded-lg px-3 pr-8 py-2 text-sm text-text-primary focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 cursor-pointer"
               >
                 <option value="all">Todos los sistemas</option>
-                {systems.map((sys) => (
+                {systems.map((sys: any) => (
                   <option key={sys.id} value={sys.id}>
                     {sys.sid} — {sys.id}
                   </option>
@@ -239,7 +240,7 @@ export default function EventsPage() {
                 </tr>
               </thead>
               <tbody>
-                {paginatedEvents.map((evt) => (
+                {paginatedEvents.map((evt: any) => (
                   <tr
                     key={evt.id}
                     className="border-b border-border last:border-0 hover:bg-surface-secondary dark:hover:bg-surface-secondary transition-colors"

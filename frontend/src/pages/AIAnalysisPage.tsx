@@ -8,6 +8,7 @@ import { createLogger } from '../lib/logger';
 const log = createLogger('AIAnalysisPage');
 import { UpgradeBanner } from '../components/ui/FeatureGate';
 import { usePlan } from '../hooks/usePlan';
+import type { ApiRecord } from '../types';
 
 // Mapa de palabras clave para seleccionar la respuesta IA apropiada
 const KEYWORD_MAP = [
@@ -21,10 +22,10 @@ const KEYWORD_MAP = [
 ];
 
 // Determina qué respuesta mock usar basado en el contenido del mensaje
-function matchResponse(text, aiResponses) {
+function matchResponse(text: any, aiResponses: any) {
   const lower = text.toLowerCase();
   for (const entry of KEYWORD_MAP) {
-    if (entry.keys.some((k) => lower.includes(k))) {
+    if (entry.keys.some((k: any) => lower.includes(k))) {
       return aiResponses[entry.response];
     }
   }
@@ -49,9 +50,9 @@ const COLOR_TEXT = {
 };
 
 // Renderiza markdown básico: **bold** y saltos de línea
-function renderMarkdown(text) {
+function renderMarkdown(text: any) {
   const lines = text.split('\n');
-  return lines.map((line, i) => {
+  return lines.map((line: any, i: any) => {
     const parts = [];
     let lastIndex = 0;
     const regex = /\*\*(.+?)\*\*/g;
@@ -87,8 +88,8 @@ export default function AIAnalysisPage() {
     msgIdRef.current += 1;
     return `${prefix}-${msgIdRef.current}`;
   };
-  const [aiUseCases, setAiUseCases] = useState([]);
-  const [aiResponses, setAiResponses] = useState({});
+  const [aiUseCases, setAiUseCases] = useState<ApiRecord[]>([]);
+  const [aiResponses, setAiResponses] = useState<Record<string, any>>({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [messages, setMessages] = useState([
@@ -100,16 +101,16 @@ export default function AIAnalysisPage() {
   ]);
   const [input, setInput] = useState('');
   const [isTyping, setIsTyping] = useState(false);
-  const chatEndRef = useRef(null);
-  const inputRef = useRef(null);
-  const typingTimerRef = useRef<ReturnType<typeof setTimeout>>(null);
+  const chatEndRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
+  const typingTimerRef = useRef<ReturnType<typeof setTimeout>>(undefined);
 
   useEffect(() => {
     Promise.all([dataService.getAIUseCases(), dataService.getAIResponses()]).then(([uc, resp]) => {
       setAiUseCases(uc as any[]);
       setAiResponses(resp as any);
       setLoading(false);
-    }).catch((err) => {
+    }).catch((err: any) => {
       log.warn('Fetch failed', { error: err.message });
       setError('Error al cargar datos. Intenta de nuevo.');
       setLoading(false);
@@ -123,7 +124,7 @@ export default function AIAnalysisPage() {
   }, [messages, isTyping]);
 
   // Genera una respuesta IA con delay simulado
-  const generateResponse = useCallback((userText) => {
+  const generateResponse = useCallback((userText: any) => {
     setIsTyping(true);
     clearTimeout(typingTimerRef.current);
     typingTimerRef.current = setTimeout(() => {
@@ -151,7 +152,7 @@ export default function AIAnalysisPage() {
   };
 
   // Click en una tarjeta de caso de uso
-  const handleUseCaseClick = (uc) => {
+  const handleUseCaseClick = (uc: any) => {
     const userMsg = { id: nextMsgId('user'), role: 'user', text: uc.query };
     setMessages((prev) => [...prev, userMsg]);
     generateResponse(uc.query);
@@ -159,7 +160,7 @@ export default function AIAnalysisPage() {
   };
 
   // Enter para enviar
-  const handleKeyDown = (e) => {
+  const handleKeyDown = (e: any) => {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
       handleSend();
@@ -204,16 +205,16 @@ export default function AIAnalysisPage() {
       <div className="flex-1 overflow-y-auto p-6 space-y-6">
         {/* Grid de casos de uso */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {aiUseCases.map((uc) => (
+          {aiUseCases.map((uc: any) => (
             <button
               key={uc.id}
               type="button"
               onClick={() => handleUseCaseClick(uc)}
-              className={`bg-surface rounded-xl border border-border border-l-4 ${COLOR_BORDER[uc.color]} p-4 cursor-pointer hover:border-primary-300 dark:hover:border-primary-600 transition text-left`}
+              className={`bg-surface rounded-xl border border-border border-l-4 ${(COLOR_BORDER as Record<string, string>)[uc.color]} p-4 cursor-pointer hover:border-primary-300 dark:hover:border-primary-600 transition text-left`}
             >
               <div className="flex items-center gap-2 mb-1">
                 <span
-                  className={`text-xs font-bold ${COLOR_TEXT[uc.color]}`}
+                  className={`text-xs font-bold ${(COLOR_TEXT as Record<string, string>)[uc.color]}`}
                 >
                   {uc.id}
                 </span>
@@ -239,7 +240,7 @@ export default function AIAnalysisPage() {
 
           {/* Area de mensajes */}
           <div className="flex-1 overflow-y-auto p-4 space-y-4">
-            {messages.map((msg) =>
+            {messages.map((msg: any) =>
               msg.role === 'user' ? (
                 <div key={msg.id} className="flex justify-end">
                   <div className="max-w-[75%] bg-primary-600 text-white rounded-xl rounded-br-sm px-4 py-2.5 text-sm">

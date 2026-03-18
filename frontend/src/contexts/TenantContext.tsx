@@ -1,7 +1,15 @@
-import { createContext, useContext, useState, useMemo, useCallback } from 'react';
+import { createContext, useContext, useState, useMemo, useCallback, type ReactNode } from 'react';
 import { useAuth } from './AuthContext';
 
-const TenantContext = createContext(null);
+interface TenantContextValue {
+  organization: Record<string, any>;
+  loading: boolean;
+  updateSettings: (newSettings: Record<string, any>) => void;
+  isWithinLimits: (resource: string) => boolean;
+  getUsagePercent: (resource: string) => number;
+}
+
+const TenantContext = createContext<TenantContextValue | null>(null);
 
 const defaultOrg = {
   id: 'org-demo',
@@ -36,20 +44,20 @@ const defaultOrg = {
 // triggers react-refresh/only-export-components. The disable is necessary because
 // the hook must live alongside its context provider for encapsulation.
 // eslint-disable-next-line react-refresh/only-export-components
-export function useTenant() {
+export function useTenant(): TenantContextValue {
   const ctx = useContext(TenantContext);
   if (!ctx) throw new Error('useTenant must be used within TenantProvider');
   return ctx;
 }
 
-export function TenantProvider({ children }) {
+export function TenantProvider({ children }: { children: ReactNode }) {
   const { user } = useAuth();
   const [organization, setOrganization] = useState(() => {
     if (user?.organization) return { ...defaultOrg, ...user.organization };
     return defaultOrg;
   });
 
-  const updateSettings = useCallback((newSettings) => {
+  const updateSettings = useCallback((newSettings: Record<string, any>) => {
     setOrganization(prev => ({
       ...prev,
       settings: { ...prev.settings, ...newSettings },
@@ -64,20 +72,20 @@ export function TenantProvider({ children }) {
       integrations: 'maxIntegrations',
       aiCallsToday: 'aiCallsPerDay',
     };
-    const getLimitKey = (resource) => limitKeyMap[resource] || `max${resource.charAt(0).toUpperCase() + resource.slice(1)}`;
+    const getLimitKey = (resource: string) => (limitKeyMap as Record<string, string>)[resource] || `max${resource.charAt(0).toUpperCase() + resource.slice(1)}`;
 
     return {
       organization,
       loading: false,
       updateSettings,
-      isWithinLimits: (resource) => {
-        const { limits, usage } = organization;
-        return (usage[resource] || 0) < (limits[getLimitKey(resource)] || Infinity);
+      isWithinLimits: (resource: string) => {
+        const { limits, usage } = organization as any;
+        return ((usage[resource] as number) || 0) < ((limits[getLimitKey(resource)] as number) || Infinity);
       },
-      getUsagePercent: (resource) => {
-        const { limits, usage } = organization;
-        const max = limits[getLimitKey(resource)] || 1;
-        return Math.round(((usage[resource] || 0) / max) * 100);
+      getUsagePercent: (resource: string) => {
+        const { limits, usage } = organization as any;
+        const max = (limits[getLimitKey(resource)] as number) || 1;
+        return Math.round((((usage[resource] as number) || 0) / max) * 100);
       },
     };
   }, [organization, updateSettings]);

@@ -8,6 +8,7 @@ import Table, { TableHeader, TableBody, TableRow, TableHead, TableCell } from '.
 import PageLoading from '../components/ui/PageLoading';
 import { dataService } from '../services/dataService';
 import { createLogger } from '../lib/logger';
+import type { ApiRecord } from '../types';
 
 const log = createLogger('BackgroundJobsPage');
 
@@ -21,9 +22,9 @@ const statusConfig = {
 
 const classLabels = { A: 'Clase A (alta)', B: 'Clase B (media)', C: 'Clase C (baja)' };
 
-function JobStatusBadge({ status }) {
+function JobStatusBadge({ status }: { status: any }) {
   const { t } = useTranslation();
-  const cfg = statusConfig[status] || statusConfig.finished;
+  const cfg = (statusConfig as Record<string, any>)[status] || statusConfig.finished;
   const Icon = cfg.icon;
   return (
     <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium ${cfg.color}`}>
@@ -35,8 +36,8 @@ function JobStatusBadge({ status }) {
 
 export default function BackgroundJobsPage() {
   const { t } = useTranslation();
-  const [jobs, setJobs] = useState([]);
-  const [systems, setSystems] = useState([]);
+  const [jobs, setJobs] = useState<ApiRecord[]>([]);
+  const [systems, setSystems] = useState<ApiRecord[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [statusFilter, setStatusFilter] = useState('all');
@@ -47,7 +48,7 @@ export default function BackgroundJobsPage() {
       setJobs(j);
       setSystems(s);
       setLoading(false);
-    }).catch((err) => {
+    }).catch((err: any) => {
       log.warn('Fetch failed', { error: err.message });
       setError('Error al cargar datos. Intenta de nuevo.');
       setLoading(false);
@@ -55,7 +56,7 @@ export default function BackgroundJobsPage() {
   }, []);
 
   const filtered = useMemo(() => {
-    return jobs.filter(job => {
+    return jobs.filter((job: any) => {
       if (statusFilter !== 'all' && job.status !== statusFilter) return false;
       if (systemFilter !== 'all' && job.systemId !== systemFilter) return false;
       return true;
@@ -63,10 +64,10 @@ export default function BackgroundJobsPage() {
   }, [statusFilter, systemFilter, jobs]);
 
   // KPI summaries
-  const running = jobs.filter(j => j.status === 'running').length;
-  const scheduled = jobs.filter(j => j.status === 'scheduled').length;
-  const failed = jobs.filter(j => j.status === 'failed').length;
-  const finished = jobs.filter(j => j.status === 'finished').length;
+  const running = jobs.filter((j: any) => j.status === 'running').length;
+  const scheduled = jobs.filter((j: any) => j.status === 'scheduled').length;
+  const failed = jobs.filter((j: any) => j.status === 'failed').length;
+  const finished = jobs.filter((j: any) => j.status === 'finished').length;
 
   if (loading) return <PageLoading message="Cargando jobs..." />;
 
@@ -156,7 +157,7 @@ export default function BackgroundJobsPage() {
             className="appearance-none bg-surface border border-border rounded-lg px-3 py-2 text-sm text-text-primary focus:outline-none focus:ring-2 focus:ring-primary-500 cursor-pointer"
           >
             <option value="all">Todos los sistemas</option>
-            {systems.map(s => (
+            {systems.map((s: any) => (
               <option key={s.id} value={s.id}>{s.sid} — {s.description || s.type}</option>
             ))}
           </select>
@@ -181,7 +182,7 @@ export default function BackgroundJobsPage() {
               </tr>
             </TableHeader>
             <TableBody>
-              {filtered.map(job => (
+              {filtered.map((job: any) => (
                 <TableRow key={job.id}>
                   <TableCell>
                     <div>
@@ -196,7 +197,7 @@ export default function BackgroundJobsPage() {
                     <JobStatusBadge status={job.status} />
                   </TableCell>
                   <TableCell className="text-xs text-text-secondary">
-                    {classLabels[job.class] || job.class}
+                    {(classLabels as Record<string, string>)[job.class] || job.class}
                   </TableCell>
                   <TableCell className="text-sm font-mono text-text-primary">
                     {job.runtime || '—'}
@@ -222,7 +223,7 @@ export default function BackgroundJobsPage() {
         </Card>
 
         {/* Failed jobs detail */}
-        {filtered.some(j => j.status === 'failed') && (
+        {filtered.some((j: any) => j.status === 'failed') && (
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
@@ -230,11 +231,11 @@ export default function BackgroundJobsPage() {
                 Jobs Fallidos — Detalle
               </CardTitle>
               <Badge variant="danger" size="sm" dot>
-                {filtered.filter(j => j.status === 'failed').length}
+                {filtered.filter((j: any) => j.status === 'failed').length}
               </Badge>
             </CardHeader>
             <div className="space-y-3">
-              {filtered.filter(j => j.status === 'failed').map(job => (
+              {filtered.filter((j: any) => j.status === 'failed').map((job: any) => (
                 <div key={job.id} className="border border-danger-200 dark:border-danger-800 rounded-lg p-4 bg-danger-50 dark:bg-danger-900/20">
                   <div className="flex items-center gap-2 mb-2">
                     <span className="font-mono text-sm font-bold text-text-primary">{job.name}</span>

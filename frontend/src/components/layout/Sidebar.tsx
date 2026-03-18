@@ -17,7 +17,18 @@ import { createLogger } from '../../lib/logger';
 
 const log = createLogger('Sidebar');
 
-const navigation = [
+type NavItem = {
+  section?: string;
+  adminOnly?: boolean;
+  nameKey?: string;
+  href?: string;
+  icon?: any;
+  alertBadge?: boolean;
+  badge?: boolean;
+  roles?: string[];
+};
+
+const navigation: NavItem[] = [
   { section: 'Command Center' },
   { nameKey: 'nav.dashboard', href: '/', icon: LayoutDashboard },
   { nameKey: 'nav.landscape', href: '/landscape', icon: Network },
@@ -62,8 +73,8 @@ export default function Sidebar() {
   const [pendingApprovals, setPendingApprovals] = useState(0);
   const [activeAlerts, setActiveAlerts] = useState(0);
   useEffect(() => {
-    dataService.getApprovals('PENDING').then(a => setPendingApprovals(a?.length || 0)).catch((err) => log.warn('Approvals fetch failed', { error: err.message }));
-    dataService.getAlerts({ status: 'active' }).then(a => setActiveAlerts(a?.length || 0)).catch((err) => log.warn('Alerts fetch failed', { error: err.message }));
+    dataService.getApprovals('PENDING').then(a => setPendingApprovals(a?.length || 0)).catch((err: any) => log.warn('Approvals fetch failed', { error: err.message }));
+    dataService.getAlerts({ status: 'active' }).then(a => setActiveAlerts(a?.length || 0)).catch((err: any) => log.warn('Alerts fetch failed', { error: err.message }));
   }, []);
 
   const usagePercent = Math.round(
@@ -144,7 +155,7 @@ export default function Sidebar() {
         {/* ── Navigation ────────────────────────────────────────── */}
         <nav aria-label="Main navigation" className="flex-1 overflow-y-auto py-3 px-2" style={{ scrollbarWidth: 'none' }}>
           <ul className="list-none m-0 p-0">
-          {navigation.map((item) => {
+          {navigation.map((item: any) => {
             /* ── Section header ── */
             if (item.section) {
               if (item.adminOnly && !hasRole('admin')) return null;
@@ -177,19 +188,19 @@ export default function Sidebar() {
             }
 
             /* ── Role guard ── */
-            if (item.roles && !item.roles.some(r => hasRole(r))) return null;
+            if (item.roles && !item.roles.some((r: any) => hasRole(r))) return null;
 
             const isActive =
               location.pathname === item.href ||
-              (item.href !== '/' && location.pathname.startsWith(item.href));
+              (item.href !== '/' && location.pathname.startsWith(item.href!));
 
             return (
               <li key={item.href}>
               <NavLink
-                to={item.href}
-                title={collapsed ? t(item.nameKey) : undefined}
+                to={item.href!}
+                title={collapsed ? t(item.nameKey!) : undefined}
                 className="flex items-center gap-3 mb-0.5 text-sm font-medium transition-all duration-200 group relative"
-                style={({ isActive: routerActive }) => {
+                style={({ isActive: routerActive }: any) => {
                   const active = routerActive || isActive;
                   return {
                     borderRadius: '10px',
@@ -210,16 +221,16 @@ export default function Sidebar() {
                 }}
               >
                 {/* Icon */}
-                <item.icon
+                {item.icon && <item.icon
                   size={17}
                   className="flex-shrink-0 transition-colors duration-200"
                   style={{ color: isActive ? '#06b6d4' : undefined }}
-                />
+                />}
 
                 {/* Label + badges (expanded only) */}
                 {!collapsed && (
                   <>
-                    <span className="truncate flex-1">{t(item.nameKey)}</span>
+                    <span className="truncate flex-1">{t(item.nameKey!)}</span>
 
                     {/* Approval badge — danger glow */}
                     {item.badge && pendingApprovals > 0 && (

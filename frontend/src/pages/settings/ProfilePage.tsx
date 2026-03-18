@@ -60,7 +60,7 @@ export default function ProfilePage() {
               <h3 className="text-lg font-semibold text-text-primary">{user?.name || user?.username}</h3>
               <p className="text-sm text-text-secondary">{user?.email}</p>
               <div className="flex items-center gap-2 mt-1">
-                <Badge variant="primary" size="sm" className="capitalize">{roleLabels[user?.role] || user?.role}</Badge>
+                <Badge variant="primary" size="sm" className="capitalize">{(roleLabels as Record<string, string>)[user?.role || ''] || user?.role}</Badge>
                 <span className="text-xs text-text-tertiary">{organization?.name}</span>
               </div>
             </div>

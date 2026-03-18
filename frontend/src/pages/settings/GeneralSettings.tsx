@@ -8,15 +8,16 @@ import Select from '../../components/ui/Select';
 import Button from '../../components/ui/Button';
 import Badge from '../../components/ui/Badge';
 import Table, { TableHeader, TableBody, TableRow, TableHead, TableCell } from '../../components/ui/Table';
+import type { ApiRecord } from '../../types';
 
 export default function GeneralSettings() {
   const { organization, updateSettings } = useTenant();
-  const [thresholds, setThresholds] = useState([]);
+  const [thresholds, setThresholds] = useState<ApiRecord[]>([]);
   const [escalationPolicy, setEscalationPolicy] = useState<any[]>([]);
   const [maintenanceWindows, setMaintenanceWindows] = useState<any[]>([]);
   const [apiKeys, setApiKeys] = useState<any[]>([]);
   const [saving, setSaving] = useState(false);
-  const [saveError, setSaveError] = useState(null);
+  const [saveError, setSaveError] = useState<string | null>(null);
   const [nameError, setNameError] = useState('');
 
   useEffect(() => {
@@ -51,7 +52,7 @@ export default function GeneralSettings() {
       // Demo mode: simulated delay — connect to real API when available
       await new Promise(r => setTimeout(r, 800));
       updateSettings({ timezone: form.timezone, language: form.language });
-    } catch (err) {
+    } catch (err: any) {
       setSaveError(err instanceof Error ? err.message : 'Error al guardar configuración');
     } finally {
       setSaving(false);
@@ -141,7 +142,7 @@ export default function GeneralSettings() {
             { label: 'Usuarios', used: organization.usage.users, max: organization.limits.maxUsers },
             { label: 'Integraciones', used: organization.usage.integrations, max: organization.limits.maxIntegrations },
             { label: 'Llamadas IA (hoy)', used: organization.usage.aiCallsToday, max: organization.limits.aiCallsPerDay },
-          ].map(item => {
+          ].map((item: any) => {
             const pct = Math.round((item.used / item.max) * 100);
             return (
               <div key={item.label}>
@@ -199,7 +200,7 @@ export default function GeneralSettings() {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {thresholds.map((t) => (
+            {thresholds.map((t: any) => (
               <TableRow key={t.metric}>
                 <TableCell className="font-medium">{t.metric}</TableCell>
                 <TableCell>
@@ -240,7 +241,7 @@ export default function GeneralSettings() {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {escalationPolicy.map((p) => (
+            {escalationPolicy.map((p: any) => (
               <TableRow key={p.level}>
                 <TableCell className="font-medium">{p.level}</TableCell>
                 <TableCell>{p.timeout}</TableCell>
@@ -279,7 +280,7 @@ export default function GeneralSettings() {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {maintenanceWindows.map((w, idx) => (
+            {maintenanceWindows.map((w: any, idx: any) => (
               <TableRow key={idx}>
                 <TableCell className="font-medium">{w.system}</TableCell>
                 <TableCell>{w.day}</TableCell>
@@ -309,7 +310,7 @@ export default function GeneralSettings() {
         </CardHeader>
 
         <div className="space-y-3">
-          {apiKeys.map((apiKey) => (
+          {apiKeys.map((apiKey: any) => (
             <div key={apiKey.name} className="flex items-center justify-between p-3 rounded-lg bg-surface-secondary border border-border">
               <div className="flex items-center gap-4">
                 <div>

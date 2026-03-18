@@ -72,7 +72,7 @@ describe('AuthProvider – initial state', () => {
 
     const { result } = renderHook(() => useAuth(), { wrapper });
     expect(result.current.user).not.toBeNull();
-    expect(result.current.user.username).toBe('admin');
+    expect(result.current.user!.username).toBe('admin');
     expect(result.current.isAuthenticated).toBe(true);
   });
 

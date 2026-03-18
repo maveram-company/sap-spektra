@@ -14,6 +14,7 @@ import PageLoading from '../components/ui/PageLoading';
 import { dataService } from '../services/dataService';
 import { useToast } from '../hooks/useToast';
 import { createLogger } from '../lib/logger';
+import type { ApiRecord } from '../types';
 
 const log = createLogger('RunbooksPage');
 
@@ -36,7 +37,7 @@ const CATEGORY_LABELS = {
 };
 
 // Step status icon component
-function StepStatusIcon({ status }) {
+function StepStatusIcon({ status }: { status: any }) {
   switch (status) {
     case 'SUCCESS':
       return <CheckCircle size={14} className="text-success-500" />;
@@ -56,7 +57,7 @@ function StepStatusIcon({ status }) {
 }
 
 // Step result row with expandable stdout/stderr
-function StepResultRow({ step, isLast }) {
+function StepResultRow({ step, isLast }: { step: any; isLast: any }) {
   const [expanded, setExpanded] = useState(false);
   const hasOutput = step.stdout || step.stderr;
 
@@ -120,9 +121,9 @@ function StepResultRow({ step, isLast }) {
 }
 
 export default function RunbooksPage() {
-  const [runbooks, setRunbooks] = useState([]);
-  const [executions, setExecutions] = useState([]);
-  const [systems, setSystems] = useState([]);
+  const [runbooks, setRunbooks] = useState<ApiRecord[]>([]);
+  const [executions, setExecutions] = useState<ApiRecord[]>([]);
+  const [systems, setSystems] = useState<ApiRecord[]>([]);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState('catalog');
   const [categoryFilter, setCategoryFilter] = useState('');
@@ -133,13 +134,13 @@ export default function RunbooksPage() {
   // Estado de modales
   const [showExecuteModal, setShowExecuteModal] = useState(false);
   const [showDryRunModal, setShowDryRunModal] = useState(false);
-  const [selectedRunbook, setSelectedRunbook] = useState(null);
+  const [selectedRunbook, setSelectedRunbook] = useState<Record<string, any> | null>(null);
   const [selectedSystemId, setSelectedSystemId] = useState('');
   const [executing, setExecuting] = useState(false);
-  const [executionResult, setExecutionResult] = useState(null);
-  const [liveStepResults, setLiveStepResults] = useState([]);
-  const [executionProgress, setExecutionProgress] = useState(null);
-  const pollingRef = useRef(null);
+  const [executionResult, setExecutionResult] = useState<Record<string, any> | null>(null);
+  const [liveStepResults, setLiveStepResults] = useState<ApiRecord[]>([]);
+  const [executionProgress, setExecutionProgress] = useState<Record<string, any> | null>(null);
+  const pollingRef = useRef<ReturnType<typeof setTimeout>>(undefined);
 
   useEffect(() => {
     let mounted = true;
@@ -154,7 +155,7 @@ export default function RunbooksPage() {
         setExecutions(ex);
         setSystems(sys);
       })
-      .catch((err) => { if (mounted) log.error('Failed to load runbooks data', { error: err.message }); })
+      .catch((err: any) => { if (mounted) log.error('Failed to load runbooks data', { error: err.message }); })
       .finally(() => { if (mounted) setLoading(false); });
     return () => { mounted = false; stopPolling(); };
   }, []);
@@ -163,11 +164,11 @@ export default function RunbooksPage() {
   const stopPolling = useCallback(() => {
     if (pollingRef.current) {
       clearInterval(pollingRef.current);
-      pollingRef.current = null;
+      pollingRef.current = undefined as any;
     }
   }, []);
 
-  const startPolling = useCallback((executionId) => {
+  const startPolling = useCallback((executionId: any) => {
     stopPolling();
     pollingRef.current = setInterval(async () => {
       try {
@@ -199,14 +200,14 @@ export default function RunbooksPage() {
           const updatedExecs = await dataService.getRunbookExecutions();
           setExecutions(updatedExecs);
         }
-      } catch (err) {
+      } catch (err: any) {
         log.error('Polling failed', { error: err.message });
       }
     }, 1500);
   }, [stopPolling]);
 
   // Abrir modal de ejecución
-  const handleExecute = (runbook) => {
+  const handleExecute = (runbook: any) => {
     if (!canExecute) {
       showToast('No tienes permisos para ejecutar runbooks', 'info');
       return;
@@ -220,7 +221,7 @@ export default function RunbooksPage() {
   };
 
   // Abrir modal de dry-run
-  const handleDryRun = (runbook) => {
+  const handleDryRun = (runbook: any) => {
     if (!canExecute) {
       showToast('No tienes permisos para ejecutar dry-runs', 'info');
       return;
@@ -257,7 +258,7 @@ export default function RunbooksPage() {
 
       if (result.id) {
         // Inicializar step results desde la definicion del runbook
-        const initialSteps = (selectedRunbook.steps || []).map((s, i) => ({
+        const initialSteps = (selectedRunbook.steps || []).map((s: any, i: any) => ({
           stepOrder: s.order || i + 1,
           action: s.action,
           command: s.command,
@@ -278,7 +279,7 @@ export default function RunbooksPage() {
         setExecutionResult(result);
         setExecuting(false);
       }
-    } catch (err) {
+    } catch (err: any) {
       let detail = err.message;
       let failures = [];
       try {
@@ -298,9 +299,9 @@ export default function RunbooksPage() {
     setExecutionResult(null);
     try {
       const result = await dataService.executeRunbook(selectedRunbook.id, selectedSystemId, true);
-      setExecutionResult(result);
-    } catch (err) {
-      setExecutionResult({ dryRun: true, error: err.message });
+      setExecutionResult(result as Record<string, any>);
+    } catch (err: any) {
+      setExecutionResult({ dryRun: true, error: (err as any).message } as any);
     } finally {
       setExecuting(false);
     }
@@ -328,18 +329,18 @@ export default function RunbooksPage() {
   ];
 
   // Variante de badge para resultado de ejecución
-  const resultVariant = (result) => {
-    const map = { SUCCESS: 'success', PENDING: 'warning', FAILED: 'danger', RUNNING: 'warning', BLOCKED: 'danger', CANCELLED: 'danger' };
+  const resultVariant = (result: any) => {
+    const map: Record<string, string> = { SUCCESS: 'success', PENDING: 'warning', FAILED: 'danger', RUNNING: 'warning', BLOCKED: 'danger', CANCELLED: 'danger' };
     return map[result] || 'default';
   };
 
   // Variante de badge para safety gate
-  const gateVariant = (gate) => {
+  const gateVariant = (gate: any) => {
     return gate === 'SAFE' ? 'success' : 'warning';
   };
 
   // Nombre del sistema para el selector
-  const systemLabel = (s) => `${s.sid} — ${s.type || s.product || 'SAP'} (${s.environment || s.tier || '—'})`;
+  const systemLabel = (s: any) => `${s.sid} — ${s.type || s.product || 'SAP'} (${s.environment || s.tier || '—'})`;
 
   // Progress bar
   const progressPercent = executionProgress
@@ -371,9 +372,9 @@ export default function RunbooksPage() {
               className="text-sm bg-surface-secondary border border-border rounded-lg px-3 py-1.5 text-text-primary focus:outline-none focus:ring-1 focus:ring-primary-500"
             >
               <option value="">Todas las categorías ({runbooks.length})</option>
-              {[...new Set(runbooks.map((rb) => rb.category).filter(Boolean))].sort().map((cat) => (
+              {[...new Set(runbooks.map((rb: any) => rb.category).filter(Boolean))].sort().map((cat: any) => (
                 <option key={cat} value={cat}>
-                  {CATEGORY_LABELS[cat] || cat} ({runbooks.filter((rb) => rb.category === cat).length})
+                  {(CATEGORY_LABELS as Record<string, string>)[cat] || cat} ({runbooks.filter((rb: any) => rb.category === cat).length})
                 </option>
               ))}
             </select>
@@ -400,11 +401,11 @@ export default function RunbooksPage() {
               </tr>
             </TableHeader>
             <TableBody>
-              {runbooks.filter((rb) => !categoryFilter || rb.category === categoryFilter).map((rb) => (
+              {runbooks.filter((rb: any) => !categoryFilter || rb.category === categoryFilter).map((rb: any) => (
                 <TableRow key={rb.id}>
                   {/* Categoria */}
                   <TableCell>
-                    <Badge variant="default" size="sm">{CATEGORY_LABELS[rb.category] || rb.category || '—'}</Badge>
+                    <Badge variant="default" size="sm">{(CATEGORY_LABELS as Record<string, string>)[rb.category] || rb.category || '—'}</Badge>
                   </TableCell>
                   {/* Nombre + descripcion */}
                   <TableCell>
@@ -461,7 +462,7 @@ export default function RunbooksPage() {
                   <TableCell>
                     {Array.isArray(rb.prereqs) && rb.prereqs.length > 0 ? (
                       <div className="max-w-[180px]">
-                        {rb.prereqs.map((p, pi) => (
+                        {rb.prereqs.map((p: any, pi: any) => (
                           <span key={pi} className="inline-flex items-center gap-0.5 text-[10px] text-text-secondary mr-1">
                             <ShieldCheck size={8} className="text-success-500 flex-shrink-0" />
                             {p}
@@ -526,7 +527,7 @@ export default function RunbooksPage() {
                   </tr>
                 </TableHeader>
                 <TableBody>
-                  {executions.map((exec, idx) => (
+                  {executions.map((exec: any, idx: any) => (
                     <TableRow key={`${exec.runbookId}-${idx}`}>
                       <TableCell className="text-xs font-mono text-text-secondary whitespace-nowrap">
                         {exec.ts}
@@ -630,7 +631,7 @@ export default function RunbooksPage() {
                 Gate: {selectedRunbook.gate || (selectedRunbook.costSafe ? 'SAFE' : 'HUMAN')}
               </Badge>
               {selectedRunbook.category && (
-                <Badge variant="default" size="sm">{CATEGORY_LABELS[selectedRunbook.category] || selectedRunbook.category}</Badge>
+                <Badge variant="default" size="sm">{(CATEGORY_LABELS as Record<string, string>)[selectedRunbook.category] || selectedRunbook.category}</Badge>
               )}
               {selectedRunbook.dbType && (
                 <Badge variant="default" size="sm">{selectedRunbook.dbType}</Badge>
@@ -645,7 +646,7 @@ export default function RunbooksPage() {
               <div>
                 <p className="text-xs font-medium text-text-secondary mb-1.5">Pre-requisitos:</p>
                 <ul className="space-y-1">
-                  {selectedRunbook.prereqs.map((p, i) => (
+                  {selectedRunbook.prereqs.map((p: any, i: any) => (
                     <li key={i} className="flex items-center gap-1.5 text-xs text-text-secondary">
                       <ShieldCheck size={12} className="text-success-500 flex-shrink-0" />
                       {p}
@@ -686,7 +687,7 @@ export default function RunbooksPage() {
               <div>
                 <p className="text-xs font-medium text-text-secondary mb-2">Pasos de ejecución:</p>
                 <ol className="space-y-2">
-                  {liveStepResults.map((step, i) => (
+                  {liveStepResults.map((step: any, i: any) => (
                     <StepResultRow
                       key={step.id || i}
                       step={step}
@@ -702,7 +703,7 @@ export default function RunbooksPage() {
               <div>
                 <p className="text-xs font-medium text-text-secondary mb-1.5">Pasos de ejecución:</p>
                 <ol className="space-y-2">
-                  {selectedRunbook.steps.map((step, i) => (
+                  {selectedRunbook.steps.map((step: any, i: any) => (
                     <li key={i} className="flex items-start gap-2.5 text-xs">
                       <span className="flex-shrink-0 mt-0.5">
                         <span className="inline-flex items-center justify-center w-3.5 h-3.5 rounded-full bg-surface-tertiary text-text-tertiary text-[10px] font-medium">
@@ -729,7 +730,7 @@ export default function RunbooksPage() {
                 onChange={(e) => setSelectedSystemId(e.target.value)}
                 placeholder="Seleccionar sistema..."
                 disabled={executing}
-                options={systems.map(s => ({ value: s.id, label: systemLabel(s) }))}
+                options={systems.map((s: any) => ({ value: s.id, label: systemLabel(s) }))}
               />
             )}
 
@@ -755,7 +756,7 @@ export default function RunbooksPage() {
                 {/* Mostrar fallos de validación */}
                 {executionResult.failures?.length > 0 && (
                   <ul className="mt-2 space-y-1">
-                    {executionResult.failures.map((f, i) => (
+                    {executionResult.failures.map((f: any, i: any) => (
                       <li key={i} className="flex items-start gap-1.5 text-xs text-red-500 dark:text-red-400">
                         <AlertTriangle size={12} className="flex-shrink-0 mt-0.5" />
                         {f}
@@ -818,7 +819,7 @@ export default function RunbooksPage() {
               <div>
                 <p className="text-xs font-medium text-text-secondary mb-1.5">Pasos que se ejecutarían:</p>
                 <ol className="space-y-2">
-                  {selectedRunbook.steps.map((step, i) => (
+                  {selectedRunbook.steps.map((step: any, i: any) => (
                     <li key={i} className="flex items-start gap-2.5 text-xs">
                       <span className="inline-flex items-center justify-center w-3.5 h-3.5 rounded-full bg-surface-tertiary text-text-tertiary text-[10px] font-medium flex-shrink-0 mt-0.5">
                         {step.order || i + 1}
@@ -840,7 +841,7 @@ export default function RunbooksPage() {
               <div>
                 <p className="text-xs font-medium text-text-secondary mb-1.5">Pre-requisitos necesarios:</p>
                 <ul className="space-y-1">
-                  {selectedRunbook.prereqs.map((p, i) => (
+                  {selectedRunbook.prereqs.map((p: any, i: any) => (
                     <li key={i} className="flex items-center gap-1.5 text-xs text-text-secondary">
                       <ShieldCheck size={12} className="text-success-500 flex-shrink-0" />
                       {p}
@@ -858,7 +859,7 @@ export default function RunbooksPage() {
                 onChange={(e) => setSelectedSystemId(e.target.value)}
                 placeholder="Seleccionar sistema..."
                 disabled={executing}
-                options={systems.map(s => ({ value: s.id, label: systemLabel(s) }))}
+                options={systems.map((s: any) => ({ value: s.id, label: systemLabel(s) }))}
               />
             )}
 
@@ -877,7 +878,7 @@ export default function RunbooksPage() {
                       <div className="p-2 rounded bg-red-500/10 border border-red-500/20">
                         <p className="font-medium text-red-500 dark:text-red-400 mb-1">Sistema incompatible — no se puede ejecutar</p>
                         <ul className="space-y-1">
-                          {executionResult.validationFailures?.map((f, i) => (
+                          {executionResult.validationFailures?.map((f: any, i: any) => (
                             <li key={i} className="flex items-start gap-1.5 text-red-500 dark:text-red-400">
                               <AlertTriangle size={11} className="flex-shrink-0 mt-0.5" />
                               {f}
