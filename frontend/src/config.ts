@@ -11,6 +11,8 @@ const config = {
     clientId: import.meta.env.VITE_COGNITO_CLIENT_ID || '',
   },
   features: {
+    // demoMode is superseded by the operational mode system (see src/mode/).
+    // Retained for backward compatibility — set via VITE_OPERATIONAL_MODE=MOCK instead.
     demoMode: false,
     chatWidget: true,
     darkMode: true,

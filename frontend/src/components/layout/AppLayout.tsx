@@ -1,13 +1,20 @@
 import { Outlet } from 'react-router-dom';
 import TopNav, { NAV_HEIGHT } from './TopNav';
 import ChatWidget from '../ChatWidget';
-import config from '../../config';
+import ModeIndicator from '../../mode/ModeIndicator';
+import { useMode } from '../../mode/ModeContext';
 
-const DEMO_BANNER_HEIGHT = 28;
+const MODE_BANNER_HEIGHT = 28;
 
 export default function AppLayout() {
-  const showDemo = config.features.demoMode;
-  const topOffset = showDemo ? DEMO_BANNER_HEIGHT : 0;
+  const { state } = useMode();
+  const showModeBanner = state.mode === 'MOCK' || state.mode === 'FALLBACK';
+  const topOffset = showModeBanner ? MODE_BANNER_HEIGHT : 0;
+
+  const bannerLabels: Record<string, string> = {
+    MOCK: 'Modo Demo — Datos simulados. Ningún sistema SAP real está conectado.',
+    FALLBACK: 'Modo Fallback — Se intentará conectar al backend; en caso de fallo se usan datos simulados.',
+  };
 
   return (
     <div className="min-h-screen bg-surface-secondary bg-grid">
@@ -19,8 +26,8 @@ export default function AppLayout() {
         Ir al contenido principal
       </a>
 
-      {/* Banner de modo demo */}
-      {showDemo && (
+      {/* Mode banner */}
+      {showModeBanner && (
         <div
           role="banner"
           style={{
@@ -28,7 +35,7 @@ export default function AppLayout() {
             top: 0,
             left: 0,
             right: 0,
-            height: `${DEMO_BANNER_HEIGHT}px`,
+            height: `${MODE_BANNER_HEIGHT}px`,
             zIndex: 60,
             display: 'flex',
             alignItems: 'center',
@@ -43,8 +50,8 @@ export default function AppLayout() {
             letterSpacing: '0.02em',
           }}
         >
-          <span style={{ fontSize: '13px', opacity: 0.7 }}>{'\u2139\uFE0F'}</span>
-          <span>Modo Demo — Datos simulados. Ningún sistema SAP real está conectado.</span>
+          <ModeIndicator />
+          <span>{bannerLabels[state.mode] || ''}</span>
         </div>
       )}
 

@@ -2,10 +2,13 @@
 // SAP Spektra — Operations Provider Contract
 // ══════════════════════════════════════════════════════════════
 
+ 
+type Any = any;
+
 export interface OperationsProvider {
-  getOperations(): Promise<unknown[]>;
-  getBackgroundJobs(): Promise<unknown[]>;
-  getTransports(): Promise<unknown[]>;
-  getCertificates(): Promise<unknown[]>;
-  getLicenses(): Promise<unknown>;
+  getOperations(): Promise<Any[]>;
+  getBackgroundJobs(): Promise<Any[]>;
+  getTransports(): Promise<Any[]>;
+  getCertificates(): Promise<Any[]>;
+  getLicenses(): Promise<Any>;
 }

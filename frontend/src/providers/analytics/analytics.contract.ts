@@ -2,7 +2,10 @@
 // SAP Spektra — Analytics Provider Contract
 // ══════════════════════════════════════════════════════════════
 
+ 
+type Any = any;
+
 export interface AnalyticsProvider {
-  getAnalytics(): Promise<unknown>;
-  getRunbookAnalytics(): Promise<unknown>;
+  getAnalytics(): Promise<Any>;
+  getRunbookAnalytics(): Promise<Any>;
 }

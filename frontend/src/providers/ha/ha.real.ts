@@ -1,43 +1,25 @@
 // ══════════════════════════════════════════════════════════════
-// SAP Spektra — HA (High Availability) Service
-// ══════════════════════════════════════════════════════════════
-//
-// Data Source Classification:
-//   REAL: getHASystems
-//   FALLBACK-TO-MOCK: getHAPrereqs, getHAOpsHistory, getHADrivers
-//   DERIVED: HA node IPs, zones, replication details (from haConfig + system data)
-//   DEMO: returns mock data with simulated latency
-//
+// SAP Spektra — HA Real Provider
 // ══════════════════════════════════════════════════════════════
 
-import config from '../config';
-import { api } from '../hooks/useApi';
-import { createLogger } from '../lib/logger';
-import type { ApiRecord } from '../types/api';
-import {
-  mockHASystems,
-  mockHAPrereqs,
-  mockHAOpsHistory,
-  mockHADrivers,
-} from '../lib/mockData';
+import { api } from '../../hooks/useApi';
+import { createLogger } from '../../lib/logger';
+import type { ApiRecord } from '../../types/api';
+import { mockHAPrereqs, mockHAOpsHistory, mockHADrivers } from '../../lib/mockData';
+import type { HAProvider } from './ha.contract';
 
-const log = createLogger('HAService');
-const delay = (ms = 400) => new Promise(r => setTimeout(r, ms));
-const isDemoMode = () => config.features.demoMode;
-
-// ── Transform: API → frontend ViewModel ──
+const log = createLogger('HARealProvider');
 
 export function transformHAConfig(h: ApiRecord) {
   const sid = h.system?.sid || '';
   const env = h.system?.environment || 'PRD';
   const strategy = h.haStrategy || 'HOT_STANDBY';
-  // Derive stable node index from sid chars for IPs/zones (no hashSeed)
   const sidNum = sid ? (sid.charCodeAt(0) + (sid.charCodeAt(1) || 0) + (sid.charCodeAt(2) || 0)) % 10 : 1;
 
   const primaryHost = h.primaryNode || `sap-${sid.toLowerCase()}-hana-pri`;
   const secondaryHost = h.secondaryNode || null;
 
-  const primary = {
+  const primary: ApiRecord = {
     id: h.id ? `${h.id}-pri` : `i-${sid.toLowerCase()}-pri`,
     host: primaryHost,
     ip: `10.0.${sidNum + 1}.10`,
@@ -50,7 +32,7 @@ export function transformHAConfig(h: ApiRecord) {
     Object.assign(primary, { instanceType: 'r6i.8xlarge', vcpu: 32, memoryGb: 256 });
   }
 
-  let secondary = null;
+  let secondary: ApiRecord | null = null;
   if (secondaryHost) {
     secondary = {
       id: h.id ? `${h.id}-sec` : `i-${sid.toLowerCase()}-sec`,
@@ -106,25 +88,21 @@ export function transformHAConfig(h: ApiRecord) {
   };
 }
 
-// ── Public API ──
+export class HARealProvider implements HAProvider {
+  async getHASystems() {
+    const configs = await api.getHAConfigs() as Record<string, unknown>[];
+    return configs.map(transformHAConfig);
+  }
 
-export const getHASystems = async () => {
-  if (isDemoMode()) { await delay(); return mockHASystems; }
-  const configs = await api.getHAConfigs() as Record<string, unknown>[];
-  return configs.map(transformHAConfig);
-};
+  async getHAPrereqs(systemId?: string) {
+    try { return await api.getHAPrereqs(systemId!); } catch (err: unknown) { log.error('Failed to fetch HA prereqs', { systemId, error: (err as Error).message }); return mockHAPrereqs; }
+  }
 
-export const getHAPrereqs = async (systemId?: string) => {
-  if (isDemoMode()) { await delay(300); return mockHAPrereqs; }
-  try { return await api.getHAPrereqs(systemId!); } catch (err: unknown) { log.error('Failed to fetch HA prereqs', { systemId, error: (err as Error).message }); return mockHAPrereqs; }
-};
+  async getHAOpsHistory(systemId?: string) {
+    try { return await api.getHAOpsHistory(systemId!); } catch (err: unknown) { log.error('Failed to fetch HA ops history', { systemId, error: (err as Error).message }); return mockHAOpsHistory; }
+  }
 
-export const getHAOpsHistory = async (systemId?: string) => {
-  if (isDemoMode()) { await delay(300); return mockHAOpsHistory; }
-  try { return await api.getHAOpsHistory(systemId!); } catch (err: unknown) { log.error('Failed to fetch HA ops history', { systemId, error: (err as Error).message }); return mockHAOpsHistory; }
-};
-
-export const getHADrivers = async (systemId?: string) => {
-  if (isDemoMode()) { await delay(300); return mockHADrivers; }
-  try { return await api.getHADrivers(systemId!); } catch (err: unknown) { log.error('Failed to fetch HA drivers', { systemId, error: (err as Error).message }); return mockHADrivers; }
-};
+  async getHADrivers(systemId?: string) {
+    try { return await api.getHADrivers(systemId!); } catch (err: unknown) { log.error('Failed to fetch HA drivers', { systemId, error: (err as Error).message }); return mockHADrivers; }
+  }
+}

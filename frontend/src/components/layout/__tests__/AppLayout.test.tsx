@@ -14,9 +14,23 @@ vi.mock('../../ChatWidget', () => ({
   default: () => <div data-testid="chat-widget">Chat</div>,
 }));
 
-// Mock config
-vi.mock('../../../config', () => ({
-  default: { features: { demoMode: false } },
+// Mock ModeContext
+vi.mock('../../../mode/ModeContext', () => ({
+  useMode: () => ({
+    state: {
+      mode: 'REAL',
+      resolvedAt: new Date().toISOString(),
+      capabilities: new Map(),
+      backendReachable: true,
+    },
+    setMode: () => {},
+    getDomainCapability: () => undefined,
+  }),
+}));
+
+// Mock ModeIndicator
+vi.mock('../../../mode/ModeIndicator', () => ({
+  default: () => <div data-testid="mode-indicator">REAL</div>,
 }));
 
 // Mock Outlet to render test content

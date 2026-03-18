@@ -1,5 +1,5 @@
 import { createContext, useContext, useState, useCallback, type ReactNode } from 'react';
-import config from '../config';
+import { getDataServiceMode } from '../services/dataService';
 import { api } from '../hooks/useApi';
 
 interface AuthUser {
@@ -74,7 +74,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const login = useCallback(async (username: string, password: string): Promise<AuthUser> => {
     // ── Primary path: real backend auth (POST /api/auth/login) ──
-    if (!config.features.demoMode) {
+    if (getDataServiceMode() !== 'MOCK') {
       const raw = await api.login(username, password) as { accessToken: string; user: { id: string; email: string; name: string; role: string; organizationId: string; organizationName?: string } };
       const result = raw;
       const payload = parseJwt(result.accessToken);
@@ -94,7 +94,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       return authUser;
     }
 
-    // ── Demo path: config.features.demoMode=true — no backend needed ──
+    // ── Demo/Mock path: mode=MOCK — no backend needed ──
     const demoUser: AuthUser = {
       id: `demo-${Date.now()}`,
       username,

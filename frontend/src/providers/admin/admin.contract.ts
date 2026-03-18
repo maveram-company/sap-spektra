@@ -1,12 +1,16 @@
 // ══════════════════════════════════════════════════════════════
-// SAP Spektra — Landscape Provider Contract
+// SAP Spektra — Admin Provider Contract
 // ══════════════════════════════════════════════════════════════
 
  
 type Any = any;
 
-export interface LandscapeProvider {
-  getDiscovery(): Promise<Any[]>;
-  getSIDLines(): Promise<Any[]>;
-  getLandscapeValidation(): Promise<Any>;
+export interface AdminProvider {
+  getUsers(): Promise<Any[]>;
+  getAuditLog(): Promise<Any[]>;
+  getPlans(): Promise<Any>;
+  getApiKeys(): Promise<Any>;
+  getThresholds(): Promise<Any>;
+  getEscalationPolicy(): Promise<Any>;
+  getMaintenanceWindows(): Promise<Any>;
 }

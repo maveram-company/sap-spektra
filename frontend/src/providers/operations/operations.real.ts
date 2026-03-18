@@ -3,8 +3,12 @@
 // ══════════════════════════════════════════════════════════════
 
 import { api } from '../../hooks/useApi';
+import { createLogger } from '../../lib/logger';
 import type { ApiOperation, ApiRecord } from '../../types/api';
+import { mockLicenses } from '../../lib/mockData';
 import type { OperationsProvider } from './operations.contract';
+
+const log = createLogger('OperationsRealProvider');
 
 export function transformOperation(op: ApiOperation) {
   return {
@@ -79,6 +83,6 @@ export class OperationsRealProvider implements OperationsProvider {
   }
 
   async getLicenses() {
-    return api.getLicenses();
+    try { return await api.getLicenses(); } catch (err: unknown) { log.error('Failed to fetch licenses', { error: (err as Error).message }); return mockLicenses; }
   }
 }

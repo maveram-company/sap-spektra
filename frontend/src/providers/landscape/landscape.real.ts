@@ -3,8 +3,12 @@
 // ══════════════════════════════════════════════════════════════
 
 import { api } from '../../hooks/useApi';
+import { createLogger } from '../../lib/logger';
 import type { ApiSystem, ApiHost, ApiRecord } from '../../types/api';
+import { mockSIDLines, mockLandscapeValidation } from '../../lib/mockData';
 import type { LandscapeProvider } from './landscape.contract';
+
+const log = createLogger('LandscapeRealProvider');
 
 export function transformDiscovery(systems: ApiSystem[]) {
   const instances = [];
@@ -64,30 +68,35 @@ export class LandscapeRealProvider implements LandscapeProvider {
   }
 
   async getSIDLines() {
-    const systems = await api.getSystems() as ApiRecord[];
-    const byProduct: Record<string, ApiRecord> = {};
-    for (const sys of systems) {
-      let lineName = 'Other';
-      const prod = (sys.sapProduct || '').toLowerCase();
-      if (prod.includes('s/4hana')) lineName = 'ERP';
-      else if (prod.includes('bw')) lineName = 'BW';
-      else if (prod.includes('solman') || prod.includes('solution')) lineName = 'SOL';
-      else if (prod.includes('po') || prod.includes('process')) lineName = 'PO';
-      else if (prod.includes('crm')) lineName = 'CRM';
-      else if (prod.includes('grc')) lineName = 'GRC';
-      else lineName = sys.sapProduct || 'Other';
+    try {
+      const systems = await api.getSystems() as ApiRecord[];
+      const byProduct: Record<string, ApiRecord> = {};
+      for (const sys of systems) {
+        let lineName = 'Other';
+        const prod = (sys.sapProduct || '').toLowerCase();
+        if (prod.includes('s/4hana')) lineName = 'ERP';
+        else if (prod.includes('bw')) lineName = 'BW';
+        else if (prod.includes('solman') || prod.includes('solution')) lineName = 'SOL';
+        else if (prod.includes('po') || prod.includes('process')) lineName = 'PO';
+        else if (prod.includes('crm')) lineName = 'CRM';
+        else if (prod.includes('grc')) lineName = 'GRC';
+        else lineName = sys.sapProduct || 'Other';
 
-      if (!byProduct[lineName]) byProduct[lineName] = { ids: [], desc: sys.sapProduct || lineName };
-      byProduct[lineName].ids.push(sys.id);
+        if (!byProduct[lineName]) byProduct[lineName] = { ids: [], desc: sys.sapProduct || lineName };
+        byProduct[lineName].ids.push(sys.id);
+      }
+      return Object.entries(byProduct).map(([line, data]: [string, ApiRecord]) => ({
+        line,
+        description: data.desc,
+        systems: data.ids,
+      }));
+    } catch (err: unknown) {
+      log.error('Failed to fetch SID lines, using mock data', { error: (err as Error).message });
+      return mockSIDLines;
     }
-    return Object.entries(byProduct).map(([line, data]: [string, ApiRecord]) => ({
-      line,
-      description: data.desc,
-      systems: data.ids,
-    }));
   }
 
   async getLandscapeValidation() {
-    return api.getLandscapeValidation();
+    try { return await api.getLandscapeValidation(); } catch (err: unknown) { log.error('Failed to fetch landscape validation', { error: (err as Error).message }); return mockLandscapeValidation; }
   }
 }

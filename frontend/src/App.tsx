@@ -1,5 +1,6 @@
 import { lazy, Suspense } from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { ModeProvider } from './mode/ModeContext';
 import { AuthProvider } from './contexts/AuthContext';
 import { ThemeProvider } from './contexts/ThemeContext';
 import { TenantProvider } from './contexts/TenantContext';
@@ -50,6 +51,7 @@ export default function App() {
   return (
     <ErrorBoundary>
     <BrowserRouter>
+      <ModeProvider>
       <ThemeProvider>
         <AuthProvider>
           <TenantProvider>
@@ -114,6 +116,7 @@ export default function App() {
           </TenantProvider>
         </AuthProvider>
       </ThemeProvider>
+      </ModeProvider>
     </BrowserRouter>
     </ErrorBoundary>
   );
