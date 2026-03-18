@@ -9,6 +9,8 @@ import Modal from '../components/ui/Modal';
 import Select from '../components/ui/Select';
 import Table, { TableHeader, TableBody, TableRow, TableHead, TableCell } from '../components/ui/Table';
 import EmptyState from '../components/ui/EmptyState';
+import { ModeBadge, CapabilityBadge, GovernanceContext } from '../components/mode';
+import { useMode } from '../mode/ModeContext';
 import { useAuth } from '../contexts/AuthContext';
 import PageLoading from '../components/ui/PageLoading';
 import { dataService } from '../services/dataService';
@@ -130,6 +132,9 @@ export default function RunbooksPage() {
   const { toast, showToast, dismissToast } = useToast();
   const { hasRole } = useAuth();
   const canExecute = hasRole('operator');
+  const { state: modeState, getDomainCapability } = useMode();
+  const runbooksCap = getDomainCapability('runbooks');
+  const isMockMode = modeState.mode === 'MOCK';
 
   // Estado de modales
   const [showExecuteModal, setShowExecuteModal] = useState(false);
@@ -351,12 +356,21 @@ export default function RunbooksPage() {
 
   return (
     <div>
-      <Header title="Runbooks" subtitle={`${runbooks.length} runbooks integrados + ejecución end-to-end`} />
+      <Header
+        title="Runbooks"
+        subtitle={`${runbooks.length} runbooks integrados + ejecución end-to-end`}
+        actions={<ModeBadge />}
+      />
       <div className="p-6">
-        <PageHeader
-          title="Runbooks"
-          description="Catálogo completo de runbooks de remediación automática y registro de ejecuciónes"
-        />
+        <div className="flex items-center justify-between mb-2">
+          <PageHeader
+            title="Runbooks"
+            description="Catálogo completo de runbooks de remediación automática y registro de ejecuciónes"
+          />
+          {runbooksCap && (
+            <CapabilityBadge action="Execute" tier={runbooksCap.tier} readOnly={runbooksCap.readOnly} restricted={isMockMode} />
+          )}
+        </div>
 
         <Tabs tabs={tabs} activeTab={activeTab} onChange={setActiveTab} className="mb-6" />
 
@@ -614,6 +628,13 @@ export default function RunbooksPage() {
       >
         {selectedRunbook && (
           <div className="space-y-4">
+            {/* Governance context */}
+            <GovernanceContext
+              requiresApproval={!selectedRunbook.costSafe}
+              restrictions={isMockMode ? ['Execution restricted in demo mode'] : undefined}
+              riskLevel={selectedRunbook.costSafe ? 'low' : 'high'}
+            />
+
             {/* Alerta cost-safe */}
             {!selectedRunbook.costSafe && (
               <div className="flex items-center gap-2 p-3 rounded-lg bg-yellow-500/10 border border-yellow-500/20 text-yellow-600 dark:text-yellow-400 text-sm">

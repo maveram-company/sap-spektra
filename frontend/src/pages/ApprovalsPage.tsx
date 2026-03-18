@@ -10,6 +10,8 @@ import Button from '../components/ui/Button';
 import Table, { TableHeader, TableBody, TableRow, TableHead, TableCell } from '../components/ui/Table';
 import EmptyState from '../components/ui/EmptyState';
 import PageLoading from '../components/ui/PageLoading';
+import { ModeBadge, CapabilityBadge, GovernanceContext } from '../components/mode';
+import { useMode } from '../mode/ModeContext';
 import { useAuth } from '../contexts/AuthContext';
 import { dataService } from '../services/dataService';
 import { createLogger } from '../lib/logger';
@@ -24,6 +26,9 @@ export default function ApprovalsPage() {
   const [processing, setProcessing] = useState<string | null>(null);
   const { hasRole } = useAuth();
   const canApprove = hasRole('escalation');
+  const { state: modeState, getDomainCapability } = useMode();
+  const approvalsCap = getDomainCapability('approvals');
+  const isMockMode = modeState.mode === 'MOCK';
 
   useEffect(() => {
     let mounted = true;
@@ -71,11 +76,29 @@ export default function ApprovalsPage() {
 
   return (
     <div>
-      <Header title="Aprobaciones" subtitle="Gestiona las solicitudes de ejecución de runbooks (demo)" />
+      <Header
+        title="Aprobaciones"
+        subtitle="Gestiona las solicitudes de ejecución de runbooks (demo)"
+        actions={<ModeBadge />}
+      />
       <div className="p-6">
-        <PageHeader title="Aprobaciones" description="Revisa y gestiona las solicitudes de ejecución automática" />
+        <div className="flex items-center justify-between mb-2">
+          <PageHeader title="Aprobaciones" description="Revisa y gestiona las solicitudes de ejecución automática" />
+          <div className="flex items-center gap-2">
+            {approvalsCap && (
+              <CapabilityBadge action="Approve" tier={approvalsCap.tier} readOnly={approvalsCap.readOnly} />
+            )}
+          </div>
+        </div>
 
-        <Tabs tabs={tabs} activeTab={activeTab} onChange={setActiveTab} className="mb-6" />
+        <GovernanceContext
+          requiresApproval
+          restrictions={isMockMode ? ['Approvals are simulated in demo mode'] : undefined}
+          riskLevel="medium"
+          recommendedAction="Review all pending items before approving"
+        />
+
+        <Tabs tabs={tabs} activeTab={activeTab} onChange={setActiveTab} className="mb-6 mt-4" />
 
         {filtered.length === 0 ? (
           <EmptyState

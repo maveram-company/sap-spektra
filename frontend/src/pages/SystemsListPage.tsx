@@ -11,11 +11,22 @@ import Select from '../components/ui/Select';
 import Button from '../components/ui/Button';
 import EmptyState from '../components/ui/EmptyState';
 import PageLoading from '../components/ui/PageLoading';
-import { dataService } from '../services/dataService';
+import { ModeBadge, SourceIndicator } from '../components/mode';
+import { getSystemsResult } from '../services/dataService';
+import type { ProviderTier } from '../mode/types';
 import type { ApiRecord } from '../types';
+
+interface SourceInfo {
+  source: ProviderTier;
+  confidence: 'high' | 'medium' | 'low';
+  degraded: boolean;
+  reason?: string;
+  timestamp: string;
+}
 
 export default function SystemsListPage() {
   const [systems, setSystems] = useState<ApiRecord[]>([]);
+  const [sourceInfo, setSourceInfo] = useState<SourceInfo | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [search, setSearch] = useState('');
@@ -25,8 +36,13 @@ export default function SystemsListPage() {
 
   useEffect(() => {
     let mounted = true;
-    dataService.getSystems()
-      .then(data => { if (mounted) setSystems(data); })
+    getSystemsResult()
+      .then(result => {
+        if (mounted) {
+          setSystems(result.data);
+          setSourceInfo({ source: result.source, confidence: result.confidence, degraded: result.degraded, reason: result.reason, timestamp: result.timestamp });
+        }
+      })
       .catch((err: unknown) => { if (mounted) setError((err as Error).message); })
       .finally(() => { if (mounted) setLoading(false); });
     return () => { mounted = false; };
@@ -52,8 +68,17 @@ export default function SystemsListPage() {
 
   return (
     <div>
-      <Header title="Sistemas SAP" subtitle={`${systems.length} sistemas en el landscape`} />
+      <Header
+        title="Sistemas SAP"
+        subtitle={`${systems.length} sistemas en el landscape`}
+        actions={<ModeBadge />}
+      />
       <div className="p-6">
+        {sourceInfo && (
+          <div className="mb-4">
+            <SourceIndicator {...sourceInfo} />
+          </div>
+        )}
         <div className="flex items-center justify-between mb-6">
           <PageHeader title="Landscape SAP" description="Vista completa de todos los sistemas monitoreados" />
           <Button icon={Plus} onClick={() => navigate('/connect')}>

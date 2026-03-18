@@ -5,8 +5,10 @@ import EmptyState from '../components/ui/EmptyState';
 import Pagination from '../components/ui/Pagination';
 import usePagination from '../hooks/usePagination';
 import { alertResolutionCategories } from '../lib/constants';
-import { dataService } from '../services/dataService';
+import { ModeBadge, SourceIndicator } from '../components/mode';
+import { dataService, getAlertsResult } from '../services/dataService';
 import { useAuth } from '../contexts/AuthContext';
+import type { ProviderTier } from '../mode/types';
 import type { ApiRecord } from '../types';
 import {
   AlertTriangle,
@@ -24,12 +26,21 @@ import {
   ArrowRight,
 } from 'lucide-react';
 
+interface SourceInfo {
+  source: ProviderTier;
+  confidence: 'high' | 'medium' | 'low';
+  degraded: boolean;
+  reason?: string;
+  timestamp: string;
+}
+
 function AlertsPage() {
   const { user, hasRole } = useAuth();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [alerts, setAlerts] = useState<ApiRecord[]>([]);
   const [systems, setSystems] = useState<ApiRecord[]>([]);
+  const [sourceInfo, setSourceInfo] = useState<SourceInfo | null>(null);
   const [statusFilter, setStatusFilter] = useState('active');
   const [systemFilter, setSystemFilter] = useState('all');
   const [resolveModalAlertId, setResolveModalAlertId] = useState<string | null>(null);
@@ -38,9 +49,13 @@ function AlertsPage() {
 
   useEffect(() => {
     let mounted = true;
-    Promise.all([dataService.getAlerts(), dataService.getSystems()])
-      .then(([alts, sys]) => {
-        if (mounted) { setAlerts(alts); setSystems(sys); }
+    Promise.all([getAlertsResult(), dataService.getSystems()])
+      .then(([alertsResult, sys]) => {
+        if (mounted) {
+          setAlerts(alertsResult.data);
+          setSourceInfo({ source: alertsResult.source, confidence: alertsResult.confidence, degraded: alertsResult.degraded, reason: alertsResult.reason, timestamp: alertsResult.timestamp });
+          setSystems(sys);
+        }
       })
       .catch((err: unknown) => { if (mounted) setError((err as Error).message); })
       .finally(() => { if (mounted) setLoading(false); });
@@ -196,9 +211,15 @@ function AlertsPage() {
       <Header
         title="Alertas"
         subtitle="Gestión de alertas y escalamiento"
+        actions={<ModeBadge />}
       />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
+        {sourceInfo && (
+          <div>
+            <SourceIndicator {...sourceInfo} />
+          </div>
+        )}
         {/* Barra de escalamiento */}
         <div className="bg-surface dark:bg-surface border border-border dark:border-border rounded-xl p-4">
           <h3 className="text-sm font-semibold text-text-primary dark:text-text-primary mb-3 flex items-center gap-2">

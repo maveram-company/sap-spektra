@@ -8,11 +8,14 @@ import {
   ASCS_FAILOVER_STEPS,
   PILOT_LIGHT_ACTIVATION_STEPS, CROSS_REGION_DR_STEPS, BACKUP_RESTORE_STEPS,
 } from '../lib/constants';
-import { dataService } from '../services/dataService';
+import { ModeBadge, CapabilityBadge, GovernanceContext, SourceIndicator } from '../components/mode';
+import { useMode } from '../mode/ModeContext';
+import { dataService, getHASystemsResult } from '../services/dataService';
 import { createLogger } from '../lib/logger';
 
 const log = createLogger('HAControlCenterPage');
 import { useAuth } from '../contexts/AuthContext';
+import type { ProviderTier } from '../mode/types';
 import type { ApiRecord } from '../types';
 import {
   ArrowLeftRight,
@@ -90,29 +93,42 @@ const getOpLabels = (sys: ApiRecord) => {
   return { primary: 'Failover', secondary: null, drTest: null };
 };
 
+interface HASourceInfo {
+  source: ProviderTier;
+  confidence: 'high' | 'medium' | 'low';
+  degraded: boolean;
+  reason?: string;
+  timestamp: string;
+}
+
 export default function HAControlCenterPage() {
   const { t } = useTranslation();
   const { user } = useAuth();
+  const { state: modeState, getDomainCapability } = useMode();
+  const haCap = getDomainCapability('ha');
+  const isMockMode = modeState.mode === 'MOCK';
   const [activeTab, setActiveTab] = useState('systems');
   const [systems, setSystems] = useState<any[]>([]);
-   
+
   const [opsHistory, setOpsHistory] = useState<any[]>([]);
-   
+
   const [haDrivers, setHaDrivers] = useState<any[]>([]);
-   
+
   const [haPrereqs, setHaPrereqs] = useState<Record<string, any[]>>({});
+  const [sourceInfo, setSourceInfo] = useState<HASourceInfo | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [selectedStrategy, setSelectedStrategy] = useState('ALL');
 
   useEffect(() => {
     Promise.all([
-      dataService.getHASystems(),
+      getHASystemsResult(),
       dataService.getHAOpsHistory(),
       dataService.getHADrivers(),
       dataService.getHAPrereqs(),
-    ]).then(([sys, history, drivers, prereqs]) => {
-      setSystems(sys as any[]);
+    ]).then(([sysResult, history, drivers, prereqs]) => {
+      setSystems(sysResult.data as any[]);
+      setSourceInfo({ source: sysResult.source, confidence: sysResult.confidence, degraded: sysResult.degraded, reason: sysResult.reason, timestamp: sysResult.timestamp });
       setOpsHistory(history as any[]);
       setHaDrivers(drivers as any[]);
       setHaPrereqs(prereqs as Record<string, any[]>);
@@ -1053,9 +1069,23 @@ export default function HAControlCenterPage() {
       <Header
         title="HA Control Center"
         subtitle="Orquestación de Alta Disponibilidad — Hot Standby, Warm Standby, Pilot Light, Cross-Region DR, Backup & Restore"
+        actions={<ModeBadge />}
       />
 
       <div className="p-6 space-y-6">
+        {/* Mode governance bar */}
+        <div className="flex flex-wrap items-center gap-3">
+          {haCap && (
+            <CapabilityBadge action="Failover" tier={haCap.tier} readOnly={haCap.readOnly} restricted={isMockMode} />
+          )}
+          <GovernanceContext
+            restrictions={isMockMode ? ['Failover restricted in demo mode', 'Operations are simulated'] : undefined}
+            riskLevel="critical"
+            recommendedAction={isMockMode ? 'Connect real backend for live failover' : undefined}
+          />
+          {sourceInfo && <SourceIndicator {...sourceInfo} />}
+        </div>
+
         {/* Tabs */}
         <div className="border-b border-border">
           <nav className="flex gap-6 -mb-px">

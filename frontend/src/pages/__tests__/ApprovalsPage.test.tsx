@@ -3,6 +3,14 @@ import { render, screen, waitFor } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 import ApprovalsPage from '../ApprovalsPage';
 
+vi.mock('../../mode/ModeContext', () => ({
+  useMode: () => ({
+    state: { mode: 'REAL', resolvedAt: new Date().toISOString(), capabilities: new Map(), backendReachable: true },
+    setMode: () => {},
+    getDomainCapability: () => ({ domain: 'approvals', tier: 'real', readOnly: false, degraded: false, confidence: 'high', source: 'api' }),
+  }),
+}));
+
 vi.mock('../../contexts/AuthContext', () => ({
   useAuth: () => ({
     hasRole: () => true,
