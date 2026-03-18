@@ -6,6 +6,7 @@ import { api } from '../../hooks/useApi';
 import { createLogger } from '../../lib/logger';
 import type { ApiSystem, ApiHost, ApiRecord } from '../../types/api';
 import type { SystemsProvider, SystemViewModel } from './systems.contract';
+import { providerResult } from '../types';
 
 const log = createLogger('SystemsRealProvider');
 
@@ -53,39 +54,42 @@ export function transformSystem(s: ApiSystem): SystemViewModel {
 }
 
 export class SystemsRealProvider implements SystemsProvider {
-  async getSystems(): Promise<SystemViewModel[]> {
+  async getSystems() {
     const systems = await api.getSystems() as ApiSystem[];
-    return systems.map(transformSystem);
+    return providerResult(systems.map(transformSystem), 'real');
   }
 
-  async getSystemById(id: string): Promise<SystemViewModel | null> {
+  async getSystemById(id: string) {
     const system = await api.getSystemById(id);
-    return transformSystem(system);
+    return providerResult(transformSystem(system), 'real');
   }
 
-  async getSystemMetrics(id: string, hours = 2): Promise<ApiRecord> {
-    return api.getSystemHostMetrics(id, hours);
+  async getSystemMetrics(id: string, hours = 2) {
+    const data = await api.getSystemHostMetrics(id, hours);
+    return providerResult(data, 'real');
   }
 
-  async getSystemBreaches(id: string, _limit = 50): Promise<ApiRecord[]> {
+  async getSystemBreaches(id: string, _limit = 50) {
     const breaches = await api.getBreaches(id) as Record<string, unknown>[];
-    return breaches.map((b: ApiRecord) => ({
+    const data = breaches.map((b: ApiRecord) => ({
       ...b,
       sid: b.system?.sid || '',
     }));
+    return providerResult(data, 'real');
   }
 
-  async getSystemSla(id: string): Promise<ApiRecord> {
-    return api.getHealthSnapshots(id, 720);
+  async getSystemSla(id: string) {
+    const data = await api.getHealthSnapshots(id, 720);
+    return providerResult(data, 'real');
   }
 
-  async getServerMetrics(id: string): Promise<ApiRecord | null> {
+  async getServerMetrics(id: string) {
     try {
       const [hosts, sys] = await Promise.all([
         api.getHosts(id) as Promise<ApiRecord[]>,
         api.getSystemById(id) as Promise<ApiRecord>,
       ]);
-      if (!hosts || !hosts.length) return null;
+      if (!hosts || !hosts.length) return providerResult(null, 'real');
       const h = hosts[0];
       const hostCpu = h.cpu ?? 30;
       const hostMem = h.memory ?? 50;
@@ -152,7 +156,7 @@ export class SystemsRealProvider implements SystemsProvider {
         });
       }
 
-      return {
+      return providerResult({
         avail: +(99.5 + factor * 0.5).toFixed(1),
         monSt: 'green',
         monPerf: h.status === 'active' ? 'green' : 'yellow',
@@ -166,28 +170,29 @@ export class SystemsRealProvider implements SystemsProvider {
         failedJobs: Math.round(factor * 3),
         ping: true,
         dbInfo,
-      };
+      }, 'real');
     } catch (err: unknown) {
       log.error('Failed to fetch server metrics', { systemId: id, error: (err as Error).message });
-      return null;
+      return providerResult(null, 'real');
     }
   }
 
-  async getServerDeps(id: string): Promise<ApiRecord[]> {
+  async getServerDeps(id: string) {
     try {
       const deps = await api.getDependencies(id) as ApiRecord[];
-      return (deps || []).map((d: ApiRecord) => ({
+      const data = (deps || []).map((d: ApiRecord) => ({
         name: d.name,
         status: d.status,
         detail: d.details ? (typeof d.details === 'string' ? d.details : JSON.stringify(d.details)) : `Latency: ${d.latencyMs ?? '—'}ms`,
       }));
+      return providerResult(data, 'real');
     } catch (err: unknown) {
       log.error('Failed to fetch server dependencies', { systemId: id, error: (err as Error).message });
-      return [];
+      return providerResult([] as ApiRecord[], 'real');
     }
   }
 
-  async getSystemInstances(id: string): Promise<ApiRecord[]> {
+  async getSystemInstances(id: string) {
     try {
       const [components, hosts, sys] = await Promise.all([
         api.getComponents(id) as Promise<ApiRecord[]>,
@@ -229,14 +234,14 @@ export class SystemsRealProvider implements SystemsProvider {
           });
         }
       }
-      return flat;
+      return providerResult(flat as ApiRecord[], 'real');
     } catch (err: unknown) {
       log.error('Failed to fetch system instances', { systemId: id, error: (err as Error).message });
-      return [];
+      return providerResult([] as ApiRecord[], 'real');
     }
   }
 
-  async getMetricHistory(hostname: string): Promise<ApiRecord[]> {
+  async getMetricHistory(hostname: string) {
     try {
       const systems = await api.getSystems() as ApiRecord[];
       let hostId = null;
@@ -245,28 +250,29 @@ export class SystemsRealProvider implements SystemsProvider {
         const match = hosts?.find((h: ApiRecord) => h.hostname === hostname);
         if (match) { hostId = match.id; break; }
       }
-      if (!hostId) return [];
+      if (!hostId) return providerResult([] as ApiRecord[], 'real');
       const metrics = await api.getHostMetrics(hostId, 6) as ApiRecord[];
-      if (!metrics || !metrics.length) return [];
-      return metrics.map((m: ApiRecord) => ({
+      if (!metrics || !metrics.length) return providerResult([] as ApiRecord[], 'real');
+      const data = metrics.map((m: ApiRecord) => ({
         cpu: Math.round(m.cpu ?? 0),
         mem: Math.round(m.memory ?? 0),
         disk: Math.round(m.disk ?? 0),
       }));
+      return providerResult(data as ApiRecord[], 'real');
     } catch (err: unknown) {
       log.error('Failed to fetch metric history', { hostname, error: (err as Error).message });
-      return [];
+      return providerResult([] as ApiRecord[], 'real');
     }
   }
 
-  async getSystemHosts(id: string): Promise<ApiRecord[]> {
+  async getSystemHosts(id: string) {
     try {
       const [hosts, sys] = await Promise.all([
         api.getHosts(id) as Promise<ApiRecord[]>,
         api.getSystemById(id) as Promise<ApiRecord>,
       ]);
       const isRise = sys?.monitoringCapabilityProfile === 'RISE_RESTRICTED' || sys?.supportsOsMetrics === false;
-      return (hosts || []).map((h: ApiRecord) => {
+      const data = (hosts || []).map((h: ApiRecord) => {
         const cpuPct = isRise ? null : Math.round(h.cpu || 0);
         const memPct = isRise ? null : Math.round(h.memory || 0);
         const diskPct = isRise ? null : Math.round(h.disk || 0);
@@ -287,34 +293,38 @@ export class SystemsRealProvider implements SystemsProvider {
           })),
         };
       });
+      return providerResult(data as ApiRecord[], 'real');
     } catch (err: unknown) {
       log.error('Failed to fetch system hosts', { systemId: id, error: (err as Error).message });
-      return [];
+      return providerResult([] as ApiRecord[], 'real');
     }
   }
 
-  async getSystemMeta(id?: string): Promise<ApiRecord> {
-    if (id) return api.getSystemMeta(id);
+  async getSystemMeta(id?: string) {
+    if (id) {
+      const data = await api.getSystemMeta(id);
+      return providerResult(data, 'real');
+    }
     try {
       const allMeta = await api.getSystemMeta();
       const map: Record<string, ApiRecord> = {};
       for (const m of (Array.isArray(allMeta) ? allMeta : [])) {
         map[m.systemId] = m;
       }
-      return map;
+      return providerResult(map as ApiRecord, 'real');
     } catch (err: unknown) {
       log.error('Failed to fetch system meta', { error: (err as Error).message });
-      return {};
+      return providerResult({} as ApiRecord, 'real');
     }
   }
 
-  async getSAPMonitoring(id: string): Promise<ApiRecord> {
+  async getSAPMonitoring(id: string) {
     try {
       const [sys, hosts] = await Promise.all([
         api.getSystemById(id) as Promise<ApiRecord>,
         api.getHosts(id) as Promise<ApiRecord[]>,
       ]);
-      if (!sys) return null as unknown as ApiRecord;
+      if (!sys) return providerResult(null as unknown as ApiRecord, 'real');
       const isJava = sys.sapStackType === 'JAVA' || sys.sapStackType === 'DUAL_STACK';
       const health = sys.healthScore ?? 80;
       const avgCpu = hosts?.length ? hosts.reduce((s: number, h: ApiRecord) => s + (h.cpu ?? 30), 0) / hosts.length : 30;
@@ -323,7 +333,7 @@ export class SystemsRealProvider implements SystemsProvider {
       if (isJava) {
         const total24h = Math.round(500 + load * 20);
         const errorCount = Math.round((100 - health) * 0.08);
-        return {
+        return providerResult({
           javaStack: true,
           messageMonitor: {
             total24h,
@@ -365,11 +375,11 @@ export class SystemsRealProvider implements SystemsProvider {
             metadataCache: { hitRate: +(96 + health * 0.03).toFixed(1), entries: Math.round(500 + load * 10), staleEntries: Math.round((100 - health) * 0.2) },
             mappingCache: { hitRate: +(93 + health * 0.06).toFixed(1), compiledMappings: Math.round(30 + load * 0.5), cacheSize: `${Math.round(20 + load * 0.4)}MB` },
           },
-        };
+        } as ApiRecord, 'real');
       }
 
       const failedJobs = Math.round((100 - health) * 0.04);
-      return {
+      return providerResult({
         sm12: {
           totalLocks: Math.round(5 + load * 0.3),
           oldLocks: Math.round((100 - health) * 0.08),
@@ -404,10 +414,10 @@ export class SystemsRealProvider implements SystemsProvider {
         st22TopPrograms: failedJobs > 0
           ? ['ZREP_MATERIAL_REVAL', 'SAPLSDTX', 'CL_GUI_ALV_GRID'].slice(0, Math.min(3, failedJobs))
           : [],
-      };
+      } as ApiRecord, 'real');
     } catch (err: unknown) {
       log.error('Failed to fetch SAP monitoring data', { systemId: id, error: (err as Error).message });
-      return null as unknown as ApiRecord;
+      return providerResult(null as unknown as ApiRecord, 'real');
     }
   }
 }

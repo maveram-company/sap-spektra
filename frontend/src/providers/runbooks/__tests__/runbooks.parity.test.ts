@@ -60,26 +60,26 @@ describe('RunbooksProvider parity tests', () => {
   ])('%s provider', (_name, provider) => {
     it('getRunbooks() returns an array', async () => {
       const result = await provider.getRunbooks();
-      expect(Array.isArray(result)).toBe(true);
-      expect(result.length).toBeGreaterThan(0);
+      expect(Array.isArray(result.data)).toBe(true);
+      expect(result.data.length).toBeGreaterThan(0);
     });
 
     it('getRunbookExecutions() returns an array', async () => {
       const result = await provider.getRunbookExecutions();
-      expect(Array.isArray(result)).toBe(true);
-      expect(result.length).toBeGreaterThan(0);
+      expect(Array.isArray(result.data)).toBe(true);
+      expect(result.data.length).toBeGreaterThan(0);
     });
 
     it('executeRunbook() returns an object', async () => {
       const result = await provider.executeRunbook('rb-1', 'sys-1', false);
-      expect(result).toBeDefined();
-      expect(typeof result).toBe('object');
+      expect(result.data).toBeDefined();
+      expect(typeof result.data).toBe('object');
     });
 
     it('getExecutionDetail() returns data', async () => {
       const result = await provider.getExecutionDetail('exec-1');
       // Both real and mock can return an object or null
-      expect(result === null || typeof result === 'object').toBe(true);
+      expect(result.data === null || typeof result.data === 'object').toBe(true);
     });
   });
 
@@ -91,7 +91,7 @@ describe('RunbooksProvider parity tests', () => {
   ])('%s provider — semantic assertions', (_name, provider) => {
     it('getRunbooks returns RunbookViewModel[] with required fields', async () => {
       const result = await provider.getRunbooks();
-      for (const rb of result) {
+      for (const rb of result.data) {
         expect(typeof rb.id).toBe('string');
         expect(typeof rb.name).toBe('string');
       }
@@ -99,7 +99,7 @@ describe('RunbooksProvider parity tests', () => {
 
     it('getRunbookExecutions returns ExecutionViewModel[] with required fields', async () => {
       const result = await provider.getRunbookExecutions();
-      for (const exec of result) {
+      for (const exec of result.data) {
         expect(typeof exec.id).toBe('string');
         expect(typeof exec.runbookId).toBe('string');
         expect(typeof exec.systemId).toBe('string');
@@ -114,13 +114,13 @@ describe('RunbooksProvider parity tests', () => {
     it('both providers return an object for executeRunbook (non-dry-run)', async () => {
       const realResult = await real.executeRunbook('rb-1', 'sys-1', false);
       const mockResult = await mock.executeRunbook('rb-1', 'sys-1', false);
-      expect(typeof realResult).toBe('object');
-      expect(typeof mockResult).toBe('object');
+      expect(typeof realResult.data).toBe('object');
+      expect(typeof mockResult.data).toBe('object');
     });
 
     it('mock returns dryRun flag for dry run execution', async () => {
       const result = await mock.executeRunbook('rb-1', 'sys-1', true);
-      expect(result.dryRun).toBe(true);
+      expect(result.data.dryRun).toBe(true);
     });
   });
 
@@ -135,9 +135,33 @@ describe('RunbooksProvider parity tests', () => {
 
     it('mock readOnly still returns data (not errors)', async () => {
       const runbooks = await mock.getRunbooks();
-      expect(Array.isArray(runbooks)).toBe(true);
+      expect(Array.isArray(runbooks.data)).toBe(true);
       const execs = await mock.getRunbookExecutions();
-      expect(Array.isArray(execs)).toBe(true);
+      expect(Array.isArray(execs.data)).toBe(true);
+    });
+  });
+
+  // ── E) ProviderResult metadata ──
+
+  describe('ProviderResult metadata', () => {
+    it('real provider returns ProviderResult with source=real and confidence=high', async () => {
+      const result = await real.getRunbooks();
+      expect(result).toHaveProperty('data');
+      expect(result).toHaveProperty('source', 'real');
+      expect(result).toHaveProperty('confidence', 'high');
+      expect(result).toHaveProperty('timestamp');
+      expect(result).toHaveProperty('degraded', false);
+      expect(Array.isArray(result.data)).toBe(true);
+    });
+
+    it('mock provider returns ProviderResult with source=mock and confidence=low', async () => {
+      const result = await mock.getRunbooks();
+      expect(result).toHaveProperty('data');
+      expect(result).toHaveProperty('source', 'mock');
+      expect(result).toHaveProperty('confidence', 'low');
+      expect(result).toHaveProperty('timestamp');
+      expect(result).toHaveProperty('degraded', false);
+      expect(Array.isArray(result.data)).toBe(true);
     });
   });
 });

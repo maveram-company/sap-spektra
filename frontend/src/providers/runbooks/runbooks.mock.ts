@@ -5,29 +5,31 @@
 import { mockRunbooks, mockRunbookExecutions } from '../../lib/mockData';
 import type { ApiRecord } from '../../types/api';
 import type { RunbooksProvider, RunbookViewModel, ExecutionViewModel } from './runbooks.contract';
+import { providerResult } from '../types';
 
 const delay = (ms = 400) => new Promise(r => setTimeout(r, ms));
 
 export class RunbooksMockProvider implements RunbooksProvider {
-  async getRunbooks(): Promise<RunbookViewModel[]> {
+  async getRunbooks() {
     await delay();
-    return mockRunbooks as unknown as RunbookViewModel[];
+    return providerResult(mockRunbooks as unknown as RunbookViewModel[], 'mock');
   }
 
-  async getRunbookExecutions(): Promise<ExecutionViewModel[]> {
+  async getRunbookExecutions() {
     await delay(300);
-    return mockRunbookExecutions as unknown as ExecutionViewModel[];
+    return providerResult(mockRunbookExecutions as unknown as ExecutionViewModel[], 'mock');
   }
 
-  async executeRunbook(runbookId: string, systemId: string, dryRun = false): Promise<ApiRecord> {
+  async executeRunbook(runbookId: string, systemId: string, dryRun = false) {
     await delay(1500);
-    return dryRun
+    const data = dryRun
       ? { dryRun: true, runbookId, systemId, wouldCreate: 'AUTO_EXECUTE', estimatedDuration: '~12s', steps: [], prereqs: [] }
       : { id: `exec-${Date.now()}`, runbookId, systemId, result: 'RUNNING', gate: 'SAFE' };
+    return providerResult(data as ApiRecord, 'mock');
   }
 
-  async getExecutionDetail(_executionId: string): Promise<ApiRecord | null> {
+  async getExecutionDetail(_executionId: string) {
     await delay(300);
-    return null;
+    return providerResult(null as ApiRecord | null, 'mock');
   }
 }

@@ -5,6 +5,7 @@
 import { api } from '../../hooks/useApi';
 import type { ApiRunbook, ApiRecord } from '../../types/api';
 import type { RunbooksProvider, RunbookViewModel, ExecutionViewModel } from './runbooks.contract';
+import { providerResult } from '../types';
 
 export function transformRunbook(r: ApiRunbook): RunbookViewModel {
   const execs = r.executions || [];
@@ -55,21 +56,23 @@ export function transformRunbookExecution(exec: ApiRecord): ExecutionViewModel {
 }
 
 export class RunbooksRealProvider implements RunbooksProvider {
-  async getRunbooks(): Promise<RunbookViewModel[]> {
+  async getRunbooks() {
     const runbooks = await api.getRunbooks() as ApiRunbook[];
-    return runbooks.map(transformRunbook);
+    return providerResult(runbooks.map(transformRunbook), 'real');
   }
 
-  async getRunbookExecutions(): Promise<ExecutionViewModel[]> {
+  async getRunbookExecutions() {
     const execs = await api.getRunbookExecutions() as Record<string, unknown>[];
-    return execs.map(transformRunbookExecution);
+    return providerResult(execs.map(transformRunbookExecution), 'real');
   }
 
-  async executeRunbook(runbookId: string, systemId: string, dryRun = false): Promise<ApiRecord> {
-    return api.executeRunbook(runbookId, systemId, dryRun);
+  async executeRunbook(runbookId: string, systemId: string, dryRun = false) {
+    const data = await api.executeRunbook(runbookId, systemId, dryRun);
+    return providerResult(data, 'real');
   }
 
-  async getExecutionDetail(executionId: string): Promise<ApiRecord | null> {
-    return api.getExecutionDetail(executionId);
+  async getExecutionDetail(executionId: string) {
+    const data = await api.getExecutionDetail(executionId);
+    return providerResult(data, 'real');
   }
 }

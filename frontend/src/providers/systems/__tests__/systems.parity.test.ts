@@ -87,53 +87,53 @@ describe('SystemsProvider parity tests', () => {
   ])('%s provider', (_name, provider) => {
     it('getSystems() returns an array', async () => {
       const result = await provider.getSystems();
-      expect(Array.isArray(result)).toBe(true);
-      expect(result.length).toBeGreaterThan(0);
+      expect(Array.isArray(result.data)).toBe(true);
+      expect(result.data.length).toBeGreaterThan(0);
     });
 
     it('getSystemById() returns an object or null', async () => {
       const result = await provider.getSystemById('sys-1');
-      expect(result === null || typeof result === 'object').toBe(true);
+      expect(result.data === null || typeof result.data === 'object').toBe(true);
     });
 
     it('getSystemMetrics() returns data', async () => {
       const result = await provider.getSystemMetrics('sys-1');
-      expect(result).toBeDefined();
+      expect(result.data).toBeDefined();
     });
 
     it('getSystemBreaches() returns an array', async () => {
       const result = await provider.getSystemBreaches('sys-1');
-      expect(Array.isArray(result)).toBe(true);
+      expect(Array.isArray(result.data)).toBe(true);
     });
 
     it('getSystemSla() returns data', async () => {
       const result = await provider.getSystemSla('sys-1');
-      expect(result === null || typeof result === 'object').toBe(true);
+      expect(result.data === null || typeof result.data === 'object').toBe(true);
     });
 
     it('getServerMetrics() returns object or null', async () => {
       const result = await provider.getServerMetrics('sys-1');
-      expect(result === null || typeof result === 'object').toBe(true);
+      expect(result.data === null || typeof result.data === 'object').toBe(true);
     });
 
     it('getSystemInstances() returns an array', async () => {
       const result = await provider.getSystemInstances('sys-1');
-      expect(Array.isArray(result)).toBe(true);
+      expect(Array.isArray(result.data)).toBe(true);
     });
 
     it('getSystemHosts() returns an array', async () => {
       const result = await provider.getSystemHosts('sys-1');
-      expect(Array.isArray(result)).toBe(true);
+      expect(Array.isArray(result.data)).toBe(true);
     });
 
     it('getSystemMeta() returns data', async () => {
       const result = await provider.getSystemMeta('sys-1');
-      expect(result === null || typeof result === 'object').toBe(true);
+      expect(result.data === null || typeof result.data === 'object').toBe(true);
     });
 
     it('getMetricHistory() returns an array', async () => {
       const result = await provider.getMetricHistory('sap-ep1-01');
-      expect(Array.isArray(result)).toBe(true);
+      expect(Array.isArray(result.data)).toBe(true);
     });
   });
 
@@ -145,7 +145,7 @@ describe('SystemsProvider parity tests', () => {
   ])('%s provider — semantic assertions', (_name, provider) => {
     it('getSystems returns SystemViewModel[] with required fields', async () => {
       const result = await provider.getSystems();
-      for (const sys of result) {
+      for (const sys of result.data) {
         expect(typeof sys.id).toBe('string');
         expect(typeof sys.sid).toBe('string');
         expect(typeof sys.type).toBe('string');
@@ -161,7 +161,8 @@ describe('SystemsProvider parity tests', () => {
     });
 
     it('getSystemById returns SystemViewModel with required fields', async () => {
-      const sys = await provider.getSystemById('sys-1') as SystemViewModel;
+      const result = await provider.getSystemById('sys-1');
+      const sys = result.data as SystemViewModel;
       expect(sys).not.toBeNull();
       expect(typeof sys.id).toBe('string');
       expect(typeof sys.sid).toBe('string');
@@ -181,9 +182,33 @@ describe('SystemsProvider parity tests', () => {
 
     it('mock readOnly still returns data (not errors)', async () => {
       const systems = await mock.getSystems();
-      expect(Array.isArray(systems)).toBe(true);
+      expect(Array.isArray(systems.data)).toBe(true);
       const metrics = await mock.getSystemMetrics('sys-1');
-      expect(metrics).toBeDefined();
+      expect(metrics.data).toBeDefined();
+    });
+  });
+
+  // ── E) ProviderResult metadata ──
+
+  describe('ProviderResult metadata', () => {
+    it('real provider returns ProviderResult with source=real and confidence=high', async () => {
+      const result = await real.getSystems();
+      expect(result).toHaveProperty('data');
+      expect(result).toHaveProperty('source', 'real');
+      expect(result).toHaveProperty('confidence', 'high');
+      expect(result).toHaveProperty('timestamp');
+      expect(result).toHaveProperty('degraded', false);
+      expect(Array.isArray(result.data)).toBe(true);
+    });
+
+    it('mock provider returns ProviderResult with source=mock and confidence=low', async () => {
+      const result = await mock.getSystems();
+      expect(result).toHaveProperty('data');
+      expect(result).toHaveProperty('source', 'mock');
+      expect(result).toHaveProperty('confidence', 'low');
+      expect(result).toHaveProperty('timestamp');
+      expect(result).toHaveProperty('degraded', false);
+      expect(Array.isArray(result.data)).toBe(true);
     });
   });
 });

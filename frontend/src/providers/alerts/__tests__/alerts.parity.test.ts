@@ -48,17 +48,17 @@ describe('AlertsProvider parity tests', () => {
   ])('%s provider', (_name, provider) => {
     it('getAlerts() returns an array', async () => {
       const result = await provider.getAlerts();
-      expect(Array.isArray(result)).toBe(true);
-      expect(result.length).toBeGreaterThan(0);
+      expect(Array.isArray(result.data)).toBe(true);
+      expect(result.data.length).toBeGreaterThan(0);
     });
 
     it('getAlertStats() returns object with total, critical, warnings', async () => {
       const result = await provider.getAlertStats();
-      expect(result).toBeDefined();
-      expect(typeof result).toBe('object');
-      expect(typeof result.total).toBe('number');
-      expect(typeof result.critical).toBe('number');
-      expect(typeof result.warnings).toBe('number');
+      expect(result.data).toBeDefined();
+      expect(typeof result.data).toBe('object');
+      expect(typeof result.data.total).toBe('number');
+      expect(typeof result.data.critical).toBe('number');
+      expect(typeof result.data.warnings).toBe('number');
     });
   });
 
@@ -70,7 +70,7 @@ describe('AlertsProvider parity tests', () => {
   ])('%s provider — semantic assertions', (_name, provider) => {
     it('getAlerts returns AlertViewModel[] with required fields', async () => {
       const result = await provider.getAlerts();
-      for (const alert of result) {
+      for (const alert of result.data) {
         expect(typeof alert.id).toBe('string');
         expect(typeof alert.level).toBe('string');
         expect(typeof alert.status).toBe('string');
@@ -80,7 +80,8 @@ describe('AlertsProvider parity tests', () => {
     });
 
     it('getAlertStats returns AlertStats with numeric fields', async () => {
-      const stats = await provider.getAlertStats();
+      const result = await provider.getAlertStats();
+      const stats = result.data;
       expect(stats.total).toBeGreaterThanOrEqual(0);
       expect(stats.critical).toBeGreaterThanOrEqual(0);
       expect(stats.warnings).toBeGreaterThanOrEqual(0);
@@ -94,8 +95,8 @@ describe('AlertsProvider parity tests', () => {
     it('mock supports filtering by status', async () => {
       const all = await mock.getAlerts();
       const resolved = await mock.getAlerts({ status: 'resolved' });
-      expect(resolved.length).toBeLessThan(all.length);
-      for (const alert of resolved) {
+      expect(resolved.data.length).toBeLessThan(all.data.length);
+      for (const alert of resolved.data) {
         expect(alert.status).toBe('resolved');
       }
     });
@@ -103,15 +104,15 @@ describe('AlertsProvider parity tests', () => {
     it('mock supports filtering by level', async () => {
       const all = await mock.getAlerts();
       const critical = await mock.getAlerts({ level: 'critical' });
-      expect(critical.length).toBeLessThan(all.length);
-      for (const alert of critical) {
+      expect(critical.data.length).toBeLessThan(all.data.length);
+      for (const alert of critical.data) {
         expect(alert.level).toBe('critical');
       }
     });
 
     it('real provider accepts filters parameter', async () => {
       const result = await real.getAlerts({ status: 'open', level: 'critical' });
-      expect(Array.isArray(result)).toBe(true);
+      expect(Array.isArray(result.data)).toBe(true);
     });
   });
 
@@ -126,9 +127,33 @@ describe('AlertsProvider parity tests', () => {
 
     it('mock readOnly still returns data (not errors)', async () => {
       const alerts = await mock.getAlerts();
-      expect(Array.isArray(alerts)).toBe(true);
+      expect(Array.isArray(alerts.data)).toBe(true);
       const stats = await mock.getAlertStats();
-      expect(typeof stats.total).toBe('number');
+      expect(typeof stats.data.total).toBe('number');
+    });
+  });
+
+  // ── E) ProviderResult metadata ──
+
+  describe('ProviderResult metadata', () => {
+    it('real provider returns ProviderResult with source=real and confidence=high', async () => {
+      const result = await real.getAlerts();
+      expect(result).toHaveProperty('data');
+      expect(result).toHaveProperty('source', 'real');
+      expect(result).toHaveProperty('confidence', 'high');
+      expect(result).toHaveProperty('timestamp');
+      expect(result).toHaveProperty('degraded', false);
+      expect(Array.isArray(result.data)).toBe(true);
+    });
+
+    it('mock provider returns ProviderResult with source=mock and confidence=low', async () => {
+      const result = await mock.getAlerts();
+      expect(result).toHaveProperty('data');
+      expect(result).toHaveProperty('source', 'mock');
+      expect(result).toHaveProperty('confidence', 'low');
+      expect(result).toHaveProperty('timestamp');
+      expect(result).toHaveProperty('degraded', false);
+      expect(Array.isArray(result.data)).toBe(true);
     });
   });
 });

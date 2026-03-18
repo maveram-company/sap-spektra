@@ -52,25 +52,25 @@ function registry(): ProviderRegistry {
   return getRegistry(resolveMode());
 }
 
-// ── Systems ──
+// ── Systems (unwrap .data for backward compat) ──
 
-export const getSystems = async () => registry().systems.getSystems();
-export const getSystemById = async (id: string) => registry().systems.getSystemById(id);
-export const getSystemMetrics = async (id: string, hours = 2) => registry().systems.getSystemMetrics(id, hours);
-export const getSystemBreaches = async (id: string, limit = 50) => registry().systems.getSystemBreaches(id, limit);
-export const getSystemSla = async (id: string) => registry().systems.getSystemSla(id);
-export const getServerMetrics = async (id: string) => registry().systems.getServerMetrics(id);
-export const getServerDeps = async (id: string) => registry().systems.getServerDeps(id);
-export const getSystemInstances = async (id: string) => registry().systems.getSystemInstances(id);
-export const getSystemHosts = async (id: string) => registry().systems.getSystemHosts(id);
-export const getSystemMeta = async (id?: string) => registry().systems.getSystemMeta(id);
-export const getSAPMonitoring = async (id: string) => registry().systems.getSAPMonitoring(id);
-export const getMetricHistory = async (hostname: string) => registry().systems.getMetricHistory(hostname);
+export const getSystems = async () => (await registry().systems.getSystems()).data;
+export const getSystemById = async (id: string) => (await registry().systems.getSystemById(id)).data;
+export const getSystemMetrics = async (id: string, hours = 2) => (await registry().systems.getSystemMetrics(id, hours)).data;
+export const getSystemBreaches = async (id: string, limit = 50) => (await registry().systems.getSystemBreaches(id, limit)).data;
+export const getSystemSla = async (id: string) => (await registry().systems.getSystemSla(id)).data;
+export const getServerMetrics = async (id: string) => (await registry().systems.getServerMetrics(id)).data;
+export const getServerDeps = async (id: string) => (await registry().systems.getServerDeps(id)).data;
+export const getSystemInstances = async (id: string) => (await registry().systems.getSystemInstances(id)).data;
+export const getSystemHosts = async (id: string) => (await registry().systems.getSystemHosts(id)).data;
+export const getSystemMeta = async (id?: string) => (await registry().systems.getSystemMeta(id)).data;
+export const getSAPMonitoring = async (id: string) => (await registry().systems.getSAPMonitoring(id)).data;
+export const getMetricHistory = async (hostname: string) => (await registry().systems.getMetricHistory(hostname)).data;
 
-// ── Alerts ──
+// ── Alerts (unwrap .data for backward compat) ──
 
-export const getAlerts = async (filters?: { status?: string; level?: string; systemId?: string }) => registry().alerts.getAlerts(filters);
-export const getAlertStats = async () => registry().alerts.getAlertStats();
+export const getAlerts = async (filters?: { status?: string; level?: string; systemId?: string }) => (await registry().alerts.getAlerts(filters)).data;
+export const getAlertStats = async () => (await registry().alerts.getAlertStats()).data;
 
 // ── Events ──
 
@@ -84,18 +84,25 @@ export const getTransports = async () => registry().operations.getTransports();
 export const getCertificates = async () => registry().operations.getCertificates();
 export const getLicenses = async () => registry().operations.getLicenses();
 
-// ── Runbooks ──
+// ── Runbooks (unwrap .data for backward compat) ──
 
-export const getRunbooks = async () => registry().runbooks.getRunbooks();
-export const getRunbookExecutions = async () => registry().runbooks.getRunbookExecutions();
-export const executeRunbook = async (runbookId: string, systemId: string, dryRun = false) => registry().runbooks.executeRunbook(runbookId, systemId, dryRun);
-export const getExecutionDetail = async (executionId: string) => registry().runbooks.getExecutionDetail(executionId);
+export const getRunbooks = async () => (await registry().runbooks.getRunbooks()).data;
+export const getRunbookExecutions = async () => (await registry().runbooks.getRunbookExecutions()).data;
+export const executeRunbook = async (runbookId: string, systemId: string, dryRun = false) => (await registry().runbooks.executeRunbook(runbookId, systemId, dryRun)).data;
+export const getExecutionDetail = async (executionId: string) => (await registry().runbooks.getExecutionDetail(executionId)).data;
 
-// ── Approvals ──
+// ── Approvals (unwrap .data for backward compat) ──
 
-export const getApprovals = async (status?: string) => registry().approvals.getApprovals(status);
-export const approveAction = async (id: string) => registry().approvals.approveAction(id);
-export const rejectAction = async (id: string) => registry().approvals.rejectAction(id);
+export const getApprovals = async (status?: string) => (await registry().approvals.getApprovals(status)).data;
+export const approveAction = async (id: string) => (await registry().approvals.approveAction(id)).data;
+export const rejectAction = async (id: string) => (await registry().approvals.rejectAction(id)).data;
+
+// ── Full ProviderResult accessors for core domains ──
+
+export const getSystemsResult = async () => registry().systems.getSystems();
+export const getAlertsResult = async (filters?: { status?: string; level?: string; systemId?: string }) => registry().alerts.getAlerts(filters);
+export const getRunbooksResult = async () => registry().runbooks.getRunbooks();
+export const getApprovalsResult = async (status?: string) => registry().approvals.getApprovals(status);
 
 // ── Analytics ──
 

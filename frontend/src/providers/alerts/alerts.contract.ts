@@ -2,6 +2,8 @@
 // SAP Spektra — Alerts Provider Contract
 // ══════════════════════════════════════════════════════════════
 
+import type { ProviderResult } from '../types';
+
 export interface AlertViewModel {
   id: string;
   title: string;
@@ -21,6 +23,6 @@ export interface AlertStats {
 }
 
 export interface AlertsProvider {
-  getAlerts(filters?: { status?: string; level?: string; systemId?: string }): Promise<AlertViewModel[]>;
-  getAlertStats(): Promise<AlertStats>;
+  getAlerts(filters?: { status?: string; level?: string; systemId?: string }): Promise<ProviderResult<AlertViewModel[]>>;
+  getAlertStats(): Promise<ProviderResult<AlertStats>>;
 }

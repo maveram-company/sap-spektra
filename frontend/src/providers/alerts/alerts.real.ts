@@ -5,6 +5,7 @@
 import { api } from '../../hooks/useApi';
 import type { ApiAlert } from '../../types/api';
 import type { AlertsProvider, AlertViewModel, AlertStats } from './alerts.contract';
+import { providerResult } from '../types';
 
 export function transformAlert(a: ApiAlert): AlertViewModel {
   return {
@@ -18,12 +19,13 @@ export function transformAlert(a: ApiAlert): AlertViewModel {
 }
 
 export class AlertsRealProvider implements AlertsProvider {
-  async getAlerts(_filters?: { status?: string; level?: string; systemId?: string }): Promise<AlertViewModel[]> {
+  async getAlerts(_filters?: { status?: string; level?: string; systemId?: string }) {
     const alerts = await api.getAlerts(_filters) as ApiAlert[];
-    return alerts.map(transformAlert);
+    return providerResult(alerts.map(transformAlert), 'real');
   }
 
-  async getAlertStats(): Promise<AlertStats> {
-    return api.getAlertStats() as Promise<AlertStats>;
+  async getAlertStats() {
+    const stats = await api.getAlertStats() as AlertStats;
+    return providerResult(stats, 'real');
   }
 }

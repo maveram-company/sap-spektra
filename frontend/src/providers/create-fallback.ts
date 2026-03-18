@@ -33,7 +33,18 @@ export function createFallbackProvider<T extends object>(
           const message = err instanceof Error ? err.message : 'Unknown error';
           log.warn(`${String(prop)} failed, falling back to mock`, { error: message });
           if (typeof mockFn === 'function') {
-            return mockFn.apply(mock, args);
+            const mockResult = await mockFn.apply(mock, args);
+            // If mock returns a ProviderResult, enrich it with fallback metadata
+            if (mockResult && typeof mockResult === 'object' && 'data' in mockResult && 'source' in mockResult) {
+              return {
+                ...mockResult,
+                source: 'fallback',
+                confidence: 'medium',
+                degraded: true,
+                reason: `Fallback: ${message}`,
+              };
+            }
+            return mockResult;
           }
           throw err;
         }

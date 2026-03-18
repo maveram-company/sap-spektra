@@ -3,6 +3,7 @@
 // ══════════════════════════════════════════════════════════════
 
 import type { ApiRecord } from '../../types/api';
+import type { ProviderResult } from '../types';
 
 export interface ApprovalViewModel {
   id: string;
@@ -16,7 +17,7 @@ export interface ApprovalViewModel {
 }
 
 export interface ApprovalsProvider {
-  getApprovals(status?: string): Promise<ApprovalViewModel[]>;
-  approveAction(id: string): Promise<ApiRecord>;
-  rejectAction(id: string): Promise<ApiRecord>;
+  getApprovals(status?: string): Promise<ProviderResult<ApprovalViewModel[]>>;
+  approveAction(id: string): Promise<ProviderResult<ApiRecord>>;
+  rejectAction(id: string): Promise<ProviderResult<ApiRecord>>;
 }

@@ -3,6 +3,7 @@
 // ══════════════════════════════════════════════════════════════
 
 import type { ApiRecord } from '../../types/api';
+import type { ProviderResult } from '../types';
 
 export interface RunbookViewModel {
   id: string;
@@ -25,8 +26,8 @@ export interface ExecutionViewModel {
 }
 
 export interface RunbooksProvider {
-  getRunbooks(): Promise<RunbookViewModel[]>;
-  getRunbookExecutions(): Promise<ExecutionViewModel[]>;
-  executeRunbook(runbookId: string, systemId: string, dryRun?: boolean): Promise<ApiRecord>;
-  getExecutionDetail(executionId: string): Promise<ApiRecord | null>;
+  getRunbooks(): Promise<ProviderResult<RunbookViewModel[]>>;
+  getRunbookExecutions(): Promise<ProviderResult<ExecutionViewModel[]>>;
+  executeRunbook(runbookId: string, systemId: string, dryRun?: boolean): Promise<ProviderResult<ApiRecord>>;
+  getExecutionDetail(executionId: string): Promise<ProviderResult<ApiRecord | null>>;
 }
