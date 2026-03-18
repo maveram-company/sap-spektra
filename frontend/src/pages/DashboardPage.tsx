@@ -42,7 +42,7 @@ const variantIconGradient = {
 // Icon is used as a JSX component (<Icon />) below; ESLint's no-unused-vars
 // does not detect JSX usage of destructured-and-renamed props.
 // eslint-disable-next-line no-unused-vars
-function KPICard({ icon: Icon, label, value, change, variant = 'default' }: { icon: any; label: any; value: any; change?: any; variant?: string }) {
+function KPICard({ icon: Icon, label, value, change, variant = 'default' }: { icon: React.ComponentType<{ size: number; className?: string }>; label: string; value: string | number; change?: number; variant?: string }) {
   const valueColor   = (variantValueColors as Record<string, string>)[variant];
   const glowClass    = (variantGlowClass as Record<string, string>)[variant];
   const [gradFrom, gradTo] = (variantIconGradient as Record<string, string[]>)[variant];
@@ -86,7 +86,7 @@ function KPICard({ icon: Icon, label, value, change, variant = 'default' }: { ic
   );
 }
 
-function SystemCard({ system, onClick }: { system: any; onClick: any }) {
+function SystemCard({ system, onClick }: { system: ApiRecord; onClick: () => void }) {
   return (
     <div
       role="button"
@@ -208,9 +208,9 @@ export default function DashboardPage() {
   );
 
   // Cálculo de KPIs
-  const healthySystems    = systems.filter((s: any) => s.healthScore >= 90).length;
-  const totalBreaches     = systems.reduce((sum: any, s: any) => sum + s.breaches, 0);
-  const pendingApprovals  = approvals.filter((a: any) => a.status === 'PENDING').length;
+  const healthySystems    = systems.filter((s: ApiRecord) => s.healthScore >= 90).length;
+  const totalBreaches     = systems.reduce((sum: number, s: ApiRecord) => sum + (s.breaches || 0), 0);
+  const pendingApprovals  = approvals.filter((a: ApiRecord) => a.status === 'PENDING').length;
 
   return (
     <div>
@@ -278,7 +278,7 @@ export default function DashboardPage() {
             Grid de SystemCards
         ══════════════════════════════════════ */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-          {systems.map((system: any) => (
+          {systems.map((system: ApiRecord) => (
             <SystemCard
               key={system.id}
               system={system}

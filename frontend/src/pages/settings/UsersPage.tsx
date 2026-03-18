@@ -23,13 +23,13 @@ export default function UsersPage() {
     let mounted = true;
     dataService.getUsers()
       .then(data => { if (mounted) setUsers(data); })
-      .catch((err: any) => { if (mounted) setError(err.message); })
+      .catch((err: unknown) => { if (mounted) setError((err as Error).message); })
       .finally(() => { if (mounted) setLoading(false); });
     return () => { mounted = false; };
   }, []);
   const [showInviteModal, setShowInviteModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
-  const [editingUser, setEditingUser] = useState<Record<string, any> | null>(null);
+  const [editingUser, setEditingUser] = useState<ApiRecord | null>(null);
   const [inviteForm, setInviteForm] = useState({ email: '', role: 'viewer', name: '' });
   const [sending, setSending] = useState(false);
   const [deleteConfirm, setDeleteConfirm] = useState<string | null>(null);
@@ -47,7 +47,7 @@ export default function UsersPage() {
   const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   const VALID_ROLES = ['admin', 'operator', 'escalation', 'viewer'];
 
-  const validateField = (name: any, value: any) => {
+  const validateField = (name: string, value: string) => {
     switch (name) {
       case 'email':
         if (!value.trim()) return 'Email es requerido';
@@ -65,7 +65,7 @@ export default function UsersPage() {
     }
   };
 
-  const validateForm = (form: any) => {
+  const validateForm = (form: ApiRecord) => {
     const errors: Record<string, string> = {};
     const emailErr = validateField('email', form.email);
     if (emailErr) errors.email = emailErr;
@@ -95,46 +95,46 @@ export default function UsersPage() {
       setShowInviteModal(false);
       setInviteForm({ email: '', role: 'viewer', name: '' });
       setFieldErrors({});
-    } catch (err: any) {
-      setActionError(err instanceof Error ? err.message : 'Error al enviar invitación');
+    } catch (err: unknown) {
+      setActionError(err instanceof Error ? (err as Error).message : 'Error al enviar invitación');
     } finally {
       setSending(false);
     }
   };
 
-  const handleEdit = (user: any) => {
+  const handleEdit = (user: ApiRecord) => {
     setEditingUser({ ...user });
     setShowEditModal(true);
   };
 
   const handleSaveEdit = async () => {
-    if (!validateForm(editingUser)) return;
+    if (!editingUser || !validateForm(editingUser)) return;
     setSending(true);
     setActionError(null);
     try {
       // Demo mode: simulated delay — connect to real API when available
       await new Promise(r => setTimeout(r, 600));
-      setUsers(prev => prev.map((u: any) => u.id === editingUser!.id ? editingUser : u));
+      setUsers(prev => prev.map((u: ApiRecord) => u.id === editingUser!.id ? editingUser! : u));
       setShowEditModal(false);
       setEditingUser(null);
       setFieldErrors({});
-    } catch (err: any) {
-      setActionError(err instanceof Error ? err.message : 'Error al guardar cambios');
+    } catch (err: unknown) {
+      setActionError(err instanceof Error ? (err as Error).message : 'Error al guardar cambios');
     } finally {
       setSending(false);
     }
   };
 
-  const handleDelete = async (id: any) => {
+  const handleDelete = async (id: string) => {
     if (deleteConfirm === id) {
       setActionError(null);
       try {
         // Demo mode: simulated delay — connect to real API when available
         await new Promise(r => setTimeout(r, 500));
-        setUsers(prev => prev.filter((u: any) => u.id !== id));
+        setUsers(prev => prev.filter((u: ApiRecord) => u.id !== id));
         setDeleteConfirm(null);
-      } catch (err: any) {
-        setActionError(err instanceof Error ? err.message : 'Error al eliminar usuario');
+      } catch (err: unknown) {
+        setActionError(err instanceof Error ? (err as Error).message : 'Error al eliminar usuario');
       }
     } else {
       setDeleteConfirm(id);
@@ -142,7 +142,7 @@ export default function UsersPage() {
     }
   };
 
-  const roleVariant = (role: any) => {
+  const roleVariant = (role: string) => {
     const map = { admin: 'danger', operator: 'primary', escalation: 'warning', viewer: 'default' };
     return (map as Record<string, string>)[role] || 'default';
   };
@@ -185,7 +185,7 @@ export default function UsersPage() {
           </tr>
         </TableHeader>
         <TableBody>
-          {users.map((user: any) => (
+          {users.map((user: ApiRecord) => (
             <TableRow key={user.id}>
               <TableCell>
                 <div className="flex items-center gap-3">

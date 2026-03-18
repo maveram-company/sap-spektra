@@ -22,7 +22,7 @@ const statusConfig = {
 
 const classLabels = { A: 'Clase A (alta)', B: 'Clase B (media)', C: 'Clase C (baja)' };
 
-function JobStatusBadge({ status }: { status: any }) {
+function JobStatusBadge({ status }: { status: string }) {
   const { t } = useTranslation();
   const cfg = (statusConfig as Record<string, any>)[status] || statusConfig.finished;
   const Icon = cfg.icon;
@@ -48,15 +48,15 @@ export default function BackgroundJobsPage() {
       setJobs(j);
       setSystems(s);
       setLoading(false);
-    }).catch((err: any) => {
-      log.warn('Fetch failed', { error: err.message });
+    }).catch((err: unknown) => {
+      log.warn('Fetch failed', { error: (err as Error).message });
       setError(t('common.error.loadData'));
       setLoading(false);
     });
   }, []);
 
   const filtered = useMemo(() => {
-    return jobs.filter((job: any) => {
+    return jobs.filter((job: ApiRecord) => {
       if (statusFilter !== 'all' && job.status !== statusFilter) return false;
       if (systemFilter !== 'all' && job.systemId !== systemFilter) return false;
       return true;
@@ -64,10 +64,10 @@ export default function BackgroundJobsPage() {
   }, [statusFilter, systemFilter, jobs]);
 
   // KPI summaries
-  const running = jobs.filter((j: any) => j.status === 'running').length;
-  const scheduled = jobs.filter((j: any) => j.status === 'scheduled').length;
-  const failed = jobs.filter((j: any) => j.status === 'failed').length;
-  const finished = jobs.filter((j: any) => j.status === 'finished').length;
+  const running = jobs.filter((j: ApiRecord) => j.status === 'running').length;
+  const scheduled = jobs.filter((j: ApiRecord) => j.status === 'scheduled').length;
+  const failed = jobs.filter((j: ApiRecord) => j.status === 'failed').length;
+  const finished = jobs.filter((j: ApiRecord) => j.status === 'finished').length;
 
   if (loading) return <PageLoading message="Cargando jobs..." />;
 
@@ -157,7 +157,7 @@ export default function BackgroundJobsPage() {
             className="appearance-none bg-surface border border-border rounded-lg px-3 py-2 text-sm text-text-primary focus:outline-none focus:ring-2 focus:ring-primary-500 cursor-pointer"
           >
             <option value="all">Todos los sistemas</option>
-            {systems.map((s: any) => (
+            {systems.map((s: ApiRecord) => (
               <option key={s.id} value={s.id}>{s.sid} — {s.description || s.type}</option>
             ))}
           </select>
@@ -182,7 +182,7 @@ export default function BackgroundJobsPage() {
               </tr>
             </TableHeader>
             <TableBody>
-              {filtered.map((job: any) => (
+              {filtered.map((job: ApiRecord) => (
                 <TableRow key={job.id}>
                   <TableCell>
                     <div>
@@ -223,7 +223,7 @@ export default function BackgroundJobsPage() {
         </Card>
 
         {/* Failed jobs detail */}
-        {filtered.some((j: any) => j.status === 'failed') && (
+        {filtered.some((j: ApiRecord) => j.status === 'failed') && (
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
@@ -231,11 +231,11 @@ export default function BackgroundJobsPage() {
                 Jobs Fallidos — Detalle
               </CardTitle>
               <Badge variant="danger" size="sm" dot>
-                {filtered.filter((j: any) => j.status === 'failed').length}
+                {filtered.filter((j: ApiRecord) => j.status === 'failed').length}
               </Badge>
             </CardHeader>
             <div className="space-y-3">
-              {filtered.filter((j: any) => j.status === 'failed').map((job: any) => (
+              {filtered.filter((j: ApiRecord) => j.status === 'failed').map((job: ApiRecord) => (
                 <div key={job.id} className="border border-danger-200 dark:border-danger-800 rounded-lg p-4 bg-danger-50 dark:bg-danger-900/20">
                   <div className="flex items-center gap-2 mb-2">
                     <span className="font-mono text-sm font-bold text-text-primary">{job.name}</span>

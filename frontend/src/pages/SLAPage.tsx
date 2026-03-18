@@ -9,13 +9,13 @@ import type { ApiRecord } from '../types';
 
 const log = createLogger('SLAPage');
 
-function getHealthColor(score: any) {
+function getHealthColor(score: number) {
   if (score >= 85) return { border: 'border-success-500', text: 'text-success-600', bg: 'bg-success-50 dark:bg-success-500/10' };
   if (score >= 65) return { border: 'border-warning-500', text: 'text-warning-600', bg: 'bg-warning-50 dark:bg-warning-500/10' };
   return { border: 'border-danger-500', text: 'text-danger-600', bg: 'bg-danger-50 dark:bg-danger-500/10' };
 }
 
-function HealthCircle({ score }: { score: any }) {
+function HealthCircle({ score }: { score: number }) {
   const colors = getHealthColor(score);
   return (
     <div
@@ -26,7 +26,7 @@ function HealthCircle({ score }: { score: any }) {
   );
 }
 
-function MetricItem({ label, value, unit, color }: { label: any; value: any; unit?: any; color: any }) {
+function MetricItem({ label, value, unit, color }: { label: string; value: string | number; unit?: string; color: string }) {
   return (
     <div className="text-center">
       <p className={`text-2xl font-bold ${color}`}>
@@ -41,7 +41,7 @@ function MetricItem({ label, value, unit, color }: { label: any; value: any; uni
 // Icon is used as a JSX component (<Icon />) below; ESLint's no-unused-vars
 // does not detect JSX usage of destructured-and-renamed props.
 // eslint-disable-next-line no-unused-vars
-function SimpleTable({ title, icon: Icon, rows }: { title: any; icon: any; rows: any[] }) {
+function SimpleTable({ title, icon: Icon, rows }: { title: string; icon: React.ComponentType<{ size: number; className?: string }>; rows: { label: string; value: string | number }[] }) {
   return (
     <div className="bg-surface rounded-xl border border-border p-5">
       <div className="flex items-center gap-2 mb-4">
@@ -56,7 +56,7 @@ function SimpleTable({ title, icon: Icon, rows }: { title: any; icon: any; rows:
           </tr>
         </thead>
         <tbody>
-          {rows.map((row: any, i: any) => (
+          {rows.map((row, i) => (
             <tr key={i} className="border-b border-border last:border-0">
               <td className="py-2.5 text-sm text-text-secondary">{row.label}</td>
               <td className="py-2.5 text-sm font-medium text-text-primary text-right">{row.value}</td>
@@ -80,8 +80,8 @@ export default function SLAPage() {
       setSystems(sys);
       setAnalytics(anl);
       setLoading(false);
-    }).catch((err: any) => {
-      log.warn('Fetch failed', { error: err.message });
+    }).catch((err: unknown) => {
+      log.warn('Fetch failed', { error: (err as Error).message });
       setError(t('common.error.loadData'));
       setLoading(false);
     });
@@ -128,7 +128,7 @@ export default function SLAPage() {
         {/* System SLA Cards */}
         <h2 className="text-base font-semibold text-text-primary mb-4">SLA por Sistema</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
-          {systems.map((system: any) => (
+          {systems.map((system: ApiRecord) => (
               <div
                 key={system.id}
                 className="bg-surface rounded-xl border border-border p-5"

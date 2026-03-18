@@ -46,8 +46,8 @@ import config from '../config';
 import { api } from '../hooks/useApi';
 import { createLogger } from '../lib/logger';
 import type {
-  ApiSystem, ApiAlert, ApiEvent, ApiApproval, ApiOperation,
-  ApiRunbook, ApiAuditEntry, ApiConnector,
+  ApiSystem, ApiHost, ApiAlert, ApiEvent, ApiApproval, ApiOperation,
+  ApiRunbook, ApiAuditEntry, ApiConnector, ApiRecord,
 } from '../types/api';
 
 const log = createLogger('DataService');
@@ -115,9 +115,9 @@ function transformSystem(s: ApiSystem) {
   let diskUsage = null;
 
   if (hasRealMetrics) {
-    const avgCpu = hosts.reduce((sum: any, h: any) => sum + (h.cpu || 0), 0) / hosts.length;
-    const avgMem = hosts.reduce((sum: any, h: any) => sum + (h.memory || 0), 0) / hosts.length;
-    const avgDisk = hosts.reduce((sum: any, h: any) => sum + (h.disk || 0), 0) / hosts.length;
+    const avgCpu = hosts.reduce((sum: number, h: ApiHost) => sum + (Number(h.cpu) || 0), 0) / hosts.length;
+    const avgMem = hosts.reduce((sum: number, h: ApiHost) => sum + (Number(h.memory) || 0), 0) / hosts.length;
+    const avgDisk = hosts.reduce((sum: number, h: ApiHost) => sum + (Number(h.disk) || 0), 0) / hosts.length;
     cpuUsage = Math.round(avgCpu);
     memUsage = Math.round(avgMem);
     diskUsage = Math.round(avgDisk);
@@ -190,24 +190,27 @@ function transformAudit(a: ApiAuditEntry) {
   };
 }
 
-function transformDiscovery(systems: any) {
+function transformDiscovery(systems: ApiSystem[]) {
   const instances = [];
   for (const sys of systems) {
-    if (sys.instances?.length) {
-      for (const inst of sys.instances) {
-        const host = sys.hosts?.find((h: any) => h.id === inst.hostId);
+    const sysInstances = (sys.instances || []) as ApiRecord[];
+    const meta = (sys.systemMeta || {}) as ApiRecord;
+    const ha = (sys.haConfig || {}) as ApiRecord;
+    if (sysInstances.length) {
+      for (const inst of sysInstances) {
+        const host = sys.hosts?.find((h: ApiHost) => h.id === inst.hostId);
         instances.push({
           instanceId: `${sys.sid}_${inst.instanceNr}`,
           hostname: host?.hostname || inst.hostId || '',
           sid: sys.sid,
           role: inst.role || inst.type || '',
           product: sys.sapProduct || '',
-          kernel: sys.systemMeta?.kernelVersion || '',
+          kernel: meta.kernelVersion || '',
           dbType: sys.dbType,
           os: host?.os || '',
-          haEnabled: !!sys.haConfig?.haEnabled,
-          haType: sys.haConfig?.haStrategy || null,
-          haPeer: sys.haConfig?.secondaryNode || null,
+          haEnabled: !!ha.haEnabled,
+          haType: ha.haStrategy || null,
+          haPeer: ha.secondaryNode || null,
           env: sys.environment,
           scanStatus: 'success',
           confidence: 'high',
@@ -222,12 +225,12 @@ function transformDiscovery(systems: any) {
         sid: sys.sid,
         role: sys.sapStackType || 'Application Server',
         product: sys.sapProduct || '',
-        kernel: sys.systemMeta?.kernelVersion || '',
+        kernel: meta.kernelVersion || '',
         dbType: sys.dbType,
         os: host?.os || '',
-        haEnabled: !!sys.haConfig?.haEnabled,
-        haType: sys.haConfig?.haStrategy || null,
-        haPeer: sys.haConfig?.secondaryNode || null,
+        haEnabled: !!ha.haEnabled,
+        haType: ha.haStrategy || null,
+        haPeer: ha.secondaryNode || null,
         env: sys.environment,
         scanStatus: host ? 'success' : 'fail',
         confidence: host ? 'high' : 'low',
@@ -250,14 +253,14 @@ function transformRunbook(r: ApiRunbook) {
   // Computar stats desde las ejecuciones incluidas por la API
   const execs = r.executions || [];
   const totalRuns = execs.length;
-  const successCount = execs.filter((e: any) => e.result === 'SUCCESS').length;
+  const successCount = execs.filter((e: Record<string, unknown>) => e.result === 'SUCCESS').length;
   const successRate = totalRuns > 0 ? Math.round((successCount / totalRuns) * 100) : 0;
 
   // Parsear durations para calcular promedio
   let avgDuration = '—';
   if (totalRuns > 0) {
-    const durations = execs.filter((e: any) => e.duration).map((e: any) => e.duration);
-    avgDuration = durations.length > 0 ? durations[0] : '—';
+    const durations = execs.filter((e: Record<string, unknown>) => e.duration).map((e: Record<string, unknown>) => e.duration);
+    avgDuration = durations.length > 0 ? String(durations[0]) : '—';
   }
 
   // Parsear prereqs y steps si son strings JSON
@@ -282,7 +285,7 @@ function transformRunbook(r: ApiRunbook) {
   };
 }
 
-function transformRunbookExecution(exec: any) {
+function transformRunbookExecution(exec: ApiRecord) {
   return {
     ...exec,
     sid: exec.system?.sid || '',
@@ -292,7 +295,7 @@ function transformRunbookExecution(exec: any) {
   };
 }
 
-function transformJob(j: any) {
+function transformJob(j: ApiRecord) {
   // Parsear details JSON si existe
   let errorMsg = null;
   if (j.details) {
@@ -315,7 +318,7 @@ function transformJob(j: any) {
   };
 }
 
-function transformTransport(t: any) {
+function transformTransport(t: ApiRecord) {
   return {
     ...t,
     sid: t.system?.sid || t.sid || '',
@@ -323,14 +326,14 @@ function transformTransport(t: any) {
   };
 }
 
-function transformCertificate(c: any) {
+function transformCertificate(c: ApiRecord) {
   return {
     ...c,
     sid: c.system?.sid || c.sid || '',
   };
 }
 
-function transformHAConfig(h: any) {
+function transformHAConfig(h: ApiRecord) {
   const sid = h.system?.sid || '';
   const env = h.system?.environment || 'PRD';
   const strategy = h.haStrategy || 'HOT_STANDBY';
@@ -410,12 +413,12 @@ function transformHAConfig(h: any) {
 }
 
 // Transforma la respuesta del API de analytics al formato que las paginas esperan
-function transformAnalytics(apiData: any) {
+function transformAnalytics(apiData: ApiRecord) {
   // El backend getOverview retorna: { systemCount, alertsByLevel, operationsByStatus, recentBreaches, healthTrend }
   // Las paginas AnalyticsPage y SLAPage esperan: { totalExecutions, successRate, failedCount, avgPerDay, topRunbooks, dailyTrend, alertStats, slaMetrics }
 
   const alertsByLevel = apiData.alertsByLevel || {};
-  const totalAlerts = Object.values(alertsByLevel).reduce((s: any, v: any) => s + (v || 0), 0);
+  const totalAlerts = Object.values(alertsByLevel).reduce((s: number, v: unknown) => s + (Number(v) || 0), 0);
 
   return {
     totalExecutions: apiData.totalExecutions || 0,
@@ -449,46 +452,46 @@ export const dataService = {
     return systems.map(transformSystem);
   },
 
-  getSystemById: async (id: any) => {
-    if (isDemoMode()) { await delay(); return mockSystems.find((s: any) => s.id === id) || null; }
+  getSystemById: async (id: string) => {
+    if (isDemoMode()) { await delay(); return mockSystems.find((s: ApiRecord) => s.id === id) || null; }
     const system = await api.getSystemById(id);
     return transformSystem(system);
   },
 
-  getSystemMetrics: async (id: any, hours = 2) => {
+  getSystemMetrics: async (id: string, hours = 2) => {
     if (isDemoMode()) { await delay(300); return mockMetrics(); }
     return api.getSystemHostMetrics(id, hours);
   },
 
-  getSystemBreaches: async (id: any, limit = 50) => {
+  getSystemBreaches: async (id: string, limit = 50) => {
     if (isDemoMode()) {
       await delay(300);
       return id
-        ? mockBreaches.filter((b: any) => b.systemId === id).slice(0, limit)
+        ? mockBreaches.filter((b: ApiRecord) => b.systemId === id).slice(0, limit)
         : mockBreaches.slice(0, limit);
     }
     const breaches = await api.getBreaches(id) as Record<string, unknown>[];
-    return breaches.map((b: any) => ({
+    return breaches.map((b: ApiRecord) => ({
       ...b,
       sid: b.system?.sid || '',
     }));
   },
 
-  getSystemSla: async (id: any) => {
+  getSystemSla: async (id: string) => {
     if (isDemoMode()) {
       await delay(300);
-      const sys = mockSystems.find((s: any) => s.id === id);
+      const sys = mockSystems.find((s: ApiRecord) => s.id === id);
       return sys ? { mttr: sys.mttr, mtbf: sys.mtbf, availability: sys.availability } : null;
     }
     return api.getHealthSnapshots(id, 720);
   },
 
-  getServerMetrics: async (id: any) => {
-    if (isDemoMode()) { await delay(300); return (mockServerMetrics as Record<string, any>)[id] || null; }
+  getServerMetrics: async (id: string) => {
+    if (isDemoMode()) { await delay(300); return (mockServerMetrics as Record<string, ApiRecord>)[id] || null; }
     try {
       const [hosts, sys] = await Promise.all([
-        api.getHosts(id) as Promise<any[]>,
-        api.getSystemById(id) as Promise<any>,
+        api.getHosts(id) as Promise<ApiRecord[]>,
+        api.getSystemById(id) as Promise<ApiRecord>,
       ]);
       if (!hosts || !hosts.length) return null;
       const h = hosts[0];
@@ -576,39 +579,39 @@ export const dataService = {
         ping: true,
         dbInfo,
       };
-    } catch (err: any) {
+    } catch (err: unknown) {
       log.error('Failed to fetch server metrics', { systemId: id, error: (err as Error).message });
       return null;
     }
   },
 
-  getServerDeps: async (id: any) => {
-    if (isDemoMode()) { await delay(300); return (mockServerDeps as Record<string, any>)[id] || null; }
+  getServerDeps: async (id: string) => {
+    if (isDemoMode()) { await delay(300); return (mockServerDeps as Record<string, ApiRecord[]>)[id] || null; }
     try {
-      const deps = await api.getDependencies(id) as any[];
-      return (deps || []).map((d: any) => ({
+      const deps = await api.getDependencies(id) as ApiRecord[];
+      return (deps || []).map((d: ApiRecord) => ({
         name: d.name,
         status: d.status,
         detail: d.details ? (typeof d.details === 'string' ? d.details : JSON.stringify(d.details)) : `Latency: ${d.latencyMs ?? '—'}ms`,
       }));
-    } catch (err: any) {
+    } catch (err: unknown) {
       log.error('Failed to fetch server dependencies', { systemId: id, error: (err as Error).message });
       return [];
     }
   },
 
-  getSystemInstances: async (id: any) => {
-    if (isDemoMode()) { await delay(300); return (mockSystemInstances as Record<string, any>)[id] || []; }
+  getSystemInstances: async (id: string) => {
+    if (isDemoMode()) { await delay(300); return (mockSystemInstances as Record<string, ApiRecord[]>)[id] || []; }
     try {
       const [components, hosts, sys] = await Promise.all([
-        api.getComponents(id) as Promise<any[]>,
-        api.getHosts(id) as Promise<any[]>,
-        api.getSystemById(id) as Promise<any>,
+        api.getComponents(id) as Promise<ApiRecord[]>,
+        api.getHosts(id) as Promise<ApiRecord[]>,
+        api.getSystemById(id) as Promise<ApiRecord>,
       ]);
       // RISE_RESTRICTED systems have no OS-level metrics
       const isRise = sys?.monitoringCapabilityProfile === 'RISE_RESTRICTED' || sys?.supportsOsMetrics === false;
       // Construir mapa hostId → host para enriquecer instancias
-      const hostMap: Record<string, any> = {};
+      const hostMap: Record<string, ApiRecord> = {};
       for (const h of (hosts || [])) {
         hostMap[h.id] = h;
       }
@@ -645,47 +648,47 @@ export const dataService = {
         }
       }
       return flat;
-    } catch (err: any) {
+    } catch (err: unknown) {
       log.error('Failed to fetch system instances', { systemId: id, error: (err as Error).message });
       return [];
     }
   },
 
-  getMetricHistory: async (hostname: any) => {
-    if (isDemoMode()) { await delay(300); return (mockMetricHistory as Record<string, any>)[hostname] || []; }
+  getMetricHistory: async (hostname: string) => {
+    if (isDemoMode()) { await delay(300); return (mockMetricHistory as Record<string, ApiRecord[]>)[hostname] || []; }
     try {
       // Resolve hostname to hostId by searching system hosts
-      const systems = await api.getSystems() as any[];
+      const systems = await api.getSystems() as ApiRecord[];
       let hostId = null;
       for (const sys of systems) {
-        const hosts = await api.getHosts(sys.id) as any[];
-        const match = hosts?.find((h: any) => h.hostname === hostname);
+        const hosts = await api.getHosts(sys.id) as ApiRecord[];
+        const match = hosts?.find((h: ApiRecord) => h.hostname === hostname);
         if (match) { hostId = match.id; break; }
       }
       if (!hostId) return [];
-      const metrics = await api.getHostMetrics(hostId, 6) as any[];
+      const metrics = await api.getHostMetrics(hostId, 6) as ApiRecord[];
       if (!metrics || !metrics.length) return [];
-      return metrics.map((m: any) => ({
+      return metrics.map((m: ApiRecord) => ({
         cpu: Math.round(m.cpu ?? 0),
         mem: Math.round(m.memory ?? 0),
         disk: Math.round(m.disk ?? 0),
       }));
-    } catch (err: any) {
+    } catch (err: unknown) {
       log.error('Failed to fetch metric history', { hostname, error: (err as Error).message });
       return [];
     }
   },
 
-  getSystemHosts: async (id: any) => {
+  getSystemHosts: async (id: string) => {
     if (isDemoMode()) { await delay(200); return getSystemHosts(id); }
     try {
       const [hosts, sys] = await Promise.all([
-        api.getHosts(id) as Promise<any[]>,
-        api.getSystemById(id) as Promise<any>,
+        api.getHosts(id) as Promise<ApiRecord[]>,
+        api.getSystemById(id) as Promise<ApiRecord>,
       ]);
       // RISE_RESTRICTED systems have no OS-level metrics
       const isRise = sys?.monitoringCapabilityProfile === 'RISE_RESTRICTED' || sys?.supportsOsMetrics === false;
-      return (hosts || []).map((h: any) => {
+      return (hosts || []).map((h: ApiRecord) => {
         // Use real metrics from Host model (updated by metrics pipeline)
         const cpuPct = isRise ? null : Math.round(h.cpu || 0);
         const memPct = isRise ? null : Math.round(h.memory || 0);
@@ -700,7 +703,7 @@ export const dataService = {
           ec2Id: null,
           ec2Type: null,
           // Transformar instancias anidadas al formato esperado por el hosts tab
-          instances: (h.instances || []).map((inst: any) => ({
+          instances: (h.instances || []).map((inst: ApiRecord) => ({
             ...inst,
             nr: inst.instanceNr || '00',
             role: inst.type || inst.role || '',
@@ -708,41 +711,41 @@ export const dataService = {
           })),
         };
       });
-    } catch (err: any) {
+    } catch (err: unknown) {
       log.error('Failed to fetch system hosts', { systemId: id, error: (err as Error).message });
       return [];
     }
   },
 
-  getSystemMeta: async (id?: any) => {
-    if (isDemoMode()) { await delay(200); return id ? ((mockSystemMeta as Record<string, any>)[id] || null) : mockSystemMeta; }
+  getSystemMeta: async (id?: string) => {
+    if (isDemoMode()) { await delay(200); return id ? ((mockSystemMeta as Record<string, ApiRecord>)[id] || null) : mockSystemMeta; }
     if (id) return api.getSystemMeta(id);
     // Sin ID: retornar mapa { systemId: meta } para ComparisonPage
     try {
       const allMeta = await api.getSystemMeta();
-      const map: Record<string, any> = {};
+      const map: Record<string, ApiRecord> = {};
       for (const m of (Array.isArray(allMeta) ? allMeta : [])) {
         map[m.systemId] = m;
       }
       return map;
-    } catch (err: any) {
+    } catch (err: unknown) {
       log.error('Failed to fetch system meta', { error: (err as Error).message });
       return {};
     }
   },
 
-  getSAPMonitoring: async (id: any) => {
-    if (isDemoMode()) { await delay(300); return (mockSAPMonitoring as Record<string, any>)[id] || null; }
+  getSAPMonitoring: async (id: string) => {
+    if (isDemoMode()) { await delay(300); return (mockSAPMonitoring as Record<string, ApiRecord>)[id] || null; }
     try {
       const [sys, hosts] = await Promise.all([
-        api.getSystemById(id) as Promise<any>,
-        api.getHosts(id) as Promise<any[]>,
+        api.getSystemById(id) as Promise<ApiRecord>,
+        api.getHosts(id) as Promise<ApiRecord[]>,
       ]);
       if (!sys) return null;
       const isJava = sys.sapStackType === 'JAVA' || sys.sapStackType === 'DUAL_STACK';
       // Use real health score and host metrics to derive monitoring values
       const health = sys.healthScore ?? 80;
-      const avgCpu = hosts?.length ? hosts.reduce((s: any, h: any) => s + (h.cpu ?? 30), 0) / hosts.length : 30;
+      const avgCpu = hosts?.length ? hosts.reduce((s: number, h: ApiRecord) => s + (h.cpu ?? 30), 0) / hosts.length : 30;
       const load = Math.round(avgCpu); // 0-100 scale factor
 
       if (isJava) {
@@ -831,7 +834,7 @@ export const dataService = {
           ? ['ZREP_MATERIAL_REVAL', 'SAPLSDTX', 'CL_GUI_ALV_GRID'].slice(0, Math.min(3, failedJobs))
           : [],
       };
-    } catch (err: any) {
+    } catch (err: unknown) {
       log.error('Failed to fetch SAP monitoring data', { systemId: id, error: (err as Error).message });
       return null;
     }
@@ -841,7 +844,7 @@ export const dataService = {
   getUsers: async () => {
     if (isDemoMode()) { await delay(); return mockUsers; }
     const users = await api.getUsers() as Record<string, unknown>[];
-    return users.map((u: any) => ({
+    return users.map((u: ApiRecord) => ({
       ...u,
       lastLogin: u.lastLoginAt || u.lastLogin,
       mfa: u.mfaEnabled ?? u.mfa ?? false,
@@ -850,21 +853,21 @@ export const dataService = {
   },
 
   // ── Aprobaciones ──
-  getApprovals: async (status?: any) => {
+  getApprovals: async (status?: string) => {
     if (isDemoMode()) {
       await delay();
-      return status ? mockApprovals.filter((a: any) => a.status === status) : mockApprovals;
+      return status ? mockApprovals.filter((a: ApiRecord) => a.status === status) : mockApprovals;
     }
     const approvals = await api.getApprovals(status) as ApiApproval[];
     return approvals.map(transformApproval);
   },
 
-  approveAction: async (id: any) => {
+  approveAction: async (id: string) => {
     if (isDemoMode()) { await delay(300); return { success: true }; }
     return api.approveAction(id);
   },
 
-  rejectAction: async (id: any) => {
+  rejectAction: async (id: string) => {
     if (isDemoMode()) { await delay(300); return { success: true }; }
     return api.rejectAction(id);
   },
@@ -884,7 +887,7 @@ export const dataService = {
   },
 
   // ── Alertas ──
-  getAlerts: async (_filters?: any) => {
+  getAlerts: async (_filters?: { status?: string; level?: string; systemId?: string }) => {
     if (isDemoMode()) { await delay(); return mockAlerts; }
     const alerts = await api.getAlerts(_filters) as ApiAlert[];
     return alerts.map(transformAlert);
@@ -910,7 +913,7 @@ export const dataService = {
     return execs.map(transformRunbookExecution);
   },
 
-  executeRunbook: async (runbookId: any, systemId: any, dryRun = false) => {
+  executeRunbook: async (runbookId: string, systemId: string, dryRun = false) => {
     if (isDemoMode()) {
       await delay(1500);
       return dryRun
@@ -920,7 +923,7 @@ export const dataService = {
     return api.executeRunbook(runbookId, systemId, dryRun);
   },
 
-  getExecutionDetail: async (executionId: any) => {
+  getExecutionDetail: async (executionId: string) => {
     if (isDemoMode()) { await delay(300); return null; }
     return api.getExecutionDetail(executionId);
   },
@@ -935,9 +938,9 @@ export const dataService = {
   getSIDLines: async () => {
     if (isDemoMode()) { await delay(300); return mockSIDLines; }
     try {
-      const systems = await api.getSystems() as any[];
+      const systems = await api.getSystems() as ApiRecord[];
       // Agrupar por producto/familia como SID lines
-      const byProduct: Record<string, any> = {};
+      const byProduct: Record<string, ApiRecord> = {};
       for (const sys of systems) {
         // Simplificar nombre del producto para la linea
         let lineName = 'Other';
@@ -953,12 +956,12 @@ export const dataService = {
         if (!byProduct[lineName]) byProduct[lineName] = { ids: [], desc: sys.sapProduct || lineName };
         byProduct[lineName].ids.push(sys.id);
       }
-      return Object.entries(byProduct).map(([line, data]: [string, any]) => ({
+      return Object.entries(byProduct).map(([line, data]: [string, ApiRecord]) => ({
         line,
         description: data.desc,
         systems: data.ids,
       }));
-    } catch (err: any) {
+    } catch (err: unknown) {
       log.error('Failed to fetch SID lines, using mock data', { error: (err as Error).message });
       return mockSIDLines;
     }
@@ -966,21 +969,21 @@ export const dataService = {
 
   getLandscapeValidation: async () => {
     if (isDemoMode()) { await delay(300); return mockLandscapeValidation; }
-    try { return await api.getLandscapeValidation(); } catch (err: any) { log.error('Failed to fetch landscape validation', { error: (err as Error).message }); return mockLandscapeValidation; }
+    try { return await api.getLandscapeValidation(); } catch (err: unknown) { log.error('Failed to fetch landscape validation', { error: (err as Error).message }); return mockLandscapeValidation; }
   },
 
   // ── AI / Chat ──
   getAIUseCases: async () => {
     if (isDemoMode()) { await delay(300); return mockAIUseCases; }
-    try { return await api.getAIUseCases(); } catch (err: any) { log.error('Failed to fetch AI use cases', { error: (err as Error).message }); return mockAIUseCases; }
+    try { return await api.getAIUseCases(); } catch (err: unknown) { log.error('Failed to fetch AI use cases', { error: (err as Error).message }); return mockAIUseCases; }
   },
 
   getAIResponses: async () => {
     if (isDemoMode()) { await delay(300); return mockAIResponses; }
-    try { return await api.getAIResponses(); } catch (err: any) { log.error('Failed to fetch AI responses', { error: (err as Error).message }); return mockAIResponses; }
+    try { return await api.getAIResponses(); } catch (err: unknown) { log.error('Failed to fetch AI responses', { error: (err as Error).message }); return mockAIResponses; }
   },
 
-  chat: async (message: any, context: any) => {
+  chat: async (message: string, context: unknown) => {
     if (isDemoMode()) { await delay(800); return mockAIResponses.estado; }
     return api.chat(message, context);
   },
@@ -999,19 +1002,19 @@ export const dataService = {
     return configs.map(transformHAConfig);
   },
 
-  getHAPrereqs: async (systemId?: any) => {
+  getHAPrereqs: async (systemId?: string) => {
     if (isDemoMode()) { await delay(300); return mockHAPrereqs; }
-    try { return await api.getHAPrereqs(systemId); } catch (err: any) { log.error('Failed to fetch HA prereqs', { systemId, error: (err as Error).message }); return mockHAPrereqs; }
+    try { return await api.getHAPrereqs(systemId!); } catch (err: unknown) { log.error('Failed to fetch HA prereqs', { systemId, error: (err as Error).message }); return mockHAPrereqs; }
   },
 
-  getHAOpsHistory: async (systemId?: any) => {
+  getHAOpsHistory: async (systemId?: string) => {
     if (isDemoMode()) { await delay(300); return mockHAOpsHistory; }
-    try { return await api.getHAOpsHistory(systemId); } catch (err: any) { log.error('Failed to fetch HA ops history', { systemId, error: (err as Error).message }); return mockHAOpsHistory; }
+    try { return await api.getHAOpsHistory(systemId!); } catch (err: unknown) { log.error('Failed to fetch HA ops history', { systemId, error: (err as Error).message }); return mockHAOpsHistory; }
   },
 
-  getHADrivers: async (systemId?: any) => {
+  getHADrivers: async (systemId?: string) => {
     if (isDemoMode()) { await delay(300); return mockHADrivers; }
-    try { return await api.getHADrivers(systemId); } catch (err: any) { log.error('Failed to fetch HA drivers', { systemId, error: (err as Error).message }); return mockHADrivers; }
+    try { return await api.getHADrivers(systemId!); } catch (err: unknown) { log.error('Failed to fetch HA drivers', { systemId, error: (err as Error).message }); return mockHADrivers; }
   },
 
   // ── Analytics ──
@@ -1020,24 +1023,24 @@ export const dataService = {
     try {
       // Combinar datos de overview y runbook analytics
       const [overview, rbAnalytics] = await Promise.all([
-        api.getAnalyticsOverview() as Promise<any>,
-        api.getRunbookAnalytics() as Promise<any>,
+        api.getAnalyticsOverview() as Promise<ApiRecord>,
+        api.getRunbookAnalytics() as Promise<ApiRecord>,
       ]);
 
       // Construir topRunbooks desde rbAnalytics.byRunbook
-      const topRunbooks = Object.entries(rbAnalytics.byRunbook || {}).map(([name, stats]: [string, any]) => ({
+      const topRunbooks = (Object.entries(rbAnalytics.byRunbook || {}) as [string, ApiRecord][]).map(([name, stats]) => ({
         id: name,
         name,
         executions: stats.total,
         successRate: stats.total > 0 ? Math.round((stats.success / stats.total) * 100) : 0,
-      })).sort((a: any, b: any) => b.executions - a.executions).slice(0, 5);
+      })).sort((a: ApiRecord, b: ApiRecord) => b.executions - a.executions).slice(0, 5);
 
       // Generate dailyTrend from real execution data, distributed evenly across days
       const totalExecForTrend = rbAnalytics.totalExecutions || 0;
       const totalFailed = rbAnalytics.byResult?.FAILED || 0;
       const avgDaySuccess = totalExecForTrend > 0 ? Math.round((totalExecForTrend - totalFailed) / 14) : 0;
       const avgDayFailed = totalFailed > 0 ? Math.round(totalFailed / 14) : 0;
-      const dailyTrend = Array.from({ length: 14 }, (_: any, i: any) => {
+      const dailyTrend = Array.from({ length: 14 }, (_: unknown, i: number) => {
         const date = new Date(Date.now() - (13 - i) * 86400000).toISOString().split('T')[0];
         // Slight variation per day using day-of-week pattern (no hashSeed)
         const dayVariation = (i % 7) / 7;
@@ -1064,7 +1067,7 @@ export const dataService = {
         avgDuration: '—',
         mostExecuted: topRunbooks.length > 0 ? `${topRunbooks[0].name} (${topRunbooks[0].executions}x)` : '—',
       });
-    } catch (err: any) {
+    } catch (err: unknown) {
       log.error('Failed to fetch analytics, using mock data', { error: (err as Error).message });
       return mockAnalytics;
     }
@@ -1098,7 +1101,7 @@ export const dataService = {
 
   getLicenses: async () => {
     if (isDemoMode()) { await delay(300); return mockLicenses; }
-    try { return await api.getLicenses(); } catch (err: any) { log.error('Failed to fetch licenses', { error: (err as Error).message }); return mockLicenses; }
+    try { return await api.getLicenses(); } catch (err: unknown) { log.error('Failed to fetch licenses', { error: (err as Error).message }); return mockLicenses; }
   },
 
   // ── Plans ──
@@ -1111,9 +1114,9 @@ export const dataService = {
   getThresholds: async () => {
     if (isDemoMode()) { await delay(300); return mockThresholds; }
     try {
-      const settings = await api.getSettings() as any;
+      const settings = await api.getSettings() as ApiRecord;
       return settings?.settings?.thresholds || mockThresholds;
-    } catch (err: any) {
+    } catch (err: unknown) {
       log.error('Failed to fetch thresholds', { error: (err as Error).message });
       return mockThresholds;
     }
@@ -1122,9 +1125,9 @@ export const dataService = {
   getEscalationPolicy: async () => {
     if (isDemoMode()) { await delay(300); return mockEscalationPolicy; }
     try {
-      const settings = await api.getSettings() as any;
+      const settings = await api.getSettings() as ApiRecord;
       return settings?.settings?.escalation || mockEscalationPolicy;
-    } catch (err: any) {
+    } catch (err: unknown) {
       log.error('Failed to fetch escalation policy', { error: (err as Error).message });
       return mockEscalationPolicy;
     }
@@ -1133,9 +1136,9 @@ export const dataService = {
   getMaintenanceWindows: async () => {
     if (isDemoMode()) { await delay(300); return mockMaintenanceWindows; }
     try {
-      const settings = await api.getSettings() as any;
+      const settings = await api.getSettings() as ApiRecord;
       return settings?.settings?.maintenanceWindows || mockMaintenanceWindows;
-    } catch (err: any) {
+    } catch (err: unknown) {
       log.error('Failed to fetch maintenance windows', { error: (err as Error).message });
       return mockMaintenanceWindows;
     }

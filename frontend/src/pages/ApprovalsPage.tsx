@@ -31,40 +31,40 @@ export default function ApprovalsPage() {
       .then(data => {
         if (mounted) { setApprovals(data); setLoading(false); }
       })
-      .catch((err: any) => {
-        if (mounted) { log.warn('Fetch failed', { error: err.message }); setLoading(false); }
+      .catch((err: unknown) => {
+        if (mounted) { log.warn('Fetch failed', { error: (err as Error).message }); setLoading(false); }
       });
     return () => { mounted = false; };
   }, []);
 
-  const filtered = approvals.filter((a: any) => a.status === activeTab);
+  const filtered = approvals.filter((a: ApiRecord) => a.status === activeTab);
 
-  const handleApprove = async (id: any) => {
+  const handleApprove = async (id: string) => {
     if (!canApprove) return;
     setProcessing(id);
     await new Promise(r => setTimeout(r, 800));
-    setApprovals(prev => prev.map((a: any) => a.id === id ? { ...a, status: 'APPROVED', processedAt: new Date().toISOString() } : a));
+    setApprovals(prev => prev.map((a: ApiRecord) => a.id === id ? { ...a, status: 'APPROVED', processedAt: new Date().toISOString() } : a));
     setProcessing(null);
   };
 
-  const handleReject = async (id: any) => {
+  const handleReject = async (id: string) => {
     if (!canApprove) return;
     setProcessing(id);
     await new Promise(r => setTimeout(r, 800));
-    setApprovals(prev => prev.map((a: any) => a.id === id ? { ...a, status: 'REJECTED', processedAt: new Date().toISOString() } : a));
+    setApprovals(prev => prev.map((a: ApiRecord) => a.id === id ? { ...a, status: 'REJECTED', processedAt: new Date().toISOString() } : a));
     setProcessing(null);
   };
 
   const tabs = [
-    { value: 'PENDING', label: 'Pendientes', count: approvals.filter((a: any) => a.status === 'PENDING').length },
-    { value: 'APPROVED', label: 'Aprobadas', count: approvals.filter((a: any) => a.status === 'APPROVED').length },
-    { value: 'REJECTED', label: 'Rechazadas', count: approvals.filter((a: any) => a.status === 'REJECTED').length },
-    { value: 'EXPIRED', label: 'Expiradas', count: approvals.filter((a: any) => a.status === 'EXPIRED').length },
+    { value: 'PENDING', label: 'Pendientes', count: approvals.filter((a: ApiRecord) => a.status === 'PENDING').length },
+    { value: 'APPROVED', label: 'Aprobadas', count: approvals.filter((a: ApiRecord) => a.status === 'APPROVED').length },
+    { value: 'REJECTED', label: 'Rechazadas', count: approvals.filter((a: ApiRecord) => a.status === 'REJECTED').length },
+    { value: 'EXPIRED', label: 'Expiradas', count: approvals.filter((a: ApiRecord) => a.status === 'EXPIRED').length },
   ];
 
   if (loading) return <PageLoading message="Cargando aprobaciones..." />;
 
-  const severityVariant = (s: any) => {
+  const severityVariant = (s: string) => {
     const map: Record<string, string> = { CRITICAL: 'danger', HIGH: 'danger', MEDIUM: 'warning', LOW: 'default' };
     return map[s] || 'default';
   };
@@ -98,7 +98,7 @@ export default function ApprovalsPage() {
               </tr>
             </TableHeader>
             <TableBody>
-              {filtered.map((approval: any) => (
+              {filtered.map((approval: ApiRecord) => (
                 <TableRow key={approval.id}>
                   <TableCell>
                     <div>

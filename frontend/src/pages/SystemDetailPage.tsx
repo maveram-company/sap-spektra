@@ -26,7 +26,7 @@ const log = createLogger('SystemDetailPage');
 
 // ── Local Helpers ──
 
-function colorDot(color: any) {
+function colorDot(color: string) {
   const bg =
     color === 'green' ? 'bg-success-500' :
     color === 'yellow' ? 'bg-warning-500' :
@@ -34,7 +34,7 @@ function colorDot(color: any) {
   return <span className={`inline-block w-2.5 h-2.5 rounded-full ${bg}`} />;
 }
 
-function MetricCard({ label, value, sub, warn, danger }: { label: any; value: any; sub?: any; warn?: any; danger?: any }) {
+function MetricCard({ label, value, sub, warn, danger }: { label: string; value: string | number; sub?: React.ReactNode; warn?: boolean; danger?: boolean }) {
   let textColor = 'text-text-primary';
   if (danger) textColor = 'text-danger-600';
   else if (warn) textColor = 'text-warning-600';
@@ -47,19 +47,19 @@ function MetricCard({ label, value, sub, warn, danger }: { label: any; value: an
   );
 }
 
-function DepStatusIcon({ status }: { status: any }) {
+function DepStatusIcon({ status }: { status: string }) {
   if (status === 'ok') return <CheckCircle size={16} className="text-success-500" />;
   if (status === 'warn') return <AlertTriangle size={16} className="text-warning-500" />;
   return <XCircle size={16} className="text-danger-500" />;
 }
 
-function pctColor(val: any, warnAt = 70, dangerAt = 85) {
+function pctColor(val: number, warnAt = 70, dangerAt = 85) {
   if (val >= dangerAt) return { warn: false, danger: true };
   if (val >= warnAt) return { warn: true, danger: false };
   return { warn: false, danger: false };
 }
 
-function calcUptime(startedAt: any) {
+function calcUptime(startedAt: string | null) {
   if (!startedAt) return 'N/A';
   const diffMs = new Date().getTime() - new Date(startedAt).getTime();
   if (diffMs <= 0) return '< 1m';
@@ -72,7 +72,7 @@ function calcUptime(startedAt: any) {
 }
 
 // Color classes for a percentage bar fill
-function barColor(val: any, warnAt = 70, dangerAt = 85) {
+function barColor(val: number, warnAt = 70, dangerAt = 85) {
   if (val >= dangerAt) return 'bg-danger-500';
   if (val >= warnAt) return 'bg-warning-500';
   return 'bg-success-500';
@@ -82,7 +82,8 @@ function barColor(val: any, warnAt = 70, dangerAt = 85) {
 
 export default function SystemDetailPage() {
   const { t } = useTranslation();
-  const { systemId } = useParams();
+  const { systemId } = useParams<{ systemId: string }>();
+  const id = systemId!;
   const navigate = useNavigate();
   const [system, setSystem] = useState<Record<string, any> | null>(null);
   const [sm, setSm] = useState<Record<string, any> | null>(null);
@@ -101,14 +102,14 @@ export default function SystemDetailPage() {
   useEffect(() => {
     let mounted = true;
     Promise.all([
-      dataService.getSystemById(systemId),
-      dataService.getServerMetrics(systemId),
-      dataService.getServerDeps(systemId),
-      dataService.getSAPMonitoring(systemId),
-      dataService.getSystemInstances(systemId),
-      dataService.getSystemMeta(systemId),
-      dataService.getSystemBreaches(systemId),
-      dataService.getSystemHosts(systemId),
+      dataService.getSystemById(id),
+      dataService.getServerMetrics(id),
+      dataService.getServerDeps(id),
+      dataService.getSAPMonitoring(id),
+      dataService.getSystemInstances(id),
+      dataService.getSystemMeta(id),
+      dataService.getSystemBreaches(id),
+      dataService.getSystemHosts(id),
     ]).then(([sys, metrics, dependencies, monitoring, inst, meta, breaches, hosts]) => {
       if (!mounted) return;
       setSystem(sys);
@@ -123,7 +124,7 @@ export default function SystemDetailPage() {
       if (hosts && hosts.length) {
         // Fetch metric history for all hosts concurrently (bounded by Promise.all)
         Promise.all(
-          hosts.map(async (h: any) => {
+          hosts.map(async (h: ApiRecord) => {
             try {
               const hist = await dataService.getMetricHistory(h.hostname);
               return [h.hostname, hist] as const;
@@ -138,17 +139,17 @@ export default function SystemDetailPage() {
             historyMap[hostname] = hist;
           }
           setMetricHistoryData(historyMap);
-        }).catch((err: any) => log.warn('Metric history fetch failed', { error: err.message }));
+        }).catch((err: unknown) => log.warn('Metric history fetch failed', { error: (err as Error).message }));
       }
       setLoading(false);
-    }).catch((err: any) => {
-      log.warn('Fetch failed', { error: err.message });
+    }).catch((err: unknown) => {
+      log.warn('Fetch failed', { error: (err as Error).message });
       if (!mounted) return;
       setError(t('common.error.loadData'));
       setLoading(false);
     });
     return () => { mounted = false; };
-  }, [systemId]);
+  }, [id]);
 
   // Derived data
   const instances = instancesData;
@@ -161,7 +162,7 @@ export default function SystemDetailPage() {
 
   // Unique host count
   const uniqueHostCount = useMemo(() => {
-    const names = new Set(instances.map((i: any) => i.hostname));
+    const names = new Set(instances.map((i: ApiRecord) => i.hostname));
     return names.size;
   }, [instances]);
 
@@ -177,7 +178,7 @@ export default function SystemDetailPage() {
     const rangeMinutes = chartRange === '1h' ? 60 : chartRange === '3h' ? 180 : 360;
     const pointsToShow = Math.min(history.length, Math.ceil(rangeMinutes / 5));
     const slice = history.slice(history.length - pointsToShow);
-    return slice.map((p: any, i: any) => ({
+    return slice.map((p: ApiRecord, i: number) => ({
       time: new Date(now - (pointsToShow - 1 - i) * 5 * 60000).toLocaleTimeString('es-CO', {
         hour: '2-digit',
         minute: '2-digit',
@@ -214,7 +215,7 @@ export default function SystemDetailPage() {
     { value: 'sapmonitor',    label: 'SAP Monitor' },
     { value: 'database',      label: 'Database' },
     { value: 'instances',     label: 'Components',   count: instances.length || undefined },
-    { value: 'dependencies',  label: 'Dependencies', count: deps.filter((d: any) => d.status !== 'ok').length || undefined },
+    { value: 'dependencies',  label: 'Dependencies', count: deps.filter((d: ApiRecord) => d.status !== 'ok').length || undefined },
     { value: 'breaches',      label: 'Breaches',     count: systemBreaches.length || undefined },
   ];
 
@@ -313,7 +314,7 @@ export default function SystemDetailPage() {
                 {[
                   { label: 'Pending', value: sm.msgQueue?.pending ?? 0, color: 'bg-warning-500', max: 100 },
                   { label: 'Failed', value: sm.msgQueue?.failed ?? 0, color: 'bg-danger-500', max: 50 },
-                ].map(({ label, value, color, max }: any) => (
+                ].map(({ label, value, color, max }: { label: string; value: number; color: string; max: number }) => (
                   <div key={label}>
                     <div className="flex justify-between text-xs mb-1">
                       <span className="text-text-secondary font-medium flex items-center gap-1.5">
@@ -339,7 +340,7 @@ export default function SystemDetailPage() {
                   { label: 'Active', value: sm.channels?.active ?? 0, color: 'bg-success-500' },
                   { label: 'Inactive', value: sm.channels?.inactive ?? 0, color: 'bg-warning-500' },
                   { label: 'Error', value: sm.channels?.error ?? 0, color: 'bg-danger-500' },
-                ].map(({ label, value, color }: any) => {
+                ].map(({ label, value, color }: { label: string; value: number; color: string }) => {
                   const total = (sm.channels?.active ?? 0) + (sm.channels?.inactive ?? 0) + (sm.channels?.error ?? 0);
                   return (
                     <div key={label}>
@@ -514,7 +515,7 @@ export default function SystemDetailPage() {
               <Select
                 value={effectiveHost}
                 onChange={(e) => setSelectedHost(e.target.value)}
-                options={hosts.map((h: any) => ({ value: h.hostname, label: h.hostname }))}
+                options={hosts.map((h: ApiRecord) => ({ value: h.hostname, label: h.hostname }))}
               />
               <Select
                 value={chartRange}
@@ -578,7 +579,7 @@ export default function SystemDetailPage() {
         </Card>
         )}
 
-        {hosts.map((host: any) => {
+        {hosts.map((host: ApiRecord) => {
           // Determine card header accent based on worst metric (skip for RISE)
           const cpuDanger  = !system!.isRiseRestricted && host.cpu  >= 85;
           const cpuWarn    = !system!.isRiseRestricted && host.cpu  >= 70;
@@ -629,7 +630,7 @@ export default function SystemDetailPage() {
                     { label: 'CPU', value: host.cpu, icon: <Cpu size={12} /> },
                     { label: 'Memory', value: host.mem, icon: <MemoryStick size={12} /> },
                     { label: 'Disk', value: host.disk, icon: <HardDrive size={12} /> },
-                  ].map(({ label, value, icon }: any) => (
+                  ].map(({ label, value, icon }: { label: string; value: number; icon: React.ReactNode }) => (
                     <div key={label}>
                       <div className="flex justify-between items-center text-xs mb-1">
                         <span className="flex items-center gap-1 text-text-secondary font-medium">
@@ -668,7 +669,7 @@ export default function SystemDetailPage() {
                     Instances on this host
                   </p>
                   <div className="space-y-1.5">
-                    {(host.instances || []).map((inst: any, idx: any) => (
+                    {(host.instances || []).map((inst: ApiRecord, idx: number) => (
                       <div
                         key={idx}
                         className="flex items-center justify-between rounded-md px-3 py-2 bg-surface-secondary border border-border"
@@ -709,12 +710,12 @@ export default function SystemDetailPage() {
     const appRoles  = ['ASCS', 'ERS', 'PAS', 'AAS'];
     const dbRoles   = ['HANA Primary', 'HANA Secondary', 'HANA', 'DB2', 'Oracle', 'MSSQL', 'ASE', 'MaxDB'];
 
-    const appLayer = instances.filter((i: any) => appRoles.includes(i.role));
+    const appLayer = instances.filter((i: ApiRecord) => appRoles.includes(i.role));
     const knownRoles = new Set([...appRoles, ...dbRoles]);
-    const otherLayer = instances.filter((i: any) => !knownRoles.has(i.role));
-    const actualDbLayer = instances.filter((i: any) => dbRoles.includes(i.role));
+    const otherLayer = instances.filter((i: ApiRecord) => !knownRoles.has(i.role));
+    const actualDbLayer = instances.filter((i: ApiRecord) => dbRoles.includes(i.role));
 
-    function InstanceBox({ inst }: { inst: any }) {
+    function InstanceBox({ inst }: { inst: ApiRecord }) {
       const isRunning = inst.status === 'running';
       return (
         <div className={`
@@ -744,7 +745,7 @@ export default function SystemDetailPage() {
       );
     }
 
-    function LayerSection({ title, layerInstances, colorClass, icon }: { title: any; layerInstances: any; colorClass: any; icon: any }) {
+    function LayerSection({ title, layerInstances, colorClass, icon }: { title: string; layerInstances: ApiRecord[]; colorClass: string; icon: React.ReactNode }) {
       if (!layerInstances.length) return null;
       return (
         <div className={`rounded-xl border-2 ${colorClass} p-4`}>
@@ -754,7 +755,7 @@ export default function SystemDetailPage() {
             <Badge variant="primary" size="sm">{layerInstances.length} instance{layerInstances.length !== 1 ? 's' : ''}</Badge>
           </div>
           <div className="flex flex-wrap gap-3">
-            {layerInstances.map((inst: any, idx: any) => (
+            {layerInstances.map((inst: ApiRecord, idx: number) => (
               <InstanceBox key={idx} inst={inst} />
             ))}
           </div>
@@ -835,15 +836,15 @@ export default function SystemDetailPage() {
             <div>
               <p className="text-[10px] text-text-tertiary uppercase tracking-wider">Running</p>
               <p className="text-lg font-bold text-success-600">
-                {instances.filter((i: any) => i.status === 'running').length}
+                {instances.filter((i: ApiRecord) => i.status === 'running').length}
               </p>
             </div>
             <div>
               <p className="text-[10px] text-text-tertiary uppercase tracking-wider">Stopped</p>
               <p className={`text-lg font-bold ${
-                instances.filter((i: any) => i.status !== 'running').length > 0 ? 'text-danger-600' : 'text-text-primary'
+                instances.filter((i: ApiRecord) => i.status !== 'running').length > 0 ? 'text-danger-600' : 'text-text-primary'
               }`}>
-                {instances.filter((i: any) => i.status !== 'running').length}
+                {instances.filter((i: ApiRecord) => i.status !== 'running').length}
               </p>
             </div>
           </div>
@@ -1007,7 +1008,7 @@ export default function SystemDetailPage() {
   function renderDependencies() {
     if (!deps.length) return <p className="text-text-secondary p-4">No hay datos de dependencias.</p>;
 
-    const hasIssues = deps.some((d: any) => d.status !== 'ok');
+    const hasIssues = deps.some((d: ApiRecord) => d.status !== 'ok');
 
     return (
       <div className="space-y-6">
@@ -1021,7 +1022,7 @@ export default function SystemDetailPage() {
               </tr>
             </TableHeader>
             <TableBody>
-              {deps.map((dep: any, i: any) => (
+              {deps.map((dep: ApiRecord, i: number) => (
                 <TableRow key={i}>
                   <TableCell>
                     <div className="flex items-center gap-2">
@@ -1058,8 +1059,8 @@ export default function SystemDetailPage() {
             </CardHeader>
             <div className="space-y-4">
               {deps
-                .filter((d: any) => d.status === 'err' || d.status === 'warn')
-                .map((dep: any, i: any) => {
+                .filter((d: ApiRecord) => d.status === 'err' || d.status === 'warn')
+                .map((dep: ApiRecord, i: number) => {
                   const remediation = (depRemediation as Record<string, any>)[dep.name];
                   return (
                     <div key={i} className="border border-border rounded-lg p-4">
@@ -1129,7 +1130,7 @@ export default function SystemDetailPage() {
                   </tr>
                 </TableHeader>
                 <TableBody>
-                  {(mm.topInterfaces || []).map((iface: any, i: any) => (
+                  {(mm.topInterfaces || []).map((iface: ApiRecord, i: number) => (
                     <TableRow key={i}>
                       <TableCell className="font-mono text-sm">{iface.name}</TableCell>
                       <TableCell className="text-xs text-text-tertiary truncate max-w-[200px]">{iface.namespace}</TableCell>
@@ -1156,7 +1157,7 @@ export default function SystemDetailPage() {
                     </tr>
                   </TableHeader>
                   <TableBody>
-                    {(mm.topErrors || []).map((err: any, i: any) => (
+                    {(mm.topErrors || []).map((err: ApiRecord, i: number) => (
                       <TableRow key={i}>
                         <TableCell className="font-mono text-sm">{err.interface}</TableCell>
                         <TableCell className="text-sm text-danger-600 max-w-[300px] truncate">{err.error}</TableCell>
@@ -1197,7 +1198,7 @@ export default function SystemDetailPage() {
                 </tr>
               </TableHeader>
               <TableBody>
-                {(cm.channels || []).map((ch: any, i: any) => (
+                {(cm.channels || []).map((ch: ApiRecord, i: number) => (
                   <TableRow key={i}>
                     <TableCell className="font-mono text-sm">{ch.name}</TableCell>
                     <TableCell><Badge variant="outline" size="sm">{ch.adapter}</Badge></TableCell>
@@ -1231,7 +1232,7 @@ export default function SystemDetailPage() {
               <MetricCard label="Info" value={ai.info} />
             </div>
             <div className="space-y-2">
-              {(ai.alerts || []).map((alert: any, i: any) => (
+              {(ai.alerts || []).map((alert: ApiRecord, i: number) => (
                 <div key={i} className={`flex items-start gap-3 p-3 rounded-lg border ${
                   alert.severity === 'critical' ? 'border-danger-300 bg-danger-50' :
                   alert.severity === 'warning' ? 'border-warning-300 bg-warning-50' :
@@ -1306,7 +1307,7 @@ export default function SystemDetailPage() {
             <div>
               <p className="text-xs text-text-tertiary uppercase tracking-wider mb-2">Top Users</p>
               <ul className="space-y-1">
-                {(sm12.topUsers || []).map((user: any, i: any) => (
+                {(sm12.topUsers || []).map((user: string, i: number) => (
                   <li key={i} className="text-sm text-text-secondary flex items-center gap-2">
                     <Users size={12} className="text-text-tertiary" />
                     <span className="font-mono">{user}</span>
@@ -1317,7 +1318,7 @@ export default function SystemDetailPage() {
             <div>
               <p className="text-xs text-text-tertiary uppercase tracking-wider mb-2">Top Tables</p>
               <ul className="space-y-1">
-                {(sm12.topTables || []).map((table: any, i: any) => (
+                {(sm12.topTables || []).map((table: string, i: number) => (
                   <li key={i} className="text-sm text-text-secondary flex items-center gap-2">
                     <Database size={12} className="text-text-tertiary" />
                     <span className="font-mono">{table}</span>
@@ -1382,7 +1383,7 @@ export default function SystemDetailPage() {
                   </tr>
                 </TableHeader>
                 <TableBody>
-                  {(sm37.longRunning || []).map((job: any, i: any) => (
+                  {(sm37.longRunning || []).map((job: ApiRecord, i: number) => (
                     <TableRow key={i}>
                       <TableCell className="font-mono text-sm">{job.name}</TableCell>
                       <TableCell className="text-sm">{job.runtime}</TableCell>
@@ -1429,7 +1430,7 @@ export default function SystemDetailPage() {
               </CardTitle>
             </CardHeader>
             <div className="flex flex-wrap gap-2">
-              {st22TopPrograms.map((prog: any, i: any) => (
+              {st22TopPrograms.map((prog: string, i: number) => (
                 <Badge key={i} variant="danger" size="sm">{prog}</Badge>
               ))}
             </div>
@@ -1462,11 +1463,11 @@ export default function SystemDetailPage() {
             <div className="flex gap-4 text-xs text-text-secondary">
               <span className="flex items-center gap-1">
                 <span className="inline-block w-2 h-2 rounded-full bg-success-500" />
-                {instances.filter((i: any) => i.status === 'running').length} running
+                {instances.filter((i: ApiRecord) => i.status === 'running').length} running
               </span>
               <span className="flex items-center gap-1">
                 <span className="inline-block w-2 h-2 rounded-full bg-danger-500" />
-                {instances.filter((i: any) => i.status !== 'running').length} stopped
+                {instances.filter((i: ApiRecord) => i.status !== 'running').length} stopped
               </span>
             </div>
           </div>
@@ -1497,7 +1498,7 @@ export default function SystemDetailPage() {
                 </tr>
               </TableHeader>
               <TableBody>
-                {instances.map((inst: any, i: any) => {
+                {instances.map((inst: ApiRecord, i: number) => {
                   const isDb   = DB_ROLES.includes(inst.role);
 
                   return (
@@ -1633,7 +1634,7 @@ export default function SystemDetailPage() {
         </Card>
 
         {/* Work Process details for app-layer instances */}
-        {instances.some((i: any) => i.dialogWP) && (
+        {instances.some((i: ApiRecord) => i.dialogWP) && (
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
@@ -1643,8 +1644,8 @@ export default function SystemDetailPage() {
             </CardHeader>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
               {instances
-                .filter((i: any) => i.dialogWP)
-                .map((inst: any, idx: any) => {
+                .filter((i: ApiRecord) => i.dialogWP)
+                .map((inst: ApiRecord, idx: number) => {
                   const wp = inst.dialogWP;
                   const bp = inst.batchWP;
                   return (
@@ -1691,7 +1692,7 @@ export default function SystemDetailPage() {
         )}
 
         {/* HANA instance DB metrics */}
-        {instances.some((i: any) => i.dbCpu !== undefined) && (
+        {instances.some((i: ApiRecord) => i.dbCpu !== undefined) && (
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
@@ -1701,8 +1702,8 @@ export default function SystemDetailPage() {
             </CardHeader>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               {instances
-                .filter((i: any) => i.dbCpu !== undefined)
-                .map((inst: any, idx: any) => (
+                .filter((i: ApiRecord) => i.dbCpu !== undefined)
+                .map((inst: ApiRecord, idx: number) => (
                   <div key={idx} className="border border-border rounded-lg p-4 bg-surface-secondary">
                     <div className="flex items-center gap-2 mb-3">
                       <span className={`inline-block w-2 h-2 rounded-full ${
@@ -1784,7 +1785,7 @@ export default function SystemDetailPage() {
             </tr>
           </TableHeader>
           <TableBody>
-            {systemBreaches.map((b: any) => (
+            {systemBreaches.map((b: ApiRecord) => (
               <TableRow key={b.id}>
                 <TableCell className="font-mono text-xs">{b.id}</TableCell>
                 <TableCell>{b.metric === 'response_time' ? 'Response Time' : b.metric}</TableCell>

@@ -134,3 +134,6 @@ export interface ApiConnector {
   latencyMs?: number;
   [key: string]: unknown;
 }
+
+/** Generic API record — used for loosely typed API responses */
+export type ApiRecord = Record<string, any>;

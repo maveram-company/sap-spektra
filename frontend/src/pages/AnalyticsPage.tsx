@@ -26,7 +26,7 @@ export default function AnalyticsPage() {
       .then(([anl, sys]) => {
         if (mounted) { setData(anl); setSystems(sys); }
       })
-      .catch((err: any) => { if (mounted) setError(err.message); })
+      .catch((err: unknown) => { if (mounted) setError((err as Error).message); })
       .finally(() => { if (mounted) setLoading(false); });
     return () => { mounted = false; };
   }, []);
@@ -60,7 +60,7 @@ export default function AnalyticsPage() {
               onChange={(e) => setSelectedSystem(e.target.value)}
               options={[
                 { value: 'all', label: 'Todos los sistemas' },
-                ...systems.map((s: any) => ({ value: s.id, label: `${s.sid} - ${s.type}` }))
+                ...systems.map((s: ApiRecord) => ({ value: s.id, label: `${s.sid} - ${s.type}` }))
               ]}
             />
           }
@@ -75,7 +75,7 @@ export default function AnalyticsPage() {
                 { icon: CheckCircle, label: 'Tasa de Éxito', value: `${data!.successRate}%`, color: 'text-success-600' },
                 { icon: AlertTriangle, label: 'Fallidas', value: data!.failedCount, color: 'text-danger-600' },
                 { icon: TrendingUp, label: 'Promedio/Día', value: data!.avgPerDay, color: 'text-accent-600' },
-              ].map((kpi: any, i: any) => (
+              ].map((kpi: ApiRecord, i: number) => (
                 <Card key={i}>
                   <div className="flex items-center gap-3">
                     <div className="w-10 h-10 rounded-lg bg-surface-tertiary flex items-center justify-center">
@@ -114,8 +114,8 @@ export default function AnalyticsPage() {
                 <div className="h-72 flex items-center justify-center">
                   <ResponsiveContainer width="100%" height="100%">
                     <PieChart>
-                      <Pie data={pieData} cx="50%" cy="50%" innerRadius={60} outerRadius={90} dataKey="value" label={({ name, percent }: any) => `${name} ${(percent * 100).toFixed(0)}%`}>
-                        {pieData.map((entry: any, i: any) => <Cell key={i} fill={entry.color} />)}
+                      <Pie data={pieData} cx="50%" cy="50%" innerRadius={60} outerRadius={90} dataKey="value" label={({ name, percent }: { name?: string; percent?: number }) => `${name || ''} ${((percent || 0) * 100).toFixed(0)}%`}>
+                        {pieData.map((entry: ApiRecord, i: number) => <Cell key={i} fill={entry.color} />)}
                       </Pie>
                       <Tooltip />
                     </PieChart>
@@ -137,7 +137,7 @@ export default function AnalyticsPage() {
                   </tr>
                 </TableHeader>
                 <TableBody>
-                  {(data!.topRunbooks || []).map((rb: any) => (
+                  {(data!.topRunbooks || []).map((rb: ApiRecord) => (
                     <TableRow key={rb.id}>
                       <TableCell><code className="text-xs bg-surface-tertiary px-1.5 py-0.5 rounded">{rb.id}</code></TableCell>
                       <TableCell className="font-medium">{rb.name}</TableCell>

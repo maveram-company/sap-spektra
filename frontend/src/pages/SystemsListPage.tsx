@@ -27,7 +27,7 @@ export default function SystemsListPage() {
     let mounted = true;
     dataService.getSystems()
       .then(data => { if (mounted) setSystems(data); })
-      .catch((err: any) => { if (mounted) setError(err.message); })
+      .catch((err: unknown) => { if (mounted) setError((err as Error).message); })
       .finally(() => { if (mounted) setLoading(false); });
     return () => { mounted = false; };
   }, []);
@@ -43,7 +43,7 @@ export default function SystemsListPage() {
     </div>
   );
 
-  const filtered = systems.filter((s: any) => {
+  const filtered = systems.filter((s: ApiRecord) => {
     const matchesSearch = !search || s.sid.toLowerCase().includes(search.toLowerCase()) || s.id.toLowerCase().includes(search.toLowerCase()) || s.description.toLowerCase().includes(search.toLowerCase());
     const matchesEnv = envFilter === 'ALL' || s.environment === envFilter;
     const matchesStatus = statusFilter === 'ALL' || s.status === statusFilter;
@@ -102,7 +102,7 @@ export default function SystemsListPage() {
           />
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-            {filtered.map((system: any) => (
+            {filtered.map((system: ApiRecord) => (
               <Card key={system.id} hover onClick={() => navigate(`/systems/${system.id}`)} className="animate-fade-in">
                 <div className="flex items-start justify-between mb-4">
                   <div>

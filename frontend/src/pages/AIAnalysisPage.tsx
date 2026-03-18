@@ -23,10 +23,10 @@ const KEYWORD_MAP = [
 ];
 
 // Determina qué respuesta mock usar basado en el contenido del mensaje
-function matchResponse(text: any, aiResponses: any) {
+function matchResponse(text: string, aiResponses: ApiRecord) {
   const lower = text.toLowerCase();
   for (const entry of KEYWORD_MAP) {
-    if (entry.keys.some((k: any) => lower.includes(k))) {
+    if (entry.keys.some((k: string) => lower.includes(k))) {
       return aiResponses[entry.response];
     }
   }
@@ -51,9 +51,9 @@ const COLOR_TEXT = {
 };
 
 // Renderiza markdown básico: **bold** y saltos de línea
-function renderMarkdown(text: any) {
+function renderMarkdown(text: string) {
   const lines = text.split('\n');
-  return lines.map((line: any, i: any) => {
+  return lines.map((line: string, i: number) => {
     const parts = [];
     let lastIndex = 0;
     const regex = /\*\*(.+?)\*\*/g;
@@ -112,8 +112,8 @@ export default function AIAnalysisPage() {
       setAiUseCases(uc as Record<string, unknown>[]);
       setAiResponses(resp as Record<string, unknown>);
       setLoading(false);
-    }).catch((err: any) => {
-      log.warn('Fetch failed', { error: err.message });
+    }).catch((err: unknown) => {
+      log.warn('Fetch failed', { error: (err as Error).message });
       setError(t('common.error.loadData'));
       setLoading(false);
     });
@@ -126,7 +126,7 @@ export default function AIAnalysisPage() {
   }, [messages, isTyping]);
 
   // Genera una respuesta IA con delay simulado
-  const generateResponse = useCallback((userText: any) => {
+  const generateResponse = useCallback((userText: string) => {
     setIsTyping(true);
     clearTimeout(typingTimerRef.current);
     typingTimerRef.current = setTimeout(() => {
@@ -154,7 +154,7 @@ export default function AIAnalysisPage() {
   };
 
   // Click en una tarjeta de caso de uso
-  const handleUseCaseClick = (uc: any) => {
+  const handleUseCaseClick = (uc: ApiRecord) => {
     const userMsg = { id: nextMsgId('user'), role: 'user', text: uc.query };
     setMessages((prev) => [...prev, userMsg]);
     generateResponse(uc.query);
@@ -162,7 +162,7 @@ export default function AIAnalysisPage() {
   };
 
   // Enter para enviar
-  const handleKeyDown = (e: any) => {
+  const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
       handleSend();
@@ -207,7 +207,7 @@ export default function AIAnalysisPage() {
       <div className="flex-1 overflow-y-auto p-6 space-y-6">
         {/* Grid de casos de uso */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {aiUseCases.map((uc: any) => (
+          {aiUseCases.map((uc: ApiRecord) => (
             <button
               key={uc.id}
               type="button"
@@ -242,7 +242,7 @@ export default function AIAnalysisPage() {
 
           {/* Area de mensajes */}
           <div className="flex-1 overflow-y-auto p-4 space-y-4">
-            {messages.map((msg: any) =>
+            {messages.map((msg: ApiRecord) =>
               msg.role === 'user' ? (
                 <div key={msg.id} className="flex justify-end">
                   <div className="max-w-[75%] bg-primary-600 text-white rounded-xl rounded-br-sm px-4 py-2.5 text-sm">

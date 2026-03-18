@@ -54,8 +54,8 @@ export default function ReportsPage() {
       if (!mounted) return;
       setEvents(evts);
       setAlerts(alts);
-    }).catch((err: any) => {
-      log.warn('Fetch failed', { error: err.message });
+    }).catch((err: unknown) => {
+      log.warn('Fetch failed', { error: (err as Error).message });
       if (!mounted) return;
       setError(t('common.error.loadData'));
     });
@@ -66,12 +66,12 @@ export default function ReportsPage() {
   }, []);
 
   // Generar reporte
-  const handleGenerate = async (typeKey: any) => {
+  const handleGenerate = async (typeKey: string) => {
     if (generating) return;
     setGenerating(typeKey);
     try {
       // Demo mode: simulated delay — connect to real API when available
-      await new Promise<void>((resolve: any, reject: any) => {
+      await new Promise<void>((resolve: () => void, reject: (err: Error) => void) => {
         generateTimerRef.current = setTimeout(() => resolve(), 1500);
       });
       const now = new Date();
@@ -83,15 +83,15 @@ export default function ReportsPage() {
       };
       setReports((prev) => [newReport, ...prev]);
       showToast(`Reporte ${typeKey} generado exitosamente`, 'success');
-    } catch (err: any) {
-      showToast(err instanceof Error ? err.message : 'Error al generar reporte', 'error');
+    } catch (err: unknown) {
+      showToast(err instanceof Error ? (err as Error).message : 'Error al generar reporte', 'error');
     } finally {
       setGenerating(null);
     }
   };
 
   // Descargar reporte como JSON
-  const handleDownload = (report: any) => {
+  const handleDownload = (report: ApiRecord) => {
     const reportData = {
       id: report.id,
       type: report.tipo,
@@ -100,8 +100,8 @@ export default function ReportsPage() {
         systemsCount: 9,
         eventsCount: events.length,
         alertsCount: alerts.length,
-        activeAlerts: alerts.filter((a: any) => a.status === 'active').length,
-        resolvedAlerts: alerts.filter((a: any) => a.status === 'resolved').length,
+        activeAlerts: alerts.filter((a: ApiRecord) => a.status === 'active').length,
+        resolvedAlerts: alerts.filter((a: ApiRecord) => a.status === 'resolved').length,
       },
       status: report.estado,
     };
@@ -118,8 +118,8 @@ export default function ReportsPage() {
   };
 
   // Etiqueta legible del tipo
-  const tipoLabel = (key: any) => {
-    const found = reportTypes.find((r: any) => r.key === key);
+  const tipoLabel = (key: string) => {
+    const found = reportTypes.find((r: ApiRecord) => r.key === key);
     return found ? found.label : key;
   };
 
@@ -145,7 +145,7 @@ export default function ReportsPage() {
 
         {/* ── Grid de tipos de reporte ── */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-          {reportTypes.map((rt: any) => {
+          {reportTypes.map((rt: ApiRecord) => {
             const Icon = rt.icon;
             const isGenerating = generating === rt.key;
             return (
@@ -192,7 +192,7 @@ export default function ReportsPage() {
                 </tr>
               </TableHeader>
               <TableBody>
-                {reports.map((rpt: any) => (
+                {reports.map((rpt: ApiRecord) => (
                   <TableRow key={rpt.id}>
                     {/* Fecha */}
                     <TableCell className="text-xs text-text-secondary whitespace-nowrap">

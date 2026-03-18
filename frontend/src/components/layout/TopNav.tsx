@@ -26,7 +26,7 @@ interface NavSection {
   items: Array<{
     name: string;
     href: string;
-    icon: any;
+    icon: React.ComponentType<{ size: number; className?: string }>;
     alertBadge?: boolean;
     badge?: boolean;
     roles?: string[];
@@ -129,15 +129,15 @@ export default function TopNav({ topOffset = 0 }) {
   useEffect(() => {
     dataService.getSystems().then(systems => {
       setSystemCounts({
-        healthy: systems.filter((s: any) => s.healthScore >= 90).length,
-        warning: systems.filter((s: any) => s.healthScore >= 70 && s.healthScore < 90).length,
-        critical: systems.filter((s: any) => s.healthScore < 70).length,
+        healthy: systems.filter((s: ApiRecord) => s.healthScore >= 90).length,
+        warning: systems.filter((s: ApiRecord) => s.healthScore >= 70 && s.healthScore < 90).length,
+        critical: systems.filter((s: ApiRecord) => s.healthScore < 70).length,
       });
-    }).catch((err: any) => log.warn('Systems fetch failed', { error: err.message }));
-    dataService.getApprovals('PENDING').then(approvals => setPendingApprovals(approvals?.length || 0)).catch((err: any) => log.warn('Approvals fetch failed', { error: err.message }));
+    }).catch((err: unknown) => log.warn('Systems fetch failed', { error: (err as Error).message }));
+    dataService.getApprovals('PENDING').then(approvals => setPendingApprovals(approvals?.length || 0)).catch((err: unknown) => log.warn('Approvals fetch failed', { error: (err as Error).message }));
     dataService.getAlerts({ status: 'active' }).then(alerts => {
       setActiveAlerts(alerts?.length || 0);
-      const recent = (alerts || []).slice(0, 5).map((a: any, i: any) => ({
+      const recent = (alerts || []).slice(0, 5).map((a: ApiRecord, i: number) => ({
         id: a.id || String(i),
         title: a.title || 'Alerta',
         message: `${a.systemSid || a.system?.sid || ''}: ${a.metric || a.title || ''}`,
@@ -145,7 +145,7 @@ export default function TopNav({ topOffset = 0 }) {
         type: a.level === 'critical' ? 'danger' : a.level === 'warning' ? 'warning' : 'info',
       }));
       setNotifications(recent);
-    }).catch((err: any) => log.warn('Alerts fetch failed', { error: err.message }));
+    }).catch((err: unknown) => log.warn('Alerts fetch failed', { error: (err as Error).message }));
   }, []);
   const { healthy, warning, critical } = systemCounts;
 
@@ -215,7 +215,7 @@ export default function TopNav({ topOffset = 0 }) {
 
   const activeSectionLabel = useMemo(() => {
     for (const section of sections) {
-      if (section.items.some((item: any) => isItemActive(item.href))) {
+      if (section.items.some((item: ApiRecord) => isItemActive(item.href))) {
         return section.label;
       }
     }
@@ -290,7 +290,7 @@ export default function TopNav({ topOffset = 0 }) {
 
           {/* ── Desktop: secciones con dropdown ── */}
           <div className="hidden lg:flex items-center gap-0.5 flex-1">
-            {sections.map((section: any) => {
+            {sections.map((section: ApiRecord) => {
               if (section.adminOnly && !hasRole('admin')) return null;
               const isSectionActive = activeSectionLabel === section.label;
               const isOpen = activeDropdown === section.label;
@@ -358,8 +358,8 @@ export default function TopNav({ topOffset = 0 }) {
                       onMouseLeave={startClose}
                     >
                       <div className="py-1.5">
-                        {section.items.map((item: any) => {
-                          if (item.roles && !item.roles.some((r: any) => hasRole(r))) return null;
+                        {section.items.map((item: ApiRecord) => {
+                          if (item.roles && !item.roles.some((r: string) => hasRole(r))) return null;
                           const active = isItemActive(item.href);
 
                           return (
@@ -533,7 +533,7 @@ export default function TopNav({ topOffset = 0 }) {
                     </h3>
                   </div>
                   <div className="max-h-64 overflow-y-auto">
-                    {notifications.map((n: any) => (
+                    {notifications.map((n: ApiRecord) => (
                       <div
                         key={n.id}
                         className="px-4 py-3 cursor-pointer transition-colors"
@@ -693,7 +693,7 @@ export default function TopNav({ topOffset = 0 }) {
             }}
           >
             <div className="p-4 grid grid-cols-2 gap-6">
-              {sections.map((section: any) => {
+              {sections.map((section: ApiRecord) => {
                 if (section.adminOnly && !hasRole('admin')) return null;
                 return (
                   <div key={section.label}>
@@ -704,8 +704,8 @@ export default function TopNav({ topOffset = 0 }) {
                       {section.label}
                     </p>
                     <div className="space-y-0.5">
-                      {section.items.map((item: any) => {
-                        if (item.roles && !item.roles.some((r: any) => hasRole(r))) return null;
+                      {section.items.map((item: ApiRecord) => {
+                        if (item.roles && !item.roles.some((r: string) => hasRole(r))) return null;
                         const active = isItemActive(item.href);
                         return (
                           <NavLink

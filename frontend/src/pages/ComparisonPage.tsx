@@ -27,7 +27,7 @@ const envBadgeVariant = {
 const envOrder = { DEV: 0, QAS: 1, PRD: 2 };
 
 // Determina si un valor difiere del mayoritario en un conjunto
-function hasDifference(values: any[]) {
+function hasDifference(values: unknown[]) {
   const unique = [...new Set(values)];
   return unique.length > 1;
 }
@@ -48,7 +48,7 @@ export default function ComparisonPage() {
       dataService.getSIDLines(),
       dataService.getSystemMeta(),
       dataService.getLandscapeValidation(),
-    ]).then(([sys, lines, meta, validation]: any[]) => {
+    ]).then(([sys, lines, meta, validation]) => {
       setSystems(sys);
       setSidLines(lines);
       setSystemMeta(meta);
@@ -61,27 +61,27 @@ export default function ComparisonPage() {
   }, []);
 
   // Opciones del selector de SID Lines
-  const lineOptions = sidLines.map((l: any) => ({
+  const lineOptions = sidLines.map((l: ApiRecord) => ({
     value: l.line,
     label: `${l.line} — ${l.description}`,
   }));
 
   // Datos de la linea seleccionada
-  const currentLine = sidLines.find((l: any) => l.line === selectedLine);
+  const currentLine = sidLines.find((l: ApiRecord) => l.line === selectedLine);
 
   // Sistemas de la linea seleccionada, ordenados DEV -> QAS -> PRD
   const lineSystems = useMemo(() => {
     if (!currentLine) return [];
     return currentLine.systems
-      .map((id: any) => systems.find((s: any) => s.id === id))
+      .map((id: ApiRecord) => systems.find((s: ApiRecord) => s.id === id))
       .filter(Boolean)
-      .sort((a: any, b: any) => ((envOrder as Record<string, number>)[a.environment] ?? 99) - ((envOrder as Record<string, number>)[b.environment] ?? 99));
+      .sort((a: ApiRecord, b: ApiRecord) => ((envOrder as Record<string, number>)[a.environment] ?? 99) - ((envOrder as Record<string, number>)[b.environment] ?? 99));
   }, [currentLine, systems]);
 
   // Meta de cada sistema
   const lineSystemsMeta = useMemo(() => {
     const map: Record<string, any> = {};
-    lineSystems.forEach((s: any) => {
+    lineSystems.forEach((s: ApiRecord) => {
       (map as Record<string, any>)[s.id] = (systemMeta as Record<string, any>)[s.id] || {};
     });
     return map;
@@ -89,21 +89,21 @@ export default function ComparisonPage() {
 
   // Algún sistema en la linea es RISE_RESTRICTED (sin metricas OS)
   const hasRiseSystem = useMemo(() =>
-    lineSystems.some((s: any) => s.isRiseRestricted),
+    lineSystems.some((s: ApiRecord) => s.isRiseRestricted),
   [lineSystems]);
 
   // Datos de comparacion para el grafico de barras
   const comparisonData = useMemo(() => {
     if (lineSystems.length === 0) return [];
     const data = [
-      { metric: 'Health Score', ...Object.fromEntries(lineSystems.map((s: any) => [s.sid, s.healthScore])) },
+      { metric: 'Health Score', ...Object.fromEntries(lineSystems.map((s: ApiRecord) => [s.sid, s.healthScore])) },
     ];
     // Omitir metricas OS si algún sistema es RISE_RESTRICTED
     if (!hasRiseSystem) {
       data.push(
-        { metric: 'CPU (%)', ...Object.fromEntries(lineSystems.map((s: any) => [s.sid, s.cpu])) },
-        { metric: 'Memoria (%)', ...Object.fromEntries(lineSystems.map((s: any) => [s.sid, s.mem])) },
-        { metric: 'Disco (%)', ...Object.fromEntries(lineSystems.map((s: any) => [s.sid, s.disk])) },
+        { metric: 'CPU (%)', ...Object.fromEntries(lineSystems.map((s: ApiRecord) => [s.sid, s.cpu])) },
+        { metric: 'Memoria (%)', ...Object.fromEntries(lineSystems.map((s: ApiRecord) => [s.sid, s.mem])) },
+        { metric: 'Disco (%)', ...Object.fromEntries(lineSystems.map((s: ApiRecord) => [s.sid, s.disk])) },
       );
     }
     return data;
@@ -115,21 +115,21 @@ export default function ComparisonPage() {
   const landscapeData = (landscapeValidation as Record<string, any>)[selectedLine] || null;
 
   // Helper: color de fila segun status de check
-  function checkStatusColor(status: any) {
+  function checkStatusColor(status: string) {
     if (status === 'ok') return 'text-success-600 dark:text-success-400';
     if (status === 'warning') return 'text-warning-600 dark:text-warning-400';
     if (status === 'info') return 'text-blue-600 dark:text-blue-400';
     return 'text-danger-600 dark:text-danger-400';
   }
 
-  function checkStatusIcon(status: any) {
+  function checkStatusIcon(status: string) {
     if (status === 'ok') return <CheckCircle size={14} className="text-success-500" />;
     if (status === 'warning') return <AlertTriangle size={14} className="text-warning-500" />;
     return <Info size={14} className="text-blue-500" />;
   }
 
   // Determina si un valor de metrica es el peor (mas alto para CPU/Mem/Disk, mas bajo para Health)
-  function isMetricOutlier(metric: any, value: any, allValues: any[]) {
+  function isMetricOutlier(metric: string, value: number, allValues: number[]) {
     if (!hasDifference(allValues)) return false;
     if (metric === 'healthScore') return value === Math.min(...allValues);
     return value === Math.max(...allValues);
@@ -183,11 +183,11 @@ export default function ComparisonPage() {
                   lineSystems.length === 2 ? 'md:grid-cols-2' :
                   'md:grid-cols-3'
                 }`}>
-                  {lineSystems.map((sys: any, i: any) => {
+                  {lineSystems.map((sys: ApiRecord, i: number) => {
                     const meta = (lineSystemsMeta as Record<string, any>)[sys.id] || {};
-                    const cpuValues = lineSystems.map((s: any) => s.cpu);
-                    const memValues = lineSystems.map((s: any) => s.mem);
-                    const diskValues = lineSystems.map((s: any) => s.disk);
+                    const cpuValues = lineSystems.map((s: ApiRecord) => s.cpu);
+                    const memValues = lineSystems.map((s: ApiRecord) => s.mem);
+                    const diskValues = lineSystems.map((s: ApiRecord) => s.disk);
 
                     return (
                       <Card
@@ -262,7 +262,7 @@ export default function ComparisonPage() {
                           <div className="flex justify-between text-xs">
                             <span className="text-text-tertiary">SAP Release</span>
                             <span className={`font-medium ${
-                              hasDifference(lineSystems.map((s: any) => (lineSystemsMeta[s.id] || {}).sapRelease))
+                              hasDifference(lineSystems.map((s: ApiRecord) => (lineSystemsMeta[s.id] || {}).sapRelease))
                                 ? 'text-warning-600 dark:text-warning-400'
                                 : 'text-text-primary'
                             }`}>
@@ -272,7 +272,7 @@ export default function ComparisonPage() {
                           <div className="flex justify-between text-xs">
                             <span className="text-text-tertiary">Kernel</span>
                             <span className={`font-medium ${
-                              hasDifference(lineSystems.map((s: any) => (lineSystemsMeta[s.id] || {}).kernelRelease))
+                              hasDifference(lineSystems.map((s: ApiRecord) => (lineSystemsMeta[s.id] || {}).kernelRelease))
                                 ? 'text-warning-600 dark:text-warning-400'
                                 : 'text-text-primary'
                             }`}>
@@ -282,7 +282,7 @@ export default function ComparisonPage() {
                           <div className="flex justify-between text-xs">
                             <span className="text-text-tertiary">SAP Notes</span>
                             <span className={`font-medium ${
-                              hasDifference(lineSystems.map((s: any) => (lineSystemsMeta[s.id] || {}).sapNotes))
+                              hasDifference(lineSystems.map((s: ApiRecord) => (lineSystemsMeta[s.id] || {}).sapNotes))
                                 ? 'text-warning-600 dark:text-warning-400'
                                 : 'text-text-primary'
                             }`}>
@@ -322,7 +322,7 @@ export default function ComparisonPage() {
                             }}
                           />
                           <Legend />
-                          {lineSystems.map((s: any, i: any) => (
+                          {lineSystems.map((s: ApiRecord, i: number) => (
                             <Bar
                               key={s.id}
                               dataKey={s.sid}
@@ -367,7 +367,7 @@ export default function ComparisonPage() {
                         </TableRow>
                       </TableHeader>
                       <TableBody>
-                        {landscapeData.checks.map((check: any, idx: any) => (
+                        {landscapeData.checks.map((check: ApiRecord, idx: number) => (
                           <TableRow key={idx}>
                             <TableCell>
                               <div>

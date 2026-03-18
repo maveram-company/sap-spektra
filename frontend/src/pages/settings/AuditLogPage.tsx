@@ -22,12 +22,12 @@ export default function AuditLogPage() {
     let mounted = true;
     dataService.getAuditLog()
       .then(data => { if (mounted) setEvents(data); })
-      .catch((err: any) => { if (mounted) setError(err.message); })
+      .catch((err: unknown) => { if (mounted) setError((err as Error).message); })
       .finally(() => { if (mounted) setLoading(false); });
     return () => { mounted = false; };
   }, []);
 
-  const filtered = events.filter((e: any) =>
+  const filtered = events.filter((e: ApiRecord) =>
     e.action.toLowerCase().includes(search.toLowerCase()) ||
     e.user.toLowerCase().includes(search.toLowerCase()) ||
     e.details.toLowerCase().includes(search.toLowerCase())
@@ -43,7 +43,7 @@ export default function AuditLogPage() {
     </div>
   );
 
-  const severityVariant = (s: any) => (({ critical: 'danger', warning: 'warning', info: 'default' } as Record<string, string>)[s] || 'default');
+  const severityVariant = (s: string) => (({ critical: 'danger', warning: 'warning', info: 'default' } as Record<string, string>)[s] || 'default');
 
   const actionLabels: Record<string, string> = {
     'system.register': 'Sistema registrado',
@@ -87,7 +87,7 @@ export default function AuditLogPage() {
           </tr>
         </TableHeader>
         <TableBody>
-          {paginatedAudit.map((event: any) => (
+          {paginatedAudit.map((event: ApiRecord) => (
             <TableRow key={event.id}>
               <TableCell className="text-xs text-text-secondary whitespace-nowrap">
                 {new Date(event.timestamp).toLocaleString('es-CO', { hour12: false })}

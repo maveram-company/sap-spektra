@@ -705,7 +705,7 @@ describe('dataService', () => {
     });
 
     it('getSystemBreaches returns all breaches when no systemId', async () => {
-      const promise = dataService.getSystemBreaches(undefined, 3);
+      const promise = dataService.getSystemBreaches(undefined as unknown as string, 3);
       vi.advanceTimersByTime(500);
       const result = await promise;
       expect(result.length).toBeLessThanOrEqual(3);
@@ -916,7 +916,7 @@ describe('dataService', () => {
       mockedApi.getTransports.mockResolvedValue([
         { id: 'T1', system: { sid: 'EP1' }, target: 'QAS' },
       ]);
-      const [t] = await dataService.getTransports();
+      const [t] = await dataService.getTransports() as any[];
       expect(t.sid).toBe('EP1');
       expect(t.targetSystem).toBe('QAS');
     });
@@ -950,7 +950,7 @@ describe('dataService', () => {
     it('getServerMetrics returns null on API error', async () => {
       mockedApi.getHosts.mockRejectedValue(new Error('Network error'));
       mockedApi.getSystemById.mockRejectedValue(new Error('Network error'));
-      const result = await dataService.getServerMetrics('SYS1');
+      const result = (await dataService.getServerMetrics('SYS1'))!;
       expect(result).toBeNull();
     });
 
@@ -983,7 +983,7 @@ describe('dataService', () => {
 
     it('getSAPMonitoring returns null on API error', async () => {
       mockedApi.getSystemById.mockRejectedValue(new Error('fail'));
-      const result = await dataService.getSAPMonitoring('SYS1');
+      const result = (await dataService.getSAPMonitoring('SYS1'))!;
       expect(result).toBeNull();
     });
 
@@ -1093,7 +1093,7 @@ describe('dataService', () => {
         dbType: 'SAP HANA 2.0',
         status: 'healthy',
       });
-      const result = await dataService.getServerMetrics('SYS1');
+      const result = (await dataService.getServerMetrics('SYS1'))!;
       expect(result).not.toBeNull();
       expect(result.dbInfo.type).toBe('HANA');
       expect(result.dbInfo.version).toBe('SAP HANA 2.0');
@@ -1111,7 +1111,7 @@ describe('dataService', () => {
         id: 'SYS2',
         dbType: 'Oracle 19c',
       });
-      const result = await dataService.getServerMetrics('SYS2');
+      const result = (await dataService.getServerMetrics('SYS2'))!;
       expect(result.dbInfo.type).toBe('Oracle');
       expect(result.dbInfo.tablespacePct).toBeTypeOf('number');
       expect(result.dbInfo.blockedSessions).toBeTypeOf('number');
@@ -1120,7 +1120,7 @@ describe('dataService', () => {
     it('getServerMetrics synthesizes DB-specific fields for ASE', async () => {
       mockedApi.getHosts.mockResolvedValue([{ id: 'H3', hostname: 'h', status: 'active', cpu: 40, memory: 50, disk: 55 }]);
       mockedApi.getSystemById.mockResolvedValue({ id: 'SYS3', dbType: 'SAP ASE 16.0' });
-      const result = await dataService.getServerMetrics('SYS3');
+      const result = (await dataService.getServerMetrics('SYS3'))!;
       expect(result.dbInfo.type).toBe('ASE');
       expect(result.dbInfo.cacheHitPct).toBeTypeOf('number');
       expect(result.dbInfo.txLogPct).toBeTypeOf('number');
@@ -1129,7 +1129,7 @@ describe('dataService', () => {
     it('getServerMetrics synthesizes DB-specific fields for MSSQL', async () => {
       mockedApi.getHosts.mockResolvedValue([{ id: 'H4', hostname: 'h', status: 'active', cpu: 30, memory: 45, disk: 40 }]);
       mockedApi.getSystemById.mockResolvedValue({ id: 'SYS4', dbType: 'MSSQL 2019' });
-      const result = await dataService.getServerMetrics('SYS4');
+      const result = (await dataService.getServerMetrics('SYS4'))!;
       expect(result.dbInfo.type).toBe('MSSQL');
       expect(result.dbInfo.logPct).toBeTypeOf('number');
       expect(result.dbInfo.dataPct).toBeTypeOf('number');
@@ -1138,7 +1138,7 @@ describe('dataService', () => {
     it('getServerMetrics synthesizes DB-specific fields for DB2', async () => {
       mockedApi.getHosts.mockResolvedValue([{ id: 'H5', hostname: 'h', status: 'active', cpu: 25, memory: 40, disk: 35 }]);
       mockedApi.getSystemById.mockResolvedValue({ id: 'SYS5', dbType: 'DB2 11.5' });
-      const result = await dataService.getServerMetrics('SYS5');
+      const result = (await dataService.getServerMetrics('SYS5'))!;
       expect(result.dbInfo.type).toBe('DB2');
       expect(result.dbInfo.tablespacePct).toBeTypeOf('number');
       expect(result.dbInfo.logPct).toBeTypeOf('number');
@@ -1147,7 +1147,7 @@ describe('dataService', () => {
     it('getServerMetrics synthesizes DB-specific fields for MaxDB', async () => {
       mockedApi.getHosts.mockResolvedValue([{ id: 'H6', hostname: 'h', status: 'active', cpu: 20, memory: 35, disk: 30 }]);
       mockedApi.getSystemById.mockResolvedValue({ id: 'SYS6', dbType: 'MaxDB 7.9' });
-      const result = await dataService.getServerMetrics('SYS6');
+      const result = (await dataService.getServerMetrics('SYS6'))!;
       expect(result.dbInfo.type).toBe('MaxDB');
       expect(result.dbInfo.dataVolPct).toBeTypeOf('number');
       expect(result.dbInfo.logVolPct).toBeTypeOf('number');
@@ -1157,7 +1157,7 @@ describe('dataService', () => {
     it('getServerMetrics returns null when hosts is empty', async () => {
       mockedApi.getHosts.mockResolvedValue([]);
       mockedApi.getSystemById.mockResolvedValue({ id: 'SYS7' });
-      const result = await dataService.getServerMetrics('SYS7');
+      const result = (await dataService.getServerMetrics('SYS7'))!;
       expect(result).toBeNull();
     });
   });
@@ -1267,7 +1267,7 @@ describe('dataService', () => {
         id: 'SYS-ABAP',
         sapStackType: 'ABAP',
       });
-      const result = await dataService.getSAPMonitoring('SYS-ABAP');
+      const result = (await dataService.getSAPMonitoring('SYS-ABAP'))!;
       expect(result).not.toBeNull();
       expect(result.sm12).toBeDefined();
       expect(result.sm12.totalLocks).toBeTypeOf('number');
@@ -1281,7 +1281,7 @@ describe('dataService', () => {
         id: 'SYS-JAVA',
         sapStackType: 'JAVA',
       });
-      const result = await dataService.getSAPMonitoring('SYS-JAVA');
+      const result = (await dataService.getSAPMonitoring('SYS-JAVA'))!;
       expect(result).not.toBeNull();
       expect(result.javaStack).toBe(true);
       expect(result.messageMonitor).toBeDefined();
@@ -1295,13 +1295,13 @@ describe('dataService', () => {
         id: 'SYS-DUAL',
         sapStackType: 'DUAL_STACK',
       });
-      const result = await dataService.getSAPMonitoring('SYS-DUAL');
+      const result = (await dataService.getSAPMonitoring('SYS-DUAL'))!;
       expect(result.javaStack).toBe(true);
     });
 
     it('returns null when system is not found', async () => {
       mockedApi.getSystemById.mockResolvedValue(null);
-      const result = await dataService.getSAPMonitoring('NONEXIST');
+      const result = (await dataService.getSAPMonitoring('NONEXIST'))!;
       expect(result).toBeNull();
     });
   });
@@ -1352,7 +1352,7 @@ describe('dataService', () => {
       ]);
       const [ha] = await dataService.getHASystems();
       expect(ha.secondary).not.toBeNull();
-      expect(ha.secondary.state).toBe('stopped');
+      expect(ha.secondary!.state).toBe('stopped');
     });
 
     it('builds warm standby details with scale-up info', async () => {
@@ -1365,10 +1365,10 @@ describe('dataService', () => {
       ]);
       const [ha] = await dataService.getHASystems();
       expect(ha.warmStandbyDetails).toBeDefined();
-      expect(ha.warmStandbyDetails.costSavingsPercent).toBe(75);
-      expect(ha.warmStandbyDetails.scaleUpRequired).toBe(true);
-      expect(ha.primary.instanceType).toBe('r6i.8xlarge');
-      expect(ha.secondary.instanceType).toBe('r6i.2xlarge');
+      expect(ha.warmStandbyDetails!.costSavingsPercent).toBe(75);
+      expect(ha.warmStandbyDetails!.scaleUpRequired).toBe(true);
+      expect((ha.primary as any).instanceType).toBe('r6i.8xlarge');
+      expect((ha.secondary as any).instanceType).toBe('r6i.2xlarge');
     });
 
     it('sets dnsEndpoint for CROSS_REGION_DR', async () => {

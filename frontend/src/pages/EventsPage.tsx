@@ -42,7 +42,7 @@ const levelConfig = {
   },
 };
 
-function LevelBadge({ level }: { level: any }) {
+function LevelBadge({ level }: { level: string }) {
   const config = (levelConfig as Record<string, any>)[level];
   if (!config) return null;
   const Icon = config.icon;
@@ -55,7 +55,7 @@ function LevelBadge({ level }: { level: any }) {
   );
 }
 
-function formatTimestamp(iso: any) {
+function formatTimestamp(iso: string) {
   const date = new Date(iso);
   return date.toLocaleString('es-CO', {
     day: '2-digit',
@@ -83,9 +83,9 @@ export default function EventsPage() {
     let mounted = true;
     Promise.all([dataService.getEvents(), dataService.getSystems()]).then(([evts, sys]) => {
       if (mounted) { setEvents(evts); setSystems(sys); setLoading(false); }
-    }).catch((err: any) => {
+    }).catch((err: unknown) => {
       if (mounted) {
-        log.warn('Fetch failed', { error: err.message });
+        log.warn('Fetch failed', { error: (err as Error).message });
         setError(t('common.error.loadData'));
         setLoading(false);
       }
@@ -94,7 +94,7 @@ export default function EventsPage() {
   }, []);
 
   const filtered = useMemo(() => {
-    return events.filter((evt: any) => {
+    return events.filter((evt: ApiRecord) => {
       if (levelFilter !== 'all' && evt.level !== levelFilter) return false;
       if (systemFilter !== 'all' && evt.systemId !== systemFilter) return false;
       if (sourceFilter !== 'all' && evt.source !== sourceFilter) return false; // P2.4
@@ -197,7 +197,7 @@ export default function EventsPage() {
                 className="appearance-none bg-surface border border-border rounded-lg px-3 pr-8 py-2 text-sm text-text-primary focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 cursor-pointer"
               >
                 <option value="all">Todos los sistemas</option>
-                {systems.map((sys: any) => (
+                {systems.map((sys: ApiRecord) => (
                   <option key={sys.id} value={sys.id}>
                     {sys.sid} — {sys.id}
                   </option>
@@ -242,7 +242,7 @@ export default function EventsPage() {
                 </tr>
               </thead>
               <tbody>
-                {paginatedEvents.map((evt: any) => (
+                {paginatedEvents.map((evt: ApiRecord) => (
                   <tr
                     key={evt.id}
                     className="border-b border-border last:border-0 hover:bg-surface-secondary dark:hover:bg-surface-secondary transition-colors"

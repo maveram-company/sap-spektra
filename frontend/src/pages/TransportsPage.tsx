@@ -19,7 +19,7 @@ const transportStatus = {
   modifiable: { label: 'Modificable', color: 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-400', icon: Clock },
 };
 
-function TransportStatusBadge({ status }: { status: any }) {
+function TransportStatusBadge({ status }: { status: string }) {
   const cfg = (transportStatus as Record<string, any>)[status] || transportStatus.modifiable;
   const Icon = cfg.icon;
   return (
@@ -30,7 +30,7 @@ function TransportStatusBadge({ status }: { status: any }) {
   );
 }
 
-function RCBadge({ rc }: { rc: any }) {
+function RCBadge({ rc }: { rc: number | null }) {
   if (rc === null || rc === undefined) return <span className="text-text-tertiary text-xs">—</span>;
   if (rc === 0) return <Badge variant="success" size="sm">RC=0</Badge>;
   if (rc <= 4) return <Badge variant="warning" size="sm">RC={rc}</Badge>;
@@ -50,8 +50,8 @@ export default function TransportsPage() {
       setTransports(t);
       setSystems(s);
       setLoading(false);
-    }).catch((err: any) => {
-      log.warn('Fetch failed', { error: err.message });
+    }).catch((err: unknown) => {
+      log.warn('Fetch failed', { error: (err as Error).message });
       setError(t('common.error.loadData'));
       setLoading(false);
     });
@@ -59,12 +59,12 @@ export default function TransportsPage() {
 
   const filtered = useMemo(() => {
     if (statusFilter === 'all') return transports;
-    return transports.filter((t: any) => t.status === statusFilter);
+    return transports.filter((t: ApiRecord) => t.status === statusFilter);
   }, [statusFilter, transports]);
 
-  const released = transports.filter((t: any) => t.status === 'released').length;
-  const imported = transports.filter((t: any) => t.status === 'imported').length;
-  const errors = transports.filter((t: any) => t.status === 'error').length;
+  const released = transports.filter((t: ApiRecord) => t.status === 'released').length;
+  const imported = transports.filter((t: ApiRecord) => t.status === 'imported').length;
+  const errors = transports.filter((t: ApiRecord) => t.status === 'error').length;
 
   if (loading) return <PageLoading message="Cargando transportes..." />;
 
@@ -138,8 +138,8 @@ export default function TransportsPage() {
           </CardHeader>
           <div className="flex items-center justify-center gap-4 py-4">
             {/* Find ERP line systems */}
-            {['DEV', 'QAS', 'PRD'].map((env: any, idx: any) => {
-              const sys = systems.find((s: any) => s.environment === env && s.type === 'S/4HANA');
+            {['DEV', 'QAS', 'PRD'].map((env: string, idx: number) => {
+              const sys = systems.find((s: ApiRecord) => s.environment === env && s.type === 'S/4HANA');
               return (
                 <div key={env} className="flex items-center gap-4">
                   <div className={`px-6 py-4 rounded-xl border-2 text-center ${
@@ -191,7 +191,7 @@ export default function TransportsPage() {
               </tr>
             </TableHeader>
             <TableBody>
-              {filtered.map((t: any) => (
+              {filtered.map((t: ApiRecord) => (
                 <TableRow key={t.id}>
                   <TableCell className="font-mono text-sm font-bold text-text-primary">
                     {t.transportId || t.id}
@@ -238,7 +238,7 @@ export default function TransportsPage() {
               </CardTitle>
             </CardHeader>
             <div className="space-y-3">
-              {transports.filter((t: any) => t.status === 'error').map((t: any) => (
+              {transports.filter((t: ApiRecord) => t.status === 'error').map((t: ApiRecord) => (
                 <div key={t.id} className="border border-danger-200 dark:border-danger-800 rounded-lg p-3 bg-surface">
                   <div className="flex items-center gap-2 mb-1">
                     <span className="font-mono text-sm font-bold text-text-primary">{t.transportId || t.id}</span>

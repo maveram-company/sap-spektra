@@ -8,16 +8,17 @@ import Table, { TableHeader, TableBody, TableRow, TableHead, TableCell } from '.
 import PageLoading from '../components/ui/PageLoading';
 import { dataService } from '../services/dataService';
 import { createLogger } from '../lib/logger';
+import type { ApiRecord } from '../types';
 
 const log = createLogger('CertificatesPage');
 
-function StatusIcon({ status }: { status: any }) {
+function StatusIcon({ status }: { status: string }) {
   if (status === 'ok') return <ShieldCheck size={16} className="text-success-500" />;
   if (status === 'warning') return <AlertTriangle size={16} className="text-warning-500" />;
   return <XCircle size={16} className="text-danger-500" />;
 }
 
-function DaysLeftBadge({ days, status }: { days: any; status: any }) {
+function DaysLeftBadge({ days, status }: { days: number; status: string }) {
   const variant = status === 'critical' ? 'danger' : status === 'warning' ? 'warning' : 'success';
   return (
     <Badge variant={variant} size="sm" dot>
@@ -28,27 +29,27 @@ function DaysLeftBadge({ days, status }: { days: any; status: any }) {
 
 export default function CertificatesPage() {
   const { t } = useTranslation();
-  const [certificates, setCertificates] = useState<any[]>([]);
-  const [licenses, setLicenses] = useState<any[]>([]);
+  const [certificates, setCertificates] = useState<ApiRecord[]>([]);
+  const [licenses, setLicenses] = useState<ApiRecord[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    Promise.all([dataService.getCertificates(), dataService.getLicenses()]).then(([certs, lics]: any[]) => {
+    Promise.all([dataService.getCertificates(), dataService.getLicenses()]).then(([certs, lics]) => {
       setCertificates(certs);
       setLicenses(lics);
       setLoading(false);
-    }).catch((err: any) => {
-      log.warn('Fetch failed', { error: err.message });
+    }).catch((err: unknown) => {
+      log.warn('Fetch failed', { error: (err as Error).message });
       setError(t('common.error.loadData'));
       setLoading(false);
     });
   }, []);
 
-  const criticalCerts = useMemo(() => certificates.filter((c: any) => c.status === 'critical').length, [certificates]);
-  const warningCerts = useMemo(() => certificates.filter((c: any) => c.status === 'warning').length, [certificates]);
-  const okCerts = useMemo(() => certificates.filter((c: any) => c.status === 'ok').length, [certificates]);
-  const warningLics = useMemo(() => licenses.filter((l: any) => l.status === 'warning').length, [licenses]);
+  const criticalCerts = useMemo(() => certificates.filter((c: ApiRecord) => c.status === 'critical').length, [certificates]);
+  const warningCerts = useMemo(() => certificates.filter((c: ApiRecord) => c.status === 'warning').length, [certificates]);
+  const okCerts = useMemo(() => certificates.filter((c: ApiRecord) => c.status === 'ok').length, [certificates]);
+  const warningLics = useMemo(() => licenses.filter((l: ApiRecord) => l.status === 'warning').length, [licenses]);
 
   if (loading) return <PageLoading message="Cargando certificados..." />;
 
@@ -138,8 +139,8 @@ export default function CertificatesPage() {
             </TableHeader>
             <TableBody>
               {certificates
-                .sort((a: any, b: any) => a.daysLeft - b.daysLeft)
-                .map((cert: any) => (
+                .sort((a: ApiRecord, b: ApiRecord) => a.daysLeft - b.daysLeft)
+                .map((cert: ApiRecord) => (
                 <TableRow key={cert.id}>
                   <TableCell>
                     <StatusIcon status={cert.status} />
@@ -191,8 +192,8 @@ export default function CertificatesPage() {
             </TableHeader>
             <TableBody>
               {licenses
-                .sort((a: any, b: any) => a.daysLeft - b.daysLeft)
-                .map((lic: any) => (
+                .sort((a: ApiRecord, b: ApiRecord) => a.daysLeft - b.daysLeft)
+                .map((lic: ApiRecord) => (
                 <TableRow key={lic.id}>
                   <TableCell>
                     <StatusIcon status={lic.status} />

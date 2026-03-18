@@ -25,39 +25,39 @@ export default function AdminPage() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    dataService.getSystems().then(data => { setSystems(data); setLoading(false); }).catch((err: any) => log.warn('Fetch failed', { error: err.message }));
+    dataService.getSystems().then(data => { setSystems(data); setLoading(false); }).catch((err: unknown) => log.warn('Fetch failed', { error: (err as Error).message }));
     return () => {
       if (deleteTimerRef.current) clearTimeout(deleteTimerRef.current);
     };
   }, []);
 
-  const handleHealthCheck = async (id: any) => {
+  const handleHealthCheck = async (id: string) => {
     setChecking(id);
     setActionError(null);
     try {
       // Demo mode: simulated delay — connect to real API when available
       await new Promise(r => setTimeout(r, 1500));
-    } catch (err: any) {
-      setActionError(err instanceof Error ? err.message : 'Error al ejecutar health check');
+    } catch (err: unknown) {
+      setActionError(err instanceof Error ? (err as Error).message : 'Error al ejecutar health check');
     } finally {
       setChecking(null);
     }
   };
 
-  const handleEdit = (sys: any) => {
+  const handleEdit = (sys: ApiRecord) => {
     navigate(`/systems/${sys.id}`);
   };
 
-  const handleDelete = async (id: any) => {
+  const handleDelete = async (id: string) => {
     if (deleteConfirm === id) {
       setActionError(null);
       try {
         // Demo mode: simulated delay — connect to real API when available
         await new Promise(r => setTimeout(r, 500));
-        setSystems(prev => prev.filter((s: any) => s.id !== id));
+        setSystems(prev => prev.filter((s: ApiRecord) => s.id !== id));
         setDeleteConfirm(null);
-      } catch (err: any) {
-        setActionError(err instanceof Error ? err.message : 'Error al eliminar sistema');
+      } catch (err: unknown) {
+        setActionError(err instanceof Error ? (err as Error).message : 'Error al eliminar sistema');
       }
     } else {
       setDeleteConfirm(id);
@@ -102,7 +102,7 @@ export default function AdminPage() {
             </tr>
           </TableHeader>
           <TableBody>
-            {systems.map((sys: any) => (
+            {systems.map((sys: ApiRecord) => (
               <TableRow key={sys.id} onClick={() => navigate(`/systems/${sys.id}`)}>
                 <TableCell>
                   <div className="flex items-center gap-2">

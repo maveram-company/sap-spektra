@@ -49,8 +49,8 @@ import {
 } from 'lucide-react';
 
 // ── Helper: pick the correct step list ──
-const getStepsForOp = (systems: any[], systemId: any, opType: any) => {
-  const sys = systems.find((s: any) => s.systemId === systemId);
+const getStepsForOp = (systems: ApiRecord[], systemId: string, opType: string) => {
+  const sys = systems.find((s: ApiRecord) => s.systemId === systemId);
   if (!sys) return HANA_TAKEOVER_STEPS;
 
   // Por estrategia
@@ -66,7 +66,7 @@ const getStepsForOp = (systems: any[], systemId: any, opType: any) => {
 };
 
 // ── Strategy icon ──
-const StrategyIcon = ({ strategy, className = 'w-4 h-4' }: any) => {
+const StrategyIcon = ({ strategy, className = 'w-4 h-4' }: { strategy: string; className?: string }) => {
   const map = {
     HOT_STANDBY: Flame,
     WARM_STANDBY: Thermometer,
@@ -79,7 +79,7 @@ const StrategyIcon = ({ strategy, className = 'w-4 h-4' }: any) => {
 };
 
 // ── Get operation label by strategy ──
-const getOpLabels = (sys: any) => {
+const getOpLabels = (sys: ApiRecord) => {
   if (!sys) return { primary: 'Failover', secondary: null, drTest: null };
   const s = sys.haStrategy;
   if (s === 'HOT_STANDBY') return { primary: 'Takeover', secondary: 'Failover', drTest: null };
@@ -108,14 +108,14 @@ export default function HAControlCenterPage() {
       dataService.getHAOpsHistory(),
       dataService.getHADrivers(),
       dataService.getHAPrereqs(),
-    ]).then(([sys, history, drivers, prereqs]: any[]) => {
+    ]).then(([sys, history, drivers, prereqs]) => {
       setSystems(sys);
       setOpsHistory(history);
       setHaDrivers(drivers);
       setHaPrereqs(prereqs);
       setLoading(false);
-    }).catch((err: any) => {
-      log.warn('Fetch failed', { error: err.message });
+    }).catch((err: unknown) => {
+      log.warn('Fetch failed', { error: (err as Error).message });
       setError(t('common.error.loadData'));
       setLoading(false);
     });
@@ -128,10 +128,10 @@ export default function HAControlCenterPage() {
   // Filtered systems
   const filteredSystems = selectedStrategy === 'ALL'
     ? systems
-    : systems.filter((s: any) => s.haStrategy === selectedStrategy);
+    : systems.filter((s: ApiRecord) => s.haStrategy === selectedStrategy);
 
   // ── Completion handler ──
-  const completeOperation = useCallback((op: any) => {
+  const completeOperation = useCallback((op: ApiRecord) => {
     const endTime = new Date().toISOString();
     setOpsHistory(prev => {
       const newEntry = {
@@ -173,13 +173,13 @@ export default function HAControlCenterPage() {
   }, [runningOp, completeOperation]);
 
   // ── Handlers ──
-  const handleStartOp = useCallback((systemId: any, type: any) => {
+  const handleStartOp = useCallback((systemId: string, type: string) => {
     setConfirmDialog({ systemId, type });
   }, []);
 
   const handleConfirmOp = useCallback(() => {
     if (!confirmDialog) return;
-    const sys = systems.find((s: any) => s.systemId === confirmDialog.systemId);
+    const sys = systems.find((s: ApiRecord) => s.systemId === confirmDialog.systemId);
     const steps = getStepsForOp(systems, confirmDialog.systemId, confirmDialog.type);
     setRunningOp({
       systemId: confirmDialog.systemId,
@@ -207,7 +207,7 @@ export default function HAControlCenterPage() {
   ];
 
   // ── Status helpers ──
-  const statusColor = (status: any) => (({
+  const statusColor = (status: string) => (({
     HEALTHY: 'border-l-success-500',
     DEGRADED: 'border-l-warning-500',
     STANDBY: 'border-l-primary-500',
@@ -215,7 +215,7 @@ export default function HAControlCenterPage() {
     NOT_CONFIGURED: 'border-l-gray-400',
   } as Record<string, string>)[status] || 'border-l-gray-400');
 
-  const statusBadge = (status: any) => {
+  const statusBadge = (status: string) => {
     const map = {
       HEALTHY: { bg: 'bg-success-50 dark:bg-success-950', text: 'text-success-700 dark:text-success-300', label: 'Healthy', Icon: CheckCircle2 },
       DEGRADED: { bg: 'bg-warning-50 dark:bg-warning-950', text: 'text-warning-700 dark:text-warning-300', label: 'Degraded', Icon: AlertTriangle },
@@ -232,7 +232,7 @@ export default function HAControlCenterPage() {
     );
   };
 
-  const strategyBadge = (strategy: any) => {
+  const strategyBadge = (strategy: string) => {
     const meta = (HA_STRATEGY_META as Record<string, any>)[strategy];
     if (!meta) return null;
     const colorMap = {
@@ -250,7 +250,7 @@ export default function HAControlCenterPage() {
     );
   };
 
-  const replStatusBadge = (replStatus: any) => {
+  const replStatusBadge = (replStatus: string) => {
     if (!replStatus) return null;
     if (replStatus === 'SOK') {
       return (
@@ -266,7 +266,7 @@ export default function HAControlCenterPage() {
     );
   };
 
-  const opTypeBadge = (type: any) => {
+  const opTypeBadge = (type: string) => {
     const map = {
       TAKEOVER: { bg: 'bg-primary-50 dark:bg-primary-950', text: 'text-primary-700 dark:text-primary-300' },
       FAILOVER: { bg: 'bg-warning-50 dark:bg-warning-950', text: 'text-warning-700 dark:text-warning-300' },
@@ -284,7 +284,7 @@ export default function HAControlCenterPage() {
     );
   };
 
-  const opStatusBadge = (status: any) => {
+  const opStatusBadge = (status: string) => {
     if (status === 'COMPLETED') {
       return (
         <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-semibold bg-success-50 dark:bg-success-950 text-success-700 dark:text-success-300">
@@ -299,13 +299,13 @@ export default function HAControlCenterPage() {
     );
   };
 
-  const prereqIcon = (status: any) => {
+  const prereqIcon = (status: string) => {
     if (status === 'PASS') return <CheckCircle2 className="w-5 h-5 text-success-500" />;
     if (status === 'WARN') return <AlertTriangle className="w-5 h-5 text-warning-500" />;
     return <XCircle className="w-5 h-5 text-danger-500" />;
   };
 
-  const prereqStatusBadge = (status: any) => {
+  const prereqStatusBadge = (status: string) => {
     const map = {
       PASS: { bg: 'bg-success-50 dark:bg-success-950', text: 'text-success-700 dark:text-success-300' },
       WARN: { bg: 'bg-warning-50 dark:bg-warning-950', text: 'text-warning-700 dark:text-warning-300' },
@@ -319,7 +319,7 @@ export default function HAControlCenterPage() {
     );
   };
 
-  const generateEvidenceHash = (id: any) => {
+  const generateEvidenceHash = (id: string) => {
     const base = `${id}-evidence-hash`;
     let hash = '';
     for (let i = 0; i < 64; i++) {
@@ -332,7 +332,7 @@ export default function HAControlCenterPage() {
   const renderStrategyOverview = () => {
     const strategies = Object.entries(HA_STRATEGY_META);
     const counts: Record<string, number> = {};
-    systems.forEach((s: any) => {
+    systems.forEach((s: ApiRecord) => {
       if (s.haStrategy) counts[s.haStrategy] = (counts[s.haStrategy] || 0) + 1;
     });
 
@@ -366,7 +366,7 @@ export default function HAControlCenterPage() {
   };
 
   // ── Render: node pair for any strategy ──
-  const renderNodePair = (sys: any) => {
+  const renderNodePair = (sys: ApiRecord) => {
     const isPilotLight = sys.haStrategy === 'PILOT_LIGHT';
     const isBackupOnly = sys.haStrategy === 'BACKUP_RESTORE';
     const isCrossRegion = sys.haStrategy === 'CROSS_REGION_DR';
@@ -574,7 +574,7 @@ export default function HAControlCenterPage() {
 
       {/* System cards grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
-        {filteredSystems.map((sys: any) => (
+        {filteredSystems.map((sys: ApiRecord) => (
           <div
             key={sys.systemId}
             className={`bg-surface rounded-xl border border-border border-l-4 ${statusColor(sys.haStatus)} p-4 space-y-3`}
@@ -743,7 +743,7 @@ export default function HAControlCenterPage() {
           Drivers Registrados
         </h3>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-          {haDrivers.map((drv: any, i: any) => (
+          {haDrivers.map((drv: ApiRecord, i: number) => (
             <div key={i} className="flex items-center justify-between p-3 rounded-lg border border-border bg-surface-secondary">
               <div>
                 <p className="text-sm font-medium text-text-primary">{drv.name}</p>
@@ -791,7 +791,7 @@ export default function HAControlCenterPage() {
           </div>
 
           <div className="space-y-1.5">
-            {runningOp.steps.map((step: any, idx: any) => {
+            {runningOp.steps.map((step: ApiRecord, idx: number) => {
               let icon, textClass;
               if (idx < runningOp.currentStep) {
                 icon = <CheckCircle2 className="w-4 h-4 text-success-500 flex-shrink-0" />;
@@ -862,7 +862,7 @@ export default function HAControlCenterPage() {
               </tr>
             </thead>
             <tbody className="divide-y divide-border">
-              {opsHistory.map((op: any) => (
+              {opsHistory.map((op: ApiRecord) => (
                 <tr key={op.id} className="hover:bg-surface-secondary transition-colors">
                   <td className="px-4 py-3 text-xs font-mono text-text-primary">{op.id}</td>
                   <td className="px-4 py-3 text-xs font-medium text-text-primary">{op.systemId}</td>
@@ -892,7 +892,7 @@ export default function HAControlCenterPage() {
   );
 
   // ── Render: Prerequisites tab ──
-  const categoryBadge = (cat: any) => {
+  const categoryBadge = (cat: string) => {
     const map = {
       cloud: { bg: 'bg-accent-50 dark:bg-accent-950', text: 'text-accent-700 dark:text-accent-300', label: 'CLOUD' },
       sap: { bg: 'bg-primary-50 dark:bg-primary-950', text: 'text-primary-700 dark:text-primary-300', label: 'SAP' },
@@ -925,9 +925,9 @@ export default function HAControlCenterPage() {
         {strategiesWithPrereqs.map(([strategy, prereqs]: [string, any[]]) => {
           const meta = (HA_STRATEGY_META as Record<string, any>)[strategy];
           if (!meta) return null;
-          const allRequiredPass = prereqs.filter((p: any) => p.required).every((p: any) => p.status === 'PASS');
-          const cloudPrereqs = prereqs.filter((p: any) => p.category === 'cloud');
-          const cloudOk = cloudPrereqs.every((p: any) => p.status === 'PASS');
+          const allRequiredPass = prereqs.filter((p: ApiRecord) => p.required).every((p: ApiRecord) => p.status === 'PASS');
+          const cloudPrereqs = prereqs.filter((p: ApiRecord) => p.category === 'cloud');
+          const cloudOk = cloudPrereqs.every((p: ApiRecord) => p.status === 'PASS');
 
           return (
             <div key={strategy} className="space-y-3">
@@ -945,13 +945,13 @@ export default function HAControlCenterPage() {
                 {cloudPrereqs.length > 0 && (
                   <span className={`inline-flex items-center gap-1 text-xs ${cloudOk ? 'text-success-600 dark:text-success-400' : 'text-danger-600 dark:text-danger-400'}`}>
                     <Globe className="w-3.5 h-3.5" />
-                    Cloud: {cloudOk ? 'OK' : `${cloudPrereqs.filter((p: any) => p.status !== 'PASS').length} pendientes`}
+                    Cloud: {cloudOk ? 'OK' : `${cloudPrereqs.filter((p: ApiRecord) => p.status !== 'PASS').length} pendientes`}
                   </span>
                 )}
               </div>
 
               <div className="bg-surface rounded-xl border border-border divide-y divide-border">
-                {prereqs.map((prereq: any, idx: any) => (
+                {prereqs.map((prereq: ApiRecord, idx: number) => (
                   <div key={idx} className={`flex items-center gap-4 px-5 py-3 ${
                     prereq.category === 'cloud' ? 'bg-accent-50/30 dark:bg-accent-950/20' : ''
                   }`}>
@@ -982,7 +982,7 @@ export default function HAControlCenterPage() {
   // ── Render: Evidence tab ──
   const renderEvidenceTab = () => (
     <div className="space-y-4">
-      {opsHistory.map((op: any) => (
+      {opsHistory.map((op: ApiRecord) => (
         <div key={op.id} className="bg-surface rounded-xl border border-border p-5 space-y-3">
           <div className="flex items-center justify-between">
             <div>
@@ -1056,7 +1056,7 @@ export default function HAControlCenterPage() {
         {/* Tabs */}
         <div className="border-b border-border">
           <nav className="flex gap-6 -mb-px">
-            {tabs.map((tab: any) => (
+            {tabs.map((tab: ApiRecord) => (
               <button
                 key={tab.key}
                 onClick={() => setActiveTab(tab.key)}
@@ -1080,7 +1080,7 @@ export default function HAControlCenterPage() {
 
       {/* Confirm dialog overlay */}
       {confirmDialog && (() => {
-        const sys = systems.find((s: any) => s.systemId === confirmDialog.systemId);
+        const sys = systems.find((s: ApiRecord) => s.systemId === confirmDialog.systemId);
         const strategy = sys?.haStrategy;
         const meta = strategy ? (HA_STRATEGY_META as Record<string, any>)[strategy] : null;
         const descriptions = {

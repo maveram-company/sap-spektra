@@ -93,10 +93,10 @@ const SID_PATTERN = /^[A-Z][A-Z0-9]{2}$/;
 
 // ── Componentes auxiliares ──
 
-function StepIndicator({ steps, current }: { steps: any; current: any }) {
+function StepIndicator({ steps, current }: { steps: ApiRecord[]; current: number }) {
   return (
     <div className="flex items-center mb-8">
-      {steps.map((s: any, i: any) => (
+      {steps.map((s: ApiRecord, i: number) => (
         <div key={s.id} className="flex items-center flex-1">
           <div className="flex items-center gap-2 flex-shrink-0">
             <div className={`w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold transition-all ${
@@ -120,7 +120,7 @@ function StepIndicator({ steps, current }: { steps: any; current: any }) {
   );
 }
 
-function CodeBlock({ title, code, onCopy }: { title: any; code: any; onCopy?: any }) {
+function CodeBlock({ title, code, onCopy }: { title: string; code: string; onCopy?: () => void }) {
   const [copied, setCopied] = useState(false);
   const handleCopy = () => {
     navigator.clipboard.writeText(code);
@@ -147,10 +147,10 @@ function CodeBlock({ title, code, onCopy }: { title: any; code: any; onCopy?: an
   );
 }
 
-function FeatureList({ features }: { features: any }) {
+function FeatureList({ features }: { features: string[] }) {
   return (
     <ul className="space-y-2">
-      {features.map((f: any, i: any) => (
+      {features.map((f: string, i: number) => (
         <li key={i} className="flex items-start gap-2 text-sm text-text-secondary">
           <CheckCircle size={16} className="text-success-500 flex-shrink-0 mt-0.5" />
           {f}
@@ -177,7 +177,7 @@ const SCC_STEPS = [
 
 // ── Generador de comandos de instalación ──
 
-function getInstallCommands(os: any) {
+function getInstallCommands(os: string) {
   const baseUrl = config.agentReleasesBaseUrl;
   if (os === 'windows') {
     return {
@@ -247,13 +247,13 @@ export default function ConnectSystemPage() {
     description: '',
   });
 
-  const updateAgent = useCallback((field: any, value: any) =>
+  const updateAgent = useCallback((field: string, value: string) =>
     setAgentForm(prev => ({ ...prev, [field]: value })), []);
-  const updateScc = useCallback((field: any, value: any) =>
+  const updateScc = useCallback((field: string, value: string) =>
     setSccForm(prev => ({ ...prev, [field]: value })), []);
 
   // Validación de paso actual antes de avanzar
-  const validateAgentStep = useCallback((currentStep: any) => {
+  const validateAgentStep = useCallback((currentStep: number) => {
     const errors: Record<string, string> = {};
     if (currentStep === 3) {
       if (!agentForm.sid.trim()) errors.sid = 'SID es requerido';
@@ -267,7 +267,7 @@ export default function ConnectSystemPage() {
     return Object.keys(errors).length === 0;
   }, [agentForm]);
 
-  const validateSccStep = useCallback((currentStep: any) => {
+  const validateSccStep = useCallback((currentStep: number) => {
     const errors: Record<string, string> = {};
     if (currentStep === 1) {
       if (!sccForm.locationId.trim()) errors.locationId = 'Location ID es requerido';
@@ -349,7 +349,7 @@ export default function ConnectSystemPage() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {Object.values(CONNECTION_METHODS).map((m: any) => {
+            {Object.values(CONNECTION_METHODS).map((m: ApiRecord) => {
               const Icon = m.icon;
               return (
                 <Card
@@ -375,7 +375,7 @@ export default function ConnectSystemPage() {
                   <div className="mt-4 pt-4 border-t border-border">
                     <p className="text-[10px] text-text-tertiary uppercase tracking-wider mb-2">Entornos compatibles</p>
                     <div className="flex flex-wrap gap-1.5">
-                      {m.environments.map((env: any) => (
+                      {m.environments.map((env: string) => (
                         <Badge key={env} variant="outline" size="sm">{env}</Badge>
                       ))}
                     </div>
@@ -426,7 +426,7 @@ export default function ConnectSystemPage() {
                 <div>
                   <label className="text-sm font-medium text-text-primary mb-3 block">Sistema Operativo</label>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                    {OS_OPTIONS.map((opt: any) => (
+                    {OS_OPTIONS.map((opt) => (
                       <button
                         key={opt.value}
                         type="button"
@@ -485,10 +485,10 @@ export default function ConnectSystemPage() {
 
                 <div className="flex items-center gap-2 mb-2">
                   <Badge variant="primary" size="sm">
-                    {OS_OPTIONS.find((o: any) => o.value === agentForm.os)?.label}
+                    {OS_OPTIONS.find((o) => o.value === agentForm.os)?.label}
                   </Badge>
                   <Badge variant="outline" size="sm">
-                    {CLOUD_PROVIDER_OPTIONS.find((o: any) => o.value === agentForm.provider)?.label}
+                    {CLOUD_PROVIDER_OPTIONS.find((o) => o.value === agentForm.provider)?.label}
                   </Badge>
                 </div>
 
@@ -625,8 +625,8 @@ export default function ConnectSystemPage() {
                     ['Ambiente', agentForm.environment],
                     ['Base de Datos', agentForm.dbType],
                     ['Host', agentForm.host || '—'],
-                    ['OS', OS_OPTIONS.find((o: any) => o.value === agentForm.os)?.label || '—'],
-                    ['Infraestructura', CLOUD_PROVIDER_OPTIONS.find((o: any) => o.value === agentForm.provider)?.label || '—'],
+                    ['OS', OS_OPTIONS.find((o) => o.value === agentForm.os)?.label || '—'],
+                    ['Infraestructura', CLOUD_PROVIDER_OPTIONS.find((o) => o.value === agentForm.provider)?.label || '—'],
                     ['Método', 'Spektra Agent'],
                   ] as [string, string][]).map(([label, value]) => (
                     <div key={label} className="flex justify-between">

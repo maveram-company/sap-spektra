@@ -14,6 +14,7 @@ import { useTenant } from '../../contexts/TenantContext';
 import { useSidebar } from '../../contexts/SidebarContext';
 import { dataService } from '../../services/dataService';
 import { createLogger } from '../../lib/logger';
+import type { ApiRecord } from '../../types';
 
 const log = createLogger('Sidebar');
 
@@ -22,7 +23,7 @@ type NavItem = {
   adminOnly?: boolean;
   nameKey?: string;
   href?: string;
-  icon?: any;
+  icon?: React.ComponentType<{ size: number; className?: string }>;
   alertBadge?: boolean;
   badge?: boolean;
   roles?: string[];
@@ -73,8 +74,8 @@ export default function Sidebar() {
   const [pendingApprovals, setPendingApprovals] = useState(0);
   const [activeAlerts, setActiveAlerts] = useState(0);
   useEffect(() => {
-    dataService.getApprovals('PENDING').then(a => setPendingApprovals(a?.length || 0)).catch((err: any) => log.warn('Approvals fetch failed', { error: err.message }));
-    dataService.getAlerts({ status: 'active' }).then(a => setActiveAlerts(a?.length || 0)).catch((err: any) => log.warn('Alerts fetch failed', { error: err.message }));
+    dataService.getApprovals('PENDING').then(a => setPendingApprovals(a?.length || 0)).catch((err: unknown) => log.warn('Approvals fetch failed', { error: (err as Error).message }));
+    dataService.getAlerts({ status: 'active' }).then(a => setActiveAlerts(a?.length || 0)).catch((err: unknown) => log.warn('Alerts fetch failed', { error: (err as Error).message }));
   }, []);
 
   const usagePercent = Math.round(
@@ -155,7 +156,7 @@ export default function Sidebar() {
         {/* ── Navigation ────────────────────────────────────────── */}
         <nav aria-label="Main navigation" className="flex-1 overflow-y-auto py-3 px-2" style={{ scrollbarWidth: 'none' }}>
           <ul className="list-none m-0 p-0">
-          {navigation.map((item: any) => {
+          {navigation.map((item: ApiRecord) => {
             /* ── Section header ── */
             if (item.section) {
               if (item.adminOnly && !hasRole('admin')) return null;
@@ -188,7 +189,7 @@ export default function Sidebar() {
             }
 
             /* ── Role guard ── */
-            if (item.roles && !item.roles.some((r: any) => hasRole(r))) return null;
+            if (item.roles && !item.roles.some((r: string) => hasRole(r))) return null;
 
             const isActive =
               location.pathname === item.href ||
@@ -200,7 +201,7 @@ export default function Sidebar() {
                 to={item.href!}
                 title={collapsed ? t(item.nameKey!) : undefined}
                 className="flex items-center gap-3 mb-0.5 text-sm font-medium transition-all duration-200 group relative"
-                style={({ isActive: routerActive }: any) => {
+                style={({ isActive: routerActive }: { isActive: boolean }) => {
                   const active = routerActive || isActive;
                   return {
                     borderRadius: '10px',

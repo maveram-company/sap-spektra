@@ -2,7 +2,9 @@
 // SAP Spektra v1.4 — Mock Data completo
 // ══════════════════════════════════════════════════════════════
 
-function seeded(seed: any) {
+import type { ApiRecord } from '../types/api';
+
+function seeded(seed: number) {
   const x = Math.sin(seed) * 10000;
   return x - Math.floor(x);
 }
@@ -493,7 +495,7 @@ export const mockAnalytics = {
     { id: 'RB-ASE-001', name: 'Dump tran log + kill old tx', executions: 112, successRate: 97.3 },
     { id: 'RB-WP-001', name: 'Clean PRIV/Hold WPs', executions: 98, successRate: 96.9 },
   ],
-  dailyTrend: Array.from({ length: 14 }, (_: any, i: any) => ({
+  dailyTrend: Array.from({ length: 14 }, (_: unknown, i: number) => ({
     date: new Date(Date.now() - (13 - i) * 86400000).toISOString().split('T')[0],
     success: Math.round(8 + seeded(i * 7) * 8),
     failed: Math.round(seeded(i * 11) * 3),
@@ -853,8 +855,8 @@ export const mockSystemInstances = {
 // ── Per-host metric history (72 points = 6h at 5min intervals) ──
 export const mockMetricHistory = (() => {
   const hist: Record<string, any> = {};
-  Object.values(mockSystemInstances).forEach((instances: any) => {
-    instances.forEach((inst: any) => {
+  Object.values(mockSystemInstances).forEach((instances: ApiRecord[]) => {
+    instances.forEach((inst: ApiRecord) => {
       if (hist[inst.hostname]) return;
       const h = [];
       let cpu = inst.cpu, mem = inst.mem, disk = inst.disk;
@@ -872,10 +874,10 @@ export const mockMetricHistory = (() => {
 })();
 
 // Helper: aggregate instance metrics to system level
-export function getSystemHosts(systemId: any) {
+export function getSystemHosts(systemId: string) {
   const instances = (mockSystemInstances as Record<string, any>)[systemId] || [];
   const hostMap: Record<string, any> = {};
-  instances.forEach((inst: any) => {
+  instances.forEach((inst: ApiRecord) => {
     if (!(hostMap as Record<string, any>)[inst.hostname]) {
       (hostMap as Record<string, any>)[inst.hostname] = {
         hostname: inst.hostname,

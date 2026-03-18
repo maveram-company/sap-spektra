@@ -4,7 +4,7 @@ import Card, { CardHeader, CardTitle, CardDescription } from '../../components/u
 import Button from '../../components/ui/Button';
 import type { ApiRecord } from '../../types';
 
-function Toggle({ enabled, onChange, label, description }: { enabled: any; onChange: any; label: any; description: any }) {
+function Toggle({ enabled, onChange, label, description }: { enabled: boolean; onChange: (v: boolean) => void; label: string; description: string }) {
   return (
     <div className="flex items-center justify-between py-3">
       <div>
@@ -34,7 +34,7 @@ export default function NotificationsPage() {
   const [saving, setSaving] = useState(false);
   const [saveError, setSaveError] = useState<string | null>(null);
 
-  const update = (key: any, value: any) => setSettings(prev => ({ ...prev, [key]: value }));
+  const update = (key: string, value: boolean) => setSettings(prev => ({ ...prev, [key]: value }));
 
   const handleSave = async () => {
     setSaving(true);
@@ -42,8 +42,8 @@ export default function NotificationsPage() {
     try {
       // Demo mode: simulated delay — connect to real API when available
       await new Promise(r => setTimeout(r, 600));
-    } catch (err: any) {
-      setSaveError(err instanceof Error ? err.message : 'Error al guardar preferencias');
+    } catch (err: unknown) {
+      setSaveError(err instanceof Error ? (err as Error).message : 'Error al guardar preferencias');
     } finally {
       setSaving(false);
     }
@@ -66,9 +66,9 @@ export default function NotificationsPage() {
             <Mail size={18} className="text-text-tertiary" />
           </CardHeader>
           <div className="divide-y divide-border">
-            <Toggle label="Breaches y alertas críticas" description="Notificación inmediata al detectar un breach" enabled={settings.emailBreaches} onChange={(v: any) => update('emailBreaches', v)} />
-            <Toggle label="Solicitudes de aprobación" description="Cuando un runbook requiere aprobación" enabled={settings.emailApprovals} onChange={(v: any) => update('emailApprovals', v)} />
-            <Toggle label="Reportes de compliance" description="Reporte semanal de SOX/ISO" enabled={settings.emailReports} onChange={(v: any) => update('emailReports', v)} />
+            <Toggle label="Breaches y alertas críticas" description="Notificación inmediata al detectar un breach" enabled={settings.emailBreaches} onChange={(v: boolean) => update('emailBreaches', v)} />
+            <Toggle label="Solicitudes de aprobación" description="Cuando un runbook requiere aprobación" enabled={settings.emailApprovals} onChange={(v: boolean) => update('emailApprovals', v)} />
+            <Toggle label="Reportes de compliance" description="Reporte semanal de SOX/ISO" enabled={settings.emailReports} onChange={(v: boolean) => update('emailReports', v)} />
           </div>
         </Card>
 
@@ -80,8 +80,8 @@ export default function NotificationsPage() {
             </div>
           </CardHeader>
           <div className="divide-y divide-border">
-            <Toggle label="Digesto diario" description="Resumen de las últimas 24 horas a las 22:00" enabled={settings.digestDaily} onChange={(v: any) => update('digestDaily', v)} />
-            <Toggle label="Reporte semanal" description="Reporte completo cada lunes a las 08:00" enabled={settings.digestWeekly} onChange={(v: any) => update('digestWeekly', v)} />
+            <Toggle label="Digesto diario" description="Resumen de las últimas 24 horas a las 22:00" enabled={settings.digestDaily} onChange={(v: boolean) => update('digestDaily', v)} />
+            <Toggle label="Reporte semanal" description="Reporte completo cada lunes a las 08:00" enabled={settings.digestWeekly} onChange={(v: boolean) => update('digestWeekly', v)} />
           </div>
         </Card>
 

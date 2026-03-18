@@ -1,6 +1,7 @@
 import { Shield, Info } from 'lucide-react';
 import Card, { CardHeader, CardTitle, CardDescription } from '../../components/ui/Card';
 import Badge from '../../components/ui/Badge';
+import type { ApiRecord } from '../../types';
 
 const roles = [
   {
@@ -46,7 +47,7 @@ export default function RolesPage() {
       </div>
 
       <div className="space-y-4">
-        {roles.map((role: any) => (
+        {roles.map((role: ApiRecord) => (
           <Card key={role.id}>
             <div className="flex items-start gap-4">
               <div className="w-10 h-10 rounded-lg bg-surface-tertiary flex items-center justify-center flex-shrink-0">
@@ -59,7 +60,7 @@ export default function RolesPage() {
                 </div>
                 <p className="text-xs text-text-secondary mb-3">{role.description}</p>
                 <div className="flex flex-wrap gap-1.5">
-                  {role.permissions.map((perm: any, i: any) => (
+                  {role.permissions.map((perm: string, i: number) => (
                     <span key={i} className="px-2 py-0.5 text-[10px] bg-surface-tertiary rounded-full text-text-secondary">
                       {perm}
                     </span>

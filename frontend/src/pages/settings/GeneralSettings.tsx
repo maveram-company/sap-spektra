@@ -26,7 +26,7 @@ export default function GeneralSettings() {
       dataService.getEscalationPolicy(),
       dataService.getMaintenanceWindows(),
       dataService.getApiKeys(),
-    ]).then(([t, e, m, a]: any[]) => {
+    ]).then(([t, e, m, a]) => {
       setThresholds(t);
       setEscalationPolicy(e);
       setMaintenanceWindows(m);
@@ -52,8 +52,8 @@ export default function GeneralSettings() {
       // Demo mode: simulated delay — connect to real API when available
       await new Promise(r => setTimeout(r, 800));
       updateSettings({ timezone: form.timezone, language: form.language });
-    } catch (err: any) {
-      setSaveError(err instanceof Error ? err.message : 'Error al guardar configuración');
+    } catch (err: unknown) {
+      setSaveError(err instanceof Error ? (err as Error).message : 'Error al guardar configuración');
     } finally {
       setSaving(false);
     }
@@ -142,7 +142,7 @@ export default function GeneralSettings() {
             { label: 'Usuarios', used: organization.usage.users, max: organization.limits.maxUsers },
             { label: 'Integraciones', used: organization.usage.integrations, max: organization.limits.maxIntegrations },
             { label: 'Llamadas IA (hoy)', used: organization.usage.aiCallsToday, max: organization.limits.aiCallsPerDay },
-          ].map((item: any) => {
+          ].map((item: ApiRecord) => {
             const pct = Math.round((item.used / item.max) * 100);
             return (
               <div key={item.label}>
@@ -200,7 +200,7 @@ export default function GeneralSettings() {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {thresholds.map((t: any) => (
+            {thresholds.map((t: ApiRecord) => (
               <TableRow key={t.metric}>
                 <TableCell className="font-medium">{t.metric}</TableCell>
                 <TableCell>
@@ -241,7 +241,7 @@ export default function GeneralSettings() {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {escalationPolicy.map((p: any) => (
+            {escalationPolicy.map((p: ApiRecord) => (
               <TableRow key={p.level}>
                 <TableCell className="font-medium">{p.level}</TableCell>
                 <TableCell>{p.timeout}</TableCell>
@@ -280,7 +280,7 @@ export default function GeneralSettings() {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {maintenanceWindows.map((w: any, idx: any) => (
+            {maintenanceWindows.map((w: ApiRecord, idx: number) => (
               <TableRow key={idx}>
                 <TableCell className="font-medium">{w.system}</TableCell>
                 <TableCell>{w.day}</TableCell>
@@ -310,7 +310,7 @@ export default function GeneralSettings() {
         </CardHeader>
 
         <div className="space-y-3">
-          {apiKeys.map((apiKey: any) => (
+          {apiKeys.map((apiKey: ApiRecord) => (
             <div key={apiKey.name} className="flex items-center justify-between p-3 rounded-lg bg-surface-secondary border border-border">
               <div className="flex items-center gap-4">
                 <div>

@@ -42,13 +42,13 @@ function AlertsPage() {
       .then(([alts, sys]) => {
         if (mounted) { setAlerts(alts); setSystems(sys); }
       })
-      .catch((err: any) => { if (mounted) setError(err.message); })
+      .catch((err: unknown) => { if (mounted) setError((err as Error).message); })
       .finally(() => { if (mounted) setLoading(false); });
     return () => { mounted = false; };
   }, []);
 
   // Filtrado de alertas
-  const filteredAlerts = alerts.filter((alert: any) => {
+  const filteredAlerts = alerts.filter((alert: ApiRecord) => {
     // Filtro por estado
     if (statusFilter === 'active' && alert.status !== 'active') return false;
     if (statusFilter === 'resolved' && alert.status !== 'resolved') return false;
@@ -64,9 +64,9 @@ function AlertsPage() {
   const { items: paginatedAlerts, page: alertPage, totalPages: alertTotalPages, total: alertTotal, setPage: setAlertPage } = usePagination(filteredAlerts, 20);
 
   // Tomar en gestión
-  const handleAcknowledge = (alertId: any) => {
+  const handleAcknowledge = (alertId: string) => {
     setAlerts((prev) =>
-      prev.map((a: any) =>
+      prev.map((a: ApiRecord) =>
         a.id === alertId
           ? {
               ...a,
@@ -80,7 +80,7 @@ function AlertsPage() {
   };
 
   // Abrir modal de resolución
-  const openResolveModal = (alertId: any) => {
+  const openResolveModal = (alertId: string) => {
     setResolveModalAlertId(alertId);
     setResolutionCategory('');
     setResolutionNote('');
@@ -98,7 +98,7 @@ function AlertsPage() {
     if (!resolutionCategory || !resolutionNote) return;
 
     setAlerts((prev) =>
-      prev.map((a: any) =>
+      prev.map((a: ApiRecord) =>
         a.id === resolveModalAlertId
           ? {
               ...a,
@@ -115,7 +115,7 @@ function AlertsPage() {
   };
 
   // Badge de nivel
-  const getLevelBadge = (level: any) => {
+  const getLevelBadge = (level: string) => {
     const config = {
       critical: {
         bg: 'bg-danger-50 dark:bg-danger-950',
@@ -148,7 +148,7 @@ function AlertsPage() {
   };
 
   // Badge de escalamiento
-  const getEscalationBadge = (escalation: any) => {
+  const getEscalationBadge = (escalation: string) => {
     if (!escalation || escalation === '-') return null;
     const config = {
       L1: {
@@ -236,7 +236,7 @@ function AlertsPage() {
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div className="flex items-center gap-2 flex-wrap">
             <Filter className="w-4 h-4 text-text-tertiary dark:text-text-tertiary" />
-            {statusFilterOptions.map((opt: any) => (
+            {statusFilterOptions.map((opt: ApiRecord) => (
               <button
                 key={opt.value}
                 type="button"
@@ -259,7 +259,7 @@ function AlertsPage() {
               className="px-3 py-1.5 rounded-lg text-sm border border-border dark:border-border bg-surface dark:bg-surface text-text-primary dark:text-text-primary focus:outline-none focus:ring-2 focus:ring-primary-500"
             >
               <option value="all">Todos los sistemas</option>
-              {systems.map((sys: any) => (
+              {systems.map((sys: ApiRecord) => (
                 <option key={sys.id} value={sys.id}>
                   {sys.sid} - {sys.description}
                 </option>
@@ -283,7 +283,7 @@ function AlertsPage() {
             </div>
           )}
 
-          {paginatedAlerts.map((alert: any) => (
+          {paginatedAlerts.map((alert: ApiRecord) => (
             <div
               key={alert.id}
               className="bg-surface dark:bg-surface border border-border dark:border-border rounded-xl p-5 space-y-3"
@@ -427,7 +427,7 @@ function AlertsPage() {
                   className="w-full px-3 py-2 rounded-lg text-sm border border-border dark:border-border bg-surface dark:bg-surface text-text-primary dark:text-text-primary focus:outline-none focus:ring-2 focus:ring-primary-500"
                 >
                   <option value="">Seleccionar categor&iacute;a...</option>
-                  {alertResolutionCategories.map((cat: any) => (
+                  {alertResolutionCategories.map((cat: ApiRecord) => (
                     <option key={cat.value} value={cat.value}>
                       {cat.label}
                     </option>

@@ -20,14 +20,14 @@ export default function IntegrationsPage() {
   const [connecting, setConnecting] = useState<string | null>(null);
   const [connectError, setConnectError] = useState<string | null>(null);
 
-  const handleConnect = async (id: any) => {
+  const handleConnect = async (id: string) => {
     setConnecting(id);
     setConnectError(null);
     try {
       // Demo mode: simulated delay — connect to real API when available
       await new Promise(r => setTimeout(r, 1000));
-    } catch (err: any) {
-      setConnectError(err instanceof Error ? err.message : 'Error al conectar integración');
+    } catch (err: unknown) {
+      setConnectError(err instanceof Error ? (err as Error).message : 'Error al conectar integración');
     } finally {
       setConnecting(null);
     }
@@ -48,7 +48,7 @@ export default function IntegrationsPage() {
         </div>
       )}
       <div className="space-y-4">
-        {integrations.map((integration: any) => {
+        {integrations.map((integration: ApiRecord) => {
           const available = hasFeature(integration.plan);
           return (
             <Card key={integration.id} className={!available ? 'opacity-60' : ''}>

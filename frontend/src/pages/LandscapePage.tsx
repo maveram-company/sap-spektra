@@ -4,6 +4,7 @@ import Header from '../components/layout/Header';
 import PageLoading from '../components/ui/PageLoading';
 import { dataService } from '../services/dataService';
 import { createLogger } from '../lib/logger';
+import type { ApiRecord } from '../types';
 
 const log = createLogger('LandscapePage');
 
@@ -28,18 +29,18 @@ const envColors = {
 };
 
 export default function LandscapePage() {
-  const [discovery, setDiscovery] = useState<any[]>([]);
+  const [discovery, setDiscovery] = useState<ApiRecord[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
 
   useEffect(() => {
-    dataService.getDiscovery().then(data => { setDiscovery(data); setLoading(false); }).catch((err: any) => log.warn('Fetch failed', { error: err.message }));
+    dataService.getDiscovery().then(data => { setDiscovery(data); setLoading(false); }).catch((err: unknown) => log.warn('Fetch failed', { error: (err as Error).message }));
   }, []);
 
   // Agrupar instancias por SID para la topología
   const sidGroups = useMemo(() => {
-    const groups: Record<string, any> = {};
-    discovery.forEach((inst: any) => {
+    const groups: Record<string, ApiRecord> = {};
+    discovery.forEach((inst: ApiRecord) => {
       if (!groups[inst.sid]) {
         groups[inst.sid] = {
           sid: inst.sid,
@@ -61,9 +62,9 @@ export default function LandscapePage() {
 
   // Métricas del resumen
   const totalInstances = discovery.length;
-  const successScans = discovery.filter((d: any) => d.scanStatus === 'success').length;
-  const failScans = discovery.filter((d: any) => d.scanStatus === 'fail').length;
-  const haClusters = sidGroups.filter((g: any) => g.haEnabled).length;
+  const successScans = discovery.filter((d: ApiRecord) => d.scanStatus === 'success').length;
+  const failScans = discovery.filter((d: ApiRecord) => d.scanStatus === 'fail').length;
+  const haClusters = sidGroups.filter((g: ApiRecord) => g.haEnabled).length;
 
   // Filtrar instancias para la tabla
   const filteredInstances = useMemo(() => {
@@ -104,7 +105,7 @@ export default function LandscapePage() {
       <div className="p-6">
         {/* Summary Cards */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-          {summaryCards.map((card: any) => (
+          {summaryCards.map((card: ApiRecord) => (
             <div
               key={card.label}
               className={`rounded-xl border p-5 ${(cardVariants as Record<string, string>)[card.color]}`}
@@ -127,7 +128,7 @@ export default function LandscapePage() {
             <h2 className="text-lg font-semibold text-text-primary">Topología por SID</h2>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-            {sidGroups.map((group: any) => (
+            {sidGroups.map((group: ApiRecord) => (
               <div
                 key={group.sid}
                 className="bg-surface rounded-xl border border-border p-5"
@@ -158,7 +159,7 @@ export default function LandscapePage() {
 
                 {/* Nodes List */}
                 <div className="space-y-2 pt-3 border-t border-border">
-                  {group.nodes.map((node: any) => (
+                  {group.nodes.map((node: ApiRecord) => (
                     <div key={node.instanceId} className="flex items-center gap-2">
                       <Server size={14} className="text-text-tertiary flex-shrink-0" />
                       <div className="min-w-0">
@@ -203,7 +204,7 @@ export default function LandscapePage() {
                   </tr>
                 </thead>
                 <tbody>
-                  {filteredInstances.map((inst: any) => (
+                  {filteredInstances.map((inst: ApiRecord) => (
                     <tr key={inst.instanceId} className="border-b border-border last:border-0 hover:bg-surface-secondary transition-colors">
                       <td className="px-4 py-3 font-mono text-xs text-text-primary">{inst.instanceId}</td>
                       <td className="px-4 py-3 text-text-primary">{inst.hostname}</td>
