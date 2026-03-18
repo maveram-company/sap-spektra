@@ -31,6 +31,7 @@ vi.mock('../../../lib/mockData', () => ({
 
 import { ApprovalsRealProvider } from '../approvals.real';
 import { ApprovalsMockProvider } from '../approvals.mock';
+import { ApprovalsRestrictedProvider } from '../approvals.restricted';
 
 describe('ApprovalsProvider parity tests', () => {
   const real = new ApprovalsRealProvider();
@@ -242,6 +243,46 @@ describe('ApprovalsProvider parity tests', () => {
         expect(result).toHaveProperty('confidence');
         expect(typeof result.degraded).toBe('boolean');
       }
+    });
+  });
+
+  // ── I) Restricted provider ──
+
+  describe('restricted provider', () => {
+    const restricted = new ApprovalsRestrictedProvider();
+
+    it('getApprovals returns empty array with source=restricted', async () => {
+      const result = await restricted.getApprovals();
+      expect(result.source).toBe('restricted');
+      expect(result.confidence).toBe('low');
+      expect(result.data).toEqual([]);
+      expect(result.reason).toContain('Restricted');
+    });
+
+    it('getApprovals with status filter returns empty array', async () => {
+      const result = await restricted.getApprovals('PENDING');
+      expect(result.source).toBe('restricted');
+      expect(result.data).toEqual([]);
+    });
+
+    it('approveAction returns blocked result', async () => {
+      const result = await restricted.approveAction('apr-1');
+      expect(result.data).toHaveProperty('blocked', true);
+      expect(result.source).toBe('restricted');
+      expect(result.confidence).toBe('low');
+    });
+
+    it('rejectAction returns blocked result', async () => {
+      const result = await restricted.rejectAction('apr-1');
+      expect(result.data).toHaveProperty('blocked', true);
+      expect(result.source).toBe('restricted');
+      expect(result.confidence).toBe('low');
+    });
+
+    it('implements all methods from the contract', () => {
+      const realMethods = Object.getOwnPropertyNames(Object.getPrototypeOf(real)).filter(m => m !== 'constructor');
+      const restrictedMethods = Object.getOwnPropertyNames(Object.getPrototypeOf(restricted)).filter(m => m !== 'constructor');
+      expect(restrictedMethods.sort()).toEqual(realMethods.sort());
     });
   });
 });

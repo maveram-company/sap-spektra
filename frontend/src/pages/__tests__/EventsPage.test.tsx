@@ -3,36 +3,54 @@ import { render, screen, waitFor } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 import EventsPage from '../EventsPage';
 
-vi.mock('../../services/dataService', () => ({
-  dataService: {
-    getEvents: vi.fn().mockResolvedValue([
-      {
-        id: 'evt-1',
-        level: 'critical',
-        message: 'CPU threshold exceeded',
-        component: 'Dispatcher',
-        sid: 'EP1',
-        systemId: 'sys-1',
-        source: 'SAP',
-        timestamp: '2026-03-10T08:30:00Z',
-      },
-      {
-        id: 'evt-2',
-        level: 'info',
-        message: 'Backup completed successfully',
-        component: 'HANA DB',
-        sid: 'QP1',
-        systemId: 'sys-2',
-        source: 'Platform',
-        timestamp: '2026-03-10T09:00:00Z',
-      },
-    ]),
-    getSystems: vi.fn().mockResolvedValue([
-      { id: 'sys-1', sid: 'EP1', description: 'Production' },
-      { id: 'sys-2', sid: 'QP1', description: 'QA' },
-    ]),
-  },
+vi.mock('../../mode/ModeContext', () => ({
+  useMode: () => ({
+    state: { mode: 'MOCK', backendReachable: false, resolvedAt: new Date().toISOString(), capabilities: new Map() },
+    setMode: vi.fn(),
+    getDomainCapability: vi.fn(),
+  }),
 }));
+
+vi.mock('../../services/dataService', () => {
+  const events = [
+    {
+      id: 'evt-1',
+      level: 'critical',
+      message: 'CPU threshold exceeded',
+      component: 'Dispatcher',
+      sid: 'EP1',
+      systemId: 'sys-1',
+      source: 'SAP',
+      timestamp: '2026-03-10T08:30:00Z',
+    },
+    {
+      id: 'evt-2',
+      level: 'info',
+      message: 'Backup completed successfully',
+      component: 'HANA DB',
+      sid: 'QP1',
+      systemId: 'sys-2',
+      source: 'Platform',
+      timestamp: '2026-03-10T09:00:00Z',
+    },
+  ];
+  return {
+    dataService: {
+      getEvents: vi.fn().mockResolvedValue(events),
+      getSystems: vi.fn().mockResolvedValue([
+        { id: 'sys-1', sid: 'EP1', description: 'Production' },
+        { id: 'sys-2', sid: 'QP1', description: 'QA' },
+      ]),
+    },
+    getEventsResult: vi.fn().mockResolvedValue({
+      data: events,
+      source: 'mock',
+      confidence: 'low',
+      timestamp: new Date().toISOString(),
+      degraded: false,
+    }),
+  };
+});
 
 describe('EventsPage', () => {
   beforeEach(() => {

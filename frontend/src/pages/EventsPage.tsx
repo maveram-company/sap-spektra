@@ -4,8 +4,10 @@ import Header from '../components/layout/Header';
 import PageLoading from '../components/ui/PageLoading';
 import Pagination from '../components/ui/Pagination';
 import usePagination from '../hooks/usePagination';
-import { dataService } from '../services/dataService';
+import { ModeBadge, SourceIndicator } from '../components/mode';
+import { dataService, getEventsResult } from '../services/dataService';
 import { createLogger } from '../lib/logger';
+import type { SourceIndicatorProps } from '../components/mode/SourceIndicator';
 
 const log = createLogger('EventsPage');
 import { Search, Filter, ChevronDown, AlertCircle, AlertTriangle, Info, CheckCircle } from 'lucide-react';
@@ -78,11 +80,23 @@ export default function EventsPage() {
   const [levelFilter, setLevelFilter] = useState('all');
   const [systemFilter, setSystemFilter] = useState('all');
   const [sourceFilter, setSourceFilter] = useState('all'); // P2.4: SAP vs Platform
+  const [sourceInfo, setSourceInfo] = useState<SourceIndicatorProps | null>(null);
 
   useEffect(() => {
     let mounted = true;
-    Promise.all([dataService.getEvents(), dataService.getSystems()]).then(([evts, sys]) => {
-      if (mounted) { setEvents(evts); setSystems(sys); setLoading(false); }
+    Promise.all([getEventsResult(), dataService.getSystems()]).then(([eventsResult, sys]) => {
+      if (mounted) {
+        setEvents(eventsResult.data);
+        setSystems(sys);
+        setSourceInfo({
+          source: eventsResult.source,
+          confidence: eventsResult.confidence,
+          degraded: eventsResult.degraded,
+          reason: eventsResult.reason,
+          timestamp: eventsResult.timestamp,
+        });
+        setLoading(false);
+      }
     }).catch((err: unknown) => {
       if (mounted) {
         log.warn('Fetch failed', { error: (err as Error).message });
@@ -131,6 +145,12 @@ export default function EventsPage() {
       <Header title="Eventos" subtitle="Registro completo de actividad" />
 
       <div className="p-6">
+        {/* ── Mode & source metadata ── */}
+        <div className="flex items-center gap-3 mb-4">
+          <ModeBadge />
+          {sourceInfo && <SourceIndicator {...sourceInfo} />}
+        </div>
+
         {/* Toolbar */}
         <div className="bg-surface border border-border rounded-xl p-4 mb-4">
           <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3">

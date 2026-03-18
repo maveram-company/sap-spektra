@@ -10,16 +10,33 @@ vi.mock('../../contexts/AuthContext', () => ({
 vi.mock('../../contexts/TenantContext', () => ({
   useTenant: () => ({ organization: { name: 'Test Org' } }),
 }));
+vi.mock('../../mode/ModeContext', () => ({
+  useMode: () => ({
+    state: { mode: 'MOCK', backendReachable: false, resolvedAt: new Date().toISOString(), capabilities: new Map() },
+    setMode: vi.fn(),
+    getDomainCapability: vi.fn(),
+  }),
+}));
 
 // Mock dataService
-vi.mock('../../services/dataService', () => ({
-  dataService: {
-    getSystems: vi.fn().mockResolvedValue([
-      { id: '1', sid: 'EP1', status: 'healthy', healthScore: 95, description: 'Production', type: 'S/4HANA', dbType: 'HANA 2.0', environment: 'PRD', mode: 'PRODUCTION', breaches: 0 },
-    ]),
-    getApprovals: vi.fn().mockResolvedValue([]),
-  },
-}));
+vi.mock('../../services/dataService', () => {
+  const systems = [
+    { id: '1', sid: 'EP1', status: 'healthy', healthScore: 95, description: 'Production', type: 'S/4HANA', dbType: 'HANA 2.0', environment: 'PRD', mode: 'PRODUCTION', breaches: 0 },
+  ];
+  return {
+    dataService: {
+      getSystems: vi.fn().mockResolvedValue(systems),
+      getApprovals: vi.fn().mockResolvedValue([]),
+    },
+    getSystemsResult: vi.fn().mockResolvedValue({
+      data: systems,
+      source: 'mock',
+      confidence: 'low',
+      timestamp: new Date().toISOString(),
+      degraded: false,
+    }),
+  };
+});
 
 describe('DashboardPage', () => {
   it('renders greeting with user name', async () => {

@@ -35,6 +35,7 @@ vi.mock('../../../lib/mockData', () => ({
 
 import { HARealProvider } from '../ha.real';
 import { HAMockProvider } from '../ha.mock';
+import { HARestrictedProvider } from '../ha.restricted';
 
 describe('HAProvider parity tests', () => {
   const real = new HARealProvider();
@@ -172,6 +173,49 @@ describe('HAProvider parity tests', () => {
         expect(result).toHaveProperty('confidence');
         expect(typeof result.degraded).toBe('boolean');
       }
+    });
+  });
+
+  // ── Restricted provider ──
+
+  describe('restricted provider', () => {
+    const restricted = new HARestrictedProvider();
+
+    it('getHASystems returns ProviderResult with source=restricted', async () => {
+      const result = await restricted.getHASystems();
+      expect(result.source).toBe('restricted');
+      expect(result.confidence).toBe('low');
+      expect(result.reason).toContain('Restricted');
+      expect(Array.isArray(result.data)).toBe(true);
+    });
+
+    it('getHAPrereqs returns blocked result', async () => {
+      const result = await restricted.getHAPrereqs('sys-1');
+      expect(result.data).toHaveProperty('blocked', true);
+      expect(result.source).toBe('restricted');
+      expect(result.confidence).toBe('low');
+    });
+
+    it('getHAOpsHistory returns empty operations', async () => {
+      const result = await restricted.getHAOpsHistory('sys-1');
+      expect(result.source).toBe('restricted');
+      expect(result.confidence).toBe('low');
+      expect(result.data).toHaveProperty('operations');
+      expect(result.reason).toContain('Restricted');
+    });
+
+    it('getHADrivers returns empty drivers', async () => {
+      const result = await restricted.getHADrivers('sys-1');
+      expect(result.source).toBe('restricted');
+      expect(result.confidence).toBe('low');
+      expect(result.data).toHaveProperty('drivers');
+      expect(result.reason).toContain('Restricted');
+    });
+
+    it('implements all methods from the contract', () => {
+      const realMethods = Object.getOwnPropertyNames(Object.getPrototypeOf(real)).filter(m => m !== 'constructor');
+      const restrictedMethods = Object.getOwnPropertyNames(Object.getPrototypeOf(restricted)).filter(m => m !== 'constructor');
+      expect(restrictedMethods.sort()).toEqual(realMethods.sort());
     });
   });
 });

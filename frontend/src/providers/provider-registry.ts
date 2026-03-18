@@ -77,6 +77,12 @@ import { ChatRealProvider } from './chat/chat.real';
 import { ChatMockProvider } from './chat/chat.mock';
 import { createChatFallbackProvider } from './chat/chat.fallback';
 
+// Restricted providers (critical domains)
+import { RunbooksRestrictedProvider } from './runbooks/runbooks.restricted';
+import { ApprovalsRestrictedProvider } from './approvals/approvals.restricted';
+import { HARestrictedProvider } from './ha/ha.restricted';
+import { ConnectorsRestrictedProvider } from './connectors/connectors.restricted';
+
 export interface ProviderRegistry {
   systems: SystemsProvider;
   alerts: AlertsProvider;
@@ -128,17 +134,19 @@ function createRegistry(mode: OperationalMode): ProviderRegistry {
 
     case 'RESTRICTED':
       return {
+        // Core restricted providers — intentional restriction behavior
+        runbooks: new RunbooksRestrictedProvider(),
+        approvals: new ApprovalsRestrictedProvider(),
+        ha: new HARestrictedProvider(),
+        connectors: new ConnectorsRestrictedProvider(),
+        // Other domains: read-only mock (acceptable for non-critical)
         systems: new SystemsMockProvider(),
         alerts: new AlertsMockProvider(),
         events: new EventsMockProvider(),
         operations: new OperationsMockProvider(),
-        runbooks: new RunbooksMockProvider(),
-        approvals: new ApprovalsMockProvider(),
         analytics: new AnalyticsMockProvider(),
-        ha: new HAMockProvider(),
         admin: new AdminMockProvider(),
         landscape: new LandscapeMockProvider(),
-        connectors: new ConnectorsMockProvider(),
         chat: new ChatMockProvider(),
       };
 

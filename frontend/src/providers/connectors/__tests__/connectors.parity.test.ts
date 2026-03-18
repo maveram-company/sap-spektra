@@ -17,6 +17,7 @@ vi.mock('../../../lib/mockData', () => ({
 
 import { ConnectorsRealProvider } from '../connectors.real';
 import { ConnectorsMockProvider } from '../connectors.mock';
+import { ConnectorsRestrictedProvider } from '../connectors.restricted';
 
 describe('ConnectorsProvider parity tests', () => {
   const real = new ConnectorsRealProvider();
@@ -96,6 +97,35 @@ describe('ConnectorsProvider parity tests', () => {
         expect(['high', 'medium', 'low']).toContain(result.confidence);
         expect(typeof result.degraded).toBe('boolean');
       }
+    });
+  });
+
+  // ── Restricted provider ──
+
+  describe('restricted provider', () => {
+    const restricted = new ConnectorsRestrictedProvider();
+
+    it('getConnectors returns ProviderResult with source=restricted', async () => {
+      const result = await restricted.getConnectors();
+      expect(result.source).toBe('restricted');
+      expect(result.confidence).toBe('low');
+      expect(result.reason).toContain('Restricted');
+      expect(Array.isArray(result.data)).toBe(true);
+    });
+
+    it('getConnectors returns data from mock fallback', async () => {
+      const result = await restricted.getConnectors();
+      expect(result.data.length).toBeGreaterThan(0);
+      for (const connector of result.data) {
+        expect(typeof connector.id).toBe('string');
+        expect(typeof connector.method).toBe('string');
+      }
+    });
+
+    it('implements all methods from the contract', () => {
+      const realMethods = Object.getOwnPropertyNames(Object.getPrototypeOf(real)).filter(m => m !== 'constructor');
+      const restrictedMethods = Object.getOwnPropertyNames(Object.getPrototypeOf(restricted)).filter(m => m !== 'constructor');
+      expect(restrictedMethods.sort()).toEqual(realMethods.sort());
     });
   });
 });

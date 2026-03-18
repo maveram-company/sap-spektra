@@ -9,8 +9,10 @@ import StatusBadge from '../components/ui/StatusBadge';
 import HealthGauge from '../components/ui/HealthGauge';
 import Button from '../components/ui/Button';
 import PageLoading from '../components/ui/PageLoading';
-import { dataService } from '../services/dataService';
+import { ModeBadge, SourceIndicator } from '../components/mode';
+import { dataService, getSystemsResult } from '../services/dataService';
 import type { ApiRecord } from '../types';
+import type { SourceIndicatorProps } from '../components/mode/SourceIndicator';
 
 // Mapa de colores por variante — solo colorea el valor y el icono, sin fondos de color
 const variantValueColors = {
@@ -41,7 +43,7 @@ const variantIconGradient = {
 
 // Icon is used as a JSX component (<Icon />) below; ESLint's no-unused-vars
 // does not detect JSX usage of destructured-and-renamed props.
-// eslint-disable-next-line no-unused-vars
+ 
 function KPICard({ icon: Icon, label, value, change, variant = 'default' }: { icon: React.ComponentType<{ size: number; className?: string }>; label: string; value: string | number; change?: number; variant?: string }) {
   const valueColor   = (variantValueColors as Record<string, string>)[variant];
   const glowClass    = (variantGlowClass as Record<string, string>)[variant];
@@ -156,6 +158,7 @@ export default function DashboardPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [refreshing, setRefreshing] = useState(false);
+  const [sourceInfo, setSourceInfo] = useState<SourceIndicatorProps | null>(null);
   const navigate = useNavigate();
   const { user } = useAuth();
   const { organization } = useTenant();
@@ -164,13 +167,20 @@ export default function DashboardPage() {
     let mounted = true;
     (async () => {
       try {
-        const [systemsData, approvalsData] = await Promise.all([
-          dataService.getSystems(),
+        const [systemsResult, approvalsData] = await Promise.all([
+          getSystemsResult(),
           dataService.getApprovals(),
         ]);
         if (mounted) {
-          setSystems(systemsData);
+          setSystems(systemsResult.data);
           setApprovals(approvalsData);
+          setSourceInfo({
+            source: systemsResult.source,
+            confidence: systemsResult.confidence,
+            degraded: systemsResult.degraded,
+            reason: systemsResult.reason,
+            timestamp: systemsResult.timestamp,
+          });
           setLoading(false);
         }
       } catch {
@@ -185,12 +195,19 @@ export default function DashboardPage() {
 
   const loadData = useCallback(async () => {
     setRefreshing(true);
-    const [systemsData, approvalsData] = await Promise.all([
-      dataService.getSystems(),
+    const [systemsResult, approvalsData] = await Promise.all([
+      getSystemsResult(),
       dataService.getApprovals(),
     ]);
-    setSystems(systemsData);
+    setSystems(systemsResult.data);
     setApprovals(approvalsData);
+    setSourceInfo({
+      source: systemsResult.source,
+      confidence: systemsResult.confidence,
+      degraded: systemsResult.degraded,
+      reason: systemsResult.reason,
+      timestamp: systemsResult.timestamp,
+    });
     setRefreshing(false);
   }, []);
 
@@ -223,6 +240,12 @@ export default function DashboardPage() {
       />
 
       <div className="p-6 space-y-8">
+
+        {/* ── Mode & source metadata ── */}
+        <div className="flex items-center gap-3">
+          <ModeBadge />
+          {sourceInfo && <SourceIndicator {...sourceInfo} />}
+        </div>
 
         {/* ══════════════════════════════════════
             KPI Cards
