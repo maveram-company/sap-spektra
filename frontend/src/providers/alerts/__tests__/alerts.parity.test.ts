@@ -35,6 +35,7 @@ vi.mock('../../../lib/mockData', () => ({
 
 import { AlertsRealProvider } from '../alerts.real';
 import { AlertsMockProvider } from '../alerts.mock';
+import { AlertsRestrictedProvider } from '../alerts.restricted';
 
 describe('AlertsProvider parity tests', () => {
   const real = new AlertsRealProvider();
@@ -154,6 +155,34 @@ describe('AlertsProvider parity tests', () => {
       expect(result).toHaveProperty('timestamp');
       expect(result).toHaveProperty('degraded', false);
       expect(Array.isArray(result.data)).toBe(true);
+    });
+  });
+
+  // ── Restricted provider ──
+
+  describe('restricted provider', () => {
+    const restricted = new AlertsRestrictedProvider();
+
+    it('getAlerts returns empty array with source=restricted', async () => {
+      const result = await restricted.getAlerts();
+      expect(result.source).toBe('restricted');
+      expect(result.confidence).toBe('low');
+      expect(result.reason).toBeTruthy();
+      expect(result.data).toEqual([]);
+    });
+
+    it('getAlertStats returns zeros with source=restricted', async () => {
+      const result = await restricted.getAlertStats();
+      expect(result.source).toBe('restricted');
+      expect(result.confidence).toBe('low');
+      expect(result.reason).toBeTruthy();
+      expect(result.data).toEqual({ total: 0, critical: 0, warnings: 0 });
+    });
+
+    it('implements all methods from the contract', () => {
+      const realMethods = Object.getOwnPropertyNames(Object.getPrototypeOf(real)).filter(m => m !== 'constructor');
+      const restrictedMethods = Object.getOwnPropertyNames(Object.getPrototypeOf(restricted)).filter(m => m !== 'constructor');
+      expect(restrictedMethods.sort()).toEqual(realMethods.sort());
     });
   });
 });

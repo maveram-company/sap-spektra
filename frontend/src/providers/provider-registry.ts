@@ -77,11 +77,19 @@ import { ChatRealProvider } from './chat/chat.real';
 import { ChatMockProvider } from './chat/chat.mock';
 import { createChatFallbackProvider } from './chat/chat.fallback';
 
-// Restricted providers (critical domains)
+// Restricted providers (all 12 domains)
+import { SystemsRestrictedProvider } from './systems/systems.restricted';
+import { AlertsRestrictedProvider } from './alerts/alerts.restricted';
+import { EventsRestrictedProvider } from './events/events.restricted';
+import { OperationsRestrictedProvider } from './operations/operations.restricted';
 import { RunbooksRestrictedProvider } from './runbooks/runbooks.restricted';
 import { ApprovalsRestrictedProvider } from './approvals/approvals.restricted';
+import { AnalyticsRestrictedProvider } from './analytics/analytics.restricted';
 import { HARestrictedProvider } from './ha/ha.restricted';
+import { AdminRestrictedProvider } from './admin/admin.restricted';
+import { LandscapeRestrictedProvider } from './landscape/landscape.restricted';
 import { ConnectorsRestrictedProvider } from './connectors/connectors.restricted';
+import { ChatRestrictedProvider } from './chat/chat.restricted';
 
 export interface ProviderRegistry {
   systems: SystemsProvider;
@@ -134,20 +142,18 @@ function createRegistry(mode: OperationalMode): ProviderRegistry {
 
     case 'RESTRICTED':
       return {
-        // Core restricted providers — intentional restriction behavior
+        systems: new SystemsRestrictedProvider(),
+        alerts: new AlertsRestrictedProvider(),
+        events: new EventsRestrictedProvider(),
+        operations: new OperationsRestrictedProvider(),
         runbooks: new RunbooksRestrictedProvider(),
         approvals: new ApprovalsRestrictedProvider(),
+        analytics: new AnalyticsRestrictedProvider(),
         ha: new HARestrictedProvider(),
+        admin: new AdminRestrictedProvider(),
+        landscape: new LandscapeRestrictedProvider(),
         connectors: new ConnectorsRestrictedProvider(),
-        // Other domains: read-only mock (acceptable for non-critical)
-        systems: new SystemsMockProvider(),
-        alerts: new AlertsMockProvider(),
-        events: new EventsMockProvider(),
-        operations: new OperationsMockProvider(),
-        analytics: new AnalyticsMockProvider(),
-        admin: new AdminMockProvider(),
-        landscape: new LandscapeMockProvider(),
-        chat: new ChatMockProvider(),
+        chat: new ChatRestrictedProvider(),
       };
 
     case 'FALLBACK':

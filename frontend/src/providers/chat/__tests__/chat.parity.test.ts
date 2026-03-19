@@ -27,6 +27,7 @@ vi.mock('../../../lib/mockData', () => ({
 
 import { ChatRealProvider } from '../chat.real';
 import { ChatMockProvider } from '../chat.mock';
+import { ChatRestrictedProvider } from '../chat.restricted';
 
 describe('ChatProvider parity tests', () => {
   const real = new ChatRealProvider();
@@ -73,6 +74,40 @@ describe('ChatProvider parity tests', () => {
       expect(result).toHaveProperty('confidence', 'low');
       expect(result).toHaveProperty('timestamp');
       expect(result).toHaveProperty('degraded', false);
+    });
+  });
+
+  // ── Restricted provider ──
+
+  describe('restricted provider', () => {
+    const restricted = new ChatRestrictedProvider();
+
+    it('chat returns blocked result with source=restricted', async () => {
+      const result = await restricted.chat('Hello', {});
+      expect(result.source).toBe('restricted');
+      expect(result.confidence).toBe('low');
+      expect(result.reason).toBeTruthy();
+      expect(result.data).toHaveProperty('blocked', true);
+    });
+
+    it('getAIUseCases returns empty with source=restricted', async () => {
+      const result = await restricted.getAIUseCases();
+      expect(result.source).toBe('restricted');
+      expect(result.confidence).toBe('low');
+      expect(result.reason).toBeTruthy();
+    });
+
+    it('getAIResponses returns empty with source=restricted', async () => {
+      const result = await restricted.getAIResponses();
+      expect(result.source).toBe('restricted');
+      expect(result.confidence).toBe('low');
+      expect(result.reason).toBeTruthy();
+    });
+
+    it('implements all methods from the contract', () => {
+      const realMethods = Object.getOwnPropertyNames(Object.getPrototypeOf(real)).filter(m => m !== 'constructor');
+      const restrictedMethods = Object.getOwnPropertyNames(Object.getPrototypeOf(restricted)).filter(m => m !== 'constructor');
+      expect(restrictedMethods.sort()).toEqual(realMethods.sort());
     });
   });
 });

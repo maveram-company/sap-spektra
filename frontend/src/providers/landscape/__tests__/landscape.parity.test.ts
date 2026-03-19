@@ -37,6 +37,7 @@ vi.mock('../../../lib/mockData', () => ({
 
 import { LandscapeRealProvider } from '../landscape.real';
 import { LandscapeMockProvider } from '../landscape.mock';
+import { LandscapeRestrictedProvider } from '../landscape.restricted';
 
 describe('LandscapeProvider parity tests', () => {
   const real = new LandscapeRealProvider();
@@ -86,6 +87,41 @@ describe('LandscapeProvider parity tests', () => {
       expect(result).toHaveProperty('timestamp');
       expect(result).toHaveProperty('degraded', false);
       expect(Array.isArray(result.data)).toBe(true);
+    });
+  });
+
+  // ── Restricted provider ──
+
+  describe('restricted provider', () => {
+    const restricted = new LandscapeRestrictedProvider();
+
+    it('getDiscovery returns empty array with source=restricted', async () => {
+      const result = await restricted.getDiscovery();
+      expect(result.source).toBe('restricted');
+      expect(result.confidence).toBe('low');
+      expect(result.reason).toBeTruthy();
+      expect(result.data).toEqual([]);
+    });
+
+    it('getSIDLines returns empty array with source=restricted', async () => {
+      const result = await restricted.getSIDLines();
+      expect(result.source).toBe('restricted');
+      expect(result.confidence).toBe('low');
+      expect(result.data).toEqual([]);
+    });
+
+    it('getLandscapeValidation returns restricted marker with source=restricted', async () => {
+      const result = await restricted.getLandscapeValidation();
+      expect(result.source).toBe('restricted');
+      expect(result.confidence).toBe('low');
+      expect(result.reason).toBeTruthy();
+      expect(result.data).toHaveProperty('restricted', true);
+    });
+
+    it('implements all methods from the contract', () => {
+      const realMethods = Object.getOwnPropertyNames(Object.getPrototypeOf(real)).filter(m => m !== 'constructor');
+      const restrictedMethods = Object.getOwnPropertyNames(Object.getPrototypeOf(restricted)).filter(m => m !== 'constructor');
+      expect(restrictedMethods.sort()).toEqual(realMethods.sort());
     });
   });
 });

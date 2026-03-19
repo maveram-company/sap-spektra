@@ -150,6 +150,9 @@ export const getUsersResult = async () => registry().admin.getUsers();
 export const getDiscoveryResult = async () => registry().landscape.getDiscovery();
 export const getAnalyticsResult = async () => registry().analytics.getAnalytics();
 export const chatResult = async (message: string, context: unknown) => registry().chat.chat(message, context);
+export const executeRunbookResult = async (runbookId: string, systemId: string, dryRun = false) => registry().runbooks.executeRunbook(runbookId, systemId, dryRun);
+export const approveActionResult = async (id: string) => registry().approvals.approveAction(id);
+export const rejectActionResult = async (id: string) => registry().approvals.rejectAction(id);
 
 // ── Backward-compatible dataService object ──
 // All pages import { dataService } and call dataService.getSystems(), etc.
@@ -239,4 +242,7 @@ export const dataService = {
   getDiscoveryResult,
   getAnalyticsResult,
   chatResult,
+  executeRunbookResult,
+  approveActionResult,
+  rejectActionResult,
 };

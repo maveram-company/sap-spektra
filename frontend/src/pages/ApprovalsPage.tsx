@@ -10,12 +10,13 @@ import Button from '../components/ui/Button';
 import Table, { TableHeader, TableBody, TableRow, TableHead, TableCell } from '../components/ui/Table';
 import EmptyState from '../components/ui/EmptyState';
 import PageLoading from '../components/ui/PageLoading';
-import { ModeBadge, CapabilityBadge, GovernanceContext } from '../components/mode';
+import { ModeBadge, CapabilityBadge, GovernanceContext, EvidencePanel } from '../components/mode';
 import { useMode } from '../mode/ModeContext';
 import { useAuth } from '../contexts/AuthContext';
-import { dataService } from '../services/dataService';
+import { dataService, approveActionResult, rejectActionResult } from '../services/dataService';
 import { createLogger } from '../lib/logger';
 import type { ApiRecord } from '../types';
+import type { ProviderResult } from '../providers/types';
 
 const log = createLogger('ApprovalsPage');
 
@@ -24,6 +25,7 @@ export default function ApprovalsPage() {
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState('PENDING');
   const [processing, setProcessing] = useState<string | null>(null);
+  const [lastActionEvidence, setLastActionEvidence] = useState<ProviderResult<unknown> | null>(null);
   const { hasRole } = useAuth();
   const canApprove = hasRole('escalation');
   const { state: modeState, getDomainCapability } = useMode();
@@ -47,7 +49,8 @@ export default function ApprovalsPage() {
   const handleApprove = async (id: string) => {
     if (!canApprove) return;
     setProcessing(id);
-    await new Promise(r => setTimeout(r, 800));
+    const fullResult = await approveActionResult(id);
+    setLastActionEvidence(fullResult);
     setApprovals(prev => prev.map((a: ApiRecord) => a.id === id ? { ...a, status: 'APPROVED', processedAt: new Date().toISOString() } : a));
     setProcessing(null);
   };
@@ -55,7 +58,8 @@ export default function ApprovalsPage() {
   const handleReject = async (id: string) => {
     if (!canApprove) return;
     setProcessing(id);
-    await new Promise(r => setTimeout(r, 800));
+    const fullResult = await rejectActionResult(id);
+    setLastActionEvidence(fullResult);
     setApprovals(prev => prev.map((a: ApiRecord) => a.id === id ? { ...a, status: 'REJECTED', processedAt: new Date().toISOString() } : a));
     setProcessing(null);
   };
@@ -156,6 +160,13 @@ export default function ApprovalsPage() {
               ))}
             </TableBody>
           </Table>
+        )}
+
+        {/* Evidence Panel — shown after approve/reject action */}
+        {lastActionEvidence && (
+          <div className="mt-4">
+            <EvidencePanel result={lastActionEvidence} domain="approvals" action="approveOrReject" />
+          </div>
         )}
       </div>
     </div>

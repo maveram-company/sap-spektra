@@ -44,6 +44,7 @@ vi.mock('../../../lib/mockData', () => ({
 
 import { OperationsRealProvider } from '../operations.real';
 import { OperationsMockProvider } from '../operations.mock';
+import { OperationsRestrictedProvider } from '../operations.restricted';
 
 describe('OperationsProvider parity tests', () => {
   const real = new OperationsRealProvider();
@@ -104,6 +105,51 @@ describe('OperationsProvider parity tests', () => {
       expect(result).toHaveProperty('timestamp');
       expect(result).toHaveProperty('degraded', false);
       expect(Array.isArray(result.data)).toBe(true);
+    });
+  });
+
+  // ── Restricted provider ──
+
+  describe('restricted provider', () => {
+    const restricted = new OperationsRestrictedProvider();
+
+    it('getOperations returns empty array with source=restricted', async () => {
+      const result = await restricted.getOperations();
+      expect(result.source).toBe('restricted');
+      expect(result.confidence).toBe('low');
+      expect(result.reason).toBeTruthy();
+      expect(result.data).toEqual([]);
+    });
+
+    it('getBackgroundJobs returns empty array with source=restricted', async () => {
+      const result = await restricted.getBackgroundJobs();
+      expect(result.source).toBe('restricted');
+      expect(result.confidence).toBe('low');
+      expect(result.data).toEqual([]);
+    });
+
+    it('getTransports returns empty array with source=restricted', async () => {
+      const result = await restricted.getTransports();
+      expect(result.source).toBe('restricted');
+      expect(result.data).toEqual([]);
+    });
+
+    it('getCertificates returns empty array with source=restricted', async () => {
+      const result = await restricted.getCertificates();
+      expect(result.source).toBe('restricted');
+      expect(result.data).toEqual([]);
+    });
+
+    it('getLicenses returns empty object with source=restricted', async () => {
+      const result = await restricted.getLicenses();
+      expect(result.source).toBe('restricted');
+      expect(result.confidence).toBe('low');
+    });
+
+    it('implements all methods from the contract', () => {
+      const realMethods = Object.getOwnPropertyNames(Object.getPrototypeOf(real)).filter(m => m !== 'constructor');
+      const restrictedMethods = Object.getOwnPropertyNames(Object.getPrototypeOf(restricted)).filter(m => m !== 'constructor');
+      expect(restrictedMethods.sort()).toEqual(realMethods.sort());
     });
   });
 });

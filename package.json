@@ -13,6 +13,7 @@
     "test:backend": "cd apps/api && npm test",
     "test:e2e": "npx playwright test",
     "test:e2e:ui": "npx playwright test --ui",
+    "test:e2e:ci": "docker-compose -f docker-compose.ci.yml up -d && sleep 5 && cd apps/api && npx prisma migrate deploy && npm run seed && npm run start & sleep 3 && cd ../../frontend && npm run dev & sleep 5 && npx playwright test; docker-compose -f docker-compose.ci.yml down",
     "build": "npm run build:backend && npm run build:frontend",
     "build:frontend": "cd frontend && npm run build",
     "build:backend": "cd apps/api && npm run build",

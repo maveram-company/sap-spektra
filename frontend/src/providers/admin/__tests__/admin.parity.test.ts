@@ -45,6 +45,7 @@ vi.mock('../../../lib/mockData', () => ({
 
 import { AdminRealProvider } from '../admin.real';
 import { AdminMockProvider } from '../admin.mock';
+import { AdminRestrictedProvider } from '../admin.restricted';
 
 describe('AdminProvider parity tests', () => {
   const real = new AdminRealProvider();
@@ -113,6 +114,46 @@ describe('AdminProvider parity tests', () => {
       expect(result).toHaveProperty('timestamp');
       expect(result).toHaveProperty('degraded', false);
       expect(Array.isArray(result.data)).toBe(true);
+    });
+  });
+
+  // ── Restricted provider ──
+
+  describe('restricted provider', () => {
+    const restricted = new AdminRestrictedProvider();
+
+    it('getUsers returns empty array with source=restricted', async () => {
+      const result = await restricted.getUsers();
+      expect(result.source).toBe('restricted');
+      expect(result.confidence).toBe('low');
+      expect(result.reason).toBeTruthy();
+      expect(result.data).toEqual([]);
+    });
+
+    it('getAuditLog returns empty array with source=restricted', async () => {
+      const result = await restricted.getAuditLog();
+      expect(result.source).toBe('restricted');
+      expect(result.confidence).toBe('low');
+      expect(result.reason).toBeTruthy();
+      expect(result.data).toEqual([]);
+    });
+
+    it('getPlans returns empty object with source=restricted', async () => {
+      const result = await restricted.getPlans();
+      expect(result.source).toBe('restricted');
+      expect(result.confidence).toBe('low');
+    });
+
+    it('getApiKeys returns empty object with source=restricted', async () => {
+      const result = await restricted.getApiKeys();
+      expect(result.source).toBe('restricted');
+      expect(result.confidence).toBe('low');
+    });
+
+    it('implements all methods from the contract', () => {
+      const realMethods = Object.getOwnPropertyNames(Object.getPrototypeOf(real)).filter(m => m !== 'constructor');
+      const restrictedMethods = Object.getOwnPropertyNames(Object.getPrototypeOf(restricted)).filter(m => m !== 'constructor');
+      expect(restrictedMethods.sort()).toEqual(realMethods.sort());
     });
   });
 });

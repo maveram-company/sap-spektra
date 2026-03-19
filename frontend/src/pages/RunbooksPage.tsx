@@ -9,14 +9,15 @@ import Modal from '../components/ui/Modal';
 import Select from '../components/ui/Select';
 import Table, { TableHeader, TableBody, TableRow, TableHead, TableCell } from '../components/ui/Table';
 import EmptyState from '../components/ui/EmptyState';
-import { ModeBadge, CapabilityBadge, GovernanceContext } from '../components/mode';
+import { ModeBadge, CapabilityBadge, GovernanceContext, EvidencePanel } from '../components/mode';
 import { useMode } from '../mode/ModeContext';
 import { useAuth } from '../contexts/AuthContext';
 import PageLoading from '../components/ui/PageLoading';
-import { dataService } from '../services/dataService';
+import { dataService, executeRunbookResult } from '../services/dataService';
 import { useToast } from '../hooks/useToast';
 import { createLogger } from '../lib/logger';
 import type { ApiRecord } from '../types';
+import type { ProviderResult } from '../providers/types';
 
 const log = createLogger('RunbooksPage');
 
@@ -145,6 +146,7 @@ export default function RunbooksPage() {
   const [executionResult, setExecutionResult] = useState<Record<string, any> | null>(null);
   const [liveStepResults, setLiveStepResults] = useState<ApiRecord[]>([]);
   const [executionProgress, setExecutionProgress] = useState<Record<string, any> | null>(null);
+  const [lastExecutionEvidence, setLastExecutionEvidence] = useState<ProviderResult<unknown> | null>(null);
   const pollingRef = useRef<ReturnType<typeof setTimeout>>(undefined);
 
   useEffect(() => {
@@ -222,6 +224,7 @@ export default function RunbooksPage() {
     setExecutionResult(null);
     setLiveStepResults([]);
     setExecutionProgress(null);
+    setLastExecutionEvidence(null);
     setShowExecuteModal(true);
   };
 
@@ -259,7 +262,9 @@ export default function RunbooksPage() {
       }
 
       // Paso 2: ejecutar realmente — el backend responde inmediatamente con RUNNING
-      const result = await dataService.executeRunbook(selectedRunbook.id, selectedSystemId, false) as Record<string, any>;
+      const fullResult = await executeRunbookResult(selectedRunbook.id, selectedSystemId, false);
+      setLastExecutionEvidence(fullResult);
+      const result = fullResult.data as Record<string, any>;
 
       if (result.id) {
         // Inicializar step results desde la definicion del runbook
@@ -789,6 +794,11 @@ export default function RunbooksPage() {
                   <p className="text-xs text-text-tertiary mt-1">Sistema: {executionResult.system.sid}</p>
                 )}
               </div>
+            )}
+
+            {/* Evidence Panel */}
+            {lastExecutionEvidence && executionResult && !['RUNNING'].includes(executionResult.result) && (
+              <EvidencePanel result={lastExecutionEvidence} domain="runbooks" action="executeRunbook" />
             )}
           </div>
         )}

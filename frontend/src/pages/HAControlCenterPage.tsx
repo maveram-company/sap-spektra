@@ -8,7 +8,7 @@ import {
   ASCS_FAILOVER_STEPS,
   PILOT_LIGHT_ACTIVATION_STEPS, CROSS_REGION_DR_STEPS, BACKUP_RESTORE_STEPS,
 } from '../lib/constants';
-import { ModeBadge, CapabilityBadge, GovernanceContext, SourceIndicator } from '../components/mode';
+import { ModeBadge, CapabilityBadge, GovernanceContext, SourceIndicator, EvidencePanel } from '../components/mode';
 import { useMode } from '../mode/ModeContext';
 import { dataService, getHASystemsResult } from '../services/dataService';
 import { createLogger } from '../lib/logger';
@@ -1085,6 +1085,15 @@ export default function HAControlCenterPage() {
           />
           {sourceInfo && <SourceIndicator {...sourceInfo} />}
         </div>
+
+        {/* Evidence Panel for HA data */}
+        {sourceInfo && (
+          <EvidencePanel
+            result={{ data: systems, ...sourceInfo }}
+            domain="ha"
+            action="getHASystems"
+          />
+        )}
 
         {/* Tabs */}
         <div className="border-b border-border">

@@ -1,0 +1,25 @@
+version: '3.8'
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: spektra
+      POSTGRES_PASSWORD: spektra_dev
+      POSTGRES_DB: spektra_dev
+    ports:
+      - '5433:5432'
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U spektra -d spektra_dev']
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7-alpine
+    ports:
+      - '6379:6379'
+    healthcheck:
+      test: ['CMD', 'redis-cli', 'ping']
+      interval: 5s
+      timeout: 5s
+      retries: 5

@@ -17,6 +17,7 @@ vi.mock('../../../lib/mockData', () => ({
 
 import { EventsRealProvider } from '../events.real';
 import { EventsMockProvider } from '../events.mock';
+import { EventsRestrictedProvider } from '../events.restricted';
 
 describe('EventsProvider parity tests', () => {
   const real = new EventsRealProvider();
@@ -54,6 +55,26 @@ describe('EventsProvider parity tests', () => {
       expect(result).toHaveProperty('timestamp');
       expect(result).toHaveProperty('degraded', false);
       expect(Array.isArray(result.data)).toBe(true);
+    });
+  });
+
+  // ── Restricted provider ──
+
+  describe('restricted provider', () => {
+    const restricted = new EventsRestrictedProvider();
+
+    it('getEvents returns empty array with source=restricted', async () => {
+      const result = await restricted.getEvents();
+      expect(result.source).toBe('restricted');
+      expect(result.confidence).toBe('low');
+      expect(result.reason).toBeTruthy();
+      expect(result.data).toEqual([]);
+    });
+
+    it('implements all methods from the contract', () => {
+      const realMethods = Object.getOwnPropertyNames(Object.getPrototypeOf(real)).filter(m => m !== 'constructor');
+      const restrictedMethods = Object.getOwnPropertyNames(Object.getPrototypeOf(restricted)).filter(m => m !== 'constructor');
+      expect(restrictedMethods.sort()).toEqual(realMethods.sort());
     });
   });
 });

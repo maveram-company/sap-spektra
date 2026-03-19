@@ -36,6 +36,7 @@ vi.mock('../../../lib/mockData', () => ({
 
 import { AnalyticsRealProvider } from '../analytics.real';
 import { AnalyticsMockProvider } from '../analytics.mock';
+import { AnalyticsRestrictedProvider } from '../analytics.restricted';
 
 describe('AnalyticsProvider parity tests', () => {
   const real = new AnalyticsRealProvider();
@@ -79,6 +80,34 @@ describe('AnalyticsProvider parity tests', () => {
       expect(result).toHaveProperty('confidence', 'low');
       expect(result).toHaveProperty('timestamp');
       expect(result).toHaveProperty('degraded', false);
+    });
+  });
+
+  // ── Restricted provider ──
+
+  describe('restricted provider', () => {
+    const restricted = new AnalyticsRestrictedProvider();
+
+    it('getAnalytics returns restricted marker with source=restricted', async () => {
+      const result = await restricted.getAnalytics();
+      expect(result.source).toBe('restricted');
+      expect(result.confidence).toBe('low');
+      expect(result.reason).toBeTruthy();
+      expect(result.data).toHaveProperty('restricted', true);
+    });
+
+    it('getRunbookAnalytics returns restricted marker with source=restricted', async () => {
+      const result = await restricted.getRunbookAnalytics();
+      expect(result.source).toBe('restricted');
+      expect(result.confidence).toBe('low');
+      expect(result.reason).toBeTruthy();
+      expect(result.data).toHaveProperty('restricted', true);
+    });
+
+    it('implements all methods from the contract', () => {
+      const realMethods = Object.getOwnPropertyNames(Object.getPrototypeOf(real)).filter(m => m !== 'constructor');
+      const restrictedMethods = Object.getOwnPropertyNames(Object.getPrototypeOf(restricted)).filter(m => m !== 'constructor');
+      expect(restrictedMethods.sort()).toEqual(realMethods.sort());
     });
   });
 });
