@@ -120,6 +120,19 @@ variable "api_min_count" {
   default     = 2
 }
 
+variable "jwt_secret" {
+  description = "JWT signing secret"
+  type        = string
+  sensitive   = true
+}
+
+variable "stripe_secret_key" {
+  description = "Stripe API secret key"
+  type        = string
+  sensitive   = true
+  default     = ""
+}
+
 # ── VPC ──
 
 module "vpc" {
@@ -279,6 +292,67 @@ resource "aws_iam_role" "ecs_task" {
   })
 }
 
+# ── Secrets Manager ──
+
+resource "aws_secretsmanager_secret" "db_url" {
+  name = "spektra-${var.environment}-db-url"
+}
+
+resource "aws_secretsmanager_secret_version" "db_url" {
+  secret_id     = aws_secretsmanager_secret.db_url.id
+  secret_string = "postgresql://spektra:${var.db_password}@${aws_db_instance.spektra.endpoint}/spektra"
+}
+
+resource "aws_secretsmanager_secret" "db_password" {
+  name = "spektra-${var.environment}-db-password"
+}
+
+resource "aws_secretsmanager_secret_version" "db_password" {
+  secret_id     = aws_secretsmanager_secret.db_password.id
+  secret_string = var.db_password
+}
+
+resource "aws_secretsmanager_secret" "jwt_secret" {
+  name = "spektra-${var.environment}-jwt-secret"
+}
+
+resource "aws_secretsmanager_secret_version" "jwt_secret" {
+  secret_id     = aws_secretsmanager_secret.jwt_secret.id
+  secret_string = var.jwt_secret
+}
+
+resource "aws_secretsmanager_secret" "stripe_secret" {
+  name = "spektra-${var.environment}-stripe-secret"
+}
+
+resource "aws_secretsmanager_secret_version" "stripe_secret" {
+  secret_id     = aws_secretsmanager_secret.stripe_secret.id
+  secret_string = var.stripe_secret_key
+}
+
+# ── IAM Policy: Allow ECS execution role to read secrets ──
+
+resource "aws_iam_role_policy" "ecs_exec_secrets" {
+  name = "spektra-ecs-secrets-${var.environment}"
+  role = aws_iam_role.ecs_task_execution.id
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [{
+      Effect = "Allow"
+      Action = [
+        "secretsmanager:GetSecretValue",
+      ]
+      Resource = [
+        aws_secretsmanager_secret.db_url.arn,
+        aws_secretsmanager_secret.db_password.arn,
+        aws_secretsmanager_secret.jwt_secret.arn,
+        aws_secretsmanager_secret.stripe_secret.arn,
+      ]
+    }]
+  })
+}
+
 # ── ECS Task Definition ──
 
 resource "aws_ecs_task_definition" "api" {
@@ -303,13 +377,18 @@ resource "aws_ecs_task_definition" "api" {
       { name = "PORT", value = "3001" },
       { name = "RUNTIME_MODE", value = "AWS_REAL" },
       { name = "NODE_ENV", value = var.environment == "production" ? "production" : "staging" },
-      { name = "DATABASE_URL", value = "postgresql://spektra:${var.db_password}@${aws_db_instance.spektra.endpoint}/spektra" },
       { name = "REDIS_URL", value = "redis://${aws_elasticache_cluster.spektra.cache_nodes[0].address}:6379" },
       { name = "COGNITO_REGION", value = var.aws_region },
       { name = "COGNITO_USER_POOL_ID", value = aws_cognito_user_pool.spektra.id },
       { name = "COGNITO_CLIENT_ID", value = aws_cognito_user_pool_client.spektra.id },
       { name = "SQS_QUEUE_URL", value = aws_sqs_queue.spektra.url },
       { name = "S3_BUCKET", value = aws_s3_bucket.spektra.id },
+    ]
+
+    secrets = [
+      { name = "DATABASE_URL", valueFrom = aws_secretsmanager_secret.db_url.arn },
+      { name = "JWT_SECRET", valueFrom = aws_secretsmanager_secret.jwt_secret.arn },
+      { name = "STRIPE_SECRET_KEY", valueFrom = aws_secretsmanager_secret.stripe_secret.arn },
     ]
 
     logConfiguration = {

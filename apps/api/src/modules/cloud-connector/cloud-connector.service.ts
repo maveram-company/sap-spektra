@@ -79,30 +79,46 @@ export class CloudConnectorService {
         'Cloud Connector not configured for this system',
       );
 
-    // Simulate connection test (real implementation would probe BTP tunnel)
+    // HONEST test: We can verify configuration completeness but NOT actual connectivity
+    // Real connectivity test requires SAP BTP tunnel access (not yet implemented)
+    const configComplete = !!(
+      config.locationId &&
+      config.virtualHost &&
+      config.virtualPort
+    );
+
     const testResult = {
-      success: true,
-      latencyMs: Math.floor(Math.random() * 200) + 50,
-      message: 'Connection successful via SAP Cloud Connector',
+      configurationValid: configComplete,
+      connectivityVerified: false, // HONEST: we cannot verify actual BTP tunnel
+      verificationMethod: 'configuration_check_only',
+      message: configComplete
+        ? 'Configuration is valid. Actual connectivity cannot be verified until BTP tunnel integration is implemented.'
+        : 'Configuration incomplete — missing required fields.',
       capabilities: {
         rfcAvailable: config.protocol === 'RFC',
         httpAvailable:
           config.protocol === 'HTTP' || config.protocol === 'HTTPS',
-        sapMetrics: true,
+        sapMetrics: configComplete,
         osMetrics: false,
         hostAccess: false,
         runbookExecution: false,
         haFailover: false,
       },
+      limitations: [
+        'OS-level metrics not available via Cloud Connector',
+        'Host-level runbook execution not supported',
+        'HA/DR physical failover not supported',
+        'Actual connectivity verification pending BTP integration',
+      ],
     };
 
     await this.prisma.cloudConnectorConfig.update({
       where: { id: config.id },
       data: {
-        status: testResult.success ? 'connected' : 'failed',
+        status: configComplete ? 'configured' : 'failed',
         lastTestAt: new Date(),
-        lastTestResult: testResult.success ? 'success' : 'unreachable',
-        latencyMs: testResult.latencyMs,
+        lastTestResult: configComplete ? 'config_valid' : 'config_incomplete',
+        latencyMs: null, // No latency measurement without real probe
       },
     });
 
@@ -112,8 +128,9 @@ export class CloudConnectorService {
         action: 'cloud_connector.tested',
         resource: `cloud-connector/${config.id}`,
         details: JSON.stringify({
-          result: testResult.success ? 'success' : 'failed',
-          latencyMs: testResult.latencyMs,
+          configurationValid: configComplete,
+          connectivityVerified: false,
+          verificationMethod: 'configuration_check_only',
         }),
         severity: 'info',
       })

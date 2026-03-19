@@ -124,26 +124,59 @@ describe('CloudConnectorService', () => {
   // ── testConnection ──
 
   describe('testConnection', () => {
-    it('returns test result and updates config status', async () => {
+    it('returns honest test result with connectivityVerified=false for complete config', async () => {
       const config = mockConfig();
       prisma.cloudConnectorConfig.findFirst.mockResolvedValue(config);
       prisma.cloudConnectorConfig.update.mockResolvedValue({
         ...config,
-        status: 'connected',
+        status: 'configured',
       });
 
       const result = await service.testConnection(ORG_ID, SYSTEM_ID);
 
-      expect(result.success).toBe(true);
-      expect(result.latencyMs).toBeGreaterThanOrEqual(50);
-      expect(result.message).toContain('Cloud Connector');
+      expect(result.connectivityVerified).toBe(false);
+      expect(result.configurationValid).toBe(true);
+      expect(result.verificationMethod).toBe('configuration_check_only');
+      expect(result.message).toContain('connectivity cannot be verified');
       expect(result.capabilities).toBeDefined();
       expect(result.capabilities.osMetrics).toBe(false);
       expect(result.capabilities.hostAccess).toBe(false);
+      expect(result.limitations).toBeInstanceOf(Array);
+      expect(result.limitations.length).toBeGreaterThan(0);
       expect(prisma.cloudConnectorConfig.update).toHaveBeenCalledWith(
         expect.objectContaining({
           where: { id: config.id },
-          data: expect.objectContaining({ status: 'connected' }),
+          data: expect.objectContaining({
+            status: 'configured',
+            latencyMs: null,
+          }),
+        }),
+      );
+    });
+
+    it('returns configurationValid=false when config is incomplete', async () => {
+      const incompleteConfig = mockConfig({
+        locationId: '',
+        virtualHost: '',
+        virtualPort: 0,
+      });
+      prisma.cloudConnectorConfig.findFirst.mockResolvedValue(incompleteConfig);
+      prisma.cloudConnectorConfig.update.mockResolvedValue({
+        ...incompleteConfig,
+        status: 'failed',
+      });
+
+      const result = await service.testConnection(ORG_ID, SYSTEM_ID);
+
+      expect(result.configurationValid).toBe(false);
+      expect(result.connectivityVerified).toBe(false);
+      expect(result.message).toContain('incomplete');
+      expect(prisma.cloudConnectorConfig.update).toHaveBeenCalledWith(
+        expect.objectContaining({
+          data: expect.objectContaining({
+            status: 'failed',
+            lastTestResult: 'config_incomplete',
+          }),
         }),
       );
     });

@@ -130,6 +130,8 @@ describe('AgentsService', () => {
 
   describe('recordHeartbeat', () => {
     it('updates heartbeat timestamp and sets status to connected', async () => {
+      const agent = mockRegistration();
+      prisma.agentRegistration.findFirst.mockResolvedValue(agent);
       const updated = mockRegistration({
         status: 'connected',
         lastHeartbeat: new Date(),
@@ -141,6 +143,9 @@ describe('AgentsService', () => {
       });
 
       expect(result.status).toBe('connected');
+      expect(prisma.agentRegistration.findFirst).toHaveBeenCalledWith({
+        where: { hostId: HOST_ID, organizationId: ORG_ID },
+      });
       expect(prisma.agentRegistration.update).toHaveBeenCalledWith({
         where: { hostId: HOST_ID },
         data: expect.objectContaining({
@@ -149,6 +154,16 @@ describe('AgentsService', () => {
           agentVersion: '1.2.0',
         }),
       });
+    });
+
+    it('throws NotFoundException when agent belongs to different org', async () => {
+      prisma.agentRegistration.findFirst.mockResolvedValue(null);
+
+      await expect(
+        service.recordHeartbeat('org-wrong', HOST_ID, {
+          agentVersion: '1.2.0',
+        }),
+      ).rejects.toThrow(NotFoundException);
     });
   });
 
@@ -240,6 +255,7 @@ describe('AgentsService', () => {
 
   describe('revokeAgent', () => {
     it('sets agent status to revoked', async () => {
+      prisma.agentRegistration.findFirst.mockResolvedValue(mockRegistration());
       prisma.agentRegistration.update.mockResolvedValue(
         mockRegistration({ status: 'revoked' }),
       );
@@ -247,10 +263,21 @@ describe('AgentsService', () => {
       const result = await service.revokeAgent(ORG_ID, 'reg-1');
 
       expect(result.status).toBe('revoked');
+      expect(prisma.agentRegistration.findFirst).toHaveBeenCalledWith({
+        where: { id: 'reg-1', organizationId: ORG_ID },
+      });
       expect(prisma.agentRegistration.update).toHaveBeenCalledWith({
         where: { id: 'reg-1' },
         data: { status: 'revoked' },
       });
+    });
+
+    it('throws NotFoundException when agent belongs to different org', async () => {
+      prisma.agentRegistration.findFirst.mockResolvedValue(null);
+
+      await expect(service.revokeAgent('org-wrong', 'reg-1')).rejects.toThrow(
+        NotFoundException,
+      );
     });
   });
 

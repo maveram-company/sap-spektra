@@ -77,6 +77,13 @@ export class AgentsService {
     hostId: string,
     data: { agentVersion: string; status?: string },
   ) {
+    // Verify agent belongs to org
+    const agent = await this.prisma.agentRegistration.findFirst({
+      where: { hostId, organizationId: orgId },
+    });
+    if (!agent)
+      throw new NotFoundException('Agent not found for this organization');
+
     return this.prisma.agentRegistration.update({
       where: { hostId },
       data: {
@@ -123,7 +130,12 @@ export class AgentsService {
 
   /** Revoke agent */
   async revokeAgent(orgId: string, agentId: string) {
-    const agent = await this.prisma.agentRegistration.update({
+    const agent = await this.prisma.agentRegistration.findFirst({
+      where: { id: agentId, organizationId: orgId },
+    });
+    if (!agent) throw new NotFoundException('Agent not found');
+
+    const updated = await this.prisma.agentRegistration.update({
       where: { id: agentId },
       data: { status: 'revoked' },
     });
@@ -137,7 +149,7 @@ export class AgentsService {
       })
       .catch(() => {});
 
-    return agent;
+    return updated;
   }
 
   /** Get agent health summary for dashboard */

@@ -36,19 +36,8 @@ export class BillingController {
     return this.billing.getUsage(orgId);
   }
 
-  @Post('activate')
-  @Roles('admin')
-  @ApiOperation({ summary: 'Activate subscription with Stripe' })
-  activate(
-    @TenantId() orgId: string,
-    @Body() body: { stripeCustomerId: string; stripeSubId: string },
-  ) {
-    return this.billing.activateSubscription(
-      orgId,
-      body.stripeCustomerId,
-      body.stripeSubId,
-    );
-  }
+  // NOTE: POST /billing/activate removed — subscription activation now happens
+  // exclusively via verified Stripe webhook (see webhook.controller.ts)
 
   @Patch('cancel')
   @Roles('admin')

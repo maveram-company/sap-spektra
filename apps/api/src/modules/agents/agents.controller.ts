@@ -11,6 +11,7 @@ import {
 import { ApiTags, ApiOperation, ApiBearerAuth } from '@nestjs/swagger';
 import { AgentsService } from './agents.service';
 import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
+import { HybridAuthGuard } from '../../common/guards/hybrid-auth.guard';
 import { TenantGuard } from '../../common/guards/tenant.guard';
 import { RolesGuard } from '../../common/guards/roles.guard';
 import { Roles } from '../../common/decorators/roles.decorator';
@@ -25,6 +26,7 @@ export class AgentsController {
   constructor(private readonly agents: AgentsService) {}
 
   @Post('register')
+  @UseGuards(HybridAuthGuard, TenantGuard, RolesGuard)
   @Roles('operator')
   @ApiOperation({ summary: 'Register a new agent for a host' })
   register(@TenantId() orgId: string, @Body() data: RegisterAgentDto) {
@@ -32,6 +34,7 @@ export class AgentsController {
   }
 
   @Post('heartbeat')
+  @UseGuards(HybridAuthGuard, TenantGuard, RolesGuard)
   @Roles('operator')
   @ApiOperation({ summary: 'Record agent heartbeat' })
   heartbeat(@TenantId() orgId: string, @Body() data: AgentHeartbeatDto) {
