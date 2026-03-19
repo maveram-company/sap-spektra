@@ -36,6 +36,9 @@ model Organization {
   auditEntries AuditEntry[]
   connectors   Connector[]
   apiKeys      ApiKey[]
+  subscription    Subscription?
+  usageRecords    UsageRecord[]
+  invitations     Invitation[]
 
   @@map("organizations")
 }
@@ -582,4 +585,57 @@ model ApiKey {
 
   @@index([organizationId])
   @@map("api_keys")
+}
+
+// ── Subscriptions & Usage ──
+
+model Subscription {
+  id               String   @id @default(uuid())
+  organizationId   String
+  organization     Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  planTier         String
+  status           String   @default("trialing") // trialing, active, past_due, canceled, suspended
+  stripeCustomerId String?
+  stripeSubId      String?
+  trialEndsAt      DateTime?
+  currentPeriodStart DateTime?
+  currentPeriodEnd   DateTime?
+  canceledAt       DateTime?
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  @@unique([organizationId])
+  @@index([status])
+  @@map("subscriptions")
+}
+
+model UsageRecord {
+  id               String   @id @default(uuid())
+  organizationId   String
+  organization     Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  metric           String   // systems_count, users_count, api_calls, agent_heartbeats, runbook_executions
+  value            Int
+  period           String   // YYYY-MM format
+  recordedAt       DateTime @default(now())
+
+  @@unique([organizationId, metric, period])
+  @@index([organizationId, period])
+  @@map("usage_records")
+}
+
+model Invitation {
+  id               String   @id @default(uuid())
+  organizationId   String
+  organization     Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  email            String
+  role             String   @default("viewer")
+  invitedBy        String
+  token            String   @unique @default(uuid())
+  status           String   @default("pending") // pending, accepted, expired
+  expiresAt        DateTime
+  createdAt        DateTime @default(now())
+
+  @@index([organizationId])
+  @@index([token])
+  @@map("invitations")
 }

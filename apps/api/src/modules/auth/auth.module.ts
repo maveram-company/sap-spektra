@@ -7,6 +7,7 @@ import { AuthController } from './auth.controller';
 import { JwtStrategy } from './strategies/jwt.strategy';
 import { CognitoStrategy } from './strategies/cognito.strategy';
 import { AuditModule } from '../audit/audit.module';
+import { BillingModule } from '../billing/billing.module';
 import type { RuntimeMode } from '../../config/configuration';
 
 /**
@@ -46,6 +47,7 @@ const cognitoStrategyProvider: Provider = {
       }),
     }),
     AuditModule,
+    BillingModule,
   ],
   controllers: [AuthController],
   providers: [AuthService, JwtStrategy, cognitoStrategyProvider],

@@ -29,6 +29,26 @@ export class QuotaGuard implements CanActivate {
     const orgId = request.user?.organizationId;
     if (!orgId) return true;
 
+    // Check subscription status
+    const subscription = await this.prisma.subscription.findUnique({
+      where: { organizationId: orgId },
+    });
+
+    if (subscription) {
+      if (subscription.status === 'suspended') {
+        throw new ForbiddenException('Subscription suspended');
+      }
+
+      if (subscription.status === 'canceled') {
+        const method = request.method?.toUpperCase();
+        if (method && method !== 'GET') {
+          throw new ForbiddenException(
+            'Subscription canceled. Only read operations are allowed.',
+          );
+        }
+      }
+    }
+
     const org = await this.prisma.organization.findUnique({
       where: { id: orgId },
       include: { _count: { select: { systems: true } } },

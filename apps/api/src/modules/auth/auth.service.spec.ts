@@ -5,6 +5,7 @@ import * as bcrypt from 'bcryptjs';
 import { AuthService } from './auth.service';
 import { PrismaService } from '../../infrastructure/prisma/prisma.service';
 import { AuditService } from '../audit/audit.service';
+import { BillingService } from '../billing/billing.service';
 
 jest.mock('bcryptjs');
 
@@ -33,6 +34,15 @@ describe('AuthService', () => {
         {
           provide: AuditService,
           useValue: { log: jest.fn().mockResolvedValue(undefined) },
+        },
+        {
+          provide: BillingService,
+          useValue: {
+            createTrialSubscription: jest.fn().mockResolvedValue({
+              id: 'sub-1',
+              status: 'trialing',
+            }),
+          },
         },
       ],
     }).compile();

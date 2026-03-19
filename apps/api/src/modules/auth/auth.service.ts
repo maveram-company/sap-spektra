@@ -8,6 +8,7 @@ import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcryptjs';
 import { PrismaService } from '../../infrastructure/prisma/prisma.service';
 import { AuditService } from '../audit/audit.service';
+import { BillingService } from '../billing/billing.service';
 import { LoginDto, RegisterDto, LoginResponseDto } from './dto/login.dto';
 import { JwtPayload } from '../../common/decorators/current-user.decorator';
 
@@ -19,6 +20,7 @@ export class AuthService {
     private readonly prisma: PrismaService,
     private readonly jwtService: JwtService,
     private readonly audit: AuditService,
+    private readonly billing: BillingService,
   ) {}
 
   async login(dto: LoginDto): Promise<LoginResponseDto> {
@@ -136,6 +138,15 @@ export class AuthService {
 
       return { user, org };
     });
+
+    // Create trial subscription (fire and forget — non-blocking)
+    this.billing
+      .createTrialSubscription(result.org.id, 'starter')
+      .catch((err) =>
+        this.logger.warn('Trial subscription creation failed', {
+          error: err?.message,
+        }),
+      );
 
     const payload: JwtPayload = {
       sub: result.user.id,
