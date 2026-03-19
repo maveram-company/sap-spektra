@@ -43,6 +43,9 @@ export interface ModeState {
   backendRuntimeMode?: string;
 }
 
+/** Connectivity profile per system */
+export type ConnectivityProfile = 'AGENT' | 'CLOUD_CONNECTOR' | 'API_ONLY' | 'NONE';
+
 /** All domain names as a constant array */
 export const ALL_DOMAINS: DomainName[] = [
   'systems', 'alerts', 'events', 'operations', 'runbooks',

@@ -1,6 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { SystemsController } from './systems.controller';
 import { SystemsService } from './systems.service';
+import { PrismaService } from '../../infrastructure/prisma/prisma.service';
 
 const mockService = {
   findAll: jest.fn(),
@@ -11,6 +12,11 @@ const mockService = {
   getHealthSummary: jest.fn(),
 };
 
+const mockPrismaService = {
+  organization: { findUnique: jest.fn() },
+  plan: { findUnique: jest.fn() },
+};
+
 describe('SystemsController', () => {
   let controller: SystemsController;
   let service: SystemsService;
@@ -18,7 +24,10 @@ describe('SystemsController', () => {
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [SystemsController],
-      providers: [{ provide: SystemsService, useValue: mockService }],
+      providers: [
+        { provide: SystemsService, useValue: mockService },
+        { provide: PrismaService, useValue: mockPrismaService },
+      ],
     }).compile();
 
     controller = module.get(SystemsController);

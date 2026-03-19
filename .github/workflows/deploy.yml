@@ -1,0 +1,55 @@
+name: Deploy to AWS
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Target environment'
+        required: true
+        default: 'staging'
+        type: choice
+        options:
+          - staging
+          - production
+
+jobs:
+  deploy-api:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+      - uses: aws-actions/amazon-ecr-login@v2
+      - name: Build and push API image
+        run: |
+          docker build -t spektra-api ./apps/api
+          docker tag spektra-api:latest ${{ secrets.ECR_REGISTRY }}/spektra-api:${{ github.sha }}
+          docker push ${{ secrets.ECR_REGISTRY }}/spektra-api:${{ github.sha }}
+      - name: Update ECS service
+        run: |
+          aws ecs update-service \
+            --cluster spektra-${{ inputs.environment }} \
+            --service spektra-api \
+            --force-new-deployment
+
+  deploy-frontend:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - run: cd frontend && npm ci && npm run build
+        env:
+          VITE_API_URL: ${{ inputs.environment == 'production' && 'https://api.spektra.maveram.com/api' || 'https://api-staging.spektra.maveram.com/api' }}
+      - uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+      - name: Deploy to S3 + invalidate CloudFront
+        run: |
+          aws s3 sync frontend/dist s3://spektra-frontend-${{ inputs.environment }} --delete
+          aws cloudfront create-invalidation --distribution-id ${{ secrets.CLOUDFRONT_DIST_ID }} --paths "/*"

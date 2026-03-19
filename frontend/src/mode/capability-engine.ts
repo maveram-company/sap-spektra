@@ -4,7 +4,7 @@
 // and backend reachability.
 // ══════════════════════════════════════════════════════════════
 
-import type { OperationalMode, DomainName, DomainCapability } from './types';
+import type { OperationalMode, DomainName, DomainCapability, ConnectivityProfile } from './types';
 import { ALL_DOMAINS } from './types';
 
 /**
@@ -16,10 +16,16 @@ import { ALL_DOMAINS } from './types';
  * - REAL + backend down   → tier:fallback, degraded:true, confidence:medium
  * - FALLBACK              → tier:fallback, confidence:medium, source:api
  * - MOCK                  → tier:mock, readOnly:true, confidence:low, source:simulation
+ *
+ * When a connectivityProfile is provided, additional restrictions apply:
+ * - CLOUD_CONNECTOR → OS-level domains downgraded to medium confidence
+ * - API_ONLY        → all domains limited, source:cache
+ * - NONE            → all domains limited, source:simulation
  */
 export function resolveCapabilities(
   mode: OperationalMode,
   backendReachable: boolean,
+  connectivityProfile?: ConnectivityProfile,
 ): Map<DomainName, DomainCapability> {
   const caps = new Map<DomainName, DomainCapability>();
 
@@ -69,6 +75,35 @@ export function resolveCapabilities(
           source: 'rules',
         });
         break;
+    }
+  }
+
+  // If connectivity profile provided, apply restrictions
+  if (connectivityProfile === 'CLOUD_CONNECTOR') {
+    // Reduce capabilities for domains that need OS access
+    const osRequiredDomains: DomainName[] = ['systems']; // OS metrics
+    for (const domain of osRequiredDomains) {
+      const cap = caps.get(domain)!;
+      caps.set(domain, {
+        ...cap,
+        confidence: cap.confidence === 'high' ? 'medium' : cap.confidence,
+        reason: cap.reason || 'Cloud Connector — OS-level metrics unavailable',
+      });
+    }
+  }
+
+  if (connectivityProfile === 'NONE' || connectivityProfile === 'API_ONLY') {
+    // Mark all domains as limited
+    for (const domain of ALL_DOMAINS) {
+      const cap = caps.get(domain)!;
+      caps.set(domain, {
+        ...cap,
+        confidence: 'low',
+        source: connectivityProfile === 'API_ONLY' ? 'cache' : 'simulation',
+        reason: connectivityProfile === 'NONE'
+          ? 'No connectivity configured'
+          : 'API-only mode — limited to manual data',
+      });
     }
   }
 

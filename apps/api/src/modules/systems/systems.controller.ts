@@ -15,6 +15,7 @@ import { CreateSystemDto, UpdateSystemDto } from './dto/system.dto';
 import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
 import { RolesGuard } from '../../common/guards/roles.guard';
 import { TenantGuard } from '../../common/guards/tenant.guard';
+import { QuotaGuard, Quota } from '../../common/guards/quota.guard';
 import { Roles } from '../../common/decorators/roles.decorator';
 import { TenantId } from '../../common/decorators/tenant.decorator';
 
@@ -49,6 +50,8 @@ export class SystemsController {
   @Post()
   @Throttle({ default: { ttl: 60000, limit: 10 } })
   @Roles('admin')
+  @UseGuards(QuotaGuard)
+  @Quota('systems')
   @ApiOperation({ summary: 'Register a new SAP system' })
   create(@TenantId() orgId: string, @Body() dto: CreateSystemDto) {
     return this.systemsService.create(orgId, dto);

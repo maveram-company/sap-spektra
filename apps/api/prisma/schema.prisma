@@ -98,6 +98,7 @@ model System {
   mode                        String   @default("PRODUCTION") // PRODUCTION | TRIAL | MAINTENANCE
   deploymentModel             String   @default("ON_PREMISE") // ON_PREMISE | RISE_MANAGED | etc.
   connectionMode              String   @default("AGENT_FULL") // AGENT_FULL | MANAGED_RESTRICTED | etc.
+  connectivityProfile         String   @default("NONE") // AGENT | CLOUD_CONNECTOR | API_ONLY | NONE
   monitoringCapabilityProfile String   @default("FULL_STACK_AGENT")
   supportsHostMetrics         Boolean  @default(true)
   supportsOsMetrics           Boolean  @default(true)
