@@ -185,6 +185,20 @@ export default function ConnectorsPage() {
             </CardTitle>
             <Badge variant="primary" size="sm">{total} sistemas</Badge>
           </CardHeader>
+          {total === 0 ? (
+            <div className="p-12 text-center">
+              <Plug size={40} className="mx-auto mb-3 text-text-tertiary opacity-40" />
+              <p className="text-sm font-medium text-text-secondary mb-1">
+                No hay agentes o conectores registrados
+              </p>
+              <p className="text-xs text-text-tertiary max-w-md mx-auto">
+                Instala el Spektra Agent en tus hosts SAP o configura un SAP Cloud Connector para habilitar el monitoreo completo.
+              </p>
+              <Button className="mt-4" icon={Plus} onClick={() => navigate('/connect')}>
+                Conectar Sistema
+              </Button>
+            </div>
+          ) : (
           <Table>
             <TableHeader>
               <tr>
@@ -241,6 +255,7 @@ export default function ConnectorsPage() {
               ))}
             </TableBody>
           </Table>
+          )}
         </Card>
       </div>
     </div>

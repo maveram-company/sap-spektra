@@ -46,6 +46,7 @@ async function main() {
     prisma.apiKey.deleteMany(),
     prisma.system.deleteMany(),
     prisma.membership.deleteMany(),
+    prisma.subscription.deleteMany(),
     prisma.user.deleteMany(),
     prisma.organization.deleteMany(),
     prisma.plan.deleteMany(),
@@ -59,14 +60,14 @@ async function main() {
       {
         tier: 'starter',
         name: 'Starter',
-        price: 0,
+        price: 29900,
         features: JSON.stringify(['monitoring', 'alerts', 'dashboard']),
         limits: JSON.stringify({ maxSystems: 3, maxUsers: 5 }),
       },
       {
         tier: 'professional',
         name: 'Professional',
-        price: 29900,
+        price: 99900,
         features: JSON.stringify([
           'monitoring',
           'alerts',
@@ -81,7 +82,7 @@ async function main() {
       {
         tier: 'enterprise',
         name: 'Enterprise',
-        price: 99900,
+        price: 249900,
         features: JSON.stringify([
           'monitoring',
           'alerts',
@@ -114,6 +115,20 @@ async function main() {
     },
   });
   logger.log(`  ✓ Organization: ${org.name}`);
+
+  // ══════════════════════════════════════════════
+  // SUBSCRIPTION
+  // ══════════════════════════════════════════════
+  await prisma.subscription.create({
+    data: {
+      organizationId: org.id,
+      planTier: 'professional',
+      status: 'active',
+      currentPeriodStart: new Date(),
+      currentPeriodEnd: daysFromNow(30),
+    },
+  });
+  logger.log('  ✓ Subscription (professional, active)');
 
   // ══════════════════════════════════════════════
   // USERS

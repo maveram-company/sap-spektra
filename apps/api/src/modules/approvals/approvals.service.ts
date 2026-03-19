@@ -22,25 +22,41 @@ export class ApprovalsService {
     organizationId: string,
     filters?: { status?: string; systemId?: string },
   ) {
-    return this.prisma.approvalRequest.findMany({
+    const rows = await this.prisma.approvalRequest.findMany({
       where: {
         organizationId,
         ...(filters?.status && { status: filters.status }),
         ...(filters?.systemId && { systemId: filters.systemId }),
       },
-      include: { system: { select: { sid: true, description: true } } },
+      include: {
+        system: { select: { sid: true, description: true } },
+        runbook: { select: { category: true, name: true } },
+      },
       orderBy: { createdAt: 'desc' },
       take: 200,
     });
+
+    return rows.map((r) => ({
+      ...r,
+      type: r.runbook?.category ?? 'MANUAL',
+      reason: r.description,
+    }));
   }
 
   async findOne(organizationId: string, id: string) {
     const approval = await this.prisma.approvalRequest.findFirst({
       where: { id, organizationId },
-      include: { system: { select: { sid: true, description: true } } },
+      include: {
+        system: { select: { sid: true, description: true } },
+        runbook: { select: { category: true, name: true } },
+      },
     });
     if (!approval) throw new NotFoundException('Approval request not found');
-    return approval;
+    return {
+      ...approval,
+      type: approval.runbook?.category ?? 'MANUAL',
+      reason: approval.description,
+    };
   }
 
   async create(

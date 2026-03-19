@@ -46,6 +46,7 @@ export class SystemsService {
         connectors: { select: { id: true, method: true, status: true } },
         haConfig: true,
         systemMeta: true,
+        _count: { select: { breaches: true } },
       },
       orderBy: { sid: 'asc' },
       take: 200,

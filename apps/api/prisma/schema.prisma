@@ -398,6 +398,7 @@ model ApprovalRequest {
 
   organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
   system       System       @relation(fields: [systemId], references: [id], onDelete: Cascade)
+  runbook      Runbook?     @relation(fields: [runbookId], references: [id])
 
   @@index([organizationId, status])
   @@map("approval_requests")
@@ -419,8 +420,9 @@ model Runbook {
   createdAt      DateTime @default(now())
   updatedAt      DateTime @updatedAt
 
-  organization Organization     @relation(fields: [organizationId], references: [id], onDelete: Cascade)
-  executions   RunbookExecution[]
+  organization     Organization      @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  executions       RunbookExecution[]
+  approvalRequests ApprovalRequest[]
 
   @@index([organizationId])
   @@map("runbooks")
