@@ -53,32 +53,33 @@
 - **Estado actual:** JWT expira en 24h sin refresh
 - **Criterio de aceptacion:** Token refresh transparente antes de expiracion
 
+### 8. AWS SDK integration
+- **Prioridad:** Media
+- **Impacto:** Modo AWS_REAL completo con Cognito, S3, SQS, EventBridge
+- **Dependencia:** Terraform templates ya existen
+- **Estado actual:** Templates Terraform, cero SDK en app code
+- **Criterio de aceptacion:** Auth via Cognito, storage via S3, eventos via EventBridge en runtime
+
 ## Nice-to-have
 
-### 8. ProviderResult en backend
+### 9. ProviderResult en backend
 - **Prioridad:** Baja
 - **Impacto:** Trazabilidad end-to-end backend → frontend
 - **Dependencia:** NestJS interceptor + DTO wrapper
 - **Estado actual:** ProviderResult es frontend-only
 - **Criterio de aceptacion:** API responses incluyen source/confidence metadata
 
-### 9. Mode switching UI
+### 10. Mode switching UI
 - **Prioridad:** Baja
 - **Impacto:** Cambio de modo desde la UI con confirmacion y audit
 - **Dependencia:** Ninguna
 - **Estado actual:** Solo via env var o localStorage
 - **Criterio de aceptacion:** Dropdown en header con confirmacion modal
 
-### 10. Capability dashboard
+### 11. Capability dashboard
 - **Prioridad:** Baja
 - **Impacto:** Vista dedicada de estado de capabilities por dominio
 - **Dependencia:** Capability context dinamico (#4)
 - **Estado actual:** No existe
 - **Criterio de aceptacion:** Pagina mostrando tier/degradaciones/restricciones por dominio
 
-### 11. AWS SDK integration
-- **Prioridad:** Baja (hasta que se necesite deploy AWS)
-- **Impacto:** Modo AWS_REAL completo con Cognito, S3, SQS, EventBridge
-- **Dependencia:** Terraform templates ya existen
-- **Estado actual:** Templates Terraform, cero SDK en app code
-- **Criterio de aceptacion:** Auth via Cognito, storage via S3, eventos via EventBridge en runtime

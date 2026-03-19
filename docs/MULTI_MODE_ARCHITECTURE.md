@@ -109,7 +109,7 @@ Cada dominio tiene una interface TypeScript unica implementada por real, mock, f
 | ha | Si | Si | Si | Si | Dedicado | Si | Badge+Capability+Governance+Source |
 | connectors | Si | Si | Si | Si | Dedicado | Si | Badge+Source |
 | events | Si | Si | Si | Si | Mock | Si | Badge+Source |
-| operations | Si | Si | Si | Si | Mock | Si | — |
+| operations | Si | Si | Si | Si | Mock | Si | Badge |
 | analytics | Si | Si | Si | Si | Mock | Si | Badge+Source |
 | admin | Si | Si | Si | Si | Mock | Si | Badge |
 | landscape | Si | Si | Si | Si | Mock | Si | Badge+Source |
