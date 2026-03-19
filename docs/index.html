@@ -64,7 +64,7 @@
       <div class="kpi-card">
         <div class="card-icon cyan">&#9881;</div>
         <div>
-          <div class="kpi-value text-cyan">22</div>
+          <div class="kpi-value text-cyan">26</div>
           <div class="kpi-label">
             <span class="es">Modulos Backend</span>
             <span class="en">Backend Modules</span>
@@ -74,14 +74,14 @@
       <div class="kpi-card">
         <div class="card-icon violet">&#8644;</div>
         <div>
-          <div class="kpi-value text-violet">78</div>
+          <div class="kpi-value text-violet">95+</div>
           <div class="kpi-label">REST Endpoints</div>
         </div>
       </div>
       <div class="kpi-card">
         <div class="card-icon success">&#9634;</div>
         <div>
-          <div class="kpi-value text-success">27</div>
+          <div class="kpi-value text-success">32</div>
           <div class="kpi-label">
             <span class="es">Modelos Prisma</span>
             <span class="en">Prisma Models</span>
@@ -91,7 +91,7 @@
       <div class="kpi-card">
         <div class="card-icon warning">&#10004;</div>
         <div>
-          <div class="kpi-value text-warning">1,446</div>
+          <div class="kpi-value text-warning">1,510</div>
           <div class="kpi-label">
             <span class="es">Tests Totales</span>
             <span class="en">Total Tests</span>
@@ -124,6 +124,8 @@
       <span class="badge cyan">Vite 7</span>
       <span class="badge warning">JWT + Passport</span>
       <span class="badge neutral">Docker</span>
+      <span class="badge success">Stripe</span>
+      <span class="badge warning">Cognito</span>
       <span class="badge cyan">TypeScript strict</span>
     </p>
 
@@ -229,8 +231,8 @@
           </div>
         </div>
         <p class="text-muted text-sm">
-          <span class="es">12 dominios documentados: contrato, ViewModels, modos soportados, cobertura de tests.</span>
-          <span class="en">12 domains documented: contract, ViewModels, supported modes, test coverage.</span>
+          <span class="es">16 dominios documentados: contrato, ViewModels, modos soportados, cobertura de tests.</span>
+          <span class="en">16 domains documented: contract, ViewModels, supported modes, test coverage.</span>
         </p>
       </a>
 
@@ -242,8 +244,8 @@
           </div>
         </div>
         <p class="text-muted text-sm">
-          <span class="es">27 modelos Prisma con campos, tipos, relaciones e indices.</span>
-          <span class="en">27 Prisma models with fields, types, relationships, and indexes.</span>
+          <span class="es">32 modelos Prisma con campos, tipos, relaciones e indices.</span>
+          <span class="en">32 Prisma models with fields, types, relationships, and indexes.</span>
         </p>
       </a>
 
@@ -255,8 +257,8 @@
           </div>
         </div>
         <p class="text-muted text-sm">
-          <span class="es">78 endpoints REST agrupados por controlador con metodo, ruta y rol requerido.</span>
-          <span class="en">78 REST endpoints grouped by controller with method, path, and required role.</span>
+          <span class="es">95+ endpoints REST agrupados por controlador con metodo, ruta y rol requerido.</span>
+          <span class="en">95+ REST endpoints grouped by controller with method, path, and required role.</span>
         </p>
       </a>
 
@@ -281,8 +283,8 @@
           </div>
         </div>
         <p class="text-muted text-sm">
-          <span class="es">1,446 tests, parity tests, cobertura de dominios, build/typecheck/lint.</span>
-          <span class="en">1,446 tests, parity tests, domain coverage, build/typecheck/lint.</span>
+          <span class="es">1,510 tests, parity tests, cobertura de dominios, build/typecheck/lint.</span>
+          <span class="en">1,510 tests, parity tests, domain coverage, build/typecheck/lint.</span>
         </p>
       </a>
 
@@ -317,15 +319,18 @@
         <ul class="feature-list">
           <li><span class="badge success">IMPL</span> <span class="es">Auth JWT con 4 roles (admin, escalation, operator, viewer)</span><span class="en">JWT auth with 4 roles (admin, escalation, operator, viewer)</span></li>
           <li><span class="badge success">IMPL</span> <span class="es">Multi-tenancy con aislamiento por organizationId</span><span class="en">Multi-tenancy with organizationId isolation</span></li>
-          <li><span class="badge success">IMPL</span> <span class="es">78 endpoints REST en 22 modulos NestJS</span><span class="en">78 REST endpoints across 22 NestJS modules</span></li>
-          <li><span class="badge success">IMPL</span> <span class="es">27 modelos Prisma con migraciones y seed</span><span class="en">27 Prisma models with migrations and seed</span></li>
+          <li><span class="badge success">IMPL</span> <span class="es">95+ endpoints REST en 26 modulos NestJS</span><span class="en">95+ REST endpoints across 26 NestJS modules</span></li>
+          <li><span class="badge success">IMPL</span> <span class="es">32 modelos Prisma con migraciones y seed</span><span class="en">32 Prisma models with migrations and seed</span></li>
           <li><span class="badge success">IMPL</span> <span class="es">12 proveedores de dominio con contract + real + mock + fallback</span><span class="en">12 domain providers with contract + real + mock + fallback</span></li>
           <li><span class="badge success">IMPL</span> <span class="es">12 proveedores restricted dedicados (12/12 dominios)</span><span class="en">12 dedicated restricted providers (12/12 domains)</span></li>
           <li><span class="badge success">IMPL</span> <span class="es">ProviderResult&lt;T&gt; como salida canonica con source/confidence/degraded</span><span class="en">ProviderResult&lt;T&gt; as canonical output with source/confidence/degraded</span></li>
           <li><span class="badge success">IMPL</span> <span class="es">Motor de capacidades resolviendo por dominio</span><span class="en">Capability engine resolving per-domain</span></li>
           <li><span class="badge success">IMPL</span> <span class="es">Componentes UX: ModeBadge, SourceIndicator, CapabilityBadge, GovernanceContext, EvidencePanel</span><span class="en">UX components: ModeBadge, SourceIndicator, CapabilityBadge, GovernanceContext, EvidencePanel</span></li>
           <li><span class="badge success">IMPL</span> <span class="es">EvidencePanel integrado en RunbooksPage, ApprovalsPage, HAControlCenterPage</span><span class="en">EvidencePanel integrated in RunbooksPage, ApprovalsPage, HAControlCenterPage</span></li>
-          <li><span class="badge success">IMPL</span> <span class="es">1,446 tests (87 FE suites / 1,054 tests + 49 BE suites / 392 tests)</span><span class="en">1,446 tests (87 FE suites / 1,054 tests + 49 BE suites / 392 tests)</span></li>
+          <li><span class="badge success">IMPL</span> <span class="es">1,510 tests (86 FE suites / 1,061 tests + 54 BE suites / 449 tests)</span><span class="en">1,510 tests (86 FE suites / 1,061 tests + 54 BE suites / 449 tests)</span></li>
+          <li><span class="badge success">IMPL</span> <span class="es">SaaS-Ready: billing (Stripe), invitaciones, agentes, cloud-connector</span><span class="en">SaaS-Ready: billing (Stripe), invitations, agents, cloud-connector</span></li>
+          <li><span class="badge success">IMPL</span> <span class="es">Cognito dual-mode (AWS_REAL usa Cognito, LOCAL_SIMULATED usa JWT)</span><span class="en">Cognito dual-mode (AWS_REAL uses Cognito, LOCAL_SIMULATED uses JWT)</span></li>
+          <li><span class="badge success">IMPL</span> <span class="es">ConnectivityProfile por sistema (AGENT/CLOUD_CONNECTOR/API_ONLY/NONE)</span><span class="en">ConnectivityProfile per system (AGENT/CLOUD_CONNECTOR/API_ONLY/NONE)</span></li>
           <li><span class="badge success">IMPL</span> <span class="es">Playwright E2E en CI pipeline (<code>docker-compose.ci.yml</code>)</span><span class="en">Playwright E2E in CI pipeline (<code>docker-compose.ci.yml</code>)</span></li>
           <li><span class="badge success">IMPL</span> <span class="es">Seguridad: Helmet, CORS, rate limiting, bcrypt, sanitizacion</span><span class="en">Security: Helmet, CORS, rate limiting, bcrypt, sanitization</span></li>
         </ul>
@@ -341,7 +346,7 @@
           <li><span class="badge warning">SIM</span> <span class="es">HA failover — gestion de estados real, comandos simulados en LOCAL_SIMULATED</span><span class="en">HA failover — real state management, commands simulated in LOCAL_SIMULATED</span></li>
           <li><span class="badge warning">SIM</span> <span class="es">AI/Chat — Claude API en AWS_REAL, respuestas mock en LOCAL_SIMULATED</span><span class="en">AI/Chat — Claude API in AWS_REAL, mock responses in LOCAL_SIMULATED</span></li>
           <li><span class="badge warning">SIM</span> <span class="es">Agent — Colector Python con stubs de BD, RFC/BAPI es roadmap</span><span class="en">Agent — Python collector with DB stubs, RFC/BAPI is roadmap</span></li>
-          <li><span class="badge violet">ROAD</span> <span class="es">AWS Cognito, S3, SQS, EventBridge (templates Terraform, sin SDK en app)</span><span class="en">AWS Cognito, S3, SQS, EventBridge (Terraform templates only, no SDK in app code)</span></li>
+          <li><span class="badge violet">ROAD</span> <span class="es">AWS S3, SQS, EventBridge (templates Terraform)</span><span class="en">AWS S3, SQS, EventBridge (Terraform templates)</span></li>
           <li><span class="badge violet">ROAD</span> <span class="es">Agente RFC/BAPI para conexion real a sistemas SAP</span><span class="en">RFC/BAPI agent for real SAP system connection</span></li>
         </ul>
       </div>
@@ -392,7 +397,7 @@ cd frontend && npm run dev</code></pre>
     <!-- Footer -->
     <div style="margin-top:48px;padding-top:24px;border-top:1px solid var(--brd);text-align:center">
       <p class="text-muted text-sm">
-        SAP Spektra v3.0 — <span class="es">Documentacion alineada a arquitectura multi-modo</span><span class="en">Documentation aligned to multi-mode architecture</span>
+        SAP Spektra v4.0 SaaS — <span class="es">Documentacion alineada a modelo SaaS multi-modo</span><span class="en">Documentation aligned to SaaS multi-mode model</span>
       </p>
       <p class="text-muted text-xs" style="margin-top:4px">
         <span class="es">SAP, S/4HANA, HANA, BW/4HANA, SolMan y otros son marcas registradas de SAP SE.</span>

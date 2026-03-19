@@ -125,6 +125,11 @@ cd sap-spektra</code></pre>
               <tr><td><code>REDIS_URL</code></td><td><code>redis://localhost:6379</code></td><td>Redis</td></tr>
               <tr><td><code>JWT_SECRET</code></td><td><code>spektra-dev-secret</code></td><td>JWT signing</td></tr>
               <tr><td><code>RUNTIME_MODE</code></td><td><code>LOCAL_SIMULATED</code></td><td>LOCAL_SIMULATED | AWS_REAL</td></tr>
+              <tr><td><code>STRIPE_SECRET_KEY</code></td><td>-</td><td><span class="es">Clave secreta de Stripe (requerido para billing)</span><span class="en">Stripe secret key (required for billing)</span></td></tr>
+              <tr><td><code>STRIPE_WEBHOOK_SECRET</code></td><td>-</td><td><span class="es">Secreto de webhook de Stripe</span><span class="en">Stripe webhook secret</span></td></tr>
+              <tr><td><code>COGNITO_USER_POOL_ID</code></td><td>-</td><td><span class="es">ID del user pool (solo AWS_REAL)</span><span class="en">User pool ID (AWS_REAL only)</span></td></tr>
+              <tr><td><code>COGNITO_CLIENT_ID</code></td><td>-</td><td><span class="es">ID del cliente Cognito (solo AWS_REAL)</span><span class="en">Cognito client ID (AWS_REAL only)</span></td></tr>
+              <tr><td><code>COGNITO_REGION</code></td><td>-</td><td><span class="es">Region AWS para Cognito (solo AWS_REAL)</span><span class="en">AWS region for Cognito (AWS_REAL only)</span></td></tr>
             </tbody>
           </table>
         </div>
@@ -211,10 +216,10 @@ cd frontend && npm run dev</code></pre>
       <pre><code># Todos los tests
 npm test
 
-# Solo backend (Jest — 49 suites, 392 tests)
+# Solo backend (Jest — 54 suites, 449 tests)
 npm run test:backend
 
-# Solo frontend (Vitest — 87 suites, 1,054 tests)
+# Solo frontend (Vitest — 86 suites, 1,061 tests)
 npm run test:frontend
 
 # E2E (Playwright)
@@ -254,6 +259,83 @@ npm run build
 
 # Verificacion completa (typecheck + lint + test + build)
 npm run verify</code></pre>
+    </div>
+
+    <!-- Agent Installation -->
+    <h2>
+      <span class="es">Instalacion del Agente</span>
+      <span class="en">Agent Installation</span>
+    </h2>
+    <div class="card">
+      <p>
+        <span class="es">El agente Python se instala en cada host SAP para observabilidad completa (OS + SAP + DB).</span>
+        <span class="en">The Python agent is installed on each SAP host for full observability (OS + SAP + DB).</span>
+      </p>
+      <div class="steps">
+        <div class="step">
+          <strong><span class="es">Registrar agente via API</span><span class="en">Register agent via API</span></strong>
+          <pre><code>POST /agents/register
+{ "hostId": "sap-host-01", "organizationId": "..." }</code></pre>
+        </div>
+        <div class="step">
+          <strong><span class="es">Instalar en el host</span><span class="en">Install on host</span></strong>
+          <pre><code># Linux (SLES/RHEL)
+curl -sSL https://spektra.example.com/agent/install.sh | bash
+
+# Configurar API key
+export SPEKTRA_API_KEY=sk-spektra-xxx
+export SPEKTRA_API_URL=https://api.spektra.example.com</code></pre>
+        </div>
+        <div class="step">
+          <strong><span class="es">Verificar heartbeat</span><span class="en">Verify heartbeat</span></strong>
+          <pre><code>GET /agents/summary
+# Debe mostrar el agente como "connected"</code></pre>
+        </div>
+      </div>
+    </div>
+
+    <!-- Cloud Connector Configuration -->
+    <h2>
+      <span class="es">Configuracion Cloud Connector</span>
+      <span class="en">Cloud Connector Configuration</span>
+    </h2>
+    <div class="card">
+      <p>
+        <span class="es">Para sistemas RISE/SAP gestionados, se usa SAP Cloud Connector en lugar del agente. Las capacidades son reducidas (sin metricas OS, sin failover fisico).</span>
+        <span class="en">For RISE/SAP managed systems, SAP Cloud Connector is used instead of the agent. Capabilities are reduced (no OS metrics, no physical failover).</span>
+      </p>
+      <pre><code>POST /cloud-connector/configure
+{
+  "systemId": "...",
+  "btpEndpoint": "https://btp-gateway.example.com",
+  "credentials": { "user": "...", "password": "..." }
+}
+
+# Test connectivity
+POST /cloud-connector/:systemId/test
+
+# View RISE limitations
+GET /cloud-connector/limitations</code></pre>
+    </div>
+
+    <!-- Billing / Subscription -->
+    <h2>
+      <span class="es">Billing y Suscripcion</span>
+      <span class="en">Billing &amp; Subscription</span>
+    </h2>
+    <div class="card">
+      <p>
+        <span class="es">El onboarding incluye seleccion de plan y suscripcion via Stripe. Las variables <code>STRIPE_SECRET_KEY</code> y <code>STRIPE_WEBHOOK_SECRET</code> deben configurarse para billing funcional.</span>
+        <span class="en">Onboarding includes plan selection and subscription via Stripe. The <code>STRIPE_SECRET_KEY</code> and <code>STRIPE_WEBHOOK_SECRET</code> variables must be configured for functional billing.</span>
+      </p>
+      <pre><code># Subscribe to a plan
+POST /billing/subscribe { "planId": "professional" }
+
+# Check usage
+GET /billing/usage
+
+# Upgrade plan
+PATCH /billing/upgrade { "newPlanId": "enterprise" }</code></pre>
     </div>
 
     <!-- Mode Switching -->

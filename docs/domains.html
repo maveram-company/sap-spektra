@@ -48,8 +48,8 @@
         <span class="en">Domain Reference</span>
       </h1>
       <p class="subtitle">
-        <span class="es">12 dominios funcionales con contratos, ViewModels, modos soportados y cobertura</span>
-        <span class="en">12 functional domains with contracts, ViewModels, supported modes, and coverage</span>
+        <span class="es">16 dominios funcionales con contratos, ViewModels, modos soportados y cobertura</span>
+        <span class="en">16 functional domains with contracts, ViewModels, supported modes, and coverage</span>
       </p>
     </div>
 
@@ -85,6 +85,10 @@
             <tr><td><strong>landscape</strong></td><td><span class="badge success">IMPL</span></td><td><span class="badge success">IMPL</span></td><td><span class="badge success">IMPL</span></td><td><span class="badge danger">RESTRICTED</span></td><td><span class="badge success">IMPL</span></td><td>ModeBadge, SourceIndicator</td></tr>
             <tr><td><strong>connectors</strong></td><td><span class="badge success">IMPL</span></td><td><span class="badge success">IMPL</span></td><td><span class="badge success">IMPL</span></td><td><span class="badge danger">RESTRICTED</span></td><td><span class="badge success">IMPL</span></td><td>ModeBadge, SourceIndicator</td></tr>
             <tr><td><strong>chat</strong></td><td><span class="badge success">IMPL</span></td><td><span class="badge success">IMPL</span></td><td><span class="badge success">IMPL</span></td><td><span class="badge danger">RESTRICTED</span></td><td><span class="badge success">IMPL</span></td><td>ModeBadge</td></tr>
+            <tr><td><strong>billing</strong></td><td colspan="6"><span class="badge success">IMPL</span> <span class="es">Stripe integration — subscribe, usage, upgrade, cancel, webhooks</span><span class="en">Stripe integration — subscribe, usage, upgrade, cancel, webhooks</span></td></tr>
+            <tr><td><strong>invitations</strong></td><td colspan="6"><span class="badge success">IMPL</span> <span class="es">Flujo de invitaciones — crear, aceptar, listar, revocar</span><span class="en">Invitation flow — create, accept, list, revoke</span></td></tr>
+            <tr><td><strong>agents</strong></td><td colspan="6"><span class="badge success">IMPL</span> <span class="es">Registro de agentes — register, heartbeat, list, summary, revoke, version check</span><span class="en">Agent registration — register, heartbeat, list, summary, revoke, version check</span></td></tr>
+            <tr><td><strong>cloud-connector</strong></td><td colspan="6"><span class="badge success">IMPL</span> <span class="es">Configuracion CC — configure, test, list, remove, limitations</span><span class="en">CC configuration — configure, test, list, remove, limitations</span></td></tr>
           </tbody>
         </table>
       </div>
@@ -268,9 +272,69 @@ getAIResponses(): ProviderResult&lt;...&gt;</code></pre>
       </div>
     </div>
 
+    <!-- Domain 13: Billing -->
+    <h2 id="billing">13. Billing</h2>
+    <div class="card">
+      <p><span class="es"><strong>Objetivo:</strong> Gestion de suscripciones y billing via Stripe — subscribe, uso, upgrade, cancel, webhooks.</span><span class="en"><strong>Objective:</strong> Subscription and billing management via Stripe — subscribe, usage, upgrade, cancel, webhooks.</span></p>
+      <h4><span class="es">Endpoints</span><span class="en">Endpoints</span> (5)</h4>
+      <pre><code>GET  /billing/subscription     # Current subscription
+GET  /billing/usage            # Usage metrics
+POST /billing/subscribe        # Create subscription
+PATCH /billing/upgrade         # Upgrade plan
+PATCH /billing/cancel          # Cancel subscription</code></pre>
+      <p class="mt-1"><span class="es">Modelo:</span><span class="en">Model:</span> <code>Subscription</code>, <code>UsageRecord</code></p>
+      <p class="mt-1"><span class="es">Integracion:</span><span class="en">Integration:</span> <span class="es">Stripe fetch-based (sin paquete stripe), QuotaGuard con verificacion de estado de suscripcion</span><span class="en">Stripe fetch-based (no stripe package), QuotaGuard with subscription status check</span></p>
+      <p class="mt-1">Status: <span class="badge success">IMPL</span></p>
+    </div>
+
+    <!-- Domain 14: Invitations -->
+    <h2 id="invitations">14. Invitations</h2>
+    <div class="card">
+      <p><span class="es"><strong>Objetivo:</strong> Flujo de invitaciones para onboarding de usuarios — crear, aceptar, listar, revocar.</span><span class="en"><strong>Objective:</strong> Invitation workflow for user onboarding — create, accept, list, revoke.</span></p>
+      <h4><span class="es">Endpoints</span><span class="en">Endpoints</span> (4)</h4>
+      <pre><code>POST   /invitations            # Create invitation
+GET    /invitations            # List invitations
+POST   /invitations/accept     # Accept invitation
+DELETE /invitations/:id        # Revoke invitation</code></pre>
+      <p class="mt-1"><span class="es">Modelo:</span><span class="en">Model:</span> <code>Invitation</code></p>
+      <p class="mt-1">Status: <span class="badge success">IMPL</span></p>
+    </div>
+
+    <!-- Domain 15: Agents -->
+    <h2 id="agents">15. Agents</h2>
+    <div class="card">
+      <p><span class="es"><strong>Objetivo:</strong> Registro y gestion de agentes Python — registro, heartbeat, listado, resumen, revocacion, verificacion de version.</span><span class="en"><strong>Objective:</strong> Python agent registration and management — register, heartbeat, list, summary, revoke, version check.</span></p>
+      <h4><span class="es">Endpoints</span><span class="en">Endpoints</span> (7)</h4>
+      <pre><code>POST  /agents/register         # Register new agent
+POST  /agents/heartbeat        # Agent heartbeat
+GET   /agents                  # List agents
+GET   /agents/summary          # Agent status summary
+GET   /agents/:hostId          # Agent by host
+PATCH /agents/:id/revoke       # Revoke agent
+GET   /agents/version/check    # Version compatibility</code></pre>
+      <p class="mt-1"><span class="es">Modelo:</span><span class="en">Model:</span> <code>AgentRegistration</code></p>
+      <p class="mt-1">Status: <span class="badge success">IMPL</span></p>
+    </div>
+
+    <!-- Domain 16: Cloud Connector -->
+    <h2 id="cloud-connector">16. Cloud Connector</h2>
+    <div class="card">
+      <p><span class="es"><strong>Objetivo:</strong> Configuracion y gestion de SAP Cloud Connector para sistemas RISE — configurar, testear, listar, eliminar, limitaciones.</span><span class="en"><strong>Objective:</strong> SAP Cloud Connector configuration and management for RISE systems — configure, test, list, remove, limitations.</span></p>
+      <h4><span class="es">Endpoints</span><span class="en">Endpoints</span> (6)</h4>
+      <pre><code>POST   /cloud-connector/configure       # Configure CC
+POST   /cloud-connector/:systemId/test  # Test connectivity
+GET    /cloud-connector                 # List configurations
+GET    /cloud-connector/:systemId       # Get by system
+DELETE /cloud-connector/:systemId       # Remove config
+GET    /cloud-connector/limitations     # RISE limitations</code></pre>
+      <p class="mt-1"><span class="es">Modelo:</span><span class="en">Model:</span> <code>CloudConnectorConfig</code></p>
+      <p class="mt-1"><span class="es">Componente UX:</span><span class="en">UX Component:</span> <code>RISELimitationBadge</code></p>
+      <p class="mt-1">Status: <span class="badge success">IMPL</span></p>
+    </div>
+
     <!-- Footer -->
     <div style="margin-top:48px;padding-top:24px;border-top:1px solid var(--brd);text-align:center">
-      <p class="text-muted text-sm">SAP Spektra v3.0 — Maveram Company</p>
+      <p class="text-muted text-sm">SAP Spektra v4.0 SaaS — Maveram Company</p>
     </div>
   </main>
 </div>

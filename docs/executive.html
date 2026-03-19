@@ -78,7 +78,7 @@
       <div class="kpi-card">
         <div class="card-icon cyan">&#9881;</div>
         <div>
-          <div class="kpi-value text-cyan">22</div>
+          <div class="kpi-value text-cyan">26</div>
           <div class="kpi-label">
             <span class="es">Modulos NestJS</span>
             <span class="en">NestJS Modules</span>
@@ -88,7 +88,7 @@
       <div class="kpi-card">
         <div class="card-icon violet">&#8644;</div>
         <div>
-          <div class="kpi-value text-violet">78</div>
+          <div class="kpi-value text-violet">95+</div>
           <div class="kpi-label">REST Endpoints</div>
         </div>
       </div>
@@ -105,7 +105,7 @@
       <div class="kpi-card">
         <div class="card-icon warning">&#10004;</div>
         <div>
-          <div class="kpi-value text-warning">1,446</div>
+          <div class="kpi-value text-warning">1,510</div>
           <div class="kpi-label">Tests</div>
         </div>
       </div>
@@ -116,9 +116,10 @@
         <h3 class="text-cyan">Backend</h3>
         <ul class="feature-list">
           <li>NestJS 11 + Prisma 6 + PostgreSQL 16 + Redis 7</li>
-          <li><span class="es">22 modulos, 78 endpoints, 27 modelos de datos</span><span class="en">22 modules, 78 endpoints, 27 data models</span></li>
-          <li><span class="es">Auth JWT + Passport + bcrypt, 4 roles, multi-tenant</span><span class="en">JWT auth + Passport + bcrypt, 4 roles, multi-tenant</span></li>
-          <li><span class="es">49 suites de test, 392 tests</span><span class="en">49 test suites, 392 tests</span></li>
+          <li><span class="es">26 modulos, 95+ endpoints, 32 modelos de datos</span><span class="en">26 modules, 95+ endpoints, 32 data models</span></li>
+          <li><span class="es">Auth JWT + Passport + bcrypt + Cognito (dual-mode), 4 roles, multi-tenant</span><span class="en">JWT auth + Passport + bcrypt + Cognito (dual-mode), 4 roles, multi-tenant</span></li>
+          <li><span class="es">54 suites de test, 449 tests</span><span class="en">54 test suites, 449 tests</span></li>
+          <li><span class="es">SaaS modules: billing (Stripe), invitations, agents, cloud-connector</span><span class="en">SaaS modules: billing (Stripe), invitations, agents, cloud-connector</span></li>
         </ul>
       </div>
       <div class="card">
@@ -127,7 +128,7 @@
           <li>React 19 + Vite 7 + Tailwind 4 + TypeScript strict</li>
           <li><span class="es">12 proveedores con contract + real + mock + fallback</span><span class="en">12 providers with contract + real + mock + fallback</span></li>
           <li><span class="es">12 proveedores restricted dedicados (12/12 dominios)</span><span class="en">12 dedicated restricted providers (12/12 domains)</span></li>
-          <li><span class="es">87 suites de test, 1,054 tests</span><span class="en">87 test suites, 1,054 tests</span></li>
+          <li><span class="es">86 suites de test, 1,061 tests</span><span class="en">86 test suites, 1,061 tests</span></li>
           <li><span class="es">EvidencePanel integrado en RunbooksPage, ApprovalsPage, HAControlCenterPage</span><span class="en">EvidencePanel integrated in RunbooksPage, ApprovalsPage, HAControlCenterPage</span></li>
           <li><span class="es">Playwright E2E en CI pipeline</span><span class="en">Playwright E2E in CI pipeline</span></li>
         </ul>
@@ -173,7 +174,7 @@
             <tr>
               <td><span class="es">Tests automatizados</span><span class="en">Automated tests</span></td>
               <td><span class="badge success">IMPL</span></td>
-              <td><span class="es">1,446 tests: Jest (BE), Vitest (FE), Playwright (E2E en CI)</span><span class="en">1,446 tests: Jest (BE), Vitest (FE), Playwright (E2E in CI)</span></td>
+              <td><span class="es">1,510 tests: Jest (BE 54/449), Vitest (FE 86/1,061), Playwright (E2E en CI)</span><span class="en">1,510 tests: Jest (BE 54/449), Vitest (FE 86/1,061), Playwright (E2E in CI)</span></td>
             </tr>
             <tr>
               <td><span class="es">HA/DR comandos</span><span class="en">HA/DR commands</span></td>
@@ -192,8 +193,8 @@
             </tr>
             <tr>
               <td><span class="es">Infraestructura AWS</span><span class="en">AWS Infrastructure</span></td>
-              <td><span class="badge violet">ROAD</span></td>
-              <td><span class="es">Templates Terraform, sin SDK en codigo de la app</span><span class="en">Terraform templates only, no SDK in app code</span></td>
+              <td><span class="badge success">IMPL</span></td>
+              <td><span class="es">Deploy workflow, Cognito dual-mode, docker-compose.ci.yml, Terraform templates</span><span class="en">Deploy workflow, Cognito dual-mode, docker-compose.ci.yml, Terraform templates</span></td>
             </tr>
           </tbody>
         </table>
@@ -274,8 +275,8 @@
     <div class="callout success">
       <div class="callout-icon">&#9989;</div>
       <div>
-        <span class="es"><strong>Conclusion:</strong> SAP Spektra tiene una arquitectura solida, validada con 1,446 tests, 12/12 restricted providers dedicados, EvidencePanel integrado y Playwright CI listo. Un modelo multi-modo unico que permite operar en multiples contextos sin cambios de codigo. El camino a produccion es de integracion, no de reconstruccion.</span>
-        <span class="en"><strong>Conclusion:</strong> SAP Spektra has a solid architecture, validated with 1,446 tests, 12/12 dedicated restricted providers, integrated EvidencePanel, and Playwright CI ready. A unique multi-mode model that enables operation across multiple contexts without code changes. The path to production is integration, not reconstruction.</span>
+        <span class="es"><strong>Conclusion:</strong> SAP Spektra es SaaS-ready con 1,510 tests, 26 modulos, 95+ endpoints, Stripe billing, Cognito auth, agent registration, Cloud Connector support, y ConnectivityProfile. La plataforma multi-modo opera en cualquier contexto. Las fases SaaS 1-5 estan completas.</span>
+        <span class="en"><strong>Conclusion:</strong> SAP Spektra is SaaS-ready with 1,510 tests, 26 modules, 95+ endpoints, Stripe billing, Cognito auth, agent registration, Cloud Connector support, and ConnectivityProfile. The multi-mode platform operates in any context. SaaS phases 1-5 are complete.</span>
       </div>
     </div>
 

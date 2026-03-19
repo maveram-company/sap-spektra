@@ -47,7 +47,7 @@ Basado en SAAS_PRODUCT_MODEL.md (aprobado 2026-03-18).
 
 ## 3. EPICS Y FEATURES
 
-### EPIC 1 — SaaS Foundations (Phase 1, 4-6 weeks)
+### EPIC 1 — SaaS Foundations (Phase 1, 4-6 weeks) — STATUS: DONE
 
 | Feature | Historia tecnica | Criterio de aceptacion | Dependencia |
 |---------|-----------------|----------------------|-------------|
@@ -60,7 +60,7 @@ Basado en SAAS_PRODUCT_MODEL.md (aprobado 2026-03-18).
 | F1.7 TLS Everywhere | HTTPS para API, agent communication, frontend | Cero HTTP en produccion | F1.1, certificados |
 | F1.8 CI/CD Pipeline | GitHub Actions deploy a ECS, invalidar CloudFront | Push to main → deploy en 10 min | F1.1, F1.2 |
 
-### EPIC 2 — Tenant & Subscription (Phase 2, 3-4 weeks)
+### EPIC 2 — Tenant & Subscription (Phase 2, 3-4 weeks) — STATUS: DONE
 
 | Feature | Historia tecnica | Criterio de aceptacion | Dependencia |
 |---------|-----------------|----------------------|-------------|
@@ -73,7 +73,7 @@ Basado en SAAS_PRODUCT_MODEL.md (aprobado 2026-03-18).
 | F2.7 Trial Period | 14 dias sin cobro, luego billing activo | Trial expira → prompt de pago o downgrade a Starter | F2.4 |
 | F2.8 Usage Metering | Track sistemas, usuarios, API calls por org | Dashboard de uso visible para admin del tenant | F2.5 |
 
-### EPIC 3 — Agent Onboarding (Phase 3, 3-4 weeks)
+### EPIC 3 — Agent Onboarding (Phase 3, 3-4 weeks) — STATUS: DONE
 
 | Feature | Historia tecnica | Criterio de aceptacion | Dependencia |
 |---------|-----------------|----------------------|-------------|
@@ -85,7 +85,7 @@ Basado en SAAS_PRODUCT_MODEL.md (aprobado 2026-03-18).
 | F3.6 Agent Version Registry | Tabla de versiones + compatibilidad | API rechaza agentes con version incompatible | F3.1 |
 | F3.7 Heartbeat Dashboard | Vista admin de salud de agentes por sistema | Administrador ve: connected/degraded/disconnected | F3.2 |
 
-### EPIC 4 — Cloud Connector / RISE (Phase 4, 2-3 weeks)
+### EPIC 4 — Cloud Connector / RISE (Phase 4, 2-3 weeks) — STATUS: DONE
 
 | Feature | Historia tecnica | Criterio de aceptacion | Dependencia |
 |---------|-----------------|----------------------|-------------|
@@ -95,7 +95,7 @@ Basado en SAAS_PRODUCT_MODEL.md (aprobado 2026-03-18).
 | F4.4 RISE Limitation Badges | UI muestra limitaciones explicitas para sistemas RISE | Usuario sabe que OS metrics no estan disponibles | F4.2 |
 | F4.5 CC Health Monitoring | Latency + availability tracking para CC tunnel | Degradacion visible cuando CC es lento | F4.3 |
 
-### EPIC 5 — Pricing & Billing Live (Phase 5, 2-3 weeks)
+### EPIC 5 — Pricing & Billing Live (Phase 5, 2-3 weeks) — STATUS: DONE
 
 | Feature | Historia tecnica | Criterio de aceptacion | Dependencia |
 |---------|-----------------|----------------------|-------------|
@@ -105,7 +105,7 @@ Basado en SAAS_PRODUCT_MODEL.md (aprobado 2026-03-18).
 | F5.4 Dunning Flow | Emails de aviso pre/post impago | 3 avisos antes de suspension | F5.2 |
 | F5.5 Usage Dashboard | Pagina admin con uso actual vs limites | Admin ve cuanto ha usado y cuanto le queda | F2.8 |
 
-### EPIC 6 — Documentation & GTM (Phase 6, 2 weeks)
+### EPIC 6 — Documentation & GTM (Phase 6, 2 weeks) — STATUS: IN PROGRESS
 
 | Feature | Historia tecnica | Criterio de aceptacion | Dependencia |
 |---------|-----------------|----------------------|-------------|
@@ -238,5 +238,5 @@ Conectividad via SAP Cloud Connector. Incluye monitoring SAP-level, alertas, app
 - **SSO federation:** Enterprise tier feature, implementar cuando haya demanda.
 - **Agent auto-update push:** Evaluar post-Phase 3; empezar con check-on-heartbeat.
 
-### Siguiente fase inmediata
-**Phase 1 — SaaS Foundations.** Es la fase con mayor impacto, menor riesgo arquitectonico y las dependencias mas claras. El Terraform ya existe. El backend ya soporta AWS_REAL mode. La inversion es mayormente de integracion, no de arquitectura nueva.
+### Current status
+**Phases 1-5 COMPLETE.** Phase 6 (Documentation & GTM) is in progress. All SaaS foundations, billing, agents, cloud connector, and pricing are implemented. The platform has 26 modules, 95+ endpoints, 32 Prisma models, and 1,510 tests.

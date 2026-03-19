@@ -48,8 +48,8 @@
         <span class="en">Data Model</span>
       </h1>
       <p class="subtitle">
-        <span class="es">27 modelos Prisma — campos, tipos, relaciones, indices y reglas de cascade</span>
-        <span class="en">27 Prisma models — fields, types, relationships, indexes, and cascade rules</span>
+        <span class="es">32 modelos Prisma — campos, tipos, relaciones, indices y reglas de cascade</span>
+        <span class="en">32 Prisma models — fields, types, relationships, indexes, and cascade rules</span>
       </p>
     </div>
 
@@ -98,6 +98,11 @@ erDiagram
     RunbookExecution ||--o{ RunbookStepResult : has
     Host ||--o{ HostMetric : has
     Component ||--o{ Instance : has
+    Organization ||--o{ Subscription : has
+    Organization ||--o{ UsageRecord : has
+    Organization ||--o{ Invitation : has
+    Organization ||--o{ AgentRegistration : has
+    System ||--o{ CloudConnectorConfig : has
       </div>
     </div>
 
@@ -178,6 +183,7 @@ erDiagram
             <tr><td>price</td><td>Int</td><td>@default(0)</td><td><span class="es">Precio mensual en centavos</span><span class="en">Monthly price in cents</span></td></tr>
             <tr><td>features</td><td>Json</td><td>@default("[]")</td><td><span class="es">Array de keys de features</span><span class="en">Feature key array</span></td></tr>
             <tr><td>limits</td><td>Json</td><td>@default("{}")</td><td>{ maxSystems, maxUsers, ... }</td></tr>
+            <tr><td>stripePriceId</td><td>String?</td><td></td><td><span class="es">ID de precio Stripe para billing</span><span class="en">Stripe price ID for billing</span></td></tr>
           </tbody>
         </table>
       </div>
@@ -207,6 +213,7 @@ erDiagram
             <tr><td>mode</td><td>String</td><td>PRODUCTION | TRIAL | MAINTENANCE</td></tr>
             <tr><td>deploymentModel</td><td>String</td><td>ON_PREMISE | RISE_MANAGED | etc.</td></tr>
             <tr><td>connectionMode</td><td>String</td><td>AGENT_FULL | MANAGED_RESTRICTED | etc.</td></tr>
+            <tr><td>connectivityProfile</td><td>String</td><td>AGENT | CLOUD_CONNECTOR | API_ONLY | NONE</td></tr>
             <tr><td>monitoringCapabilityProfile</td><td>String</td><td>FULL_STACK_AGENT</td></tr>
             <tr><td>supportsHostMetrics</td><td>Boolean</td><td></td></tr>
             <tr><td>supportsOsMetrics</td><td>Boolean</td><td></td></tr>
@@ -427,10 +434,112 @@ erDiagram
       <p><span class="es">API keys: <code>id, organizationId, name, keyHash (SHA-256), prefix (8 chars), status (active|inactive), lastUsedAt?</code>. FK → Organization (Cascade). Indice: <code>[organizationId]</code>.</span><span class="en">API keys: <code>id, organizationId, name, keyHash (SHA-256), prefix (8 chars), status (active|inactive), lastUsedAt?</code>. FK → Organization (Cascade). Index: <code>[organizationId]</code>.</span></p>
     </div>
 
+    <!-- SaaS Models -->
+    <h2>
+      <span class="es">Modelos SaaS</span>
+      <span class="en">SaaS Models</span>
+    </h2>
+
+    <h3>Subscription</h3>
+    <div class="card">
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th><span class="es">Campo</span><span class="en">Field</span></th><th><span class="es">Tipo</span><span class="en">Type</span></th><th><span class="es">Descripcion</span><span class="en">Description</span></th></tr></thead>
+          <tbody>
+            <tr><td>id</td><td>String</td><td>PK (uuid)</td></tr>
+            <tr><td>organizationId</td><td>String</td><td>FK → Organization (Cascade)</td></tr>
+            <tr><td>stripeCustomerId</td><td>String?</td><td>Stripe Customer ID</td></tr>
+            <tr><td>stripeSubscriptionId</td><td>String?</td><td>Stripe Subscription ID</td></tr>
+            <tr><td>planTier</td><td>String</td><td>starter | professional | enterprise</td></tr>
+            <tr><td>status</td><td>String</td><td>active | trialing | past_due | canceled | incomplete</td></tr>
+            <tr><td>currentPeriodStart</td><td>DateTime?</td><td></td></tr>
+            <tr><td>currentPeriodEnd</td><td>DateTime?</td><td></td></tr>
+            <tr><td>canceledAt</td><td>DateTime?</td><td></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <h3>UsageRecord</h3>
+    <div class="card">
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th><span class="es">Campo</span><span class="en">Field</span></th><th><span class="es">Tipo</span><span class="en">Type</span></th><th><span class="es">Descripcion</span><span class="en">Description</span></th></tr></thead>
+          <tbody>
+            <tr><td>id</td><td>String</td><td>PK (uuid)</td></tr>
+            <tr><td>organizationId</td><td>String</td><td>FK → Organization (Cascade)</td></tr>
+            <tr><td>metric</td><td>String</td><td>systems | users | api_calls</td></tr>
+            <tr><td>value</td><td>Int</td><td><span class="es">Valor actual del recurso</span><span class="en">Current resource value</span></td></tr>
+            <tr><td>limit</td><td>Int</td><td><span class="es">Limite segun plan</span><span class="en">Plan limit</span></td></tr>
+            <tr><td>recordedAt</td><td>DateTime</td><td>@default(now())</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <h3>Invitation</h3>
+    <div class="card">
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th><span class="es">Campo</span><span class="en">Field</span></th><th><span class="es">Tipo</span><span class="en">Type</span></th><th><span class="es">Descripcion</span><span class="en">Description</span></th></tr></thead>
+          <tbody>
+            <tr><td>id</td><td>String</td><td>PK (uuid)</td></tr>
+            <tr><td>organizationId</td><td>String</td><td>FK → Organization (Cascade)</td></tr>
+            <tr><td>email</td><td>String</td><td><span class="es">Email del invitado</span><span class="en">Invitee email</span></td></tr>
+            <tr><td>role</td><td>String</td><td>admin | escalation | operator | viewer</td></tr>
+            <tr><td>token</td><td>String</td><td>@unique</td></tr>
+            <tr><td>status</td><td>String</td><td>pending | accepted | revoked | expired</td></tr>
+            <tr><td>invitedBy</td><td>String</td><td><span class="es">ID del usuario que invita</span><span class="en">Inviting user ID</span></td></tr>
+            <tr><td>expiresAt</td><td>DateTime</td><td></td></tr>
+            <tr><td>acceptedAt</td><td>DateTime?</td><td></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <h3>AgentRegistration</h3>
+    <div class="card">
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th><span class="es">Campo</span><span class="en">Field</span></th><th><span class="es">Tipo</span><span class="en">Type</span></th><th><span class="es">Descripcion</span><span class="en">Description</span></th></tr></thead>
+          <tbody>
+            <tr><td>id</td><td>String</td><td>PK (uuid)</td></tr>
+            <tr><td>organizationId</td><td>String</td><td>FK → Organization (Cascade)</td></tr>
+            <tr><td>hostId</td><td>String</td><td><span class="es">Identificador del host</span><span class="en">Host identifier</span></td></tr>
+            <tr><td>version</td><td>String?</td><td><span class="es">Version del agente</span><span class="en">Agent version</span></td></tr>
+            <tr><td>status</td><td>String</td><td>registered | connected | degraded | disconnected | revoked</td></tr>
+            <tr><td>lastHeartbeat</td><td>DateTime?</td><td></td></tr>
+            <tr><td>registeredAt</td><td>DateTime</td><td>@default(now())</td></tr>
+            <tr><td>revokedAt</td><td>DateTime?</td><td></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="text-sm text-muted"><span class="es">Indice:</span><span class="en">Index:</span> <code>@@index([organizationId, hostId])</code></p>
+    </div>
+
+    <h3>CloudConnectorConfig</h3>
+    <div class="card">
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th><span class="es">Campo</span><span class="en">Field</span></th><th><span class="es">Tipo</span><span class="en">Type</span></th><th><span class="es">Descripcion</span><span class="en">Description</span></th></tr></thead>
+          <tbody>
+            <tr><td>id</td><td>String</td><td>PK (uuid)</td></tr>
+            <tr><td>systemId</td><td>String</td><td>FK → System (Cascade)</td></tr>
+            <tr><td>btpEndpoint</td><td>String</td><td><span class="es">Endpoint del BTP gateway</span><span class="en">BTP gateway endpoint</span></td></tr>
+            <tr><td>status</td><td>String</td><td>configured | connected | degraded | disconnected</td></tr>
+            <tr><td>lastTestAt</td><td>DateTime?</td><td></td></tr>
+            <tr><td>latencyMs</td><td>Int?</td><td></td></tr>
+            <tr><td>configuredAt</td><td>DateTime</td><td>@default(now())</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="text-sm text-muted"><span class="es">Indice:</span><span class="en">Index:</span> <code>@@unique([systemId])</code></p>
+    </div>
+
     <!-- Summary -->
     <h2>
-      <span class="es">Resumen: 27 Modelos</span>
-      <span class="en">Summary: 27 Models</span>
+      <span class="es">Resumen: 32 Modelos</span>
+      <span class="en">Summary: 32 Models</span>
     </h2>
     <div class="card">
       <div class="table-wrap">
@@ -464,6 +573,11 @@ erDiagram
             <tr><td>25</td><td>Connector</td><td>connectors</td><td>Integration</td></tr>
             <tr><td>26</td><td>AuditEntry</td><td>audit_entries</td><td>Security</td></tr>
             <tr><td>27</td><td>ApiKey</td><td>api_keys</td><td>Security</td></tr>
+            <tr><td>28</td><td>Subscription</td><td>subscriptions</td><td>SaaS</td></tr>
+            <tr><td>29</td><td>UsageRecord</td><td>usage_records</td><td>SaaS</td></tr>
+            <tr><td>30</td><td>Invitation</td><td>invitations</td><td>SaaS</td></tr>
+            <tr><td>31</td><td>AgentRegistration</td><td>agent_registrations</td><td>SaaS</td></tr>
+            <tr><td>32</td><td>CloudConnectorConfig</td><td>cloud_connector_configs</td><td>SaaS</td></tr>
           </tbody>
         </table>
       </div>

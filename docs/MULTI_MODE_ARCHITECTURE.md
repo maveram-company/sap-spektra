@@ -77,6 +77,30 @@ interface ProviderResult<T> {
 
 `getRegistry(mode)` retorna un objeto con los 12 providers activos segun el modo. El orchestrator (`dataService.ts`) delega al registry y unwraps `.data` para backward compat con las paginas.
 
+## ConnectivityProfile — Segunda Dimension
+
+Ademas del modo operacional, el sistema usa `ConnectivityProfile` como segunda dimension ortogonal:
+
+```typescript
+type ConnectivityProfile = 'AGENT' | 'CLOUD_CONNECTOR' | 'API_ONLY' | 'NONE';
+```
+
+El capability engine ahora resuelve por:
+
+```
+resolveCapabilities(mode, backendReachable, connectivityProfile, systemCapabilities)
+```
+
+| Combinacion | Comportamiento |
+|------------|---------------|
+| REAL + AGENT | Plena funcionalidad, efecto operativo real |
+| REAL + CLOUD_CONNECTOR | Funcionalidad SAP-level real, sin OS-level |
+| REAL + API_ONLY | Solo operaciones manuales/importadas |
+| FALLBACK + AGENT | Intenta real, degrada a cache si agente no responde |
+| FALLBACK + CLOUD_CONNECTOR | Intenta real via CC, degrada si BTP no responde |
+| MOCK + cualquiera | Simulacion completa, sin conexion real |
+| RESTRICTED + cualquiera | Lectura limitada, escritura bloqueada |
+
 ## Contratos por dominio
 
 Cada dominio tiene una interface TypeScript unica implementada por real, mock, fallback y (donde aplica) restricted providers. Los ViewModels tipados son:
@@ -124,7 +148,10 @@ Cada dominio tiene una interface TypeScript unica implementada por real, mock, f
 - ProviderResult<T> como contrato canonico en todos los providers
 - Capability engine resolviendo per-dominio
 - UX multi-modo visible en 12 paginas
-- 1,446 tests validando el modelo
+- 1,510 tests validando el modelo (54 BE suites / 449 tests + 86 FE suites / 1,061 tests)
 - EvidencePanel integrado en RunbooksPage, ApprovalsPage, HAControlCenterPage
 - Playwright E2E configurado en CI pipeline
+- SaaS modules: billing (Stripe), invitations, agents, cloud-connector
+- ConnectivityProfile dimension (AGENT/CLOUD_CONNECTOR/API_ONLY/NONE)
+- Cognito dual-mode auth strategy
 - 0 errores TypeScript, strict mode habilitado

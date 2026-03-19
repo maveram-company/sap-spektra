@@ -66,12 +66,12 @@ graph TB
     end
 
     subgraph backend["Backend Layer"]
-        BE["&lt;b&gt;API&lt;/b&gt;&lt;br/&gt;NestJS 11 · Prisma 6&lt;br/&gt;22 modules · 78 endpoints&lt;br/&gt;Port 3001"]
+        BE["&lt;b&gt;API&lt;/b&gt;&lt;br/&gt;NestJS 11 · Prisma 6&lt;br/&gt;26 modules · 95+ endpoints&lt;br/&gt;Port 3001"]
         AUTH["&lt;b&gt;Auth&lt;/b&gt;&lt;br/&gt;JWT · Passport · bcrypt&lt;br/&gt;4 roles · Multi-tenant"]
     end
 
     subgraph data["Data Layer"]
-        PG["&lt;b&gt;PostgreSQL 16&lt;/b&gt;&lt;br/&gt;27 Prisma models&lt;br/&gt;Migrations · Seed"]
+        PG["&lt;b&gt;PostgreSQL 16&lt;/b&gt;&lt;br/&gt;32 Prisma models&lt;br/&gt;Migrations · Seed"]
         RD["&lt;b&gt;Redis 7&lt;/b&gt;&lt;br/&gt;Cache · Sessions"]
     end
 
@@ -79,15 +79,22 @@ graph TB
         AG["&lt;b&gt;Python Agent&lt;/b&gt;&lt;br/&gt;OS + SAP Collector&lt;br/&gt;DB Stubs · Heartbeat"]
     end
 
+    subgraph saas["SaaS Services"]
+        STRIPE["&lt;b&gt;Stripe&lt;/b&gt;&lt;br/&gt;Billing · Webhooks"]
+        COGNITO["&lt;b&gt;AWS Cognito&lt;/b&gt;&lt;br/&gt;Auth (AWS_REAL)"]
+    end
+
     subgraph infra["Infrastructure"]
         DC["Docker Compose"]
-        TF["Terraform Templates&lt;br/&gt;(AWS roadmap)"]
+        TF["Terraform Templates&lt;br/&gt;ECS · CloudFront · RDS"]
     end
 
     FE -->|"REST + JWT"| BE
     BE --> AUTH
     BE --> PG
     BE --> RD
+    BE -->|"Webhooks"| STRIPE
+    BE -->|"AWS_REAL mode"| COGNITO
     AG -->|"Ingest + Heartbeat"| BE
     DC --> PG
     DC --> RD
@@ -136,8 +143,8 @@ graph TB
               <tr><td>Cache</td><td>Redis 7</td></tr>
               <tr><td>Auth</td><td>JWT + Passport + bcrypt</td></tr>
               <tr><td>API Docs</td><td>Swagger / OpenAPI</td></tr>
-              <tr><td><span class="es">Modulos</span><span class="en">Modules</span></td><td>22</td></tr>
-              <tr><td>Endpoints</td><td>78</td></tr>
+              <tr><td><span class="es">Modulos</span><span class="en">Modules</span></td><td>26</td></tr>
+              <tr><td>Endpoints</td><td>95+</td></tr>
               <tr><td>Testing</td><td>Jest</td></tr>
               <tr><td>Port</td><td>3001</td></tr>
             </tbody>
@@ -176,8 +183,9 @@ graph TB
               <tr><td>Docker Compose</td><td><span class="badge success">IMPL</span></td></tr>
               <tr><td>PostgreSQL 16</td><td>Alpine</td></tr>
               <tr><td>Redis 7</td><td>Alpine</td></tr>
-              <tr><td>Terraform</td><td><span class="es">Templates AWS (sin SDK en app)</span><span class="en">AWS templates (no SDK in app)</span></td></tr>
-              <tr><td>AWS Cognito/S3/SQS</td><td><span class="badge violet">ROAD</span></td></tr>
+              <tr><td>Terraform</td><td><span class="es">Templates AWS (ECS, RDS, CloudFront)</span><span class="en">AWS templates (ECS, RDS, CloudFront)</span></td></tr>
+              <tr><td>AWS Cognito</td><td><span class="badge success">IMPL</span> <span class="es">(dual-mode)</span><span class="en">(dual-mode)</span></td></tr>
+              <tr><td>Stripe</td><td><span class="badge success">IMPL</span> <span class="es">(billing + webhooks)</span><span class="en">(billing + webhooks)</span></td></tr>
             </tbody>
           </table>
         </div>
@@ -347,6 +355,125 @@ sequenceDiagram
       </div>
     </div>
 
+    <!-- SaaS Deployment -->
+    <h2>
+      <span class="es">Despliegue SaaS</span>
+      <span class="en">SaaS Deployment</span>
+    </h2>
+    <div class="card">
+      <p>
+        <span class="es">SAP Spektra se despliega como SaaS centralizado con edge agents. La infraestructura corre en AWS con ECS Fargate, CloudFront, RDS Multi-AZ, ElastiCache y Cognito.</span>
+        <span class="en">SAP Spektra deploys as a centralized SaaS with edge agents. Infrastructure runs on AWS with ECS Fargate, CloudFront, RDS Multi-AZ, ElastiCache, and Cognito.</span>
+      </p>
+      <div class="table-wrap mt-2">
+        <table>
+          <thead>
+            <tr>
+              <th><span class="es">Componente</span><span class="en">Component</span></th>
+              <th><span class="es">Servicio AWS</span><span class="en">AWS Service</span></th>
+              <th><span class="es">Funcion</span><span class="en">Function</span></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Frontend</td><td>CloudFront + S3</td><td>CDN global, SPA hosting</td></tr>
+            <tr><td>Backend API</td><td>ECS Fargate + ALB</td><td>Serverless containers, auto-scaling</td></tr>
+            <tr><td>Database</td><td>RDS Multi-AZ</td><td>PostgreSQL 16, encrypted at rest</td></tr>
+            <tr><td>Cache</td><td>ElastiCache</td><td>Redis 7, session cache</td></tr>
+            <tr><td>Auth</td><td>AWS Cognito</td><td>Managed identity, MFA, email verification</td></tr>
+            <tr><td>Billing</td><td>Stripe</td><td>Subscriptions, invoices, webhooks</td></tr>
+            <tr><td>CI/CD</td><td>GitHub Actions</td><td><code>.github/workflows/deploy.yml</code></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Agent Registration Flow -->
+    <h2>
+      <span class="es">Flujo de Registro de Agente</span>
+      <span class="en">Agent Registration Flow</span>
+    </h2>
+    <div class="card">
+      <div class="mermaid">
+sequenceDiagram
+    participant Admin as Tenant Admin
+    participant API as Spektra API
+    participant DB as PostgreSQL
+    participant Agent as Python Agent
+
+    Admin->>API: POST /agents/register (hostId, apiKey)
+    API->>DB: Create AgentRegistration
+    DB-->>API: Agent record
+    API-->>Admin: { agentId, status: registered }
+    Agent->>API: POST /agents/heartbeat (hostId, metrics)
+    API->>DB: Update lastHeartbeat + status
+    API-->>Agent: { ack, nextInterval }
+    Admin->>API: GET /agents/summary
+    API->>DB: Aggregate agent statuses
+    API-->>Admin: { total, connected, degraded, disconnected }
+      </div>
+    </div>
+
+    <!-- Cloud Connector Connectivity -->
+    <h2>
+      <span class="es">Conectividad Cloud Connector</span>
+      <span class="en">Cloud Connector Connectivity</span>
+    </h2>
+    <div class="card">
+      <div class="mermaid">
+graph LR
+    subgraph customer["Customer Network"]
+        SAP["SAP System&lt;br/&gt;(RISE)"]
+        CC["SAP Cloud&lt;br/&gt;Connector"]
+    end
+    subgraph btp["SAP BTP"]
+        BTPGW["BTP Gateway"]
+    end
+    subgraph spektra["Spektra SaaS"]
+        API["Spektra API"]
+        DB["PostgreSQL"]
+    end
+
+    SAP -->|"RFC/API"| CC
+    CC -->|"TLS Tunnel"| BTPGW
+    BTPGW -->|"HTTPS"| API
+    API --> DB
+      </div>
+      <div class="callout warning mt-2">
+        <div class="callout-icon">&#9888;&#65039;</div>
+        <div>
+          <span class="es"><strong>Limitaciones RISE/CC:</strong> Sin metricas de OS, sin runbooks host-level, sin failover fisico, sin evidencia local avanzada. El componente RISELimitationBadge hace visibles estas restricciones en la UI.</span>
+          <span class="en"><strong>RISE/CC Limitations:</strong> No OS metrics, no host-level runbooks, no physical failover, no advanced local evidence. The RISELimitationBadge component makes these restrictions visible in the UI.</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Billing / Subscription Flow -->
+    <h2>
+      <span class="es">Flujo de Billing / Suscripcion</span>
+      <span class="en">Billing / Subscription Flow</span>
+    </h2>
+    <div class="card">
+      <div class="mermaid">
+sequenceDiagram
+    participant User as Customer
+    participant API as Spektra API
+    participant Stripe as Stripe API
+    participant WH as Webhook Handler
+
+    User->>API: POST /billing/subscribe (planId)
+    API->>Stripe: Create Customer + Subscription
+    Stripe-->>API: subscription.id + status
+    API->>API: Create Subscription record
+    API-->>User: { subscriptionId, status: active }
+    Stripe->>WH: POST /webhooks/stripe (invoice.paid)
+    WH->>API: Update subscription status
+    User->>API: PATCH /billing/upgrade (newPlanId)
+    API->>Stripe: Update Subscription
+    Stripe-->>API: Updated subscription
+    API-->>User: { status: upgraded }
+      </div>
+    </div>
+
     <!-- Directory Structure -->
     <h2 id="directory-structure">
       <span class="es">Estructura del Proyecto</span>
@@ -357,10 +484,10 @@ sequenceDiagram
 ├── apps/
 │   └── api/                    # NestJS 11 Backend
 │       ├── prisma/
-│       │   └── schema.prisma   # 27 models
+│       │   └── schema.prisma   # 32 models
 │       ├── src/
-│       │   ├── modules/        # 22 domain modules
-│       │   │   ├── auth/       # JWT + Passport
+│       │   ├── modules/        # 26 domain modules
+│       │   │   ├── auth/       # JWT + Passport + Cognito
 │       │   │   ├── systems/    # SAP system CRUD
 │       │   │   ├── alerts/     # Alert lifecycle
 │       │   │   ├── events/     # Event stream
@@ -381,7 +508,11 @@ sequenceDiagram
 │       │   │   ├── plans/      # Subscription plans
 │       │   │   ├── settings/   # Org settings + API keys
 │       │   │   ├── tenants/    # Tenant management
-│       │   │   └── users/      # User CRUD
+│       │   │   ├── users/      # User CRUD
+│       │   │   ├── billing/    # Stripe subscriptions + usage
+│       │   │   ├── invitations/ # Email invitations
+│       │   │   ├── agents/     # Agent registration + heartbeat
+│       │   │   └── cloud-connector/ # CC config + limitations
 │       │   └── common/         # Guards, decorators, pipes
 │       └── test/
 ├── frontend/                   # React 19 Frontend
@@ -413,8 +544,12 @@ sequenceDiagram
 │   └── e2e/                    # Playwright tests
 ├── agent/                      # Python agent
 ├── infra/                      # Terraform templates
+├── .github/
+│   └── workflows/
+│       └── deploy.yml          # CI/CD pipeline
 ├── docs/                       # This documentation
-└── docker-compose.yml</code></pre>
+├── docker-compose.yml
+└── docker-compose.ci.yml       # E2E testing</code></pre>
     </div>
 
     <!-- Footer -->

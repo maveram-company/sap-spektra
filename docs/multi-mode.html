@@ -418,6 +418,80 @@ sequenceDiagram
       </div>
     </div>
 
+    <!-- Connectivity Profile Dimension -->
+    <h2>
+      <span class="es">ConnectivityProfile — Segunda Dimension</span>
+      <span class="en">ConnectivityProfile — Second Dimension</span>
+    </h2>
+    <div class="card">
+      <p>
+        <span class="es">Ademas del modo operacional, el sistema usa <code>ConnectivityProfile</code> como segunda dimension ortogonal. Cada sistema SAP tiene un perfil de conectividad que determina las capacidades disponibles.</span>
+        <span class="en">In addition to the operational mode, the system uses <code>ConnectivityProfile</code> as a second orthogonal dimension. Each SAP system has a connectivity profile that determines available capabilities.</span>
+      </p>
+      <pre><code>type ConnectivityProfile = 'AGENT' | 'CLOUD_CONNECTOR' | 'API_ONLY' | 'NONE';</code></pre>
+      <div class="table-wrap mt-2">
+        <table>
+          <thead>
+            <tr>
+              <th>Profile</th>
+              <th><span class="es">Descripcion</span><span class="en">Description</span></th>
+              <th><span class="es">Capacidades</span><span class="en">Capabilities</span></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td><span class="badge success">AGENT</span></td><td><span class="es">Agente Python instalado por host</span><span class="en">Python agent installed per host</span></td><td><span class="es">Completas: OS + SAP + DB + runbooks + failover</span><span class="en">Full: OS + SAP + DB + runbooks + failover</span></td></tr>
+            <tr><td><span class="badge warning">CLOUD_CONNECTOR</span></td><td><span class="es">SAP Cloud Connector (RISE)</span><span class="en">SAP Cloud Connector (RISE)</span></td><td><span class="es">Parciales: SAP-level only, sin OS, sin failover fisico</span><span class="en">Partial: SAP-level only, no OS, no physical failover</span></td></tr>
+            <tr><td><span class="badge cyan">API_ONLY</span></td><td><span class="es">Sin agente ni CC, datos manuales</span><span class="en">No agent or CC, manual data</span></td><td><span class="es">Basicas: governance, analytics, approvals</span><span class="en">Basic: governance, analytics, approvals</span></td></tr>
+            <tr><td><span class="badge neutral">NONE</span></td><td><span class="es">Tenant sin sistemas conectados</span><span class="en">Tenant with no connected systems</span></td><td><span class="es">Solo configuracion y documentacion</span><span class="en">Configuration and documentation only</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Mode x Profile Combination Table -->
+    <h2>
+      <span class="es">Tabla de Combinaciones: Modo x Perfil</span>
+      <span class="en">Combination Table: Mode x Profile</span>
+    </h2>
+    <div class="card">
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th><span class="es">Combinacion</span><span class="en">Combination</span></th>
+              <th><span class="es">Comportamiento</span><span class="en">Behavior</span></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>REAL + AGENT</td><td><span class="es">Plena funcionalidad, efecto operativo real</span><span class="en">Full functionality, real operational effect</span></td></tr>
+            <tr><td>REAL + CLOUD_CONNECTOR</td><td><span class="es">Funcionalidad SAP-level real, sin OS-level</span><span class="en">Real SAP-level functionality, no OS-level</span></td></tr>
+            <tr><td>REAL + API_ONLY</td><td><span class="es">Solo operaciones manuales/importadas</span><span class="en">Manual/imported operations only</span></td></tr>
+            <tr><td>FALLBACK + AGENT</td><td><span class="es">Intenta real, degrada a cache si agente no responde</span><span class="en">Tries real, degrades to cache if agent unresponsive</span></td></tr>
+            <tr><td>FALLBACK + CLOUD_CONNECTOR</td><td><span class="es">Intenta real via CC, degrada si BTP no responde</span><span class="en">Tries real via CC, degrades if BTP unresponsive</span></td></tr>
+            <tr><td>MOCK + <span class="es">cualquiera</span><span class="en">any</span></td><td><span class="es">Simulacion completa, sin conexion real</span><span class="en">Full simulation, no real connection</span></td></tr>
+            <tr><td>RESTRICTED + <span class="es">cualquiera</span><span class="en">any</span></td><td><span class="es">Lectura limitada, escritura bloqueada</span><span class="en">Limited read, write blocked</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Updated Capability Engine -->
+    <div class="card">
+      <h3>
+        <span class="es">Motor de Capacidades Extendido</span>
+        <span class="en">Extended Capability Engine</span>
+      </h3>
+      <p>
+        <span class="es">El motor de capacidades ahora acepta <code>connectivityProfile</code> como parametro adicional:</span>
+        <span class="en">The capability engine now accepts <code>connectivityProfile</code> as an additional parameter:</span>
+      </p>
+      <pre><code>resolveCapabilities(mode, backendReachable, connectivityProfile, systemCapabilities)</code></pre>
+      <p class="text-sm text-muted mt-1">
+        <span class="es">La resolucion es por DOMINIO x SISTEMA, no solo por dominio global. El <code>connectivityProfile</code> determina que providers y acciones estan disponibles.</span>
+        <span class="en">Resolution is per DOMAIN x SYSTEM, not just per global domain. The <code>connectivityProfile</code> determines which providers and actions are available.</span>
+      </p>
+    </div>
+
     <!-- Parity Testing -->
     <h2>
       <span class="es">Testing de Paridad</span>

@@ -45,8 +45,8 @@
     <div class="page-header">
       <h1>API Reference</h1>
       <p class="subtitle">
-        <span class="es">78 endpoints REST agrupados por controlador — metodo, ruta, rol requerido</span>
-        <span class="en">78 REST endpoints grouped by controller — method, path, required role</span>
+        <span class="es">95+ endpoints REST agrupados por controlador — metodo, ruta, rol requerido</span>
+        <span class="en">95+ REST endpoints grouped by controller — method, path, required role</span>
       </p>
     </div>
 
@@ -351,9 +351,92 @@
       </div>
     </div>
 
+    <!-- Billing (5) -->
+    <h2 id="billing">Billing <span class="badge neutral">5 endpoints</span></h2>
+    <div class="card">
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th><span class="es">Metodo</span><span class="en">Method</span></th><th><span class="es">Ruta</span><span class="en">Path</span></th><th>Role</th><th><span class="es">Descripcion</span><span class="en">Description</span></th><th>Status</th></tr></thead>
+          <tbody>
+            <tr><td><span class="badge cyan">GET</span></td><td><code>/billing/subscription</code></td><td>admin</td><td><span class="es">Suscripcion actual</span><span class="en">Current subscription</span></td><td><span class="badge success">IMPL</span></td></tr>
+            <tr><td><span class="badge cyan">GET</span></td><td><code>/billing/usage</code></td><td>admin</td><td><span class="es">Metricas de uso</span><span class="en">Usage metrics</span></td><td><span class="badge success">IMPL</span></td></tr>
+            <tr><td><span class="badge success">POST</span></td><td><code>/billing/subscribe</code></td><td>admin</td><td><span class="es">Crear suscripcion (Stripe)</span><span class="en">Create subscription (Stripe)</span></td><td><span class="badge success">IMPL</span></td></tr>
+            <tr><td><span class="badge warning">PATCH</span></td><td><code>/billing/upgrade</code></td><td>admin</td><td><span class="es">Upgrade de plan</span><span class="en">Plan upgrade</span></td><td><span class="badge success">IMPL</span></td></tr>
+            <tr><td><span class="badge warning">PATCH</span></td><td><code>/billing/cancel</code></td><td>admin</td><td><span class="es">Cancelar suscripcion</span><span class="en">Cancel subscription</span></td><td><span class="badge success">IMPL</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Invitations (4) -->
+    <h2 id="invitations">Invitations <span class="badge neutral">4 endpoints</span></h2>
+    <div class="card">
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th><span class="es">Metodo</span><span class="en">Method</span></th><th><span class="es">Ruta</span><span class="en">Path</span></th><th>Role</th><th><span class="es">Descripcion</span><span class="en">Description</span></th><th>Status</th></tr></thead>
+          <tbody>
+            <tr><td><span class="badge success">POST</span></td><td><code>/invitations</code></td><td>admin</td><td><span class="es">Crear invitacion</span><span class="en">Create invitation</span></td><td><span class="badge success">IMPL</span></td></tr>
+            <tr><td><span class="badge cyan">GET</span></td><td><code>/invitations</code></td><td>admin</td><td><span class="es">Listar invitaciones</span><span class="en">List invitations</span></td><td><span class="badge success">IMPL</span></td></tr>
+            <tr><td><span class="badge success">POST</span></td><td><code>/invitations/accept</code></td><td><span class="es">Publico</span><span class="en">Public</span></td><td><span class="es">Aceptar invitacion</span><span class="en">Accept invitation</span></td><td><span class="badge success">IMPL</span></td></tr>
+            <tr><td><span class="badge danger">DELETE</span></td><td><code>/invitations/:id</code></td><td>admin</td><td><span class="es">Revocar invitacion</span><span class="en">Revoke invitation</span></td><td><span class="badge success">IMPL</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Agents (7) -->
+    <h2 id="agents">Agents <span class="badge neutral">7 endpoints</span></h2>
+    <div class="card">
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th><span class="es">Metodo</span><span class="en">Method</span></th><th><span class="es">Ruta</span><span class="en">Path</span></th><th>Role</th><th><span class="es">Descripcion</span><span class="en">Description</span></th><th>Status</th></tr></thead>
+          <tbody>
+            <tr><td><span class="badge success">POST</span></td><td><code>/agents/register</code></td><td>admin</td><td><span class="es">Registrar nuevo agente</span><span class="en">Register new agent</span></td><td><span class="badge success">IMPL</span></td></tr>
+            <tr><td><span class="badge success">POST</span></td><td><code>/agents/heartbeat</code></td><td>operator</td><td><span class="es">Heartbeat del agente</span><span class="en">Agent heartbeat</span></td><td><span class="badge success">IMPL</span></td></tr>
+            <tr><td><span class="badge cyan">GET</span></td><td><code>/agents</code></td><td>viewer</td><td><span class="es">Listar agentes</span><span class="en">List agents</span></td><td><span class="badge success">IMPL</span></td></tr>
+            <tr><td><span class="badge cyan">GET</span></td><td><code>/agents/summary</code></td><td>viewer</td><td><span class="es">Resumen de estado de agentes</span><span class="en">Agent status summary</span></td><td><span class="badge success">IMPL</span></td></tr>
+            <tr><td><span class="badge cyan">GET</span></td><td><code>/agents/:hostId</code></td><td>viewer</td><td><span class="es">Agente por host</span><span class="en">Agent by host</span></td><td><span class="badge success">IMPL</span></td></tr>
+            <tr><td><span class="badge warning">PATCH</span></td><td><code>/agents/:id/revoke</code></td><td>admin</td><td><span class="es">Revocar agente</span><span class="en">Revoke agent</span></td><td><span class="badge success">IMPL</span></td></tr>
+            <tr><td><span class="badge cyan">GET</span></td><td><code>/agents/version/check</code></td><td>operator</td><td><span class="es">Verificar compatibilidad de version</span><span class="en">Check version compatibility</span></td><td><span class="badge success">IMPL</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Cloud Connector (6) -->
+    <h2 id="cloud-connector">Cloud Connector <span class="badge neutral">6 endpoints</span></h2>
+    <div class="card">
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th><span class="es">Metodo</span><span class="en">Method</span></th><th><span class="es">Ruta</span><span class="en">Path</span></th><th>Role</th><th><span class="es">Descripcion</span><span class="en">Description</span></th><th>Status</th></tr></thead>
+          <tbody>
+            <tr><td><span class="badge success">POST</span></td><td><code>/cloud-connector/configure</code></td><td>admin</td><td><span class="es">Configurar Cloud Connector</span><span class="en">Configure Cloud Connector</span></td><td><span class="badge success">IMPL</span></td></tr>
+            <tr><td><span class="badge success">POST</span></td><td><code>/cloud-connector/:systemId/test</code></td><td>admin</td><td><span class="es">Testear conectividad</span><span class="en">Test connectivity</span></td><td><span class="badge success">IMPL</span></td></tr>
+            <tr><td><span class="badge cyan">GET</span></td><td><code>/cloud-connector</code></td><td>viewer</td><td><span class="es">Listar configuraciones</span><span class="en">List configurations</span></td><td><span class="badge success">IMPL</span></td></tr>
+            <tr><td><span class="badge cyan">GET</span></td><td><code>/cloud-connector/:systemId</code></td><td>viewer</td><td><span class="es">Config por sistema</span><span class="en">Config by system</span></td><td><span class="badge success">IMPL</span></td></tr>
+            <tr><td><span class="badge danger">DELETE</span></td><td><code>/cloud-connector/:systemId</code></td><td>admin</td><td><span class="es">Eliminar configuracion</span><span class="en">Remove configuration</span></td><td><span class="badge success">IMPL</span></td></tr>
+            <tr><td><span class="badge cyan">GET</span></td><td><code>/cloud-connector/limitations</code></td><td>viewer</td><td><span class="es">Limitaciones RISE</span><span class="en">RISE limitations</span></td><td><span class="badge success">IMPL</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Webhooks (1) -->
+    <h2 id="webhooks">Webhooks <span class="badge neutral">1 endpoint</span></h2>
+    <div class="card">
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th><span class="es">Metodo</span><span class="en">Method</span></th><th><span class="es">Ruta</span><span class="en">Path</span></th><th>Role</th><th><span class="es">Descripcion</span><span class="en">Description</span></th><th>Status</th></tr></thead>
+          <tbody>
+            <tr><td><span class="badge success">POST</span></td><td><code>/webhooks/stripe</code></td><td><span class="es">Publico (firma Stripe)</span><span class="en">Public (Stripe signature)</span></td><td><span class="es">Webhook de Stripe para eventos de billing</span><span class="en">Stripe webhook for billing events</span></td><td><span class="badge success">IMPL</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
     <!-- Footer -->
     <div style="margin-top:48px;padding-top:24px;border-top:1px solid var(--brd);text-align:center">
-      <p class="text-muted text-sm">SAP Spektra v3.0 — 78 REST endpoints — Maveram Company</p>
+      <p class="text-muted text-sm">SAP Spektra v4.0 SaaS — 95+ REST endpoints — Maveram Company</p>
     </div>
   </main>
 </div>
