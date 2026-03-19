@@ -124,11 +124,10 @@
       <div class="table-wrap mt-1">
         <table>
           <tbody>
-            <tr><td><span class="es">Fuente de datos</span><span class="en">Data source</span></td><td><span class="es">Proveedores restricted dedicados para 4 dominios criticos; mock para el resto</span><span class="en">Dedicated restricted providers for 4 critical domains; mock for the rest</span></td></tr>
+            <tr><td><span class="es">Fuente de datos</span><span class="en">Data source</span></td><td><span class="es">Proveedores restricted dedicados para los 12 dominios</span><span class="en">Dedicated restricted providers for all 12 domains</span></td></tr>
             <tr><td><span class="es">Confianza</span><span class="en">Confidence</span></td><td><code>low</code></td></tr>
             <tr><td><span class="es">Escritura</span><span class="en">Write</span></td><td><span class="es">Solo lectura</span><span class="en">Read-only</span></td></tr>
-            <tr><td><span class="es">Dominios con proveedor dedicado</span><span class="en">Domains with dedicated provider</span></td><td>runbooks, approvals, ha, connectors</td></tr>
-            <tr><td><span class="es">Dominios con mock</span><span class="en">Domains using mock</span></td><td>systems, alerts, events, operations, analytics, admin, landscape, chat</td></tr>
+            <tr><td><span class="es">Dominios con proveedor dedicado</span><span class="en">Domains with dedicated provider</span></td><td><span class="es">12/12 — todos los dominios</span><span class="en">12/12 — all domains</span></td></tr>
             <tr><td>Source</td><td><code>rules</code></td></tr>
           </tbody>
         </table>
@@ -231,7 +230,7 @@ graph TD
     REG["getRegistry(mode)"] --> |REAL| R["12x RealProvider"]
     REG --> |MOCK| M["12x MockProvider"]
     REG --> |FALLBACK| F["12x FallbackProvider&lt;br/&gt;(Proxy: real → mock)"]
-    REG --> |RESTRICTED| X["4x RestrictedProvider&lt;br/&gt;+ 8x MockProvider"]
+    REG --> |RESTRICTED| X["12x RestrictedProvider"]
       </div>
     </div>
 
@@ -251,7 +250,7 @@ graph TD
     {domain}.real.ts         # HTTP calls to backend API
     {domain}.mock.ts         # Simulated static data
     {domain}.fallback.ts     # createFallbackProvider(real, mock)
-    {domain}.restricted.ts   # Only for: runbooks, approvals, ha, connectors
+    {domain}.restricted.ts   # All 12 domains have dedicated restricted providers
     __tests__/
       {domain}.parity.test.ts  # Parity tests: mock shape == real shape</code></pre>
     </div>
@@ -329,17 +328,45 @@ sequenceDiagram
               <td><span class="es">Conectividad limitada en entornos managed</span><span class="en">Limited connectivity in managed environments</span></td>
             </tr>
             <tr>
-              <td>systems</td>
-              <td><span class="badge cyan">MOCK</span> <code>SystemsMockProvider</code></td>
-              <td rowspan="8"><span class="es">Lectura segura con datos simulados</span><span class="en">Safe read with simulated data</span></td>
+              <td><strong>systems</strong></td>
+              <td><span class="badge danger">RESTRICTED</span> <code>SystemsRestrictedProvider</code></td>
+              <td><span class="es">Lectura segura con restriccion de escritura</span><span class="en">Safe read with write restriction</span></td>
             </tr>
-            <tr><td>alerts</td><td><span class="badge cyan">MOCK</span> <code>AlertsMockProvider</code></td></tr>
-            <tr><td>events</td><td><span class="badge cyan">MOCK</span> <code>EventsMockProvider</code></td></tr>
-            <tr><td>operations</td><td><span class="badge cyan">MOCK</span> <code>OperationsMockProvider</code></td></tr>
-            <tr><td>analytics</td><td><span class="badge cyan">MOCK</span> <code>AnalyticsMockProvider</code></td></tr>
-            <tr><td>admin</td><td><span class="badge cyan">MOCK</span> <code>AdminMockProvider</code></td></tr>
-            <tr><td>landscape</td><td><span class="badge cyan">MOCK</span> <code>LandscapeMockProvider</code></td></tr>
-            <tr><td>chat</td><td><span class="badge cyan">MOCK</span> <code>ChatMockProvider</code></td></tr>
+            <tr>
+              <td><strong>alerts</strong></td>
+              <td><span class="badge danger">RESTRICTED</span> <code>AlertsRestrictedProvider</code></td>
+              <td><span class="es">Lectura segura con restriccion de escritura</span><span class="en">Safe read with write restriction</span></td>
+            </tr>
+            <tr>
+              <td><strong>events</strong></td>
+              <td><span class="badge danger">RESTRICTED</span> <code>EventsRestrictedProvider</code></td>
+              <td><span class="es">Lectura segura con restriccion de escritura</span><span class="en">Safe read with write restriction</span></td>
+            </tr>
+            <tr>
+              <td><strong>operations</strong></td>
+              <td><span class="badge danger">RESTRICTED</span> <code>OperationsRestrictedProvider</code></td>
+              <td><span class="es">Lectura segura con restriccion de escritura</span><span class="en">Safe read with write restriction</span></td>
+            </tr>
+            <tr>
+              <td><strong>analytics</strong></td>
+              <td><span class="badge danger">RESTRICTED</span> <code>AnalyticsRestrictedProvider</code></td>
+              <td><span class="es">Lectura segura con restriccion de escritura</span><span class="en">Safe read with write restriction</span></td>
+            </tr>
+            <tr>
+              <td><strong>admin</strong></td>
+              <td><span class="badge danger">RESTRICTED</span> <code>AdminRestrictedProvider</code></td>
+              <td><span class="es">Lectura segura con restriccion de escritura</span><span class="en">Safe read with write restriction</span></td>
+            </tr>
+            <tr>
+              <td><strong>landscape</strong></td>
+              <td><span class="badge danger">RESTRICTED</span> <code>LandscapeRestrictedProvider</code></td>
+              <td><span class="es">Lectura segura con restriccion de escritura</span><span class="en">Safe read with write restriction</span></td>
+            </tr>
+            <tr>
+              <td><strong>chat</strong></td>
+              <td><span class="badge danger">RESTRICTED</span> <code>ChatRestrictedProvider</code></td>
+              <td><span class="es">Lectura segura con restriccion de escritura</span><span class="en">Safe read with write restriction</span></td>
+            </tr>
           </tbody>
         </table>
       </div>
@@ -383,8 +410,8 @@ sequenceDiagram
             </tr>
             <tr>
               <td><code>EvidencePanel</code></td>
-              <td><span class="es">Panel de evidencia (existe, no conectado a datos reales)</span><span class="en">Evidence panel (exists, not connected to real data)</span></td>
-              <td><span class="badge warning">SIM</span></td>
+              <td><span class="es">Panel de evidencia integrado con ProviderResult metadata</span><span class="en">Evidence panel integrated with ProviderResult metadata</span></td>
+              <td><span class="es">3 paginas (RunbooksPage, ApprovalsPage, HAControlCenterPage)</span><span class="en">3 pages (RunbooksPage, ApprovalsPage, HAControlCenterPage)</span></td>
             </tr>
           </tbody>
         </table>

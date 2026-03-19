@@ -102,28 +102,29 @@ Cada dominio tiene una interface TypeScript unica implementada por real, mock, f
 
 | Dominio | Contract | Real | Mock | Fallback | Restricted | Parity | UX metadata |
 |---------|:--------:|:----:|:----:|:--------:|:----------:|:------:|:-----------:|
-| systems | Si | Si | Si | Si | Mock | Si | Badge+Source |
-| alerts | Si | Si | Si | Si | Mock | Si | Badge+Source |
-| runbooks | Si | Si | Si | Si | Dedicado | Si | Badge+Capability+Governance |
-| approvals | Si | Si | Si | Si | Dedicado | Si | Badge+Capability+Governance |
-| ha | Si | Si | Si | Si | Dedicado | Si | Badge+Capability+Governance+Source |
+| systems | Si | Si | Si | Si | Dedicado | Si | Badge+Source |
+| alerts | Si | Si | Si | Si | Dedicado | Si | Badge+Source |
+| runbooks | Si | Si | Si | Si | Dedicado | Si | Badge+Capability+Governance+EvidencePanel |
+| approvals | Si | Si | Si | Si | Dedicado | Si | Badge+Capability+Governance+EvidencePanel |
+| ha | Si | Si | Si | Si | Dedicado | Si | Badge+Capability+Governance+Source+EvidencePanel |
 | connectors | Si | Si | Si | Si | Dedicado | Si | Badge+Source |
-| events | Si | Si | Si | Si | Mock | Si | Badge+Source |
-| operations | Si | Si | Si | Si | Mock | Si | Badge |
-| analytics | Si | Si | Si | Si | Mock | Si | Badge+Source |
-| admin | Si | Si | Si | Si | Mock | Si | Badge |
-| landscape | Si | Si | Si | Si | Mock | Si | Badge+Source |
-| chat | Si | Si | Si | Si | Mock | Si | Badge |
+| events | Si | Si | Si | Si | Dedicado | Si | Badge+Source |
+| operations | Si | Si | Si | Si | Dedicado | Si | Badge |
+| analytics | Si | Si | Si | Si | Dedicado | Si | Badge+Source |
+| admin | Si | Si | Si | Si | Dedicado | Si | Badge |
+| landscape | Si | Si | Si | Si | Dedicado | Si | Badge+Source |
+| chat | Si | Si | Si | Si | Dedicado | Si | Badge |
 
-**Dedicado** = Restricted provider propio con semantica de bloqueo intencional.
-**Mock** = Usa mock provider en modo RESTRICTED (backlog para crear providers dedicados).
+**Dedicado** = Restricted provider propio con semantica de bloqueo intencional. 12/12 dominios completados.
 
 ## Estado actual de madurez
 
 - 12/12 dominios con contract + real + mock + fallback
-- 4/12 dominios con restricted provider dedicado
+- 12/12 dominios con restricted provider dedicado
 - ProviderResult<T> como contrato canonico en todos los providers
 - Capability engine resolviendo per-dominio
 - UX multi-modo visible en 12 paginas
-- 1,414 tests validando el modelo
+- 1,446 tests validando el modelo
+- EvidencePanel integrado en RunbooksPage, ApprovalsPage, HAControlCenterPage
+- Playwright E2E configurado en CI pipeline
 - 0 errores TypeScript, strict mode habilitado

@@ -214,14 +214,30 @@ npm test
 # Solo backend (Jest — 49 suites, 392 tests)
 npm run test:backend
 
-# Solo frontend (Vitest — 85 suites, 1,022 tests)
+# Solo frontend (Vitest — 87 suites, 1,054 tests)
 npm run test:frontend
 
 # E2E (Playwright)
 npm run test:e2e
 
 # E2E con UI
-npm run test:e2e:ui</code></pre>
+npm run test:e2e:ui
+
+# E2E en CI (usa docker-compose.ci.yml)
+npm run test:e2e:ci</code></pre>
+
+      <h3 class="mt-2">
+        <span class="es">Playwright E2E Local</span>
+        <span class="en">Playwright E2E Local</span>
+      </h3>
+      <pre><code># Instalar browsers de Playwright
+npx playwright install
+
+# Ejecutar tests E2E localmente
+npx playwright test
+
+# Para CI, se usa docker-compose.ci.yml que levanta backend + DB
+# El script test:e2e:ci lo orquesta automaticamente</code></pre>
 
       <h3 class="mt-2">
         <span class="es">Otros Comandos de Verificacion</span>
