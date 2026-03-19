@@ -26,6 +26,9 @@ describe('BillingService', () => {
       membership: {
         count: jest.fn(),
       },
+      agentRegistration: {
+        count: jest.fn(),
+      },
     };
 
     const mockAudit = { log: jest.fn().mockResolvedValue({}) };
@@ -202,21 +205,29 @@ describe('BillingService', () => {
   // ── refreshUsageSnapshot ──
 
   describe('refreshUsageSnapshot', () => {
-    it('counts systems and users and records usage', async () => {
+    it('counts systems, users, and agents and records usage', async () => {
       prisma.system.count.mockResolvedValue(3);
       prisma.membership.count.mockResolvedValue(7);
+      prisma.agentRegistration.count.mockResolvedValue(2);
       prisma.usageRecord.upsert.mockResolvedValue({});
 
       const result = await service.refreshUsageSnapshot(ORG_ID);
 
-      expect(result).toEqual({ systems_count: 3, users_count: 7 });
+      expect(result).toEqual({
+        systems_count: 3,
+        users_count: 7,
+        agents_count: 2,
+      });
       expect(prisma.system.count).toHaveBeenCalledWith({
         where: { organizationId: ORG_ID },
       });
       expect(prisma.membership.count).toHaveBeenCalledWith({
         where: { organizationId: ORG_ID },
       });
-      expect(prisma.usageRecord.upsert).toHaveBeenCalledTimes(2);
+      expect(prisma.agentRegistration.count).toHaveBeenCalledWith({
+        where: { organizationId: ORG_ID, status: { not: 'revoked' } },
+      });
+      expect(prisma.usageRecord.upsert).toHaveBeenCalledTimes(3);
     });
   });
 });

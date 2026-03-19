@@ -29,6 +29,7 @@ import { AiModule } from './modules/ai/ai.module';
 import { LicensesModule } from './modules/licenses/licenses.module';
 import { BillingModule } from './modules/billing/billing.module';
 import { InvitationsModule } from './modules/invitations/invitations.module';
+import { AgentsModule } from './modules/agents/agents.module';
 
 @Module({
   imports: [
@@ -63,6 +64,7 @@ import { InvitationsModule } from './modules/invitations/invitations.module';
     LicensesModule,
     BillingModule,
     InvitationsModule,
+    AgentsModule,
   ],
   providers: [{ provide: APP_GUARD, useClass: ThrottlerGuard }],
 })

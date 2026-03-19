@@ -39,6 +39,7 @@ model Organization {
   subscription    Subscription?
   usageRecords    UsageRecord[]
   invitations     Invitation[]
+  agentRegistrations AgentRegistration[]
 
   @@map("organizations")
 }
@@ -136,6 +137,7 @@ model System {
   transports         TransportRecord[]
   certificates       CertificateRecord[]
   runbookExecutions  RunbookExecution[]
+  agentRegistrations AgentRegistration[]
 
   @@unique([organizationId, sid])
   @@index([organizationId])
@@ -212,6 +214,7 @@ model Host {
   system    System     @relation(fields: [systemId], references: [id], onDelete: Cascade)
   instances Instance[]
   metrics   HostMetric[]
+  agentRegistration AgentRegistration?
 
   @@index([systemId])
   @@map("hosts")
@@ -638,4 +641,31 @@ model Invitation {
   @@index([organizationId])
   @@index([token])
   @@map("invitations")
+}
+
+// ── Agent Registry ──
+
+model AgentRegistration {
+  id               String   @id @default(uuid())
+  organizationId   String
+  organization     Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  systemId         String
+  system           System   @relation(fields: [systemId], references: [id], onDelete: Cascade)
+  hostId           String
+  host             Host     @relation(fields: [hostId], references: [id], onDelete: Cascade)
+  agentVersion     String
+  osType           String   // linux-sles, linux-rhel, windows
+  architecture     String   // x64, arm64
+  status           String   @default("registered") // registered, connected, degraded, disconnected, revoked
+  apiKeyId         String?
+  lastHeartbeat    DateTime?
+  lastMetricsAt    DateTime?
+  installedAt      DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  @@unique([hostId])
+  @@index([organizationId])
+  @@index([systemId])
+  @@index([status])
+  @@map("agent_registrations")
 }

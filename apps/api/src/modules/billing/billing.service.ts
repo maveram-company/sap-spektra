@@ -125,16 +125,24 @@ export class BillingService {
   }
 
   async refreshUsageSnapshot(organizationId: string) {
-    const [systemsCount, usersCount] = await Promise.all([
+    const [systemsCount, usersCount, agentCount] = await Promise.all([
       this.prisma.system.count({ where: { organizationId } }),
       this.prisma.membership.count({ where: { organizationId } }),
+      this.prisma.agentRegistration.count({
+        where: { organizationId, status: { not: 'revoked' } },
+      }),
     ]);
 
     await Promise.all([
       this.recordUsage(organizationId, 'systems_count', systemsCount),
       this.recordUsage(organizationId, 'users_count', usersCount),
+      this.recordUsage(organizationId, 'agents_count', agentCount),
     ]);
 
-    return { systems_count: systemsCount, users_count: usersCount };
+    return {
+      systems_count: systemsCount,
+      users_count: usersCount,
+      agents_count: agentCount,
+    };
   }
 }
