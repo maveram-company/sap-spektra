@@ -1,13 +1,16 @@
 import { Test, TestingModule } from '@nestjs/testing';
+import { ConfigService } from '@nestjs/config';
 import { BillingService } from './billing.service';
 import { PrismaService } from '../../infrastructure/prisma/prisma.service';
 import { AuditService } from '../audit/audit.service';
+import { StripeService } from './stripe.service';
 
 const ORG_ID = 'org-billing-1';
 
 describe('BillingService', () => {
   let service: BillingService;
   let prisma: Record<string, any>;
+  let mockStripe: Record<string, jest.Mock>;
 
   beforeEach(async () => {
     prisma = {
@@ -29,15 +32,33 @@ describe('BillingService', () => {
       agentRegistration: {
         count: jest.fn(),
       },
+      plan: {
+        findUnique: jest.fn(),
+      },
+      organization: {
+        update: jest.fn(),
+      },
     };
 
     const mockAudit = { log: jest.fn().mockResolvedValue({}) };
+    mockStripe = {
+      isEnabled: jest.fn().mockReturnValue(false),
+      createCustomer: jest.fn(),
+      createSubscription: jest.fn(),
+      cancelSubscription: jest.fn(),
+      updateSubscription: jest.fn(),
+    };
 
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         BillingService,
         { provide: PrismaService, useValue: prisma },
         { provide: AuditService, useValue: mockAudit },
+        { provide: StripeService, useValue: mockStripe },
+        {
+          provide: ConfigService,
+          useValue: { get: jest.fn().mockReturnValue('') },
+        },
       ],
     }).compile();
 
@@ -110,6 +131,11 @@ describe('BillingService', () => {
 
   describe('cancelSubscription', () => {
     it('cancels subscription and sets canceledAt', async () => {
+      prisma.subscription.findUnique.mockResolvedValue({
+        id: 'sub-1',
+        organizationId: ORG_ID,
+        stripeSubId: null,
+      });
       const mockSub = {
         id: 'sub-1',
         organizationId: ORG_ID,
@@ -125,6 +151,26 @@ describe('BillingService', () => {
         where: { organizationId: ORG_ID },
         data: { status: 'canceled', canceledAt: expect.any(Date) },
       });
+    });
+
+    it('cancels Stripe subscription if enabled and stripeSubId exists', async () => {
+      mockStripe.isEnabled.mockReturnValue(true);
+      prisma.subscription.findUnique.mockResolvedValue({
+        id: 'sub-1',
+        organizationId: ORG_ID,
+        stripeSubId: 'sub_stripe_123',
+      });
+      prisma.subscription.update.mockResolvedValue({
+        id: 'sub-1',
+        status: 'canceled',
+        canceledAt: new Date(),
+      });
+
+      await service.cancelSubscription(ORG_ID);
+
+      expect(mockStripe.cancelSubscription).toHaveBeenCalledWith(
+        'sub_stripe_123',
+      );
     });
   });
 
@@ -228,6 +274,253 @@ describe('BillingService', () => {
         where: { organizationId: ORG_ID, status: { not: 'revoked' } },
       });
       expect(prisma.usageRecord.upsert).toHaveBeenCalledTimes(3);
+    });
+  });
+
+  // ── subscribe ──
+
+  describe('subscribe', () => {
+    it('creates a trial subscription when Stripe is disabled', async () => {
+      prisma.plan.findUnique.mockResolvedValue({
+        id: 'plan-1',
+        tier: 'starter',
+        name: 'Starter',
+        price: 0,
+        stripePriceId: null,
+      });
+      prisma.subscription.findUnique.mockResolvedValue(null);
+      prisma.subscription.create.mockResolvedValue({
+        id: 'sub-new',
+        organizationId: ORG_ID,
+        planTier: 'starter',
+        status: 'trialing',
+      });
+      prisma.organization.update.mockResolvedValue({});
+
+      const result = await service.subscribe(
+        ORG_ID,
+        'user@example.com',
+        'Test User',
+        'starter',
+      );
+
+      expect(result.status).toBe('trialing');
+      expect(prisma.subscription.create).toHaveBeenCalledWith({
+        data: expect.objectContaining({
+          organizationId: ORG_ID,
+          planTier: 'starter',
+          status: 'trialing',
+        }),
+      });
+      expect(prisma.organization.update).toHaveBeenCalledWith({
+        where: { id: ORG_ID },
+        data: { plan: 'starter' },
+      });
+    });
+
+    it('throws if plan tier is unknown', async () => {
+      prisma.plan.findUnique.mockResolvedValue(null);
+
+      await expect(
+        service.subscribe(ORG_ID, 'user@example.com', 'Test', 'nonexistent'),
+      ).rejects.toThrow('Unknown plan tier: nonexistent');
+    });
+
+    it('throws if organization already has an active subscription', async () => {
+      prisma.plan.findUnique.mockResolvedValue({
+        id: 'plan-1',
+        tier: 'starter',
+        price: 0,
+        stripePriceId: null,
+      });
+      prisma.subscription.findUnique.mockResolvedValue({
+        id: 'sub-existing',
+        organizationId: ORG_ID,
+        status: 'active',
+      });
+
+      await expect(
+        service.subscribe(ORG_ID, 'user@example.com', 'Test', 'starter'),
+      ).rejects.toThrow('already has an active subscription');
+    });
+
+    it('creates Stripe customer and subscription when Stripe is enabled', async () => {
+      mockStripe.isEnabled.mockReturnValue(true);
+      prisma.plan.findUnique.mockResolvedValue({
+        id: 'plan-1',
+        tier: 'professional',
+        price: 29900,
+        stripePriceId: 'price_pro_123',
+      });
+      prisma.subscription.findUnique.mockResolvedValue(null);
+      mockStripe.createCustomer.mockResolvedValue({ id: 'cus_stripe_1' });
+      mockStripe.createSubscription.mockResolvedValue({ id: 'sub_stripe_1' });
+      prisma.subscription.create.mockResolvedValue({
+        id: 'sub-new',
+        organizationId: ORG_ID,
+        planTier: 'professional',
+        status: 'active',
+        stripeCustomerId: 'cus_stripe_1',
+        stripeSubId: 'sub_stripe_1',
+      });
+      prisma.organization.update.mockResolvedValue({});
+
+      const result = await service.subscribe(
+        ORG_ID,
+        'user@example.com',
+        'Test',
+        'professional',
+      );
+
+      expect(result.status).toBe('active');
+      expect(mockStripe.createCustomer).toHaveBeenCalledWith(
+        'user@example.com',
+        'Test',
+        ORG_ID,
+      );
+      expect(mockStripe.createSubscription).toHaveBeenCalledWith(
+        'cus_stripe_1',
+        'price_pro_123',
+      );
+    });
+  });
+
+  // ── changePlan ──
+
+  describe('changePlan', () => {
+    it('changes plan tier locally when Stripe is disabled', async () => {
+      prisma.plan.findUnique.mockResolvedValue({
+        id: 'plan-2',
+        tier: 'enterprise',
+        price: 99900,
+        stripePriceId: null,
+      });
+      prisma.subscription.findUnique.mockResolvedValue({
+        id: 'sub-1',
+        organizationId: ORG_ID,
+        planTier: 'professional',
+        stripeSubId: null,
+      });
+      prisma.subscription.update.mockResolvedValue({
+        id: 'sub-1',
+        organizationId: ORG_ID,
+        planTier: 'enterprise',
+      });
+      prisma.organization.update.mockResolvedValue({});
+
+      const result = await service.changePlan(ORG_ID, 'enterprise');
+
+      expect(result.planTier).toBe('enterprise');
+      expect(prisma.subscription.update).toHaveBeenCalledWith({
+        where: { organizationId: ORG_ID },
+        data: { planTier: 'enterprise' },
+      });
+      expect(prisma.organization.update).toHaveBeenCalledWith({
+        where: { id: ORG_ID },
+        data: { plan: 'enterprise' },
+      });
+    });
+
+    it('throws if plan tier is unknown', async () => {
+      prisma.plan.findUnique.mockResolvedValue(null);
+
+      await expect(service.changePlan(ORG_ID, 'mega')).rejects.toThrow(
+        'Unknown plan tier: mega',
+      );
+    });
+
+    it('throws if no subscription exists', async () => {
+      prisma.plan.findUnique.mockResolvedValue({
+        id: 'plan-1',
+        tier: 'starter',
+        price: 0,
+      });
+      prisma.subscription.findUnique.mockResolvedValue(null);
+
+      await expect(service.changePlan(ORG_ID, 'starter')).rejects.toThrow(
+        'No subscription found',
+      );
+    });
+
+    it('updates Stripe subscription when Stripe is enabled', async () => {
+      mockStripe.isEnabled.mockReturnValue(true);
+      prisma.plan.findUnique.mockResolvedValue({
+        id: 'plan-3',
+        tier: 'enterprise',
+        price: 99900,
+        stripePriceId: 'price_ent_123',
+      });
+      prisma.subscription.findUnique.mockResolvedValue({
+        id: 'sub-1',
+        organizationId: ORG_ID,
+        planTier: 'professional',
+        stripeSubId: 'sub_stripe_1',
+      });
+      mockStripe.updateSubscription.mockResolvedValue({});
+      prisma.subscription.update.mockResolvedValue({
+        id: 'sub-1',
+        planTier: 'enterprise',
+      });
+      prisma.organization.update.mockResolvedValue({});
+
+      await service.changePlan(ORG_ID, 'enterprise');
+
+      expect(mockStripe.updateSubscription).toHaveBeenCalledWith(
+        'sub_stripe_1',
+        'price_ent_123',
+      );
+    });
+  });
+
+  // ── getInvoices ──
+
+  describe('getInvoices', () => {
+    it('returns empty list when no subscription exists', async () => {
+      prisma.subscription.findUnique.mockResolvedValue(null);
+
+      const result = await service.getInvoices(ORG_ID);
+
+      expect(result).toEqual({ invoices: [], total: 0 });
+    });
+
+    it('returns synthetic invoice from subscription record', async () => {
+      const now = new Date();
+      prisma.subscription.findUnique.mockResolvedValue({
+        id: 'sub-1',
+        organizationId: ORG_ID,
+        planTier: 'professional',
+        status: 'active',
+        currentPeriodStart: now,
+        currentPeriodEnd: now,
+        createdAt: now,
+      });
+
+      const result = await service.getInvoices(ORG_ID);
+
+      expect(result.total).toBe(1);
+      expect(result.invoices[0]).toEqual(
+        expect.objectContaining({
+          subscriptionId: 'sub-1',
+          planTier: 'professional',
+          status: 'active',
+        }),
+      );
+    });
+
+    it('respects limit parameter', async () => {
+      prisma.subscription.findUnique.mockResolvedValue({
+        id: 'sub-1',
+        organizationId: ORG_ID,
+        planTier: 'starter',
+        status: 'active',
+        currentPeriodStart: new Date(),
+        currentPeriodEnd: new Date(),
+        createdAt: new Date(),
+      });
+
+      const result = await service.getInvoices(ORG_ID, 1);
+
+      expect(result.invoices.length).toBeLessThanOrEqual(1);
     });
   });
 });

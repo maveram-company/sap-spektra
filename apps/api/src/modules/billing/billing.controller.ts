@@ -1,4 +1,12 @@
-import { Controller, Get, Post, Body, Patch, UseGuards } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  UseGuards,
+  Query,
+} from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiBearerAuth } from '@nestjs/swagger';
 import { BillingService } from './billing.service';
 import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
@@ -54,5 +62,29 @@ export class BillingController {
   @ApiOperation({ summary: 'Refresh usage snapshot' })
   refreshUsage(@TenantId() orgId: string) {
     return this.billing.refreshUsageSnapshot(orgId);
+  }
+
+  @Post('subscribe')
+  @Roles('admin')
+  @ApiOperation({ summary: 'Create Stripe customer and start subscription' })
+  subscribe(
+    @TenantId() orgId: string,
+    @Body() body: { email: string; name: string; planTier: string },
+  ) {
+    return this.billing.subscribe(orgId, body.email, body.name, body.planTier);
+  }
+
+  @Patch('upgrade')
+  @Roles('admin')
+  @ApiOperation({ summary: 'Change plan tier (upgrade or downgrade)' })
+  upgrade(@TenantId() orgId: string, @Body() body: { newTier: string }) {
+    return this.billing.changePlan(orgId, body.newTier);
+  }
+
+  @Get('invoices')
+  @Roles('viewer')
+  @ApiOperation({ summary: 'List invoices / subscription history' })
+  invoices(@TenantId() orgId: string, @Query('limit') limit?: string) {
+    return this.billing.getInvoices(orgId, limit ? parseInt(limit, 10) : 10);
   }
 }

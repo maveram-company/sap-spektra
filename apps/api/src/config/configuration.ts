@@ -24,6 +24,15 @@ export interface AppConfig {
     sqsQueueUrl: string;
     eventBridgeBus: string;
   };
+  stripe: {
+    secretKey: string;
+    webhookSecret: string;
+    prices: {
+      starter: string;
+      professional: string;
+      enterprise: string;
+    };
+  };
   log: { level: string };
   cors: { origin: string[] };
   seed: { scenario: string };
@@ -71,6 +80,15 @@ export default (): AppConfig => {
       s3Bucket: process.env.S3_BUCKET || '',
       sqsQueueUrl: process.env.SQS_QUEUE_URL || '',
       eventBridgeBus: process.env.EVENTBRIDGE_BUS || '',
+    },
+    stripe: {
+      secretKey: process.env.STRIPE_SECRET_KEY || '',
+      webhookSecret: process.env.STRIPE_WEBHOOK_SECRET || '',
+      prices: {
+        starter: process.env.STRIPE_PRICE_STARTER || '',
+        professional: process.env.STRIPE_PRICE_PROFESSIONAL || '',
+        enterprise: process.env.STRIPE_PRICE_ENTERPRISE || '',
+      },
     },
     log: {
       level: process.env.LOG_LEVEL || 'debug',

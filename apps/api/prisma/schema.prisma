@@ -77,13 +77,14 @@ model Membership {
 }
 
 model Plan {
-  id          String   @id @default(uuid())
-  tier        String   @unique // starter | professional | enterprise
-  name        String
-  price       Int      @default(0) // monthly price in cents
-  features    Json     @default("[]") // string array of feature keys
-  limits      Json     @default("{}") // { maxSystems, maxUsers, etc. }
-  createdAt   DateTime @default(now())
+  id            String   @id @default(uuid())
+  tier          String   @unique // starter | professional | enterprise
+  name          String
+  price         Int      @default(0) // monthly price in cents
+  stripePriceId String?  // Stripe Price ID for this tier
+  features      Json     @default("[]") // string array of feature keys
+  limits        Json     @default("{}") // { maxSystems, maxUsers, etc. }
+  createdAt     DateTime @default(now())
 
   @@map("plans")
 }
