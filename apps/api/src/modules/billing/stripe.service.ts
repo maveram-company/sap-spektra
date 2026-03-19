@@ -38,34 +38,57 @@ export class StripeService {
     method: string,
     path: string,
     body?: Record<string, string>,
+    retries = 2,
   ): Promise<T> {
     if (!this.enabled) {
       this.logger.warn('Stripe not configured — returning mock response');
       return {} as T;
     }
 
-    const url = `${this.baseUrl}${path}`;
-    const headers: Record<string, string> = {
-      Authorization: `Bearer ${this.apiKey}`,
-      'Content-Type': 'application/x-www-form-urlencoded',
-    };
+    for (let attempt = 0; attempt <= retries; attempt++) {
+      try {
+        const url = `${this.baseUrl}${path}`;
+        const headers: Record<string, string> = {
+          Authorization: `Bearer ${this.apiKey}`,
+          'Content-Type': 'application/x-www-form-urlencoded',
+          'Idempotency-Key': `${path}-${Date.now()}-${attempt}`,
+        };
 
-    const options: RequestInit = { method, headers };
-    if (body) {
-      options.body = new URLSearchParams(body).toString();
+        const options: RequestInit = { method, headers };
+        if (body) {
+          options.body = new URLSearchParams(body).toString();
+        }
+
+        const res = await fetch(url, options);
+        if (!res.ok) {
+          const err = await res.json().catch(() => ({}));
+          if (res.status >= 500 && attempt < retries) {
+            this.logger.warn(
+              `Stripe API error ${res.status}, retrying (${attempt + 1}/${retries})`,
+            );
+            await new Promise((r) => setTimeout(r, 1000 * (attempt + 1)));
+            continue;
+          }
+          const errObj = err as { error?: { message?: string } };
+          throw new Error(
+            `Stripe error: ${errObj.error?.message || res.statusText}`,
+          );
+        }
+
+        return res.json() as Promise<T>;
+      } catch (err) {
+        if (attempt < retries && (err as Error).message?.includes('fetch')) {
+          this.logger.warn(
+            `Stripe network error, retrying (${attempt + 1}/${retries})`,
+          );
+          await new Promise((r) => setTimeout(r, 1000 * (attempt + 1)));
+          continue;
+        }
+        throw err;
+      }
     }
 
-    const res = await fetch(url, options);
-    if (!res.ok) {
-      const err = await res.json().catch(() => ({}));
-      this.logger.error(`Stripe API error: ${res.status}`, err);
-      const errObj = err as { error?: { message?: string } };
-      throw new Error(
-        `Stripe error: ${errObj.error?.message || res.statusText}`,
-      );
-    }
-
-    return res.json() as Promise<T>;
+    throw new Error('Stripe request failed after all retries');
   }
 
   async createCustomer(

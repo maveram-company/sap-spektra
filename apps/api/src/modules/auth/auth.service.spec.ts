@@ -20,6 +20,11 @@ describe('AuthService', () => {
         findUnique: jest.fn(),
         update: jest.fn(),
       },
+      refreshToken: {
+        create: jest.fn().mockResolvedValue({}),
+        findUnique: jest.fn(),
+        updateMany: jest.fn().mockResolvedValue({ count: 1 }),
+      },
       $transaction: jest.fn(),
     };
 
@@ -74,6 +79,8 @@ describe('AuthService', () => {
       const result = await service.login(loginDto);
 
       expect(result.accessToken).toBe('mock-jwt-token');
+      expect(result.refreshToken).toBeDefined();
+      expect(typeof result.refreshToken).toBe('string');
       expect(result.user.email).toBe('admin@test.com');
       expect(result.user.role).toBe('admin');
       expect(result.user.organizationId).toBe('org-1');
@@ -253,6 +260,90 @@ describe('AuthService', () => {
           role: 'admin',
         }),
       ).rejects.toThrow(UnauthorizedException);
+    });
+  });
+
+  describe('refreshAccessToken', () => {
+    it('returns new accessToken with valid refresh token', async () => {
+      prisma.refreshToken.findUnique.mockResolvedValue({
+        token: 'valid-token',
+        revokedAt: null,
+        expiresAt: new Date(Date.now() + 86400000),
+        user: {
+          id: 'u-1',
+          email: 'admin@test.com',
+          name: 'Admin',
+          memberships: [
+            {
+              organizationId: 'org-1',
+              role: 'admin',
+              organization: { name: 'Test Org' },
+            },
+          ],
+        },
+      });
+
+      const result = await service.refreshAccessToken('valid-token');
+
+      expect(result.accessToken).toBe('mock-jwt-token');
+      expect(result.user.id).toBe('u-1');
+      expect(result.user.email).toBe('admin@test.com');
+    });
+
+    it('throws for expired refresh token', async () => {
+      prisma.refreshToken.findUnique.mockResolvedValue({
+        token: 'expired-token',
+        revokedAt: null,
+        expiresAt: new Date(Date.now() - 86400000),
+        user: {
+          id: 'u-1',
+          email: 'admin@test.com',
+          name: 'Admin',
+          memberships: [],
+        },
+      });
+
+      await expect(service.refreshAccessToken('expired-token')).rejects.toThrow(
+        UnauthorizedException,
+      );
+    });
+  });
+
+  describe('revokeRefreshToken', () => {
+    it('revokes a refresh token', async () => {
+      prisma.refreshToken.updateMany.mockResolvedValue({ count: 1 });
+
+      await service.revokeRefreshToken('some-token');
+
+      expect(prisma.refreshToken.updateMany).toHaveBeenCalledWith({
+        where: { token: 'some-token', revokedAt: null },
+        data: { revokedAt: expect.any(Date) },
+      });
+    });
+  });
+
+  describe('forgotPassword', () => {
+    it('returns generic message regardless of email existence', async () => {
+      prisma.user.findUnique.mockResolvedValue(null);
+
+      const result = await service.forgotPassword('nonexistent@test.com');
+
+      expect(result.message).toBe(
+        'If the email exists, a reset link has been sent',
+      );
+    });
+
+    it('returns generic message for existing user', async () => {
+      prisma.user.findUnique.mockResolvedValue({
+        id: 'u-1',
+        email: 'admin@test.com',
+      });
+
+      const result = await service.forgotPassword('admin@test.com');
+
+      expect(result.message).toBe(
+        'If the email exists, a reset link has been sent',
+      );
     });
   });
 });

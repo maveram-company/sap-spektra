@@ -112,8 +112,7 @@ export class WebhookController {
           );
         }
         if (orgId && sub.status === 'past_due') {
-          // Mark subscription as past_due — dunning starts
-          this.logger.warn(`Subscription past_due for org ${orgId}`);
+          await this.billing.markPastDue(orgId);
         }
         break;
       }

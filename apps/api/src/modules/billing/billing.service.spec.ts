@@ -174,6 +174,26 @@ describe('BillingService', () => {
     });
   });
 
+  // ── markPastDue ──
+
+  describe('markPastDue', () => {
+    it('updates subscription status to past_due', async () => {
+      prisma.subscription.update.mockResolvedValue({
+        id: 'sub-1',
+        organizationId: ORG_ID,
+        status: 'past_due',
+      });
+
+      const result = await service.markPastDue(ORG_ID);
+
+      expect(result.status).toBe('past_due');
+      expect(prisma.subscription.update).toHaveBeenCalledWith({
+        where: { organizationId: ORG_ID },
+        data: { status: 'past_due' },
+      });
+    });
+  });
+
   // ── suspendSubscription ──
 
   describe('suspendSubscription', () => {

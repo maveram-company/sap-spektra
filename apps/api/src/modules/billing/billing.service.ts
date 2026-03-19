@@ -112,6 +112,13 @@ export class BillingService {
     return subscription;
   }
 
+  async markPastDue(organizationId: string) {
+    return this.prisma.subscription.update({
+      where: { organizationId },
+      data: { status: 'past_due' },
+    });
+  }
+
   async suspendSubscription(organizationId: string) {
     return this.prisma.subscription.update({
       where: { organizationId },

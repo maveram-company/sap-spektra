@@ -56,9 +56,24 @@ model User {
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
 
-  memberships Membership[]
+  memberships   Membership[]
+  refreshTokens RefreshToken[]
 
   @@map("users")
+}
+
+model RefreshToken {
+  id        String    @id @default(uuid())
+  userId    String
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  token     String    @unique
+  expiresAt DateTime
+  revokedAt DateTime?
+  createdAt DateTime  @default(now())
+
+  @@index([userId])
+  @@index([token])
+  @@map("refresh_tokens")
 }
 
 model Membership {
@@ -600,7 +615,7 @@ model Subscription {
   organizationId   String
   organization     Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
   planTier         String
-  status           String   @default("trialing") // trialing, active, past_due, canceled, suspended
+  status           String   @default("trialing") // trialing, active, past_due, canceled, suspended, expired
   stripeCustomerId String?
   stripeSubId      String?
   trialEndsAt      DateTime?

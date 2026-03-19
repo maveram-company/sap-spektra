@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { ThrottlerModule, ThrottlerGuard } from '@nestjs/throttler';
+import { ScheduleModule } from '@nestjs/schedule';
 import { APP_GUARD } from '@nestjs/core';
 import configuration from './config/configuration';
 import { PrismaModule } from './infrastructure/prisma/prisma.module';
@@ -39,6 +40,7 @@ import { CloudConnectorModule } from './modules/cloud-connector/cloud-connector.
       load: [configuration],
     }),
     ThrottlerModule.forRoot([{ ttl: 60000, limit: 100 }]),
+    ScheduleModule.forRoot(),
     PrismaModule,
     CacheModule,
     AuthModule,

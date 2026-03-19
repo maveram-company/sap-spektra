@@ -2,10 +2,12 @@ import {
   Injectable,
   UnauthorizedException,
   ConflictException,
+  BadRequestException,
   Logger,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcryptjs';
+import { randomBytes } from 'crypto';
 import { PrismaService } from '../../infrastructure/prisma/prisma.service';
 import { AuditService } from '../audit/audit.service';
 import { BillingService } from '../billing/billing.service';
@@ -35,19 +37,19 @@ export class AuthService {
     });
 
     if (!user) {
-      this.logger.warn(`Login attempt with unknown email: ${dto.email}`);
+      this.logger.warn('Login attempt with unknown email');
       throw new UnauthorizedException('Invalid credentials');
     }
 
     const isValid = await bcrypt.compare(dto.password, user.passwordHash);
     if (!isValid) {
-      this.logger.warn(`Failed login attempt for user: ${dto.email}`);
+      this.logger.warn(`Failed login attempt for user ${user.id}`);
       throw new UnauthorizedException('Invalid credentials');
     }
 
     const membership = user.memberships[0];
     if (!membership) {
-      this.logger.warn(`User ${dto.email} has no organization membership`);
+      this.logger.warn(`User ${user.id} has no organization membership`);
       throw new UnauthorizedException('No organization membership');
     }
 
@@ -64,9 +66,10 @@ export class AuthService {
     };
 
     const accessToken = this.jwtService.sign(payload);
+    const refreshToken = await this.generateRefreshToken(user.id);
 
     this.logger.log(
-      `User ${user.email} logged in → org ${membership.organization.slug}`,
+      `User ${user.id} logged in → org ${membership.organization.slug}`,
     );
 
     // Audit log (fire and forget)
@@ -84,6 +87,7 @@ export class AuthService {
 
     return {
       accessToken,
+      refreshToken,
       user: {
         id: user.id,
         email: user.email,
@@ -156,8 +160,9 @@ export class AuthService {
     };
 
     const accessToken = this.jwtService.sign(payload);
+    const refreshToken = await this.generateRefreshToken(result.user.id);
 
-    this.logger.log(`New registration: ${dto.email} → org ${slug}`);
+    this.logger.log(`New registration: user ${result.user.id} → org ${slug}`);
 
     // Audit log (fire and forget)
     this.audit
@@ -174,6 +179,7 @@ export class AuthService {
 
     return {
       accessToken,
+      refreshToken,
       user: {
         id: result.user.id,
         email: result.user.email,
@@ -198,5 +204,91 @@ export class AuthService {
     }
 
     return payload;
+  }
+
+  async generateRefreshToken(userId: string): Promise<string> {
+    const token = randomBytes(40).toString('hex');
+    const expiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000); // 7 days
+
+    await this.prisma.refreshToken.create({
+      data: { userId, token, expiresAt },
+    });
+
+    return token;
+  }
+
+  async refreshAccessToken(refreshToken: string) {
+    const stored = await this.prisma.refreshToken.findUnique({
+      where: { token: refreshToken },
+      include: {
+        user: {
+          include: {
+            memberships: { include: { organization: true }, take: 1 },
+          },
+        },
+      },
+    });
+
+    if (!stored || stored.revokedAt || stored.expiresAt < new Date()) {
+      throw new UnauthorizedException('Invalid or expired refresh token');
+    }
+
+    const membership = stored.user.memberships[0];
+    if (!membership)
+      throw new UnauthorizedException('No organization membership');
+
+    const payload: JwtPayload = {
+      sub: stored.user.id,
+      email: stored.user.email,
+      organizationId: membership.organizationId,
+      role: membership.role,
+    };
+
+    const accessToken = this.jwtService.sign(payload);
+
+    return {
+      accessToken,
+      user: {
+        id: stored.user.id,
+        email: stored.user.email,
+        name: stored.user.name,
+        role: membership.role,
+      },
+    };
+  }
+
+  async revokeRefreshToken(token: string) {
+    await this.prisma.refreshToken.updateMany({
+      where: { token, revokedAt: null },
+      data: { revokedAt: new Date() },
+    });
+  }
+
+  async revokeAllUserTokens(userId: string) {
+    await this.prisma.refreshToken.updateMany({
+      where: { userId, revokedAt: null },
+      data: { revokedAt: new Date() },
+    });
+  }
+
+  async forgotPassword(email: string) {
+    const user = await this.prisma.user.findUnique({ where: { email } });
+    if (!user)
+      return { message: 'If the email exists, a reset link has been sent' };
+
+    const resetToken = randomBytes(32).toString('hex');
+    // In production, this would send an email with a reset link
+    this.logger.log(
+      `Password reset requested for user ${user.id} (token: ${resetToken.substring(0, 8)}...)`,
+    );
+
+    return { message: 'If the email exists, a reset link has been sent' };
+  }
+
+  async resetPassword(_token: string, _newPassword: string) {
+    // Placeholder: In production, validate token against stored reset tokens
+    throw new BadRequestException(
+      'Password reset tokens not yet implemented — use admin reset',
+    );
   }
 }

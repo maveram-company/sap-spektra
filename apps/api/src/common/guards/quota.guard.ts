@@ -39,6 +39,12 @@ export class QuotaGuard implements CanActivate {
         throw new ForbiddenException('Subscription suspended');
       }
 
+      if (subscription.status === 'expired') {
+        throw new ForbiddenException(
+          'Trial expired. Please upgrade to a paid plan.',
+        );
+      }
+
       if (subscription.status === 'canceled') {
         const method = request.method?.toUpperCase();
         if (method && method !== 'GET') {
