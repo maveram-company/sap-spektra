@@ -30,6 +30,7 @@ import { LicensesModule } from './modules/licenses/licenses.module';
 import { BillingModule } from './modules/billing/billing.module';
 import { InvitationsModule } from './modules/invitations/invitations.module';
 import { AgentsModule } from './modules/agents/agents.module';
+import { CloudConnectorModule } from './modules/cloud-connector/cloud-connector.module';
 
 @Module({
   imports: [
@@ -65,6 +66,7 @@ import { AgentsModule } from './modules/agents/agents.module';
     BillingModule,
     InvitationsModule,
     AgentsModule,
+    CloudConnectorModule,
   ],
   providers: [{ provide: APP_GUARD, useClass: ThrottlerGuard }],
 })

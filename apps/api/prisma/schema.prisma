@@ -40,6 +40,7 @@ model Organization {
   usageRecords    UsageRecord[]
   invitations     Invitation[]
   agentRegistrations AgentRegistration[]
+  cloudConnectorConfigs CloudConnectorConfig[]
 
   @@map("organizations")
 }
@@ -138,6 +139,7 @@ model System {
   certificates       CertificateRecord[]
   runbookExecutions  RunbookExecution[]
   agentRegistrations AgentRegistration[]
+  cloudConnectorConfig CloudConnectorConfig?
 
   @@unique([organizationId, sid])
   @@index([organizationId])
@@ -668,4 +670,27 @@ model AgentRegistration {
   @@index([systemId])
   @@index([status])
   @@map("agent_registrations")
+}
+
+// ── Cloud Connector ──
+
+model CloudConnectorConfig {
+  id               String   @id @default(uuid())
+  organizationId   String
+  organization     Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  systemId         String   @unique
+  system           System   @relation(fields: [systemId], references: [id], onDelete: Cascade)
+  locationId       String   // SAP BTP subaccount location ID
+  virtualHost      String   // Virtual host exposed by CC
+  virtualPort      Int      // Virtual port
+  protocol         String   @default("RFC") // RFC, HTTP, HTTPS
+  status           String   @default("configured") // configured, testing, connected, failed, disconnected
+  lastTestAt       DateTime?
+  lastTestResult   String?  // success, timeout, auth_failed, unreachable
+  latencyMs        Int?
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  @@index([organizationId])
+  @@map("cloud_connector_configs")
 }

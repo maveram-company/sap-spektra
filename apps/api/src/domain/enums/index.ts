@@ -178,6 +178,22 @@ export const RUNBOOK_CATEGORY_LABELS: Record<RunbookCategory, string> = {
   [RunbookCategory.SOLARIS_OS]: 'Solaris',
 };
 
+// ── Connectivity ──
+export enum ConnectivityProfile {
+  AGENT = 'AGENT',
+  CLOUD_CONNECTOR = 'CLOUD_CONNECTOR',
+  API_ONLY = 'API_ONLY',
+  NONE = 'NONE',
+}
+
+export enum CloudConnectorStatus {
+  CONFIGURED = 'configured',
+  TESTING = 'testing',
+  CONNECTED = 'connected',
+  FAILED = 'failed',
+  DISCONNECTED = 'disconnected',
+}
+
 // ── Audit ──
 export enum AuditSeverity {
   INFO = 'info',
