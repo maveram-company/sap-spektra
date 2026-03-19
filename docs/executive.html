@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="dark" data-lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <title>Executive Summary — SAP Spektra Docs</title>
+  <link rel="stylesheet" href="theme.css">
+  <script src="theme-toggle.js"></script>
+  <script src="lang-toggle.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+  <script src="mermaid-init.js"></script>
+</head>
+<body>
+<div class="docs-wrapper">
+  <nav class="docs-sidebar">
+    <div class="sidebar-brand">
+      <div class="logo">&#9889;</div>
+      <div class="brand-text">
+        <div class="brand-name">SAP Spektra</div>
+        <div class="brand-sub">Documentation v3.0</div>
+      </div>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-section-label">Overview</div>
+      <a href="index.html" class="sidebar-link">Home</a>
+      <a href="executive.html" class="sidebar-link active">Executive Summary</a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-section-label">Architecture</div>
+      <a href="architecture.html" class="sidebar-link">System Architecture</a>
+      <a href="multi-mode.html" class="sidebar-link">Multi-Mode Model</a>
+      <a href="domains.html" class="sidebar-link">Domain Reference</a>
+      <a href="domain-model.html" class="sidebar-link">Data Model</a>
+      <a href="api-reference.html" class="sidebar-link">API Reference</a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-section-label">Operations</div>
+      <a href="getting-started.html" class="sidebar-link">Setup &amp; Development</a>
+      <a href="validation.html" class="sidebar-link">Validation &amp; Quality</a>
+      <a href="backlog.html" class="sidebar-link">Hardening Backlog</a>
+    </div>
+  </nav>
+
+  <main class="docs-main">
+    <div class="page-header">
+      <h1>
+        <span class="es">Resumen Ejecutivo</span>
+        <span class="en">Executive Summary</span>
+      </h1>
+      <p class="subtitle">
+        <span class="es">Vision de alto nivel para liderazgo y stakeholders</span>
+        <span class="en">High-level vision for leadership and stakeholders</span>
+      </p>
+    </div>
+
+    <!-- What is SAP Spektra -->
+    <h2>
+      <span class="es">Que es SAP Spektra</span>
+      <span class="en">What is SAP Spektra</span>
+    </h2>
+    <div class="card">
+      <p>
+        <span class="es">SAP Spektra es una plataforma de centro de control para operaciones SAP. Proporciona monitoreo unificado, automatizacion de runbooks, gestion de aprobaciones y alta disponibilidad para landscapes SAP heterogeneos — desde S/4HANA en RISE hasta sistemas legacy ECC con Oracle o DB2.</span>
+        <span class="en">SAP Spektra is a mission control platform for SAP operations. It provides unified monitoring, runbook automation, approval management, and high availability for heterogeneous SAP landscapes — from S/4HANA on RISE to legacy ECC systems running Oracle or DB2.</span>
+      </p>
+      <p class="mt-2">
+        <span class="es">La plataforma se distingue por su <strong>arquitectura multi-modo</strong>: puede operar en 4 modos (REAL, FALLBACK, MOCK, RESTRICTED) con proveedores intercambiables por dominio. Esto permite demostraciones sin infraestructura SAP, degradacion controlada ante fallos, y restriccion de operaciones criticas para sistemas cloud-managed.</span>
+        <span class="en">The platform stands out through its <strong>multi-mode architecture</strong>: it can operate in 4 modes (REAL, FALLBACK, MOCK, RESTRICTED) with interchangeable providers per domain. This enables demos without SAP infrastructure, controlled degradation on failures, and restriction of critical operations for cloud-managed systems.</span>
+      </p>
+    </div>
+
+    <!-- What Was Achieved -->
+    <h2>
+      <span class="es">Lo Que Se Logro</span>
+      <span class="en">What Was Achieved</span>
+    </h2>
+    <div class="kpi-grid">
+      <div class="kpi-card">
+        <div class="card-icon cyan">&#9881;</div>
+        <div>
+          <div class="kpi-value text-cyan">22</div>
+          <div class="kpi-label">
+            <span class="es">Modulos NestJS</span>
+            <span class="en">NestJS Modules</span>
+          </div>
+        </div>
+      </div>
+      <div class="kpi-card">
+        <div class="card-icon violet">&#8644;</div>
+        <div>
+          <div class="kpi-value text-violet">78</div>
+          <div class="kpi-label">REST Endpoints</div>
+        </div>
+      </div>
+      <div class="kpi-card">
+        <div class="card-icon success">&#128230;</div>
+        <div>
+          <div class="kpi-value text-success">12</div>
+          <div class="kpi-label">
+            <span class="es">Proveedores de Dominio</span>
+            <span class="en">Domain Providers</span>
+          </div>
+        </div>
+      </div>
+      <div class="kpi-card">
+        <div class="card-icon warning">&#10004;</div>
+        <div>
+          <div class="kpi-value text-warning">1,414</div>
+          <div class="kpi-label">Tests</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="grid-2">
+      <div class="card">
+        <h3 class="text-cyan">Backend</h3>
+        <ul class="feature-list">
+          <li>NestJS 11 + Prisma 6 + PostgreSQL 16 + Redis 7</li>
+          <li><span class="es">22 modulos, 78 endpoints, 27 modelos de datos</span><span class="en">22 modules, 78 endpoints, 27 data models</span></li>
+          <li><span class="es">Auth JWT + Passport + bcrypt, 4 roles, multi-tenant</span><span class="en">JWT auth + Passport + bcrypt, 4 roles, multi-tenant</span></li>
+          <li><span class="es">49 suites de test, 392 tests</span><span class="en">49 test suites, 392 tests</span></li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3 class="text-violet">Frontend</h3>
+        <ul class="feature-list">
+          <li>React 19 + Vite 7 + Tailwind 4 + TypeScript strict</li>
+          <li><span class="es">12 proveedores con contract + real + mock + fallback</span><span class="en">12 providers with contract + real + mock + fallback</span></li>
+          <li><span class="es">4 proveedores restricted dedicados</span><span class="en">4 dedicated restricted providers</span></li>
+          <li><span class="es">85 suites de test, 1,022 tests</span><span class="en">85 test suites, 1,022 tests</span></li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- What Is Validated -->
+    <h2>
+      <span class="es">Lo Que Esta Validado</span>
+      <span class="en">What Is Validated</span>
+    </h2>
+    <div class="card">
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th><span class="es">Area</span><span class="en">Area</span></th>
+              <th>Status</th>
+              <th><span class="es">Evidencia</span><span class="en">Evidence</span></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><span class="es">Arquitectura multi-modo</span><span class="en">Multi-mode architecture</span></td>
+              <td><span class="badge success">IMPL</span></td>
+              <td><span class="es">4 modos, 12 dominios, ProviderResult&lt;T&gt;, parity tests</span><span class="en">4 modes, 12 domains, ProviderResult&lt;T&gt;, parity tests</span></td>
+            </tr>
+            <tr>
+              <td><span class="es">Contratos tipados</span><span class="en">Typed contracts</span></td>
+              <td><span class="badge success">IMPL</span></td>
+              <td><span class="es">Cada dominio tiene interfaz TypeScript que real/mock/fallback/restricted implementan</span><span class="en">Each domain has TypeScript interface that real/mock/fallback/restricted implement</span></td>
+            </tr>
+            <tr>
+              <td><span class="es">Seguridad</span><span class="en">Security</span></td>
+              <td><span class="badge success">IMPL</span></td>
+              <td>JWT + Passport, bcrypt (12 rounds), RBAC, Helmet, CORS, rate limiting, XSS sanitization</td>
+            </tr>
+            <tr>
+              <td><span class="es">Multi-tenancy</span><span class="en">Multi-tenancy</span></td>
+              <td><span class="badge success">IMPL</span></td>
+              <td><span class="es">organizationId en cada consulta, aislamiento a nivel de datos</span><span class="en">organizationId in every query, data-level isolation</span></td>
+            </tr>
+            <tr>
+              <td><span class="es">Tests automatizados</span><span class="en">Automated tests</span></td>
+              <td><span class="badge success">IMPL</span></td>
+              <td><span class="es">1,414 tests: Jest (BE), Vitest (FE), Playwright (E2E)</span><span class="en">1,414 tests: Jest (BE), Vitest (FE), Playwright (E2E)</span></td>
+            </tr>
+            <tr>
+              <td><span class="es">HA/DR comandos</span><span class="en">HA/DR commands</span></td>
+              <td><span class="badge warning">SIM</span></td>
+              <td><span class="es">Gestion de estados real, failover simulado en LOCAL_SIMULATED</span><span class="en">Real state management, failover simulated in LOCAL_SIMULATED</span></td>
+            </tr>
+            <tr>
+              <td><span class="es">AI/Chat</span><span class="en">AI/Chat</span></td>
+              <td><span class="badge warning">SIM</span></td>
+              <td><span class="es">Claude API en AWS_REAL, mock en LOCAL_SIMULATED</span><span class="en">Claude API in AWS_REAL, mock in LOCAL_SIMULATED</span></td>
+            </tr>
+            <tr>
+              <td><span class="es">Agente SAP</span><span class="en">SAP Agent</span></td>
+              <td><span class="badge warning">SIM</span></td>
+              <td><span class="es">Colector Python con stubs de BD, RFC/BAPI en roadmap</span><span class="en">Python collector with DB stubs, RFC/BAPI on roadmap</span></td>
+            </tr>
+            <tr>
+              <td><span class="es">Infraestructura AWS</span><span class="en">AWS Infrastructure</span></td>
+              <td><span class="badge violet">ROAD</span></td>
+              <td><span class="es">Templates Terraform, sin SDK en codigo de la app</span><span class="en">Terraform templates only, no SDK in app code</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Why the Model is Productizable -->
+    <h2>
+      <span class="es">Por Que el Modelo es Productizable</span>
+      <span class="en">Why the Model is Productizable</span>
+    </h2>
+    <div class="card">
+      <div class="grid-2">
+        <div>
+          <h4>
+            <span class="es">Diferenciador: Multi-Modo</span>
+            <span class="en">Differentiator: Multi-Mode</span>
+          </h4>
+          <p class="text-sm">
+            <span class="es">La arquitectura de proveedores permite que la misma UI funcione con datos reales (produccion), datos en fallback (degradacion controlada), datos mock (demo/testing), o en modo restricted (sistemas cloud-managed). No existe recableado manual — el motor de capacidades resuelve automaticamente por dominio.</span>
+            <span class="en">The provider architecture allows the same UI to work with real data (production), fallback data (controlled degradation), mock data (demo/testing), or in restricted mode (cloud-managed systems). No manual rewiring — the capability engine resolves automatically per domain.</span>
+          </p>
+        </div>
+        <div>
+          <h4>
+            <span class="es">Camino a Produccion</span>
+            <span class="en">Path to Production</span>
+          </h4>
+          <p class="text-sm">
+            <span class="es">Cada proveedor real ya tiene la interfaz correcta. Conectar un sistema SAP real requiere implementar el proveedor real (que ya existe con llamadas HTTP) y apuntar a la API del agente desplegado. El cambio es de configuracion, no de arquitectura.</span>
+            <span class="en">Every real provider already has the correct interface. Connecting a real SAP system requires implementing the real provider (which already exists with HTTP calls) and pointing to the deployed agent's API. The change is configuration, not architecture.</span>
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- What's Next -->
+    <h2>
+      <span class="es">Proximos Pasos</span>
+      <span class="en">What's Next</span>
+    </h2>
+    <div class="card">
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th><span class="es">Prioridad</span><span class="en">Priority</span></th>
+              <th><span class="es">Iniciativa</span><span class="en">Initiative</span></th>
+              <th><span class="es">Impacto</span><span class="en">Impact</span></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><span class="badge danger">P0</span></td>
+              <td><span class="es">Agente RFC/BAPI funcional</span><span class="en">Functional RFC/BAPI agent</span></td>
+              <td><span class="es">Habilita conexion real a sistemas SAP</span><span class="en">Enables real SAP system connection</span></td>
+            </tr>
+            <tr>
+              <td><span class="badge danger">P0</span></td>
+              <td><span class="es">EvidencePanel conectado a datos reales</span><span class="en">EvidencePanel connected to real data</span></td>
+              <td><span class="es">Completa el ciclo de transparencia multi-modo en UI</span><span class="en">Completes the multi-mode transparency cycle in UI</span></td>
+            </tr>
+            <tr>
+              <td><span class="badge warning">P1</span></td>
+              <td><span class="es">AWS SDK integration (Cognito, S3, SQS)</span><span class="en">AWS SDK integration (Cognito, S3, SQS)</span></td>
+              <td><span class="es">Produccion cloud-native</span><span class="en">Cloud-native production</span></td>
+            </tr>
+            <tr>
+              <td><span class="badge warning">P1</span></td>
+              <td><span class="es">Parity tests end-to-end</span><span class="en">End-to-end parity tests</span></td>
+              <td><span class="es">Garantiza que mock == real en comportamiento</span><span class="en">Guarantees mock == real in behavior</span></td>
+            </tr>
+            <tr>
+              <td><span class="badge cyan">P2</span></td>
+              <td><span class="es">HA failover real con SAP HANA System Replication</span><span class="en">Real HA failover with SAP HANA System Replication</span></td>
+              <td><span class="es">Operaciones DR validadas</span><span class="en">Validated DR operations</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="callout success">
+      <div class="callout-icon">&#9989;</div>
+      <div>
+        <span class="es"><strong>Conclusion:</strong> SAP Spektra tiene una arquitectura solida, validada con 1,414 tests, y un modelo multi-modo unico que permite operar en multiples contextos sin cambios de codigo. El camino a produccion es de integracion, no de reconstruccion.</span>
+        <span class="en"><strong>Conclusion:</strong> SAP Spektra has a solid architecture, validated with 1,414 tests, and a unique multi-mode model that enables operation across multiple contexts without code changes. The path to production is integration, not reconstruction.</span>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <div style="margin-top:48px;padding-top:24px;border-top:1px solid var(--brd);text-align:center">
+      <p class="text-muted text-sm">SAP Spektra v3.0 — Maveram Company</p>
+    </div>
+  </main>
+</div>
+</body>
+</html>

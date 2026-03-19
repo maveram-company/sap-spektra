@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width,initial-scale=1.0">
-  <title>Arquitectura — SAP Spektra Docs</title>
+  <title>System Architecture — SAP Spektra Docs</title>
   <link rel="stylesheet" href="theme.css">
   <script src="theme-toggle.js"></script>
   <script src="lang-toggle.js"></script>
@@ -17,132 +17,107 @@
       <div class="logo">&#9889;</div>
       <div class="brand-text">
         <div class="brand-name">SAP Spektra</div>
-        <div class="brand-sub">Documentacion v2.0</div>
+        <div class="brand-sub">Documentation v3.0</div>
       </div>
     </div>
     <div class="sidebar-section">
-      <div class="sidebar-section-label">Inicio</div>
-      <a href="index.html" class="sidebar-link">Portal</a>
-      <a href="getting-started.html" class="sidebar-link">Primeros Pasos</a>
+      <div class="sidebar-section-label">Overview</div>
+      <a href="index.html" class="sidebar-link">Home</a>
+      <a href="executive.html" class="sidebar-link">Executive Summary</a>
     </div>
     <div class="sidebar-section">
       <div class="sidebar-section-label">Architecture</div>
-      <a href="architecture.html" class="sidebar-link active">Arquitectura</a>
-      <a href="domain-model.html" class="sidebar-link">Modelo de Datos</a>
+      <a href="architecture.html" class="sidebar-link active">System Architecture</a>
+      <a href="multi-mode.html" class="sidebar-link">Multi-Mode Model</a>
+      <a href="domains.html" class="sidebar-link">Domain Reference</a>
+      <a href="domain-model.html" class="sidebar-link">Data Model</a>
       <a href="api-reference.html" class="sidebar-link">API Reference</a>
     </div>
     <div class="sidebar-section">
-      <div class="sidebar-section-label">Command</div>
-      <a href="dashboard.html" class="sidebar-link">Dashboard</a>
-      <a href="landscape.html" class="sidebar-link">Landscape</a>
-      <a href="alerts.html" class="sidebar-link">Alertas</a>
-    </div>
-    <div class="sidebar-section">
-      <div class="sidebar-section-label">Monitor</div>
-      <a href="systems.html" class="sidebar-link">Sistemas</a>
-      <a href="connectors.html" class="sidebar-link">Conectores</a>
-      <a href="events.html" class="sidebar-link">Eventos</a>
-    </div>
-    <div class="sidebar-section">
-      <div class="sidebar-section-label">Intelligence</div>
-      <a href="ai-analysis.html" class="sidebar-link">Analisis IA</a>
-      <a href="analytics.html" class="sidebar-link">Analytics</a>
-      <a href="reports.html" class="sidebar-link">Reportes</a>
-      <a href="comparison.html" class="sidebar-link">Comparacion</a>
-    </div>
-    <div class="sidebar-section">
       <div class="sidebar-section-label">Operations</div>
-      <a href="runbooks.html" class="sidebar-link">Runbooks</a>
-      <a href="approvals.html" class="sidebar-link">Aprobaciones</a>
-      <a href="operations.html" class="sidebar-link">Operaciones</a>
-      <a href="jobs.html" class="sidebar-link">Jobs (SM37)</a>
-      <a href="transports.html" class="sidebar-link">Transportes</a>
-      <a href="sla.html" class="sidebar-link">SLA</a>
-      <a href="ha-control.html" class="sidebar-link">HA Control</a>
-      <a href="certificates.html" class="sidebar-link">Certificados</a>
-    </div>
-    <div class="sidebar-section">
-      <div class="sidebar-section-label">Admin</div>
-      <a href="admin.html" class="sidebar-link">Gestion</a>
-      <a href="settings.html" class="sidebar-link">Configuracion</a>
-      <a href="connect-system.html" class="sidebar-link">Conectar Sistema</a>
+      <a href="getting-started.html" class="sidebar-link">Setup &amp; Development</a>
+      <a href="validation.html" class="sidebar-link">Validation &amp; Quality</a>
+      <a href="backlog.html" class="sidebar-link">Hardening Backlog</a>
     </div>
   </nav>
 
   <main class="docs-main">
-    <div class="breadcrumb">
-      <a href="index.html">SAP Spektra</a>
-      <span class="sep">/</span>
-      <span><span class="es">Arquitectura</span><span class="en">Architecture</span></span>
-    </div>
-
     <div class="page-header">
       <h1>
         <span class="es">Arquitectura del Sistema</span>
         <span class="en">System Architecture</span>
       </h1>
-      <div class="subtitle">
-        <span class="es">Diagrama de componentes, flujo de datos, seguridad, multi-tenancy y estructura del proyecto</span>
-        <span class="en">Component diagram, data flow, security, multi-tenancy and project structure</span>
-      </div>
+      <p class="subtitle">
+        <span class="es">Componentes, flujo de datos, autenticacion y estructura del proyecto</span>
+        <span class="en">Components, data flow, authentication, and project structure</span>
+      </p>
     </div>
 
-    <!-- ═══ System Diagram ═══ -->
+    <!-- System Diagram -->
     <h2>
       <span class="es">Diagrama del Sistema</span>
       <span class="en">System Diagram</span>
     </h2>
-
     <div class="card">
       <div class="mermaid">
 graph TB
-    subgraph platform["SAP Spektra Platform"]
-        FE["&lt;b&gt;Frontend&lt;/b&gt;&lt;br/&gt;React 19 · Vite 7&lt;br/&gt;Tailwind 4 · Port 5173"]
-        BE["&lt;b&gt;API Backend&lt;/b&gt;&lt;br/&gt;NestJS 11 · TypeScript&lt;br/&gt;Prisma 6 · Port 3001"]
-        AG["&lt;b&gt;Agent / Collector&lt;/b&gt;&lt;br/&gt;Python · OS Metrics&lt;br/&gt;SAP Metrics · Heartbeat"]
-        PG[("&lt;b&gt;PostgreSQL 16&lt;/b&gt;&lt;br/&gt;Port 5432")]
-        RD[("&lt;b&gt;Redis 7&lt;/b&gt;&lt;br/&gt;Port 6379")]
-        SW["&lt;b&gt;Swagger&lt;/b&gt;&lt;br/&gt;OpenAPI 3 · /api"]
+    subgraph client["Client Layer"]
+        FE["&lt;b&gt;Frontend&lt;/b&gt;&lt;br/&gt;React 19 · Vite 7&lt;br/&gt;Tailwind 4 · TypeScript strict&lt;br/&gt;Port 5173"]
     end
 
-    subgraph sap["SAP Landscape"]
-        EP1["EP1 PRD"]
-        BW1["BW1 PRD"]
-        PI1["PI1 PRD"]
+    subgraph backend["Backend Layer"]
+        BE["&lt;b&gt;API&lt;/b&gt;&lt;br/&gt;NestJS 11 · Prisma 6&lt;br/&gt;22 modules · 78 endpoints&lt;br/&gt;Port 3001"]
+        AUTH["&lt;b&gt;Auth&lt;/b&gt;&lt;br/&gt;JWT · Passport · bcrypt&lt;br/&gt;4 roles · Multi-tenant"]
     end
 
-    FE -- "JWT" --&gt; BE
-    AG -- "REST" --&gt; BE
-    BE --&gt; PG
-    BE --&gt; RD
-    BE --&gt; SW
-    sap -.- AG
+    subgraph data["Data Layer"]
+        PG["&lt;b&gt;PostgreSQL 16&lt;/b&gt;&lt;br/&gt;27 Prisma models&lt;br/&gt;Migrations · Seed"]
+        RD["&lt;b&gt;Redis 7&lt;/b&gt;&lt;br/&gt;Cache · Sessions"]
+    end
+
+    subgraph agent["Agent Layer"]
+        AG["&lt;b&gt;Python Agent&lt;/b&gt;&lt;br/&gt;OS + SAP Collector&lt;br/&gt;DB Stubs · Heartbeat"]
+    end
+
+    subgraph infra["Infrastructure"]
+        DC["Docker Compose"]
+        TF["Terraform Templates&lt;br/&gt;(AWS roadmap)"]
+    end
+
+    FE -->|"REST + JWT"| BE
+    BE --> AUTH
+    BE --> PG
+    BE --> RD
+    AG -->|"Ingest + Heartbeat"| BE
+    DC --> PG
+    DC --> RD
       </div>
     </div>
 
-    <!-- ═══ Component Breakdown ═══ -->
+    <!-- Component Breakdown -->
     <h2>
-      <span class="es">Componentes del Sistema</span>
-      <span class="en">System Components</span>
+      <span class="es">Desglose de Componentes</span>
+      <span class="en">Component Breakdown</span>
     </h2>
 
     <div class="grid-2">
       <div class="card">
         <div class="card-header">
-          <div class="card-title"><div class="card-icon cyan">&#9881;</div> API Backend</div>
+          <div class="card-title"><div class="card-icon cyan">&#128187;</div> Frontend</div>
         </div>
         <div class="table-wrap">
           <table>
             <tbody>
-              <tr><td class="font-bold"><span class="es">Framework</span><span class="en">Framework</span></td><td>NestJS 11 + TypeScript 5</td></tr>
-              <tr><td class="font-bold"><span class="es">Puerto</span><span class="en">Port</span></td><td>3001</td></tr>
-              <tr><td class="font-bold">ORM</td><td>Prisma 6 (pg driver, 27 models)</td></tr>
-              <tr><td class="font-bold">Auth</td><td>JWT + Passport + bcryptjs</td></tr>
-              <tr><td class="font-bold">Docs</td><td>Swagger / OpenAPI 3.0</td></tr>
-              <tr><td class="font-bold">Cache</td><td>Redis (ioredis)</td></tr>
-              <tr><td class="font-bold">Rate Limit</td><td>@nestjs/throttler</td></tr>
-              <tr><td class="font-bold"><span class="es">Seguridad</span><span class="en">Security</span></td><td>Helmet, CORS, XSS protection</td></tr>
-              <tr><td class="font-bold"><span class="es">Modulos</span><span class="en">Modules</span></td><td>22 (auth, systems, alerts, runbooks, etc.)</td></tr>
+              <tr><td>Framework</td><td>React 19</td></tr>
+              <tr><td>Bundler</td><td>Vite 7</td></tr>
+              <tr><td>CSS</td><td>Tailwind CSS 4</td></tr>
+              <tr><td>TypeScript</td><td>strict mode</td></tr>
+              <tr><td>Routing</td><td>React Router v7</td></tr>
+              <tr><td>Charts</td><td>Recharts 3</td></tr>
+              <tr><td>Icons</td><td>Lucide React</td></tr>
+              <tr><td>i18n</td><td>i18next</td></tr>
+              <tr><td>Testing</td><td>Vitest + Playwright</td></tr>
+              <tr><td>Port</td><td>5173</td></tr>
             </tbody>
           </table>
         </div>
@@ -150,20 +125,21 @@ graph TB
 
       <div class="card">
         <div class="card-header">
-          <div class="card-title"><div class="card-icon violet">&#127912;</div> Frontend</div>
+          <div class="card-title"><div class="card-icon violet">&#9881;</div> Backend API</div>
         </div>
         <div class="table-wrap">
           <table>
             <tbody>
-              <tr><td class="font-bold"><span class="es">Framework</span><span class="en">Framework</span></td><td>React 19</td></tr>
-              <tr><td class="font-bold"><span class="es">Puerto</span><span class="en">Port</span></td><td>5173</td></tr>
-              <tr><td class="font-bold">Bundler</td><td>Vite 7</td></tr>
-              <tr><td class="font-bold">CSS</td><td>Tailwind CSS 4</td></tr>
-              <tr><td class="font-bold"><span class="es">Graficos</span><span class="en">Charts</span></td><td>Recharts 3</td></tr>
-              <tr><td class="font-bold"><span class="es">Iconos</span><span class="en">Icons</span></td><td>Lucide React</td></tr>
-              <tr><td class="font-bold">Router</td><td>React Router v7</td></tr>
-              <tr><td class="font-bold">HTTP</td><td><span class="es">Fetch nativo (useApi hook)</span><span class="en">Native Fetch (useApi hook)</span></td></tr>
-              <tr><td class="font-bold">i18n</td><td>i18next + react-i18next</td></tr>
+              <tr><td>Framework</td><td>NestJS 11</td></tr>
+              <tr><td>ORM</td><td>Prisma 6</td></tr>
+              <tr><td>Database</td><td>PostgreSQL 16</td></tr>
+              <tr><td>Cache</td><td>Redis 7</td></tr>
+              <tr><td>Auth</td><td>JWT + Passport + bcrypt</td></tr>
+              <tr><td>API Docs</td><td>Swagger / OpenAPI</td></tr>
+              <tr><td><span class="es">Modulos</span><span class="en">Modules</span></td><td>22</td></tr>
+              <tr><td>Endpoints</td><td>78</td></tr>
+              <tr><td>Testing</td><td>Jest</td></tr>
+              <tr><td>Port</td><td>3001</td></tr>
             </tbody>
           </table>
         </div>
@@ -171,614 +147,280 @@ graph TB
 
       <div class="card">
         <div class="card-header">
-          <div class="card-title"><div class="card-icon success">&#128225;</div> Agent / Collector</div>
-        </div>
-        <p>
-          <span class="es">El agente (Python) se despliega junto a los sistemas SAP y recopila metricas del host. Incluye stubs de colectores para multiples bases de datos. El agente usa el endpoint <code>POST /metrics/ingest</code> para enviar datos y <code>PATCH /connectors/:id/heartbeat</code> para heartbeats.</span>
-          <span class="en">The agent (Python) is deployed alongside SAP systems and collects host metrics. It includes collector stubs for multiple databases. The agent uses the <code>POST /metrics/ingest</code> endpoint to send data and <code>PATCH /connectors/:id/heartbeat</code> for heartbeats.</span>
-        </p>
-        <ul class="feature-list">
-          <li><span class="es">Metricas de host: CPU, memoria, disco, IOPS, red (os_collector)</span><span class="en">Host metrics: CPU, memory, disk, IOPS, network (os_collector)</span></li>
-          <li><span class="es">Stubs de colectores: HANA, Oracle, DB2, MSSQL, MaxDB, ASE, Cloud</span><span class="en">Collector stubs: HANA, Oracle, DB2, MSSQL, MaxDB, ASE, Cloud</span></li>
-          <li><span class="es">Deteccion SAP (sap_detector) y colector SAP (sap_collector)</span><span class="en">SAP detection (sap_detector) and SAP collector (sap_collector)</span></li>
-          <li><span class="es">Wizard de configuracion y validacion de permisos cloud</span><span class="en">Setup wizard and cloud permission validation</span></li>
-        </ul>
-        <div class="callout warning">
-          <div class="callout-icon">&#9888;&#65039;</div>
-          <div>
-            <span class="es"><strong>Estado:</strong> Los colectores de bases de datos y la integracion RFC/BAPI son stubs — la integracion real con SAP via RFC/BAPI esta en el ROADMAP.</span>
-            <span class="en"><strong>Status:</strong> Database collectors and RFC/BAPI integration are stubs — real SAP integration via RFC/BAPI is on the ROADMAP.</span>
-          </div>
-        </div>
-      </div>
-
-      <div class="card">
-        <div class="card-header">
-          <div class="card-title"><div class="card-icon warning">&#128451;</div>
-            <span class="es">Infraestructura</span>
-            <span class="en">Infrastructure</span>
+          <div class="card-title"><div class="card-icon success">&#128225;</div>
+            <span class="es">Agente</span><span class="en">Agent</span>
           </div>
         </div>
         <div class="table-wrap">
           <table>
             <tbody>
-              <tr><td class="font-bold">PostgreSQL</td><td><span class="es">Base de datos principal (puerto 5432)</span><span class="en">Primary database (port 5432)</span></td></tr>
-              <tr><td class="font-bold">Redis</td><td><span class="es">Cache y rate limiting (puerto 6379)</span><span class="en">Cache and rate limiting (port 6379)</span></td></tr>
-              <tr><td class="font-bold">Docker Compose</td><td><span class="es">Orquestacion de contenedores local</span><span class="en">Local container orchestration</span></td></tr>
-              <tr><td class="font-bold">Prisma Migrate</td><td><span class="es">Migraciones de esquema</span><span class="en">Schema migrations</span></td></tr>
+              <tr><td><span class="es">Lenguaje</span><span class="en">Language</span></td><td>Python</td></tr>
+              <tr><td><span class="es">Funcion</span><span class="en">Function</span></td><td><span class="es">Colector OS + SAP</span><span class="en">OS + SAP Collector</span></td></tr>
+              <tr><td><span class="es">Estado BD</span><span class="en">DB State</span></td><td><span class="es">Stubs (HANA, Oracle, DB2, etc.)</span><span class="en">Stubs (HANA, Oracle, DB2, etc.)</span></td></tr>
+              <tr><td>RFC/BAPI</td><td><span class="badge violet">ROAD</span></td></tr>
+              <tr><td>Heartbeat</td><td><span class="badge success">IMPL</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title"><div class="card-icon warning">&#128230;</div>
+            <span class="es">Infraestructura</span><span class="en">Infrastructure</span>
+          </div>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <tbody>
+              <tr><td>Docker Compose</td><td><span class="badge success">IMPL</span></td></tr>
+              <tr><td>PostgreSQL 16</td><td>Alpine</td></tr>
+              <tr><td>Redis 7</td><td>Alpine</td></tr>
+              <tr><td>Terraform</td><td><span class="es">Templates AWS (sin SDK en app)</span><span class="en">AWS templates (no SDK in app)</span></td></tr>
+              <tr><td>AWS Cognito/S3/SQS</td><td><span class="badge violet">ROAD</span></td></tr>
             </tbody>
           </table>
         </div>
       </div>
     </div>
 
-    <!-- ═══ Data Flow ═══ -->
-    <h2>
-      <span class="es">Flujo de Datos</span>
-      <span class="en">Data Flow</span>
-    </h2>
-
-    <div class="card">
-      <div class="card-header">
-        <div class="card-title">
-          <span class="es">Agent → API → Frontend</span>
-          <span class="en">Agent → API → Frontend</span>
-        </div>
-      </div>
-      <div class="mermaid">
-graph LR
-    SAP["&lt;b&gt;SAP System&lt;/b&gt;&lt;br/&gt;HANA DB&lt;br/&gt;OS Layer&lt;br/&gt;SAP Inst"] -->|"RFC / BAPI&lt;br/&gt;OS Cmd&lt;br/&gt;sapcontrol"| AG["&lt;b&gt;Agent / Collector&lt;/b&gt;&lt;br/&gt;Collect&lt;br/&gt;Aggregate&lt;br/&gt;Transform"]
-    AG -->|"POST&lt;br/&gt;/metrics/ingest"| API["&lt;b&gt;API Backend&lt;/b&gt;&lt;br/&gt;Ingest Pipeline&lt;br/&gt;Analyze · Breach?&lt;br/&gt;Alert? · Store"]
-    AG -.->|"PATCH&lt;br/&gt;/connectors/:id/heartbeat"| API
-    API -->|"Cache (Redis)"| FE["&lt;b&gt;React Frontend&lt;/b&gt;&lt;br/&gt;Dashboard&lt;br/&gt;Charts · Alerts&lt;br/&gt;Topology"]
-    API -->|"REST / JWT"| FE
-    API --> PG[("&lt;b&gt;PostgreSQL&lt;/b&gt;&lt;br/&gt;Prisma")]
-    API --> RD[("&lt;b&gt;Redis&lt;/b&gt;&lt;br/&gt;Cache")]
-      </div>
-    </div>
-
-    <div class="steps">
-      <div class="step">
-        <strong><span class="es">El agente recopila metricas del sistema SAP</span><span class="en">The agent collects metrics from the SAP system</span></strong>
-        <p class="text-muted text-sm">
-          <span class="es">CPU, memoria, disco, IOPS, red via comandos OS; datos SAP via RFC/BAPI.</span>
-          <span class="en">CPU, memory, disk, IOPS, network via OS commands; SAP data via RFC/BAPI.</span>
-        </p>
-      </div>
-      <div class="step">
-        <strong><span class="es">Los datos se envian al endpoint POST /metrics/ingest</span><span class="en">Data is sent to the POST /metrics/ingest endpoint</span></strong>
-        <p class="text-muted text-sm">
-          <span class="es">Con autenticacion JWT y tenant isolation (organizationId).</span>
-          <span class="en">With JWT authentication and tenant isolation (organizationId).</span>
-        </p>
-      </div>
-      <div class="step">
-        <strong><span class="es">El pipeline de metricas procesa y analiza</span><span class="en">The metrics pipeline processes and analyzes</span></strong>
-        <p class="text-muted text-sm">
-          <span class="es">Detecta breaches de umbrales, genera alertas automaticas, actualiza health scores.</span>
-          <span class="en">Detects threshold breaches, generates automatic alerts, updates health scores.</span>
-        </p>
-      </div>
-      <div class="step">
-        <strong><span class="es">Los datos se almacenan y cachean</span><span class="en">Data is stored and cached</span></strong>
-        <p class="text-muted text-sm">
-          <span class="es">PostgreSQL para persistencia, Redis para cache de dashboard y consultas frecuentes.</span>
-          <span class="en">PostgreSQL for persistence, Redis for dashboard cache and frequent queries.</span>
-        </p>
-      </div>
-      <div class="step">
-        <strong><span class="es">El frontend consulta el API via REST</span><span class="en">The frontend queries the API via REST</span></strong>
-        <p class="text-muted text-sm">
-          <span class="es">Con JWT Bearer token en cada request. El dashboard se actualiza en tiempo real.</span>
-          <span class="en">With JWT Bearer token in every request. The dashboard updates in real time.</span>
-        </p>
-      </div>
-    </div>
-
-    <!-- ═══ Auth Flow ═══ -->
+    <!-- Auth Flow -->
     <h2>
       <span class="es">Flujo de Autenticacion</span>
       <span class="en">Authentication Flow</span>
     </h2>
-
     <div class="card">
       <div class="mermaid">
 sequenceDiagram
-    participant C as Cliente
-    participant A as API (NestJS)
+    participant U as User
+    participant FE as Frontend
+    participant BE as NestJS API
     participant DB as PostgreSQL
 
-    C->>A: POST /auth/login {email, password}
-    A->>DB: bcrypt.compare → buscar usuario
-    DB-->>A: user found
-    A-->>C: 200 OK {accessToken, user}
-    Note over A: JWT firmado con sub, email, orgId, role
-
-    C->>A: GET /systems — Authorization: Bearer &lt;token&gt;
-    A->>A: Verify JWT → Extract organizationId
-    A->>DB: WHERE organizationId = orgId (Tenant filter)
-    DB-->>A: [systems...]
-    A-->>C: 200 OK [systems...]
+    U->>FE: Login (email + password)
+    FE->>BE: POST /auth/login
+    BE->>DB: Find user by email
+    DB-->>BE: User record
+    BE->>BE: bcrypt.compare(password, hash)
+    BE->>BE: Verify membership + role
+    BE-->>FE: JWT token + user profile
+    FE->>FE: Store token in localStorage
+    FE->>BE: GET /systems (Authorization: Bearer JWT)
+    BE->>BE: JwtAuthGuard validates token
+    BE->>BE: RolesGuard checks role
+    BE->>DB: Query with organizationId filter
+    DB-->>BE: Tenant-scoped data
+    BE-->>FE: JSON response
       </div>
     </div>
 
-    <div class="grid-2">
-      <div>
-        <h3>JWT Token</h3>
-        <p>
-          <span class="es">El token JWT contiene:</span>
-          <span class="en">The JWT token contains:</span>
-        </p>
-<pre><code>{
-  "sub": "user-uuid",
-  "email": "admin@acme-corp.com",
-  "name": "Carlos Admin",
-  "organizationId": "org-uuid",
-  "role": "admin",
-  "iat": 1710000000,
-  "exp": 1710086400
-}</code></pre>
-      </div>
-      <div>
-        <h3>
-          <span class="es">Cabecera de Autorizacion</span>
-          <span class="en">Authorization Header</span>
-        </h3>
-        <p>
-          <span class="es">Todas las rutas protegidas requieren:</span>
-          <span class="en">All protected routes require:</span>
-        </p>
-<pre><code>Authorization: Bearer eyJhbGciOiJIUzI1NiIs...</code></pre>
-        <p class="text-muted text-sm">
-          <span class="es">El token expira en 24h por defecto. Rate limit de login: 10 intentos/minuto.</span>
-          <span class="en">Token expires in 24h by default. Login rate limit: 10 attempts/minute.</span>
-        </p>
-      </div>
-    </div>
-
-    <!-- ═══ Multi-tenancy ═══ -->
-    <h2>Multi-tenancy</h2>
-
-    <p>
-      <span class="es">SAP Spektra implementa multi-tenancy a nivel de base de datos usando <code>organizationId</code> como filtro en cada consulta. Cada usuario pertenece a una organizacion via <code>Membership</code>.</span>
-      <span class="en">SAP Spektra implements multi-tenancy at the database level using <code>organizationId</code> as a filter in every query. Each user belongs to an organization via <code>Membership</code>.</span>
-    </p>
-
+    <!-- Multi-Tenancy -->
+    <h2>Multi-Tenancy</h2>
     <div class="card">
-<pre><code>// TenantGuard extrae organizationId del JWT
-@UseGuards(JwtAuthGuard, TenantGuard, RolesGuard)
-
-// En cada servicio, las queries filtran por orgId
-findAll(orgId: string) {
-  return this.prisma.system.findMany({
-    where: { organizationId: orgId }
-  });
-}</code></pre>
-    </div>
-
-    <div class="callout warning">
-      <div class="callout-icon">&#9888;&#65039;</div>
-      <div>
-        <span class="es"><strong>Aislamiento total:</strong> Un usuario de la organizacion A <em>nunca</em> puede ver datos de la organizacion B. El <code>TenantGuard</code> valida que el <code>organizationId</code> del JWT coincida con la membresia del usuario.</span>
-        <span class="en"><strong>Total isolation:</strong> A user from organization A can <em>never</em> see data from organization B. The <code>TenantGuard</code> validates that the JWT's <code>organizationId</code> matches the user's membership.</span>
+      <p>
+        <span class="es">Cada usuario pertenece a una o mas organizaciones via el modelo <code>Membership</code>. El JWT incluye <code>organizationId</code>, y cada consulta a la base de datos filtra por este campo. Esto proporciona aislamiento de datos a nivel de aplicacion.</span>
+        <span class="en">Each user belongs to one or more organizations via the <code>Membership</code> model. The JWT includes <code>organizationId</code>, and every database query filters by this field. This provides application-level data isolation.</span>
+      </p>
+      <div class="table-wrap mt-2">
+        <table>
+          <thead>
+            <tr>
+              <th><span class="es">Capa</span><span class="en">Layer</span></th>
+              <th><span class="es">Mecanismo</span><span class="en">Mechanism</span></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>JWT Token</td><td><span class="es">Incluye organizationId + userId + role</span><span class="en">Includes organizationId + userId + role</span></td></tr>
+            <tr><td>Guards</td><td>JwtAuthGuard + RolesGuard</td></tr>
+            <tr><td>Queries</td><td><code>WHERE organizationId = :orgId</code></td></tr>
+            <tr><td><span class="es">Modelos</span><span class="en">Models</span></td><td>Organization, Membership, System, Alert, Event, etc.</td></tr>
+          </tbody>
+        </table>
       </div>
     </div>
 
-    <!-- ═══ RBAC ═══ -->
+    <!-- RBAC -->
+    <h2>RBAC</h2>
+    <div class="card">
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Role</th>
+              <th><span class="es">Permisos</span><span class="en">Permissions</span></th>
+              <th><span class="es">Uso Tipico</span><span class="en">Typical Use</span></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><span class="badge danger">admin</span></td>
+              <td><span class="es">Todo: CRUD sistemas, usuarios, settings, API keys, HA failover</span><span class="en">Everything: CRUD systems, users, settings, API keys, HA failover</span></td>
+              <td><span class="es">Administrador de plataforma</span><span class="en">Platform administrator</span></td>
+            </tr>
+            <tr>
+              <td><span class="badge warning">escalation</span></td>
+              <td><span class="es">Aprobar/rechazar solicitudes, viewer permissions</span><span class="en">Approve/reject requests, viewer permissions</span></td>
+              <td><span class="es">Aprobador de operaciones</span><span class="en">Operations approver</span></td>
+            </tr>
+            <tr>
+              <td><span class="badge cyan">operator</span></td>
+              <td><span class="es">Ejecutar runbooks, crear operaciones, ack alertas, heartbeat</span><span class="en">Execute runbooks, create operations, ack alerts, heartbeat</span></td>
+              <td><span class="es">Operador SAP Basis</span><span class="en">SAP Basis operator</span></td>
+            </tr>
+            <tr>
+              <td><span class="badge neutral">viewer</span></td>
+              <td><span class="es">Lectura de todos los recursos</span><span class="en">Read all resources</span></td>
+              <td><span class="es">Monitoreo, reportes</span><span class="en">Monitoring, reports</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Caching -->
     <h2>
-      <span class="es">Control de Acceso Basado en Roles (RBAC)</span>
-      <span class="en">Role-Based Access Control (RBAC)</span>
+      <span class="es">Cache con Redis</span>
+      <span class="en">Redis Caching</span>
     </h2>
-
-    <div class="table-wrap">
-      <table>
-        <thead>
-          <tr>
-            <th>Rol / Role</th>
-            <th><span class="es">Hereda de</span><span class="en">Inherits from</span></th>
-            <th><span class="es">Permisos Exclusivos</span><span class="en">Exclusive Permissions</span></th>
-            <th><span class="es">Ejemplo de Uso</span><span class="en">Example Use</span></th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td><span class="badge danger">admin</span></td>
-            <td>escalation + operator + viewer</td>
-            <td>
-              <span class="es">Crear/eliminar sistemas, gestionar usuarios, API keys, configuracion, HA failover</span>
-              <span class="en">Create/delete systems, manage users, API keys, settings, HA failover</span>
-            </td>
-            <td>Carlos Admin</td>
-          </tr>
-          <tr>
-            <td><span class="badge warning">escalation</span></td>
-            <td>operator + viewer</td>
-            <td>
-              <span class="es">Aprobar/rechazar solicitudes de aprobacion</span>
-              <span class="en">Approve/reject approval requests</span>
-            </td>
-            <td>Ana Escalation</td>
-          </tr>
-          <tr>
-            <td><span class="badge cyan">operator</span></td>
-            <td>viewer</td>
-            <td>
-              <span class="es">Ejecutar runbooks, reconocer/resolver alertas, crear operaciones, ingestar metricas, heartbeats</span>
-              <span class="en">Execute runbooks, acknowledge/resolve alerts, create operations, ingest metrics, heartbeats</span>
-            </td>
-            <td>Maria Operator</td>
-          </tr>
-          <tr>
-            <td><span class="badge neutral">viewer</span></td>
-            <td>-</td>
-            <td>
-              <span class="es">Solo lectura: dashboard, sistemas, alertas, eventos, metricas, analytics, landscape</span>
-              <span class="en">Read-only: dashboard, systems, alerts, events, metrics, analytics, landscape</span>
-            </td>
-            <td>Juan Viewer</td>
-          </tr>
-        </tbody>
-      </table>
+    <div class="card">
+      <p>
+        <span class="es">Redis 7 se usa como capa de cache para reducir carga en PostgreSQL. El backend utiliza Redis para sesiones y cache de respuestas frecuentes (dashboard, health summary, analytics).</span>
+        <span class="en">Redis 7 is used as a caching layer to reduce PostgreSQL load. The backend uses Redis for sessions and caching frequent responses (dashboard, health summary, analytics).</span>
+      </p>
     </div>
 
+    <!-- Security -->
+    <h2>
+      <span class="es">Seguridad</span>
+      <span class="en">Security</span>
+    </h2>
     <div class="card">
-      <h4>
-        <span class="es">Jerarquia de Roles</span>
-        <span class="en">Role Hierarchy</span>
-      </h4>
-      <div class="mermaid">
-graph TD
-    ADMIN["&lt;b&gt;admin&lt;/b&gt;&lt;br/&gt;ALL PERMISSIONS"]
-    ESC["&lt;b&gt;escalation&lt;/b&gt;&lt;br/&gt;approve / reject requests"]
-    OP["&lt;b&gt;operator&lt;/b&gt;&lt;br/&gt;execute, acknowledge, create operations"]
-    VIEW["&lt;b&gt;viewer&lt;/b&gt;&lt;br/&gt;read-only access"]
-
-    ADMIN --> ESC
-    ESC --> OP
-    OP --> VIEW
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th><span class="es">Medida</span><span class="en">Measure</span></th>
+              <th><span class="es">Implementacion</span><span class="en">Implementation</span></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Helmet</td><td><span class="es">Cabeceras HTTP seguras</span><span class="en">Secure HTTP headers</span></td></tr>
+            <tr><td>CORS</td><td><span class="es">Origenes permitidos configurables</span><span class="en">Configurable allowed origins</span></td></tr>
+            <tr><td>Rate Limiting</td><td>@nestjs/throttler (10 req/min login)</td></tr>
+            <tr><td>Password Hashing</td><td>bcryptjs (12 rounds)</td></tr>
+            <tr><td>XSS Protection</td><td><span class="es">Sanitizacion de entrada</span><span class="en">Input sanitization</span></td></tr>
+            <tr><td>API Keys</td><td><span class="es">Hash SHA-256, prefijo visible</span><span class="en">SHA-256 hash, visible prefix</span></td></tr>
+            <tr><td>Audit Log</td><td><span class="es">Toda accion critica registrada con timestamp y userId</span><span class="en">Every critical action logged with timestamp and userId</span></td></tr>
+            <tr><td>Cascade Deletes</td><td><span class="es">onDelete: Cascade en relaciones FK</span><span class="en">onDelete: Cascade on FK relationships</span></td></tr>
+          </tbody>
+        </table>
       </div>
     </div>
 
-    <!-- ═══ Runtime Modes ═══ -->
+    <!-- Runtime Modes -->
     <h2>
       <span class="es">Modos de Ejecucion</span>
       <span class="en">Runtime Modes</span>
     </h2>
-
-    <div class="grid-2">
-      <div class="card">
-        <div class="card-header">
-          <div class="card-title"><div class="card-icon cyan">&#128187;</div> LOCAL_SIMULATED</div>
-        </div>
-        <p>
-          <span class="es">Modo por defecto para desarrollo local. Genera datos simulados, metricas ficticias y respuestas de AI mockeadas. No requiere conexion a sistemas SAP reales.</span>
-          <span class="en">Default mode for local development. Generates simulated data, mock metrics and mocked AI responses. Does not require connection to real SAP systems.</span>
-        </p>
-        <ul class="feature-list">
-          <li><span class="es">Datos de seed predefinidos</span><span class="en">Predefined seed data</span></li>
-          <li><span class="es">Metricas generadas aleatoriamente</span><span class="en">Randomly generated metrics</span></li>
-          <li><span class="es">AI con respuestas deterministas</span><span class="en">AI with deterministic responses</span></li>
-          <li><span class="es">Sin dependencias externas (solo Postgres/Redis)</span><span class="en">No external dependencies (only Postgres/Redis)</span></li>
-        </ul>
-      </div>
-
-      <div class="card">
-        <div class="card-header">
-          <div class="card-title"><div class="card-icon warning">&#9729;</div> AWS_REAL <span class="badge warning"><span class="es">Infraestructura lista</span><span class="en">Infrastructure ready</span></span></div>
-        </div>
-        <p>
-          <span class="es">Modo produccion planificado. La configuracion para servicios AWS esta definida en <code>.env.example</code> (Cognito, S3, SQS, EventBridge), pero la integracion end-to-end <strong>no esta completamente implementada</strong>.</span>
-          <span class="en">Planned production mode. Configuration for AWS services is defined in <code>.env.example</code> (Cognito, S3, SQS, EventBridge), but end-to-end integration is <strong>not fully implemented yet</strong>.</span>
-        </p>
-        <ul class="feature-list">
-          <li><span class="es">Variables de entorno para Cognito, S3, SQS, EventBridge definidas</span><span class="en">Environment variables for Cognito, S3, SQS, EventBridge defined</span></li>
-          <li><span class="es">Arquitectura preparada para switch de runtime mode</span><span class="en">Architecture prepared for runtime mode switch</span></li>
-          <li><span class="es">Integracion end-to-end con AWS: <strong>ROADMAP</strong></span><span class="en">End-to-end AWS integration: <strong>ROADMAP</strong></span></li>
-          <li><span class="es">Autenticacion Cognito: <strong>ROADMAP</strong></span><span class="en">Cognito authentication: <strong>ROADMAP</strong></span></li>
-        </ul>
+    <div class="card">
+      <p>
+        <span class="es">La plataforma soporta 4 modos operacionales que determinan como cada dominio resuelve sus datos. Ver <a href="multi-mode.html">Multi-Mode Model</a> para documentacion completa.</span>
+        <span class="en">The platform supports 4 operational modes that determine how each domain resolves its data. See <a href="multi-mode.html">Multi-Mode Model</a> for full documentation.</span>
+      </p>
+      <div class="table-wrap mt-2">
+        <table>
+          <thead>
+            <tr>
+              <th><span class="es">Modo</span><span class="en">Mode</span></th>
+              <th><span class="es">Fuente de Datos</span><span class="en">Data Source</span></th>
+              <th><span class="es">Confianza</span><span class="en">Confidence</span></th>
+              <th><span class="es">Escritura</span><span class="en">Write</span></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td><span class="badge success">REAL</span></td><td>API Backend</td><td><span class="text-success">high</span></td><td><span class="es">Si</span><span class="en">Yes</span></td></tr>
+            <tr><td><span class="badge warning">FALLBACK</span></td><td><span class="es">Intenta real, cae a mock</span><span class="en">Tries real, falls to mock</span></td><td><span class="text-warning">medium</span></td><td><span class="es">Si</span><span class="en">Yes</span></td></tr>
+            <tr><td><span class="badge cyan">MOCK</span></td><td><span class="es">Datos simulados locales</span><span class="en">Local simulated data</span></td><td><span class="text-cyan">low</span></td><td><span class="es">Solo lectura</span><span class="en">Read-only</span></td></tr>
+            <tr><td><span class="badge danger">RESTRICTED</span></td><td><span class="es">Proveedores dedicados o mock</span><span class="en">Dedicated or mock providers</span></td><td><span class="text-danger">low</span></td><td><span class="es">Solo lectura</span><span class="en">Read-only</span></td></tr>
+          </tbody>
+        </table>
       </div>
     </div>
 
-    <!-- ═══ Caching ═══ -->
-    <h2>Caching (Redis)</h2>
-
-    <p>
-      <span class="es">Redis se usa para:</span>
-      <span class="en">Redis is used for:</span>
-    </p>
-    <div class="table-wrap">
-      <table>
-        <thead>
-          <tr>
-            <th><span class="es">Caso de Uso</span><span class="en">Use Case</span></th>
-            <th>TTL</th>
-            <th><span class="es">Descripcion</span><span class="en">Description</span></th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>Dashboard summary</td>
-            <td>30s</td>
-            <td><span class="es">KPIs agregados del dashboard</span><span class="en">Aggregated dashboard KPIs</span></td>
-          </tr>
-          <tr>
-            <td>Health summaries</td>
-            <td>60s</td>
-            <td><span class="es">Estado de salud de todos los sistemas</span><span class="en">Health status of all systems</span></td>
-          </tr>
-          <tr>
-            <td>Rate limiting</td>
-            <td>60s</td>
-            <td><span class="es">Contadores de throttling por IP/usuario</span><span class="en">Throttling counters per IP/user</span></td>
-          </tr>
-          <tr>
-            <td>AI responses</td>
-            <td>300s</td>
-            <td><span class="es">Respuestas de IA cacheadas</span><span class="en">Cached AI responses</span></td>
-          </tr>
-          <tr>
-            <td>Analytics overview</td>
-            <td>120s</td>
-            <td><span class="es">Datos agregados de analytics</span><span class="en">Aggregated analytics data</span></td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-
-    <!-- ═══ Rate Limiting ═══ -->
-    <h2>Rate Limiting</h2>
-
-    <div class="table-wrap">
-      <table>
-        <thead>
-          <tr>
-            <th>Endpoint</th>
-            <th><span class="es">Limite</span><span class="en">Limit</span></th>
-            <th><span class="es">Ventana</span><span class="en">Window</span></th>
-            <th><span class="es">Descripcion</span><span class="en">Description</span></th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td><code>POST /auth/login</code></td>
-            <td>10 req</td>
-            <td>60s</td>
-            <td><span class="es">Proteccion contra fuerza bruta</span><span class="en">Brute-force protection</span></td>
-          </tr>
-          <tr>
-            <td><code>POST /auth/register</code></td>
-            <td>5 req</td>
-            <td>60s</td>
-            <td><span class="es">Proteccion contra spam de registros</span><span class="en">Registration spam protection</span></td>
-          </tr>
-          <tr>
-            <td><code>POST /runbooks/:id/execute</code></td>
-            <td>10 req</td>
-            <td>60s</td>
-            <td><span class="es">Prevenir ejecuciones accidentales multiples</span><span class="en">Prevent accidental multiple executions</span></td>
-          </tr>
-          <tr>
-            <td><code>POST /operations</code></td>
-            <td>10 req</td>
-            <td>60s</td>
-            <td><span class="es">Limitar creacion de operaciones</span><span class="en">Limit operation creation</span></td>
-          </tr>
-          <tr>
-            <td><code>POST /chat</code></td>
-            <td>20 req</td>
-            <td>60s</td>
-            <td><span class="es">Limitar consultas de IA</span><span class="en">Limit AI queries</span></td>
-          </tr>
-          <tr>
-            <td><span class="es">Global (por defecto)</span><span class="en">Global (default)</span></td>
-            <td>100 req</td>
-            <td>60s</td>
-            <td><span class="es">Limite global por IP</span><span class="en">Global limit per IP</span></td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-
-    <!-- ═══ Security Measures ═══ -->
-    <h2>
-      <span class="es">Medidas de Seguridad</span>
-      <span class="en">Security Measures</span>
-    </h2>
-
-    <div class="table-wrap">
-      <table>
-        <thead>
-          <tr>
-            <th><span class="es">Medida</span><span class="en">Measure</span></th>
-            <th><span class="es">Implementacion</span><span class="en">Implementation</span></th>
-            <th><span class="es">Descripcion</span><span class="en">Description</span></th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td><strong>Helmet</strong></td>
-            <td>NestJS Middleware</td>
-            <td><span class="es">Configura cabeceras HTTP seguras (X-Frame-Options, CSP, etc.)</span><span class="en">Sets secure HTTP headers (X-Frame-Options, CSP, etc.)</span></td>
-          </tr>
-          <tr>
-            <td><strong>CORS</strong></td>
-            <td>NestJS Config</td>
-            <td><span class="es">Solo permite origenes configurados en <code>CORS_ORIGIN</code></span><span class="en">Only allows origins configured in <code>CORS_ORIGIN</code></span></td>
-          </tr>
-          <tr>
-            <td><strong>XSS Protection</strong></td>
-            <td><span class="es">Sanitizacion de entrada</span><span class="en">Input sanitization</span></td>
-            <td><span class="es">DTOs validados con class-validator</span><span class="en">DTOs validated with class-validator</span></td>
-          </tr>
-          <tr>
-            <td><strong>Password Hashing</strong></td>
-            <td>bcryptjs (12 rounds)</td>
-            <td><span class="es">Contrasenas nunca almacenadas en texto plano</span><span class="en">Passwords never stored in plain text</span></td>
-          </tr>
-          <tr>
-            <td><strong>Tenant Isolation</strong></td>
-            <td>TenantGuard</td>
-            <td><span class="es">Aislamiento total entre organizaciones</span><span class="en">Total isolation between organizations</span></td>
-          </tr>
-          <tr>
-            <td><strong>Cascade Delete</strong></td>
-            <td>Prisma onDelete: Cascade</td>
-            <td><span class="es">Al eliminar un sistema, se eliminan todos los datos relacionados</span><span class="en">When deleting a system, all related data is deleted</span></td>
-          </tr>
-          <tr>
-            <td><strong>Audit Logging</strong></td>
-            <td>AuditService</td>
-            <td><span class="es">Toda accion critica se registra con timestamp, usuario y detalles</span><span class="en">Every critical action is logged with timestamp, user and details</span></td>
-          </tr>
-          <tr>
-            <td><strong>API Key Hashing</strong></td>
-            <td>SHA-256</td>
-            <td><span class="es">Solo el prefijo visible; hash almacenado en BD</span><span class="en">Only prefix visible; hash stored in DB</span></td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-
-    <!-- ═══ Directory Structure ═══ -->
+    <!-- Directory Structure -->
     <h2 id="directory-structure">
       <span class="es">Estructura del Proyecto</span>
       <span class="en">Project Structure</span>
     </h2>
-
     <div class="card">
-<pre><code>sap-spektra/
+      <pre><code>sap-spektra/
 ├── apps/
-│   └── api/                          # NestJS Backend API
+│   └── api/                    # NestJS 11 Backend
 │       ├── prisma/
-│       │   └── schema.prisma         # 27 modelos Prisma
+│       │   └── schema.prisma   # 27 models
 │       ├── src/
-│       │   ├── common/
-│       │   │   ├── decorators/       # @CurrentUser, @TenantId, @Roles
-│       │   │   ├── guards/           # JwtAuthGuard, TenantGuard, RolesGuard
-│       │   │   └── interceptors/     # Logging, Transform
-│       │   ├── infrastructure/
-│       │   │   ├── prisma/           # PrismaService, seed.ts
-│       │   │   └── redis/            # RedisService
-│       │   ├── modules/
-│       │   │   ├── auth/             # Login, Register, JWT Strategy
-│       │   │   ├── users/            # User CRUD
-│       │   │   ├── systems/          # SAP Systems CRUD
-│       │   │   ├── dashboard/        # Dashboard aggregation
-│       │   │   ├── landscape/        # Landscape validation
-│       │   │   ├── alerts/           # Alert lifecycle
-│       │   │   ├── events/           # Event log
-│       │   │   ├── metrics/          # Metrics ingest + pipeline
-│       │   │   ├── runbooks/         # Runbook execution engine
-│       │   │   ├── approvals/        # Approval workflow
-│       │   │   ├── operations/       # Operations + Jobs + Transports + Certs
-│       │   │   ├── connectors/       # Connector management
-│       │   │   ├── ha/               # HA/DR management
-│       │   │   ├── analytics/        # Analytics aggregation
-│       │   │   ├── ai/               # AI use cases + responses
-│       │   │   ├── chat/             # AI chat assistant
-│       │   │   ├── audit/            # Audit log
-│       │   │   ├── settings/         # Org settings + API keys
-│       │   │   ├── tenants/          # Tenant management
-│       │   │   ├── plans/            # Subscription plans
-│       │   │   ├── licenses/         # SAP license info
-│       │   │   └── health/           # Health check (Terminus)
-│       │   └── app.module.ts         # Root module
-│       └── package.json
-├── frontend/                         # React Frontend
+│       │   ├── modules/        # 22 domain modules
+│       │   │   ├── auth/       # JWT + Passport
+│       │   │   ├── systems/    # SAP system CRUD
+│       │   │   ├── alerts/     # Alert lifecycle
+│       │   │   ├── events/     # Event stream
+│       │   │   ├── runbooks/   # Runbook engine
+│       │   │   ├── approvals/  # Approval workflow
+│       │   │   ├── operations/ # Ops + Jobs + Transports + Certs
+│       │   │   ├── ha/         # HA/DR management
+│       │   │   ├── analytics/  # Analytics + trends
+│       │   │   ├── landscape/  # Topology validation
+│       │   │   ├── connectors/ # Connector management
+│       │   │   ├── chat/       # AI chat interface
+│       │   │   ├── metrics/    # Metric ingestion
+│       │   │   ├── dashboard/  # Aggregated KPIs
+│       │   │   ├── ai/         # AI use-cases
+│       │   │   ├── audit/      # Audit log
+│       │   │   ├── health/     # Health checks
+│       │   │   ├── licenses/   # License info
+│       │   │   ├── plans/      # Subscription plans
+│       │   │   ├── settings/   # Org settings + API keys
+│       │   │   ├── tenants/    # Tenant management
+│       │   │   └── users/      # User CRUD
+│       │   └── common/         # Guards, decorators, pipes
+│       └── test/
+├── frontend/                   # React 19 Frontend
 │   ├── src/
-│   │   ├── components/               # Shared UI components
-│   │   ├── pages/                    # Route pages
-│   │   ├── services/                 # API client (native fetch)
-│   │   ├── hooks/                    # Custom React hooks
-│   │   └── App.jsx                   # Root component + Router
-│   └── package.json
-├── agent/                            # SAP Agent/Collector
-├── infra/                            # Infrastructure configs
-├── docs/                             # This documentation
-├── tests/                            # Integration tests
-├── e2e/                              # End-to-end tests (Playwright)
-├── scripts/                          # Utility scripts
-├── docker-compose.yml                # Docker orchestration
-└── package.json                      # Root package (workspaces)</code></pre>
+│   │   ├── mode/               # Multi-mode types + engine
+│   │   │   ├── types.ts        # OperationalMode, DomainName
+│   │   │   └── capability-engine.ts
+│   │   ├── providers/          # 12 domain providers
+│   │   │   ├── types.ts        # ProviderResult&lt;T&gt;
+│   │   │   ├── create-fallback.ts
+│   │   │   ├── provider-registry.ts
+│   │   │   ├── systems/        # .contract + .real + .mock + .fallback
+│   │   │   ├── alerts/
+│   │   │   ├── events/
+│   │   │   ├── operations/
+│   │   │   ├── runbooks/       # + .restricted
+│   │   │   ├── approvals/      # + .restricted
+│   │   │   ├── ha/             # + .restricted
+│   │   │   ├── connectors/     # + .restricted
+│   │   │   ├── analytics/
+│   │   │   ├── admin/
+│   │   │   ├── landscape/
+│   │   │   └── chat/
+│   │   ├── components/
+│   │   │   └── mode/           # ModeBadge, SourceIndicator, etc.
+│   │   ├── services/
+│   │   │   └── dataService.ts  # Backward-compat adapter
+│   │   └── pages/
+│   └── e2e/                    # Playwright tests
+├── agent/                      # Python agent
+├── infra/                      # Terraform templates
+├── docs/                       # This documentation
+└── docker-compose.yml</code></pre>
     </div>
 
-    <div class="callout success">
-      <div class="callout-icon">&#9989;</div>
-      <div>
-        <span class="es"><strong>Modular:</strong> Cada modulo NestJS sigue el patron Controller → Service → DTO con validacion, y esta aislado en su propia carpeta bajo <code>modules/</code>.</span>
-        <span class="en"><strong>Modular:</strong> Each NestJS module follows the Controller → Service → DTO pattern with validation, and is isolated in its own folder under <code>modules/</code>.</span>
-      </div>
+    <!-- Footer -->
+    <div style="margin-top:48px;padding-top:24px;border-top:1px solid var(--brd);text-align:center">
+      <p class="text-muted text-sm">SAP Spektra v3.0 — Maveram Company</p>
     </div>
-
-    <!-- ═══ Implementation Status ═══ -->
-    <h2 id="implementation-status">
-      <span class="es">Estado de Implementacion: Lo Real vs Lo Planificado</span>
-      <span class="en">Implementation Status: What's Real vs What's Planned</span>
-    </h2>
-
-    <p>
-      <span class="es">SAP Spektra es una plataforma en desarrollo activo. Esta seccion documenta con transparencia que esta completamente implementado, que esta simulado para demostracion, y que esta en el roadmap.</span>
-      <span class="en">SAP Spektra is a platform under active development. This section transparently documents what is fully implemented, what is simulated for demonstration, and what is on the roadmap.</span>
-    </p>
-
-    <h3><span class="badge success"><span class="es">IMPLEMENTADO</span><span class="en">IMPLEMENTED</span></span> <span class="es">— Funcionalidad completa y testeada</span><span class="en">— Fully functional and tested</span></h3>
-    <div class="table-wrap">
-      <table>
-        <thead><tr><th><span class="es">Componente</span><span class="en">Component</span></th><th><span class="es">Descripcion</span><span class="en">Description</span></th><th><span class="es">Evidencia</span><span class="en">Evidence</span></th></tr></thead>
-        <tbody>
-          <tr><td><strong>JWT Auth</strong></td><td><span class="es">Login, registro, JWT tokens con Passport, bcryptjs (12 rounds)</span><span class="en">Login, register, JWT tokens with Passport, bcryptjs (12 rounds)</span></td><td>auth module</td></tr>
-          <tr><td><strong>RBAC</strong></td><td><span class="es">4 roles jerarquicos (admin, escalation, operator, viewer)</span><span class="en">4 hierarchical roles (admin, escalation, operator, viewer)</span></td><td>RolesGuard</td></tr>
-          <tr><td><strong>Multi-tenancy</strong></td><td><span class="es">Aislamiento total por organizationId</span><span class="en">Total isolation by organizationId</span></td><td>TenantGuard</td></tr>
-          <tr><td><strong><span class="es">Pipeline de metricas</span><span class="en">Metrics pipeline</span></strong></td><td><span class="es">Ingesta, almacenamiento, breaches, alertas automaticas</span><span class="en">Ingestion, storage, breaches, automatic alerts</span></td><td>9 endpoints</td></tr>
-          <tr><td><strong>Redis caching</strong></td><td><span class="es">Dashboard (30s), health (60s), analytics (120s), AI (300s)</span><span class="en">Dashboard (30s), health (60s), analytics (120s), AI (300s)</span></td><td>RedisService</td></tr>
-          <tr><td><strong><span class="es">Auditoria</span><span class="en">Audit</span></strong></td><td><span class="es">Registro de acciones criticas con timestamp y usuario</span><span class="en">Critical action logging with timestamp and user</span></td><td>AuditService</td></tr>
-          <tr><td><strong>CRUD</strong></td><td><span class="es">78 endpoints REST en 22 modulos con DTOs validados</span><span class="en">78 REST endpoints across 22 modules with validated DTOs</span></td><td>22 controllers</td></tr>
-          <tr><td><strong><span class="es">Motor de runbooks</span><span class="en">Runbook engine</span></strong></td><td><span class="es">Ejecucion con pasos, resultados, dry run</span><span class="en">Execution with steps, results, dry run</span></td><td>runbooks module</td></tr>
-          <tr><td><strong><span class="es">Aprobaciones</span><span class="en">Approvals</span></strong></td><td><span class="es">Crear, aprobar, rechazar con control de roles</span><span class="en">Create, approve, reject with role control</span></td><td>approvals module</td></tr>
-          <tr><td><strong><span class="es">Seguridad</span><span class="en">Security</span></strong></td><td><span class="es">Helmet, CORS, rate limiting, class-validator, cascade deletes</span><span class="en">Helmet, CORS, rate limiting, class-validator, cascade deletes</span></td><td>app.module</td></tr>
-          <tr><td><strong>Tests</strong></td><td><span class="es">49 spec backend (Jest, 392+ tests), 55 spec frontend (Vitest, 690+ tests), E2E (Playwright)</span><span class="en">49 backend specs (Jest, 392+ tests), 55 frontend specs (Vitest, 690+ tests), E2E (Playwright)</span></td><td>*.spec.ts, *.test.*</td></tr>
-          <tr><td><strong><span class="es">Demo data</span><span class="en">Demo data</span></strong></td><td><span class="es">Seed con 12 sistemas SAP, 4 usuarios, runbooks, metricas, alertas, HA configs</span><span class="en">Seed with 12 SAP systems, 4 users, runbooks, metrics, alerts, HA configs</span></td><td>seed.ts</td></tr>
-        </tbody>
-      </table>
-    </div>
-
-    <h3><span class="badge warning"><span class="es">SIMULADO</span><span class="en">SIMULATED</span></span> <span class="es">— Funcional para demos, no conectado a sistemas reales</span><span class="en">— Functional for demos, not connected to real systems</span></h3>
-    <div class="table-wrap">
-      <table>
-        <thead><tr><th><span class="es">Componente</span><span class="en">Component</span></th><th><span class="es">Que hace actualmente</span><span class="en">What it does currently</span></th><th><span class="es">Que se necesita</span><span class="en">What's needed</span></th></tr></thead>
-        <tbody>
-          <tr><td><strong>HA Failover</strong></td><td><span class="es">Alterna estados en la BD, no ejecuta failover SAP real</span><span class="en">Toggles states in DB, no real SAP failover</span></td><td>sapcontrol / pacemaker</td></tr>
-          <tr><td><strong>AI / Chat</strong></td><td><span class="es">Retorna respuestas mock estructuradas, sin LLM</span><span class="en">Returns structured mock responses, no LLM</span></td><td>OpenAI / Bedrock</td></tr>
-          <tr><td><strong><span class="es">Colectores agente</span><span class="en">Agent collectors</span></strong></td><td><span class="es">Colectores BD (HANA, Oracle, etc.) son stubs</span><span class="en">DB collectors (HANA, Oracle, etc.) are stubs</span></td><td><span class="es">Integracion real BD + RFC/BAPI</span><span class="en">Real DB + RFC/BAPI integration</span></td></tr>
-          <tr><td><strong><span class="es">Ejecucion runbooks</span><span class="en">Runbook execution</span></strong></td><td><span class="es">Simula pasos con resultados predeterminados</span><span class="en">Simulates steps with predetermined results</span></td><td><span class="es">Conexion al agente para ejecucion remota</span><span class="en">Agent connection for remote execution</span></td></tr>
-          <tr><td><strong><span class="es">Metricas SAP</span><span class="en">SAP metrics</span></strong></td><td><span class="es">12 sistemas del seed, metricas no se auto-actualizan</span><span class="en">12 seeded systems, metrics don't auto-update</span></td><td><span class="es">Agente desplegado enviando metricas reales</span><span class="en">Deployed agent sending real metrics</span></td></tr>
-        </tbody>
-      </table>
-    </div>
-
-    <h3><span class="badge violet">ROADMAP</span> <span class="es">— Planificado pero no implementado</span><span class="en">— Planned but not implemented</span></h3>
-    <div class="table-wrap">
-      <table>
-        <thead><tr><th><span class="es">Funcionalidad</span><span class="en">Feature</span></th><th><span class="es">Descripcion</span><span class="en">Description</span></th><th><span class="es">Estado actual</span><span class="en">Current status</span></th></tr></thead>
-        <tbody>
-          <tr><td><strong>AWS Cognito</strong></td><td><span class="es">Auth via Cognito en modo AWS_REAL</span><span class="en">Auth via Cognito in AWS_REAL mode</span></td><td><span class="es">Env vars definidas</span><span class="en">Env vars defined</span></td></tr>
-          <tr><td><strong><span class="es">LLM real</span><span class="en">Real LLM</span></strong></td><td><span class="es">Conectar AI/Chat a OpenAI o Bedrock</span><span class="en">Connect AI/Chat to OpenAI or Bedrock</span></td><td><span class="es">Endpoints listos, mocks activos</span><span class="en">Endpoints ready, mocks active</span></td></tr>
-          <tr><td><strong><span class="es">Agente RFC/BAPI</span><span class="en">RFC/BAPI Agent</span></strong></td><td><span class="es">Metricas SAP reales via RFC/BAPI</span><span class="en">Real SAP metrics via RFC/BAPI</span></td><td><span class="es">Stubs de colectores listos</span><span class="en">Collector stubs ready</span></td></tr>
-          <tr><td><strong>AWS S3/SQS/EventBridge</strong></td><td><span class="es">Storage, colas, eventos AWS</span><span class="en">AWS storage, queues, events</span></td><td><span class="es">Env vars definidas, sin codigo</span><span class="en">Env vars defined, no code</span></td></tr>
-          <tr><td><strong>Webhooks</strong></td><td><span class="es">Alertas y eventos a sistemas externos</span><span class="en">Alerts and events to external systems</span></td><td><span class="es">No implementado</span><span class="en">Not implemented</span></td></tr>
-          <tr><td><strong><span class="es">HA real</span><span class="en">Real HA</span></strong></td><td><span class="es">Failover real via sapcontrol/pacemaker</span><span class="en">Real failover via sapcontrol/pacemaker</span></td><td><span class="es">UI/API listos, logica simulada</span><span class="en">UI/API ready, logic simulated</span></td></tr>
-        </tbody>
-      </table>
-    </div>
-
-    <div class="callout info">
-      <div class="callout-icon">&#128161;</div>
-      <div>
-        <span class="es"><strong>Nota para evaluadores:</strong> SAP Spektra es una plataforma funcional con arquitectura production-ready. Los componentes marcados como SIMULADO estan disenados para ser facilmente reemplazados por integraciones reales sin cambiar la API publica ni la interfaz de usuario.</span>
-        <span class="en"><strong>Note for evaluators:</strong> SAP Spektra is a functional platform with production-ready architecture. Components marked as SIMULATED are designed to be easily replaced with real integrations without changing the public API or user interface.</span>
-      </div>
-    </div>
-
   </main>
 </div>
 </body>

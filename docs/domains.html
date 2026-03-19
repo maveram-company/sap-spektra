@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="dark" data-lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <title>Domain Reference — SAP Spektra Docs</title>
+  <link rel="stylesheet" href="theme.css">
+  <script src="theme-toggle.js"></script>
+  <script src="lang-toggle.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+  <script src="mermaid-init.js"></script>
+</head>
+<body>
+<div class="docs-wrapper">
+  <nav class="docs-sidebar">
+    <div class="sidebar-brand">
+      <div class="logo">&#9889;</div>
+      <div class="brand-text">
+        <div class="brand-name">SAP Spektra</div>
+        <div class="brand-sub">Documentation v3.0</div>
+      </div>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-section-label">Overview</div>
+      <a href="index.html" class="sidebar-link">Home</a>
+      <a href="executive.html" class="sidebar-link">Executive Summary</a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-section-label">Architecture</div>
+      <a href="architecture.html" class="sidebar-link">System Architecture</a>
+      <a href="multi-mode.html" class="sidebar-link">Multi-Mode Model</a>
+      <a href="domains.html" class="sidebar-link active">Domain Reference</a>
+      <a href="domain-model.html" class="sidebar-link">Data Model</a>
+      <a href="api-reference.html" class="sidebar-link">API Reference</a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-section-label">Operations</div>
+      <a href="getting-started.html" class="sidebar-link">Setup &amp; Development</a>
+      <a href="validation.html" class="sidebar-link">Validation &amp; Quality</a>
+      <a href="backlog.html" class="sidebar-link">Hardening Backlog</a>
+    </div>
+  </nav>
+
+  <main class="docs-main">
+    <div class="page-header">
+      <h1>
+        <span class="es">Referencia de Dominios</span>
+        <span class="en">Domain Reference</span>
+      </h1>
+      <p class="subtitle">
+        <span class="es">12 dominios funcionales con contratos, ViewModels, modos soportados y cobertura</span>
+        <span class="en">12 functional domains with contracts, ViewModels, supported modes, and coverage</span>
+      </p>
+    </div>
+
+    <!-- Coverage Matrix -->
+    <h2>
+      <span class="es">Matriz de Cobertura</span>
+      <span class="en">Coverage Matrix</span>
+    </h2>
+    <div class="card">
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th><span class="es">Dominio</span><span class="en">Domain</span></th>
+              <th>Real</th>
+              <th>Mock</th>
+              <th>Fallback</th>
+              <th>Restricted</th>
+              <th>Parity Test</th>
+              <th>UX Mode</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td><strong>systems</strong></td><td><span class="badge success">IMPL</span></td><td><span class="badge success">IMPL</span></td><td><span class="badge success">IMPL</span></td><td><span class="badge cyan">MOCK</span></td><td><span class="badge success">IMPL</span></td><td>ModeBadge, SourceIndicator</td></tr>
+            <tr><td><strong>alerts</strong></td><td><span class="badge success">IMPL</span></td><td><span class="badge success">IMPL</span></td><td><span class="badge success">IMPL</span></td><td><span class="badge cyan">MOCK</span></td><td><span class="badge success">IMPL</span></td><td>ModeBadge, SourceIndicator</td></tr>
+            <tr><td><strong>events</strong></td><td><span class="badge success">IMPL</span></td><td><span class="badge success">IMPL</span></td><td><span class="badge success">IMPL</span></td><td><span class="badge cyan">MOCK</span></td><td><span class="badge success">IMPL</span></td><td>ModeBadge, SourceIndicator</td></tr>
+            <tr><td><strong>operations</strong></td><td><span class="badge success">IMPL</span></td><td><span class="badge success">IMPL</span></td><td><span class="badge success">IMPL</span></td><td><span class="badge cyan">MOCK</span></td><td><span class="badge success">IMPL</span></td><td>ModeBadge</td></tr>
+            <tr><td><strong>runbooks</strong></td><td><span class="badge success">IMPL</span></td><td><span class="badge success">IMPL</span></td><td><span class="badge success">IMPL</span></td><td><span class="badge danger">RESTRICTED</span></td><td><span class="badge success">IMPL</span></td><td>ModeBadge, SourceIndicator, GovernanceContext</td></tr>
+            <tr><td><strong>approvals</strong></td><td><span class="badge success">IMPL</span></td><td><span class="badge success">IMPL</span></td><td><span class="badge success">IMPL</span></td><td><span class="badge danger">RESTRICTED</span></td><td><span class="badge success">IMPL</span></td><td>ModeBadge, SourceIndicator, GovernanceContext</td></tr>
+            <tr><td><strong>analytics</strong></td><td><span class="badge success">IMPL</span></td><td><span class="badge success">IMPL</span></td><td><span class="badge success">IMPL</span></td><td><span class="badge cyan">MOCK</span></td><td><span class="badge success">IMPL</span></td><td>ModeBadge, SourceIndicator</td></tr>
+            <tr><td><strong>ha</strong></td><td><span class="badge success">IMPL</span></td><td><span class="badge success">IMPL</span></td><td><span class="badge success">IMPL</span></td><td><span class="badge danger">RESTRICTED</span></td><td><span class="badge success">IMPL</span></td><td>ModeBadge, CapabilityBadge, GovernanceContext</td></tr>
+            <tr><td><strong>admin</strong></td><td><span class="badge success">IMPL</span></td><td><span class="badge success">IMPL</span></td><td><span class="badge success">IMPL</span></td><td><span class="badge cyan">MOCK</span></td><td><span class="badge success">IMPL</span></td><td>ModeBadge</td></tr>
+            <tr><td><strong>landscape</strong></td><td><span class="badge success">IMPL</span></td><td><span class="badge success">IMPL</span></td><td><span class="badge success">IMPL</span></td><td><span class="badge cyan">MOCK</span></td><td><span class="badge success">IMPL</span></td><td>ModeBadge, SourceIndicator, CapabilityBadge</td></tr>
+            <tr><td><strong>connectors</strong></td><td><span class="badge success">IMPL</span></td><td><span class="badge success">IMPL</span></td><td><span class="badge success">IMPL</span></td><td><span class="badge danger">RESTRICTED</span></td><td><span class="badge success">IMPL</span></td><td>ModeBadge, SourceIndicator, CapabilityBadge</td></tr>
+            <tr><td><strong>chat</strong></td><td><span class="badge success">IMPL</span></td><td><span class="badge success">IMPL</span></td><td><span class="badge success">IMPL</span></td><td><span class="badge cyan">MOCK</span></td><td><span class="badge success">IMPL</span></td><td>ModeBadge</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Domain 1: Systems -->
+    <h2 id="systems">1. Systems</h2>
+    <div class="card">
+      <p><span class="es"><strong>Objetivo:</strong> Gestion del ciclo de vida de sistemas SAP — registro, monitoreo de salud, metricas, breaches, SLA, instancias, hosts.</span><span class="en"><strong>Objective:</strong> SAP system lifecycle management — registration, health monitoring, metrics, breaches, SLA, instances, hosts.</span></p>
+      <h4><span class="es">Contrato</span><span class="en">Contract</span>: <code>SystemsProvider</code></h4>
+      <pre><code>getSystems(): ProviderResult&lt;SystemViewModel[]&gt;
+getSystemById(id): ProviderResult&lt;SystemViewModel | null&gt;
+getSystemMetrics(id, hours?): ProviderResult&lt;ApiRecord&gt;
+getSystemBreaches(id, limit?): ProviderResult&lt;ApiRecord[]&gt;
+getSystemSla(id): ProviderResult&lt;ApiRecord&gt;
+getServerMetrics(id): ProviderResult&lt;ApiRecord | null&gt;
+getServerDeps(id): ProviderResult&lt;ApiRecord[]&gt;
+getSystemInstances(id): ProviderResult&lt;ApiRecord[]&gt;
+getSystemHosts(id): ProviderResult&lt;ApiRecord[]&gt;
+getSystemMeta(id?): ProviderResult&lt;ApiRecord&gt;
+getSAPMonitoring(id): ProviderResult&lt;ApiRecord&gt;
+getMetricHistory(hostname): ProviderResult&lt;ApiRecord[]&gt;</code></pre>
+      <h4>ViewModel: <code>SystemViewModel</code></h4>
+      <p class="text-sm text-muted"><code>id, sid, type, dbType, environment, healthScore, status, cpu, mem, disk, isRiseRestricted, description, mttr, mtbf, availability, breaches, lastCheck</code></p>
+      <p class="mt-1"><span class="es">Modo RESTRICTED:</span><span class="en">RESTRICTED mode:</span> <span class="badge cyan">MOCK</span> — <span class="es">usa mock, lectura segura</span><span class="en">uses mock, safe read</span></p>
+    </div>
+
+    <!-- Domain 2: Alerts -->
+    <h2 id="alerts">2. Alerts</h2>
+    <div class="card">
+      <p><span class="es"><strong>Objetivo:</strong> Ciclo de vida de alertas — creacion, acknowledgment, resolucion, stats, escalamiento L1/L2.</span><span class="en"><strong>Objective:</strong> Alert lifecycle — creation, acknowledgment, resolution, stats, L1/L2 escalation.</span></p>
+      <h4><span class="es">Contrato</span><span class="en">Contract</span>: <code>AlertsProvider</code></h4>
+      <pre><code>getAlerts(filters?): ProviderResult&lt;AlertViewModel[]&gt;
+getAlertStats(): ProviderResult&lt;...&gt;</code></pre>
+      <h4>ViewModel: <code>AlertViewModel</code></h4>
+      <p class="text-sm text-muted"><code>id, systemId, title, message, level, status, escalation, acknowledged, ackBy, ackAt, resolved, resolvedBy, resolvedAt, resolutionCategory, resolutionNote, createdAt</code></p>
+      <p class="mt-1"><span class="es">Modo RESTRICTED:</span><span class="en">RESTRICTED mode:</span> <span class="badge cyan">MOCK</span></p>
+    </div>
+
+    <!-- Domain 3: Events -->
+    <h2 id="events">3. Events</h2>
+    <div class="card">
+      <p><span class="es"><strong>Objetivo:</strong> Stream de eventos de plataforma, SAP y seguridad.</span><span class="en"><strong>Objective:</strong> Platform, SAP, and security event stream.</span></p>
+      <h4><span class="es">Contrato</span><span class="en">Contract</span>: <code>EventsProvider</code></h4>
+      <pre><code>getEvents(): ProviderResult&lt;EventViewModel[]&gt;</code></pre>
+      <h4>ViewModel: <code>EventViewModel</code></h4>
+      <p class="text-sm text-muted"><code>id, systemId, level, source, component, message, details, timestamp</code></p>
+      <p class="mt-1"><span class="es">Modo RESTRICTED:</span><span class="en">RESTRICTED mode:</span> <span class="badge cyan">MOCK</span></p>
+    </div>
+
+    <!-- Domain 4: Operations -->
+    <h2 id="operations">4. Operations</h2>
+    <div class="card">
+      <p><span class="es"><strong>Objetivo:</strong> Operaciones planificadas (backup, restart, maintenance), jobs SM37, transportes y certificados.</span><span class="en"><strong>Objective:</strong> Scheduled operations (backup, restart, maintenance), SM37 jobs, transports, and certificates.</span></p>
+      <h4><span class="es">Contrato</span><span class="en">Contract</span>: <code>OperationsProvider</code></h4>
+      <pre><code>getOperations(): ProviderResult&lt;OperationViewModel[]&gt;
+getBackgroundJobs(): ProviderResult&lt;...&gt;
+getTransports(): ProviderResult&lt;...&gt;
+getCertificates(): ProviderResult&lt;...&gt;
+getLicenses(): ProviderResult&lt;...&gt;</code></pre>
+      <h4>ViewModel: <code>OperationViewModel</code></h4>
+      <p class="text-sm text-muted"><code>id, systemId, type, status, riskLevel, scheduledTime, completedAt, requestedBy, description</code></p>
+      <p class="mt-1"><span class="es">Modo RESTRICTED:</span><span class="en">RESTRICTED mode:</span> <span class="badge cyan">MOCK</span></p>
+    </div>
+
+    <!-- Domain 5: Runbooks -->
+    <h2 id="runbooks">5. Runbooks</h2>
+    <div class="card">
+      <p><span class="es"><strong>Objetivo:</strong> Motor de runbooks — catalogo, ejecucion por pasos, evidencia, gates (SAFE/HUMAN).</span><span class="en"><strong>Objective:</strong> Runbook engine — catalog, step-by-step execution, evidence, gates (SAFE/HUMAN).</span></p>
+      <h4><span class="es">Contrato</span><span class="en">Contract</span>: <code>RunbooksProvider</code></h4>
+      <pre><code>getRunbooks(): ProviderResult&lt;RunbookViewModel[]&gt;
+getRunbookExecutions(): ProviderResult&lt;ExecutionViewModel[]&gt;
+executeRunbook(runbookId, systemId, dryRun?): ProviderResult&lt;...&gt;
+getExecutionDetail(executionId): ProviderResult&lt;...&gt;</code></pre>
+      <h4>ViewModels: <code>RunbookViewModel</code>, <code>ExecutionViewModel</code></h4>
+      <p class="text-sm text-muted">RunbookViewModel: <code>id, name, description, costSafe, autoExecute, category, dbType, txCode, steps</code></p>
+      <p class="text-sm text-muted">ExecutionViewModel: <code>id, runbookId, systemId, gate, result, duration, detail, executedBy, totalSteps, completedSteps</code></p>
+      <p class="mt-1"><span class="es">Modo RESTRICTED:</span><span class="en">RESTRICTED mode:</span> <span class="badge danger">RESTRICTED</span> — <code>RunbooksRestrictedProvider</code> <span class="es">(proveedor dedicado, bloquea ejecucion)</span><span class="en">(dedicated provider, blocks execution)</span></p>
+    </div>
+
+    <!-- Domain 6: Approvals -->
+    <h2 id="approvals">6. Approvals</h2>
+    <div class="card">
+      <p><span class="es"><strong>Objetivo:</strong> Flujo de aprobacion para operaciones criticas — solicitud, revision, aprobacion/rechazo.</span><span class="en"><strong>Objective:</strong> Approval workflow for critical operations — request, review, approve/reject.</span></p>
+      <h4><span class="es">Contrato</span><span class="en">Contract</span>: <code>ApprovalsProvider</code></h4>
+      <pre><code>getApprovals(status?): ProviderResult&lt;ApprovalViewModel[]&gt;
+approveAction(id): ProviderResult&lt;...&gt;
+rejectAction(id): ProviderResult&lt;...&gt;</code></pre>
+      <h4>ViewModel: <code>ApprovalViewModel</code></h4>
+      <p class="text-sm text-muted"><code>id, systemId, runbookId, metric, value, severity, status, description, requestedBy, processedBy, processedAt, expiresAt, evidence</code></p>
+      <p class="mt-1"><span class="es">Modo RESTRICTED:</span><span class="en">RESTRICTED mode:</span> <span class="badge danger">RESTRICTED</span> — <code>ApprovalsRestrictedProvider</code></p>
+    </div>
+
+    <!-- Domain 7: Analytics -->
+    <h2 id="analytics">7. Analytics</h2>
+    <div class="card">
+      <p><span class="es"><strong>Objetivo:</strong> Metricas agregadas, tendencias por sistema, analytics de runbooks.</span><span class="en"><strong>Objective:</strong> Aggregated metrics, per-system trends, runbook analytics.</span></p>
+      <h4><span class="es">Contrato</span><span class="en">Contract</span>: <code>AnalyticsProvider</code></h4>
+      <pre><code>getAnalytics(): ProviderResult&lt;...&gt;
+getRunbookAnalytics(): ProviderResult&lt;...&gt;</code></pre>
+      <p class="mt-1"><span class="es">Modo RESTRICTED:</span><span class="en">RESTRICTED mode:</span> <span class="badge cyan">MOCK</span></p>
+    </div>
+
+    <!-- Domain 8: HA -->
+    <h2 id="ha">8. HA (High Availability)</h2>
+    <div class="card">
+      <p><span class="es"><strong>Objetivo:</strong> Gestion de alta disponibilidad y DR — configuracion HA, failover, prereqs, historial de operaciones, drivers.</span><span class="en"><strong>Objective:</strong> High availability and DR management — HA config, failover, prereqs, ops history, drivers.</span></p>
+      <h4><span class="es">Contrato</span><span class="en">Contract</span>: <code>HAProvider</code></h4>
+      <pre><code>getHASystems(): ProviderResult&lt;HAConfigViewModel[]&gt;
+getHAPrereqs(systemId?): ProviderResult&lt;...&gt;
+getHAOpsHistory(systemId?): ProviderResult&lt;...&gt;
+getHADrivers(systemId?): ProviderResult&lt;...&gt;</code></pre>
+      <h4>ViewModel: <code>HAConfigViewModel</code></h4>
+      <p class="text-sm text-muted"><code>id, systemId, haEnabled, haStrategy, primaryNode, secondaryNode, rpoMinutes, rtoMinutes, lastFailoverAt, status</code></p>
+      <p class="mt-1"><span class="es">Modo RESTRICTED:</span><span class="en">RESTRICTED mode:</span> <span class="badge danger">RESTRICTED</span> — <code>HARestrictedProvider</code> <span class="es">(failover controlado por proveedor cloud)</span><span class="en">(failover controlled by cloud provider)</span></p>
+      <div class="callout warning mt-2">
+        <div class="callout-icon">&#9888;&#65039;</div>
+        <div>
+          <span class="es"><strong>Nota:</strong> En LOCAL_SIMULATED, la gestion de estados de HA es real (se persiste en BD), pero los comandos de failover son simulados. En AWS_REAL, el failover ejecutaria operaciones reales.</span>
+          <span class="en"><strong>Note:</strong> In LOCAL_SIMULATED, HA state management is real (persisted to DB), but failover commands are simulated. In AWS_REAL, failover would execute real operations.</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Domain 9: Admin -->
+    <h2 id="admin">9. Admin</h2>
+    <div class="card">
+      <p><span class="es"><strong>Objetivo:</strong> Gestion administrativa — usuarios, audit log, planes, API keys, umbrales, politicas de escalamiento, ventanas de mantenimiento.</span><span class="en"><strong>Objective:</strong> Administrative management — users, audit log, plans, API keys, thresholds, escalation policies, maintenance windows.</span></p>
+      <h4><span class="es">Contrato</span><span class="en">Contract</span>: <code>AdminProvider</code></h4>
+      <pre><code>getUsers(): ProviderResult&lt;UserViewModel[]&gt;
+getAuditLog(): ProviderResult&lt;AuditEntryViewModel[]&gt;
+getPlans(): ProviderResult&lt;...&gt;
+getApiKeys(): ProviderResult&lt;...&gt;
+getThresholds(): ProviderResult&lt;...&gt;
+getEscalationPolicy(): ProviderResult&lt;...&gt;
+getMaintenanceWindows(): ProviderResult&lt;...&gt;</code></pre>
+      <h4>ViewModels: <code>UserViewModel</code>, <code>AuditEntryViewModel</code></h4>
+      <p class="mt-1"><span class="es">Modo RESTRICTED:</span><span class="en">RESTRICTED mode:</span> <span class="badge cyan">MOCK</span></p>
+    </div>
+
+    <!-- Domain 10: Landscape -->
+    <h2 id="landscape">10. Landscape</h2>
+    <div class="card">
+      <p><span class="es"><strong>Objetivo:</strong> Topologia SAP — descubrimiento de sistemas, lineas SID, validacion de landscape.</span><span class="en"><strong>Objective:</strong> SAP topology — system discovery, SID lines, landscape validation.</span></p>
+      <h4><span class="es">Contrato</span><span class="en">Contract</span>: <code>LandscapeProvider</code></h4>
+      <pre><code>getDiscovery(): ProviderResult&lt;...&gt;
+getSIDLines(): ProviderResult&lt;...&gt;
+getLandscapeValidation(): ProviderResult&lt;...&gt;</code></pre>
+      <p class="mt-1"><span class="es">Modo RESTRICTED:</span><span class="en">RESTRICTED mode:</span> <span class="badge cyan">MOCK</span></p>
+    </div>
+
+    <!-- Domain 11: Connectors -->
+    <h2 id="connectors">11. Connectors</h2>
+    <div class="card">
+      <p><span class="es"><strong>Objetivo:</strong> Gestion de conectores SAP — SAP Cloud Connector, Spektra Agent, RFC/BAPI, API Gateway.</span><span class="en"><strong>Objective:</strong> SAP connector management — SAP Cloud Connector, Spektra Agent, RFC/BAPI, API Gateway.</span></p>
+      <h4><span class="es">Contrato</span><span class="en">Contract</span>: <code>ConnectorsProvider</code></h4>
+      <pre><code>getConnectors(): ProviderResult&lt;ConnectorViewModel[]&gt;</code></pre>
+      <h4>ViewModel: <code>ConnectorViewModel</code></h4>
+      <p class="text-sm text-muted"><code>id, systemId, method, status, latencyMs, version, lastHeartbeat, features</code></p>
+      <p class="mt-1"><span class="es">Modo RESTRICTED:</span><span class="en">RESTRICTED mode:</span> <span class="badge danger">RESTRICTED</span> — <code>ConnectorsRestrictedProvider</code></p>
+    </div>
+
+    <!-- Domain 12: Chat -->
+    <h2 id="chat">12. Chat (AI)</h2>
+    <div class="card">
+      <p><span class="es"><strong>Objetivo:</strong> Interfaz de chat con IA — consultas sobre sistemas, analisis, recomendaciones.</span><span class="en"><strong>Objective:</strong> AI chat interface — system queries, analysis, recommendations.</span></p>
+      <h4><span class="es">Contrato</span><span class="en">Contract</span>: <code>ChatProvider</code></h4>
+      <pre><code>chat(message, context): ProviderResult&lt;...&gt;
+getAIUseCases(): ProviderResult&lt;...&gt;
+getAIResponses(): ProviderResult&lt;...&gt;</code></pre>
+      <p class="mt-1"><span class="es">Modo RESTRICTED:</span><span class="en">RESTRICTED mode:</span> <span class="badge cyan">MOCK</span></p>
+      <div class="callout info mt-2">
+        <div class="callout-icon">&#128161;</div>
+        <div>
+          <span class="es"><strong>Estado:</strong> En AWS_REAL usa Claude API. En LOCAL_SIMULATED retorna respuestas mock predefinidas.</span>
+          <span class="en"><strong>Status:</strong> In AWS_REAL uses Claude API. In LOCAL_SIMULATED returns predefined mock responses.</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <div style="margin-top:48px;padding-top:24px;border-top:1px solid var(--brd);text-align:center">
+      <p class="text-muted text-sm">SAP Spektra v3.0 — Maveram Company</p>
+    </div>
+  </main>
+</div>
+</body>
+</html>

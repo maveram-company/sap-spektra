@@ -7,6 +7,8 @@
   <link rel="stylesheet" href="theme.css">
   <script src="theme-toggle.js"></script>
   <script src="lang-toggle.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+  <script src="mermaid-init.js"></script>
 </head>
 <body>
 <div class="docs-wrapper">
@@ -15,501 +17,344 @@
       <div class="logo">&#9889;</div>
       <div class="brand-text">
         <div class="brand-name">SAP Spektra</div>
-        <div class="brand-sub">Documentacion v2.0</div>
+        <div class="brand-sub">Documentation v3.0</div>
       </div>
     </div>
     <div class="sidebar-section">
-      <div class="sidebar-section-label">Inicio</div>
-      <a href="index.html" class="sidebar-link">Portal</a>
-      <a href="getting-started.html" class="sidebar-link">Primeros Pasos</a>
+      <div class="sidebar-section-label">Overview</div>
+      <a href="index.html" class="sidebar-link">Home</a>
+      <a href="executive.html" class="sidebar-link">Executive Summary</a>
     </div>
     <div class="sidebar-section">
       <div class="sidebar-section-label">Architecture</div>
-      <a href="architecture.html" class="sidebar-link">Arquitectura</a>
-      <a href="domain-model.html" class="sidebar-link">Modelo de Datos</a>
+      <a href="architecture.html" class="sidebar-link">System Architecture</a>
+      <a href="multi-mode.html" class="sidebar-link">Multi-Mode Model</a>
+      <a href="domains.html" class="sidebar-link">Domain Reference</a>
+      <a href="domain-model.html" class="sidebar-link">Data Model</a>
       <a href="api-reference.html" class="sidebar-link active">API Reference</a>
     </div>
     <div class="sidebar-section">
-      <div class="sidebar-section-label">Command</div>
-      <a href="dashboard.html" class="sidebar-link">Dashboard</a>
-      <a href="landscape.html" class="sidebar-link">Landscape</a>
-      <a href="alerts.html" class="sidebar-link">Alertas</a>
-    </div>
-    <div class="sidebar-section">
-      <div class="sidebar-section-label">Monitor</div>
-      <a href="systems.html" class="sidebar-link">Sistemas</a>
-      <a href="connectors.html" class="sidebar-link">Conectores</a>
-      <a href="events.html" class="sidebar-link">Eventos</a>
-    </div>
-    <div class="sidebar-section">
-      <div class="sidebar-section-label">Intelligence</div>
-      <a href="ai-analysis.html" class="sidebar-link">Analisis IA</a>
-      <a href="analytics.html" class="sidebar-link">Analytics</a>
-      <a href="reports.html" class="sidebar-link">Reportes</a>
-      <a href="comparison.html" class="sidebar-link">Comparacion</a>
-    </div>
-    <div class="sidebar-section">
       <div class="sidebar-section-label">Operations</div>
-      <a href="runbooks.html" class="sidebar-link">Runbooks</a>
-      <a href="approvals.html" class="sidebar-link">Aprobaciones</a>
-      <a href="operations.html" class="sidebar-link">Operaciones</a>
-      <a href="jobs.html" class="sidebar-link">Jobs (SM37)</a>
-      <a href="transports.html" class="sidebar-link">Transportes</a>
-      <a href="sla.html" class="sidebar-link">SLA</a>
-      <a href="ha-control.html" class="sidebar-link">HA Control</a>
-      <a href="certificates.html" class="sidebar-link">Certificados</a>
-    </div>
-    <div class="sidebar-section">
-      <div class="sidebar-section-label">Admin</div>
-      <a href="admin.html" class="sidebar-link">Gestion</a>
-      <a href="settings.html" class="sidebar-link">Configuracion</a>
-      <a href="connect-system.html" class="sidebar-link">Conectar Sistema</a>
+      <a href="getting-started.html" class="sidebar-link">Setup &amp; Development</a>
+      <a href="validation.html" class="sidebar-link">Validation &amp; Quality</a>
+      <a href="backlog.html" class="sidebar-link">Hardening Backlog</a>
     </div>
   </nav>
 
   <main class="docs-main">
-    <div class="breadcrumb">
-      <a href="index.html">SAP Spektra</a>
-      <span class="sep">/</span>
-      <span>API Reference</span>
-    </div>
-
     <div class="page-header">
       <h1>API Reference</h1>
-      <div class="subtitle">
-        <span class="es">Todos los endpoints REST organizados por controlador — metodo, ruta, rol minimo y descripcion</span>
-        <span class="en">All REST endpoints organized by controller — method, path, minimum role and description</span>
-      </div>
+      <p class="subtitle">
+        <span class="es">78 endpoints REST agrupados por controlador — metodo, ruta, rol requerido</span>
+        <span class="en">78 REST endpoints grouped by controller — method, path, required role</span>
+      </p>
     </div>
 
     <div class="callout info">
       <div class="callout-icon">&#128161;</div>
       <div>
-        <span class="es"><strong>Base URL:</strong> <code>http://localhost:3001</code> | <strong>Swagger UI:</strong> <code>http://localhost:3001/api</code> | Todas las rutas protegidas requieren <code>Authorization: Bearer &lt;token&gt;</code>. El <code>organizationId</code> se extrae automaticamente del JWT. <strong>Total: 78 endpoints en 22 controladores.</strong></span>
-        <span class="en"><strong>Base URL:</strong> <code>http://localhost:3001</code> | <strong>Swagger UI:</strong> <code>http://localhost:3001/api</code> | All protected routes require <code>Authorization: Bearer &lt;token&gt;</code>. The <code>organizationId</code> is automatically extracted from the JWT. <strong>Total: 78 endpoints across 22 controllers.</strong></span>
+        <span class="es"><strong>Base URL:</strong> <code>http://localhost:3001</code>. Swagger UI disponible en <code>/api</code>. Todos los endpoints (excepto auth) requieren header <code>Authorization: Bearer &lt;JWT&gt;</code>.</span>
+        <span class="en"><strong>Base URL:</strong> <code>http://localhost:3001</code>. Swagger UI available at <code>/api</code>. All endpoints (except auth) require <code>Authorization: Bearer &lt;JWT&gt;</code> header.</span>
       </div>
     </div>
 
-    <!-- ═══ Auth ═══ -->
-    <h2>Auth <span class="badge neutral">Public + Protected</span></h2>
-    <div class="table-wrap">
-      <table>
-        <thead><tr><th>Method</th><th>Path</th><th>Rol</th><th>Rate Limit</th><th><span class="es">Descripcion</span><span class="en">Description</span></th></tr></thead>
-        <tbody>
-          <tr><td><span class="badge success">POST</span></td><td><code>/auth/login</code></td><td><span class="badge neutral">public</span></td><td>10/min</td><td><span class="es">Login con email y contrasena</span><span class="en">Login with email and password</span></td></tr>
-          <tr><td><span class="badge success">POST</span></td><td><code>/auth/register</code></td><td><span class="badge neutral">public</span></td><td>5/min</td><td><span class="es">Registrar nuevo usuario y organizacion</span><span class="en">Register new user and organization</span></td></tr>
-          <tr><td><span class="badge cyan">GET</span></td><td><code>/auth/me</code></td><td><span class="badge neutral">any</span></td><td>-</td><td><span class="es">Obtener perfil del usuario actual</span><span class="en">Get current user profile</span></td></tr>
-        </tbody>
-      </table>
-    </div>
-
-    <h3>
-      <span class="es">Ejemplo: Login</span>
-      <span class="en">Example: Login</span>
-    </h3>
-    <div class="grid-2">
-      <div>
-        <h4>Request</h4>
-<pre><code>POST /auth/login
-Content-Type: application/json
-
-{
-  "email": "admin@acme-corp.com",
-  "password": "admin123"
-}</code></pre>
-      </div>
-      <div>
-        <h4>Response (200 OK)</h4>
-<pre><code>{
-  "accessToken": "eyJhbGciOiJIUzI1NiIs...",
-  "user": {
-    "id": "uuid-...",
-    "email": "admin@acme-corp.com",
-    "name": "Carlos Admin",
-    "role": "admin",
-    "organizationId": "uuid-...",
-    "organizationName": "ACME Corp"
-  }
-}</code></pre>
+    <!-- Auth (3) -->
+    <h2 id="auth">Auth <span class="badge neutral">3 endpoints</span></h2>
+    <div class="card">
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th><span class="es">Metodo</span><span class="en">Method</span></th><th><span class="es">Ruta</span><span class="en">Path</span></th><th>Role</th><th><span class="es">Descripcion</span><span class="en">Description</span></th><th>Status</th></tr></thead>
+          <tbody>
+            <tr><td><span class="badge success">POST</span></td><td><code>/auth/login</code></td><td><span class="es">Publico</span><span class="en">Public</span></td><td><span class="es">Login con email + password, retorna JWT</span><span class="en">Login with email + password, returns JWT</span></td><td><span class="badge success">IMPL</span></td></tr>
+            <tr><td><span class="badge success">POST</span></td><td><code>/auth/register</code></td><td><span class="es">Publico</span><span class="en">Public</span></td><td><span class="es">Registro de usuario</span><span class="en">User registration</span></td><td><span class="badge success">IMPL</span></td></tr>
+            <tr><td><span class="badge cyan">GET</span></td><td><code>/auth/me</code></td><td><span class="es">Autenticado</span><span class="en">Authenticated</span></td><td><span class="es">Perfil del usuario actual</span><span class="en">Current user profile</span></td><td><span class="badge success">IMPL</span></td></tr>
+          </tbody>
+        </table>
       </div>
     </div>
 
-    <!-- ═══ Dashboard ═══ -->
-    <h2>Dashboard <span class="badge cyan">viewer+</span></h2>
-    <div class="table-wrap">
-      <table>
-        <thead><tr><th>Method</th><th>Path</th><th>Rol</th><th><span class="es">Descripcion</span><span class="en">Description</span></th></tr></thead>
-        <tbody>
-          <tr><td><span class="badge cyan">GET</span></td><td><code>/dashboard</code></td><td><span class="badge neutral">viewer</span></td><td><span class="es">Resumen del dashboard (KPIs, salud de sistemas, alertas recientes)</span><span class="en">Dashboard summary (KPIs, system health, recent alerts)</span></td></tr>
-        </tbody>
-      </table>
+    <!-- Systems (6) -->
+    <h2 id="systems">Systems <span class="badge neutral">6 endpoints</span></h2>
+    <div class="card">
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th><span class="es">Metodo</span><span class="en">Method</span></th><th><span class="es">Ruta</span><span class="en">Path</span></th><th>Role</th><th><span class="es">Descripcion</span><span class="en">Description</span></th><th>Status</th></tr></thead>
+          <tbody>
+            <tr><td><span class="badge cyan">GET</span></td><td><code>/systems</code></td><td>viewer</td><td><span class="es">Listar sistemas del tenant</span><span class="en">List tenant systems</span></td><td><span class="badge success">IMPL</span></td></tr>
+            <tr><td><span class="badge cyan">GET</span></td><td><code>/systems/health-summary</code></td><td>viewer</td><td><span class="es">Resumen de salud agregado</span><span class="en">Aggregated health summary</span></td><td><span class="badge success">IMPL</span></td></tr>
+            <tr><td><span class="badge cyan">GET</span></td><td><code>/systems/:id</code></td><td>viewer</td><td><span class="es">Detalle de un sistema</span><span class="en">System detail</span></td><td><span class="badge success">IMPL</span></td></tr>
+            <tr><td><span class="badge success">POST</span></td><td><code>/systems</code></td><td>admin</td><td><span class="es">Registrar nuevo sistema</span><span class="en">Register new system</span></td><td><span class="badge success">IMPL</span></td></tr>
+            <tr><td><span class="badge warning">PATCH</span></td><td><code>/systems/:id</code></td><td>operator</td><td><span class="es">Actualizar sistema</span><span class="en">Update system</span></td><td><span class="badge success">IMPL</span></td></tr>
+            <tr><td><span class="badge danger">DELETE</span></td><td><code>/systems/:id</code></td><td>admin</td><td><span class="es">Eliminar sistema</span><span class="en">Delete system</span></td><td><span class="badge success">IMPL</span></td></tr>
+          </tbody>
+        </table>
+      </div>
     </div>
 
-    <!-- ═══ Systems ═══ -->
-    <h2>Systems <span class="badge cyan">viewer+ / admin</span></h2>
-    <div class="table-wrap">
-      <table>
-        <thead><tr><th>Method</th><th>Path</th><th>Rol</th><th><span class="es">Descripcion</span><span class="en">Description</span></th></tr></thead>
-        <tbody>
-          <tr><td><span class="badge cyan">GET</span></td><td><code>/systems</code></td><td><span class="badge neutral">viewer</span></td><td><span class="es">Listar todos los sistemas SAP</span><span class="en">List all SAP systems</span></td></tr>
-          <tr><td><span class="badge cyan">GET</span></td><td><code>/systems/health-summary</code></td><td><span class="badge neutral">viewer</span></td><td><span class="es">Resumen de salud de todos los sistemas</span><span class="en">Health summary for all systems</span></td></tr>
-          <tr><td><span class="badge cyan">GET</span></td><td><code>/systems/:id</code></td><td><span class="badge neutral">viewer</span></td><td><span class="es">Detalle del sistema con relaciones</span><span class="en">System detail with relations</span></td></tr>
-          <tr><td><span class="badge success">POST</span></td><td><code>/systems</code></td><td><span class="badge danger">admin</span></td><td><span class="es">Registrar nuevo sistema SAP</span><span class="en">Register new SAP system</span></td></tr>
-          <tr><td><span class="badge warning">PATCH</span></td><td><code>/systems/:id</code></td><td><span class="badge cyan">operator</span></td><td><span class="es">Actualizar configuracion del sistema</span><span class="en">Update system configuration</span></td></tr>
-          <tr><td><span class="badge danger">DELETE</span></td><td><code>/systems/:id</code></td><td><span class="badge danger">admin</span></td><td><span class="es">Desregistrar un sistema (CASCADE)</span><span class="en">Deregister a system (CASCADE)</span></td></tr>
-        </tbody>
-      </table>
+    <!-- Metrics (9) -->
+    <h2 id="metrics">Metrics <span class="badge neutral">9 endpoints</span></h2>
+    <div class="card">
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th><span class="es">Metodo</span><span class="en">Method</span></th><th><span class="es">Ruta</span><span class="en">Path</span></th><th>Role</th><th><span class="es">Descripcion</span><span class="en">Description</span></th><th>Status</th></tr></thead>
+          <tbody>
+            <tr><td><span class="badge success">POST</span></td><td><code>/metrics/ingest</code></td><td>operator</td><td><span class="es">Ingesta de metricas del agente</span><span class="en">Agent metric ingestion</span></td><td><span class="badge success">IMPL</span></td></tr>
+            <tr><td><span class="badge cyan">GET</span></td><td><code>/metrics/hosts/:hostId</code></td><td>viewer</td><td><span class="es">Metricas de un host</span><span class="en">Host metrics</span></td><td><span class="badge success">IMPL</span></td></tr>
+            <tr><td><span class="badge cyan">GET</span></td><td><code>/metrics/systems/:systemId/hosts</code></td><td>viewer</td><td><span class="es">Hosts de un sistema</span><span class="en">System hosts</span></td><td><span class="badge success">IMPL</span></td></tr>
+            <tr><td><span class="badge cyan">GET</span></td><td><code>/metrics/systems/:systemId/health</code></td><td>viewer</td><td><span class="es">Salud del sistema</span><span class="en">System health</span></td><td><span class="badge success">IMPL</span></td></tr>
+            <tr><td><span class="badge cyan">GET</span></td><td><code>/metrics/breaches</code></td><td>viewer</td><td><span class="es">Breaches de umbrales</span><span class="en">Threshold breaches</span></td><td><span class="badge success">IMPL</span></td></tr>
+            <tr><td><span class="badge cyan">GET</span></td><td><code>/metrics/systems/:systemId/dependencies</code></td><td>viewer</td><td><span class="es">Dependencias del sistema</span><span class="en">System dependencies</span></td><td><span class="badge success">IMPL</span></td></tr>
+            <tr><td><span class="badge cyan">GET</span></td><td><code>/metrics/systems/:systemId/hosts-detail</code></td><td>viewer</td><td><span class="es">Detalle de hosts</span><span class="en">Hosts detail</span></td><td><span class="badge success">IMPL</span></td></tr>
+            <tr><td><span class="badge cyan">GET</span></td><td><code>/metrics/systems/:systemId/components</code></td><td>viewer</td><td><span class="es">Componentes del sistema</span><span class="en">System components</span></td><td><span class="badge success">IMPL</span></td></tr>
+            <tr><td><span class="badge cyan">GET</span></td><td><code>/metrics/system-meta</code></td><td>viewer</td><td><span class="es">Metadata del sistema</span><span class="en">System metadata</span></td><td><span class="badge success">IMPL</span></td></tr>
+          </tbody>
+        </table>
+      </div>
     </div>
 
-    <h3>
-      <span class="es">Ejemplo: Crear Sistema</span>
-      <span class="en">Example: Create System</span>
-    </h3>
-<pre><code>POST /systems
-Authorization: Bearer eyJhbGci...
-Content-Type: application/json
-
-{
-  "sid": "NW1",
-  "description": "NetWeaver Gateway Production",
-  "sapProduct": "SAP NW 7.5",
-  "productFamily": "ABAP_BUSINESS_SUITE",
-  "sapStackType": "ABAP",
-  "dbType": "SAP HANA 2.0",
-  "environment": "PRD",
-  "deploymentModel": "ON_PREMISE"
-}</code></pre>
-
-    <!-- ═══ Alerts ═══ -->
-    <h2>Alerts <span class="badge cyan">viewer+ / operator</span></h2>
-    <div class="table-wrap">
-      <table>
-        <thead><tr><th>Method</th><th>Path</th><th>Rol</th><th><span class="es">Descripcion</span><span class="en">Description</span></th></tr></thead>
-        <tbody>
-          <tr><td><span class="badge cyan">GET</span></td><td><code>/alerts</code></td><td><span class="badge neutral">viewer</span></td><td><span class="es">Listar alertas con filtros opcionales (?status, ?level, ?systemId)</span><span class="en">List alerts with optional filters (?status, ?level, ?systemId)</span></td></tr>
-          <tr><td><span class="badge cyan">GET</span></td><td><code>/alerts/stats</code></td><td><span class="badge neutral">viewer</span></td><td><span class="es">Estadisticas de alertas (conteo por nivel y estado)</span><span class="en">Alert statistics (count by level and status)</span></td></tr>
-          <tr><td><span class="badge warning">PATCH</span></td><td><code>/alerts/:id/acknowledge</code></td><td><span class="badge cyan">operator</span></td><td><span class="es">Reconocer una alerta</span><span class="en">Acknowledge an alert</span></td></tr>
-          <tr><td><span class="badge warning">PATCH</span></td><td><code>/alerts/:id/resolve</code></td><td><span class="badge cyan">operator</span></td><td><span class="es">Resolver una alerta (con categoria y nota)</span><span class="en">Resolve an alert (with category and note)</span></td></tr>
-        </tbody>
-      </table>
+    <!-- Alerts (4) -->
+    <h2 id="alerts">Alerts <span class="badge neutral">4 endpoints</span></h2>
+    <div class="card">
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th><span class="es">Metodo</span><span class="en">Method</span></th><th><span class="es">Ruta</span><span class="en">Path</span></th><th>Role</th><th><span class="es">Descripcion</span><span class="en">Description</span></th><th>Status</th></tr></thead>
+          <tbody>
+            <tr><td><span class="badge cyan">GET</span></td><td><code>/alerts</code></td><td>viewer</td><td><span class="es">Listar alertas con filtros</span><span class="en">List alerts with filters</span></td><td><span class="badge success">IMPL</span></td></tr>
+            <tr><td><span class="badge cyan">GET</span></td><td><code>/alerts/stats</code></td><td>viewer</td><td><span class="es">Estadisticas de alertas</span><span class="en">Alert statistics</span></td><td><span class="badge success">IMPL</span></td></tr>
+            <tr><td><span class="badge warning">PATCH</span></td><td><code>/alerts/:id/acknowledge</code></td><td>operator</td><td><span class="es">Acknowledge una alerta</span><span class="en">Acknowledge an alert</span></td><td><span class="badge success">IMPL</span></td></tr>
+            <tr><td><span class="badge warning">PATCH</span></td><td><code>/alerts/:id/resolve</code></td><td>operator</td><td><span class="es">Resolver una alerta</span><span class="en">Resolve an alert</span></td><td><span class="badge success">IMPL</span></td></tr>
+          </tbody>
+        </table>
+      </div>
     </div>
 
-    <!-- ═══ Events ═══ -->
-    <h2>Events <span class="badge cyan">viewer</span></h2>
-    <div class="table-wrap">
-      <table>
-        <thead><tr><th>Method</th><th>Path</th><th>Rol</th><th><span class="es">Descripcion</span><span class="en">Description</span></th></tr></thead>
-        <tbody>
-          <tr><td><span class="badge cyan">GET</span></td><td><code>/events</code></td><td><span class="badge neutral">viewer</span></td><td><span class="es">Listar eventos con filtros (?level, ?source, ?systemId, ?limit)</span><span class="en">List events with filters (?level, ?source, ?systemId, ?limit)</span></td></tr>
-        </tbody>
-      </table>
+    <!-- Events (1) -->
+    <h2 id="events">Events <span class="badge neutral">1 endpoint</span></h2>
+    <div class="card">
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th><span class="es">Metodo</span><span class="en">Method</span></th><th><span class="es">Ruta</span><span class="en">Path</span></th><th>Role</th><th><span class="es">Descripcion</span><span class="en">Description</span></th><th>Status</th></tr></thead>
+          <tbody>
+            <tr><td><span class="badge cyan">GET</span></td><td><code>/events</code></td><td>viewer</td><td><span class="es">Listar eventos</span><span class="en">List events</span></td><td><span class="badge success">IMPL</span></td></tr>
+          </tbody>
+        </table>
+      </div>
     </div>
 
-    <!-- ═══ Metrics ═══ -->
-    <h2>Metrics <span class="badge cyan">viewer+ / operator</span></h2>
-    <div class="table-wrap">
-      <table>
-        <thead><tr><th>Method</th><th>Path</th><th>Rol</th><th><span class="es">Descripcion</span><span class="en">Description</span></th></tr></thead>
-        <tbody>
-          <tr><td><span class="badge success">POST</span></td><td><code>/metrics/ingest</code></td><td><span class="badge cyan">operator</span></td><td><span class="es">Ingestar metricas desde el agente</span><span class="en">Ingest metrics from agent</span></td></tr>
-          <tr><td><span class="badge cyan">GET</span></td><td><code>/metrics/hosts/:hostId</code></td><td><span class="badge neutral">viewer</span></td><td><span class="es">Series de tiempo de metricas del host (?hours=24)</span><span class="en">Host metrics time-series (?hours=24)</span></td></tr>
-          <tr><td><span class="badge cyan">GET</span></td><td><code>/metrics/systems/:systemId/hosts</code></td><td><span class="badge neutral">viewer</span></td><td><span class="es">Metricas de todos los hosts de un sistema</span><span class="en">All host metrics for a system</span></td></tr>
-          <tr><td><span class="badge cyan">GET</span></td><td><code>/metrics/systems/:systemId/health</code></td><td><span class="badge neutral">viewer</span></td><td><span class="es">Snapshots de salud del sistema</span><span class="en">System health snapshots</span></td></tr>
-          <tr><td><span class="badge cyan">GET</span></td><td><code>/metrics/breaches</code></td><td><span class="badge neutral">viewer</span></td><td><span class="es">Listar breaches de umbrales (?systemId, ?resolved)</span><span class="en">List threshold breaches (?systemId, ?resolved)</span></td></tr>
-          <tr><td><span class="badge cyan">GET</span></td><td><code>/metrics/systems/:systemId/dependencies</code></td><td><span class="badge neutral">viewer</span></td><td><span class="es">Dependencias del sistema</span><span class="en">System dependencies</span></td></tr>
-          <tr><td><span class="badge cyan">GET</span></td><td><code>/metrics/systems/:systemId/hosts-detail</code></td><td><span class="badge neutral">viewer</span></td><td><span class="es">Hosts con instancias asociadas</span><span class="en">Hosts with associated instances</span></td></tr>
-          <tr><td><span class="badge cyan">GET</span></td><td><code>/metrics/systems/:systemId/components</code></td><td><span class="badge neutral">viewer</span></td><td><span class="es">Componentes con instancias</span><span class="en">Components with instances</span></td></tr>
-          <tr><td><span class="badge cyan">GET</span></td><td><code>/metrics/system-meta</code></td><td><span class="badge neutral">viewer</span></td><td><span class="es">Metadatos del sistema (?systemId)</span><span class="en">System metadata (?systemId)</span></td></tr>
-        </tbody>
-      </table>
+    <!-- Runbooks (5) -->
+    <h2 id="runbooks">Runbooks <span class="badge neutral">5 endpoints</span></h2>
+    <div class="card">
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th><span class="es">Metodo</span><span class="en">Method</span></th><th><span class="es">Ruta</span><span class="en">Path</span></th><th>Role</th><th><span class="es">Descripcion</span><span class="en">Description</span></th><th>Status</th></tr></thead>
+          <tbody>
+            <tr><td><span class="badge cyan">GET</span></td><td><code>/runbooks</code></td><td>viewer</td><td><span class="es">Listar runbooks</span><span class="en">List runbooks</span></td><td><span class="badge success">IMPL</span></td></tr>
+            <tr><td><span class="badge cyan">GET</span></td><td><code>/runbooks/executions</code></td><td>viewer</td><td><span class="es">Listar ejecuciones</span><span class="en">List executions</span></td><td><span class="badge success">IMPL</span></td></tr>
+            <tr><td><span class="badge cyan">GET</span></td><td><code>/runbooks/executions/:executionId</code></td><td>viewer</td><td><span class="es">Detalle de ejecucion</span><span class="en">Execution detail</span></td><td><span class="badge success">IMPL</span></td></tr>
+            <tr><td><span class="badge cyan">GET</span></td><td><code>/runbooks/:id</code></td><td>viewer</td><td><span class="es">Detalle de runbook</span><span class="en">Runbook detail</span></td><td><span class="badge success">IMPL</span></td></tr>
+            <tr><td><span class="badge success">POST</span></td><td><code>/runbooks/:id/execute</code></td><td>operator</td><td><span class="es">Ejecutar runbook</span><span class="en">Execute runbook</span></td><td><span class="badge warning">SIM</span></td></tr>
+          </tbody>
+        </table>
+      </div>
     </div>
 
-    <!-- ═══ Landscape ═══ -->
-    <h2>Landscape <span class="badge cyan">viewer</span></h2>
-    <div class="table-wrap">
-      <table>
-        <thead><tr><th>Method</th><th>Path</th><th>Rol</th><th><span class="es">Descripcion</span><span class="en">Description</span></th></tr></thead>
-        <tbody>
-          <tr><td><span class="badge cyan">GET</span></td><td><code>/landscape/validation</code></td><td><span class="badge neutral">viewer</span></td><td><span class="es">Validacion del landscape — checks de todos los sistemas</span><span class="en">Landscape validation — checks for all systems</span></td></tr>
-        </tbody>
-      </table>
+    <!-- Approvals (5) -->
+    <h2 id="approvals">Approvals <span class="badge neutral">5 endpoints</span></h2>
+    <div class="card">
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th><span class="es">Metodo</span><span class="en">Method</span></th><th><span class="es">Ruta</span><span class="en">Path</span></th><th>Role</th><th><span class="es">Descripcion</span><span class="en">Description</span></th><th>Status</th></tr></thead>
+          <tbody>
+            <tr><td><span class="badge cyan">GET</span></td><td><code>/approvals</code></td><td>viewer</td><td><span class="es">Listar solicitudes</span><span class="en">List requests</span></td><td><span class="badge success">IMPL</span></td></tr>
+            <tr><td><span class="badge cyan">GET</span></td><td><code>/approvals/:id</code></td><td>viewer</td><td><span class="es">Detalle de solicitud</span><span class="en">Request detail</span></td><td><span class="badge success">IMPL</span></td></tr>
+            <tr><td><span class="badge success">POST</span></td><td><code>/approvals</code></td><td>operator</td><td><span class="es">Crear solicitud</span><span class="en">Create request</span></td><td><span class="badge success">IMPL</span></td></tr>
+            <tr><td><span class="badge warning">PATCH</span></td><td><code>/approvals/:id/approve</code></td><td>escalation</td><td><span class="es">Aprobar solicitud</span><span class="en">Approve request</span></td><td><span class="badge success">IMPL</span></td></tr>
+            <tr><td><span class="badge warning">PATCH</span></td><td><code>/approvals/:id/reject</code></td><td>escalation</td><td><span class="es">Rechazar solicitud</span><span class="en">Reject request</span></td><td><span class="badge success">IMPL</span></td></tr>
+          </tbody>
+        </table>
+      </div>
     </div>
 
-    <!-- ═══ Runbooks ═══ -->
-    <h2>Runbooks <span class="badge cyan">viewer+ / operator</span></h2>
-    <div class="table-wrap">
-      <table>
-        <thead><tr><th>Method</th><th>Path</th><th>Rol</th><th>Rate Limit</th><th><span class="es">Descripcion</span><span class="en">Description</span></th></tr></thead>
-        <tbody>
-          <tr><td><span class="badge cyan">GET</span></td><td><code>/runbooks</code></td><td><span class="badge neutral">viewer</span></td><td>-</td><td><span class="es">Listar runbooks (?category)</span><span class="en">List runbooks (?category)</span></td></tr>
-          <tr><td><span class="badge cyan">GET</span></td><td><code>/runbooks/executions</code></td><td><span class="badge neutral">viewer</span></td><td>-</td><td><span class="es">Listar todas las ejecuciones</span><span class="en">List all executions</span></td></tr>
-          <tr><td><span class="badge cyan">GET</span></td><td><code>/runbooks/executions/:executionId</code></td><td><span class="badge neutral">viewer</span></td><td>-</td><td><span class="es">Detalle de ejecucion con pasos</span><span class="en">Execution detail with steps</span></td></tr>
-          <tr><td><span class="badge cyan">GET</span></td><td><code>/runbooks/:id</code></td><td><span class="badge neutral">viewer</span></td><td>-</td><td><span class="es">Detalle del runbook</span><span class="en">Runbook detail</span></td></tr>
-          <tr><td><span class="badge success">POST</span></td><td><code>/runbooks/:id/execute</code></td><td><span class="badge cyan">operator</span></td><td>10/min</td><td><span class="es">Ejecutar runbook en un sistema (202 Accepted)</span><span class="en">Execute runbook on a system (202 Accepted)</span></td></tr>
-        </tbody>
-      </table>
+    <!-- Operations (6) -->
+    <h2 id="operations">Operations <span class="badge neutral">6 endpoints</span></h2>
+    <div class="card">
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th><span class="es">Metodo</span><span class="en">Method</span></th><th><span class="es">Ruta</span><span class="en">Path</span></th><th>Role</th><th><span class="es">Descripcion</span><span class="en">Description</span></th><th>Status</th></tr></thead>
+          <tbody>
+            <tr><td><span class="badge cyan">GET</span></td><td><code>/operations</code></td><td>viewer</td><td><span class="es">Listar operaciones</span><span class="en">List operations</span></td><td><span class="badge success">IMPL</span></td></tr>
+            <tr><td><span class="badge success">POST</span></td><td><code>/operations</code></td><td>operator</td><td><span class="es">Crear operacion</span><span class="en">Create operation</span></td><td><span class="badge success">IMPL</span></td></tr>
+            <tr><td><span class="badge warning">PATCH</span></td><td><code>/operations/:id/status</code></td><td>operator</td><td><span class="es">Actualizar estado</span><span class="en">Update status</span></td><td><span class="badge success">IMPL</span></td></tr>
+            <tr><td><span class="badge cyan">GET</span></td><td><code>/operations/jobs</code></td><td>viewer</td><td><span class="es">Listar jobs SM37</span><span class="en">List SM37 jobs</span></td><td><span class="badge success">IMPL</span></td></tr>
+            <tr><td><span class="badge cyan">GET</span></td><td><code>/operations/transports</code></td><td>viewer</td><td><span class="es">Listar transportes</span><span class="en">List transports</span></td><td><span class="badge success">IMPL</span></td></tr>
+            <tr><td><span class="badge cyan">GET</span></td><td><code>/operations/certificates</code></td><td>viewer</td><td><span class="es">Listar certificados</span><span class="en">List certificates</span></td><td><span class="badge success">IMPL</span></td></tr>
+          </tbody>
+        </table>
+      </div>
     </div>
 
-    <h3>
-      <span class="es">Ejemplo: Ejecutar Runbook</span>
-      <span class="en">Example: Execute Runbook</span>
-    </h3>
-<pre><code>POST /runbooks/:runbookId/execute
-Authorization: Bearer eyJhbGci...
-Content-Type: application/json
-
-{
-  "systemId": "uuid-of-ep1-system",
-  "dryRun": false
-}
-
-// Response 202 Accepted
-{
-  "executionId": "uuid-...",
-  "runbookId": "uuid-...",
-  "systemId": "uuid-...",
-  "gate": "SAFE",
-  "result": "RUNNING",
-  "totalSteps": 5,
-  "currentStep": 1
-}</code></pre>
-
-    <!-- ═══ Approvals ═══ -->
-    <h2>Approvals <span class="badge cyan">viewer+ / escalation</span></h2>
-    <div class="table-wrap">
-      <table>
-        <thead><tr><th>Method</th><th>Path</th><th>Rol</th><th><span class="es">Descripcion</span><span class="en">Description</span></th></tr></thead>
-        <tbody>
-          <tr><td><span class="badge cyan">GET</span></td><td><code>/approvals</code></td><td><span class="badge neutral">viewer</span></td><td><span class="es">Listar solicitudes de aprobacion (?status, ?systemId)</span><span class="en">List approval requests (?status, ?systemId)</span></td></tr>
-          <tr><td><span class="badge cyan">GET</span></td><td><code>/approvals/:id</code></td><td><span class="badge neutral">viewer</span></td><td><span class="es">Detalle de la solicitud</span><span class="en">Request detail</span></td></tr>
-          <tr><td><span class="badge success">POST</span></td><td><code>/approvals</code></td><td><span class="badge cyan">operator</span></td><td><span class="es">Crear solicitud de aprobacion</span><span class="en">Create approval request</span></td></tr>
-          <tr><td><span class="badge warning">PATCH</span></td><td><code>/approvals/:id/approve</code></td><td><span class="badge warning">escalation</span></td><td><span class="es">Aprobar solicitud</span><span class="en">Approve request</span></td></tr>
-          <tr><td><span class="badge warning">PATCH</span></td><td><code>/approvals/:id/reject</code></td><td><span class="badge warning">escalation</span></td><td><span class="es">Rechazar solicitud</span><span class="en">Reject request</span></td></tr>
-        </tbody>
-      </table>
+    <!-- HA (7) -->
+    <h2 id="ha">HA / DR <span class="badge neutral">7 endpoints</span></h2>
+    <div class="card">
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th><span class="es">Metodo</span><span class="en">Method</span></th><th><span class="es">Ruta</span><span class="en">Path</span></th><th>Role</th><th><span class="es">Descripcion</span><span class="en">Description</span></th><th>Status</th></tr></thead>
+          <tbody>
+            <tr><td><span class="badge cyan">GET</span></td><td><code>/ha</code></td><td>viewer</td><td><span class="es">Listar configuraciones HA</span><span class="en">List HA configurations</span></td><td><span class="badge success">IMPL</span></td></tr>
+            <tr><td><span class="badge cyan">GET</span></td><td><code>/ha/:systemId</code></td><td>viewer</td><td><span class="es">HA de un sistema</span><span class="en">System HA config</span></td><td><span class="badge success">IMPL</span></td></tr>
+            <tr><td><span class="badge warning">PATCH</span></td><td><code>/ha/:systemId/failover</code></td><td>admin</td><td><span class="es">Ejecutar failover</span><span class="en">Execute failover</span></td><td><span class="badge warning">SIM</span></td></tr>
+            <tr><td><span class="badge warning">PATCH</span></td><td><code>/ha/:systemId/status</code></td><td>operator</td><td><span class="es">Actualizar estado HA</span><span class="en">Update HA status</span></td><td><span class="badge success">IMPL</span></td></tr>
+            <tr><td><span class="badge cyan">GET</span></td><td><code>/ha/:systemId/prereqs</code></td><td>viewer</td><td><span class="es">Prerequisitos de failover</span><span class="en">Failover prerequisites</span></td><td><span class="badge success">IMPL</span></td></tr>
+            <tr><td><span class="badge cyan">GET</span></td><td><code>/ha/:systemId/ops-history</code></td><td>viewer</td><td><span class="es">Historial de operaciones HA</span><span class="en">HA operations history</span></td><td><span class="badge success">IMPL</span></td></tr>
+            <tr><td><span class="badge cyan">GET</span></td><td><code>/ha/:systemId/drivers</code></td><td>viewer</td><td><span class="es">Drivers HA</span><span class="en">HA drivers</span></td><td><span class="badge success">IMPL</span></td></tr>
+          </tbody>
+        </table>
+      </div>
     </div>
 
-    <!-- ═══ Operations ═══ -->
-    <h2>Operations <span class="badge cyan">viewer+ / operator</span></h2>
-    <div class="table-wrap">
-      <table>
-        <thead><tr><th>Method</th><th>Path</th><th>Rol</th><th>Rate Limit</th><th><span class="es">Descripcion</span><span class="en">Description</span></th></tr></thead>
-        <tbody>
-          <tr><td><span class="badge cyan">GET</span></td><td><code>/operations</code></td><td><span class="badge neutral">viewer</span></td><td>-</td><td><span class="es">Listar operaciones (?status, ?type, ?systemId)</span><span class="en">List operations (?status, ?type, ?systemId)</span></td></tr>
-          <tr><td><span class="badge success">POST</span></td><td><code>/operations</code></td><td><span class="badge cyan">operator</span></td><td>10/min</td><td><span class="es">Programar nueva operacion</span><span class="en">Schedule new operation</span></td></tr>
-          <tr><td><span class="badge warning">PATCH</span></td><td><code>/operations/:id/status</code></td><td><span class="badge cyan">operator</span></td><td>-</td><td><span class="es">Actualizar estado de operacion</span><span class="en">Update operation status</span></td></tr>
-          <tr><td><span class="badge cyan">GET</span></td><td><code>/operations/jobs</code></td><td><span class="badge neutral">viewer</span></td><td>-</td><td><span class="es">Listar registros de jobs SM37 (?systemId)</span><span class="en">List SM37 job records (?systemId)</span></td></tr>
-          <tr><td><span class="badge cyan">GET</span></td><td><code>/operations/transports</code></td><td><span class="badge neutral">viewer</span></td><td>-</td><td><span class="es">Listar ordenes de transporte (?systemId)</span><span class="en">List transport orders (?systemId)</span></td></tr>
-          <tr><td><span class="badge cyan">GET</span></td><td><code>/operations/certificates</code></td><td><span class="badge neutral">viewer</span></td><td>-</td><td><span class="es">Listar certificados (?systemId)</span><span class="en">List certificates (?systemId)</span></td></tr>
-        </tbody>
-      </table>
+    <!-- Analytics (3) -->
+    <h2 id="analytics">Analytics <span class="badge neutral">3 endpoints</span></h2>
+    <div class="card">
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th><span class="es">Metodo</span><span class="en">Method</span></th><th><span class="es">Ruta</span><span class="en">Path</span></th><th>Role</th><th><span class="es">Descripcion</span><span class="en">Description</span></th><th>Status</th></tr></thead>
+          <tbody>
+            <tr><td><span class="badge cyan">GET</span></td><td><code>/analytics/overview</code></td><td>viewer</td><td><span class="es">Resumen de analytics</span><span class="en">Analytics overview</span></td><td><span class="badge success">IMPL</span></td></tr>
+            <tr><td><span class="badge cyan">GET</span></td><td><code>/analytics/runbooks</code></td><td>viewer</td><td><span class="es">Analytics de runbooks</span><span class="en">Runbook analytics</span></td><td><span class="badge success">IMPL</span></td></tr>
+            <tr><td><span class="badge cyan">GET</span></td><td><code>/analytics/systems/:systemId/trends</code></td><td>viewer</td><td><span class="es">Tendencias por sistema</span><span class="en">Per-system trends</span></td><td><span class="badge success">IMPL</span></td></tr>
+          </tbody>
+        </table>
+      </div>
     </div>
 
-    <!-- ═══ Connectors ═══ -->
-    <h2>Connectors <span class="badge cyan">viewer+ / operator</span></h2>
-    <div class="table-wrap">
-      <table>
-        <thead><tr><th>Method</th><th>Path</th><th>Rol</th><th><span class="es">Descripcion</span><span class="en">Description</span></th></tr></thead>
-        <tbody>
-          <tr><td><span class="badge cyan">GET</span></td><td><code>/connectors</code></td><td><span class="badge neutral">viewer</span></td><td><span class="es">Listar conectores</span><span class="en">List connectors</span></td></tr>
-          <tr><td><span class="badge cyan">GET</span></td><td><code>/connectors/:id</code></td><td><span class="badge neutral">viewer</span></td><td><span class="es">Detalle del conector</span><span class="en">Connector detail</span></td></tr>
-          <tr><td><span class="badge warning">PATCH</span></td><td><code>/connectors/:id/heartbeat</code></td><td><span class="badge cyan">operator</span></td><td><span class="es">Actualizar heartbeat del conector</span><span class="en">Update connector heartbeat</span></td></tr>
-          <tr><td><span class="badge cyan">GET</span></td><td><code>/connectors/validate/all</code></td><td><span class="badge cyan">operator</span></td><td><span class="es">Validar conectividad de todos</span><span class="en">Validate all connectivity</span></td></tr>
-          <tr><td><span class="badge cyan">GET</span></td><td><code>/connectors/:id/validate</code></td><td><span class="badge cyan">operator</span></td><td><span class="es">Validar conectividad de un conector</span><span class="en">Validate single connector</span></td></tr>
-        </tbody>
-      </table>
+    <!-- Connectors (5) -->
+    <h2 id="connectors">Connectors <span class="badge neutral">5 endpoints</span></h2>
+    <div class="card">
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th><span class="es">Metodo</span><span class="en">Method</span></th><th><span class="es">Ruta</span><span class="en">Path</span></th><th>Role</th><th><span class="es">Descripcion</span><span class="en">Description</span></th><th>Status</th></tr></thead>
+          <tbody>
+            <tr><td><span class="badge cyan">GET</span></td><td><code>/connectors</code></td><td>viewer</td><td><span class="es">Listar conectores</span><span class="en">List connectors</span></td><td><span class="badge success">IMPL</span></td></tr>
+            <tr><td><span class="badge cyan">GET</span></td><td><code>/connectors/:id</code></td><td>viewer</td><td><span class="es">Detalle de conector</span><span class="en">Connector detail</span></td><td><span class="badge success">IMPL</span></td></tr>
+            <tr><td><span class="badge warning">PATCH</span></td><td><code>/connectors/:id/heartbeat</code></td><td>operator</td><td><span class="es">Actualizar heartbeat</span><span class="en">Update heartbeat</span></td><td><span class="badge success">IMPL</span></td></tr>
+            <tr><td><span class="badge cyan">GET</span></td><td><code>/connectors/validate/all</code></td><td>operator</td><td><span class="es">Validar todos los conectores</span><span class="en">Validate all connectors</span></td><td><span class="badge success">IMPL</span></td></tr>
+            <tr><td><span class="badge cyan">GET</span></td><td><code>/connectors/:id/validate</code></td><td>operator</td><td><span class="es">Validar un conector</span><span class="en">Validate one connector</span></td><td><span class="badge success">IMPL</span></td></tr>
+          </tbody>
+        </table>
+      </div>
     </div>
 
-    <!-- ═══ HA/DR ═══ -->
-    <h2>HA/DR <span class="badge cyan">viewer+ / admin</span> <span class="badge warning">SIMULATED</span></h2>
-    <p class="text-muted text-sm">
-      <span class="es"><strong>Nota:</strong> El failover alterna estados en la BD pero no ejecuta failover SAP real (sapcontrol/pacemaker). La integracion real esta en el ROADMAP.</span>
-      <span class="en"><strong>Note:</strong> Failover toggles states in the DB but does not execute real SAP failover (sapcontrol/pacemaker). Real integration is on the ROADMAP.</span>
-    </p>
-    <div class="table-wrap">
-      <table>
-        <thead><tr><th>Method</th><th>Path</th><th>Rol</th><th><span class="es">Descripcion</span><span class="en">Description</span></th></tr></thead>
-        <tbody>
-          <tr><td><span class="badge cyan">GET</span></td><td><code>/ha</code></td><td><span class="badge neutral">viewer</span></td><td><span class="es">Listar configuraciones HA</span><span class="en">List HA configurations</span></td></tr>
-          <tr><td><span class="badge cyan">GET</span></td><td><code>/ha/:systemId</code></td><td><span class="badge neutral">viewer</span></td><td><span class="es">Configuracion HA de un sistema</span><span class="en">HA config for a system</span></td></tr>
-          <tr><td><span class="badge warning">PATCH</span></td><td><code>/ha/:systemId/failover</code></td><td><span class="badge danger">admin</span></td><td><span class="es">Disparar failover (accion critica)</span><span class="en">Trigger failover (critical action)</span></td></tr>
-          <tr><td><span class="badge warning">PATCH</span></td><td><code>/ha/:systemId/status</code></td><td><span class="badge cyan">operator</span></td><td><span class="es">Actualizar estado HA</span><span class="en">Update HA status</span></td></tr>
-          <tr><td><span class="badge cyan">GET</span></td><td><code>/ha/:systemId/prereqs</code></td><td><span class="badge neutral">viewer</span></td><td><span class="es">Checklist de pre-requisitos HA</span><span class="en">HA prerequisites checklist</span></td></tr>
-          <tr><td><span class="badge cyan">GET</span></td><td><code>/ha/:systemId/ops-history</code></td><td><span class="badge neutral">viewer</span></td><td><span class="es">Historial de operaciones HA</span><span class="en">HA operations history</span></td></tr>
-          <tr><td><span class="badge cyan">GET</span></td><td><code>/ha/:systemId/drivers</code></td><td><span class="badge neutral">viewer</span></td><td><span class="es">Informacion de drivers HA</span><span class="en">HA driver information</span></td></tr>
-        </tbody>
-      </table>
+    <!-- Landscape (1) -->
+    <h2 id="landscape">Landscape <span class="badge neutral">1 endpoint</span></h2>
+    <div class="card">
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th><span class="es">Metodo</span><span class="en">Method</span></th><th><span class="es">Ruta</span><span class="en">Path</span></th><th>Role</th><th><span class="es">Descripcion</span><span class="en">Description</span></th><th>Status</th></tr></thead>
+          <tbody>
+            <tr><td><span class="badge cyan">GET</span></td><td><code>/landscape/validation</code></td><td>viewer</td><td><span class="es">Validacion del landscape SAP</span><span class="en">SAP landscape validation</span></td><td><span class="badge success">IMPL</span></td></tr>
+          </tbody>
+        </table>
+      </div>
     </div>
 
-    <!-- ═══ Analytics ═══ -->
-    <h2>Analytics <span class="badge cyan">viewer</span></h2>
-    <div class="table-wrap">
-      <table>
-        <thead><tr><th>Method</th><th>Path</th><th>Rol</th><th><span class="es">Descripcion</span><span class="en">Description</span></th></tr></thead>
-        <tbody>
-          <tr><td><span class="badge cyan">GET</span></td><td><code>/analytics/overview</code></td><td><span class="badge neutral">viewer</span></td><td><span class="es">Vista general de analytics</span><span class="en">Analytics overview</span></td></tr>
-          <tr><td><span class="badge cyan">GET</span></td><td><code>/analytics/runbooks</code></td><td><span class="badge neutral">viewer</span></td><td><span class="es">Analytics de ejecuciones de runbooks</span><span class="en">Runbook execution analytics</span></td></tr>
-          <tr><td><span class="badge cyan">GET</span></td><td><code>/analytics/systems/:systemId/trends</code></td><td><span class="badge neutral">viewer</span></td><td><span class="es">Tendencias de salud del sistema (?days=7)</span><span class="en">System health trends (?days=7)</span></td></tr>
-        </tbody>
-      </table>
+    <!-- Dashboard (1) -->
+    <h2 id="dashboard">Dashboard <span class="badge neutral">1 endpoint</span></h2>
+    <div class="card">
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th><span class="es">Metodo</span><span class="en">Method</span></th><th><span class="es">Ruta</span><span class="en">Path</span></th><th>Role</th><th><span class="es">Descripcion</span><span class="en">Description</span></th><th>Status</th></tr></thead>
+          <tbody>
+            <tr><td><span class="badge cyan">GET</span></td><td><code>/dashboard</code></td><td>viewer+</td><td><span class="es">KPIs agregados del dashboard</span><span class="en">Aggregated dashboard KPIs</span></td><td><span class="badge success">IMPL</span></td></tr>
+          </tbody>
+        </table>
+      </div>
     </div>
 
-    <!-- ═══ AI ═══ -->
-    <h2>AI <span class="badge cyan">viewer</span> <span class="badge warning">SIMULATED</span></h2>
-    <p class="text-muted text-sm">
-      <span class="es"><strong>Nota:</strong> Los endpoints de IA retornan respuestas mock estructuradas. La integracion con un LLM real esta en el ROADMAP.</span>
-      <span class="en"><strong>Note:</strong> AI endpoints return structured mock responses. Real LLM integration is on the ROADMAP.</span>
-    </p>
-    <div class="table-wrap">
-      <table>
-        <thead><tr><th>Method</th><th>Path</th><th>Rol</th><th><span class="es">Descripcion</span><span class="en">Description</span></th></tr></thead>
-        <tbody>
-          <tr><td><span class="badge cyan">GET</span></td><td><code>/ai/use-cases</code></td><td><span class="badge neutral">viewer</span></td><td><span class="es">Casos de uso de IA disponibles</span><span class="en">Available AI use cases</span></td></tr>
-          <tr><td><span class="badge cyan">GET</span></td><td><code>/ai/responses</code></td><td><span class="badge neutral">viewer</span></td><td><span class="es">Respuestas y insights de IA recientes</span><span class="en">Recent AI responses and insights</span></td></tr>
-        </tbody>
-      </table>
+    <!-- AI (2) -->
+    <h2 id="ai">AI <span class="badge neutral">2 endpoints</span></h2>
+    <div class="card">
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th><span class="es">Metodo</span><span class="en">Method</span></th><th><span class="es">Ruta</span><span class="en">Path</span></th><th>Role</th><th><span class="es">Descripcion</span><span class="en">Description</span></th><th>Status</th></tr></thead>
+          <tbody>
+            <tr><td><span class="badge cyan">GET</span></td><td><code>/ai/use-cases</code></td><td>viewer</td><td><span class="es">Casos de uso de IA</span><span class="en">AI use cases</span></td><td><span class="badge warning">SIM</span></td></tr>
+            <tr><td><span class="badge cyan">GET</span></td><td><code>/ai/responses</code></td><td>viewer</td><td><span class="es">Respuestas de IA</span><span class="en">AI responses</span></td><td><span class="badge warning">SIM</span></td></tr>
+          </tbody>
+        </table>
+      </div>
     </div>
 
-    <!-- ═══ Chat ═══ -->
-    <h2>Chat <span class="badge cyan">viewer+</span> <span class="badge warning">SIMULATED</span></h2>
-    <p class="text-muted text-sm">
-      <span class="es"><strong>Nota:</strong> El chat retorna respuestas deterministas basadas en contexto del sistema. La integracion con un LLM real esta en el ROADMAP.</span>
-      <span class="en"><strong>Note:</strong> Chat returns deterministic responses based on system context. Real LLM integration is on the ROADMAP.</span>
-    </p>
-    <div class="table-wrap">
-      <table>
-        <thead><tr><th>Method</th><th>Path</th><th>Rol</th><th>Rate Limit</th><th><span class="es">Descripcion</span><span class="en">Description</span></th></tr></thead>
-        <tbody>
-          <tr><td><span class="badge success">POST</span></td><td><code>/chat</code></td><td><span class="badge neutral">viewer</span></td><td>20/min</td><td><span class="es">Enviar mensaje al asistente IA</span><span class="en">Send message to AI assistant</span></td></tr>
-        </tbody>
-      </table>
+    <!-- Chat (1) -->
+    <h2 id="chat">Chat <span class="badge neutral">1 endpoint</span></h2>
+    <div class="card">
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th><span class="es">Metodo</span><span class="en">Method</span></th><th><span class="es">Ruta</span><span class="en">Path</span></th><th>Role</th><th><span class="es">Descripcion</span><span class="en">Description</span></th><th>Status</th></tr></thead>
+          <tbody>
+            <tr><td><span class="badge success">POST</span></td><td><code>/chat</code></td><td>viewer+</td><td><span class="es">Enviar mensaje al chat IA</span><span class="en">Send message to AI chat</span></td><td><span class="badge warning">SIM</span></td></tr>
+          </tbody>
+        </table>
+      </div>
     </div>
 
-    <!-- ═══ Users ═══ -->
-    <h2>Users <span class="badge cyan">viewer+ / admin</span></h2>
-    <div class="table-wrap">
-      <table>
-        <thead><tr><th>Method</th><th>Path</th><th>Rol</th><th><span class="es">Descripcion</span><span class="en">Description</span></th></tr></thead>
-        <tbody>
-          <tr><td><span class="badge cyan">GET</span></td><td><code>/users</code></td><td><span class="badge neutral">viewer</span></td><td><span class="es">Listar usuarios de la organizacion</span><span class="en">List organization users</span></td></tr>
-          <tr><td><span class="badge cyan">GET</span></td><td><code>/users/:id</code></td><td><span class="badge neutral">viewer</span></td><td><span class="es">Detalle del usuario</span><span class="en">User detail</span></td></tr>
-          <tr><td><span class="badge success">POST</span></td><td><code>/users</code></td><td><span class="badge danger">admin</span></td><td><span class="es">Crear o invitar usuario</span><span class="en">Create or invite user</span></td></tr>
-          <tr><td><span class="badge warning">PATCH</span></td><td><code>/users/:id</code></td><td><span class="badge danger">admin</span></td><td><span class="es">Actualizar rol o estado</span><span class="en">Update role or status</span></td></tr>
-          <tr><td><span class="badge danger">DELETE</span></td><td><code>/users/:id</code></td><td><span class="badge danger">admin</span></td><td><span class="es">Eliminar usuario de la organizacion</span><span class="en">Remove user from organization</span></td></tr>
-        </tbody>
-      </table>
+    <!-- Users (5) -->
+    <h2 id="users">Users <span class="badge neutral">5 endpoints</span></h2>
+    <div class="card">
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th><span class="es">Metodo</span><span class="en">Method</span></th><th><span class="es">Ruta</span><span class="en">Path</span></th><th>Role</th><th><span class="es">Descripcion</span><span class="en">Description</span></th><th>Status</th></tr></thead>
+          <tbody>
+            <tr><td><span class="badge cyan">GET</span></td><td><code>/users</code></td><td>viewer</td><td><span class="es">Listar usuarios</span><span class="en">List users</span></td><td><span class="badge success">IMPL</span></td></tr>
+            <tr><td><span class="badge cyan">GET</span></td><td><code>/users/:id</code></td><td>viewer</td><td><span class="es">Detalle de usuario</span><span class="en">User detail</span></td><td><span class="badge success">IMPL</span></td></tr>
+            <tr><td><span class="badge success">POST</span></td><td><code>/users</code></td><td>admin</td><td><span class="es">Crear usuario</span><span class="en">Create user</span></td><td><span class="badge success">IMPL</span></td></tr>
+            <tr><td><span class="badge warning">PATCH</span></td><td><code>/users/:id</code></td><td>admin</td><td><span class="es">Actualizar usuario</span><span class="en">Update user</span></td><td><span class="badge success">IMPL</span></td></tr>
+            <tr><td><span class="badge danger">DELETE</span></td><td><code>/users/:id</code></td><td>admin</td><td><span class="es">Eliminar usuario</span><span class="en">Delete user</span></td><td><span class="badge success">IMPL</span></td></tr>
+          </tbody>
+        </table>
+      </div>
     </div>
 
-    <!-- ═══ Tenant ═══ -->
-    <h2>Tenant <span class="badge cyan">viewer+ / admin</span></h2>
-    <div class="table-wrap">
-      <table>
-        <thead><tr><th>Method</th><th>Path</th><th>Rol</th><th><span class="es">Descripcion</span><span class="en">Description</span></th></tr></thead>
-        <tbody>
-          <tr><td><span class="badge cyan">GET</span></td><td><code>/tenant</code></td><td><span class="badge neutral">viewer</span></td><td><span class="es">Datos de la organizacion actual</span><span class="en">Current organization data</span></td></tr>
-          <tr><td><span class="badge warning">PATCH</span></td><td><code>/tenant</code></td><td><span class="badge danger">admin</span></td><td><span class="es">Actualizar configuracion de la organizacion</span><span class="en">Update organization settings</span></td></tr>
-          <tr><td><span class="badge cyan">GET</span></td><td><code>/tenant/stats</code></td><td><span class="badge neutral">viewer</span></td><td><span class="es">Estadisticas de la organizacion</span><span class="en">Organization statistics</span></td></tr>
-        </tbody>
-      </table>
+    <!-- Settings (5), Audit (1), Tenant (3), Plans (2), Licenses (1), Health (2) -->
+    <h2 id="settings">Settings <span class="badge neutral">5 endpoints</span></h2>
+    <div class="card">
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th><span class="es">Metodo</span><span class="en">Method</span></th><th><span class="es">Ruta</span><span class="en">Path</span></th><th>Role</th><th><span class="es">Descripcion</span><span class="en">Description</span></th><th>Status</th></tr></thead>
+          <tbody>
+            <tr><td><span class="badge cyan">GET</span></td><td><code>/settings</code></td><td>admin</td><td><span class="es">Obtener configuracion</span><span class="en">Get settings</span></td><td><span class="badge success">IMPL</span></td></tr>
+            <tr><td><span class="badge warning">PATCH</span></td><td><code>/settings</code></td><td>admin</td><td><span class="es">Actualizar configuracion</span><span class="en">Update settings</span></td><td><span class="badge success">IMPL</span></td></tr>
+            <tr><td><span class="badge cyan">GET</span></td><td><code>/settings/api-keys</code></td><td>admin</td><td><span class="es">Listar API keys</span><span class="en">List API keys</span></td><td><span class="badge success">IMPL</span></td></tr>
+            <tr><td><span class="badge success">POST</span></td><td><code>/settings/api-keys</code></td><td>admin</td><td><span class="es">Crear API key</span><span class="en">Create API key</span></td><td><span class="badge success">IMPL</span></td></tr>
+            <tr><td><span class="badge warning">PATCH</span></td><td><code>/settings/api-keys/:id/revoke</code></td><td>admin</td><td><span class="es">Revocar API key</span><span class="en">Revoke API key</span></td><td><span class="badge success">IMPL</span></td></tr>
+          </tbody>
+        </table>
+      </div>
     </div>
 
-    <!-- ═══ Settings ═══ -->
-    <h2>Settings <span class="badge danger">admin</span></h2>
-    <div class="table-wrap">
-      <table>
-        <thead><tr><th>Method</th><th>Path</th><th>Rol</th><th><span class="es">Descripcion</span><span class="en">Description</span></th></tr></thead>
-        <tbody>
-          <tr><td><span class="badge cyan">GET</span></td><td><code>/settings</code></td><td><span class="badge danger">admin</span></td><td><span class="es">Obtener configuracion de la organizacion</span><span class="en">Get organization settings</span></td></tr>
-          <tr><td><span class="badge warning">PATCH</span></td><td><code>/settings</code></td><td><span class="badge danger">admin</span></td><td><span class="es">Actualizar configuracion</span><span class="en">Update settings</span></td></tr>
-          <tr><td><span class="badge cyan">GET</span></td><td><code>/settings/api-keys</code></td><td><span class="badge danger">admin</span></td><td><span class="es">Listar API keys</span><span class="en">List API keys</span></td></tr>
-          <tr><td><span class="badge success">POST</span></td><td><code>/settings/api-keys</code></td><td><span class="badge danger">admin</span></td><td><span class="es">Crear nuevo API key</span><span class="en">Create new API key</span></td></tr>
-          <tr><td><span class="badge warning">PATCH</span></td><td><code>/settings/api-keys/:id/revoke</code></td><td><span class="badge danger">admin</span></td><td><span class="es">Revocar un API key</span><span class="en">Revoke an API key</span></td></tr>
-        </tbody>
-      </table>
+    <h2 id="remaining">Audit, Tenant, Plans, Licenses, Health <span class="badge neutral">9 endpoints</span></h2>
+    <div class="card">
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th><span class="es">Metodo</span><span class="en">Method</span></th><th><span class="es">Ruta</span><span class="en">Path</span></th><th>Role</th><th><span class="es">Descripcion</span><span class="en">Description</span></th><th>Status</th></tr></thead>
+          <tbody>
+            <tr><td><span class="badge cyan">GET</span></td><td><code>/audit</code></td><td>admin</td><td><span class="es">Log de auditoria</span><span class="en">Audit log</span></td><td><span class="badge success">IMPL</span></td></tr>
+            <tr><td><span class="badge cyan">GET</span></td><td><code>/tenant</code></td><td>viewer</td><td><span class="es">Info del tenant</span><span class="en">Tenant info</span></td><td><span class="badge success">IMPL</span></td></tr>
+            <tr><td><span class="badge warning">PATCH</span></td><td><code>/tenant</code></td><td>admin</td><td><span class="es">Actualizar tenant</span><span class="en">Update tenant</span></td><td><span class="badge success">IMPL</span></td></tr>
+            <tr><td><span class="badge cyan">GET</span></td><td><code>/tenant/stats</code></td><td>viewer</td><td><span class="es">Estadisticas del tenant</span><span class="en">Tenant statistics</span></td><td><span class="badge success">IMPL</span></td></tr>
+            <tr><td><span class="badge cyan">GET</span></td><td><code>/plans</code></td><td><span class="es">Publico</span><span class="en">Public</span></td><td><span class="es">Listar planes</span><span class="en">List plans</span></td><td><span class="badge success">IMPL</span></td></tr>
+            <tr><td><span class="badge cyan">GET</span></td><td><code>/plans/:tier</code></td><td><span class="es">Publico</span><span class="en">Public</span></td><td><span class="es">Detalle de plan</span><span class="en">Plan detail</span></td><td><span class="badge success">IMPL</span></td></tr>
+            <tr><td><span class="badge cyan">GET</span></td><td><code>/licenses</code></td><td>viewer</td><td><span class="es">Info de licencias</span><span class="en">License info</span></td><td><span class="badge success">IMPL</span></td></tr>
+            <tr><td><span class="badge cyan">GET</span></td><td><code>/health</code></td><td><span class="es">Publico</span><span class="en">Public</span></td><td><span class="es">Estado de salud de la API</span><span class="en">API health status</span></td><td><span class="badge success">IMPL</span></td></tr>
+            <tr><td><span class="badge cyan">GET</span></td><td><code>/health/liveness</code></td><td><span class="es">Publico</span><span class="en">Public</span></td><td><span class="es">Liveness probe</span><span class="en">Liveness probe</span></td><td><span class="badge success">IMPL</span></td></tr>
+          </tbody>
+        </table>
+      </div>
     </div>
 
-    <!-- ═══ Audit ═══ -->
-    <h2>Audit <span class="badge danger">admin</span></h2>
-    <div class="table-wrap">
-      <table>
-        <thead><tr><th>Method</th><th>Path</th><th>Rol</th><th><span class="es">Descripcion</span><span class="en">Description</span></th></tr></thead>
-        <tbody>
-          <tr><td><span class="badge cyan">GET</span></td><td><code>/audit</code></td><td><span class="badge danger">admin</span></td><td><span class="es">Listar entradas del log de auditoria (?severity, ?action, ?limit)</span><span class="en">List audit log entries (?severity, ?action, ?limit)</span></td></tr>
-        </tbody>
-      </table>
+    <!-- Footer -->
+    <div style="margin-top:48px;padding-top:24px;border-top:1px solid var(--brd);text-align:center">
+      <p class="text-muted text-sm">SAP Spektra v3.0 — 78 REST endpoints — Maveram Company</p>
     </div>
-
-    <!-- ═══ Plans ═══ -->
-    <h2>Plans <span class="badge neutral">public</span></h2>
-    <div class="table-wrap">
-      <table>
-        <thead><tr><th>Method</th><th>Path</th><th>Rol</th><th><span class="es">Descripcion</span><span class="en">Description</span></th></tr></thead>
-        <tbody>
-          <tr><td><span class="badge cyan">GET</span></td><td><code>/plans</code></td><td><span class="badge neutral">public</span></td><td><span class="es">Listar planes disponibles</span><span class="en">List available plans</span></td></tr>
-          <tr><td><span class="badge cyan">GET</span></td><td><code>/plans/:tier</code></td><td><span class="badge neutral">public</span></td><td><span class="es">Detalle de un plan por tier</span><span class="en">Plan detail by tier</span></td></tr>
-        </tbody>
-      </table>
-    </div>
-
-    <!-- ═══ Licenses ═══ -->
-    <h2>Licenses <span class="badge cyan">viewer</span></h2>
-    <div class="table-wrap">
-      <table>
-        <thead><tr><th>Method</th><th>Path</th><th>Rol</th><th><span class="es">Descripcion</span><span class="en">Description</span></th></tr></thead>
-        <tbody>
-          <tr><td><span class="badge cyan">GET</span></td><td><code>/licenses</code></td><td><span class="badge neutral">viewer</span></td><td><span class="es">Informacion de licencias de todos los sistemas</span><span class="en">License information for all systems</span></td></tr>
-        </tbody>
-      </table>
-    </div>
-
-    <!-- ═══ Health ═══ -->
-    <h2>Health <span class="badge neutral">public</span></h2>
-    <div class="table-wrap">
-      <table>
-        <thead><tr><th>Method</th><th>Path</th><th>Rol</th><th><span class="es">Descripcion</span><span class="en">Description</span></th></tr></thead>
-        <tbody>
-          <tr><td><span class="badge cyan">GET</span></td><td><code>/health</code></td><td><span class="badge neutral">public</span></td><td><span class="es">Health check completo (DB, memoria, disco)</span><span class="en">Full health check (DB, memory, disk)</span></td></tr>
-          <tr><td><span class="badge cyan">GET</span></td><td><code>/health/liveness</code></td><td><span class="badge neutral">public</span></td><td><span class="es">Liveness probe (siempre devuelve OK)</span><span class="en">Liveness probe (always returns OK)</span></td></tr>
-        </tbody>
-      </table>
-    </div>
-
-    <!-- ═══ Summary ═══ -->
-    <h2>
-      <span class="es">Resumen de Endpoints por Controlador</span>
-      <span class="en">Endpoint Summary by Controller</span>
-    </h2>
-    <div class="table-wrap">
-      <table>
-        <thead><tr><th>Controller</th><th>Endpoints</th><th>Auth</th></tr></thead>
-        <tbody>
-          <tr><td>Auth</td><td>3</td><td><span class="es">Mixto (publico + protegido)</span><span class="en">Mixed (public + protected)</span></td></tr>
-          <tr><td>Dashboard</td><td>1</td><td>JWT</td></tr>
-          <tr><td>Systems</td><td>6</td><td>JWT</td></tr>
-          <tr><td>Alerts</td><td>4</td><td>JWT</td></tr>
-          <tr><td>Events</td><td>1</td><td>JWT</td></tr>
-          <tr><td>Metrics</td><td>9</td><td>JWT</td></tr>
-          <tr><td>Landscape</td><td>1</td><td>JWT</td></tr>
-          <tr><td>Runbooks</td><td>5</td><td>JWT</td></tr>
-          <tr><td>Approvals</td><td>5</td><td>JWT</td></tr>
-          <tr><td>Operations</td><td>6</td><td>JWT</td></tr>
-          <tr><td>Connectors</td><td>5</td><td>JWT</td></tr>
-          <tr><td>HA/DR</td><td>7</td><td>JWT</td></tr>
-          <tr><td>Analytics</td><td>3</td><td>JWT</td></tr>
-          <tr><td>AI</td><td>2</td><td>JWT</td></tr>
-          <tr><td>Chat</td><td>1</td><td>JWT</td></tr>
-          <tr><td>Users</td><td>5</td><td>JWT</td></tr>
-          <tr><td>Tenant</td><td>3</td><td>JWT</td></tr>
-          <tr><td>Settings</td><td>5</td><td>JWT</td></tr>
-          <tr><td>Audit</td><td>1</td><td>JWT</td></tr>
-          <tr><td>Plans</td><td>2</td><td><span class="es">Publico</span><span class="en">Public</span></td></tr>
-          <tr><td>Licenses</td><td>1</td><td>JWT</td></tr>
-          <tr><td>Health</td><td>2</td><td><span class="es">Publico</span><span class="en">Public</span></td></tr>
-          <tr><td class="font-bold">Total</td><td class="font-bold">78</td><td>-</td></tr>
-        </tbody>
-      </table>
-    </div>
-
   </main>
 </div>
 </body>

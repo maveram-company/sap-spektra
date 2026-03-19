@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="dark" data-lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <title>Validation &amp; Quality — SAP Spektra Docs</title>
+  <link rel="stylesheet" href="theme.css">
+  <script src="theme-toggle.js"></script>
+  <script src="lang-toggle.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+  <script src="mermaid-init.js"></script>
+</head>
+<body>
+<div class="docs-wrapper">
+  <nav class="docs-sidebar">
+    <div class="sidebar-brand">
+      <div class="logo">&#9889;</div>
+      <div class="brand-text">
+        <div class="brand-name">SAP Spektra</div>
+        <div class="brand-sub">Documentation v3.0</div>
+      </div>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-section-label">Overview</div>
+      <a href="index.html" class="sidebar-link">Home</a>
+      <a href="executive.html" class="sidebar-link">Executive Summary</a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-section-label">Architecture</div>
+      <a href="architecture.html" class="sidebar-link">System Architecture</a>
+      <a href="multi-mode.html" class="sidebar-link">Multi-Mode Model</a>
+      <a href="domains.html" class="sidebar-link">Domain Reference</a>
+      <a href="domain-model.html" class="sidebar-link">Data Model</a>
+      <a href="api-reference.html" class="sidebar-link">API Reference</a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-section-label">Operations</div>
+      <a href="getting-started.html" class="sidebar-link">Setup &amp; Development</a>
+      <a href="validation.html" class="sidebar-link active">Validation &amp; Quality</a>
+      <a href="backlog.html" class="sidebar-link">Hardening Backlog</a>
+    </div>
+  </nav>
+
+  <main class="docs-main">
+    <div class="page-header">
+      <h1>
+        <span class="es">Validacion y Calidad</span>
+        <span class="en">Validation &amp; Quality</span>
+      </h1>
+      <p class="subtitle">
+        <span class="es">1,414 tests, parity testing, cobertura por dominio, build y verificacion</span>
+        <span class="en">1,414 tests, parity testing, per-domain coverage, build and verification</span>
+      </p>
+    </div>
+
+    <!-- Test Summary -->
+    <h2>
+      <span class="es">Resumen de Tests</span>
+      <span class="en">Test Summary</span>
+    </h2>
+    <div class="kpi-grid">
+      <div class="kpi-card">
+        <div class="card-icon success">&#10004;</div>
+        <div>
+          <div class="kpi-value text-success">1,414</div>
+          <div class="kpi-label">
+            <span class="es">Tests Totales</span>
+            <span class="en">Total Tests</span>
+          </div>
+        </div>
+      </div>
+      <div class="kpi-card">
+        <div class="card-icon cyan">&#128187;</div>
+        <div>
+          <div class="kpi-value text-cyan">85</div>
+          <div class="kpi-label">
+            <span class="es">Suites Frontend</span>
+            <span class="en">Frontend Suites</span>
+          </div>
+        </div>
+      </div>
+      <div class="kpi-card">
+        <div class="card-icon violet">&#9881;</div>
+        <div>
+          <div class="kpi-value text-violet">49</div>
+          <div class="kpi-label">
+            <span class="es">Suites Backend</span>
+            <span class="en">Backend Suites</span>
+          </div>
+        </div>
+      </div>
+      <div class="kpi-card">
+        <div class="card-icon warning">&#128260;</div>
+        <div>
+          <div class="kpi-value text-warning">12</div>
+          <div class="kpi-label">Parity Tests</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Test Breakdown -->
+    <h2>
+      <span class="es">Desglose por Capa</span>
+      <span class="en">Breakdown by Layer</span>
+    </h2>
+    <div class="card">
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th><span class="es">Capa</span><span class="en">Layer</span></th>
+              <th>Framework</th>
+              <th>Suites</th>
+              <th>Tests</th>
+              <th><span class="es">Comando</span><span class="en">Command</span></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Frontend</td>
+              <td>Vitest</td>
+              <td>85</td>
+              <td>1,022</td>
+              <td><code>npm run test:frontend</code></td>
+            </tr>
+            <tr>
+              <td>Backend</td>
+              <td>Jest</td>
+              <td>49</td>
+              <td>392</td>
+              <td><code>npm run test:backend</code></td>
+            </tr>
+            <tr>
+              <td>E2E</td>
+              <td>Playwright</td>
+              <td>-</td>
+              <td>-</td>
+              <td><code>npm run test:e2e</code></td>
+            </tr>
+            <tr style="font-weight:700">
+              <td><span class="es">Total</span><span class="en">Total</span></td>
+              <td></td>
+              <td>134</td>
+              <td>1,414</td>
+              <td><code>npm test</code></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Parity Tests -->
+    <h2>
+      <span class="es">Tests de Paridad</span>
+      <span class="en">Parity Tests</span>
+    </h2>
+    <div class="card">
+      <p>
+        <span class="es">Los parity tests verifican que los proveedores mock y real devuelven datos con la misma forma (mismos campos, mismos tipos). Cada dominio tiene un archivo <code>*.parity.test.ts</code>.</span>
+        <span class="en">Parity tests verify that mock and real providers return data with the same shape (same fields, same types). Each domain has a <code>*.parity.test.ts</code> file.</span>
+      </p>
+      <div class="table-wrap mt-2">
+        <table>
+          <thead>
+            <tr>
+              <th><span class="es">Dominio</span><span class="en">Domain</span></th>
+              <th><span class="es">Archivo</span><span class="en">File</span></th>
+              <th><span class="es">Verifica</span><span class="en">Verifies</span></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>systems</td><td><code>systems.parity.test.ts</code></td><td><span class="es">SystemViewModel shape</span><span class="en">SystemViewModel shape</span></td></tr>
+            <tr><td>alerts</td><td><code>alerts.parity.test.ts</code></td><td>AlertViewModel shape</td></tr>
+            <tr><td>events</td><td><code>events.parity.test.ts</code></td><td>EventViewModel shape</td></tr>
+            <tr><td>operations</td><td><code>operations.parity.test.ts</code></td><td>OperationViewModel shape</td></tr>
+            <tr><td>runbooks</td><td><code>runbooks.parity.test.ts</code></td><td>RunbookViewModel, ExecutionViewModel shape</td></tr>
+            <tr><td>approvals</td><td><code>approvals.parity.test.ts</code></td><td>ApprovalViewModel shape</td></tr>
+            <tr><td>analytics</td><td><code>analytics.parity.test.ts</code></td><td><span class="es">Estructura de analytics</span><span class="en">Analytics structure</span></td></tr>
+            <tr><td>ha</td><td><code>ha.parity.test.ts</code></td><td>HAConfigViewModel shape</td></tr>
+            <tr><td>admin</td><td><code>admin.parity.test.ts</code></td><td>UserViewModel, AuditEntryViewModel shape</td></tr>
+            <tr><td>landscape</td><td><code>landscape.parity.test.ts</code></td><td><span class="es">Estructura de discovery</span><span class="en">Discovery structure</span></td></tr>
+            <tr><td>connectors</td><td><code>connectors.parity.test.ts</code></td><td>ConnectorViewModel shape</td></tr>
+            <tr><td>chat</td><td><code>chat.parity.test.ts</code></td><td><span class="es">Estructura de respuesta</span><span class="en">Response structure</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Test Categories -->
+    <h2>
+      <span class="es">Categorias de Tests</span>
+      <span class="en">Test Categories</span>
+    </h2>
+    <div class="card">
+      <div class="grid-2">
+        <div>
+          <h4 class="text-cyan">Frontend Tests</h4>
+          <ul class="feature-list">
+            <li><span class="es">Renderizado de paginas</span><span class="en">Page rendering</span></li>
+            <li><span class="es">Componentes de modo (ModeBadge, SourceIndicator, CapabilityBadge, GovernanceContext, EvidencePanel)</span><span class="en">Mode components (ModeBadge, SourceIndicator, CapabilityBadge, GovernanceContext, EvidencePanel)</span></li>
+            <li><span class="es">Proveedores: real, mock, fallback, restricted</span><span class="en">Providers: real, mock, fallback, restricted</span></li>
+            <li><span class="es">Parity tests (12 dominios)</span><span class="en">Parity tests (12 domains)</span></li>
+            <li><span class="es">DataService adapter</span><span class="en">DataService adapter</span></li>
+            <li><span class="es">Hooks y utilidades</span><span class="en">Hooks and utilities</span></li>
+          </ul>
+        </div>
+        <div>
+          <h4 class="text-violet">Backend Tests</h4>
+          <ul class="feature-list">
+            <li><span class="es">Controladores: endpoints, roles, validacion</span><span class="en">Controllers: endpoints, roles, validation</span></li>
+            <li><span class="es">Servicios: logica de negocio</span><span class="en">Services: business logic</span></li>
+            <li><span class="es">Guards: JwtAuthGuard, RolesGuard</span><span class="en">Guards: JwtAuthGuard, RolesGuard</span></li>
+            <li><span class="es">Prisma: queries, cascade, indices</span><span class="en">Prisma: queries, cascade, indexes</span></li>
+            <li><span class="es">Auth: login, registro, JWT</span><span class="en">Auth: login, register, JWT</span></li>
+            <li><span class="es">Multi-tenancy isolation</span><span class="en">Multi-tenancy isolation</span></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- Build & Verification -->
+    <h2>
+      <span class="es">Build y Verificacion</span>
+      <span class="en">Build &amp; Verification</span>
+    </h2>
+    <div class="card">
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th><span class="es">Paso</span><span class="en">Step</span></th>
+              <th><span class="es">Comando</span><span class="en">Command</span></th>
+              <th><span class="es">Que Verifica</span><span class="en">What It Verifies</span></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>TypeCheck Backend</td><td><code>npm run typecheck:backend</code></td><td><span class="es">Tipos TypeScript strict del backend</span><span class="en">Backend strict TypeScript types</span></td></tr>
+            <tr><td>TypeCheck Frontend</td><td><code>npm run typecheck:frontend</code></td><td><span class="es">Tipos TypeScript strict del frontend</span><span class="en">Frontend strict TypeScript types</span></td></tr>
+            <tr><td>Lint</td><td><code>npm run lint</code></td><td>ESLint</td></tr>
+            <tr><td>Tests</td><td><code>npm test</code></td><td><span class="es">Todos los tests unitarios</span><span class="en">All unit tests</span></td></tr>
+            <tr><td>Build Backend</td><td><code>npm run build:backend</code></td><td><span class="es">Compilacion NestJS</span><span class="en">NestJS compilation</span></td></tr>
+            <tr><td>Build Frontend</td><td><code>npm run build:frontend</code></td><td><span class="es">Build Vite de produccion</span><span class="en">Vite production build</span></td></tr>
+            <tr style="font-weight:700"><td><span class="es">Todo</span><span class="en">All</span></td><td><code>npm run verify</code></td><td><span class="es">typecheck + lint + test + build</span><span class="en">typecheck + lint + test + build</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Coverage by Domain -->
+    <h2>
+      <span class="es">Cobertura por Dominio</span>
+      <span class="en">Coverage by Domain</span>
+    </h2>
+    <div class="card">
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th><span class="es">Dominio</span><span class="en">Domain</span></th>
+              <th><span class="es">Contrato</span><span class="en">Contract</span></th>
+              <th>Real</th>
+              <th>Mock</th>
+              <th>Fallback</th>
+              <th>Restricted</th>
+              <th>Parity</th>
+              <th>Page Test</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>systems</td><td><span class="badge success">IMPL</span></td><td><span class="badge success">IMPL</span></td><td><span class="badge success">IMPL</span></td><td><span class="badge success">IMPL</span></td><td>-</td><td><span class="badge success">IMPL</span></td><td><span class="badge success">IMPL</span></td></tr>
+            <tr><td>alerts</td><td><span class="badge success">IMPL</span></td><td><span class="badge success">IMPL</span></td><td><span class="badge success">IMPL</span></td><td><span class="badge success">IMPL</span></td><td>-</td><td><span class="badge success">IMPL</span></td><td><span class="badge success">IMPL</span></td></tr>
+            <tr><td>events</td><td><span class="badge success">IMPL</span></td><td><span class="badge success">IMPL</span></td><td><span class="badge success">IMPL</span></td><td><span class="badge success">IMPL</span></td><td>-</td><td><span class="badge success">IMPL</span></td><td><span class="badge success">IMPL</span></td></tr>
+            <tr><td>operations</td><td><span class="badge success">IMPL</span></td><td><span class="badge success">IMPL</span></td><td><span class="badge success">IMPL</span></td><td><span class="badge success">IMPL</span></td><td>-</td><td><span class="badge success">IMPL</span></td><td><span class="badge success">IMPL</span></td></tr>
+            <tr><td>runbooks</td><td><span class="badge success">IMPL</span></td><td><span class="badge success">IMPL</span></td><td><span class="badge success">IMPL</span></td><td><span class="badge success">IMPL</span></td><td><span class="badge success">IMPL</span></td><td><span class="badge success">IMPL</span></td><td><span class="badge success">IMPL</span></td></tr>
+            <tr><td>approvals</td><td><span class="badge success">IMPL</span></td><td><span class="badge success">IMPL</span></td><td><span class="badge success">IMPL</span></td><td><span class="badge success">IMPL</span></td><td><span class="badge success">IMPL</span></td><td><span class="badge success">IMPL</span></td><td><span class="badge success">IMPL</span></td></tr>
+            <tr><td>analytics</td><td><span class="badge success">IMPL</span></td><td><span class="badge success">IMPL</span></td><td><span class="badge success">IMPL</span></td><td><span class="badge success">IMPL</span></td><td>-</td><td><span class="badge success">IMPL</span></td><td><span class="badge success">IMPL</span></td></tr>
+            <tr><td>ha</td><td><span class="badge success">IMPL</span></td><td><span class="badge success">IMPL</span></td><td><span class="badge success">IMPL</span></td><td><span class="badge success">IMPL</span></td><td><span class="badge success">IMPL</span></td><td><span class="badge success">IMPL</span></td><td><span class="badge success">IMPL</span></td></tr>
+            <tr><td>admin</td><td><span class="badge success">IMPL</span></td><td><span class="badge success">IMPL</span></td><td><span class="badge success">IMPL</span></td><td><span class="badge success">IMPL</span></td><td>-</td><td><span class="badge success">IMPL</span></td><td><span class="badge success">IMPL</span></td></tr>
+            <tr><td>landscape</td><td><span class="badge success">IMPL</span></td><td><span class="badge success">IMPL</span></td><td><span class="badge success">IMPL</span></td><td><span class="badge success">IMPL</span></td><td>-</td><td><span class="badge success">IMPL</span></td><td><span class="badge success">IMPL</span></td></tr>
+            <tr><td>connectors</td><td><span class="badge success">IMPL</span></td><td><span class="badge success">IMPL</span></td><td><span class="badge success">IMPL</span></td><td><span class="badge success">IMPL</span></td><td><span class="badge success">IMPL</span></td><td><span class="badge success">IMPL</span></td><td><span class="badge success">IMPL</span></td></tr>
+            <tr><td>chat</td><td><span class="badge success">IMPL</span></td><td><span class="badge success">IMPL</span></td><td><span class="badge success">IMPL</span></td><td><span class="badge success">IMPL</span></td><td>-</td><td><span class="badge success">IMPL</span></td><td><span class="badge success">IMPL</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Quality Gates -->
+    <h2>
+      <span class="es">Quality Gates</span>
+      <span class="en">Quality Gates</span>
+    </h2>
+    <div class="card">
+      <ul class="feature-list">
+        <li><span class="es">TypeScript strict mode en frontend y backend</span><span class="en">TypeScript strict mode in frontend and backend</span></li>
+        <li><span class="es">ESLint configurado y pasando</span><span class="en">ESLint configured and passing</span></li>
+        <li><span class="es">Husky pre-commit hooks</span><span class="en">Husky pre-commit hooks</span></li>
+        <li><span class="es">Parity tests para cada dominio (mock == real en forma)</span><span class="en">Parity tests for each domain (mock == real in shape)</span></li>
+        <li><span class="es">Cascade deletes validados en schema Prisma</span><span class="en">Cascade deletes validated in Prisma schema</span></li>
+        <li><span class="es">Input sanitization contra XSS</span><span class="en">Input sanitization against XSS</span></li>
+        <li><span class="es">Rate limiting en endpoints sensibles</span><span class="en">Rate limiting on sensitive endpoints</span></li>
+      </ul>
+    </div>
+
+    <!-- Footer -->
+    <div style="margin-top:48px;padding-top:24px;border-top:1px solid var(--brd);text-align:center">
+      <p class="text-muted text-sm">SAP Spektra v3.0 — Maveram Company</p>
+    </div>
+  </main>
+</div>
+</body>
+</html>

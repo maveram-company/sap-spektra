@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="dark" data-lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <title>Multi-Mode Model — SAP Spektra Docs</title>
+  <link rel="stylesheet" href="theme.css">
+  <script src="theme-toggle.js"></script>
+  <script src="lang-toggle.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+  <script src="mermaid-init.js"></script>
+</head>
+<body>
+<div class="docs-wrapper">
+  <nav class="docs-sidebar">
+    <div class="sidebar-brand">
+      <div class="logo">&#9889;</div>
+      <div class="brand-text">
+        <div class="brand-name">SAP Spektra</div>
+        <div class="brand-sub">Documentation v3.0</div>
+      </div>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-section-label">Overview</div>
+      <a href="index.html" class="sidebar-link">Home</a>
+      <a href="executive.html" class="sidebar-link">Executive Summary</a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-section-label">Architecture</div>
+      <a href="architecture.html" class="sidebar-link">System Architecture</a>
+      <a href="multi-mode.html" class="sidebar-link active">Multi-Mode Model</a>
+      <a href="domains.html" class="sidebar-link">Domain Reference</a>
+      <a href="domain-model.html" class="sidebar-link">Data Model</a>
+      <a href="api-reference.html" class="sidebar-link">API Reference</a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-section-label">Operations</div>
+      <a href="getting-started.html" class="sidebar-link">Setup &amp; Development</a>
+      <a href="validation.html" class="sidebar-link">Validation &amp; Quality</a>
+      <a href="backlog.html" class="sidebar-link">Hardening Backlog</a>
+    </div>
+  </nav>
+
+  <main class="docs-main">
+    <div class="page-header">
+      <h1>
+        <span class="es">Modelo Multi-Modo</span>
+        <span class="en">Multi-Mode Model</span>
+      </h1>
+      <p class="subtitle">
+        <span class="es">La arquitectura central de SAP Spektra: 4 modos, 12 dominios, proveedores intercambiables</span>
+        <span class="en">SAP Spektra's core architecture: 4 modes, 12 domains, interchangeable providers</span>
+      </p>
+    </div>
+
+    <!-- Principles -->
+    <h2>
+      <span class="es">Principios</span>
+      <span class="en">Principles</span>
+    </h2>
+    <div class="card">
+      <ul class="feature-list">
+        <li><strong><span class="es">Contrato unico por dominio:</span><span class="en">Single contract per domain:</span></strong> <span class="es">Cada dominio define una interfaz TypeScript. Todos los proveedores (real, mock, fallback, restricted) la implementan.</span><span class="en">Each domain defines a TypeScript interface. All providers (real, mock, fallback, restricted) implement it.</span></li>
+        <li><strong>ProviderResult&lt;T&gt;:</strong> <span class="es">Toda respuesta de proveedor incluye <code>data</code>, <code>source</code>, <code>confidence</code>, <code>degraded</code>, <code>timestamp</code>, y <code>reason</code> opcional.</span><span class="en">Every provider response includes <code>data</code>, <code>source</code>, <code>confidence</code>, <code>degraded</code>, <code>timestamp</code>, and optional <code>reason</code>.</span></li>
+        <li><strong><span class="es">Resolucion automatica:</span><span class="en">Automatic resolution:</span></strong> <span class="es">El motor de capacidades resuelve el tier de cada dominio segun el modo activo y si el backend esta accesible.</span><span class="en">The capability engine resolves each domain's tier based on the active mode and backend reachability.</span></li>
+        <li><strong><span class="es">Transparencia en UI:</span><span class="en">UI transparency:</span></strong> <span class="es">Componentes como ModeBadge, SourceIndicator y CapabilityBadge muestran al usuario de donde vienen los datos.</span><span class="en">Components like ModeBadge, SourceIndicator, and CapabilityBadge show the user where data comes from.</span></li>
+        <li><strong><span class="es">Paridad testeable:</span><span class="en">Testable parity:</span></strong> <span class="es">Parity tests verifican que mock y real proveen la misma forma de datos.</span><span class="en">Parity tests verify that mock and real provide the same data shape.</span></li>
+      </ul>
+    </div>
+
+    <!-- 4 Mode Definitions -->
+    <h2>
+      <span class="es">Las 4 Definiciones de Modo</span>
+      <span class="en">The 4 Mode Definitions</span>
+    </h2>
+
+    <div class="card">
+      <h3><span class="badge success">REAL</span> <span class="es">— Modo Produccion</span><span class="en">— Production Mode</span></h3>
+      <div class="table-wrap mt-1">
+        <table>
+          <tbody>
+            <tr><td><span class="es">Fuente de datos</span><span class="en">Data source</span></td><td><span class="es">API backend real (NestJS + PostgreSQL)</span><span class="en">Real backend API (NestJS + PostgreSQL)</span></td></tr>
+            <tr><td><span class="es">Confianza</span><span class="en">Confidence</span></td><td><code>high</code></td></tr>
+            <tr><td><span class="es">Escritura</span><span class="en">Write</span></td><td><span class="es">Habilitada</span><span class="en">Enabled</span></td></tr>
+            <tr><td><span class="es">Degradacion</span><span class="en">Degradation</span></td><td><span class="es">Si el backend no responde, cae a tier <code>fallback</code> con <code>degraded: true</code></span><span class="en">If backend is unreachable, falls to <code>fallback</code> tier with <code>degraded: true</code></span></td></tr>
+            <tr><td>Source</td><td><code>api</code> (<span class="es">o <code>cache</code> si backend no accesible</span><span class="en">or <code>cache</code> if backend unreachable</span>)</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3><span class="badge warning">FALLBACK</span> <span class="es">— Modo Degradado</span><span class="en">— Degraded Mode</span></h3>
+      <div class="table-wrap mt-1">
+        <table>
+          <tbody>
+            <tr><td><span class="es">Fuente de datos</span><span class="en">Data source</span></td><td><span class="es">Intenta proveedor real; si falla, ejecuta mock automaticamente</span><span class="en">Tries real provider; on failure, executes mock automatically</span></td></tr>
+            <tr><td><span class="es">Confianza</span><span class="en">Confidence</span></td><td><code>medium</code></td></tr>
+            <tr><td><span class="es">Escritura</span><span class="en">Write</span></td><td><span class="es">Habilitada</span><span class="en">Enabled</span></td></tr>
+            <tr><td><span class="es">Mecanismo</span><span class="en">Mechanism</span></td><td><code>createFallbackProvider()</code> — Proxy <span class="es">que captura errores y delega a mock</span><span class="en">that catches errors and delegates to mock</span></td></tr>
+            <tr><td>Source</td><td><code>api</code></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3><span class="badge cyan">MOCK</span> <span class="es">— Modo Demo/Testing</span><span class="en">— Demo/Testing Mode</span></h3>
+      <div class="table-wrap mt-1">
+        <table>
+          <tbody>
+            <tr><td><span class="es">Fuente de datos</span><span class="en">Data source</span></td><td><span class="es">Datos simulados locales en el frontend</span><span class="en">Local simulated data in the frontend</span></td></tr>
+            <tr><td><span class="es">Confianza</span><span class="en">Confidence</span></td><td><code>low</code></td></tr>
+            <tr><td><span class="es">Escritura</span><span class="en">Write</span></td><td><span class="es">Solo lectura</span><span class="en">Read-only</span></td></tr>
+            <tr><td><span class="es">Uso</span><span class="en">Use</span></td><td><span class="es">Demos, testing, desarrollo sin backend</span><span class="en">Demos, testing, development without backend</span></td></tr>
+            <tr><td>Source</td><td><code>simulation</code></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3><span class="badge danger">RESTRICTED</span> <span class="es">— Modo Cloud-Managed</span><span class="en">— Cloud-Managed Mode</span></h3>
+      <div class="table-wrap mt-1">
+        <table>
+          <tbody>
+            <tr><td><span class="es">Fuente de datos</span><span class="en">Data source</span></td><td><span class="es">Proveedores restricted dedicados para 4 dominios criticos; mock para el resto</span><span class="en">Dedicated restricted providers for 4 critical domains; mock for the rest</span></td></tr>
+            <tr><td><span class="es">Confianza</span><span class="en">Confidence</span></td><td><code>low</code></td></tr>
+            <tr><td><span class="es">Escritura</span><span class="en">Write</span></td><td><span class="es">Solo lectura</span><span class="en">Read-only</span></td></tr>
+            <tr><td><span class="es">Dominios con proveedor dedicado</span><span class="en">Domains with dedicated provider</span></td><td>runbooks, approvals, ha, connectors</td></tr>
+            <tr><td><span class="es">Dominios con mock</span><span class="en">Domains using mock</span></td><td>systems, alerts, events, operations, analytics, admin, landscape, chat</td></tr>
+            <tr><td>Source</td><td><code>rules</code></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ProviderResult<T> -->
+    <h2>ProviderResult&lt;T&gt;</h2>
+    <div class="card">
+      <p>
+        <span class="es">La salida canonica de todo proveedor. Envuelve los datos con metadata sobre su origen.</span>
+        <span class="en">The canonical output of every provider. Wraps data with metadata about its origin.</span>
+      </p>
+      <pre><code>interface ProviderResult&lt;T&gt; {
+  data: T;                        // The actual domain data
+  source: ProviderTier;           // 'real' | 'mock' | 'fallback' | 'restricted'
+  confidence: 'high' | 'medium' | 'low';
+  timestamp: string;              // ISO 8601
+  degraded: boolean;              // true if operating in degraded state
+  reason?: string;                // Optional explanation
+}</code></pre>
+      <div class="callout info mt-2">
+        <div class="callout-icon">&#128161;</div>
+        <div>
+          <span class="es">La funcion helper <code>providerResult()</code> resuelve <code>confidence</code> automaticamente: <code>real → high</code>, <code>fallback → medium</code>, <code>mock/restricted → low</code>.</span>
+          <span class="en">The helper function <code>providerResult()</code> resolves <code>confidence</code> automatically: <code>real → high</code>, <code>fallback → medium</code>, <code>mock/restricted → low</code>.</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Capability Engine -->
+    <h2>
+      <span class="es">Motor de Capacidades</span>
+      <span class="en">Capability Engine</span>
+    </h2>
+    <div class="card">
+      <p>
+        <span class="es">El archivo <code>capability-engine.ts</code> resuelve las capacidades de cada dominio dado el modo activo y la accesibilidad del backend.</span>
+        <span class="en">The <code>capability-engine.ts</code> file resolves each domain's capabilities given the active mode and backend reachability.</span>
+      </p>
+      <div class="mermaid mt-2">
+graph LR
+    MODE["OperationalMode"] --> CE["Capability Engine"]
+    REACH["Backend Reachable?"] --> CE
+    CE --> C1["systems: tier, confidence, readOnly"]
+    CE --> C2["alerts: tier, confidence, readOnly"]
+    CE --> C3["...12 domains"]
+    CE --> C4["chat: tier, confidence, readOnly"]
+      </div>
+      <h4 class="mt-2">DomainCapability</h4>
+      <pre><code>interface DomainCapability {
+  domain: DomainName;
+  tier: ProviderTier;              // Which provider implementation is active
+  readOnly: boolean;
+  degraded: boolean;
+  reason?: string;
+  confidence: 'high' | 'medium' | 'low';
+  source: 'api' | 'agent' | 'cache' | 'simulation' | 'rules';
+}</code></pre>
+      <h4 class="mt-2">
+        <span class="es">Reglas de Resolucion</span>
+        <span class="en">Resolution Rules</span>
+      </h4>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th><span class="es">Modo</span><span class="en">Mode</span></th>
+              <th>Backend</th>
+              <th>Tier</th>
+              <th>Confidence</th>
+              <th>ReadOnly</th>
+              <th>Degraded</th>
+              <th>Source</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>REAL</td><td>Up</td><td>real</td><td>high</td><td>false</td><td>false</td><td>api</td></tr>
+            <tr><td>REAL</td><td>Down</td><td>fallback</td><td>medium</td><td>false</td><td>true</td><td>cache</td></tr>
+            <tr><td>FALLBACK</td><td>-</td><td>fallback</td><td>medium</td><td>false</td><td>false</td><td>api</td></tr>
+            <tr><td>MOCK</td><td>-</td><td>mock</td><td>low</td><td>true</td><td>false</td><td>simulation</td></tr>
+            <tr><td>RESTRICTED</td><td>-</td><td>restricted</td><td>low</td><td>true</td><td>false</td><td>rules</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Provider Registry -->
+    <h2>
+      <span class="es">Registro de Proveedores</span>
+      <span class="en">Provider Registry</span>
+    </h2>
+    <div class="card">
+      <p>
+        <span class="es"><code>provider-registry.ts</code> mapea modo + dominio al proveedor correcto. Crea una instancia de <code>ProviderRegistry</code> con los 12 proveedores segun el modo.</span>
+        <span class="en"><code>provider-registry.ts</code> maps mode + domain to the correct provider. Creates a <code>ProviderRegistry</code> instance with all 12 providers based on the mode.</span>
+      </p>
+      <div class="mermaid mt-2">
+graph TD
+    REG["getRegistry(mode)"] --> |REAL| R["12x RealProvider"]
+    REG --> |MOCK| M["12x MockProvider"]
+    REG --> |FALLBACK| F["12x FallbackProvider&lt;br/&gt;(Proxy: real → mock)"]
+    REG --> |RESTRICTED| X["4x RestrictedProvider&lt;br/&gt;+ 8x MockProvider"]
+      </div>
+    </div>
+
+    <!-- Provider Architecture per Domain -->
+    <h2>
+      <span class="es">Arquitectura de Proveedores por Dominio</span>
+      <span class="en">Provider Architecture per Domain</span>
+    </h2>
+    <div class="card">
+      <p>
+        <span class="es">Cada dominio sigue esta estructura de archivos:</span>
+        <span class="en">Each domain follows this file structure:</span>
+      </p>
+      <pre><code>providers/
+  {domain}/
+    {domain}.contract.ts     # Interface + ViewModels
+    {domain}.real.ts         # HTTP calls to backend API
+    {domain}.mock.ts         # Simulated static data
+    {domain}.fallback.ts     # createFallbackProvider(real, mock)
+    {domain}.restricted.ts   # Only for: runbooks, approvals, ha, connectors
+    __tests__/
+      {domain}.parity.test.ts  # Parity tests: mock shape == real shape</code></pre>
+    </div>
+
+    <!-- Fallback Proxy Mechanism -->
+    <h2>
+      <span class="es">Mecanismo de Proxy Fallback</span>
+      <span class="en">Fallback Proxy Mechanism</span>
+    </h2>
+    <div class="card">
+      <p>
+        <span class="es"><code>createFallbackProvider(real, mock, domainName)</code> crea un Proxy ES6 que intercepta cada llamada a metodo:</span>
+        <span class="en"><code>createFallbackProvider(real, mock, domainName)</code> creates an ES6 Proxy that intercepts every method call:</span>
+      </p>
+      <div class="mermaid mt-2">
+sequenceDiagram
+    participant Page as Page Component
+    participant Proxy as Fallback Proxy
+    participant Real as Real Provider
+    participant Mock as Mock Provider
+
+    Page->>Proxy: getSystems()
+    Proxy->>Real: getSystems()
+    alt Success
+        Real-->>Proxy: ProviderResult (source: real)
+        Proxy-->>Page: ProviderResult (source: real)
+    else Error
+        Real-->>Proxy: throw Error
+        Proxy->>Mock: getSystems()
+        Mock-->>Proxy: ProviderResult (source: mock)
+        Proxy->>Proxy: Enrich: source=fallback, degraded=true
+        Proxy-->>Page: ProviderResult (source: fallback)
+    end
+      </div>
+    </div>
+
+    <!-- RESTRICTED Mode Details -->
+    <h2>
+      <span class="es">Detalle del Modo RESTRICTED</span>
+      <span class="en">RESTRICTED Mode Details</span>
+    </h2>
+    <div class="card">
+      <p>
+        <span class="es">El modo RESTRICTED existe para sistemas cloud-managed (ej: RISE with SAP) donde ciertas operaciones no estan permitidas por el proveedor cloud.</span>
+        <span class="en">RESTRICTED mode exists for cloud-managed systems (e.g., RISE with SAP) where certain operations are not permitted by the cloud provider.</span>
+      </p>
+      <div class="table-wrap mt-2">
+        <table>
+          <thead>
+            <tr>
+              <th><span class="es">Dominio</span><span class="en">Domain</span></th>
+              <th><span class="es">Proveedor en RESTRICTED</span><span class="en">Provider in RESTRICTED</span></th>
+              <th><span class="es">Razon</span><span class="en">Reason</span></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>runbooks</strong></td>
+              <td><span class="badge danger">RESTRICTED</span> <code>RunbooksRestrictedProvider</code></td>
+              <td><span class="es">Ejecucion de runbooks no permitida en sistemas managed</span><span class="en">Runbook execution not permitted on managed systems</span></td>
+            </tr>
+            <tr>
+              <td><strong>approvals</strong></td>
+              <td><span class="badge danger">RESTRICTED</span> <code>ApprovalsRestrictedProvider</code></td>
+              <td><span class="es">Flujo de aprobacion controlado por el proveedor cloud</span><span class="en">Approval flow controlled by cloud provider</span></td>
+            </tr>
+            <tr>
+              <td><strong>ha</strong></td>
+              <td><span class="badge danger">RESTRICTED</span> <code>HARestrictedProvider</code></td>
+              <td><span class="es">Failover gestionado por el proveedor cloud</span><span class="en">Failover managed by cloud provider</span></td>
+            </tr>
+            <tr>
+              <td><strong>connectors</strong></td>
+              <td><span class="badge danger">RESTRICTED</span> <code>ConnectorsRestrictedProvider</code></td>
+              <td><span class="es">Conectividad limitada en entornos managed</span><span class="en">Limited connectivity in managed environments</span></td>
+            </tr>
+            <tr>
+              <td>systems</td>
+              <td><span class="badge cyan">MOCK</span> <code>SystemsMockProvider</code></td>
+              <td rowspan="8"><span class="es">Lectura segura con datos simulados</span><span class="en">Safe read with simulated data</span></td>
+            </tr>
+            <tr><td>alerts</td><td><span class="badge cyan">MOCK</span> <code>AlertsMockProvider</code></td></tr>
+            <tr><td>events</td><td><span class="badge cyan">MOCK</span> <code>EventsMockProvider</code></td></tr>
+            <tr><td>operations</td><td><span class="badge cyan">MOCK</span> <code>OperationsMockProvider</code></td></tr>
+            <tr><td>analytics</td><td><span class="badge cyan">MOCK</span> <code>AnalyticsMockProvider</code></td></tr>
+            <tr><td>admin</td><td><span class="badge cyan">MOCK</span> <code>AdminMockProvider</code></td></tr>
+            <tr><td>landscape</td><td><span class="badge cyan">MOCK</span> <code>LandscapeMockProvider</code></td></tr>
+            <tr><td>chat</td><td><span class="badge cyan">MOCK</span> <code>ChatMockProvider</code></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- UX Mode Components -->
+    <h2>
+      <span class="es">Componentes UX de Modo</span>
+      <span class="en">Mode UX Components</span>
+    </h2>
+    <div class="card">
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th><span class="es">Componente</span><span class="en">Component</span></th>
+              <th><span class="es">Funcion</span><span class="en">Function</span></th>
+              <th><span class="es">Usado en</span><span class="en">Used in</span></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>ModeBadge</code></td>
+              <td><span class="es">Muestra el modo activo (REAL/FALLBACK/MOCK/RESTRICTED)</span><span class="en">Shows active mode (REAL/FALLBACK/MOCK/RESTRICTED)</span></td>
+              <td><span class="es">12 paginas</span><span class="en">12 pages</span></td>
+            </tr>
+            <tr>
+              <td><code>SourceIndicator</code></td>
+              <td><span class="es">Indica la fuente de datos (api/cache/simulation/rules)</span><span class="en">Indicates data source (api/cache/simulation/rules)</span></td>
+              <td><span class="es">7 paginas</span><span class="en">7 pages</span></td>
+            </tr>
+            <tr>
+              <td><code>CapabilityBadge</code></td>
+              <td><span class="es">Muestra capacidades por dominio (readOnly, degraded)</span><span class="en">Shows per-domain capabilities (readOnly, degraded)</span></td>
+              <td><span class="es">3 paginas</span><span class="en">3 pages</span></td>
+            </tr>
+            <tr>
+              <td><code>GovernanceContext</code></td>
+              <td><span class="es">Contexto de gobernanza para decisiones operacionales</span><span class="en">Governance context for operational decisions</span></td>
+              <td><span class="es">3 paginas</span><span class="en">3 pages</span></td>
+            </tr>
+            <tr>
+              <td><code>EvidencePanel</code></td>
+              <td><span class="es">Panel de evidencia (existe, no conectado a datos reales)</span><span class="en">Evidence panel (exists, not connected to real data)</span></td>
+              <td><span class="badge warning">SIM</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Parity Testing -->
+    <h2>
+      <span class="es">Testing de Paridad</span>
+      <span class="en">Parity Testing</span>
+    </h2>
+    <div class="card">
+      <p>
+        <span class="es">Cada dominio tiene un archivo <code>*.parity.test.ts</code> que verifica que mock y real proveedores devuelven datos con la misma forma (mismos campos, mismos tipos). Esto garantiza que cambiar de modo no rompa la UI.</span>
+        <span class="en">Each domain has a <code>*.parity.test.ts</code> file that verifies mock and real providers return data with the same shape (same fields, same types). This guarantees that switching modes doesn't break the UI.</span>
+      </p>
+      <div class="table-wrap mt-2">
+        <table>
+          <thead>
+            <tr>
+              <th><span class="es">Dominio</span><span class="en">Domain</span></th>
+              <th><span class="es">Archivo de Paridad</span><span class="en">Parity File</span></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>systems</td><td><code>systems.parity.test.ts</code></td></tr>
+            <tr><td>alerts</td><td><code>alerts.parity.test.ts</code></td></tr>
+            <tr><td>events</td><td><code>events.parity.test.ts</code></td></tr>
+            <tr><td>operations</td><td><code>operations.parity.test.ts</code></td></tr>
+            <tr><td>runbooks</td><td><code>runbooks.parity.test.ts</code></td></tr>
+            <tr><td>approvals</td><td><code>approvals.parity.test.ts</code></td></tr>
+            <tr><td>analytics</td><td><code>analytics.parity.test.ts</code></td></tr>
+            <tr><td>ha</td><td><code>ha.parity.test.ts</code></td></tr>
+            <tr><td>admin</td><td><code>admin.parity.test.ts</code></td></tr>
+            <tr><td>landscape</td><td><code>landscape.parity.test.ts</code></td></tr>
+            <tr><td>connectors</td><td><code>connectors.parity.test.ts</code></td></tr>
+            <tr><td>chat</td><td><code>chat.parity.test.ts</code></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Differences: Allowed vs Not Allowed -->
+    <h2>
+      <span class="es">Diferencias Permitidas vs No Permitidas</span>
+      <span class="en">Differences: Allowed vs Not Allowed</span>
+    </h2>
+    <div class="card">
+      <div class="grid-2">
+        <div>
+          <h4 class="text-success">
+            <span class="es">Diferencias Permitidas Entre Modos</span>
+            <span class="en">Allowed Differences Between Modes</span>
+          </h4>
+          <ul class="feature-list">
+            <li><span class="es">Valores concretos de datos (IDs, timestamps, counts)</span><span class="en">Concrete data values (IDs, timestamps, counts)</span></li>
+            <li><span class="es">Latencia de respuesta</span><span class="en">Response latency</span></li>
+            <li><span class="es">Volumen de datos</span><span class="en">Data volume</span></li>
+            <li><span class="es">Campos <code>source</code> y <code>confidence</code> en ProviderResult</span><span class="en"><code>source</code> and <code>confidence</code> fields in ProviderResult</span></li>
+          </ul>
+        </div>
+        <div>
+          <h4 class="text-danger">
+            <span class="es">Diferencias NO Permitidas</span>
+            <span class="en">NOT Allowed Differences</span>
+          </h4>
+          <ul class="feature-list">
+            <li><span class="es">Forma de los ViewModels (campos presentes/ausentes)</span><span class="en">ViewModel shape (present/absent fields)</span></li>
+            <li><span class="es">Tipos de datos de campos</span><span class="en">Field data types</span></li>
+            <li><span class="es">Metodos disponibles en el contrato</span><span class="en">Available methods in the contract</span></li>
+            <li><span class="es">Estructura de respuesta (ProviderResult wrapper)</span><span class="en">Response structure (ProviderResult wrapper)</span></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- DataService Adapter -->
+    <h2>
+      <span class="es">Adaptador dataService</span>
+      <span class="en">dataService Adapter</span>
+    </h2>
+    <div class="card">
+      <p>
+        <span class="es"><code>dataService.ts</code> actua como capa de compatibilidad retroactiva. Las paginas importan <code>dataService.getSystems()</code> y obtienen datos ya extraidos (<code>.data</code>) del ProviderResult. Para acceso completo al metadata, usan <code>getSystemsResult()</code>.</span>
+        <span class="en"><code>dataService.ts</code> acts as a backward-compatibility layer. Pages import <code>dataService.getSystems()</code> and get data already extracted (<code>.data</code>) from ProviderResult. For full metadata access, they use <code>getSystemsResult()</code>.</span>
+      </p>
+      <pre><code>// Unwrapped (backward-compat):
+const systems = await dataService.getSystems();  // SystemViewModel[]
+
+// Full ProviderResult:
+const result = await dataService.getSystemsResult();
+// result.data: SystemViewModel[]
+// result.source: 'real' | 'mock' | 'fallback' | 'restricted'
+// result.confidence: 'high' | 'medium' | 'low'
+// result.degraded: boolean</code></pre>
+    </div>
+
+    <!-- Footer -->
+    <div style="margin-top:48px;padding-top:24px;border-top:1px solid var(--brd);text-align:center">
+      <p class="text-muted text-sm">SAP Spektra v3.0 — Maveram Company</p>
+    </div>
+  </main>
+</div>
+</body>
+</html>

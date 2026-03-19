@@ -3,10 +3,12 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width,initial-scale=1.0">
-  <title>Modelo de Datos — SAP Spektra Docs</title>
+  <title>Data Model — SAP Spektra Docs</title>
   <link rel="stylesheet" href="theme.css">
   <script src="theme-toggle.js"></script>
   <script src="lang-toggle.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+  <script src="mermaid-init.js"></script>
 </head>
 <body>
 <div class="docs-wrapper">
@@ -15,665 +17,462 @@
       <div class="logo">&#9889;</div>
       <div class="brand-text">
         <div class="brand-name">SAP Spektra</div>
-        <div class="brand-sub">Documentacion v2.0</div>
+        <div class="brand-sub">Documentation v3.0</div>
       </div>
     </div>
     <div class="sidebar-section">
-      <div class="sidebar-section-label">Inicio</div>
-      <a href="index.html" class="sidebar-link">Portal</a>
-      <a href="getting-started.html" class="sidebar-link">Primeros Pasos</a>
+      <div class="sidebar-section-label">Overview</div>
+      <a href="index.html" class="sidebar-link">Home</a>
+      <a href="executive.html" class="sidebar-link">Executive Summary</a>
     </div>
     <div class="sidebar-section">
       <div class="sidebar-section-label">Architecture</div>
-      <a href="architecture.html" class="sidebar-link">Arquitectura</a>
-      <a href="domain-model.html" class="sidebar-link active">Modelo de Datos</a>
+      <a href="architecture.html" class="sidebar-link">System Architecture</a>
+      <a href="multi-mode.html" class="sidebar-link">Multi-Mode Model</a>
+      <a href="domains.html" class="sidebar-link">Domain Reference</a>
+      <a href="domain-model.html" class="sidebar-link active">Data Model</a>
       <a href="api-reference.html" class="sidebar-link">API Reference</a>
     </div>
     <div class="sidebar-section">
-      <div class="sidebar-section-label">Command</div>
-      <a href="dashboard.html" class="sidebar-link">Dashboard</a>
-      <a href="landscape.html" class="sidebar-link">Landscape</a>
-      <a href="alerts.html" class="sidebar-link">Alertas</a>
-    </div>
-    <div class="sidebar-section">
-      <div class="sidebar-section-label">Monitor</div>
-      <a href="systems.html" class="sidebar-link">Sistemas</a>
-      <a href="connectors.html" class="sidebar-link">Conectores</a>
-      <a href="events.html" class="sidebar-link">Eventos</a>
-    </div>
-    <div class="sidebar-section">
-      <div class="sidebar-section-label">Intelligence</div>
-      <a href="ai-analysis.html" class="sidebar-link">Analisis IA</a>
-      <a href="analytics.html" class="sidebar-link">Analytics</a>
-      <a href="reports.html" class="sidebar-link">Reportes</a>
-      <a href="comparison.html" class="sidebar-link">Comparacion</a>
-    </div>
-    <div class="sidebar-section">
       <div class="sidebar-section-label">Operations</div>
-      <a href="runbooks.html" class="sidebar-link">Runbooks</a>
-      <a href="approvals.html" class="sidebar-link">Aprobaciones</a>
-      <a href="operations.html" class="sidebar-link">Operaciones</a>
-      <a href="jobs.html" class="sidebar-link">Jobs (SM37)</a>
-      <a href="transports.html" class="sidebar-link">Transportes</a>
-      <a href="sla.html" class="sidebar-link">SLA</a>
-      <a href="ha-control.html" class="sidebar-link">HA Control</a>
-      <a href="certificates.html" class="sidebar-link">Certificados</a>
-    </div>
-    <div class="sidebar-section">
-      <div class="sidebar-section-label">Admin</div>
-      <a href="admin.html" class="sidebar-link">Gestion</a>
-      <a href="settings.html" class="sidebar-link">Configuracion</a>
-      <a href="connect-system.html" class="sidebar-link">Conectar Sistema</a>
+      <a href="getting-started.html" class="sidebar-link">Setup &amp; Development</a>
+      <a href="validation.html" class="sidebar-link">Validation &amp; Quality</a>
+      <a href="backlog.html" class="sidebar-link">Hardening Backlog</a>
     </div>
   </nav>
 
   <main class="docs-main">
-    <div class="breadcrumb">
-      <a href="index.html">SAP Spektra</a>
-      <span class="sep">/</span>
-      <span><span class="es">Modelo de Datos</span><span class="en">Domain Model</span></span>
-    </div>
-
     <div class="page-header">
       <h1>
-        <span class="es">Modelo de Datos (Prisma Schema)</span>
-        <span class="en">Domain Model (Prisma Schema)</span>
+        <span class="es">Modelo de Datos</span>
+        <span class="en">Data Model</span>
       </h1>
-      <div class="subtitle">
-        <span class="es">27 modelos Prisma con campos, tipos, restricciones, indices y reglas de cascade</span>
-        <span class="en">27 Prisma models with fields, types, constraints, indexes and cascade rules</span>
-      </div>
+      <p class="subtitle">
+        <span class="es">27 modelos Prisma — campos, tipos, relaciones, indices y reglas de cascade</span>
+        <span class="en">27 Prisma models — fields, types, relationships, indexes, and cascade rules</span>
+      </p>
     </div>
 
     <div class="callout info">
       <div class="callout-icon">&#128161;</div>
       <div>
-        <span class="es"><strong>Fuente:</strong> Todos los modelos provienen de <code>apps/api/prisma/schema.prisma</code>. Usa <code>npx prisma studio</code> para explorar los datos de forma interactiva.</span>
-        <span class="en"><strong>Source:</strong> All models come from <code>apps/api/prisma/schema.prisma</code>. Use <code>npx prisma studio</code> to explore data interactively.</span>
+        <span class="es"><strong>ORM:</strong> Prisma 6 con PostgreSQL 16. Todas las relaciones FK usan <code>onDelete: Cascade</code>. Los modelos se definen en <code>apps/api/prisma/schema.prisma</code>.</span>
+        <span class="en"><strong>ORM:</strong> Prisma 6 with PostgreSQL 16. All FK relationships use <code>onDelete: Cascade</code>. Models are defined in <code>apps/api/prisma/schema.prisma</code>.</span>
       </div>
     </div>
 
-    <!-- ═══ Auth Domain ═══ -->
+    <!-- ER Diagram -->
     <h2>
-      <span class="es">Dominio: Autenticacion y Tenancy</span>
-      <span class="en">Domain: Authentication & Tenancy</span>
+      <span class="es">Diagrama de Relaciones</span>
+      <span class="en">Entity Relationships</span>
     </h2>
-
-    <!-- Organization -->
-    <h3>Organization <code class="text-muted">@@map("organizations")</code></h3>
-    <div class="table-wrap">
-      <table>
-        <thead>
-          <tr>
-            <th><span class="es">Campo</span><span class="en">Field</span></th>
-            <th><span class="es">Tipo</span><span class="en">Type</span></th>
-            <th><span class="es">Restricciones</span><span class="en">Constraints</span></th>
-            <th><span class="es">Descripcion</span><span class="en">Description</span></th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr><td><code>id</code></td><td>String</td><td>@id @default(uuid())</td><td>UUID</td></tr>
-          <tr><td><code>name</code></td><td>String</td><td><span class="es">requerido</span><span class="en">required</span></td><td><span class="es">Nombre de la organizacion</span><span class="en">Organization name</span></td></tr>
-          <tr><td><code>slug</code></td><td>String</td><td>@unique</td><td><span class="es">Identificador URL-friendly</span><span class="en">URL-friendly identifier</span></td></tr>
-          <tr><td><code>plan</code></td><td>String</td><td>@default("professional")</td><td>starter | professional | enterprise</td></tr>
-          <tr><td><code>logo</code></td><td>String?</td><td><span class="es">opcional</span><span class="en">optional</span></td><td><span class="es">URL del logo</span><span class="en">Logo URL</span></td></tr>
-          <tr><td><code>timezone</code></td><td>String</td><td>@default("America/Bogota")</td><td><span class="es">Zona horaria</span><span class="en">Timezone</span></td></tr>
-          <tr><td><code>language</code></td><td>String</td><td>@default("es")</td><td><span class="es">Idioma: es | en</span><span class="en">Language: es | en</span></td></tr>
-          <tr><td><code>settings</code></td><td>Json</td><td>@default("{}")</td><td><span class="es">Configuracion personalizada</span><span class="en">Custom settings</span></td></tr>
-          <tr><td><code>limits</code></td><td>Json</td><td>@default("{}")</td><td><span class="es">Limites del plan</span><span class="en">Plan limits</span></td></tr>
-          <tr><td><code>createdAt</code></td><td>DateTime</td><td>@default(now())</td><td>Timestamp</td></tr>
-          <tr><td><code>updatedAt</code></td><td>DateTime</td><td>@updatedAt</td><td>Timestamp</td></tr>
-        </tbody>
-      </table>
-    </div>
-
-    <!-- User -->
-    <h3>User <code class="text-muted">@@map("users")</code></h3>
-    <div class="table-wrap">
-      <table>
-        <thead>
-          <tr><th><span class="es">Campo</span><span class="en">Field</span></th><th><span class="es">Tipo</span><span class="en">Type</span></th><th><span class="es">Restricciones</span><span class="en">Constraints</span></th><th><span class="es">Descripcion</span><span class="en">Description</span></th></tr>
-        </thead>
-        <tbody>
-          <tr><td><code>id</code></td><td>String</td><td>@id @default(uuid())</td><td>UUID</td></tr>
-          <tr><td><code>email</code></td><td>String</td><td>@unique</td><td><span class="es">Email unico del usuario</span><span class="en">Unique user email</span></td></tr>
-          <tr><td><code>name</code></td><td>String</td><td><span class="es">requerido</span><span class="en">required</span></td><td><span class="es">Nombre completo</span><span class="en">Full name</span></td></tr>
-          <tr><td><code>passwordHash</code></td><td>String</td><td><span class="es">requerido</span><span class="en">required</span></td><td><span class="es">Hash bcrypt (12 rounds)</span><span class="en">bcrypt hash (12 rounds)</span></td></tr>
-          <tr><td><code>status</code></td><td>String</td><td>@default("active")</td><td>active | invited | disabled</td></tr>
-          <tr><td><code>mfaEnabled</code></td><td>Boolean</td><td>@default(false)</td><td><span class="es">MFA habilitado</span><span class="en">MFA enabled</span></td></tr>
-          <tr><td><code>lastLoginAt</code></td><td>DateTime?</td><td><span class="es">opcional</span><span class="en">optional</span></td><td><span class="es">Ultimo login</span><span class="en">Last login</span></td></tr>
-          <tr><td><code>createdAt</code></td><td>DateTime</td><td>@default(now())</td><td>Timestamp</td></tr>
-          <tr><td><code>updatedAt</code></td><td>DateTime</td><td>@updatedAt</td><td>Timestamp</td></tr>
-        </tbody>
-      </table>
-    </div>
-
-    <!-- Membership -->
-    <h3>Membership <code class="text-muted">@@map("memberships")</code></h3>
-    <div class="table-wrap">
-      <table>
-        <thead>
-          <tr><th><span class="es">Campo</span><span class="en">Field</span></th><th><span class="es">Tipo</span><span class="en">Type</span></th><th><span class="es">Restricciones</span><span class="en">Constraints</span></th><th><span class="es">Descripcion</span><span class="en">Description</span></th></tr>
-        </thead>
-        <tbody>
-          <tr><td><code>id</code></td><td>String</td><td>@id @default(uuid())</td><td>UUID</td></tr>
-          <tr><td><code>userId</code></td><td>String</td><td>FK → User (Cascade)</td><td><span class="es">Referencia al usuario</span><span class="en">User reference</span></td></tr>
-          <tr><td><code>organizationId</code></td><td>String</td><td>FK → Organization (Cascade)</td><td><span class="es">Referencia a la organizacion</span><span class="en">Organization reference</span></td></tr>
-          <tr><td><code>role</code></td><td>String</td><td>@default("viewer")</td><td>admin | escalation | operator | viewer</td></tr>
-          <tr><td><code>createdAt</code></td><td>DateTime</td><td>@default(now())</td><td>Timestamp</td></tr>
-          <tr><td><code>updatedAt</code></td><td>DateTime</td><td>@updatedAt</td><td>Timestamp</td></tr>
-        </tbody>
-      </table>
-    </div>
-    <p class="text-muted text-sm"><span class="es">Restriccion unica:</span><span class="en">Unique constraint:</span> <code>@@unique([userId, organizationId])</code></p>
-
-    <!-- Plan -->
-    <h3>Plan <code class="text-muted">@@map("plans")</code></h3>
-    <div class="table-wrap">
-      <table>
-        <thead>
-          <tr><th><span class="es">Campo</span><span class="en">Field</span></th><th><span class="es">Tipo</span><span class="en">Type</span></th><th><span class="es">Restricciones</span><span class="en">Constraints</span></th><th><span class="es">Descripcion</span><span class="en">Description</span></th></tr>
-        </thead>
-        <tbody>
-          <tr><td><code>id</code></td><td>String</td><td>@id @default(uuid())</td><td>UUID</td></tr>
-          <tr><td><code>tier</code></td><td>String</td><td>@unique</td><td>starter | professional | enterprise</td></tr>
-          <tr><td><code>name</code></td><td>String</td><td><span class="es">requerido</span><span class="en">required</span></td><td><span class="es">Nombre visible del plan</span><span class="en">Visible plan name</span></td></tr>
-          <tr><td><code>price</code></td><td>Int</td><td>@default(0)</td><td><span class="es">Precio mensual en centavos</span><span class="en">Monthly price in cents</span></td></tr>
-          <tr><td><code>features</code></td><td>Json</td><td>@default("[]")</td><td><span class="es">Array de features habilitadas</span><span class="en">Array of enabled features</span></td></tr>
-          <tr><td><code>limits</code></td><td>Json</td><td>@default("{}")</td><td><span class="es">{ maxSystems, maxUsers, ... }</span><span class="en">{ maxSystems, maxUsers, ... }</span></td></tr>
-          <tr><td><code>createdAt</code></td><td>DateTime</td><td>@default(now())</td><td>Timestamp</td></tr>
-        </tbody>
-      </table>
-    </div>
-
-    <!-- ═══ Core Domain ═══ -->
-    <h2>
-      <span class="es">Dominio: Core SAP</span>
-      <span class="en">Domain: SAP Core</span>
-    </h2>
-
-    <!-- System -->
-    <h3>System <code class="text-muted">@@map("systems")</code></h3>
-    <div class="table-wrap">
-      <table>
-        <thead>
-          <tr><th><span class="es">Campo</span><span class="en">Field</span></th><th><span class="es">Tipo</span><span class="en">Type</span></th><th><span class="es">Restricciones</span><span class="en">Constraints</span></th><th><span class="es">Descripcion</span><span class="en">Description</span></th></tr>
-        </thead>
-        <tbody>
-          <tr><td><code>id</code></td><td>String</td><td>@id @default(uuid())</td><td>UUID</td></tr>
-          <tr><td><code>organizationId</code></td><td>String</td><td>FK → Organization (Cascade)</td><td><span class="es">Tenant</span><span class="en">Tenant</span></td></tr>
-          <tr><td><code>sid</code></td><td>String</td><td><span class="es">requerido</span><span class="en">required</span></td><td><span class="es">SID SAP de 3 caracteres (EP1, BW1)</span><span class="en">3-char SAP SID (EP1, BW1)</span></td></tr>
-          <tr><td><code>description</code></td><td>String</td><td><span class="es">requerido</span><span class="en">required</span></td><td><span class="es">Descripcion del sistema</span><span class="en">System description</span></td></tr>
-          <tr><td><code>sapProduct</code></td><td>String</td><td><span class="es">requerido</span><span class="en">required</span></td><td>S/4HANA, ECC, BW/4HANA, SolMan, PO, etc.</td></tr>
-          <tr><td><code>productFamily</code></td><td>String</td><td><span class="es">requerido</span><span class="en">required</span></td><td>ABAP_BUSINESS_SUITE | JAVA_STACK | EDGE</td></tr>
-          <tr><td><code>sapStackType</code></td><td>String</td><td><span class="es">requerido</span><span class="en">required</span></td><td>ABAP | JAVA | DUAL_STACK | EDGE | DB</td></tr>
-          <tr><td><code>dbType</code></td><td>String</td><td><span class="es">requerido</span><span class="en">required</span></td><td>SAP HANA 2.0 | Oracle 19c | MS SQL | DB2 | MaxDB</td></tr>
-          <tr><td><code>environment</code></td><td>String</td><td><span class="es">requerido</span><span class="en">required</span></td><td>PRD | QAS | DEV | SBX | DR</td></tr>
-          <tr><td><code>mode</code></td><td>String</td><td>@default("PRODUCTION")</td><td>PRODUCTION | TRIAL | MAINTENANCE</td></tr>
-          <tr><td><code>deploymentModel</code></td><td>String</td><td>@default("ON_PREMISE")</td><td>ON_PREMISE | RISE_MANAGED | etc.</td></tr>
-          <tr><td><code>connectionMode</code></td><td>String</td><td>@default("AGENT_FULL")</td><td>AGENT_FULL | MANAGED_RESTRICTED</td></tr>
-          <tr><td><code>monitoringCapabilityProfile</code></td><td>String</td><td>@default("FULL_STACK_AGENT")</td><td><span class="es">Perfil de monitoreo</span><span class="en">Monitoring profile</span></td></tr>
-          <tr><td><code>supportsHostMetrics</code></td><td>Boolean</td><td>@default(true)</td><td><span class="es">Soporta metricas de host</span><span class="en">Supports host metrics</span></td></tr>
-          <tr><td><code>supportsOsMetrics</code></td><td>Boolean</td><td>@default(true)</td><td><span class="es">Soporta metricas de OS</span><span class="en">Supports OS metrics</span></td></tr>
-          <tr><td><code>supportsSapMetrics</code></td><td>Boolean</td><td>@default(true)</td><td><span class="es">Soporta metricas SAP</span><span class="en">Supports SAP metrics</span></td></tr>
-          <tr><td><code>supportsDbMetrics</code></td><td>Boolean</td><td>@default(true)</td><td><span class="es">Soporta metricas de BD</span><span class="en">Supports DB metrics</span></td></tr>
-          <tr><td><code>supportsTopologyDiscovery</code></td><td>Boolean</td><td>@default(true)</td><td><span class="es">Descubrimiento de topologia</span><span class="en">Topology discovery</span></td></tr>
-          <tr><td><code>supportsRunbookExecution</code></td><td>Boolean</td><td>@default(true)</td><td><span class="es">Ejecucion de runbooks</span><span class="en">Runbook execution</span></td></tr>
-          <tr><td><code>supportsApprovals</code></td><td>Boolean</td><td>@default(true)</td><td><span class="es">Flujo de aprobaciones</span><span class="en">Approval workflow</span></td></tr>
-          <tr><td><code>integrationTrustLevel</code></td><td>String</td><td>@default("full")</td><td>full | partial | restricted</td></tr>
-          <tr><td><code>healthScore</code></td><td>Int</td><td>@default(0)</td><td><span class="es">Puntuacion 0-100</span><span class="en">Score 0-100</span></td></tr>
-          <tr><td><code>status</code></td><td>String</td><td>@default("healthy")</td><td>healthy | warning | critical</td></tr>
-          <tr><td><code>lastCheckAt</code></td><td>DateTime?</td><td><span class="es">opcional</span><span class="en">optional</span></td><td><span class="es">Ultima verificacion</span><span class="en">Last check</span></td></tr>
-          <tr><td><code>createdAt</code></td><td>DateTime</td><td>@default(now())</td><td>Timestamp</td></tr>
-          <tr><td><code>updatedAt</code></td><td>DateTime</td><td>@updatedAt</td><td>Timestamp</td></tr>
-        </tbody>
-      </table>
-    </div>
-    <p class="text-muted text-sm"><span class="es">Unique:</span><span class="en">Unique:</span> <code>@@unique([organizationId, sid])</code> | Index: <code>@@index([organizationId])</code></p>
-
-    <!-- SystemMeta -->
-    <h3>SystemMeta <code class="text-muted">@@map("system_meta")</code></h3>
-    <div class="table-wrap">
-      <table>
-        <thead>
-          <tr><th><span class="es">Campo</span><span class="en">Field</span></th><th><span class="es">Tipo</span><span class="en">Type</span></th><th><span class="es">Restricciones</span><span class="en">Constraints</span></th><th><span class="es">Descripcion</span><span class="en">Description</span></th></tr>
-        </thead>
-        <tbody>
-          <tr><td><code>id</code></td><td>String</td><td>@id @default(uuid())</td><td>UUID</td></tr>
-          <tr><td><code>systemId</code></td><td>String</td><td>@unique, FK → System (Cascade)</td><td><span class="es">Relacion 1:1 con System</span><span class="en">1:1 relation with System</span></td></tr>
-          <tr><td><code>sapRelease</code></td><td>String?</td><td><span class="es">opcional</span><span class="en">optional</span></td><td><span class="es">Release SAP (ej. 756)</span><span class="en">SAP Release (e.g. 756)</span></td></tr>
-          <tr><td><code>kernelVersion</code></td><td>String?</td><td><span class="es">opcional</span><span class="en">optional</span></td><td><span class="es">Version del kernel SAP</span><span class="en">SAP kernel version</span></td></tr>
-          <tr><td><code>kernelPatch</code></td><td>String?</td><td><span class="es">opcional</span><span class="en">optional</span></td><td><span class="es">Parche del kernel</span><span class="en">Kernel patch</span></td></tr>
-          <tr><td><code>abapPatch</code></td><td>String?</td><td><span class="es">opcional</span><span class="en">optional</span></td><td><span class="es">Nivel de parche ABAP</span><span class="en">ABAP patch level</span></td></tr>
-          <tr><td><code>client</code></td><td>String?</td><td><span class="es">opcional</span><span class="en">optional</span></td><td><span class="es">Cliente SAP (ej. 100)</span><span class="en">SAP client (e.g. 100)</span></td></tr>
-          <tr><td><code>osVersion</code></td><td>String?</td><td><span class="es">opcional</span><span class="en">optional</span></td><td><span class="es">Version del SO</span><span class="en">OS version</span></td></tr>
-          <tr><td><code>dbVersion</code></td><td>String?</td><td><span class="es">opcional</span><span class="en">optional</span></td><td><span class="es">Version de la BD</span><span class="en">DB version</span></td></tr>
-          <tr><td><code>notes</code></td><td>String?</td><td><span class="es">opcional</span><span class="en">optional</span></td><td><span class="es">Notas libres</span><span class="en">Free-form notes</span></td></tr>
-        </tbody>
-      </table>
-    </div>
-
-    <!-- Component -->
-    <h3>Component <code class="text-muted">@@map("components")</code></h3>
-    <div class="table-wrap">
-      <table>
-        <thead>
-          <tr><th><span class="es">Campo</span><span class="en">Field</span></th><th><span class="es">Tipo</span><span class="en">Type</span></th><th><span class="es">Restricciones</span><span class="en">Constraints</span></th><th><span class="es">Descripcion</span><span class="en">Description</span></th></tr>
-        </thead>
-        <tbody>
-          <tr><td><code>id</code></td><td>String</td><td>@id @default(uuid())</td><td>UUID</td></tr>
-          <tr><td><code>systemId</code></td><td>String</td><td>FK → System (Cascade)</td><td><span class="es">Sistema padre</span><span class="en">Parent system</span></td></tr>
-          <tr><td><code>name</code></td><td>String</td><td><span class="es">requerido</span><span class="en">required</span></td><td><span class="es">Nombre del componente</span><span class="en">Component name</span></td></tr>
-          <tr><td><code>type</code></td><td>String</td><td><span class="es">requerido</span><span class="en">required</span></td><td>ABAP | JAVA | DB | WEBDISP | GATEWAY</td></tr>
-          <tr><td><code>version</code></td><td>String?</td><td><span class="es">opcional</span><span class="en">optional</span></td><td><span class="es">Version del componente</span><span class="en">Component version</span></td></tr>
-          <tr><td><code>status</code></td><td>String</td><td>@default("active")</td><td>active | inactive | error</td></tr>
-        </tbody>
-      </table>
-    </div>
-
-    <!-- Instance -->
-    <h3>Instance <code class="text-muted">@@map("instances")</code></h3>
-    <div class="table-wrap">
-      <table>
-        <thead>
-          <tr><th><span class="es">Campo</span><span class="en">Field</span></th><th><span class="es">Tipo</span><span class="en">Type</span></th><th><span class="es">Restricciones</span><span class="en">Constraints</span></th><th><span class="es">Descripcion</span><span class="en">Description</span></th></tr>
-        </thead>
-        <tbody>
-          <tr><td><code>id</code></td><td>String</td><td>@id @default(uuid())</td><td>UUID</td></tr>
-          <tr><td><code>systemId</code></td><td>String</td><td>FK → System (Cascade)</td><td><span class="es">Sistema</span><span class="en">System</span></td></tr>
-          <tr><td><code>componentId</code></td><td>String?</td><td>FK → Component (Cascade)</td><td><span class="es">Componente padre</span><span class="en">Parent component</span></td></tr>
-          <tr><td><code>hostId</code></td><td>String?</td><td>FK → Host (Cascade)</td><td><span class="es">Host donde corre</span><span class="en">Host where it runs</span></td></tr>
-          <tr><td><code>instanceNr</code></td><td>String</td><td><span class="es">requerido</span><span class="en">required</span></td><td><span class="es">Numero de instancia (00, 01, 02)</span><span class="en">Instance number (00, 01, 02)</span></td></tr>
-          <tr><td><code>type</code></td><td>String</td><td><span class="es">requerido</span><span class="en">required</span></td><td>PAS | AAS | ASCS | ERS | HANA | WEBDISP</td></tr>
-          <tr><td><code>role</code></td><td>String</td><td><span class="es">requerido</span><span class="en">required</span></td><td>Dialog | Batch | Gateway | Web Dispatcher</td></tr>
-          <tr><td><code>status</code></td><td>String</td><td>@default("active")</td><td>active | stopped | error</td></tr>
-          <tr><td><code>features</code></td><td>Json</td><td>@default("{}")</td><td><span class="es">Features SAP habilitadas</span><span class="en">Enabled SAP features</span></td></tr>
-        </tbody>
-      </table>
-    </div>
-
-    <!-- Host -->
-    <h3>Host <code class="text-muted">@@map("hosts")</code></h3>
-    <div class="table-wrap">
-      <table>
-        <thead>
-          <tr><th><span class="es">Campo</span><span class="en">Field</span></th><th><span class="es">Tipo</span><span class="en">Type</span></th><th><span class="es">Restricciones</span><span class="en">Constraints</span></th><th><span class="es">Descripcion</span><span class="en">Description</span></th></tr>
-        </thead>
-        <tbody>
-          <tr><td><code>id</code></td><td>String</td><td>@id @default(uuid())</td><td>UUID</td></tr>
-          <tr><td><code>systemId</code></td><td>String</td><td>FK → System (Cascade)</td><td><span class="es">Sistema</span><span class="en">System</span></td></tr>
-          <tr><td><code>hostname</code></td><td>String</td><td><span class="es">requerido</span><span class="en">required</span></td><td><span class="es">Nombre del host (ep1app01)</span><span class="en">Host name (ep1app01)</span></td></tr>
-          <tr><td><code>ip</code></td><td>String?</td><td><span class="es">opcional</span><span class="en">optional</span></td><td><span class="es">Direccion IP</span><span class="en">IP address</span></td></tr>
-          <tr><td><code>os</code></td><td>String?</td><td><span class="es">opcional</span><span class="en">optional</span></td><td><span class="es">Sistema operativo</span><span class="en">Operating system</span></td></tr>
-          <tr><td><code>osVersion</code></td><td>String?</td><td><span class="es">opcional</span><span class="en">optional</span></td><td><span class="es">Version del SO</span><span class="en">OS version</span></td></tr>
-          <tr><td><code>region</code></td><td>String?</td><td><span class="es">opcional</span><span class="en">optional</span></td><td><span class="es">Region cloud</span><span class="en">Cloud region</span></td></tr>
-          <tr><td><code>zone</code></td><td>String?</td><td><span class="es">opcional</span><span class="en">optional</span></td><td><span class="es">Zona de disponibilidad</span><span class="en">Availability zone</span></td></tr>
-          <tr><td><code>cpu</code></td><td>Float</td><td>@default(0)</td><td><span class="es">Ultimo % CPU</span><span class="en">Latest CPU %</span></td></tr>
-          <tr><td><code>memory</code></td><td>Float</td><td>@default(0)</td><td><span class="es">Ultimo % memoria</span><span class="en">Latest memory %</span></td></tr>
-          <tr><td><code>disk</code></td><td>Float</td><td>@default(0)</td><td><span class="es">Ultimo % disco</span><span class="en">Latest disk %</span></td></tr>
-          <tr><td><code>status</code></td><td>String</td><td>@default("active")</td><td>active | offline | error</td></tr>
-        </tbody>
-      </table>
-    </div>
-
-    <!-- ═══ Monitoring Domain ═══ -->
-    <h2>
-      <span class="es">Dominio: Monitoreo</span>
-      <span class="en">Domain: Monitoring</span>
-    </h2>
-
-    <!-- HostMetric -->
-    <h3>HostMetric <code class="text-muted">@@map("host_metrics")</code></h3>
-    <div class="table-wrap">
-      <table>
-        <thead>
-          <tr><th><span class="es">Campo</span><span class="en">Field</span></th><th><span class="es">Tipo</span><span class="en">Type</span></th><th><span class="es">Restricciones</span><span class="en">Constraints</span></th><th><span class="es">Descripcion</span><span class="en">Description</span></th></tr>
-        </thead>
-        <tbody>
-          <tr><td><code>id</code></td><td>String</td><td>@id @default(uuid())</td><td>UUID</td></tr>
-          <tr><td><code>hostId</code></td><td>String</td><td>FK → Host (Cascade)</td><td><span class="es">Host asociado</span><span class="en">Associated host</span></td></tr>
-          <tr><td><code>timestamp</code></td><td>DateTime</td><td>@default(now())</td><td><span class="es">Momento de la medicion</span><span class="en">Measurement timestamp</span></td></tr>
-          <tr><td><code>cpu</code></td><td>Float</td><td><span class="es">requerido</span><span class="en">required</span></td><td><span class="es">Uso de CPU %</span><span class="en">CPU usage %</span></td></tr>
-          <tr><td><code>memory</code></td><td>Float</td><td><span class="es">requerido</span><span class="en">required</span></td><td><span class="es">Uso de memoria %</span><span class="en">Memory usage %</span></td></tr>
-          <tr><td><code>disk</code></td><td>Float</td><td><span class="es">requerido</span><span class="en">required</span></td><td><span class="es">Uso de disco %</span><span class="en">Disk usage %</span></td></tr>
-          <tr><td><code>iops</code></td><td>Float?</td><td><span class="es">opcional</span><span class="en">optional</span></td><td>IOPS</td></tr>
-          <tr><td><code>networkIn</code></td><td>Float?</td><td><span class="es">opcional</span><span class="en">optional</span></td><td><span class="es">Red entrada (MB/s)</span><span class="en">Network in (MB/s)</span></td></tr>
-          <tr><td><code>networkOut</code></td><td>Float?</td><td><span class="es">opcional</span><span class="en">optional</span></td><td><span class="es">Red salida (MB/s)</span><span class="en">Network out (MB/s)</span></td></tr>
-        </tbody>
-      </table>
-    </div>
-    <p class="text-muted text-sm">Index: <code>@@index([hostId, timestamp])</code></p>
-
-    <!-- HealthSnapshot -->
-    <h3>HealthSnapshot <code class="text-muted">@@map("health_snapshots")</code></h3>
-    <div class="table-wrap">
-      <table>
-        <thead>
-          <tr><th><span class="es">Campo</span><span class="en">Field</span></th><th><span class="es">Tipo</span><span class="en">Type</span></th><th><span class="es">Restricciones</span><span class="en">Constraints</span></th><th><span class="es">Descripcion</span><span class="en">Description</span></th></tr>
-        </thead>
-        <tbody>
-          <tr><td><code>id</code></td><td>String</td><td>@id @default(uuid())</td><td>UUID</td></tr>
-          <tr><td><code>systemId</code></td><td>String</td><td>FK → System (Cascade)</td><td><span class="es">Sistema</span><span class="en">System</span></td></tr>
-          <tr><td><code>score</code></td><td>Int</td><td><span class="es">requerido</span><span class="en">required</span></td><td><span class="es">Puntuacion 0-100</span><span class="en">Score 0-100</span></td></tr>
-          <tr><td><code>status</code></td><td>String</td><td><span class="es">requerido</span><span class="en">required</span></td><td>healthy | warning | critical</td></tr>
-          <tr><td><code>cpu</code></td><td>Float?</td><td><span class="es">opcional</span><span class="en">optional</span></td><td>CPU %</td></tr>
-          <tr><td><code>memory</code></td><td>Float?</td><td><span class="es">opcional</span><span class="en">optional</span></td><td>Memory %</td></tr>
-          <tr><td><code>disk</code></td><td>Float?</td><td><span class="es">opcional</span><span class="en">optional</span></td><td>Disk %</td></tr>
-          <tr><td><code>details</code></td><td>Json?</td><td><span class="es">opcional</span><span class="en">optional</span></td><td><span class="es">Detalles adicionales</span><span class="en">Additional details</span></td></tr>
-          <tr><td><code>timestamp</code></td><td>DateTime</td><td>@default(now())</td><td>Timestamp</td></tr>
-        </tbody>
-      </table>
-    </div>
-
-    <!-- Breach -->
-    <h3>Breach <code class="text-muted">@@map("breaches")</code></h3>
-    <div class="table-wrap">
-      <table>
-        <thead>
-          <tr><th><span class="es">Campo</span><span class="en">Field</span></th><th><span class="es">Tipo</span><span class="en">Type</span></th><th><span class="es">Restricciones</span><span class="en">Constraints</span></th><th><span class="es">Descripcion</span><span class="en">Description</span></th></tr>
-        </thead>
-        <tbody>
-          <tr><td><code>id</code></td><td>String</td><td>@id @default(uuid())</td><td>UUID</td></tr>
-          <tr><td><code>systemId</code></td><td>String</td><td>FK → System (Cascade)</td><td><span class="es">Sistema</span><span class="en">System</span></td></tr>
-          <tr><td><code>metric</code></td><td>String</td><td><span class="es">requerido</span><span class="en">required</span></td><td>cpu_usage | memory_usage | disk_usage</td></tr>
-          <tr><td><code>value</code></td><td>Float</td><td><span class="es">requerido</span><span class="en">required</span></td><td><span class="es">Valor observado</span><span class="en">Observed value</span></td></tr>
-          <tr><td><code>threshold</code></td><td>Float</td><td><span class="es">requerido</span><span class="en">required</span></td><td><span class="es">Umbral configurado</span><span class="en">Configured threshold</span></td></tr>
-          <tr><td><code>severity</code></td><td>String</td><td><span class="es">requerido</span><span class="en">required</span></td><td>CRITICAL | HIGH | MEDIUM | LOW</td></tr>
-          <tr><td><code>timestamp</code></td><td>DateTime</td><td>@default(now())</td><td>Timestamp</td></tr>
-          <tr><td><code>resolved</code></td><td>Boolean</td><td>@default(false)</td><td><span class="es">Resuelto</span><span class="en">Resolved</span></td></tr>
-          <tr><td><code>resolvedAt</code></td><td>DateTime?</td><td><span class="es">opcional</span><span class="en">optional</span></td><td><span class="es">Cuando se resolvio</span><span class="en">When resolved</span></td></tr>
-        </tbody>
-      </table>
-    </div>
-
-    <!-- Dependency -->
-    <h3>Dependency <code class="text-muted">@@map("dependencies")</code></h3>
-    <div class="table-wrap">
-      <table>
-        <thead>
-          <tr><th><span class="es">Campo</span><span class="en">Field</span></th><th><span class="es">Tipo</span><span class="en">Type</span></th><th><span class="es">Restricciones</span><span class="en">Constraints</span></th><th><span class="es">Descripcion</span><span class="en">Description</span></th></tr>
-        </thead>
-        <tbody>
-          <tr><td><code>id</code></td><td>String</td><td>@id @default(uuid())</td><td>UUID</td></tr>
-          <tr><td><code>systemId</code></td><td>String</td><td>FK → System (Cascade)</td><td><span class="es">Sistema origen</span><span class="en">Source system</span></td></tr>
-          <tr><td><code>name</code></td><td>String</td><td><span class="es">requerido</span><span class="en">required</span></td><td><span class="es">Nombre de la dependencia</span><span class="en">Dependency name</span></td></tr>
-          <tr><td><code>type</code></td><td>String</td><td><span class="es">requerido</span><span class="en">required</span></td><td>DB | RFC | HTTP | IDoc</td></tr>
-          <tr><td><code>target</code></td><td>String</td><td><span class="es">requerido</span><span class="en">required</span></td><td><span class="es">Sistema/servicio destino</span><span class="en">Target system/service</span></td></tr>
-          <tr><td><code>status</code></td><td>String</td><td>@default("ok")</td><td>ok | warning | error</td></tr>
-          <tr><td><code>latencyMs</code></td><td>Int?</td><td><span class="es">opcional</span><span class="en">optional</span></td><td><span class="es">Latencia en ms</span><span class="en">Latency in ms</span></td></tr>
-          <tr><td><code>details</code></td><td>Json?</td><td><span class="es">opcional</span><span class="en">optional</span></td><td><span class="es">Detalles adicionales</span><span class="en">Additional details</span></td></tr>
-        </tbody>
-      </table>
-    </div>
-
-    <!-- ═══ Operations Domain ═══ -->
-    <h2>
-      <span class="es">Dominio: Operaciones</span>
-      <span class="en">Domain: Operations</span>
-    </h2>
-
-    <!-- Alert -->
-    <h3>Alert <code class="text-muted">@@map("alerts")</code></h3>
-    <div class="table-wrap">
-      <table>
-        <thead>
-          <tr><th><span class="es">Campo</span><span class="en">Field</span></th><th><span class="es">Tipo</span><span class="en">Type</span></th><th><span class="es">Restricciones</span><span class="en">Constraints</span></th><th><span class="es">Descripcion</span><span class="en">Description</span></th></tr>
-        </thead>
-        <tbody>
-          <tr><td><code>id</code></td><td>String</td><td>@id @default(uuid())</td><td>UUID</td></tr>
-          <tr><td><code>organizationId</code></td><td>String</td><td>FK → Organization (Cascade)</td><td>Tenant</td></tr>
-          <tr><td><code>systemId</code></td><td>String</td><td>FK → System (Cascade)</td><td><span class="es">Sistema afectado</span><span class="en">Affected system</span></td></tr>
-          <tr><td><code>title</code></td><td>String</td><td><span class="es">requerido</span><span class="en">required</span></td><td><span class="es">Titulo de la alerta</span><span class="en">Alert title</span></td></tr>
-          <tr><td><code>message</code></td><td>String</td><td><span class="es">requerido</span><span class="en">required</span></td><td><span class="es">Mensaje detallado</span><span class="en">Detailed message</span></td></tr>
-          <tr><td><code>level</code></td><td>String</td><td><span class="es">requerido</span><span class="en">required</span></td><td>critical | warning | info</td></tr>
-          <tr><td><code>status</code></td><td>String</td><td>@default("active")</td><td>active | acknowledged | resolved</td></tr>
-          <tr><td><code>escalation</code></td><td>String</td><td>@default("-")</td><td>L1 | L2 | -</td></tr>
-          <tr><td><code>acknowledged</code></td><td>Boolean</td><td>@default(false)</td><td><span class="es">Reconocida</span><span class="en">Acknowledged</span></td></tr>
-          <tr><td><code>ackBy</code></td><td>String?</td><td><span class="es">opcional</span><span class="en">optional</span></td><td><span class="es">Quien reconocio</span><span class="en">Who acknowledged</span></td></tr>
-          <tr><td><code>ackAt</code></td><td>DateTime?</td><td><span class="es">opcional</span><span class="en">optional</span></td><td><span class="es">Cuando se reconocio</span><span class="en">When acknowledged</span></td></tr>
-          <tr><td><code>resolved</code></td><td>Boolean</td><td>@default(false)</td><td><span class="es">Resuelta</span><span class="en">Resolved</span></td></tr>
-          <tr><td><code>resolvedBy</code></td><td>String?</td><td><span class="es">opcional</span><span class="en">optional</span></td><td><span class="es">Quien resolvio</span><span class="en">Who resolved</span></td></tr>
-          <tr><td><code>resolvedAt</code></td><td>DateTime?</td><td><span class="es">opcional</span><span class="en">optional</span></td><td><span class="es">Cuando se resolvio</span><span class="en">When resolved</span></td></tr>
-          <tr><td><code>resolutionCategory</code></td><td>String?</td><td><span class="es">opcional</span><span class="en">optional</span></td><td><span class="es">Categoria de resolucion</span><span class="en">Resolution category</span></td></tr>
-          <tr><td><code>resolutionNote</code></td><td>String?</td><td><span class="es">opcional</span><span class="en">optional</span></td><td><span class="es">Nota de resolucion</span><span class="en">Resolution note</span></td></tr>
-          <tr><td><code>runbookId</code></td><td>String?</td><td><span class="es">opcional</span><span class="en">optional</span></td><td><span class="es">Runbook asociado</span><span class="en">Associated runbook</span></td></tr>
-          <tr><td><code>createdAt</code></td><td>DateTime</td><td>@default(now())</td><td>Timestamp</td></tr>
-          <tr><td><code>updatedAt</code></td><td>DateTime</td><td>@updatedAt</td><td>Timestamp</td></tr>
-        </tbody>
-      </table>
-    </div>
-
-    <!-- Runbook, RunbookExecution, RunbookStepResult -->
-    <h3>Runbook <code class="text-muted">@@map("runbooks")</code></h3>
-    <div class="table-wrap">
-      <table>
-        <thead>
-          <tr><th><span class="es">Campo</span><span class="en">Field</span></th><th><span class="es">Tipo</span><span class="en">Type</span></th><th><span class="es">Restricciones</span><span class="en">Constraints</span></th><th><span class="es">Descripcion</span><span class="en">Description</span></th></tr>
-        </thead>
-        <tbody>
-          <tr><td><code>id</code></td><td>String</td><td>@id @default(uuid())</td><td>UUID</td></tr>
-          <tr><td><code>organizationId</code></td><td>String</td><td>FK → Organization (Cascade)</td><td>Tenant</td></tr>
-          <tr><td><code>name</code></td><td>String</td><td><span class="es">requerido</span><span class="en">required</span></td><td><span class="es">Nombre del runbook</span><span class="en">Runbook name</span></td></tr>
-          <tr><td><code>description</code></td><td>String</td><td><span class="es">requerido</span><span class="en">required</span></td><td><span class="es">Descripcion</span><span class="en">Description</span></td></tr>
-          <tr><td><code>costSafe</code></td><td>Boolean</td><td>@default(true)</td><td><span class="es">Seguro para costos (no destruye datos)</span><span class="en">Cost-safe (does not destroy data)</span></td></tr>
-          <tr><td><code>autoExecute</code></td><td>Boolean</td><td>@default(false)</td><td><span class="es">Ejecucion automatica sin aprobacion</span><span class="en">Automatic execution without approval</span></td></tr>
-          <tr><td><code>category</code></td><td>String?</td><td><span class="es">opcional</span><span class="en">optional</span></td><td><span class="es">Categoria (Performance, Security, etc.)</span><span class="en">Category (Performance, Security, etc.)</span></td></tr>
-          <tr><td><code>dbType</code></td><td>String?</td><td><span class="es">opcional</span><span class="en">optional</span></td><td><span class="es">BD requerida (SAP HANA, Oracle, etc.)</span><span class="en">Required DB (SAP HANA, Oracle, etc.)</span></td></tr>
-          <tr><td><code>txCode</code></td><td>String?</td><td><span class="es">opcional</span><span class="en">optional</span></td><td><span class="es">Codigo de transaccion SAP</span><span class="en">SAP transaction code</span></td></tr>
-          <tr><td><code>prereqs</code></td><td>Json?</td><td><span class="es">opcional</span><span class="en">optional</span></td><td><span class="es">Pre-requisitos</span><span class="en">Prerequisites</span></td></tr>
-          <tr><td><code>parameters</code></td><td>Json?</td><td><span class="es">opcional</span><span class="en">optional</span></td><td><span class="es">Parametros de entrada</span><span class="en">Input parameters</span></td></tr>
-          <tr><td><code>steps</code></td><td>Json?</td><td><span class="es">opcional</span><span class="en">optional</span></td><td><span class="es">Pasos del runbook</span><span class="en">Runbook steps</span></td></tr>
-        </tbody>
-      </table>
-    </div>
-
-    <h3>RunbookExecution <code class="text-muted">@@map("runbook_executions")</code></h3>
-    <div class="table-wrap">
-      <table>
-        <thead>
-          <tr><th><span class="es">Campo</span><span class="en">Field</span></th><th><span class="es">Tipo</span><span class="en">Type</span></th><th><span class="es">Restricciones</span><span class="en">Constraints</span></th><th><span class="es">Descripcion</span><span class="en">Description</span></th></tr>
-        </thead>
-        <tbody>
-          <tr><td><code>id</code></td><td>String</td><td>@id @default(uuid())</td><td>UUID</td></tr>
-          <tr><td><code>runbookId</code></td><td>String</td><td>FK → Runbook (Cascade)</td><td><span class="es">Runbook ejecutado</span><span class="en">Executed runbook</span></td></tr>
-          <tr><td><code>systemId</code></td><td>String</td><td>FK → System (Cascade)</td><td><span class="es">Sistema objetivo</span><span class="en">Target system</span></td></tr>
-          <tr><td><code>gate</code></td><td>String</td><td><span class="es">requerido</span><span class="en">required</span></td><td>SAFE | HUMAN</td></tr>
-          <tr><td><code>result</code></td><td>String</td><td><span class="es">requerido</span><span class="en">required</span></td><td>SUCCESS | FAILED | PENDING | RUNNING | CANCELLED</td></tr>
-          <tr><td><code>duration</code></td><td>String?</td><td><span class="es">opcional</span><span class="en">optional</span></td><td><span class="es">Duracion (ej. "2m 15s")</span><span class="en">Duration (e.g. "2m 15s")</span></td></tr>
-          <tr><td><code>detail</code></td><td>String?</td><td><span class="es">opcional</span><span class="en">optional</span></td><td><span class="es">Detalle del resultado</span><span class="en">Result detail</span></td></tr>
-          <tr><td><code>executedBy</code></td><td>String?</td><td><span class="es">opcional</span><span class="en">optional</span></td><td><span class="es">Email del ejecutor</span><span class="en">Executor email</span></td></tr>
-          <tr><td><code>totalSteps</code></td><td>Int</td><td>@default(0)</td><td><span class="es">Total de pasos</span><span class="en">Total steps</span></td></tr>
-          <tr><td><code>completedSteps</code></td><td>Int</td><td>@default(0)</td><td><span class="es">Pasos completados</span><span class="en">Completed steps</span></td></tr>
-          <tr><td><code>currentStep</code></td><td>Int</td><td>@default(0)</td><td><span class="es">Paso actual</span><span class="en">Current step</span></td></tr>
-          <tr><td><code>startedAt</code></td><td>DateTime</td><td>@default(now())</td><td><span class="es">Inicio</span><span class="en">Start</span></td></tr>
-          <tr><td><code>completedAt</code></td><td>DateTime?</td><td><span class="es">opcional</span><span class="en">optional</span></td><td><span class="es">Finalizacion</span><span class="en">Completion</span></td></tr>
-        </tbody>
-      </table>
-    </div>
-
-    <h3>RunbookStepResult <code class="text-muted">@@map("runbook_step_results")</code></h3>
-    <div class="table-wrap">
-      <table>
-        <thead>
-          <tr><th><span class="es">Campo</span><span class="en">Field</span></th><th><span class="es">Tipo</span><span class="en">Type</span></th><th><span class="es">Restricciones</span><span class="en">Constraints</span></th><th><span class="es">Descripcion</span><span class="en">Description</span></th></tr>
-        </thead>
-        <tbody>
-          <tr><td><code>id</code></td><td>String</td><td>@id @default(uuid())</td><td>UUID</td></tr>
-          <tr><td><code>executionId</code></td><td>String</td><td>FK → RunbookExecution (Cascade)</td><td><span class="es">Ejecucion padre</span><span class="en">Parent execution</span></td></tr>
-          <tr><td><code>stepOrder</code></td><td>Int</td><td><span class="es">requerido</span><span class="en">required</span></td><td><span class="es">Orden del paso</span><span class="en">Step order</span></td></tr>
-          <tr><td><code>action</code></td><td>String</td><td><span class="es">requerido</span><span class="en">required</span></td><td><span class="es">Nombre de la accion</span><span class="en">Action name</span></td></tr>
-          <tr><td><code>command</code></td><td>String?</td><td><span class="es">opcional</span><span class="en">optional</span></td><td><span class="es">Comando ejecutado</span><span class="en">Executed command</span></td></tr>
-          <tr><td><code>status</code></td><td>String</td><td>@default("PENDING")</td><td>PENDING | RUNNING | SUCCESS | FAILED | SKIPPED</td></tr>
-          <tr><td><code>exitCode</code></td><td>Int?</td><td><span class="es">opcional</span><span class="en">optional</span></td><td><span class="es">Codigo de salida</span><span class="en">Exit code</span></td></tr>
-          <tr><td><code>stdout</code></td><td>String?</td><td><span class="es">opcional</span><span class="en">optional</span></td><td><span class="es">Salida estandar</span><span class="en">Standard output</span></td></tr>
-          <tr><td><code>stderr</code></td><td>String?</td><td><span class="es">opcional</span><span class="en">optional</span></td><td><span class="es">Salida de error</span><span class="en">Error output</span></td></tr>
-          <tr><td><code>duration</code></td><td>String?</td><td><span class="es">opcional</span><span class="en">optional</span></td><td><span class="es">Duracion</span><span class="en">Duration</span></td></tr>
-        </tbody>
-      </table>
-    </div>
-
-    <!-- ═══ Infrastructure Domain ═══ -->
-    <h2>
-      <span class="es">Dominio: Infraestructura</span>
-      <span class="en">Domain: Infrastructure</span>
-    </h2>
-
-    <!-- Brief tables for remaining models -->
-    <h3>Connector <code class="text-muted">@@map("connectors")</code></h3>
-    <p><span class="es">Metodo de conexion al sistema SAP.</span><span class="en">Connection method to the SAP system.</span></p>
-    <div class="table-wrap"><table><thead><tr><th><span class="es">Campo</span><span class="en">Field</span></th><th><span class="es">Tipo</span><span class="en">Type</span></th><th><span class="es">Descripcion</span><span class="en">Description</span></th></tr></thead><tbody>
-      <tr><td><code>id</code></td><td>String</td><td>@id @default(uuid())</td></tr>
-      <tr><td><code>organizationId</code></td><td>String</td><td>FK → Organization (Cascade)</td></tr>
-      <tr><td><code>systemId</code></td><td>String</td><td>FK → System (Cascade)</td></tr>
-      <tr><td><code>method</code></td><td>String</td><td>SAP Cloud Connector | Spektra Agent | RFC/BAPI | API Gateway</td></tr>
-      <tr><td><code>status</code></td><td>String</td><td>connected | degraded | disconnected</td></tr>
-      <tr><td><code>latencyMs</code></td><td>Int?</td><td><span class="es">Latencia de la conexion</span><span class="en">Connection latency</span></td></tr>
-      <tr><td><code>version</code></td><td>String?</td><td><span class="es">Version del agente/conector</span><span class="en">Agent/connector version</span></td></tr>
-      <tr><td><code>lastHeartbeat</code></td><td>DateTime?</td><td><span class="es">Ultimo heartbeat</span><span class="en">Last heartbeat</span></td></tr>
-      <tr><td><code>features</code></td><td>Json?</td><td><span class="es">Features soportadas</span><span class="en">Supported features</span></td></tr>
-    </tbody></table></div>
-
-    <h3>HAConfig <code class="text-muted">@@map("ha_configs")</code></h3>
-    <p><span class="es">Configuracion de Alta Disponibilidad/Disaster Recovery por sistema.</span><span class="en">High Availability/Disaster Recovery configuration per system.</span></p>
-    <div class="table-wrap"><table><thead><tr><th><span class="es">Campo</span><span class="en">Field</span></th><th><span class="es">Tipo</span><span class="en">Type</span></th><th><span class="es">Descripcion</span><span class="en">Description</span></th></tr></thead><tbody>
-      <tr><td><code>systemId</code></td><td>String</td><td>@unique, FK → System (Cascade), 1:1</td></tr>
-      <tr><td><code>haEnabled</code></td><td>Boolean</td><td>@default(false)</td></tr>
-      <tr><td><code>haStrategy</code></td><td>String?</td><td>HOT_STANDBY | WARM_STANDBY</td></tr>
-      <tr><td><code>primaryNode</code></td><td>String?</td><td><span class="es">Nodo primario</span><span class="en">Primary node</span></td></tr>
-      <tr><td><code>secondaryNode</code></td><td>String?</td><td><span class="es">Nodo secundario</span><span class="en">Secondary node</span></td></tr>
-      <tr><td><code>rpoMinutes</code></td><td>Int?</td><td>Recovery Point Objective</td></tr>
-      <tr><td><code>rtoMinutes</code></td><td>Int?</td><td>Recovery Time Objective</td></tr>
-      <tr><td><code>status</code></td><td>String</td><td>standby | failover_in_progress | failed_over</td></tr>
-    </tbody></table></div>
-
-    <h3>JobRecord <code class="text-muted">@@map("job_records")</code></h3>
-    <p><span class="es">Registros de jobs SAP (SM37).</span><span class="en">SAP job records (SM37).</span></p>
-    <div class="table-wrap"><table><thead><tr><th><span class="es">Campo</span><span class="en">Field</span></th><th><span class="es">Tipo</span><span class="en">Type</span></th><th><span class="es">Descripcion</span><span class="en">Description</span></th></tr></thead><tbody>
-      <tr><td><code>systemId</code></td><td>String</td><td>FK → System (Cascade)</td></tr>
-      <tr><td><code>jobName</code></td><td>String</td><td><span class="es">Nombre del job</span><span class="en">Job name</span></td></tr>
-      <tr><td><code>jobClass</code></td><td>String</td><td>A | B | C</td></tr>
-      <tr><td><code>status</code></td><td>String</td><td>running | scheduled | finished | failed | canceled</td></tr>
-      <tr><td><code>client</code></td><td>String?</td><td><span class="es">Cliente SAP</span><span class="en">SAP client</span></td></tr>
-      <tr><td><code>user</code></td><td>String?</td><td><span class="es">Usuario SAP que programo el job</span><span class="en">SAP user who scheduled the job</span></td></tr>
-    </tbody></table></div>
-
-    <h3>TransportRecord <code class="text-muted">@@map("transport_records")</code></h3>
-    <p><span class="es">Ordenes de transporte SAP.</span><span class="en">SAP transport orders.</span></p>
-    <div class="table-wrap"><table><thead><tr><th><span class="es">Campo</span><span class="en">Field</span></th><th><span class="es">Tipo</span><span class="en">Type</span></th><th><span class="es">Descripcion</span><span class="en">Description</span></th></tr></thead><tbody>
-      <tr><td><code>systemId</code></td><td>String</td><td>FK → System (Cascade)</td></tr>
-      <tr><td><code>transportId</code></td><td>String</td><td><span class="es">ID de transporte (EP1K900001)</span><span class="en">Transport ID (EP1K900001)</span></td></tr>
-      <tr><td><code>description</code></td><td>String</td><td><span class="es">Descripcion del transporte</span><span class="en">Transport description</span></td></tr>
-      <tr><td><code>owner</code></td><td>String</td><td><span class="es">Dueno del transporte</span><span class="en">Transport owner</span></td></tr>
-      <tr><td><code>status</code></td><td>String</td><td>released | imported | error | modifiable</td></tr>
-      <tr><td><code>target</code></td><td>String?</td><td><span class="es">SID del sistema destino</span><span class="en">Target system SID</span></td></tr>
-      <tr><td><code>rc</code></td><td>Int?</td><td><span class="es">Codigo de retorno</span><span class="en">Return code</span></td></tr>
-    </tbody></table></div>
-
-    <h3>CertificateRecord <code class="text-muted">@@map("certificate_records")</code></h3>
-    <div class="table-wrap"><table><thead><tr><th><span class="es">Campo</span><span class="en">Field</span></th><th><span class="es">Tipo</span><span class="en">Type</span></th><th><span class="es">Descripcion</span><span class="en">Description</span></th></tr></thead><tbody>
-      <tr><td><code>systemId</code></td><td>String</td><td>FK → System (Cascade)</td></tr>
-      <tr><td><code>name</code></td><td>String</td><td><span class="es">Nombre del certificado</span><span class="en">Certificate name</span></td></tr>
-      <tr><td><code>issuer</code></td><td>String</td><td><span class="es">Emisor</span><span class="en">Issuer</span></td></tr>
-      <tr><td><code>expiresAt</code></td><td>DateTime</td><td><span class="es">Fecha de expiracion</span><span class="en">Expiration date</span></td></tr>
-      <tr><td><code>daysLeft</code></td><td>Int</td><td><span class="es">Dias restantes</span><span class="en">Days remaining</span></td></tr>
-      <tr><td><code>status</code></td><td>String</td><td>ok | warning | critical</td></tr>
-      <tr><td><code>type</code></td><td>String</td><td>SSL | SAML | SNC</td></tr>
-    </tbody></table></div>
-
-    <!-- ═══ Admin Domain ═══ -->
-    <h2>
-      <span class="es">Dominio: Administracion</span>
-      <span class="en">Domain: Administration</span>
-    </h2>
-
-    <h3>AuditEntry <code class="text-muted">@@map("audit_entries")</code></h3>
-    <div class="table-wrap"><table><thead><tr><th><span class="es">Campo</span><span class="en">Field</span></th><th><span class="es">Tipo</span><span class="en">Type</span></th><th><span class="es">Descripcion</span><span class="en">Description</span></th></tr></thead><tbody>
-      <tr><td><code>organizationId</code></td><td>String</td><td>FK → Organization (Cascade)</td></tr>
-      <tr><td><code>userId</code></td><td>String?</td><td><span class="es">UUID del usuario (opcional si es sistema)</span><span class="en">User UUID (optional if system)</span></td></tr>
-      <tr><td><code>userEmail</code></td><td>String</td><td><span class="es">Email del usuario</span><span class="en">User email</span></td></tr>
-      <tr><td><code>action</code></td><td>String</td><td>system.register | approval.approve | alert.resolve | ...</td></tr>
-      <tr><td><code>resource</code></td><td>String</td><td><span class="es">Recurso afectado</span><span class="en">Affected resource</span></td></tr>
-      <tr><td><code>details</code></td><td>String?</td><td><span class="es">Detalles adicionales</span><span class="en">Additional details</span></td></tr>
-      <tr><td><code>severity</code></td><td>String</td><td>info | warning | critical</td></tr>
-      <tr><td><code>timestamp</code></td><td>DateTime</td><td>@default(now())</td></tr>
-    </tbody></table></div>
-
-    <h3>ApiKey <code class="text-muted">@@map("api_keys")</code></h3>
-    <div class="table-wrap"><table><thead><tr><th><span class="es">Campo</span><span class="en">Field</span></th><th><span class="es">Tipo</span><span class="en">Type</span></th><th><span class="es">Descripcion</span><span class="en">Description</span></th></tr></thead><tbody>
-      <tr><td><code>organizationId</code></td><td>String</td><td>FK → Organization (Cascade)</td></tr>
-      <tr><td><code>name</code></td><td>String</td><td><span class="es">Nombre descriptivo</span><span class="en">Descriptive name</span></td></tr>
-      <tr><td><code>keyHash</code></td><td>String</td><td><span class="es">Hash SHA-256 del key</span><span class="en">SHA-256 hash of the key</span></td></tr>
-      <tr><td><code>prefix</code></td><td>String</td><td><span class="es">Primeros 8 caracteres (identificacion)</span><span class="en">First 8 characters (identification)</span></td></tr>
-      <tr><td><code>status</code></td><td>String</td><td>active | inactive</td></tr>
-      <tr><td><code>lastUsedAt</code></td><td>DateTime?</td><td><span class="es">Ultimo uso</span><span class="en">Last used</span></td></tr>
-    </tbody></table></div>
-
-    <!-- ═══ Indexes ═══ -->
-    <h2>
-      <span class="es">Indices de Base de Datos</span>
-      <span class="en">Database Indexes</span>
-    </h2>
-    <div class="table-wrap">
-      <table>
-        <thead>
-          <tr>
-            <th><span class="es">Modelo</span><span class="en">Model</span></th>
-            <th><span class="es">Indice</span><span class="en">Index</span></th>
-            <th><span class="es">Proposito</span><span class="en">Purpose</span></th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr><td>System</td><td><code>[organizationId]</code></td><td><span class="es">Filtro por tenant</span><span class="en">Tenant filter</span></td></tr>
-          <tr><td>System</td><td><code>[organizationId, sid] UNIQUE</code></td><td><span class="es">SID unico por org</span><span class="en">Unique SID per org</span></td></tr>
-          <tr><td>Component</td><td><code>[systemId]</code></td><td><span class="es">Componentes por sistema</span><span class="en">Components per system</span></td></tr>
-          <tr><td>Instance</td><td><code>[systemId]</code>, <code>[componentId]</code>, <code>[hostId]</code></td><td><span class="es">Busqueda por relacion</span><span class="en">Relation lookup</span></td></tr>
-          <tr><td>Host</td><td><code>[systemId]</code></td><td><span class="es">Hosts por sistema</span><span class="en">Hosts per system</span></td></tr>
-          <tr><td>HostMetric</td><td><code>[hostId, timestamp]</code></td><td><span class="es">Series de tiempo</span><span class="en">Time series</span></td></tr>
-          <tr><td>Breach</td><td><code>[systemId, timestamp]</code>, <code>[systemId, resolved]</code></td><td><span class="es">Consultas de breaches</span><span class="en">Breach queries</span></td></tr>
-          <tr><td>HealthSnapshot</td><td><code>[systemId, timestamp]</code></td><td><span class="es">Historial de salud</span><span class="en">Health history</span></td></tr>
-          <tr><td>Alert</td><td><code>[organizationId, status]</code>, <code>[organizationId, level]</code></td><td><span class="es">Filtro de alertas</span><span class="en">Alert filter</span></td></tr>
-          <tr><td>Event</td><td><code>[organizationId, timestamp]</code>, <code>[systemId]</code></td><td><span class="es">Timeline de eventos</span><span class="en">Event timeline</span></td></tr>
-          <tr><td>ApprovalRequest</td><td><code>[organizationId, status]</code></td><td><span class="es">Aprobaciones pendientes</span><span class="en">Pending approvals</span></td></tr>
-          <tr><td>RunbookExecution</td><td><code>[runbookId, startedAt]</code>, <code>[systemId]</code></td><td><span class="es">Historial de ejecuciones</span><span class="en">Execution history</span></td></tr>
-          <tr><td>AuditEntry</td><td><code>[organizationId, timestamp]</code></td><td><span class="es">Log de auditoria</span><span class="en">Audit log</span></td></tr>
-        </tbody>
-      </table>
-    </div>
-
-    <!-- ═══ Cascade Rules ═══ -->
-    <h2>
-      <span class="es">Reglas de Eliminacion en Cascada</span>
-      <span class="en">Cascade Delete Rules</span>
-    </h2>
-
-    <div class="callout danger">
-      <div class="callout-icon">&#9888;&#65039;</div>
-      <div>
-        <span class="es"><strong>Cuidado:</strong> Todas las relaciones usan <code>onDelete: Cascade</code>. Al eliminar una Organization se eliminan TODOS sus datos. Al eliminar un System se eliminan sus componentes, instancias, hosts, metricas, alertas, etc.</span>
-        <span class="en"><strong>Caution:</strong> All relations use <code>onDelete: Cascade</code>. Deleting an Organization removes ALL its data. Deleting a System removes its components, instances, hosts, metrics, alerts, etc.</span>
+    <div class="card">
+      <div class="mermaid">
+erDiagram
+    Organization ||--o{ Membership : has
+    Organization ||--o{ System : owns
+    Organization ||--o{ Alert : has
+    Organization ||--o{ Event : has
+    Organization ||--o{ ApprovalRequest : has
+    Organization ||--o{ Runbook : has
+    Organization ||--o{ OperationRecord : has
+    Organization ||--o{ AuditEntry : has
+    Organization ||--o{ Connector : has
+    Organization ||--o{ ApiKey : has
+    User ||--o{ Membership : has
+    System ||--o{ Component : has
+    System ||--o{ Instance : has
+    System ||--o{ Host : has
+    System ||--o{ Alert : has
+    System ||--o{ Event : has
+    System ||--o{ Dependency : has
+    System ||--o{ Breach : has
+    System ||--o{ HealthSnapshot : has
+    System ||--|| HAConfig : has
+    System ||--|| SystemMeta : has
+    System ||--o{ RunbookExecution : has
+    System ||--o{ JobRecord : has
+    System ||--o{ TransportRecord : has
+    System ||--o{ CertificateRecord : has
+    Runbook ||--o{ RunbookExecution : has
+    RunbookExecution ||--o{ RunbookStepResult : has
+    Host ||--o{ HostMetric : has
+    Component ||--o{ Instance : has
       </div>
     </div>
 
-    <div class="table-wrap">
-      <table>
-        <thead>
-          <tr>
-            <th><span class="es">Al eliminar</span><span class="en">When deleting</span></th>
-            <th><span class="es">Se eliminan</span><span class="en">Also deleted</span></th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr><td><strong>Organization</strong></td><td>Memberships, Systems, Alerts, Events, Approvals, Runbooks, Operations, AuditEntries, Connectors, ApiKeys</td></tr>
-          <tr><td><strong>User</strong></td><td>Memberships</td></tr>
-          <tr><td><strong>System</strong></td><td>SystemMeta, Components, Instances, Hosts, Breaches, HealthSnapshots, Dependencies, Alerts, Events, Approvals, Operations, Connectors, HAConfig, JobRecords, TransportRecords, CertificateRecords, RunbookExecutions</td></tr>
-          <tr><td><strong>Host</strong></td><td>Instances, HostMetrics</td></tr>
-          <tr><td><strong>Component</strong></td><td>Instances</td></tr>
-          <tr><td><strong>Runbook</strong></td><td>RunbookExecutions</td></tr>
-          <tr><td><strong>RunbookExecution</strong></td><td>RunbookStepResults</td></tr>
-        </tbody>
-      </table>
+    <!-- Tenant Models -->
+    <h2>
+      <span class="es">Modelos de Tenant</span>
+      <span class="en">Tenant Models</span>
+    </h2>
+
+    <h3>Organization</h3>
+    <div class="card">
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th><span class="es">Campo</span><span class="en">Field</span></th><th><span class="es">Tipo</span><span class="en">Type</span></th><th><span class="es">Restricciones</span><span class="en">Constraints</span></th><th><span class="es">Descripcion</span><span class="en">Description</span></th></tr></thead>
+          <tbody>
+            <tr><td>id</td><td>String</td><td>@id @default(uuid())</td><td>PK</td></tr>
+            <tr><td>name</td><td>String</td><td></td><td><span class="es">Nombre de la organizacion</span><span class="en">Organization name</span></td></tr>
+            <tr><td>slug</td><td>String</td><td>@unique</td><td><span class="es">Slug unico</span><span class="en">Unique slug</span></td></tr>
+            <tr><td>plan</td><td>String</td><td>@default("professional")</td><td>starter | professional | enterprise</td></tr>
+            <tr><td>logo</td><td>String?</td><td></td><td>URL</td></tr>
+            <tr><td>timezone</td><td>String</td><td>@default("America/Bogota")</td><td>IANA timezone</td></tr>
+            <tr><td>language</td><td>String</td><td>@default("es")</td><td>es | en</td></tr>
+            <tr><td>settings</td><td>Json</td><td>@default("{}")</td><td><span class="es">Configuracion personalizada</span><span class="en">Custom settings</span></td></tr>
+            <tr><td>limits</td><td>Json</td><td>@default("{}")</td><td><span class="es">Limites por plan</span><span class="en">Plan limits</span></td></tr>
+            <tr><td>createdAt</td><td>DateTime</td><td>@default(now())</td><td></td></tr>
+            <tr><td>updatedAt</td><td>DateTime</td><td>@updatedAt</td><td></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="text-sm text-muted"><span class="es">Relaciones:</span><span class="en">Relations:</span> Membership[], System[], Alert[], Event[], ApprovalRequest[], Runbook[], OperationRecord[], AuditEntry[], Connector[], ApiKey[]</p>
     </div>
 
+    <h3>User</h3>
+    <div class="card">
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th><span class="es">Campo</span><span class="en">Field</span></th><th><span class="es">Tipo</span><span class="en">Type</span></th><th><span class="es">Restricciones</span><span class="en">Constraints</span></th><th><span class="es">Descripcion</span><span class="en">Description</span></th></tr></thead>
+          <tbody>
+            <tr><td>id</td><td>String</td><td>@id @default(uuid())</td><td>PK</td></tr>
+            <tr><td>email</td><td>String</td><td>@unique</td><td></td></tr>
+            <tr><td>name</td><td>String</td><td></td><td></td></tr>
+            <tr><td>passwordHash</td><td>String</td><td></td><td>bcrypt (12 rounds)</td></tr>
+            <tr><td>status</td><td>String</td><td>@default("active")</td><td>active | invited | disabled</td></tr>
+            <tr><td>mfaEnabled</td><td>Boolean</td><td>@default(false)</td><td></td></tr>
+            <tr><td>lastLoginAt</td><td>DateTime?</td><td></td><td></td></tr>
+            <tr><td>createdAt</td><td>DateTime</td><td>@default(now())</td><td></td></tr>
+            <tr><td>updatedAt</td><td>DateTime</td><td>@updatedAt</td><td></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <h3>Membership</h3>
+    <div class="card">
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th><span class="es">Campo</span><span class="en">Field</span></th><th><span class="es">Tipo</span><span class="en">Type</span></th><th><span class="es">Restricciones</span><span class="en">Constraints</span></th><th><span class="es">Descripcion</span><span class="en">Description</span></th></tr></thead>
+          <tbody>
+            <tr><td>id</td><td>String</td><td>@id @default(uuid())</td><td>PK</td></tr>
+            <tr><td>userId</td><td>String</td><td>FK → User (Cascade)</td><td></td></tr>
+            <tr><td>organizationId</td><td>String</td><td>FK → Organization (Cascade)</td><td></td></tr>
+            <tr><td>role</td><td>String</td><td>@default("viewer")</td><td>admin | escalation | operator | viewer</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="text-sm text-muted"><span class="es">Indice unico:</span><span class="en">Unique index:</span> <code>@@unique([userId, organizationId])</code></p>
+    </div>
+
+    <h3>Plan</h3>
+    <div class="card">
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th><span class="es">Campo</span><span class="en">Field</span></th><th><span class="es">Tipo</span><span class="en">Type</span></th><th><span class="es">Restricciones</span><span class="en">Constraints</span></th><th><span class="es">Descripcion</span><span class="en">Description</span></th></tr></thead>
+          <tbody>
+            <tr><td>id</td><td>String</td><td>@id @default(uuid())</td><td>PK</td></tr>
+            <tr><td>tier</td><td>String</td><td>@unique</td><td>starter | professional | enterprise</td></tr>
+            <tr><td>name</td><td>String</td><td></td><td></td></tr>
+            <tr><td>price</td><td>Int</td><td>@default(0)</td><td><span class="es">Precio mensual en centavos</span><span class="en">Monthly price in cents</span></td></tr>
+            <tr><td>features</td><td>Json</td><td>@default("[]")</td><td><span class="es">Array de keys de features</span><span class="en">Feature key array</span></td></tr>
+            <tr><td>limits</td><td>Json</td><td>@default("{}")</td><td>{ maxSystems, maxUsers, ... }</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- SAP Domain Models -->
+    <h2>
+      <span class="es">Modelos del Dominio SAP</span>
+      <span class="en">SAP Domain Models</span>
+    </h2>
+
+    <h3>System</h3>
+    <div class="card">
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th><span class="es">Campo</span><span class="en">Field</span></th><th><span class="es">Tipo</span><span class="en">Type</span></th><th><span class="es">Descripcion</span><span class="en">Description</span></th></tr></thead>
+          <tbody>
+            <tr><td>id</td><td>String</td><td>PK (uuid)</td></tr>
+            <tr><td>organizationId</td><td>String</td><td>FK → Organization (Cascade)</td></tr>
+            <tr><td>sid</td><td>String</td><td><span class="es">SID SAP de 3 caracteres</span><span class="en">3-char SAP System ID</span></td></tr>
+            <tr><td>description</td><td>String</td><td></td></tr>
+            <tr><td>sapProduct</td><td>String</td><td>S/4HANA, ECC, BW/4HANA, etc.</td></tr>
+            <tr><td>productFamily</td><td>String</td><td>ABAP_BUSINESS_SUITE, JAVA_STACK, etc.</td></tr>
+            <tr><td>sapStackType</td><td>String</td><td>ABAP | JAVA | DUAL_STACK | EDGE | DB | MANAGED_CLOUD_RESTRICTED</td></tr>
+            <tr><td>dbType</td><td>String</td><td>SAP HANA 2.0, Oracle 19c, etc.</td></tr>
+            <tr><td>environment</td><td>String</td><td>PRD | QAS | DEV | SBX | DR</td></tr>
+            <tr><td>mode</td><td>String</td><td>PRODUCTION | TRIAL | MAINTENANCE</td></tr>
+            <tr><td>deploymentModel</td><td>String</td><td>ON_PREMISE | RISE_MANAGED | etc.</td></tr>
+            <tr><td>connectionMode</td><td>String</td><td>AGENT_FULL | MANAGED_RESTRICTED | etc.</td></tr>
+            <tr><td>monitoringCapabilityProfile</td><td>String</td><td>FULL_STACK_AGENT</td></tr>
+            <tr><td>supportsHostMetrics</td><td>Boolean</td><td></td></tr>
+            <tr><td>supportsOsMetrics</td><td>Boolean</td><td></td></tr>
+            <tr><td>supportsSapMetrics</td><td>Boolean</td><td></td></tr>
+            <tr><td>supportsDbMetrics</td><td>Boolean</td><td></td></tr>
+            <tr><td>supportsTopologyDiscovery</td><td>Boolean</td><td></td></tr>
+            <tr><td>supportsRunbookExecution</td><td>Boolean</td><td></td></tr>
+            <tr><td>supportsApprovals</td><td>Boolean</td><td></td></tr>
+            <tr><td>integrationTrustLevel</td><td>String</td><td>full | partial | restricted</td></tr>
+            <tr><td>healthScore</td><td>Int</td><td>0-100</td></tr>
+            <tr><td>status</td><td>String</td><td>healthy | warning | critical</td></tr>
+            <tr><td>lastCheckAt</td><td>DateTime?</td><td></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="text-sm text-muted"><span class="es">Indice unico:</span><span class="en">Unique index:</span> <code>@@unique([organizationId, sid])</code>. <span class="es">Indice:</span><span class="en">Index:</span> <code>@@index([organizationId])</code></p>
+      <p class="text-sm text-muted"><span class="es">Relaciones hijas:</span><span class="en">Child relations:</span> Component[], Instance[], Host[], Dependency[], Breach[], HealthSnapshot[], Alert[], Event[], ApprovalRequest[], OperationRecord[], Connector[], HAConfig?, SystemMeta?, JobRecord[], TransportRecord[], CertificateRecord[], RunbookExecution[]</p>
+    </div>
+
+    <h3>SystemMeta</h3>
+    <div class="card">
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th><span class="es">Campo</span><span class="en">Field</span></th><th><span class="es">Tipo</span><span class="en">Type</span></th><th><span class="es">Descripcion</span><span class="en">Description</span></th></tr></thead>
+          <tbody>
+            <tr><td>id</td><td>String</td><td>PK (uuid)</td></tr>
+            <tr><td>systemId</td><td>String</td><td>@unique, FK → System (Cascade)</td></tr>
+            <tr><td>sapRelease</td><td>String?</td><td></td></tr>
+            <tr><td>kernelVersion</td><td>String?</td><td></td></tr>
+            <tr><td>kernelPatch</td><td>String?</td><td></td></tr>
+            <tr><td>abapPatch</td><td>String?</td><td></td></tr>
+            <tr><td>client</td><td>String?</td><td></td></tr>
+            <tr><td>osVersion</td><td>String?</td><td></td></tr>
+            <tr><td>dbVersion</td><td>String?</td><td></td></tr>
+            <tr><td>notes</td><td>String?</td><td></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <h3>Component, Instance, Host</h3>
+    <div class="card">
+      <p><span class="es"><strong>Component:</strong> Componentes del sistema (ABAP, JAVA, DB, WEBDISP, GATEWAY). FK → System (Cascade). Indice: <code>[systemId]</code>.</span><span class="en"><strong>Component:</strong> System components (ABAP, JAVA, DB, WEBDISP, GATEWAY). FK → System (Cascade). Index: <code>[systemId]</code>.</span></p>
+      <p><span class="es"><strong>Instance:</strong> Instancias SAP (PAS, AAS, ASCS, ERS, HANA, WEBDISP). FK → System, Component?, Host? (Cascade). Indices: <code>[systemId]</code>, <code>[componentId]</code>, <code>[hostId]</code>.</span><span class="en"><strong>Instance:</strong> SAP instances (PAS, AAS, ASCS, ERS, HANA, WEBDISP). FK → System, Component?, Host? (Cascade). Indexes: <code>[systemId]</code>, <code>[componentId]</code>, <code>[hostId]</code>.</span></p>
+      <p><span class="es"><strong>Host:</strong> Servidores fisicos/virtuales. Campos: hostname, ip, os, region, zone, cpu, memory, disk, status. FK → System (Cascade). Indice: <code>[systemId]</code>.</span><span class="en"><strong>Host:</strong> Physical/virtual servers. Fields: hostname, ip, os, region, zone, cpu, memory, disk, status. FK → System (Cascade). Index: <code>[systemId]</code>.</span></p>
+    </div>
+
+    <h3>HostMetric, Dependency, Breach, HealthSnapshot</h3>
+    <div class="card">
+      <p><span class="es"><strong>HostMetric:</strong> Metricas de host (cpu, memory, disk, iops, networkIn, networkOut). FK → Host (Cascade). Indice: <code>[hostId, timestamp]</code>.</span><span class="en"><strong>HostMetric:</strong> Host metrics (cpu, memory, disk, iops, networkIn, networkOut). FK → Host (Cascade). Index: <code>[hostId, timestamp]</code>.</span></p>
+      <p><span class="es"><strong>Dependency:</strong> Dependencias del sistema (DB, RFC, HTTP, IDoc). FK → System (Cascade). Indice: <code>[systemId]</code>.</span><span class="en"><strong>Dependency:</strong> System dependencies (DB, RFC, HTTP, IDoc). FK → System (Cascade). Index: <code>[systemId]</code>.</span></p>
+      <p><span class="es"><strong>Breach:</strong> Violaciones de umbrales (metric, value, threshold, severity). FK → System (Cascade). Indices: <code>[systemId, timestamp]</code>, <code>[systemId, resolved]</code>.</span><span class="en"><strong>Breach:</strong> Threshold breaches (metric, value, threshold, severity). FK → System (Cascade). Indexes: <code>[systemId, timestamp]</code>, <code>[systemId, resolved]</code>.</span></p>
+      <p><span class="es"><strong>HealthSnapshot:</strong> Snapshots de salud (score, status, cpu, memory, disk, details). FK → System (Cascade). Indice: <code>[systemId, timestamp]</code>.</span><span class="en"><strong>HealthSnapshot:</strong> Health snapshots (score, status, cpu, memory, disk, details). FK → System (Cascade). Index: <code>[systemId, timestamp]</code>.</span></p>
+    </div>
+
+    <!-- HA Model -->
+    <h2>HA/DR</h2>
+    <h3>HAConfig</h3>
+    <div class="card">
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th><span class="es">Campo</span><span class="en">Field</span></th><th><span class="es">Tipo</span><span class="en">Type</span></th><th><span class="es">Descripcion</span><span class="en">Description</span></th></tr></thead>
+          <tbody>
+            <tr><td>id</td><td>String</td><td>PK (uuid)</td></tr>
+            <tr><td>systemId</td><td>String</td><td>@unique, FK → System (Cascade)</td></tr>
+            <tr><td>haEnabled</td><td>Boolean</td><td>@default(false)</td></tr>
+            <tr><td>haStrategy</td><td>String?</td><td>HOT_STANDBY | WARM_STANDBY | etc.</td></tr>
+            <tr><td>primaryNode</td><td>String?</td><td></td></tr>
+            <tr><td>secondaryNode</td><td>String?</td><td></td></tr>
+            <tr><td>rpoMinutes</td><td>Int?</td><td>Recovery Point Objective</td></tr>
+            <tr><td>rtoMinutes</td><td>Int?</td><td>Recovery Time Objective</td></tr>
+            <tr><td>lastFailoverAt</td><td>DateTime?</td><td></td></tr>
+            <tr><td>status</td><td>String</td><td>standby | failover_in_progress | failed_over</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Alerts & Events -->
+    <h2>
+      <span class="es">Alertas y Eventos</span>
+      <span class="en">Alerts &amp; Events</span>
+    </h2>
+
+    <h3>Alert</h3>
+    <div class="card">
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th><span class="es">Campo</span><span class="en">Field</span></th><th><span class="es">Tipo</span><span class="en">Type</span></th><th><span class="es">Descripcion</span><span class="en">Description</span></th></tr></thead>
+          <tbody>
+            <tr><td>id</td><td>String</td><td>PK (uuid)</td></tr>
+            <tr><td>organizationId</td><td>String</td><td>FK → Organization (Cascade)</td></tr>
+            <tr><td>systemId</td><td>String</td><td>FK → System (Cascade)</td></tr>
+            <tr><td>title</td><td>String</td><td></td></tr>
+            <tr><td>message</td><td>String</td><td></td></tr>
+            <tr><td>level</td><td>String</td><td>critical | warning | info</td></tr>
+            <tr><td>status</td><td>String</td><td>active | acknowledged | resolved</td></tr>
+            <tr><td>escalation</td><td>String</td><td>L1 | L2 | -</td></tr>
+            <tr><td>acknowledged</td><td>Boolean</td><td></td></tr>
+            <tr><td>ackBy / ackAt</td><td>String? / DateTime?</td><td></td></tr>
+            <tr><td>resolved</td><td>Boolean</td><td></td></tr>
+            <tr><td>resolvedBy / resolvedAt</td><td>String? / DateTime?</td><td></td></tr>
+            <tr><td>resolutionCategory</td><td>String?</td><td></td></tr>
+            <tr><td>resolutionNote</td><td>String?</td><td></td></tr>
+            <tr><td>runbookId</td><td>String?</td><td></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="text-sm text-muted"><span class="es">Indices:</span><span class="en">Indexes:</span> <code>[organizationId, status]</code>, <code>[organizationId, level]</code></p>
+    </div>
+
+    <h3>Event</h3>
+    <div class="card">
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th><span class="es">Campo</span><span class="en">Field</span></th><th><span class="es">Tipo</span><span class="en">Type</span></th><th><span class="es">Descripcion</span><span class="en">Description</span></th></tr></thead>
+          <tbody>
+            <tr><td>id</td><td>String</td><td>PK (uuid)</td></tr>
+            <tr><td>organizationId</td><td>String</td><td>FK → Organization (Cascade)</td></tr>
+            <tr><td>systemId</td><td>String?</td><td>FK → System (Cascade)</td></tr>
+            <tr><td>level</td><td>String</td><td>critical | warning | info | success</td></tr>
+            <tr><td>source</td><td>String</td><td>SAP | Platform | Security</td></tr>
+            <tr><td>component</td><td>String</td><td></td></tr>
+            <tr><td>message</td><td>String</td><td></td></tr>
+            <tr><td>details</td><td>Json?</td><td></td></tr>
+            <tr><td>timestamp</td><td>DateTime</td><td>@default(now())</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="text-sm text-muted"><span class="es">Indices:</span><span class="en">Indexes:</span> <code>[organizationId, timestamp]</code>, <code>[systemId]</code></p>
+    </div>
+
+    <!-- Approvals & Runbooks -->
+    <h2>
+      <span class="es">Aprobaciones y Runbooks</span>
+      <span class="en">Approvals &amp; Runbooks</span>
+    </h2>
+
+    <h3>ApprovalRequest</h3>
+    <div class="card">
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th><span class="es">Campo</span><span class="en">Field</span></th><th><span class="es">Tipo</span><span class="en">Type</span></th><th><span class="es">Descripcion</span><span class="en">Description</span></th></tr></thead>
+          <tbody>
+            <tr><td>id</td><td>String</td><td>PK (uuid)</td></tr>
+            <tr><td>organizationId</td><td>String</td><td>FK → Organization (Cascade)</td></tr>
+            <tr><td>systemId</td><td>String</td><td>FK → System (Cascade)</td></tr>
+            <tr><td>runbookId</td><td>String?</td><td></td></tr>
+            <tr><td>severity</td><td>String</td><td></td></tr>
+            <tr><td>status</td><td>String</td><td>PENDING | APPROVED | REJECTED | EXPIRED | EXECUTED</td></tr>
+            <tr><td>description</td><td>String</td><td></td></tr>
+            <tr><td>requestedBy</td><td>String</td><td></td></tr>
+            <tr><td>processedBy</td><td>String?</td><td></td></tr>
+            <tr><td>token</td><td>String</td><td>@unique @default(uuid())</td></tr>
+            <tr><td>expiresAt</td><td>DateTime?</td><td></td></tr>
+            <tr><td>evidence</td><td>Json?</td><td></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="text-sm text-muted"><span class="es">Indice:</span><span class="en">Index:</span> <code>[organizationId, status]</code></p>
+    </div>
+
+    <h3>Runbook, RunbookExecution, RunbookStepResult</h3>
+    <div class="card">
+      <p><span class="es"><strong>Runbook:</strong> Catalogo de runbooks (name, description, costSafe, autoExecute, category, dbType, txCode, prereqs, parameters, steps). FK → Organization (Cascade). Indice: <code>[organizationId]</code>.</span><span class="en"><strong>Runbook:</strong> Runbook catalog (name, description, costSafe, autoExecute, category, dbType, txCode, prereqs, parameters, steps). FK → Organization (Cascade). Index: <code>[organizationId]</code>.</span></p>
+      <p><span class="es"><strong>RunbookExecution:</strong> Ejecuciones (runbookId, systemId, gate SAFE|HUMAN, result SUCCESS|FAILED|PENDING|RUNNING|CANCELLED, steps tracking). FK → Runbook, System (Cascade). Indices: <code>[runbookId, startedAt]</code>, <code>[systemId]</code>.</span><span class="en"><strong>RunbookExecution:</strong> Executions (runbookId, systemId, gate SAFE|HUMAN, result SUCCESS|FAILED|PENDING|RUNNING|CANCELLED, steps tracking). FK → Runbook, System (Cascade). Indexes: <code>[runbookId, startedAt]</code>, <code>[systemId]</code>.</span></p>
+      <p><span class="es"><strong>RunbookStepResult:</strong> Resultado por paso (stepOrder, action, command, status, exitCode, stdout, stderr, duration). FK → RunbookExecution (Cascade). Indice: <code>[executionId, stepOrder]</code>.</span><span class="en"><strong>RunbookStepResult:</strong> Per-step result (stepOrder, action, command, status, exitCode, stdout, stderr, duration). FK → RunbookExecution (Cascade). Index: <code>[executionId, stepOrder]</code>.</span></p>
+    </div>
+
+    <!-- Operations -->
+    <h2>
+      <span class="es">Operaciones</span>
+      <span class="en">Operations</span>
+    </h2>
+
+    <h3>OperationRecord, JobRecord, TransportRecord, CertificateRecord</h3>
+    <div class="card">
+      <p><span class="es"><strong>OperationRecord:</strong> Operaciones planificadas (type: BACKUP|RESTART|MAINTENANCE|DR_DRILL|HOUSEKEEPING, status: SCHEDULED|RUNNING|COMPLETED|FAILED|CANCELLED, riskLevel, schedule). FK → Organization, System (Cascade). Indice: <code>[organizationId, status]</code>.</span><span class="en"><strong>OperationRecord:</strong> Scheduled operations (type: BACKUP|RESTART|MAINTENANCE|DR_DRILL|HOUSEKEEPING, status: SCHEDULED|RUNNING|COMPLETED|FAILED|CANCELLED, riskLevel, schedule). FK → Organization, System (Cascade). Index: <code>[organizationId, status]</code>.</span></p>
+      <p><span class="es"><strong>JobRecord:</strong> Jobs SM37 (jobName, jobClass A|B|C, status). FK → System (Cascade). Indice: <code>[systemId]</code>.</span><span class="en"><strong>JobRecord:</strong> SM37 jobs (jobName, jobClass A|B|C, status). FK → System (Cascade). Index: <code>[systemId]</code>.</span></p>
+      <p><span class="es"><strong>TransportRecord:</strong> Transportes SAP (transportId, description, owner, status, target, rc). FK → System (Cascade). Indice: <code>[systemId]</code>.</span><span class="en"><strong>TransportRecord:</strong> SAP transports (transportId, description, owner, status, target, rc). FK → System (Cascade). Index: <code>[systemId]</code>.</span></p>
+      <p><span class="es"><strong>CertificateRecord:</strong> Certificados (name, issuer, expiresAt, daysLeft, status, type SSL|SAML|SNC). FK → System (Cascade). Indice: <code>[systemId]</code>.</span><span class="en"><strong>CertificateRecord:</strong> Certificates (name, issuer, expiresAt, daysLeft, status, type SSL|SAML|SNC). FK → System (Cascade). Index: <code>[systemId]</code>.</span></p>
+    </div>
+
+    <!-- Connectors, Audit, API Keys -->
+    <h2>
+      <span class="es">Conectores, Auditoria, API Keys</span>
+      <span class="en">Connectors, Audit, API Keys</span>
+    </h2>
+
+    <h3>Connector</h3>
+    <div class="card">
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th><span class="es">Campo</span><span class="en">Field</span></th><th><span class="es">Tipo</span><span class="en">Type</span></th><th><span class="es">Descripcion</span><span class="en">Description</span></th></tr></thead>
+          <tbody>
+            <tr><td>id</td><td>String</td><td>PK (uuid)</td></tr>
+            <tr><td>organizationId</td><td>String</td><td>FK → Organization (Cascade)</td></tr>
+            <tr><td>systemId</td><td>String</td><td>FK → System (Cascade)</td></tr>
+            <tr><td>method</td><td>String</td><td>SAP Cloud Connector | Spektra Agent | RFC/BAPI | API Gateway</td></tr>
+            <tr><td>status</td><td>String</td><td>connected | degraded | disconnected</td></tr>
+            <tr><td>latencyMs</td><td>Int?</td><td></td></tr>
+            <tr><td>version</td><td>String?</td><td></td></tr>
+            <tr><td>lastHeartbeat</td><td>DateTime?</td><td></td></tr>
+            <tr><td>features</td><td>Json?</td><td></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="text-sm text-muted"><span class="es">Indices:</span><span class="en">Indexes:</span> <code>[organizationId]</code>, <code>[systemId]</code></p>
+    </div>
+
+    <h3>AuditEntry</h3>
+    <div class="card">
+      <p><span class="es">Registro de auditoria: <code>id, organizationId, userId?, userEmail, action, resource, details?, severity (info|warning|critical), timestamp</code>. FK → Organization (Cascade). Indice: <code>[organizationId, timestamp]</code>.</span><span class="en">Audit record: <code>id, organizationId, userId?, userEmail, action, resource, details?, severity (info|warning|critical), timestamp</code>. FK → Organization (Cascade). Index: <code>[organizationId, timestamp]</code>.</span></p>
+    </div>
+
+    <h3>ApiKey</h3>
+    <div class="card">
+      <p><span class="es">API keys: <code>id, organizationId, name, keyHash (SHA-256), prefix (8 chars), status (active|inactive), lastUsedAt?</code>. FK → Organization (Cascade). Indice: <code>[organizationId]</code>.</span><span class="en">API keys: <code>id, organizationId, name, keyHash (SHA-256), prefix (8 chars), status (active|inactive), lastUsedAt?</code>. FK → Organization (Cascade). Index: <code>[organizationId]</code>.</span></p>
+    </div>
+
+    <!-- Summary -->
+    <h2>
+      <span class="es">Resumen: 27 Modelos</span>
+      <span class="en">Summary: 27 Models</span>
+    </h2>
+    <div class="card">
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>#</th><th><span class="es">Modelo</span><span class="en">Model</span></th><th><span class="es">Tabla</span><span class="en">Table</span></th><th><span class="es">Categoria</span><span class="en">Category</span></th></tr></thead>
+          <tbody>
+            <tr><td>1</td><td>Organization</td><td>organizations</td><td>Tenant</td></tr>
+            <tr><td>2</td><td>User</td><td>users</td><td>Tenant</td></tr>
+            <tr><td>3</td><td>Membership</td><td>memberships</td><td>Tenant</td></tr>
+            <tr><td>4</td><td>Plan</td><td>plans</td><td>Tenant</td></tr>
+            <tr><td>5</td><td>System</td><td>systems</td><td>SAP</td></tr>
+            <tr><td>6</td><td>SystemMeta</td><td>system_meta</td><td>SAP</td></tr>
+            <tr><td>7</td><td>Component</td><td>components</td><td>SAP</td></tr>
+            <tr><td>8</td><td>Instance</td><td>instances</td><td>SAP</td></tr>
+            <tr><td>9</td><td>Host</td><td>hosts</td><td>SAP</td></tr>
+            <tr><td>10</td><td>HostMetric</td><td>host_metrics</td><td>Metrics</td></tr>
+            <tr><td>11</td><td>Dependency</td><td>dependencies</td><td>SAP</td></tr>
+            <tr><td>12</td><td>Breach</td><td>breaches</td><td>Metrics</td></tr>
+            <tr><td>13</td><td>HealthSnapshot</td><td>health_snapshots</td><td>Metrics</td></tr>
+            <tr><td>14</td><td>HAConfig</td><td>ha_configs</td><td>HA/DR</td></tr>
+            <tr><td>15</td><td>Alert</td><td>alerts</td><td>Monitoring</td></tr>
+            <tr><td>16</td><td>Event</td><td>events</td><td>Monitoring</td></tr>
+            <tr><td>17</td><td>ApprovalRequest</td><td>approval_requests</td><td>Workflow</td></tr>
+            <tr><td>18</td><td>Runbook</td><td>runbooks</td><td>Automation</td></tr>
+            <tr><td>19</td><td>RunbookExecution</td><td>runbook_executions</td><td>Automation</td></tr>
+            <tr><td>20</td><td>RunbookStepResult</td><td>runbook_step_results</td><td>Automation</td></tr>
+            <tr><td>21</td><td>OperationRecord</td><td>operation_records</td><td>Operations</td></tr>
+            <tr><td>22</td><td>JobRecord</td><td>job_records</td><td>Operations</td></tr>
+            <tr><td>23</td><td>TransportRecord</td><td>transport_records</td><td>Operations</td></tr>
+            <tr><td>24</td><td>CertificateRecord</td><td>certificate_records</td><td>Operations</td></tr>
+            <tr><td>25</td><td>Connector</td><td>connectors</td><td>Integration</td></tr>
+            <tr><td>26</td><td>AuditEntry</td><td>audit_entries</td><td>Security</td></tr>
+            <tr><td>27</td><td>ApiKey</td><td>api_keys</td><td>Security</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <div style="margin-top:48px;padding-top:24px;border-top:1px solid var(--brd);text-align:center">
+      <p class="text-muted text-sm">SAP Spektra v3.0 — Maveram Company</p>
+    </div>
   </main>
 </div>
 </body>

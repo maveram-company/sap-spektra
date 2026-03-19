@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="dark" data-lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <title>Hardening Backlog — SAP Spektra Docs</title>
+  <link rel="stylesheet" href="theme.css">
+  <script src="theme-toggle.js"></script>
+  <script src="lang-toggle.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+  <script src="mermaid-init.js"></script>
+</head>
+<body>
+<div class="docs-wrapper">
+  <nav class="docs-sidebar">
+    <div class="sidebar-brand">
+      <div class="logo">&#9889;</div>
+      <div class="brand-text">
+        <div class="brand-name">SAP Spektra</div>
+        <div class="brand-sub">Documentation v3.0</div>
+      </div>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-section-label">Overview</div>
+      <a href="index.html" class="sidebar-link">Home</a>
+      <a href="executive.html" class="sidebar-link">Executive Summary</a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-section-label">Architecture</div>
+      <a href="architecture.html" class="sidebar-link">System Architecture</a>
+      <a href="multi-mode.html" class="sidebar-link">Multi-Mode Model</a>
+      <a href="domains.html" class="sidebar-link">Domain Reference</a>
+      <a href="domain-model.html" class="sidebar-link">Data Model</a>
+      <a href="api-reference.html" class="sidebar-link">API Reference</a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-section-label">Operations</div>
+      <a href="getting-started.html" class="sidebar-link">Setup &amp; Development</a>
+      <a href="validation.html" class="sidebar-link">Validation &amp; Quality</a>
+      <a href="backlog.html" class="sidebar-link active">Hardening Backlog</a>
+    </div>
+  </nav>
+
+  <main class="docs-main">
+    <div class="page-header">
+      <h1>
+        <span class="es">Backlog de Hardening</span>
+        <span class="en">Hardening Backlog</span>
+      </h1>
+      <p class="subtitle">
+        <span class="es">Priorizacion de proximos pasos: must-have, should-have, nice-to-have</span>
+        <span class="en">Prioritized next steps: must-have, should-have, nice-to-have</span>
+      </p>
+    </div>
+
+    <!-- P0: Must-Have -->
+    <h2>
+      <span class="badge danger">P0</span> Must-Have
+    </h2>
+    <div class="card">
+      <p class="text-muted text-sm mb-2">
+        <span class="es">Bloqueadores para produccion. Deben completarse antes del primer despliegue real.</span>
+        <span class="en">Production blockers. Must be completed before the first real deployment.</span>
+      </p>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th><span class="es">Item</span><span class="en">Item</span></th>
+              <th><span class="es">Impacto</span><span class="en">Impact</span></th>
+              <th><span class="es">Dependencia</span><span class="en">Dependency</span></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><span class="es">Agente RFC/BAPI funcional para conexion real a sistemas SAP</span><span class="en">Functional RFC/BAPI agent for real SAP system connection</span></td>
+              <td><span class="es">Habilita monitoreo real de sistemas SAP</span><span class="en">Enables real SAP system monitoring</span></td>
+              <td><span class="es">Acceso a sistema SAP de prueba</span><span class="en">Access to test SAP system</span></td>
+            </tr>
+            <tr>
+              <td><span class="es">EvidencePanel conectado a datos reales</span><span class="en">EvidencePanel connected to real data</span></td>
+              <td><span class="es">Completa el ciclo de transparencia multi-modo en UI</span><span class="en">Completes the multi-mode transparency cycle in UI</span></td>
+              <td><span class="es">ProviderResult ya implementado</span><span class="en">ProviderResult already implemented</span></td>
+            </tr>
+            <tr>
+              <td><span class="es">Rotacion de JWT refresh tokens</span><span class="en">JWT refresh token rotation</span></td>
+              <td><span class="es">Seguridad de sesiones en produccion</span><span class="en">Production session security</span></td>
+              <td><span class="es">Ninguna</span><span class="en">None</span></td>
+            </tr>
+            <tr>
+              <td><span class="es">Test E2E multi-modo completo (REAL → FALLBACK → MOCK → RESTRICTED)</span><span class="en">Complete multi-mode E2E test (REAL → FALLBACK → MOCK → RESTRICTED)</span></td>
+              <td><span class="es">Valida que el cambio de modo no rompe la UI</span><span class="en">Validates that mode switching doesn't break the UI</span></td>
+              <td><span class="es">Playwright configurado</span><span class="en">Playwright configured</span></td>
+            </tr>
+            <tr>
+              <td><span class="es">Validacion de entrada en todos los endpoints POST/PATCH</span><span class="en">Input validation on all POST/PATCH endpoints</span></td>
+              <td><span class="es">Seguridad contra inyeccion</span><span class="en">Injection security</span></td>
+              <td><span class="es">class-validator ya en uso</span><span class="en">class-validator already in use</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- P1: Should-Have -->
+    <h2>
+      <span class="badge warning">P1</span> Should-Have
+    </h2>
+    <div class="card">
+      <p class="text-muted text-sm mb-2">
+        <span class="es">Importantes para una experiencia de produccion completa. Pueden implementarse en sprints post-lanzamiento.</span>
+        <span class="en">Important for a complete production experience. Can be implemented in post-launch sprints.</span>
+      </p>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th><span class="es">Item</span><span class="en">Item</span></th>
+              <th><span class="es">Impacto</span><span class="en">Impact</span></th>
+              <th><span class="es">Dependencia</span><span class="en">Dependency</span></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><span class="es">AWS SDK integration (Cognito, S3, SQS, EventBridge)</span><span class="en">AWS SDK integration (Cognito, S3, SQS, EventBridge)</span></td>
+              <td><span class="es">Produccion cloud-native</span><span class="en">Cloud-native production</span></td>
+              <td><span class="es">Cuenta AWS, templates Terraform existentes</span><span class="en">AWS account, existing Terraform templates</span></td>
+            </tr>
+            <tr>
+              <td><span class="es">HA failover real con SAP HANA System Replication</span><span class="en">Real HA failover with SAP HANA System Replication</span></td>
+              <td><span class="es">Operaciones DR validadas</span><span class="en">Validated DR operations</span></td>
+              <td><span class="es">Agente funcional + sistema SAP HA</span><span class="en">Functional agent + SAP HA system</span></td>
+            </tr>
+            <tr>
+              <td><span class="es">AI/Chat con LLM real (Claude/Bedrock)</span><span class="en">AI/Chat with real LLM (Claude/Bedrock)</span></td>
+              <td><span class="es">Recomendaciones inteligentes reales</span><span class="en">Real intelligent recommendations</span></td>
+              <td><span class="es">API key de Claude o AWS Bedrock</span><span class="en">Claude or AWS Bedrock API key</span></td>
+            </tr>
+            <tr>
+              <td><span class="es">WebSocket para eventos en tiempo real</span><span class="en">WebSocket for real-time events</span></td>
+              <td><span class="es">Alertas push en lugar de polling</span><span class="en">Push alerts instead of polling</span></td>
+              <td><span class="es">NestJS WebSocket gateway</span><span class="en">NestJS WebSocket gateway</span></td>
+            </tr>
+            <tr>
+              <td><span class="es">Parity tests end-to-end (API → Provider → UI)</span><span class="en">End-to-end parity tests (API → Provider → UI)</span></td>
+              <td><span class="es">Garantiza consistencia total</span><span class="en">Guarantees total consistency</span></td>
+              <td><span class="es">Backend corriendo</span><span class="en">Backend running</span></td>
+            </tr>
+            <tr>
+              <td><span class="es">Notificaciones (email, webhook, Slack)</span><span class="en">Notifications (email, webhook, Slack)</span></td>
+              <td><span class="es">Alertas proactivas</span><span class="en">Proactive alerts</span></td>
+              <td><span class="es">Servicio de email/webhook</span><span class="en">Email/webhook service</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- P2: Nice-to-Have -->
+    <h2>
+      <span class="badge cyan">P2</span> Nice-to-Have
+    </h2>
+    <div class="card">
+      <p class="text-muted text-sm mb-2">
+        <span class="es">Mejoras de experiencia y funcionalidad avanzada. Baja prioridad relativa.</span>
+        <span class="en">Experience improvements and advanced functionality. Lower relative priority.</span>
+      </p>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th><span class="es">Item</span><span class="en">Item</span></th>
+              <th><span class="es">Impacto</span><span class="en">Impact</span></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><span class="es">Dashboard personalizable por usuario</span><span class="en">User-customizable dashboard</span></td>
+              <td><span class="es">UX mejorada</span><span class="en">Improved UX</span></td>
+            </tr>
+            <tr>
+              <td><span class="es">Exportacion de reportes (PDF, CSV)</span><span class="en">Report export (PDF, CSV)</span></td>
+              <td><span class="es">Compliance y auditorias</span><span class="en">Compliance and audits</span></td>
+            </tr>
+            <tr>
+              <td><span class="es">Theme builder para branding por organizacion</span><span class="en">Theme builder for per-org branding</span></td>
+              <td><span class="es">Personalizacion enterprise</span><span class="en">Enterprise customization</span></td>
+            </tr>
+            <tr>
+              <td><span class="es">Mobile responsive mejorado</span><span class="en">Improved mobile responsive</span></td>
+              <td><span class="es">Acceso desde movil</span><span class="en">Mobile access</span></td>
+            </tr>
+            <tr>
+              <td><span class="es">SSO (SAML/OIDC) integration</span><span class="en">SSO (SAML/OIDC) integration</span></td>
+              <td><span class="es">Auth enterprise</span><span class="en">Enterprise auth</span></td>
+            </tr>
+            <tr>
+              <td><span class="es">Runbook marketplace / sharing</span><span class="en">Runbook marketplace / sharing</span></td>
+              <td><span class="es">Comunidad de runbooks</span><span class="en">Runbook community</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Tech Debt Already Addressed -->
+    <h2>
+      <span class="es">Deuda Tecnica Ya Resuelta</span>
+      <span class="en">Tech Debt Already Addressed</span>
+    </h2>
+    <div class="card">
+      <p class="text-muted text-sm mb-2">
+        <span class="es">Los siguientes items de deuda tecnica fueron resueltos en rondas de hardening recientes:</span>
+        <span class="en">The following tech debt items were resolved in recent hardening rounds:</span>
+      </p>
+      <ul class="feature-list">
+        <li><span class="badge success">IMPL</span> <span class="es">Proteccion XSS y sanitizacion de entrada</span><span class="en">XSS protection and input sanitization</span></li>
+        <li><span class="badge success">IMPL</span> <span class="es">Race conditions en providers y servicios</span><span class="en">Race conditions in providers and services</span></li>
+        <li><span class="badge success">IMPL</span> <span class="es">Aislamiento de tenant en todas las queries</span><span class="en">Tenant isolation in all queries</span></li>
+        <li><span class="badge success">IMPL</span> <span class="es">Cascade deletes en todas las relaciones FK</span><span class="en">Cascade deletes on all FK relationships</span></li>
+        <li><span class="badge success">IMPL</span> <span class="es">Indices en campos de busqueda frecuente</span><span class="en">Indexes on frequently queried fields</span></li>
+        <li><span class="badge success">IMPL</span> <span class="es">Validacion JWT de usuario</span><span class="en">JWT user validation</span></li>
+        <li><span class="badge success">IMPL</span> <span class="es">Logging centralizado</span><span class="en">Centralized logging</span></li>
+        <li><span class="badge success">IMPL</span> <span class="es">Configuracion centralizada</span><span class="en">Centralized configuration</span></li>
+        <li><span class="badge success">IMPL</span> <span class="es">DTO types reforzados</span><span class="en">Enforced DTO types</span></li>
+        <li><span class="badge success">IMPL</span> <span class="es">React correctness (keys, deps, cleanup)</span><span class="en">React correctness (keys, deps, cleanup)</span></li>
+      </ul>
+    </div>
+
+    <!-- Footer -->
+    <div style="margin-top:48px;padding-top:24px;border-top:1px solid var(--brd);text-align:center">
+      <p class="text-muted text-sm">SAP Spektra v3.0 — Maveram Company</p>
+    </div>
+  </main>
+</div>
+</body>
+</html>
